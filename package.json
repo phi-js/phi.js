@@ -1,9 +1,11 @@
 {
   "name": "phidias.js",
-  "main": "dist/phidias.js",
   "description": "JavaScript client libraries to interact with phidias APIs",
+  "version": "1.0.0",
+  "license": "MIT",
   "author": "Santiago Cortes <santiago.cortes@phidias.com.co>",
-  "private": true,
+  "main": "dist/phidias.js",
+  "private": false,
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
