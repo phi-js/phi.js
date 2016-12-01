@@ -4,16 +4,10 @@
   "version": "1.0.0",
   "license": "MIT",
   "author": "Santiago Cortes <santiago.cortes@phidias.com.co>",
-  "main": "dist/phidias.js",
+  "main": "lib/main.js",
   "private": false,
-  "scripts": {
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
-  },
-  "devDependencies": {
-    "babel-core": "^6.18.2",
-    "babel-loader": "^6.2.8",
+  "dependencies": {
     "dexie": "^1.4.2",
-    "webpack": "2.1.0-beta.22",
     "whatwg-fetch": "^1.0.0"
   }
 }
