@@ -1,7 +1,7 @@
 {
   "name": "phidias.js",
   "description": "JavaScript client libraries to interact with phidias APIs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "author": "Santiago Cortes <santiago.cortes@phidias.com.co>",
   "main": "lib/main.js",
