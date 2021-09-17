@@ -2,7 +2,12 @@
 import '/packages/ui/style/normalize.scss';
 import '/packages/ui/style/index.scss';
 
-import { shallowRef, ref, watch, onMounted, onBeforeUnmount } from 'vue';
+import { shallowRef, ref, watch, onMounted, onBeforeUnmount, reactive, provide } from 'vue';
+
+// Provide de APIs disponibles
+const apis = reactive([1, 2, 3, 4]);
+provide('$useApi', apis);
+
 
 // Lista de paginas
 // (por ahora VITE no da una forma de listar archivos locales)
@@ -55,19 +60,21 @@ function loadPageComponent(href) {
 
   return importCallback().then((mod) => mod.default);
 }
-
 </script>
 
 <template>
-  <nav id="app-menu" class="ui-noselect">
-    <a
-      v-for="page in pages"
-      :key="page.href"
-      :class="{ '--active': currentPage == page.href }"
-      :href="`/#/${page.href}`"
-      v-text="page.name"
-    ></a>
-  </nav>
+  <div id="app-sidebar">
+    <!-- <button @click="apis.push(Math.random())">PUSH API</button> -->
+    <nav class="ui-noselect">
+      <a
+        v-for="page in pages"
+        :key="page.href"
+        :class="{ '--active': currentPage == page.href }"
+        :href="`/#/${page.href}`"
+        v-text="page.name"
+      ></a>
+    </nav>
+  </div>
 
   <div id="app-body">
     <component :is="component"></component>
@@ -81,14 +88,14 @@ function loadPageComponent(href) {
 <style lang="scss">
 #app {
   display: flex;
-  height: 100%;
+  min-height: 100%;
 
   a {
     text-decoration: none;
     color: #257dba;
   }
 
-  #app-menu {
+  #app-sidebar {
     display: block;
     width: 240px;
     background-color: #ffffff88;
@@ -114,6 +121,14 @@ function loadPageComponent(href) {
   #app-body {
     flex: 1;
     padding: 18px 32px;
+
+    .ui-code {
+      overflow: auto;
+      max-height: 300px;
+      padding: var(--ui-padding);
+      border-radius: var(--ui-radius);
+      background-color: rgba(0, 0, 0, 0.04);
+    }
   }
 }
 </style>
