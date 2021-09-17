@@ -69,12 +69,12 @@ function loadPageComponent(href) {
     <!-- <button @click="apis.push(Math.random())">PUSH API</button> -->
     <nav class="ui-noselect">
       <a
-        v-for="page in pages"
+        v-for="(page, i) in pages"
         :key="page.href"
         :class="{ '--active': currentPage == page.href }"
         :href="`/#/${page.href}`"
       >
-        <UiItem :text="page.name" :secondary="page.path" />
+        <UiItem :text="page.name" :secondary="page.dir" :icon="i === 0 ? '/phidias.png' : null" />
       </a>
     </nav>
   </div>

@@ -18,6 +18,7 @@ for (const path in modules) {
     href: 'component/' + name,
     name,
     path,
+    dir: path.replace('../packages', '').split('/').slice(0,-1).join('/'),
     import: modules[path]
   });
 }
