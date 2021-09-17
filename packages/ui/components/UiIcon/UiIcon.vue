@@ -1,9 +1,5 @@
 <template>
-  <span
-    class="ui-icon ui-noselect"
-    :style="styles"
-    @click="$emit('click', $event)"
-  >
+  <span class="ui-icon ui-noselect" :style="styles" @click="$emit('click', $event)">
     <component
       v-if="provider"
       :is="provider.component"
@@ -11,15 +7,9 @@
       :fullValue="filteredValue"
       :color="color"
     ></component>
-    <span
-      v-else
-      :title="filteredValue"
-    >�</span>
+    <span v-else :title="filteredValue">�</span>
 
-    <div
-      v-if="$slots.default"
-      class="contents-slot"
-    >
+    <div v-if="$slots.default" class="contents-slot">
       <slot></slot>
     </div>
   </span>
@@ -78,6 +68,17 @@ export default {
         typeof this.filteredValue.split == 'undefined'
       ) {
         return null;
+      }
+
+      if (this.filteredValue.substr(0, 1) == '/'
+        || this.filteredValue.substr(0, 2) == './'
+        || this.filteredValue.substr(0, 3) == '../'
+      ) {
+        return {
+          key: this.filteredValue,
+          component: ProviderImage,
+          value: this.filteredValue,
+        };
       }
 
       let parts = this.filteredValue.split(':', 2);
