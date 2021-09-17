@@ -1,0 +1,25 @@
+.ui-outset {
+  border-radius: $ui-radius;
+
+  border: 1px solid #dcdcdc;
+  background: #f1f1f1;
+  background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0,#f1f1f1),color-stop(1,#fcfcfc));
+
+  &:hover {
+    border: 1px solid #bbb;
+  }
+}
+
+// SCSS is removing the repeating "background-image" declaration un the .ui-outset block
+// so, for all rules to end up in the final css, they must be declared in separate blocks
+.ui-outset {
+  background-image: -ms-linear-gradient(bottom,#f1f1f1,#fcfcfc);
+}
+
+.ui-outset {
+  background-image: -moz-linear-gradient(center bottom,#f1f1f1 0,#fcfcfc 100%);
+}
+
+.ui-outset {
+  background-image: -o-linear-gradient(#fcfcfc,#f1f1f1);
+}

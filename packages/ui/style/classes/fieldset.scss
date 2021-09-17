@@ -1,0 +1,10 @@
+.ui-fieldset {
+  border-radius: var(--ui-radius);
+  border: 1px solid #ccc;
+
+  & > legend {
+    font-size: 12px;
+    font-weight: bold;
+    color: #999;
+  }
+}

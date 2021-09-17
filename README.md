@@ -1,2 +1,2 @@
-# phidias.js
-> JavaScript client libraries to interact with phidias APIs
+# Phidias.js
+> JavaScript libraries and Vue components

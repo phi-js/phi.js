@@ -1,0 +1,85 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700|Poppins:400,500,600,700");
+
+:root {
+  --ui-font-primary: "Open Sans", sans-serif;
+  --ui-font-secondary: "Poppins", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: #f3f3f3;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.02);
+
+  height: 100%;
+
+  overflow: auto; // Si el primer elemento del documento es un H1, su margen superior hace que el body se desplace.
+                  // este overflow colapsa la margen del primer elemento (al parecer)
+}
+
+html,
+body,
+input,
+textarea {
+  font-family: var(--ui-font-primary);
+}
+
+button {
+  font-family: var(--ui-font-secondary);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+label {
+  font-family: var(--ui-font-secondary);
+  font-size: 13px;
+}
+
+// p {
+//   margin: 0;
+// }
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--ui-font-primary);
+  font-weight: normal;
+  // margin: 0;
+}
+
+/* Some web frameworks (cough Vuetify cough) are deluded when it comes to correct default styles.  Assert -acceptable- font sizes: */
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  font-size: 1.17em;
+}
+
+h4 {
+  font-size: 1em;
+}
+
+h5 {
+  font-size: 0.83em;
+}
+
+h6 {
+  font-size: 0.67em;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

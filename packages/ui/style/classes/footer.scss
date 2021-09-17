@@ -1,0 +1,9 @@
+.ui-footer {
+  padding: $ui-padding;
+  background-color: $ui-color-darken;
+  text-align: right;
+
+  & > .ui-button {
+    @extend .ui-breathe;
+  }
+}

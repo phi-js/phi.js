@@ -1,0 +1,11 @@
+$ui-duration-snap: .2s;
+$ui-duration-quick: .3s;
+$ui-duration-smooth: .7s;
+$ui-duration-slow: 1s;
+
+:root {
+  --ui-duration-snap: #{$ui-duration-snap};
+  --ui-duration-quick: #{$ui-duration-quick};
+  --ui-duration-smooth: #{$ui-duration-smooth};
+  --ui-duration-slow: #{$ui-duration-slow};
+}

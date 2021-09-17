@@ -1,0 +1,73 @@
+.ui-button {
+  // @extend .ui-breathe;
+  @extend .ui-outset;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  // padding: var(--ui-padding);
+  padding: 0 var(--ui-padding-horizontal);
+  min-height: 50px;
+}
+
+.ui-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.ui-button.--main {
+  border: 0 !important;
+  color: #fff;
+  background: var(--ui-color-primary) !important;
+}
+
+.ui-button.--danger {
+  border: 0 !important;
+  color: #fff;
+  background: var(--ui-color-danger) !important;
+}
+
+.ui-button.--cancel {
+  border: 0 !important;
+  color: var(--ui-color-primary);
+  background: transparent !important;
+}
+
+
+// !!! Esto deberia estar en la clase .ui-group
+/*
+.ui-row > .ui-button {
+  border-radius: 0;
+  border-right-width: 0;
+
+  margin-left: 0;
+  margin-right: 0;
+
+  &:first-child {
+    // margin-left: $ui-breathe;
+    border-top-left-radius: $ui-radius;
+    border-bottom-left-radius: $ui-radius;
+  }
+
+  &:last-child {
+    // margin-right: $ui-breathe;
+    border-right-width: 1px;
+    border-top-right-radius: $ui-radius;
+    border-bottom-right-radius: $ui-radius;
+  }
+
+  &:hover {
+    border-right-width: 1px;
+    margin-right: -1px !important;
+    z-index: 2;
+
+    &:last-child {
+      // margin-right: $ui-breathe !important;
+    }
+  }
+}
+*/

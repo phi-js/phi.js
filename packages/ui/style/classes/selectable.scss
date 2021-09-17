@@ -1,0 +1,12 @@
+.ui-selectable {
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  &.--selected {
+    // background-color: rgba(0, 0, 0, 0.02);
+    background-color: #09afe812;
+  }
+}

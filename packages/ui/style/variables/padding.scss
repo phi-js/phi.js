@@ -1,0 +1,9 @@
+$ui-padding-vertical: 8px;
+$ui-padding-horizontal: 12px;
+$ui-padding: $ui-padding-vertical $ui-padding-horizontal;
+
+:root {
+  --ui-padding-vertical: #{$ui-padding-vertical};
+  --ui-padding-horizontal: #{$ui-padding-horizontal};
+  --ui-padding: #{$ui-padding};
+}

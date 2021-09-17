@@ -1,0 +1,211 @@
+/*
+<div class="ui-toolbar">
+    <button>
+    <ui-icon>
+    <.ui-row>
+</div>
+
+--dark (default)
+--light
+
+--horizonal (default)
+--vertical
+
+item.--active
+*/
+
+.ui-toolbar {
+  @extend .ui-noselect;
+  display: inline-flex;
+  // flex-wrap: wrap;
+  // overflow-x: auto;
+
+  align-items: stretch; // Logra 100% de la altura del padre
+
+  border-radius: var(--ui-radius);
+
+  // Toolbar items
+  button,
+  .ui-icon {
+    @extend .ui-toolbar-item;
+  }
+
+  button {
+    font-size: 16px;
+  }
+
+  .ui-icon {
+    --ui-icon-size: 20px;
+    // position: relative;
+    // top: 1px;
+  }
+
+  &.--wide {
+    display: flex;
+  }
+
+  input,
+  select,
+  & > h1,
+  & > h2,
+  & > h3,
+  & > p {
+    @extend .ui-toolbar-item;
+    margin: 0;
+
+    font-size: 16px;
+    font-family: var(--ui-font-secondary);
+    font-weight: 500;
+  }
+
+  select option {
+    color: #333;
+  }
+
+  .ui-clickable {
+    cursor: pointer;
+    &:hover {
+      color: #fff;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+
+.ui-toolbar-item {
+  flex: none;
+  // cursor: pointer;
+  // padding: 6px 10px;
+  padding: 0 10px;
+  border: 0;
+  // border-radius: var(--ui-radius);
+  background: transparent;
+
+  outline: none;
+  display: block;
+
+  min-width: 12px;
+  height: 40px; // 40px es el minimo al que puedo poner <input /> dentro del toolbar
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: background-color var(--ui-duration-snap);
+}
+
+.ui-toolbar,
+.ui-toolbar.--dark {
+  // background-color: rgba(0, 0, 0, 0.8);
+  background-color: #313131;
+
+  .ui-toolbar-item {
+    color: rgba(255, 255, 255, 0.5);
+    // &:hover {
+    //   color: #fff;
+    //   background-color: rgba(255, 255, 255, 0.2);
+    // }
+
+    &.--active {
+      color: #fff;
+    }
+  }
+}
+
+.ui-toolbar.--light {
+  background-color: transparent;
+
+  .ui-toolbar-item {
+    color: rgba(0, 0, 0, 0.6);
+    // &:hover {
+    //   color: rgba(0, 0, 0, 0.6);
+    //   background-color: rgba(0, 0, 0, 0.05);
+    // }
+
+    &.--active {
+      color: #fff;
+      background-color: var(--ui-color-primary);
+    }
+  }
+}
+
+// Rows within toolbars breathe horizontally
+.ui-toolbar .ui-row,
+.ui-toolbar.--horizontal .ui-row {
+  align-items: stretch;
+
+  flex: none;
+  margin: 0;
+  margin-left: $ui-breathe;
+
+  &:first-child {
+    margin-left: 0;
+  }
+}
+
+.ui-toolbar.--vertical {
+  flex-direction: column;
+  .ui-row {
+    flex-direction: column;
+  }
+}
+
+// Rows within toolbars breathe horizontally
+.ui-toolbar.--vertical .ui-row {
+  flex: none;
+  margin: 0;
+  margin-top: $ui-breathe;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+
+// .ui-field within toolbars
+.ui-toolbar {
+  .ui-field {
+    label {
+      display: none;
+    }
+
+    input,
+    select {
+      @extend .ui-toolbar-item;
+      margin: 0;
+      border-radius: 0;
+
+      font-size: 16px;
+      font-family: var(--ui-font-secondary);
+      font-weight: 500;
+    }
+  }
+}
+
+.ui-toolbar.--clear {
+  // background-color: transparent;
+  background-color: var(--ui-color-background);
+  border-radius: 0;
+
+  .ui-toolbar-item {
+    color: rgba(0, 0, 0, 0.7);
+
+    .ui-clickable:hover,
+    &.ui-clickable:hover {
+      color: var(--ui-color-primary);
+    }
+
+    &.--active {
+      color: var(--ui-color-primary);
+    }
+  }
+
+  input,
+  select,
+  & > h1,
+  & > h2,
+  & > h3,
+  & > p {
+    @extend .ui-toolbar-item;
+  }
+
+}

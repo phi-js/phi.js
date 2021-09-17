@@ -1,0 +1,1 @@
+export { default as UiItem } from './UiItem.vue'
