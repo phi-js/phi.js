@@ -100,6 +100,7 @@ function loadPageComponent(href) {
 
   #app-sidebar {
     display: block;
+    overflow: hidden;
     overflow-y: auto;
     width: 240px;
     background-color: #ffffff88;
