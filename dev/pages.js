@@ -17,6 +17,7 @@ for (const path in modules) {
   componentDocs.push({
     href: 'component/' + name,
     name,
+    path,
     import: modules[path]
   });
 }

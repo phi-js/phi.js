@@ -1,8 +1,10 @@
 <script setup>
+// Estilos globales
 import '/packages/ui/style/normalize.scss';
 import '/packages/ui/style/index.scss';
 
 import { shallowRef, ref, watch, onMounted, onBeforeUnmount, reactive, provide } from 'vue';
+import { UiItem } from '/packages/ui';
 
 // Provide de APIs disponibles
 const apis = reactive([1, 2, 3, 4]);
@@ -71,8 +73,9 @@ function loadPageComponent(href) {
         :key="page.href"
         :class="{ '--active': currentPage == page.href }"
         :href="`/#/${page.href}`"
-        v-text="page.name"
-      ></a>
+      >
+        <UiItem :text="page.name" :secondary="page.path" />
+      </a>
     </nav>
   </div>
 
@@ -97,12 +100,12 @@ function loadPageComponent(href) {
 
   #app-sidebar {
     display: block;
+    overflow-y: auto;
     width: 240px;
     background-color: #ffffff88;
 
     a {
       display: block;
-      padding: 8px 12px;
       font-weight: bold;
       border-radius: 3px;
       margin: 4px;
