@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { UiIcon, UiItem } from '/packages/ui';
+import { UiIcon, UiItem } from '/packages/ui/components';
 import allMdiIcons from './Provider/Mdi.js';
 
 const curIcon = ref('mdi:vuejs');

@@ -4,7 +4,7 @@ import '/packages/ui/style/normalize.scss';
 import '/packages/ui/style/index.scss';
 
 import { shallowRef, ref, watch, onMounted, onBeforeUnmount, reactive, provide } from 'vue';
-import { UiItem } from '/packages/ui';
+import { UiItem } from '/packages/ui/components';
 
 // Provide de APIs disponibles
 const apis = reactive([1, 2, 3, 4]);
