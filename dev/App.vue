@@ -67,6 +67,8 @@ function loadPageComponent(href) {
 <template>
   <div id="app-sidebar">
     <!-- <button @click="apis.push(Math.random())">PUSH API</button> -->
+    <UiItem text="Phidias.js" icon="/phidias.png" />
+
     <nav class="ui-noselect">
       <a
         v-for="(page, i) in pages"
@@ -74,17 +76,18 @@ function loadPageComponent(href) {
         :class="{ '--active': currentPage == page.href }"
         :href="`/#/${page.href}`"
       >
-        <UiItem
-          :text="page.name"
-          :secondary="`${(page.isLocal ? '(i)' : '')} ${page.dir}`"
-          :icon="i === 0 ? '/phidias.png' : null"
-        />
+        <UiItem :text="`${page.name}${(page.isLocal ? '(.local)' : '')}`" :secondary="page.dir" />
       </a>
     </nav>
   </div>
 
   <div id="app-body">
-    <component :is="component"></component>
+    <transition name="fade">
+      <div :key="currentPage" v-if="component">
+        <component :is="component"></component>
+      </div>
+    </transition>
+
     <div v-if="error">
       <h1>404</h1>
       <p>'{{ currentPage }}' no encontrado</p>
@@ -137,6 +140,29 @@ function loadPageComponent(href) {
       border-radius: var(--ui-radius);
       background-color: rgba(0, 0, 0, 0.04);
     }
+  }
+
+  // Transitions
+  #app-body {
+    position: relative;
+  }
+
+  .fade-enter-active {
+    position: absolute;
+    top: 18px;
+    right: 32px;
+    bottom: 18px;
+    left: 32px;
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.1618s ease;
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
   }
 }
 </style>
