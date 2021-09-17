@@ -74,7 +74,11 @@ function loadPageComponent(href) {
         :class="{ '--active': currentPage == page.href }"
         :href="`/#/${page.href}`"
       >
-        <UiItem :text="page.name" :secondary="page.dir" :icon="i === 0 ? '/phidias.png' : null" />
+        <UiItem
+          :text="page.name"
+          :secondary="`${(page.isLocal ? '(i)' : '')} ${page.dir}`"
+          :icon="i === 0 ? '/phidias.png' : null"
+        />
       </a>
     </nav>
   </div>
