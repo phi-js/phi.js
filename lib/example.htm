@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>Uso de Phidias.js</title>
+
+  <!-- Incluir VUE -->
+  <script src="https://unpkg.com/vue@next"></script>
+
+  <!-- Incluir Phidias.js (UMD) -->
+  <script src="/dist/phidias.umd.js"></script>
+
+  <!-- Incluir Estilos -->
+  <link
+    rel="stylesheet"
+    href="/dist/style.css"
+  >
+  </script>
+</head>
+
+<body>
+  <div id="app">
+    <h1>
+      <ui-icon value="mdi:vuejs"></ui-icon>
+      {{ msg }}
+    </h1>
+    <input
+      type="text"
+      v-model="msg"
+    />
+    <ui-item
+      :text="msg"
+      icon="mdi:vuejs"
+    ></ui-item>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue;
+    const { UiIcon, UiItem } = Phidias.ui.components;
+
+    createApp({
+      components: { UiIcon, UiItem },
+      setup() {
+        const msg = ref('Hola mundo!')
+        return { msg }
+      }
+    }).mount('#app')
+  </script>
+</body>
+
+</html>
