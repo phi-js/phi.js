@@ -129,6 +129,7 @@
 import { getProperty } from '../../helpers'
 import { UiPopover } from '../UiPopover'
 import { UiIcon } from '../UiIcon'
+import { normalize } from '../../helpers'
 
 /**
  * Este componente recibe un arreglo de objetos arbitrarios
@@ -273,7 +274,7 @@ export default {
     },
 
     filteredOptions() {
-      let search = this.normalize(this.searchString)
+      let search = normalize(this.searchString)
       if (!search) {
         return this.availableOptions
       }
@@ -499,17 +500,6 @@ export default {
       this.isOpen ? this.close() : this.open()
     },
 
-    normalize(string) {
-      if (!string.trim()) {
-        return ''
-      }
-
-      return string
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase()
-    },
-
     // Retorna un arreglo con todas las cadenas encontradas en el objeto
     getStrings(object) {
       if (!object) {
@@ -517,7 +507,7 @@ export default {
       }
 
       if (typeof object == 'string') {
-        let string = this.normalize(object)
+        let string = normalize(object)
         return string ? [string] : []
       }
 
