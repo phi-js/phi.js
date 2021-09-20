@@ -15,6 +15,7 @@ const themes = [
 ]
 
 const curTheme = ref('my-theme-wide')
+// const curTheme = ref('my-theme-material')
 </script>
 
 <template>
@@ -31,8 +32,16 @@ const curTheme = ref('my-theme-wide')
   <hr />
 
   <div :class="curTheme">
-    <UiInput type="text" label="Un texto" placeholder="Un texto" />
-    <UiInput type="textarea" label="textarea" placeholder="textarea" />
+    <UiInput
+      type="text"
+      label="Un texto"
+      placeholder="Escribe cualquier cosa"
+    />
+    <UiInput
+      type="textarea"
+      label="textarea"
+      placeholder="Escribe cualquier cosa"
+    />
     <UiInput type="checkbox" placeholder="Acepto tal cosa" />
     <UiInput type="number" label="number" />
     <UiInput type="search" label="search" />
@@ -80,6 +89,70 @@ const curTheme = ref('my-theme-wide')
 }
 
 .my-theme-material {
+  --label-transition-duration: 0.17s;
+  max-width: 300px;
+
+  // bottom border animation on focus
+  .ui-input {
+    &__elem {
+      display: block;
+      width: 100%;
+      outline: none;
+    }
+
+    &__body {
+      position: relative;
+      border-bottom: 1px solid #ccc;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--ui-color-primary);
+        transition: all var(--label-transition-duration);
+      }
+    }
+
+    &--focused {
+      .ui-input__body {
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .ui-native {
+    &::placeholder {
+      color: transparent;
+    }
+  }
+
+  .ui-input--type-date,
+  .ui-input--type-time,
+  .ui-input--type-color,
+  .ui-input--type-select {
+    .ui-input__label {
+      opacity: 0 !important;
+    }
+  }
+
+  input.ui-native,
+  textarea.ui-native {
+    border: 0;
+    background: transparent;
+    // border-bottom: 1px solid var(--ui-color-primary);
+    border-radius: 0;
+  }
+
+  button.ui-native {
+    background: var(--ui-color-primary) !important;
+    color: #fff;
+  }
+
   .ui-input {
     margin-bottom: var(--ui-breathe);
     position: relative;
@@ -92,15 +165,16 @@ const curTheme = ref('my-theme-wide')
       left: 0;
       top: 0;
       font-size: 0.8em;
-      transition: all 0.22s;
+      transition: all var(--label-transition-duration);
     }
 
     &--empty {
       .ui-input__label {
-        left: var(--ui-padding-horizontal);
+        // left: var(--ui-padding-horizontal);
+        left: 5px;
         top: 30px;
         font-size: 1em;
-        opacity: 0;
+        opacity: 1;
       }
     }
 
@@ -109,7 +183,7 @@ const curTheme = ref('my-theme-wide')
         left: 0;
         top: 0;
         font-size: 0.8em;
-        opacity: 1;
+        opacity: 1 !important;
       }
     }
   }
