@@ -3,7 +3,31 @@ const tree = [
   {
     text: 'Un elemento',
     subtext: 'Un subtexto',
-    children: [{ text: 'Hijo 1' }, { text: 'Hijo 2' }, { text: 'Hijo 3' }]
+    children: [
+      {
+        text: 'Hijo 1',
+        children: [{ text: 'Hijo 1' }, { text: 'Hijo 2' }, { text: 'Hijo 3' }]
+      },
+      {
+        text: 'Hijo 2',
+        children: [
+          { text: 'Hijo 1' },
+          {
+            text: 'Hijo 2',
+            children: [
+              { text: 'Hijo 1' },
+              { text: 'Hijo 2' },
+              { text: 'Hijo 3' }
+            ]
+          },
+          { text: 'Hijo 3' }
+        ]
+      },
+      {
+        text: 'Hijo 3',
+        children: [{ text: 'Hijo 1' }, { text: 'Hijo 2' }, { text: 'Hijo 3' }]
+      }
+    ]
   },
   {
     text: 'Otro elemento',
@@ -12,7 +36,25 @@ const tree = [
   {
     text: 'Otro elemento',
     subtext: 'Otro subtexto',
-    children: [{ text: 'Hijo 1' }, { text: 'Hijo 2' }, { text: 'Hijo 3' }]
+    children: [
+      { text: 'Hijo 1' },
+      {
+        text: 'Hijo 2',
+        children: [
+          { text: 'Hijo 1' },
+          { text: 'Hijo 2' },
+          {
+            text: 'Hijo 3',
+            children: [
+              { text: 'Hijo 1' },
+              { text: 'Hijo 2' },
+              { text: 'Hijo 3' }
+            ]
+          }
+        ]
+      },
+      { text: 'Hijo 3' }
+    ]
   }
 ]
 
