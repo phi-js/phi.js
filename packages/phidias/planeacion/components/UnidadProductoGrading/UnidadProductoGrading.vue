@@ -516,7 +516,6 @@ export default {
       }
 
       if (!this.hasChanges) {
-        console.log('UnidadProductoGrading: No changes, ignoring POST');
         this.setCurrentPerson(gotoPerson);
         return;
       }

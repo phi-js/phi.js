@@ -21,7 +21,7 @@ export function useI18n(dictionary = null) {
     },
 
     d(date, options = null) {
-      console.log('i18n.d', date, options)
+      // !!! 2do
     }
   })
 
