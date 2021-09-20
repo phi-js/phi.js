@@ -3,8 +3,17 @@
 import '/packages/ui/style/normalize.scss'
 import '/packages/ui/style/index.scss'
 
-import { shallowRef, ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import { UiItem, UiTree } from '/packages/ui/components'
+import {
+  shallowRef,
+  ref,
+  watch,
+  onMounted,
+  onBeforeUnmount,
+  computed
+} from 'vue'
+
+// UI components
+import { UiInput, UiItem, UiTree } from '/packages/ui/components'
 
 // Modulo API: Definicion de clients globales
 import { provideApi } from '/packages/api'
@@ -30,7 +39,44 @@ provideI18n({
 
 // Lista de paginas
 // (por ahora VITE no da una forma de listar archivos locales)
+import { normalize } from '/packages/ui/helpers'
 import { default as pages, docsTree } from './pages.js'
+
+function filterTree(arrTree, strFilter) {
+  let retval = []
+  arrTree.forEach((node) => {
+    if (node?.children?.length) {
+      let filteredChildren = filterTree(node.children, strFilter)
+      if (filteredChildren.length) {
+        retval.push({
+          ...node,
+          children: filteredChildren,
+          isActive: filteredChildren.some((child) => child.isActive)
+        })
+      }
+    } else if (strFilter) {
+      let searchKey = normalize(node.text)
+      if (searchKey.includes(strFilter)) {
+        retval.push({
+          ...node,
+          isActive: true
+        })
+      }
+    } else {
+      retval.push({
+        ...node,
+        isActive: currentPage.value == node?.payload.href
+      })
+    }
+  })
+  return retval
+}
+
+const searchString = ref('')
+const filteredTree = computed(() => {
+  let search = normalize(searchString.value.trim())
+  return filterTree(docsTree, search)
+})
 
 // currentPage se inicializa segun el hash actual
 const currentPage = ref(window.location.hash.split('#/')[1] || '1.home')
@@ -55,6 +101,7 @@ onBeforeUnmount(() => {
 watch(
   currentPage,
   async () => {
+    searchString.value = ''
     error.value = null
     try {
       component.value = await loadPageComponent(currentPage.value)
@@ -91,10 +138,16 @@ function loadPageComponent(href) {
 
   <div id="app__container">
     <div id="app__sidebar">
-      <div class="app__search">
-        <input type="text" placeholder="Buscar..." />
-      </div>
-      <UiTree :value="docsTree" class="app__tree">
+      <UiInput
+        v-model="searchString"
+        type="search"
+        class="app-search"
+        placeholder="Buscar..."
+        :value="searchString"
+        @input="searchString = $event.target.value"
+      />
+
+      <UiTree :value="filteredTree" class="app__tree">
         <template #item="{ item }">
           <a
             :class="{ '--active': currentPage == item.payload.href }"
@@ -147,10 +200,10 @@ function loadPageComponent(href) {
     overflow-y: auto;
     width: 240px;
 
-    .app__search {
-      margin: var(--ui-breathe);
+    .app-search {
+      padding: var(--ui-breathe);
 
-      input {
+      .ui-input__elem {
         padding: var(--ui-padding);
         border-radius: var(--ui-radius);
         display: block;
