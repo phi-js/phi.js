@@ -1,10 +1,10 @@
 <script setup>
-import { ref } from 'vue';
-import { UiSelect } from './index.js';
-import records from './records.js';
+import { ref } from 'vue'
+import { UiSelect } from './index.js'
+import records from './records.js'
 
-const singlePerson = ref();
-const manyPeople = ref([]);
+const singlePerson = ref()
+const manyPeople = ref([])
 </script>
 <template>
   <h1>UiSelect</h1>
@@ -18,7 +18,7 @@ const manyPeople = ref([]);
   :value="singlePerson"
   @input="singlePerson = $event"
 
-  :data="records"
+  :options="records"
   placeholder="Escoge una persona"
   option-value="$.id"
   option-text="$.email"
@@ -27,11 +27,11 @@ const manyPeople = ref([]);
 
   <UiSelect
     :value="singlePerson"
-    @input="singlePerson = $event"
-    :data="records"
+    :options="records"
     placeholder="Escoge una persona"
     option-value="$.id"
     option-text="$.email"
+    @input="singlePerson = $event"
   />
   <pre>singlePerson: {{ singlePerson }}</pre>
 
@@ -41,7 +41,7 @@ const manyPeople = ref([]);
   multiple
   :value="manyPeople"
   @input="manyPeople = $event"
-  :data="records"
+  :options="records"
   placeholder="Escoge varias persona"
   option-value="$.id"
   option-text="$.email"
@@ -51,11 +51,11 @@ const manyPeople = ref([]);
   <UiSelect
     multiple
     :value="manyPeople"
-    @input="manyPeople = $event"
-    :data="records"
+    :options="records"
     placeholder="Escoge varias persona"
     option-value="$.id"
     option-text="$.email"
+    @input="manyPeople = $event"
   />
   <pre>manyPeople: {{ manyPeople }}</pre>
 </template>

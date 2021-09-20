@@ -26,7 +26,7 @@ onMounted(() => {
         v-for="user in users"
         :key="user.id"
         :text="user.name"
-        :secondary="user.username"
+        :subtext="user.username"
       />
     </div>
 
@@ -36,7 +36,7 @@ onMounted(() => {
         v-for="post in posts"
         :key="post.id"
         :text="post.title"
-        :secondary="post.body"
+        :subtext="post.body"
       />
     </div>
   </div>

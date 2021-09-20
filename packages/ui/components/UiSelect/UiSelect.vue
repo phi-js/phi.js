@@ -59,7 +59,7 @@
 
           <UiIcon
             class="picker-face-icon"
-            :value="isOpen ? 'mdi:chevron-up' : 'mdi:chevron-down'"
+            :src="isOpen ? 'mdi:chevron-up' : 'mdi:chevron-down'"
             @click="toggle()"
           />
         </div>
@@ -160,7 +160,7 @@ export default {
     /**
      * Arreglo de objetos arbitrarios
      */
-    data: {
+    options: {
       type: Array,
       required: false,
       default: () => []
@@ -234,7 +234,7 @@ export default {
 
   computed: {
     availableOptions() {
-      let retval = this.data.map((item) => {
+      let retval = this.options.map((item) => {
         let optionValue =
           typeof this.optionValue == 'function'
             ? this.optionValue(item)

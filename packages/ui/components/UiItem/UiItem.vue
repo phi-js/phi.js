@@ -120,7 +120,7 @@ export default {
 
   &__body {
     flex: 1;
-    min-width: 0; // Allows correct cropping of overflown text-secondary and text-tertiary (see https://css-tricks.com/flexbox-truncated-text/)
+    min-width: 0; // Allows correct cropping of overflown texts (see https://css-tricks.com/flexbox-truncated-text/)
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -158,97 +158,5 @@ export default {
       }
     }
   }
-}
-
-.xxxxx-ui-item {
-  --item-icon-width: 48px;
-
-  .item-body {
-    flex: 1;
-
-    padding: var(--ui-breathe);
-    min-width: 0; // Allows correct cropping of overflown text-secondary and text-tertiary (see https://css-tricks.com/flexbox-truncated-text/)
-
-    // Correct vertical alignment when only text-primary is present
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    .text-primary,
-    .text-secondary,
-    .text-tertiary {
-      margin: 0;
-    }
-
-    .text-primary {
-      font-family: var(--ui-font-secondary);
-      font-size: 1em;
-      font-weight: inherit;
-
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .text-secondary {
-      opacity: 0.8;
-      font-size: 0.82em;
-    }
-
-    .text-tertiary {
-      opacity: 0.6;
-      font-size: 0.82em;
-    }
-  }
-
-  .ui-item__icon {
-    display: flex;
-    align-self: baseline;
-    align-items: center;
-    justify-content: center;
-
-    min-width: var(--item-icon-width);
-    min-height: var(--item-icon-width);
-  }
-
-  .item-delete-icon {
-    cursor: pointer;
-    min-width: 42px;
-    height: 100%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    color: rgba(0, 0, 0, 0.4);
-
-    &:hover {
-      color: crimson;
-    }
-  }
-
-  .ui-item__actions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    align-self: center;
-  }
-}
-
-// hide overflow in secondary and tertiary texts
-.xxxxui-item.--nowrap {
-  .text-primary {
-    white-space: nowrap;
-  }
-
-  .text-secondary,
-  .text-tertiary {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-.xxxxxui-item.--inline {
-  display: inline-flex;
 }
 </style>

@@ -26,7 +26,7 @@ var name = 'Hey';
     <UiItem
       :icon="item.person.avatar"
       :text="item.person.firstName"
-      :secondary="item.person.lastName"
+      :subtext="item.person.lastName"
     />
   </UiColumn>
 

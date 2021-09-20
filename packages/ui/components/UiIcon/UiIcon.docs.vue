@@ -26,5 +26,5 @@ const curIcon = ref('mdi:vuejs')
     <UiIcon :src="curIcon" style="font-size: 6em; color: green" />
   </div>
 
-  <UiItem text="Hello world" :icon="curIcon" :secondary="curIcon" />
+  <UiItem text="Hello world" :icon="curIcon" :subtext="curIcon" />
 </template>
