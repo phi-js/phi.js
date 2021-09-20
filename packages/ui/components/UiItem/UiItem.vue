@@ -1,88 +1,41 @@
 <template>
-  <div
-    class="ui-item"
-    @click="$emit('click', $event)"
-  >
-    <div
-      v-if="badge"
-      class="item-badge ui-noselect"
-      :style="{backgroundColor: badgeColor ? badgeColor : undefined}"
-    >{{ badge }}</div>
+  <div class="ui-item" @click="$emit('click', $event)">
+    <div v-if="badge" class="ui-item__badge" v-text="badge"></div>
 
     <div
       v-if="hasSlot('icon')"
-      class="item-icon"
+      class="ui-item__icon"
       @click="$emit('click-icon', $event)"
     >
       <slot name="icon"></slot>
     </div>
     <UiIcon
       v-else-if="icon"
-      class="item-icon"
-      :value="icon"
-      :size="iconSize"
+      class="ui-item__icon"
+      :src="icon"
       :color="iconColor"
       @click="$emit('click-icon', $event)"
     />
 
     <div
-      class="item-slot"
+      v-if="hasSlot('default') || text || subtext"
+      class="ui-item__body"
       @click="$emit('click-body', $event)"
     >
-      <div class="item-body">
-        <slot name="text">
-          <h1
-            class="text-primary"
-            v-text="text"
-          ></h1>
-        </slot>
-
-        <div
-          v-if="hasSlot('secondary')"
-          class="text-secondary"
-        >
-          <slot name="secondary"></slot>
-        </div>
-        <p
-          v-else-if="secondary"
-          class="text-secondary"
-          v-text="secondary"
-        ></p>
-
-        <div
-          v-if="hasSlot('tertiary')"
-          class="text-tertiary"
-        >
-          <slot name="tertiary"></slot>
-        </div>
-        <p
-          v-else-if="tertiary"
-          class="text-tertiary"
-          v-text="tertiary"
-        ></p>
-
-        <slot name="default"></slot>
-      </div>
+      <slot name="default">
+        <h1 class="ui-item__text" v-text="text"></h1>
+        <p class="ui-item__subtext" v-text="subtext"></p>
+      </slot>
     </div>
 
-    <div
-      v-if="hasSlot('right') || $attrs.onDelete"
-      class="item-right"
-    >
-      <slot name="right">
-        <div class="item-delete-icon">
-          <UiIcon
-            value="g:delete_forever"
-            @mousedown.stop="$emit('delete')"
-          />
-        </div>
-      </slot>
+    <div v-if="hasSlot('actions')" class="ui-item__actions">
+      <slot name="actions"> </slot>
     </div>
   </div>
 </template>
 
 <script>
-import { UiIcon } from '../UiIcon';
+import { UiIcon } from '../UiIcon'
 
 export default {
   name: 'UiItem',
@@ -92,94 +45,123 @@ export default {
     text: {
       type: [String, Number],
       required: false,
-      default: null,
+      default: null
+    },
+
+    subtext: {
+      type: String,
+      required: false,
+      default: ''
     },
 
     icon: {
       type: String,
       required: false,
-      default: null,
-    },
-
-    iconSize: {
-      type: [Number, String],
-      required: false,
-      default: '24',
+      default: null
     },
 
     iconColor: {
       type: String,
       required: false,
-      default: 'rgba(0, 0, 0, 0.54)',
-    },
-
-    secondary: {
-      type: [String, Number],
-      required: false,
-      default: null,
-    },
-
-    tertiary: {
-      type: [String, Number],
-      required: false,
-      default: null,
+      default: 'rgba(0, 0, 0, 0.54)'
     },
 
     badge: {
       type: [String, Number],
       required: false,
-      default: null,
-    },
-
-    badgeColor: {
-      type: String,
-      required: false,
-      default: null,
-    },
+      default: null
+    }
   },
+  emits: ['click', 'click-icon', 'click-body'],
 
   methods: {
     hasSlot(slotName) {
-      return !!this.$slots[slotName];
-    },
-  },
-};
+      return !!this.$slots[slotName]
+    }
+  }
+}
 </script>
 
 <style lang="scss">
 .ui-item {
-  --item-icon-width: 48px;
-
   position: relative;
   display: flex;
+  align-items: flex-start;
+  padding: var(--ui-padding);
 
-  .item-badge {
+  &__badge {
     background-color: var(--ui-color-danger);
     color: #fff;
     z-index: 1;
 
     position: absolute;
-    top: 16px;
-    left: -3px;
+    top: 12px;
+    left: -4px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
 
     border-radius: 50%;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-
     font-size: 8px;
     font-weight: bold;
-    width: 16px;
-    height: 16px;
-    line-height: 16px;
   }
 
-  .item-slot {
-    flex: 1;
-    display: flex;
-    min-width: 0; // Allows correct cropping of overflown text-secondary and text-tertiary (see https://css-tricks.com/flexbox-truncated-text/)
+  &__icon {
+    margin-top: 2px;
+    margin-right: var(--ui-padding-horizontal);
+    &:last-child {
+      margin-right: 0;
+    }
   }
+
+  &__body {
+    flex: 1;
+    min-width: 0; // Allows correct cropping of overflown text-secondary and text-tertiary (see https://css-tricks.com/flexbox-truncated-text/)
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  &__text {
+    margin: 0;
+    font-family: var(--ui-font-secondary);
+    font-size: 1em;
+    font-weight: inherit;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__subtext {
+    margin: 0;
+    opacity: 0.8;
+    font-size: 0.82em;
+  }
+
+  &--inline {
+    display: inline-flex;
+  }
+
+  &--nowrap {
+    .ui-item {
+      &__text,
+      &__subtext {
+        white-space: nowrap;
+      }
+
+      &__subtext {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+.xxxxx-ui-item {
+  --item-icon-width: 48px;
 
   .item-body {
     flex: 1;
@@ -218,7 +200,7 @@ export default {
     }
   }
 
-  .item-icon {
+  .ui-item__icon {
     display: flex;
     align-self: baseline;
     align-items: center;
@@ -244,7 +226,7 @@ export default {
     }
   }
 
-  .item-right {
+  .ui-item__actions {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -253,7 +235,7 @@ export default {
 }
 
 // hide overflow in secondary and tertiary texts
-.ui-item.--nowrap {
+.xxxxui-item.--nowrap {
   .text-primary {
     white-space: nowrap;
   }
@@ -266,7 +248,7 @@ export default {
   }
 }
 
-.ui-item.--inline {
+.xxxxxui-item.--inline {
   display: inline-flex;
 }
 </style>

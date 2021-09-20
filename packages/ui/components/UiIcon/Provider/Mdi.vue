@@ -1,12 +1,9 @@
 <template>
-  <span :class="['mdi',  `mdi-${value}`]"></span>
+  <span :class="['mdi', `mdi-${value}`]"></span>
 </template>
 
 <script>
-import '@mdi/font/css/materialdesignicons.css';
-
 export default {
-  name: 'ui-icon-mdi',
   props: {
     value: {
       type: String,
@@ -14,5 +11,9 @@ export default {
       default: 'help'
     }
   }
-};
+}
 </script>
+
+<style>
+@import '/public/material-design-icons/css/materialdesignicons.css';
+</style>

@@ -1,24 +1,21 @@
 <template>
-  <div
-    class="ui-icon-image"
-    :style="styles"
-  ></div>
+  <div class="ui-icon-image" :style="styles"></div>
 </template>
 
 <script>
 export default {
-  name: 'ui-icon-image',
+  name: 'UiIconImage',
 
   props: {
     fullValue: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
 
   computed: {
     styles() {
-      let src = this.fullValue;
+      let src = this.fullValue
 
       return {
         display: 'inline-block',
@@ -26,9 +23,9 @@ export default {
         width: '1em',
         height: '1em',
         backgroundImage: `url('${src}')`,
-        backgroundSize: 'cover',
-      };
-    },
-  },
-};
+        backgroundSize: 'cover'
+      }
+    }
+  }
+}
 </script>

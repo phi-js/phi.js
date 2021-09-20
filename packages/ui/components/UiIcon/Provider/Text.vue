@@ -1,48 +1,45 @@
 <template>
-  <div
-    class="ui-icon-text"
-    :style="{ backgroundColor }"
-  >
+  <div class="ui-icon-text" :style="{ backgroundColor }">
     <div :style="{ fontSize }">{{ value }}</div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ui-icon-text',
+  name: 'UiIconText',
 
   props: {
     value: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
 
   data() {
     return {
-      backgroundColor: null,
-    };
-  },
-
-  mounted() {
-    this.backgroundColor = window.getComputedStyle(this.$el).color;
+      backgroundColor: null
+    }
   },
 
   computed: {
     // fontSize depending on string length
     fontSize() {
       if (this.value.length <= 1) {
-        return '0.6em';
+        return '0.6em'
       } else if (this.value.length <= 2) {
-        return '0.5em';
+        return '0.5em'
       } else if (this.value.length <= 3) {
-        return '0.4em';
+        return '0.4em'
       } else {
-        return '0.2em';
+        return '0.2em'
       }
-    },
+    }
   },
-};
+
+  mounted() {
+    this.backgroundColor = window.getComputedStyle(this.$el).color
+  }
+}
 </script>
 
 <style lang="scss">

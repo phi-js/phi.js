@@ -1,25 +1,48 @@
 <script setup>
-import { reactive } from 'vue';
-import UiItem from './UiItem.vue';
+import { reactive } from 'vue'
+import UiItem from './UiItem.vue'
 
 const item = reactive({
   icon: 'mdi:account',
   text: 'Hello world',
-  secondary: '',
-});
+  subtext: ''
+})
 </script>
 
 <template>
   <h1>UiItem</h1>
   <form>
-    <select class="ui-native" v-model="item.icon">
+    <select v-model="item.icon" class="ui-native">
       <option value="mdi:account">mdi:account</option>
-      <option value="mdi:close">mdi:close</option>
       <option value="mdi:android">mdi:android</option>
+      <option value="mdi:close">mdi:close</option>
       <option value="mdi:delete">mdi:delete</option>
+      <option value="mdi:star">mdi:star</option>
     </select>
-    <input class="ui-native" type="text" v-model="item.text" placeholder="text" />
-    <input class="ui-native" type="text" v-model="item.secondary" placeholder="secondary" />
+    <input
+      v-model="item.text"
+      class="ui-native"
+      type="text"
+      placeholder="text"
+    />
+    <input
+      v-model="item.subtext"
+      class="ui-native"
+      type="text"
+      placeholder="subtext"
+    />
+    <input
+      v-model="item.badge"
+      class="ui-native"
+      type="text"
+      placeholder="badge"
+    />
   </form>
-  <UiItem class="ui-clickable" v-bind="item"></UiItem>
+
+  <UiItem class="ui-clickable" v-bind="item" />
+  <UiItem class="ui-clickable ui-item--inline" v-bind="item" />
+  <UiItem class="ui-clickable ui-item--inline" v-bind="item" />
+  <UiItem class="ui-clickable ui-item--inline" v-bind="item" />
+  <UiItem class="ui-clickable ui-item--inline" v-bind="item" />
+  <UiItem class="ui-clickable ui-item--inline" v-bind="item" />
 </template>

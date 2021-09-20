@@ -18,20 +18,25 @@ const placements = [
   'left',
   'left-start',
   'left-end'
-];
+]
 </script>
 
 <template>
   <h1>UiPopover</h1>
 
   <div style="text-align: center">
-    <UiPopover v-for="placement in placements" :key="placement" :placement="placement">
+    <UiPopover
+      v-for="placement in placements"
+      :key="placement"
+      :placement="placement"
+      class="ui-item--inline"
+    >
       <template #trigger>
         <UiItem
           class="ui-outset ui-clickable"
           icon="mdi:window-maximize"
           text="Abrir Popover"
-          :secondary="placement"
+          :subtext="placement"
         />
       </template>
 

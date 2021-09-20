@@ -1,130 +1,86 @@
 <template>
-  <span class="ui-icon ui-noselect" :style="styles" @click="$emit('click', $event)">
+  <span class="ui-icon" :style="styles" @click="$emit('click', $event)">
     <component
-      v-if="provider"
       :is="provider.component"
+      v-if="provider"
       :value="provider.value"
-      :fullValue="filteredValue"
+      :full-value="sanitizedSrc"
       :color="color"
     ></component>
-    <span v-else :title="filteredValue">�</span>
-
-    <div v-if="$slots.default" class="contents-slot">
-      <slot></slot>
-    </div>
+    <span v-else :title="sanitizedSrc">�</span>
+    <slot></slot>
   </span>
 </template>
 
 <script>
-import AliasMime from './Alias/Mime.js';
-import ProviderImage from './Provider/Image.vue';
-import ProviderGoogle from './Provider/Google.vue';
-import ProviderMdi from './Provider/Mdi.vue';
-import ProviderText from './Provider/Text.vue';
-
-const providers = {
-  http: ProviderImage,
-  https: ProviderImage,
-  data: ProviderImage,
-  g: ProviderGoogle,
-  mdi: ProviderMdi,
-  text: ProviderText,
-};
+import aliases from './aliases.js'
+import providers from './providers.js'
 
 export default {
   name: 'UiIcon',
-
   props: {
-    value: {
+    src: {
       type: String,
       required: false,
-      default: '�',
+      default: '�'
     },
 
     color: {
       type: String,
       required: false,
-      default: null,
-    },
+      default: null
+    }
   },
 
+  emits: ['click'],
+
   computed: {
-    filteredValue() {
-      if (this.value && this.value.substring(0, 5) == 'mime:') {
-        return AliasMime(this.value.substring(5));
-      }
-      return this.value;
+    sanitizedSrc() {
+      return aliases?.[this.src] || this.src
     },
 
     styles() {
       return {
-        color: this.color || undefined,
-      };
+        color: this.color || undefined
+      }
     },
 
     provider() {
-      if (
-        !this.filteredValue ||
-        typeof this.filteredValue.split == 'undefined'
-      ) {
-        return null;
+      if (!this.sanitizedSrc || typeof this.sanitizedSrc.split == 'undefined') {
+        return null
       }
 
-      if (this.filteredValue.substr(0, 1) == '/'
-        || this.filteredValue.substr(0, 2) == './'
-        || this.filteredValue.substr(0, 3) == '../'
+      if (
+        this.sanitizedSrc.substr(0, 1) == '/' ||
+        this.sanitizedSrc.substr(0, 2) == './' ||
+        this.sanitizedSrc.substr(0, 3) == '../'
       ) {
         return {
-          key: this.filteredValue,
-          component: ProviderImage,
-          value: this.filteredValue,
-        };
+          key: this.sanitizedSrc,
+          component: providers.file,
+          value: this.sanitizedSrc
+        }
       }
 
-      let parts = this.filteredValue.split(':', 2);
-      if (typeof providers[parts[0]] == 'undefined') {
-        return null;
+      let [providerName, iconValue] = this.sanitizedSrc.split(':', 2)
+      if (!providers?.[providerName]) {
+        return null
       }
-
       return {
-        key: parts[0],
-        component: providers[parts[0]],
-        value: parts[1],
-      };
-    },
-
-    // cssColor() {
-    //   return this.reactiveEl
-    //     ? window.getComputedStyle(this.reactiveEl).color
-    //     : null;
-    // },
-  },
-
-  // data() {
-  //   return {
-  //     reactiveEl: null,
-  //   };
-  // },
-
-  // mounted() {
-  //   this.reactiveEl = this.$el;
-  // },
-};
+        key: providerName,
+        component: providers[providerName],
+        value: iconValue
+      }
+    }
+  }
+}
 </script>
 
 <style lang="scss">
 .ui-icon {
   font-size: inherit;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  .contents-slot {
-    padding-left: 4px;
-    font-size: auto;
-    white-space: nowrap;
-    color: inherit;
-  }
 }
 </style>

@@ -1,10 +1,6 @@
 <template>
   <div class="UiSelect">
-    <UiPopover
-      v-model:open="isOpen"
-      placement="bottom-start"
-      trigger=""
-    >
+    <UiPopover v-model:open="isOpen" placement="bottom-start" trigger="">
       <template #trigger="{ open, toggle }">
         <div
           class="picker-face ui-inset"
@@ -27,8 +23,8 @@
               <slot
                 name="chip"
                 v-bind="option"
-                :openDialog="() => { focusOption(option); open(); }"
-                :toggleDialog="() => { focusOption(option); toggle(); }"
+                :openDialog="() => focusOption(option).then(open)"
+                :toggleDialog="() => focusOption(option).then(toggle)"
                 :select="() => selectOption(option)"
                 :deselect="() => deselectOption(option)"
                 :toggle="() => toggleOption(option)"
@@ -42,7 +38,7 @@
                 >
                   <div
                     class="generic-option"
-                    @click="focusOption(option); toggle();"
+                    @click="focusOption(option).then(toggle)"
                   >
                     <p class="generic-option-text">{{ option.text }}</p>
                     <p class="generic-option-subtext">{{ option.subtext }}</p>
@@ -51,17 +47,12 @@
               </slot>
             </div>
           </template>
-          <div
-            v-else
-            class="picker-aggregator"
-            @click="toggle()"
-          >
-            <slot
-              name="aggregator"
-              :options="selectedOptions"
-            >
+          <div v-else class="picker-aggregator" @click="toggle()">
+            <slot name="aggregator" :options="selectedOptions">
               <div class="generic-option">
-                <p class="generic-option-text">{{ selectedOptions.length }} elementos seleccionados</p>
+                <p class="generic-option-text">
+                  {{ selectedOptions.length }} elementos seleccionados
+                </p>
               </div>
             </slot>
           </div>
@@ -75,15 +66,12 @@
       </template>
 
       <template #contents>
-        <div
-          class="picker-popover-contents"
-          ref="popoverContents"
-        >
+        <div ref="popoverContents" class="picker-popover-contents">
           <div class="picker-search">
             <input
               ref="searchInput"
-              type="text"
               v-model="searchString"
+              type="text"
               :placeholder="searchPlaceholder"
               @keydown="onSearchKeyDown($event)"
               @input="onSearchInput"
@@ -95,7 +83,10 @@
               v-for="(option, i) in filteredOptions"
               :key="option.value"
               class="option-container option-listed"
-              :class="{'--selected': option.isSelected, '--focused': focusedIndex === i}"
+              :class="{
+                '--selected': option.isSelected,
+                '--focused': focusedIndex === i
+              }"
             >
               <slot
                 name="list-option"
@@ -115,7 +106,10 @@
                 >
                   <div
                     class="generic-option"
-                    :class="{'--selected': option.isSelected, '--focused': focusedIndex === i}"
+                    :class="{
+                      '--selected': option.isSelected,
+                      '--focused': focusedIndex === i
+                    }"
                     @click="toggleOption(option)"
                   >
                     <p class="generic-option-text">{{ option.text }}</p>
@@ -132,9 +126,9 @@
 </template>
 
 <script>
-import { getProperty } from '../../helpers';
-import { UiPopover } from '../UiPopover';
-import { UiIcon } from '../UiIcon';
+import { getProperty } from '../../helpers'
+import { UiPopover } from '../UiPopover'
+import { UiIcon } from '../UiIcon'
 
 /**
  * Este componente recibe un arreglo de objetos arbitrarios
@@ -148,13 +142,13 @@ export default {
     placeholder: {
       type: String,
       required: false,
-      default: null,
+      default: null
     },
 
     multiple: {
       type: Boolean,
       required: false,
-      default: false,
+      default: false
     },
 
     /**
@@ -169,7 +163,7 @@ export default {
     data: {
       type: Array,
       required: false,
-      default: () => [],
+      default: () => []
     },
 
     /**
@@ -181,19 +175,19 @@ export default {
     optionValue: {
       type: [String, Function],
       required: false,
-      default: '$.value',
+      default: '$.value'
     },
 
     optionText: {
       type: [String, Function],
       required: false,
-      default: '$.text',
+      default: '$.text'
     },
 
     optionSubtext: {
       type: [String, Function],
       required: false,
-      default: null,
+      default: null
     },
 
     /**
@@ -202,7 +196,7 @@ export default {
     searchPlaceholder: {
       type: String,
       required: false,
-      default: 'Buscar',
+      default: 'Buscar'
     },
 
     /**
@@ -212,7 +206,7 @@ export default {
     maxChips: {
       type: [String, Number],
       required: false,
-      default: 3,
+      default: 3
     },
 
     /**
@@ -221,8 +215,8 @@ export default {
     autoClose: {
       type: [Boolean, String, Number],
       required: false,
-      default: 'auto',
-    },
+      default: 'auto'
+    }
   },
 
   data() {
@@ -234,47 +228,8 @@ export default {
 
       focusedIndex: 0,
       searchString: '',
-      isOpen: false,
-    };
-  },
-
-  watch: {
-    value: {
-      immediate: true,
-      handler(newValue) {
-        this.innerValue = Array.isArray(newValue)
-          ? [...newValue]
-          : newValue != null
-          ? [newValue]
-          : [];
-      },
-    },
-
-    isOpen: {
-      handler(newValue) {
-        this.$nextTick(() => {
-          if (newValue) {
-            this.$refs?.searchInput?.focus();
-          } else {
-            this.$el.querySelector('.picker-face').focus();
-            this.searchString = '';
-          }
-        });
-      },
-    },
-
-    focusedIndex() {
-      this.$nextTick(
-        () =>
-          this.$refs.popoverContents &&
-          this.$refs.popoverContents
-            .querySelector('.--focused')
-            ?.scrollIntoView({
-              block: 'nearest',
-              inline: 'nearest',
-            })
-      );
-    },
+      isOpen: false
+    }
   },
 
   computed: {
@@ -283,7 +238,7 @@ export default {
         let optionValue =
           typeof this.optionValue == 'function'
             ? this.optionValue(item)
-            : getProperty(item, this.optionValue.substr(2)) || null;
+            : getProperty(item, this.optionValue.substr(2)) || null
 
         return {
           item,
@@ -304,45 +259,84 @@ export default {
           isSelected: this.innerValue.includes(optionValue),
           select() {},
           deselect() {},
-          toggle() {},
-        };
-      });
+          toggle() {}
+        }
+      })
 
       // Si el picker es multiple, mostrar todas
       // las opciones seleccionadas al inicio de la lista
-      if (this.multiple) {
-        retval.sort((a, b) => b.isSelected - a.isSelected);
-      }
+      // if (this.multiple) {
+      //   retval.sort((a, b) => b.isSelected - a.isSelected);
+      // }
 
-      return retval;
+      return retval
     },
 
     filteredOptions() {
-      let search = this.normalize(this.searchString);
+      let search = this.normalize(this.searchString)
       if (!search) {
-        return this.availableOptions;
+        return this.availableOptions
       }
 
-      let words = search.split(' ');
+      let words = search.split(' ')
       return this.availableOptions.filter((option) =>
         words.every((word) => option.fulltext.includes(word))
-      );
+      )
     },
 
     selectedOptions() {
       return this.innerValue.map((value) => {
-        let found = this.availableOptions.find((opt) => opt.value === value);
+        let found = this.availableOptions.find((opt) => opt.value === value)
         return (
           found || {
             value,
             item: null,
             text: value,
             subtext: '',
-            isSelected: true,
+            isSelected: true
           }
-        );
-      });
+        )
+      })
+    }
+  },
+
+  watch: {
+    value: {
+      immediate: true,
+      handler(newValue) {
+        this.innerValue = Array.isArray(newValue)
+          ? [...newValue]
+          : newValue != null
+          ? [newValue]
+          : []
+      }
     },
+
+    isOpen: {
+      handler(newValue) {
+        this.$nextTick(() => {
+          if (newValue) {
+            this.$refs?.searchInput?.focus()
+          } else {
+            this.$el.querySelector('.picker-face').focus()
+            this.searchString = ''
+          }
+        })
+      }
+    },
+
+    focusedIndex() {
+      this.$nextTick(
+        () =>
+          this.$refs.popoverContents &&
+          this.$refs.popoverContents
+            .querySelector('.--focused')
+            ?.scrollIntoView({
+              block: 'nearest',
+              inline: 'nearest'
+            })
+      )
+    }
   },
 
   methods: {
@@ -350,199 +344,199 @@ export default {
       switch (event.key) {
         case 'Space':
         case 'Enter':
-          this.open();
-          break;
+          this.open()
+          break
 
         case 'ArrowDown':
-          this.open();
+          this.open()
           this.focusedIndex = Math.min(
             this.focusedIndex + 1,
             this.filteredOptions.length - 1
-          );
-          break;
+          )
+          break
 
         case 'ArrowUp':
-          this.open();
-          this.focusedIndex = Math.max(this.focusedIndex - 1, 0);
-          break;
+          this.open()
+          this.focusedIndex = Math.max(this.focusedIndex - 1, 0)
+          break
 
         default:
           if (event.key.length == 1) {
-            this.open();
+            this.open()
           }
-          break;
+          break
       }
     },
 
     onSearchKeyDown(event) {
       switch (event.key) {
         case 'Tab':
-          this.close();
-          break;
+          this.close()
+          break
 
         case 'ArrowDown':
           this.focusedIndex = Math.min(
             this.focusedIndex + 1,
             this.filteredOptions.length - 1
-          );
-          break;
+          )
+          break
 
         case 'ArrowUp':
-          this.focusedIndex = Math.max(this.focusedIndex - 1, 0);
-          break;
+          this.focusedIndex = Math.max(this.focusedIndex - 1, 0)
+          break
 
         case 'Backspace':
-          break;
+          break
 
         case 'Escape':
-          break;
+          break
 
         case 'Enter':
-          this.toggleOption(this.filteredOptions?.[this.focusedIndex]);
-          break;
+          this.toggleOption(this.filteredOptions?.[this.focusedIndex])
+          break
       }
     },
 
     onSearchInput() {
       if (this.searchString == ' ') {
-        this.searchString = '';
+        this.searchString = ''
       }
 
-      this.focusedIndex = 0;
+      this.focusedIndex = 0
     },
 
     clear() {
-      this.innerValue = [];
-      this.$emit('input', this.multiple ? this.innerValue : this.innerValue[0]);
+      this.innerValue = []
+      this.$emit('input', this.multiple ? this.innerValue : this.innerValue[0])
     },
 
     selectOption(option) {
       if (!option || option.isSelected) {
-        return;
+        return
       }
 
       if (this.multiple) {
-        this.innerValue.push(option.value);
+        this.innerValue.push(option.value)
       } else {
-        this.innerValue = [option.value];
+        this.innerValue = [option.value]
       }
-      this.$emit('select', option.item);
-      this.$emit('input', this.multiple ? this.innerValue : this.innerValue[0]);
-      this.afterOptionChange(option);
+      this.$emit('select', option.item)
+      this.$emit('input', this.multiple ? this.innerValue : this.innerValue[0])
+      this.afterOptionChange(option)
     },
 
     deselectOption(option) {
       if (!option || !option.isSelected) {
-        return;
+        return
       }
 
-      let foundIndex = this.innerValue.indexOf(option.value);
+      let foundIndex = this.innerValue.indexOf(option.value)
       // La option a deseleccionar No en innerValue (no pasa nunca)
       if (foundIndex === -1) {
-        this.afterOptionChange(option);
-        return;
+        this.afterOptionChange(option)
+        return
       }
 
       if (this.multiple) {
-        this.innerValue.splice(foundIndex, 1);
+        this.innerValue.splice(foundIndex, 1)
       } else {
         // zzzz
         // si es un picker unico, no se desmarca el elemento actual
       }
-      this.$emit('deselect', option.item);
-      this.$emit('input', this.multiple ? this.innerValue : this.innerValue[0]);
-      this.afterOptionChange(option);
+      this.$emit('deselect', option.item)
+      this.$emit('input', this.multiple ? this.innerValue : this.innerValue[0])
+      this.afterOptionChange(option)
     },
 
     toggleOption(option) {
       if (!option) {
-        return;
+        return
       }
 
       if (option.isSelected) {
-        this.deselectOption(option);
+        this.deselectOption(option)
       } else {
-        this.selectOption(option);
+        this.selectOption(option)
       }
     },
 
     afterOptionChange() {
       let autoClose =
-        this.autoClose === 'auto' ? !this.multiple : this.autoClose;
+        this.autoClose === 'auto' ? !this.multiple : this.autoClose
 
       if (autoClose) {
-        this.close();
+        this.close()
       } else {
-        this.searchString = '';
-        this.$refs?.searchInput?.focus();
+        this.searchString = ''
+        this.$refs?.searchInput?.focus()
       }
     },
 
-    focusOption(option) {
-      this.focusedIndex = this.filteredOptions.indexOf(option);
+    async focusOption(option) {
+      this.focusedIndex = this.filteredOptions.indexOf(option)
     },
 
     open() {
-      this.isOpen = true;
+      this.isOpen = true
 
       // Enfocar el ultimo elemento seleccionado
       // (o el primer elemento, si no hay seleccion)
-      this.focusedIndex = 0;
+      this.focusedIndex = 0
       for (let i = this.filteredOptions.length - 1; i >= 0; i--) {
         if (this.filteredOptions[i].isSelected) {
-          this.focusedIndex = i;
-          break;
+          this.focusedIndex = i
+          break
         }
       }
     },
 
     close() {
-      this.isOpen = false;
-      this.searchString = '';
+      this.isOpen = false
+      this.searchString = ''
     },
 
     toggle() {
-      this.isOpen ? this.close() : this.open();
+      this.isOpen ? this.close() : this.open()
     },
 
     normalize(string) {
       if (!string.trim()) {
-        return '';
+        return ''
       }
 
       return string
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase();
+        .toLowerCase()
     },
 
     // Retorna un arreglo con todas las cadenas encontradas en el objeto
     getStrings(object) {
       if (!object) {
-        return [];
+        return []
       }
 
       if (typeof object == 'string') {
-        let string = this.normalize(object);
-        return string ? [string] : [];
+        let string = this.normalize(object)
+        return string ? [string] : []
       }
 
-      let retval = [];
+      let retval = []
 
       if (Array.isArray(object)) {
         object.forEach(
           (item) => (retval = retval.concat(this.getStrings(item)))
-        );
+        )
       } else {
         for (const p in object) {
-          retval = retval.concat(this.getStrings(object[p]));
+          retval = retval.concat(this.getStrings(object[p]))
         }
       }
 
-      return retval;
-    },
-  },
-};
+      return retval
+    }
+  }
+}
 </script>
 
 <style lang="scss">
