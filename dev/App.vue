@@ -1,116 +1,164 @@
 <script setup>
 // Estilos globales
-import '/packages/ui/style/normalize.scss';
-import '/packages/ui/style/index.scss';
+import '/packages/ui/style/normalize.scss'
+import '/packages/ui/style/index.scss'
 
-import { shallowRef, ref, watch, onMounted, onBeforeUnmount, reactive, provide } from 'vue';
-import { UiItem } from '/packages/ui/components';
+import { shallowRef, ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { UiItem, UiTree } from '/packages/ui/components'
 
-// Provide de APIs disponibles
-const apis = reactive([1, 2, 3, 4]);
-provide('$useApi', apis);
+// Modulo API: Definicion de clients globales
+import { provideApi } from '/packages/api'
+import placeholderApi from '/packages/placeholder/api'
+provideApi(placeholderApi)
 
+import { provideI18n } from '/packages/i18n'
+provideI18n({
+  locale: 'en', // set locale
+  fallbackLocale: 'en', // set fallback locale,
+  messages: {
+    en: {
+      'myDictionary.globalWord': 'Global Word'
+    },
+    es: {
+      'myDictionary.globalWord': 'Palabra Global'
+    }
+  }
+  // messages, // set locale messages
+  // // If you need to specify other options, you can set other options
+  // // ...
+})
 
 // Lista de paginas
 // (por ahora VITE no da una forma de listar archivos locales)
-import pages from './pages.js';
+import { default as pages, docsTree } from './pages.js'
 
 // currentPage se inicializa segun el hash actual
-const currentPage = ref(window.location.hash.split('#/')[1] || 'home');
-const component = shallowRef();
-const error = ref();
+const currentPage = ref(window.location.hash.split('#/')[1] || '1.home')
+const component = shallowRef()
+const error = ref()
 
 // Escuchar cambios en el hash de la URL y actualizar currentPage
 const onHashChange = () => {
   currentPage.value =
-    window.location.hash.split('#/')[1] || window.location.hash.substr(1);
-};
+    window.location.hash.split('#/')[1] || window.location.hash.substr(1)
+}
 
 onMounted(() => {
-  window.addEventListener('hashchange', onHashChange);
-});
+  window.addEventListener('hashchange', onHashChange)
+})
 
 onBeforeUnmount(() => {
-  window.removeEventListener('hashchange', onHashChange);
-});
+  window.removeEventListener('hashchange', onHashChange)
+})
 
 // cuando cambie currentPage, cargamos dinamicamente la pagina /pages/hashname.vue
 watch(
   currentPage,
   async () => {
-    error.value = null;
+    error.value = null
     try {
-      component.value = await loadPageComponent(currentPage.value);
+      component.value = await loadPageComponent(currentPage.value)
     } catch (e) {
-      component.value = null;
-      error.value = e;
+      component.value = null
+      error.value = e
     }
   },
-  { immediate: true }
-);
+  {
+    immediate: true
+  }
+)
 
 // Importar el componente asociado a un nombre de pagina
 function loadPageComponent(href) {
-  let objPage = pages.find((p) => p.href == href);
-  let importCallback;
+  let objPage = pages.find((p) => p.href == href)
+  let importCallback
   if (objPage?.import) {
-    importCallback = objPage.import;
+    importCallback = objPage.import
   } else {
-    let baseName = 'pages/' + href;
-    importCallback = () => import(`../${baseName}.vue`);
+    let baseName = 'pages/' + href
+    importCallback = () => import(`../${baseName}.vue`)
   }
 
-  return importCallback().then((mod) => mod.default);
+  return importCallback().then((mod) => mod.default)
 }
 </script>
 
 <template>
-  <div id="app-sidebar">
+  <div id="app__top-bar">
     <!-- <button @click="apis.push(Math.random())">PUSH API</button> -->
     <UiItem text="Phidias.js" icon="/phidias.png" />
-
-    <nav class="ui-noselect">
-      <a
-        v-for="(page, i) in pages"
-        :key="page.href"
-        :class="{ '--active': currentPage == page.href }"
-        :href="`/#/${page.href}`"
-      >
-        <UiItem :text="`${page.name}${(page.isLocal ? '(.local)' : '')}`" :secondary="page.dir" />
-      </a>
-    </nav>
   </div>
 
-  <div id="app-body">
-    <transition name="fade">
-      <div :key="currentPage" v-if="component">
-        <component :is="component"></component>
+  <div id="app__container">
+    <div id="app__sidebar">
+      <div class="app__search">
+        <input type="text" placeholder="Buscar..." />
       </div>
-    </transition>
+      <UiTree :value="docsTree" class="app__tree">
+        <template #item="{ item }">
+          <a
+            :class="{ '--active': currentPage == item.payload.href }"
+            :href="`/#/${item.payload.href}`"
+          >
+            <UiItem
+              :text="item.text"
+              :subtext="item.payload.isLocal ? '.local' : ''"
+            />
+          </a>
+        </template>
+      </UiTree>
+    </div>
 
-    <div v-if="error">
-      <h1>404</h1>
-      <p>'{{ currentPage }}' no encontrado</p>
+    <div id="app-body">
+      <transition name="fade">
+        <div v-if="component" :key="currentPage">
+          <component :is="component" />
+        </div>
+      </transition>
+
+      <div v-if="error">
+        <h1>404</h1>
+        <p>'{{ currentPage }}' no encontrado</p>
+      </div>
     </div>
   </div>
 </template>
 
 <style lang="scss">
 #app {
-  display: flex;
-  min-height: 100%;
-
   a {
     text-decoration: none;
     color: #257dba;
   }
 
-  #app-sidebar {
+  #app__top-bar {
+    background-color: #fff;
+    padding: 4px 8px;
+  }
+
+  #app__container {
+    display: flex;
+    min-height: 100%;
+  }
+
+  #app__sidebar {
     display: block;
     overflow: hidden;
     overflow-y: auto;
     width: 240px;
-    background-color: #ffffff88;
+
+    .app__search {
+      margin: var(--ui-breathe);
+
+      input {
+        padding: var(--ui-padding);
+        border-radius: var(--ui-radius);
+        display: block;
+        width: 100%;
+        border: 0;
+        background: #fff;
+      }
+    }
 
     a {
       display: block;
