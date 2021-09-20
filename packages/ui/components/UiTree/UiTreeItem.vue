@@ -1,5 +1,4 @@
 <script>
-// import UiTree from './UiTree.vue'
 import { defineAsyncComponent } from 'vue'
 const UiTree = defineAsyncComponent(() => import('./UiTree.vue'))
 
@@ -64,8 +63,8 @@ export default {
           :value="value.children"
           @click-item="$emit('click-item', $event)"
         >
-          <template #item="foo">
-            <slot name="item" v-bind="foo"></slot>
+          <template v-if="$slots.item" #item="slotProps">
+            <slot name="item" v-bind="slotProps"></slot>
           </template>
         </UiTree>
       </template>

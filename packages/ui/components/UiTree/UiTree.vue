@@ -1,19 +1,3 @@
-<template>
-  <div class="ui-tree" :class="{ 'ui-tree--submenu': depth > 0 }">
-    <UiTreeItem
-      v-for="(item, i) in value"
-      :key="i"
-      :value="item"
-      :depth="depth"
-      @click-item="$emit('click-item', $event)"
-    >
-      <template #item="itemSlotProps">
-        <slot name="item" v-bind="itemSlotProps"></slot>
-      </template>
-    </UiTreeItem>
-  </div>
-</template>
-
 <script>
 import UiTreeItem from './UiTreeItem.vue'
 export default {
@@ -35,6 +19,22 @@ export default {
   emits: ['click-item']
 }
 </script>
+
+<template>
+  <div class="ui-tree" :class="{ 'ui-tree--submenu': depth > 0 }">
+    <UiTreeItem
+      v-for="(item, i) in value"
+      :key="i"
+      :value="item"
+      :depth="depth"
+      @click-item="$emit('click-item', $event)"
+    >
+      <template v-if="$slots.item" #item="itemSlotProps">
+        <slot name="item" v-bind="itemSlotProps"></slot>
+      </template>
+    </UiTreeItem>
+  </div>
+</template>
 
 <style lang="scss">
 .ui-tree {
