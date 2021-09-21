@@ -21,8 +21,8 @@ import placeholderApi from '/packages/placeholder/api'
 provideApi(placeholderApi)
 
 import { provideI18n } from '/packages/i18n'
-provideI18n({
-  locale: 'en', // set locale
+const i18n = provideI18n({
+  locale: 'es', // set locale
   fallbackLocale: 'en', // set fallback locale,
   messages: {
     en: {
@@ -32,9 +32,6 @@ provideI18n({
       'myDictionary.globalWord': 'Palabra Global'
     }
   }
-  // messages, // set locale messages
-  // // If you need to specify other options, you can set other options
-  // // ...
 })
 
 // Lista de paginas
@@ -133,7 +130,16 @@ function loadPageComponent(href) {
 <template>
   <div id="app__top-bar">
     <!-- <button @click="apis.push(Math.random())">PUSH API</button> -->
-    <UiItem text="Phidias.js" icon="/phidias.png" />
+    <UiItem id="app__logo" text="Phidias.js" icon="/phidias.png" />
+
+    <UiItem icon="mdi:web">
+      <select v-model="i18n.locale" class="ui-native">
+        <option value="en">en</option>
+        <option value="es">es</option>
+        <option value="de">de</option>
+        <option value="fr">fr</option>
+      </select>
+    </UiItem>
   </div>
 
   <div id="app__container">
@@ -179,26 +185,35 @@ function loadPageComponent(href) {
 
 <style lang="scss">
 #app {
+  --app-sidebar-width: 240px;
+
   a {
     text-decoration: none;
     color: #257dba;
   }
 
-  #app__top-bar {
+  &__top-bar {
     background-color: #fff;
     padding: 4px 8px;
+    display: flex;
+    align-items: center;
   }
 
-  #app__container {
+  &__logo {
+    width: var(--app-sidebar-width);
+    margin-right: auto;
+  }
+
+  &__container {
     display: flex;
     min-height: 100%;
   }
 
-  #app__sidebar {
+  &__sidebar {
     display: block;
     overflow: hidden;
     overflow-y: auto;
-    width: 240px;
+    width: var(--app-sidebar-width);
 
     .app-search {
       padding: var(--ui-breathe);

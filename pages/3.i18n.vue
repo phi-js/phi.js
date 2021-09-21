@@ -2,6 +2,7 @@
 import { useI18n } from '/packages/i18n'
 import * as myDictionary from '/packages/placeholder/components/PlaceholderTest/i18n'
 const i18n = useI18n(myDictionary)
+const now = new Date()
 </script>
 
 <template>
@@ -17,6 +18,17 @@ import { * as myDictionary } from './i18n/'
     <option value="de">de</option>
     <option value="fr">fr</option>
   </select>
+
+  <pre>now: {{ now }}</pre>
+  <pre>{{ i18n.d(now) }}</pre>
+  <pre>{{
+    i18n.d(now, {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }}</pre>
 
   <h1>{{ i18n.t('myDictionary.word1') }}</h1>
   <h2>{{ i18n.t('myDictionary.word2') }}</h2>
