@@ -1,6 +1,7 @@
 export * from './UiDrawer'
 export * from './UiIcon'
 export * from './UiInput'
+export * from './UiInputJson'
 export * from './UiItem'
 export * from './UiPopover'
 export * from './UiSelect'
