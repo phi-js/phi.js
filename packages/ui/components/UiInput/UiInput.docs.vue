@@ -9,6 +9,22 @@ const options = [
   { value: 3, text: 'Tres' }
 ]
 
+const modelValue = ref({
+  string: '',
+  boolean: true,
+  number: 0,
+  date: '1982-01-15',
+  time: '16:20',
+  color: '#ffffff',
+  single: null,
+  multiple: [],
+  obj: {
+    foo: 'foo',
+    bar: 'bar',
+    baz: [1, 2, 3]
+  }
+})
+
 const themes = [
   { value: 'my-theme-wide', text: 'Wide' },
   { value: 'my-theme-material', text: 'Material' }
@@ -28,39 +44,53 @@ const curTheme = ref('my-theme-wide')
     :options="themes"
     @input="curTheme = $event"
   />
-
+  <pre>modelValue: {{ modelValue }}</pre>
   <hr />
 
   <div :class="curTheme">
     <UiInput
+      v-model="modelValue.string"
       type="text"
       label="Un texto"
       placeholder="Escribe cualquier cosa"
     />
     <UiInput
+      v-model="modelValue.string"
       type="textarea"
       label="textarea"
       placeholder="Escribe cualquier cosa"
     />
-    <UiInput type="checkbox" placeholder="Acepto tal cosa" />
-    <UiInput type="number" label="number" />
-    <UiInput type="search" label="search" />
-    <UiInput type="date" label="date" />
-    <UiInput type="time" label="time" />
-    <UiInput type="date-time" label="date-time" />
-    <UiInput type="color" label="color" />
     <UiInput
+      v-model="modelValue.boolean"
+      type="checkbox"
+      placeholder="Acepto tal cosa"
+    />
+    <UiInput v-model="modelValue.number" type="number" label="number" />
+    <UiInput v-model="modelValue.string" type="search" label="search" />
+    <UiInput v-model="modelValue.date" type="date" label="date" />
+    <UiInput v-model="modelValue.time" type="time" label="time" />
+    <UiInput v-model="modelValue.date" type="date-time" label="date-time" />
+    <UiInput v-model="modelValue.color" type="color" label="color" />
+    <UiInput
+      v-model="modelValue.single"
       type="select"
       label="select"
       placeholder="Escoge una cosa"
       :options="options"
     />
     <UiInput
+      v-model="modelValue.multiple"
       type="select"
       multiple
       :options="options"
       label="select(m)"
       placeholder="Escoge varias cosas"
+    />
+    <UiInput
+      v-model="modelValue"
+      type="json"
+      label="json"
+      placeholder="Escribe JSON aqui"
     />
     <UiInput type="button" label="button" />
   </div>

@@ -2,6 +2,10 @@
 import { computed, useAttrs, ref } from 'vue'
 import types from './types.js'
 
+// eslint-disable-next-line no-undef
+const emit = defineEmits(['update:modelValue'])
+
+// eslint-disable-next-line no-undef
 const props = defineProps({
   type: {
     type: String,
@@ -9,8 +13,8 @@ const props = defineProps({
     default: 'text'
   },
 
-  value: {
-    type: [String, Number, Boolean],
+  modelValue: {
+    type: [String, Number, Boolean, Object, Array, Date],
     required: false,
     default: null
   },
@@ -56,17 +60,26 @@ function setFocused(newValue) {
   return (isFocused.value = newValue)
 }
 
-const classNames = computed(() => [
-  `ui-input--type-${props.type}`,
-  {
-    'ui-input--empty': !props.value && !props.value?.length,
-    'ui-input--focused': isFocused.value,
-    'ui-input--disabled': props.disabled,
-    'ui-input--enabled': !props.disabled,
-    'ui-input--required': props.required,
-    'ui-input--invalid': props.errors.length > 0
-  }
-])
+const classNames = computed(() => {
+  let isEmpty =
+    props.modelValue === null ||
+    props.modelValue === undefined ||
+    props.modelValue === '' ||
+    (Array.isArray(props.modelValue) && !props.modelValue.length)
+
+  return [
+    `ui-input--type-${props.type}`,
+    {
+      'ui-input--empty': isEmpty,
+      'ui-input--full': !isEmpty,
+      'ui-input--focused': isFocused.value,
+      'ui-input--disabled': props.disabled,
+      'ui-input--enabled': !props.disabled,
+      'ui-input--required': props.required,
+      'ui-input--invalid': props.errors.length > 0
+    }
+  ]
+})
 
 const customComponent = computed(() => {
   return types[props.type]
@@ -77,11 +90,29 @@ const showLabel = computed(() => {
 })
 
 const elementProps = computed(() => {
+  const attrs = useAttrs()
   return {
-    ...useAttrs(),
+    ...attrs,
     ...props,
     onFocus: () => setFocused(true),
-    onBlur: () => setFocused(false)
+    onBlur: () => setFocused(false),
+    'onUpdate:modelValue': (newValue) => emit('update:modelValue', newValue)
+  }
+})
+
+const nativeElementProps = computed(() => {
+  return {
+    ...elementProps.value,
+    value: elementProps.value?.modelValue,
+    onInput: (event) => emit('update:modelValue', event.target.value)
+  }
+})
+
+const nativeCheckboxProps = computed(() => {
+  return {
+    ...elementProps.value,
+    checked: elementProps.value?.modelValue,
+    onInput: (event) => emit('update:modelValue', event.target.checked)
   }
 })
 </script>
@@ -99,25 +130,27 @@ const elementProps = computed(() => {
         <component
           :is="customComponent"
           v-if="customComponent"
+          class="ui-input__elem"
           v-bind="elementProps"
         ></component>
         <textarea
           v-else-if="props.type == 'textarea'"
           class="ui-input__elem ui-native"
-          v-bind="elementProps"
+          v-bind="nativeElementProps"
         ></textarea>
         <button
           v-else-if="props.type == 'button'"
           type="button"
           class="ui-input__elem ui-native"
-          v-bind="elementProps"
+          v-bind="nativeElementProps"
           v-text="props.label"
         ></button>
         <label
           v-else-if="props.type == 'checkbox'"
           class="ui-input__elem ui-noselect"
           :type="props.type"
-          ><input type="checkbox" v-bind="elementProps" /><span>{{
+        >
+          <input type="checkbox" v-bind="nativeCheckboxProps" /><span>{{
             props.placeholder
           }}</span></label
         >
@@ -125,7 +158,7 @@ const elementProps = computed(() => {
           v-else
           class="ui-input__elem ui-native"
           :type="props.type"
-          v-bind="elementProps"
+          v-bind="nativeElementProps"
         />
       </slot>
     </div>

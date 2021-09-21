@@ -1,8 +1,9 @@
-import { UiSelect } from '../UiSelect'
 // const UiInputDate = {}
+import { UiInputJson } from '../UiInputJson'
+import { UiSelect } from '../UiSelect'
 
 export default {
   // date: UiInputDate,
-  // json: UiInputDate,
+  json: UiInputJson,
   select: UiSelect
 }
