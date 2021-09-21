@@ -15,9 +15,7 @@ const manyPeople = ref([])
   <p>Podemos declarar un UiSelect asi:</p>
   <pre class="ui-code"><code>
 &lt;UiSelect
-  :value="singlePerson"
-  @input="singlePerson = $event"
-
+  v-model="singlePerson"
   :options="records"
   placeholder="Escoge una persona"
   option-value="$.id"
@@ -26,21 +24,19 @@ const manyPeople = ref([])
   </code></pre>
 
   <UiSelect
-    :value="singlePerson"
+    v-model="singlePerson"
     :options="records"
     placeholder="Escoge una persona"
     option-value="$.id"
     option-text="$.email"
-    @input="singlePerson = $event"
   />
   <pre>singlePerson: {{ singlePerson }}</pre>
 
   <p>Multiple:</p>
   <pre class="ui-code"><code>
 &lt;UiSelect
+  v-model="manyPeople"
   multiple
-  :value="manyPeople"
-  @input="manyPeople = $event"
   :options="records"
   placeholder="Escoge varias persona"
   option-value="$.id"
@@ -49,13 +45,12 @@ const manyPeople = ref([])
   </code></pre>
 
   <UiSelect
+    v-model="manyPeople"
     multiple
-    :value="manyPeople"
     :options="records"
     placeholder="Escoge varias persona"
     option-value="$.id"
     option-text="$.email"
-    @input="manyPeople = $event"
   />
   <pre>manyPeople: {{ manyPeople }}</pre>
 </template>

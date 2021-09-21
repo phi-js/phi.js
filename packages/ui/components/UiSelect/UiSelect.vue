@@ -6,6 +6,8 @@
           class="picker-face ui-inset"
           tabindex="0"
           @keydown="onFaceKeyDown($event)"
+          @focus="onFaceFocus($event)"
+          @blur="onFaceBlur($event)"
         >
           <div
             v-if="!innerValue.length"
@@ -156,7 +158,10 @@ export default {
      * v-model:
      * Obedece al mismo comportamiento de &lt;select v-model="..."&gt;
      */
-    value: {},
+    modelValue: {
+      type: [Array, String, Number],
+      default: null
+    },
 
     /**
      * Arreglo de objetos arbitrarios
@@ -220,6 +225,8 @@ export default {
     }
   },
 
+  emits: ['select', 'deselect', 'update:modelValue', 'focus', 'blur'],
+
   data() {
     return {
       /**
@@ -239,7 +246,7 @@ export default {
         let optionValue =
           typeof this.optionValue == 'function'
             ? this.optionValue(item)
-            : getProperty(item, this.optionValue.substr(2)) || null
+            : getProperty(item, this.optionValue.substr(2))
 
         return {
           item,
@@ -302,7 +309,7 @@ export default {
   },
 
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler(newValue) {
         this.innerValue = Array.isArray(newValue)
@@ -369,6 +376,14 @@ export default {
       }
     },
 
+    onFaceFocus(event) {
+      this.$emit('focus', event)
+    },
+
+    onFaceBlur(event) {
+      this.$emit('blur', event)
+    },
+
     onSearchKeyDown(event) {
       switch (event.key) {
         case 'Tab':
@@ -408,7 +423,7 @@ export default {
 
     clear() {
       this.innerValue = []
-      this.$emit('input', this.multiple ? this.innerValue : this.innerValue[0])
+      this.emitInput()
     },
 
     selectOption(option) {
@@ -422,7 +437,7 @@ export default {
         this.innerValue = [option.value]
       }
       this.$emit('select', option.item)
-      this.$emit('input', this.multiple ? this.innerValue : this.innerValue[0])
+      this.emitInput()
       this.afterOptionChange(option)
     },
 
@@ -445,7 +460,7 @@ export default {
         // si es un picker unico, no se desmarca el elemento actual
       }
       this.$emit('deselect', option.item)
-      this.$emit('input', this.multiple ? this.innerValue : this.innerValue[0])
+      this.emitInput()
       this.afterOptionChange(option)
     },
 
@@ -524,6 +539,13 @@ export default {
       }
 
       return retval
+    },
+
+    emitInput() {
+      this.$emit(
+        'update:modelValue',
+        this.multiple ? this.innerValue : this.innerValue[0]
+      )
     }
   }
 }
