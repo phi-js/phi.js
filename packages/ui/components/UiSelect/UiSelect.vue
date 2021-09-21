@@ -6,8 +6,7 @@
           class="picker-face ui-inset"
           tabindex="0"
           @keydown="onFaceKeyDown($event)"
-          @focus="onFaceFocus($event)"
-          @blur="onFaceBlur($event)"
+          @focus="$emit('focus')"
         >
           <div
             v-if="!innerValue.length"
@@ -325,9 +324,11 @@ export default {
         this.$nextTick(() => {
           if (newValue) {
             this.$refs?.searchInput?.focus()
+            this.$emit('focus')
           } else {
             this.$el.querySelector('.picker-face').focus()
             this.searchString = ''
+            this.$emit('blur')
           }
         })
       }
@@ -374,14 +375,6 @@ export default {
           }
           break
       }
-    },
-
-    onFaceFocus(event) {
-      this.$emit('focus', event)
-    },
-
-    onFaceBlur(event) {
-      this.$emit('blur', event)
     },
 
     onSearchKeyDown(event) {
