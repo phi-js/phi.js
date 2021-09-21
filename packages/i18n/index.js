@@ -1,31 +1,38 @@
 import { provide, inject, reactive } from 'vue'
+import { toDate } from '/packages/ui/helpers'
 
 export function provideI18n(options) {
-  provide('$_phidias_i18n', options)
-  return options
+  const provided = reactive(options)
+  provide('$_phidias_i18n', provided)
+  return provided
 }
 
 export function useI18n(dictionary = null) {
   const injected = inject('$_phidias_i18n') || {}
+  const messages = deepMerge(injected?.messages, dictionary)
 
-  const i18n = {
-    ...injected,
-    messages: deepMerge(injected?.messages, dictionary)
-  }
-
-  const base = reactive({
-    ...i18n,
-
-    t(word) {
-      return i18n?.messages?.[base.locale]?.[word] || word + '(?)'
+  return {
+    get locale() {
+      return injected.locale
     },
 
-    d(date, options = null) {
-      // !!! 2do
-    }
-  })
+    set locale(newValue) {
+      injected.locale = newValue
+    },
 
-  return base
+    t(word) {
+      return messages?.[injected.locale]?.[word] || word + '(?)'
+    },
+
+    d(date, options = undefined) {
+      let objDate = toDate(date)
+      if (!objDate) {
+        return date + '(?)'
+      }
+
+      return objDate.toLocaleDateString(injected.locale, options)
+    }
+  }
 }
 
 function deepMerge(obj1, obj2) {
