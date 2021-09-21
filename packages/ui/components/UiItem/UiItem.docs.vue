@@ -45,4 +45,12 @@ const item = reactive({
   <UiItem class="ui-clickable ui-item--inline" v-bind="item" />
   <UiItem class="ui-clickable ui-item--inline" v-bind="item" />
   <UiItem class="ui-clickable ui-item--inline" v-bind="item" />
+
+  <hr />
+
+  <UiItem class="ui-item--inline" v-bind="item" style="font-size: 0.8em" />
+  <UiItem class="ui-item--inline" v-bind="item" style="font-size: 1em" />
+  <UiItem class="ui-item--inline" v-bind="item" style="font-size: 1.5em" />
+  <UiItem class="ui-item--inline" v-bind="item" style="font-size: 2em" />
+  <UiItem class="ui-item--inline" v-bind="item" style="font-size: 3em" />
 </template>

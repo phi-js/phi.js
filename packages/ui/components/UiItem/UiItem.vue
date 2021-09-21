@@ -86,7 +86,7 @@ export default {
 .ui-item {
   position: relative;
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   padding: var(--ui-padding);
 
   &__badge {
@@ -111,8 +111,7 @@ export default {
   }
 
   &__icon {
-    margin-top: 2px;
-    margin-right: var(--ui-padding-horizontal);
+    margin-right: var(--ui-breathe);
     &:last-child {
       margin-right: 0;
     }
