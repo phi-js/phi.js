@@ -1,6 +1,6 @@
 <template>
   <div class="ui-item" @click="$emit('click', $event)">
-    <div v-if="badge" class="ui-item__badge" v-text="badge"></div>
+    <div v-if="badge != null" class="ui-item__badge" v-text="badge"></div>
 
     <div
       v-if="hasSlot('icon')"
@@ -49,13 +49,13 @@ export default {
     },
 
     subtext: {
-      type: String,
+      type: [String, Number],
       required: false,
       default: ''
     },
 
     icon: {
-      type: String,
+      type: [String, Number],
       required: false,
       default: null
     },
