@@ -146,6 +146,7 @@ const curTheme = ref('my-theme-wide')
 .my-theme-terminal {
   padding: 12px;
   color: green;
+  position: relative;
 
   background-color: black;
   background-image: radial-gradient(rgba(0, 150, 0, 0.25), black 120%);
