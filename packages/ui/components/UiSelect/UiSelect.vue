@@ -310,6 +310,7 @@ export default {
   watch: {
     modelValue: {
       immediate: true,
+      deep: true,
       handler(newValue) {
         this.innerValue = Array.isArray(newValue)
           ? [...newValue]
