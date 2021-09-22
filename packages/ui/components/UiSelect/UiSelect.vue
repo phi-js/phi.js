@@ -554,6 +554,7 @@ export default {
     cursor: text;
 
     .picker-face-icon {
+      margin-left: auto;
       width: 32px;
     }
 
@@ -563,8 +564,13 @@ export default {
   }
 
   .picker-placeholder {
+    flex: 1;
     padding: var(--ui-padding);
     opacity: 0.8;
+  }
+
+  .ui-popover-trigger {
+    display: block;
   }
 }
 
