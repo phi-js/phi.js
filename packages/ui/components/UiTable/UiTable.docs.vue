@@ -7,10 +7,10 @@ import records from './records.js';
   <h1>UiTable</h1>
 
   <p>Dado un arreglo de objetos arbitratios:</p>
-  <pre class="ui-code"><code>const records = {{ records }}</code></pre>
+  <pre class="docs-code"><code>const records = {{ records }}</code></pre>
 
   <p>Podemos definir una tabla así</p>
-  <pre class="ui-code"><code>
+  <pre class="docs-code"><code>
 &lt;UiTable :data="records">
   &lt;UiColumn header="Columna 1" value="timestamp" />
 

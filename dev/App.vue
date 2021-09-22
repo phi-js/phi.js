@@ -13,7 +13,7 @@ import {
 } from 'vue'
 
 // UI components
-import { UiInput, UiItem, UiTree } from '/packages/ui/components'
+import { UiInput, UiItem, UiTree, UiPopover } from '/packages/ui/components'
 
 // Modulo API: Definicion de clients globales
 import { provideApi } from '/packages/api'
@@ -24,13 +24,12 @@ import { provideI18n } from '/packages/i18n'
 const i18n = provideI18n({
   locale: 'es', // set locale
   fallbackLocale: 'en', // set fallback locale,
+  currency: 'cop', //default currency
   messages: {
-    en: {
-      'myDictionary.globalWord': 'Global Word'
-    },
-    es: {
-      'myDictionary.globalWord': 'Palabra Global'
-    }
+    de: { globalWord: 'globales Wort' },
+    en: { globalWord: 'Global Word' },
+    es: { globalWord: 'Palabra Global' },
+    fr: { globalWord: 'mot global' }
   }
 })
 
@@ -132,6 +131,29 @@ function loadPageComponent(href) {
     <!-- <button @click="apis.push(Math.random())">PUSH API</button> -->
     <UiItem id="app__logo" text="Phidias.js" icon="/phidias.png" />
 
+    <UiPopover>
+      <template #trigger>
+        <UiItem
+          class="api-dialog__trigger ui-clickable"
+          icon="mdi:wifi"
+          text="APIs"
+        />
+      </template>
+      <template #contents>
+        <div class="api-dialog__contents">
+          <UiItem
+            v-for="i in 10"
+            :key="i"
+            :text="`API ${i}`"
+            :subtext="`https://some-api-${i}.example.com`"
+            class="ui-clickable"
+            badge-color="var(--ui-color-success)"
+            badge=" "
+          />
+        </div>
+      </template>
+    </UiPopover>
+
     <UiItem icon="mdi:web">
       <select v-model="i18n.locale" class="ui-native">
         <option value="en">en</option>
@@ -187,6 +209,14 @@ function loadPageComponent(href) {
 #app {
   --app-sidebar-width: 240px;
 
+  .api-dialog {
+    &__contents {
+      .ui-item__badge {
+        background-color: var(--ui-color-success);
+      }
+    }
+  }
+
   a {
     text-decoration: none;
     color: #257dba;
@@ -197,11 +227,14 @@ function loadPageComponent(href) {
     padding: 4px 8px;
     display: flex;
     align-items: center;
+
+    & > :last-child {
+      margin-left: auto;
+    }
   }
 
   &__logo {
     width: var(--app-sidebar-width);
-    margin-right: auto;
   }
 
   &__container {
@@ -248,14 +281,6 @@ function loadPageComponent(href) {
   #app-body {
     flex: 1;
     padding: 18px 32px;
-
-    .ui-code {
-      overflow: auto;
-      max-height: 300px;
-      padding: var(--ui-padding);
-      border-radius: var(--ui-radius);
-      background-color: rgba(0, 0, 0, 0.04);
-    }
   }
 
   // Estilos fijos para elementos class="docs-page"
@@ -277,6 +302,14 @@ function loadPageComponent(href) {
         font-family: var(--ui-font-secondary);
       }
     }
+  }
+
+  .docs-code {
+    overflow: auto;
+    max-height: 300px;
+    padding: var(--ui-padding);
+    border-radius: var(--ui-radius);
+    background-color: rgba(0, 0, 0, 0.04);
   }
 
   // Transitions

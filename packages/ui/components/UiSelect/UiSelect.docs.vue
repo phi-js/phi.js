@@ -10,10 +10,10 @@ const manyPeople = ref([])
   <h1>UiSelect</h1>
 
   <p>Dado un arreglo de objetos arbitratios:</p>
-  <pre class="ui-code"><code>const records = {{ records }}</code></pre>
+  <pre class="docs-code"><code>const records = {{ records }}</code></pre>
 
   <p>Podemos declarar un UiSelect asi:</p>
-  <pre class="ui-code"><code>
+  <pre class="docs-code"><code>
 &lt;UiSelect
   v-model="singlePerson"
   :options="records"
@@ -33,7 +33,7 @@ const manyPeople = ref([])
   <pre>singlePerson: {{ singlePerson }}</pre>
 
   <p>Multiple:</p>
-  <pre class="ui-code"><code>
+  <pre class="docs-code"><code>
 &lt;UiSelect
   v-model="manyPeople"
   multiple
