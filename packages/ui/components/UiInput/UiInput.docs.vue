@@ -27,7 +27,8 @@ const modelValue = ref({
 
 const themes = [
   { value: 'my-theme-wide', text: 'Wide' },
-  { value: 'my-theme-material', text: 'Material' }
+  { value: 'my-theme-material', text: 'Material' },
+  { value: 'my-theme-terminal', text: 'Terminal' }
 ]
 
 const curTheme = ref('my-theme-wide')
@@ -39,60 +40,83 @@ const curTheme = ref('my-theme-wide')
   <UiInput
     v-model="curTheme"
     :value="curTheme"
-    type="select"
+    type="select-buttons"
     label="Theme"
     :options="themes"
     @input="curTheme = $event"
   />
-  <pre>modelValue: {{ modelValue }}</pre>
+
   <hr />
 
-  <div :class="curTheme">
-    <UiInput
-      v-model="modelValue.string"
-      type="text"
-      label="Un texto"
-      placeholder="Escribe cualquier cosa"
-    />
-    <UiInput
-      v-model="modelValue.string"
-      type="textarea"
-      label="textarea"
-      placeholder="Escribe cualquier cosa"
-    />
-    <UiInput
-      v-model="modelValue.boolean"
-      type="checkbox"
-      placeholder="Acepto tal cosa"
-    />
-    <UiInput v-model="modelValue.number" type="number" label="number" />
-    <UiInput v-model="modelValue.string" type="search" label="search" />
-    <UiInput v-model="modelValue.date" type="date" label="date" />
-    <UiInput v-model="modelValue.time" type="time" label="time" />
-    <UiInput v-model="modelValue.date" type="date-time" label="date-time" />
-    <UiInput v-model="modelValue.color" type="color" label="color" />
-    <UiInput
-      v-model="modelValue.single"
-      type="select"
-      label="select"
-      placeholder="Escoge una cosa"
-      :options="options"
-    />
-    <UiInput
-      v-model="modelValue.multiple"
-      type="select"
-      multiple
-      :options="options"
-      label="select(m)"
-      placeholder="Escoge varias cosas"
-    />
-    <UiInput
-      v-model="modelValue"
-      type="json"
-      label="json"
-      placeholder="Escribe JSON aqui"
-    />
-    <UiInput type="button" label="button" />
+  <div class="docs-page ui-row --top" style="position: relative">
+    <div :class="curTheme" style="margin-right: var(--ui-breathe)">
+      <UiInput
+        v-model="modelValue.string"
+        type="text"
+        label="Un texto"
+        placeholder="Escribe cualquier cosa"
+      />
+      <UiInput
+        v-model="modelValue.string"
+        type="textarea"
+        label="textarea"
+        placeholder="Escribe cualquier cosa"
+      />
+      <UiInput
+        v-model="modelValue.boolean"
+        type="checkbox"
+        placeholder="Acepto tal cosa"
+      />
+      <UiInput v-model="modelValue.number" type="number" label="number" />
+      <UiInput v-model="modelValue.string" type="search" label="search" />
+      <UiInput v-model="modelValue.date" type="date" label="date" />
+      <UiInput v-model="modelValue.time" type="time" label="time" />
+      <UiInput v-model="modelValue.date" type="date-time" label="date-time" />
+      <UiInput v-model="modelValue.color" type="color" label="color" />
+
+      <UiInput
+        v-model="modelValue.single"
+        type="select"
+        label="select"
+        placeholder="Escoge una cosa"
+        :options="options"
+      />
+      <UiInput
+        v-model="modelValue.multiple"
+        type="select"
+        multiple
+        :options="options"
+        label="select(m)"
+        placeholder="Escoge varias cosas"
+      />
+
+      <UiInput
+        v-model="modelValue.single"
+        type="select-buttons"
+        label="select"
+        placeholder="Escoge una cosa"
+        :options="options"
+      />
+      <UiInput
+        v-model="modelValue.multiple"
+        type="select-buttons"
+        multiple
+        :options="options"
+        label="select(m)"
+        placeholder="Escoge varias cosas"
+      />
+
+      <UiInput
+        v-model="modelValue"
+        type="json"
+        label="json"
+        placeholder="Escribe JSON aqui"
+      />
+      <UiInput type="button" label="button" />
+    </div>
+    <div style="position: sticky; top: 0">
+      <pre>modelValue: {{ modelValue }}</pre>
+    </div>
   </div>
 </template>
 
@@ -111,16 +135,113 @@ const curTheme = ref('my-theme-wide')
       display: block;
       width: var(--input-label-width);
       position: absolute;
-      top: var(--ui-breathe);
+      top: 0;
       left: 0;
+      padding: var(--ui-padding);
       font-weight: bold;
+    }
+  }
+}
+
+.my-theme-terminal {
+  padding: 12px;
+  color: green;
+
+  background-color: black;
+  background-image: radial-gradient(rgba(0, 150, 0, 0.25), black 120%);
+
+  &::after {
+    pointer-events: none;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(black, 0.15),
+      rgba(black, 0.15) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+  }
+
+  & > * {
+    // color: green !important;
+    color: white;
+    font: 1rem Inconsolata, monospace;
+    text-shadow: 0 0 5px #c8c8c8;
+  }
+
+  --ui-font-primary: monospace;
+  --ui-font-secondary: monospace;
+
+  .ui-input {
+    display: flex;
+    align-items: stretch;
+
+    border: 1px solid transparent;
+    &:hover {
+      border: 1px dashed green;
+    }
+
+    &__body {
+      flex: 1;
+    }
+
+    &__label {
+      display: flex;
+      align-items: center;
+      padding-right: 12px;
+      font-weight: bold;
+
+      &::after {
+        content: ' > ';
+      }
+    }
+
+    &__elem {
+      display: block;
+      width: 100%;
+      outline: none;
+      background: transparent;
+
+      border: 0;
+      border-radius: unset;
+      margin: 0;
+      padding: 0;
+
+      color: white;
+      text-shadow: 0 0 5px #c8c8c8;
+    }
+
+    .ui-button,
+    .ui-inset,
+    .ui-native {
+      border: 0;
+      background: transparent;
+      border-radius: 0;
+
+      color: white;
+      text-shadow: 0 0 5px #c8c8c8;
+
+      &.UiSelectButtons__button--selected {
+        font-weight: bold;
+        &::before {
+          content: ' *';
+        }
+        &::after {
+          content: '* ';
+        }
+      }
     }
   }
 }
 
 .my-theme-material {
   --label-transition-duration: 0.17s;
-  max-width: 300px;
+  max-width: 320px;
 
   // bottom border animation on focus
   .ui-input {
@@ -172,6 +293,16 @@ const curTheme = ref('my-theme-wide')
     &--type-select {
       .ui-input__label {
         opacity: 0 !important;
+      }
+    }
+
+    &--type-select-buttons,
+    &--type-checkbox {
+      .ui-input__body {
+        border: 0;
+        &::after {
+          content: unset;
+        }
       }
     }
   }

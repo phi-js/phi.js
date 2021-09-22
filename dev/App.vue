@@ -258,6 +258,27 @@ function loadPageComponent(href) {
     }
   }
 
+  // Estilos fijos para elementos class="docs-page"
+  .docs-page {
+    --ui-breathe: 32px;
+
+    pre {
+      padding: var(--ui-padding);
+      border-radius: var(--ui-radius);
+      background-color: var(--ui-color-darken);
+    }
+
+    & > section {
+      margin-bottom: var(--ui-breathe);
+
+      & > label {
+        display: block;
+        font-weight: bold;
+        font-family: var(--ui-font-secondary);
+      }
+    }
+  }
+
   // Transitions
   #app-body {
     position: relative;
