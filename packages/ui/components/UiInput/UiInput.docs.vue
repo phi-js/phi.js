@@ -153,32 +153,31 @@ const curTheme = ref('my-theme-wide')
         }
       }
     }
-  }
 
-  .ui-native {
-    &::placeholder {
-      color: transparent;
+    .ui-inset,
+    .ui-native {
+      border: 0;
+      background: transparent;
+      border-radius: 0;
+      width: 100%;
+
+      &::placeholder {
+        color: transparent;
+      }
     }
-  }
 
-  .ui-input--type-date,
-  .ui-input--type-time,
-  .ui-input--type-color,
-  .ui-input--type-select {
-    .ui-input__label {
-      opacity: 0 !important;
+    &--type-date,
+    &--type-time,
+    &--type-color,
+    &--type-select {
+      .ui-input__label {
+        opacity: 0 !important;
+      }
     }
-  }
-
-  input.ui-native,
-  textarea.ui-native {
-    border: 0;
-    background: transparent;
-    // border-bottom: 1px solid var(--ui-color-primary);
-    border-radius: 0;
   }
 
   button.ui-native {
+    border-radius: var(--ui-radius);
     background: var(--ui-color-primary) !important;
     color: #fff;
   }
