@@ -1,4 +1,4 @@
-import { provide, inject, reactive } from 'vue'
+import { provide, inject, reactive, useAttrs } from 'vue'
 import { toDate } from '/packages/ui/helpers'
 
 export function provideI18n(options) {
@@ -9,6 +9,7 @@ export function provideI18n(options) {
 
 export function useI18n(dictionary = null) {
   const injected = inject('$_phidias_i18n') || {}
+  const attrs = useAttrs()
   const messages = deepMerge(injected?.messages, dictionary)
 
   return {
@@ -20,17 +21,35 @@ export function useI18n(dictionary = null) {
       injected.locale = newValue
     },
 
+    // Translate a word
     t(word) {
-      return messages?.[injected.locale]?.[word] || word + '(?)'
+      const targetLocale = attrs?.['i18n-language'] || injected.locale
+      const baseLocale = targetLocale.substr(0, 2)
+      return (
+        messages?.[targetLocale]?.[word] ||
+        messages?.[baseLocale]?.[word] ||
+        messages?.[injected.fallbackLocale]?.[word] ||
+        word + '(?)'
+      )
     },
 
+    // Format date
     d(date, options = undefined) {
+      const targetLocale = attrs?.['i18n-language'] || injected.locale
       let objDate = toDate(date)
       if (!objDate) {
         return date + '(?)'
       }
+      return objDate.toLocaleDateString(targetLocale, options)
+    },
 
-      return objDate.toLocaleDateString(injected.locale, options)
+    // Format currency
+    $(value, currency = null) {
+      const targetLocale = attrs?.['i18n-language'] || injected.locale
+      return Number(value).toLocaleString(targetLocale, {
+        style: 'currency',
+        currency: currency || injected.defaultCurrency
+      })
     }
   }
 }
