@@ -33,7 +33,7 @@ watch(
 )
 
 function toggleValue(value) {
-  let foundIndex = innerValue.value.findIndex((e) => e == value)
+  let foundIndex = innerValue.value.findIndex((e) => e === value)
   if (foundIndex >= 0) {
     innerValue.value.splice(foundIndex, 1)
   } else {
