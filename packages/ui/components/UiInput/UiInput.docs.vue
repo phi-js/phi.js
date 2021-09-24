@@ -94,7 +94,7 @@ const curTheme = ref('my-theme-wide')
       <UiInput
         v-model="modelValue.single"
         type="select-buttons"
-        label="select"
+        label="select-buttons"
         placeholder="Escoge una cosa"
         :options="options"
       />
@@ -103,7 +103,23 @@ const curTheme = ref('my-theme-wide')
         type="select-buttons"
         multiple
         :options="options"
-        label="select(m)"
+        label="select-buttons(m)"
+        placeholder="Escoge varias cosas"
+      />
+
+      <UiInput
+        v-model="modelValue.single"
+        type="select-list"
+        label="select-list"
+        placeholder="Escoge una cosa"
+        :options="options"
+      />
+      <UiInput
+        v-model="modelValue.multiple"
+        type="select-list"
+        multiple
+        :options="options"
+        label="select-list(m)"
         placeholder="Escoge varias cosas"
       />
 
