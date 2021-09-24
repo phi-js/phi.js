@@ -117,6 +117,12 @@ export default {
     }
   }
 
+  &__actions {
+    margin-left: var(--ui-padding-horizontal);
+    display: flex;
+    align-items: stretch;
+  }
+
   &__body {
     flex: 1;
     min-width: 0; // Allows correct cropping of overflown texts (see https://css-tricks.com/flexbox-truncated-text/)
