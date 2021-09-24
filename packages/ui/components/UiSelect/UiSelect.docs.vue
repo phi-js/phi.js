@@ -1,10 +1,12 @@
 <script setup>
 import { ref } from 'vue'
+import { default as xrecords } from './records.js'
+
 import { UiSelect } from './index.js'
-import records from './records.js'
 
 const singlePerson = ref()
 const manyPeople = ref([])
+const records = ref(xrecords)
 </script>
 <template>
   <h1>UiSelect</h1>
@@ -38,7 +40,7 @@ const manyPeople = ref([])
   v-model="manyPeople"
   multiple
   :options="records"
-  placeholder="Escoge varias persona"
+  placeholder="Escoge varias personas"
   option-value="$.id"
   option-text="$.email"
 />
@@ -48,9 +50,26 @@ const manyPeople = ref([])
     v-model="manyPeople"
     multiple
     :options="records"
-    placeholder="Escoge varias persona"
+    placeholder="Escoge varias personas"
     option-value="$.id"
     option-text="$.email"
   />
+
+  <section>
+    <h2>Aggregator slot</h2>
+    <UiSelect
+      v-model="manyPeople"
+      multiple
+      :options="records"
+      placeholder="Escoge varias personas"
+      option-value="$.id"
+      option-text="$.email"
+    >
+      <template #aggregator="{ options }"
+        >y otras {{ options.length }} personas</template
+      >
+    </UiSelect>
+  </section>
+
   <pre>manyPeople: {{ manyPeople }}</pre>
 </template>
