@@ -5,7 +5,7 @@ import { UiIcon } from '../UiIcon'
 const emit = defineEmits(['update:modelValue', 'focus', 'blur'])
 const props = defineProps({
   modelValue: {
-    type: Object,
+    validator: () => true,
     required: false,
     default: null
   },
