@@ -166,13 +166,13 @@ export default {
         if (isVisible) {
           if (!this.componentLoaded) {
             this.componentLoaded = true
-            setTimeout(() => {
+            this.$nextTick(() => {
               Velocity(
                 this.element,
                 'slideDown',
                 this.velocityOptions.down
               ).then(() => this.$emit('animation-done'))
-            }, 100) // give the inner contents some time to load
+            })
           } else {
             Velocity(this.element, 'slideDown', this.velocityOptions.down).then(
               () => this.$emit('animation-done')
