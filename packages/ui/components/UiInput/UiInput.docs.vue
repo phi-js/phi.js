@@ -5,6 +5,7 @@ import { UiInput } from './index.js'
 const options = [
   { value: 0, text: 'Cero' },
   { value: 1, text: 'Uno' },
+  { value: false, text: 'false' },
   { value: 2, text: 'Dos' },
   { value: 3, text: 'Tres' }
 ]
