@@ -219,10 +219,6 @@ export default {
 
 <style lang="scss">
 .ui-popover {
-  .ui-popover-trigger {
-    display: inline-block;
-  }
-
   .ui-popover-contents {
     background-color: #fff;
     border: 1px solid #ccc;
