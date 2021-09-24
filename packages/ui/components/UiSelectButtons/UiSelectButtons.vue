@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 
 const props = defineProps({
   modelValue: {
-    type: [Array, String, Number],
+    validator: () => true,
     required: false,
     default: null
   },
