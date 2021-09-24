@@ -51,85 +51,112 @@ const curTheme = ref('my-theme-wide')
 
   <div class="docs-page ui-row --top" style="position: relative">
     <div :class="curTheme" style="margin-right: var(--ui-breathe)">
-      <UiInput
-        v-model="modelValue.string"
-        type="text"
-        label="Un texto"
-        placeholder="Escribe cualquier cosa"
-      />
-      <UiInput
-        v-model="modelValue.string"
-        type="textarea"
-        label="textarea"
-        placeholder="Escribe cualquier cosa"
-      />
-      <UiInput
-        v-model="modelValue.boolean"
-        type="checkbox"
-        placeholder="Acepto tal cosa"
-      />
-      <UiInput v-model="modelValue.number" type="number" label="number" />
-      <UiInput v-model="modelValue.string" type="search" label="search" />
-      <UiInput v-model="modelValue.date" type="date" label="date" />
-      <UiInput v-model="modelValue.time" type="time" label="time" />
-      <UiInput v-model="modelValue.date" type="date-time" label="date-time" />
-      <UiInput v-model="modelValue.color" type="color" label="color" />
+      <section>
+        <h2>Native types</h2>
+        <UiInput
+          v-model="modelValue.string"
+          type="text"
+          label="text"
+          placeholder="Escribe cualquier cosa"
+        />
+        <UiInput
+          v-model="modelValue.string"
+          type="textarea"
+          label="textarea"
+          placeholder="Escribe cualquier cosa"
+        />
+        <UiInput
+          v-model="modelValue.boolean"
+          type="checkbox"
+          label="checkbox"
+          placeholder="Acepto tal cosa"
+        />
+        <UiInput v-model="modelValue.number" type="number" label="number" />
+        <UiInput v-model="modelValue.string" type="search" label="search" />
+        <UiInput v-model="modelValue.date" type="date" label="date" />
+        <UiInput v-model="modelValue.time" type="time" label="time" />
+        <UiInput v-model="modelValue.date" type="date-time" label="date-time" />
+        <UiInput v-model="modelValue.color" type="color" label="color" />
+        <UiInput type="button" label="button" />
+      </section>
 
-      <UiInput
-        v-model="modelValue.single"
-        type="select"
-        label="select"
-        placeholder="Escoge una cosa"
-        :options="options"
-      />
-      <UiInput
-        v-model="modelValue.multiple"
-        type="select"
-        multiple
-        :options="options"
-        label="select(m)"
-        placeholder="Escoge varias cosas"
-      />
+      <section>
+        <h2>select (single value)</h2>
+        <UiInput
+          v-model="modelValue.single"
+          type="select"
+          label="select"
+          placeholder="Escoge una cosa"
+          :options="options"
+        />
+        <UiInput
+          v-model="modelValue.single"
+          type="select-native"
+          label="select-native"
+          placeholder="Escoge una cosa"
+          :options="options"
+        />
+        <UiInput
+          v-model="modelValue.single"
+          type="select-buttons"
+          label="select-buttons"
+          placeholder="Escoge una cosa"
+          :options="options"
+        />
+        <UiInput
+          v-model="modelValue.single"
+          type="select-list"
+          label="select-list"
+          placeholder="Escoge una cosa"
+          :options="options"
+        />
+      </section>
 
-      <UiInput
-        v-model="modelValue.single"
-        type="select-buttons"
-        label="select-buttons"
-        placeholder="Escoge una cosa"
-        :options="options"
-      />
-      <UiInput
-        v-model="modelValue.multiple"
-        type="select-buttons"
-        multiple
-        :options="options"
-        label="select-buttons(m)"
-        placeholder="Escoge varias cosas"
-      />
+      <section>
+        <h2>select (multiple)</h2>
+        <UiInput
+          v-model="modelValue.multiple"
+          type="select"
+          multiple
+          :options="options"
+          label="select(m)"
+          placeholder="Escoge varias cosas"
+        />
+        <UiInput
+          v-model="modelValue.multiple"
+          type="select-native"
+          multiple
+          :options="options"
+          label="select-native(m)"
+          placeholder="Escoge varias cosas"
+        />
+        <UiInput
+          v-model="modelValue.multiple"
+          type="select-buttons"
+          multiple
+          :options="options"
+          label="select-buttons(m)"
+          placeholder="Escoge varias cosas"
+        />
+        <UiInput
+          v-model="modelValue.multiple"
+          type="select-list"
+          multiple
+          :options="options"
+          label="select-list(m)"
+          placeholder="Escoge varias cosas"
+        />
+      </section>
 
-      <UiInput
-        v-model="modelValue.single"
-        type="select-list"
-        label="select-list"
-        placeholder="Escoge una cosa"
-        :options="options"
-      />
-      <UiInput
-        v-model="modelValue.multiple"
-        type="select-list"
-        multiple
-        :options="options"
-        label="select-list(m)"
-        placeholder="Escoge varias cosas"
-      />
-
-      <UiInput
-        v-model="modelValue"
-        type="json"
-        label="json"
-        placeholder="Escribe JSON aqui"
-      />
-      <UiInput type="button" label="button" />
+      <section>
+        <h2>Custom types</h2>
+        <UiInput
+          v-model="modelValue"
+          type="json"
+          label="json"
+          placeholder="Escribe JSON aqui"
+        />
+      </section>
     </div>
     <div style="position: sticky; top: 0">
       <pre>modelValue: {{ modelValue }}</pre>
