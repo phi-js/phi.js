@@ -8,11 +8,11 @@
     "eslint": "eslint --fix"
   },
   "dependencies": {
+    "@popperjs/core": "^2.10.1",
     "velocity-animate": "^1.5.2",
     "vue": "^3.2.6"
   },
   "devDependencies": {
-    "@popperjs/core": "^2.10.1",
     "@vitejs/plugin-vue": "^1.6.1",
     "@vue/compiler-sfc": "^3.2.6",
     "eslint": "^7.32.0",
