@@ -1,0 +1,1 @@
+export { default as CmsPageEditor } from './CmsPageEditor.vue'
