@@ -34,8 +34,8 @@ const tabs = computed(() => {
     }
   }
 
-  return tabNodes.map((vNode) => ({
-    value: vNode?.props?.value,
+  return tabNodes.map((vNode, vIndex) => ({
+    value: vNode?.props?.value !== undefined ? vNode.props.value : vIndex,
     props: vNode?.props || {},
     slotTab: vNode?.children?.tab,
     slotContent: vNode?.children?.default || vNode?.children?.contents,
