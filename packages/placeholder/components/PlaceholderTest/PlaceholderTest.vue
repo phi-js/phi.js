@@ -1,11 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { UiItem } from '/packages/ui/components'
+import { UiItem, UiInput } from '/packages/ui/components'
 import { useApi } from '/packages/api/'
 import {
   default as jpApi,
   users as apiUsers,
-  posts as apiPosts
+  posts as apiPosts,
 } from '../../api'
 
 const users = ref([])
@@ -22,6 +22,12 @@ onMounted(() => {
   <div class="PlaceholderTest ui-row --nowrap --top">
     <div>
       <label class="ui-label">Users</label>
+      <UiInput
+        type="select"
+        :options="users"
+        option-value="$.id"
+        option-text="$.username"
+      />
       <UiItem
         v-for="user in users"
         :key="user.id"
@@ -32,6 +38,14 @@ onMounted(() => {
 
     <div>
       <label class="ui-label">Posts</label>
+
+      <UiInput
+        type="select"
+        :options="posts"
+        option-value="$.id"
+        option-text="$.title"
+      />
+
       <UiItem
         v-for="post in posts"
         :key="post.id"
