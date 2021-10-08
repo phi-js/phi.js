@@ -1,28 +1,38 @@
 module.exports = {
-  env: {
-    node: true
-  },
+  env: { node: true },
   extends: [
     'eslint:recommended',
     'plugin:vue/vue3-recommended',
-    'plugin:prettier/recommended'
   ],
+  globals: {
+    defineProps: 'readonly',
+    defineEmits: 'readonly',
+    defineExpose: 'readonly',
+    withDefaults: 'readonly',
+  },
   rules: {
-    // override/add rules settings here, such as:
-    // 'vue/no-unused-vars': 'error'
-    // 'prettier/prettier': 'warn',
-    // 'vue/max-attributes-per-line': [
-    //   'warn',
-    //   {
-    //     singleline: {
-    //       max: 1,
-    //       allowFirstLine: true
-    //     },
-    //     multiline: {
-    //       max: 1,
-    //       allowFirstLine: false
-    //     }
-    //   }
-    // ]
-  }
+    'quotes': ['error', 'single'],
+    'quote-props': ['error', 'consistent-as-needed'],
+    'linebreak-style': ['error', 'windows'],
+    'arrow-parens': ['error', 'always'],
+    'block-spacing': ['error'],
+    'comma-dangle': ['error', 'always-multiline'],
+    'comma-spacing': ['error'],
+    'func-call-spacing': ['error', 'never'],
+    'function-call-argument-newline': ['error', 'consistent'],
+    'function-paren-newline': ['error', 'multiline'],
+    'indent': ['error', 2],
+    'key-spacing': ['error'],
+    'keyword-spacing': ['error'],
+    'no-multi-spaces': ['error'],
+    'no-trailing-spaces': ['error'],
+    'object-curly-newline': ['error', { multiline: true }],
+    'object-curly-spacing': ['error', 'always'],
+    'object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }],
+    'semi': ['error', 'never'],
+    'space-in-parens': ['error', 'never'],
+    'space-infix-ops': ['error'],
+    'max-len': ['error', { code: 120, ignoreComments: true }],
+    'brace-style': ['error', '1tbs'],
+  },
 }
