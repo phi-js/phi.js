@@ -1,6 +1,6 @@
 <script setup>
-import { UiTable, UiColumn } from './index.js';
-import records from './records.js';
+import { UiTable, UiColumn } from './index.js'
+import records from './records.js'
 </script>
 
 <template>
@@ -25,22 +25,35 @@ import records from './records.js';
     &lt;/template>
     &lt;template #footer>Footer Columna 3&lt;/template>
   &lt;/UiColumn>
-&lt;/UiTable>   
+&lt;/UiTable>
   </code></pre>
 
   <UiTable :data="records">
-    <UiColumn header="Columna 1" value="timestamp" />
+    <UiColumn
+      header="Columna 1"
+      value="timestamp"
+    />
 
     <UiColumn header="Columna 2">
-      <template #content>Item 1</template>
+      <template #content>
+        Item 1
+      </template>
     </UiColumn>
 
     <UiColumn>
-      <template #header>Columna 3</template>
-      <template #content="{ item }">
-        <img :src="item.image" :alt="item.image" style="max-width: 120px; max-height: 120px" />
+      <template #header>
+        Columna 3
       </template>
-      <template #footer>Footer Columna 3</template>
+      <template #content="{ item }">
+        <img
+          :src="item.image"
+          :alt="item.image"
+          style="max-width: 120px; max-height: 120px"
+        >
+      </template>
+      <template #footer>
+        Footer Columna 3
+      </template>
     </UiColumn>
   </UiTable>
 </template>

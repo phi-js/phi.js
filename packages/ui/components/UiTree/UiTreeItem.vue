@@ -12,21 +12,21 @@ export default {
     UiTree,
     UiIcon,
     UiItem,
-    UiDrawer
+    UiDrawer,
   },
 
   props: {
     value: {
       type: Object,
       required: false,
-      default: () => ({})
+      default: () => ({}),
     },
 
     depth: {
       type: Number,
       required: false,
-      default: 0
-    }
+      default: 0,
+    },
   },
 
   emits: ['click-item'],
@@ -35,8 +35,8 @@ export default {
     drawerGroupName() {
       return null
       // return `ui-menu-${this.depth}`
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -51,10 +51,18 @@ export default {
       :open="value.isActive"
     >
       <template #trigger="{ isOpen }">
-        <UiItem class="ui-clickable" v-bind="value" :children="undefined">
-          <template #actions
-            ><UiIcon :src="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'"
-          /></template>
+        <UiItem
+          class="ui-clickable"
+          v-bind="value"
+          :children="undefined"
+        >
+          <template
+            #actions
+          >
+            <UiIcon
+              :src="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'"
+            />
+          </template>
         </UiItem>
       </template>
       <template #contents>
@@ -63,15 +71,28 @@ export default {
           :value="value.children"
           @click-item="$emit('click-item', $event)"
         >
-          <template v-if="$slots.item" #item="slotProps">
-            <slot name="item" v-bind="slotProps"></slot>
+          <template
+            v-if="$slots.item"
+            #item="slotProps"
+          >
+            <slot
+              name="item"
+              v-bind="slotProps"
+            />
           </template>
         </UiTree>
       </template>
     </UiDrawer>
     <template v-else-if="$slots.item">
-      <slot name="item" :item="value"></slot>
+      <slot
+        name="item"
+        :item="value"
+      />
     </template>
-    <UiItem v-else v-bind="value" @click="$emit('click-item', value)"></UiItem>
+    <UiItem
+      v-else
+      v-bind="value"
+      @click="$emit('click-item', value)"
+    />
   </div>
 </template>

@@ -15,16 +15,32 @@ const curIcon = ref('mdi:vuejs')
       :key="i"
       :src="`mdi:${icon}`"
       v-text="`mdi:${icon}`"
-    ></option>
+    />
   </select>
 
   <div>
     <UiIcon :src="curIcon" />
-    <UiIcon :src="curIcon" style="font-size: 2em" />
-    <UiIcon :src="curIcon" style="font-size: 3em" />
-    <UiIcon :src="curIcon" style="font-size: 4em" />
-    <UiIcon :src="curIcon" style="font-size: 6em; color: green" />
+    <UiIcon
+      :src="curIcon"
+      style="font-size: 2em"
+    />
+    <UiIcon
+      :src="curIcon"
+      style="font-size: 3em"
+    />
+    <UiIcon
+      :src="curIcon"
+      style="font-size: 4em"
+    />
+    <UiIcon
+      :src="curIcon"
+      style="font-size: 6em; color: green"
+    />
   </div>
 
-  <UiItem text="Hello world" :icon="curIcon" :subtext="curIcon" />
+  <UiItem
+    text="Hello world"
+    :icon="curIcon"
+    :subtext="curIcon"
+  />
 </template>

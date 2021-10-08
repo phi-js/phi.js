@@ -9,19 +9,19 @@ const props = defineProps({
   multiple: {
     type: Boolean,
     required: false,
-    default: false
+    default: false,
   },
 
   modelValue: {
     validator: () => true,
     required: false,
-    default: null
+    default: null,
   },
 
   placeholder: {
     type: String,
     required: false,
-    default: ''
+    default: '',
   },
 
   /**
@@ -30,7 +30,7 @@ const props = defineProps({
   options: {
     type: Array,
     required: false,
-    default: () => []
+    default: () => [],
   },
 
   /**
@@ -42,7 +42,7 @@ const props = defineProps({
   optionValue: {
     type: String,
     required: false,
-    default: null
+    default: null,
   },
 
   /**
@@ -54,14 +54,14 @@ const props = defineProps({
   optionText: {
     type: String,
     required: false,
-    default: null
+    default: null,
   },
 
   optionSearch: {
     type: [String, Array],
     required: false,
-    default: null
-  }
+    default: null,
+  },
 })
 
 // Option list manager: Converts arbitrary array to Option array,
@@ -71,8 +71,8 @@ const { options, searchQuery, filteredOptions } = useOptionsManager(
   {
     optionText: props.optionText,
     optionValue: props.optionValue,
-    optionSearch: props.optionSearch
-  }
+    optionSearch: props.optionSearch,
+  },
 )
 
 // Manage selected value
@@ -84,12 +84,11 @@ const { selection, isSelected, select, toggle } = useSelectionManager(
     if (!props.multiple) {
       close()
     }
-  }
+  },
 )
 
 const selectedOptions = computed(() =>
-  options.value.filter((option) => isSelected(option.value))
-)
+  options.value.filter((option) => isSelected(option.value)))
 
 // Option toggling functions
 function clickOption(objOption) {
@@ -114,7 +113,7 @@ const elOptionsContainer = ref(null)
 
 const { setFocus, focusNext, focusPrevious, focusedItem } = useFocusItem(
   listedOptions,
-  elOptionsContainer
+  elOptionsContainer,
 )
 
 // reset focus when search changes
@@ -125,9 +124,8 @@ const parsedOptions = computed(() =>
   listedOptions.value.map((option) => ({
     ...option,
     isSelected: isSelected(option.value),
-    isFocused: option === focusedItem.value
-  }))
-)
+    isFocused: option === focusedItem.value,
+  })))
 
 // open/closed state
 const root = ref(false)
@@ -149,14 +147,10 @@ async function open(setFocusedIndex = null) {
       setFocus(0)
     } else {
       // Focus the first selected option when opening a single-value picker
-      setFocus(
-        Math.max(
-          listedOptions.value.findIndex(
-            (opt) => opt.value === selection.value?.[0]
-          ),
-          0
-        )
-      )
+      setFocus(Math.max(
+        listedOptions.value.findIndex((opt) => opt.value === selection.value?.[0]),
+        0,
+      ))
     }
   }
 
@@ -211,18 +205,14 @@ function clickChip(option) {
 
 const placeholderOption = computed(() => {
   if (props.multiple) {
-    return {
-      text: selectedOptions.value.length ? '' : props.placeholder
-    }
+    return { text: selectedOptions.value.length ? '' : props.placeholder }
   }
 
   if (selectedOptions.value.length) {
     return selectedOptions.value[0]
   }
 
-  return {
-    text: props.placeholder
-  }
+  return { text: props.placeholder }
 })
 </script>
 <template>
@@ -241,7 +231,10 @@ const placeholderOption = computed(() => {
     >
       <template #trigger>
         <div class="UiSelect__face ui-noselect ui-inset">
-          <template v-for="option in visibleChips" :key="option.value">
+          <template
+            v-for="option in visibleChips"
+            :key="option.value"
+          >
             <slot name="chip">
               <UiItem
                 v-bind="option"
@@ -279,10 +272,17 @@ const placeholderOption = computed(() => {
               v-if="hiddenChips.length"
               name="aggregator"
               :options="hiddenChips"
-              >... {{ hiddenChips.length }} more
+            >
+              ... {{ hiddenChips.length }} more
             </slot>
-            <slot v-else name="placeholder">
-              <UiItem style="flex: 1" v-bind="placeholderOption" />
+            <slot
+              v-else
+              name="placeholder"
+            >
+              <UiItem
+                style="flex: 1"
+                v-bind="placeholderOption"
+              />
             </slot>
             <UiIcon
               style="padding: var(--ui-padding)"
@@ -293,7 +293,10 @@ const placeholderOption = computed(() => {
       </template>
 
       <template #contents>
-        <div ref="elPopoverContents" class="UiSelect__popover">
+        <div
+          ref="elPopoverContents"
+          class="UiSelect__popover"
+        >
           <input
             ref="searchElem"
             v-model="searchQuery"
@@ -303,9 +306,12 @@ const placeholderOption = computed(() => {
             @keydown.arrow-up.prevent="focusPrevious()"
             @keydown.arrow-down.prevent="focusNext()"
             @keydown.enter.stop="clickOption(focusedItem)"
-          />
+          >
 
-          <div ref="elOptionsContainer" class="UiSelect__options">
+          <div
+            ref="elOptionsContainer"
+            class="UiSelect__options"
+          >
             <div
               v-for="option in parsedOptions"
               :key="option.value"
@@ -315,7 +321,10 @@ const placeholderOption = computed(() => {
                 'UiOption--selected': option.isSelected
               }"
             >
-              <slot name="option" v-bind="option">
+              <slot
+                name="option"
+                v-bind="option"
+              >
                 <UiItem
                   class="UiOption ui-clickable ui-noselect"
                   v-bind="option"
@@ -340,8 +349,23 @@ const placeholderOption = computed(() => {
   }
 
   &__options {
+    margin: 3px;
+    padding-right: 3px;
     max-height: 350px;
     overflow-y: auto;
+
+    /*firefox only*/
+    scrollbar-width: thin;
+
+    /*webkit based browsers only*/
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
   }
 
   &__search-input {

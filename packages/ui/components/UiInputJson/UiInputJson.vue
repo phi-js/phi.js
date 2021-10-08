@@ -7,13 +7,13 @@ const props = defineProps({
   modelValue: {
     validator: () => true,
     required: false,
-    default: null
+    default: null,
   },
 
   placeholder: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 })
 
 const stringValue = ref('')
@@ -36,8 +36,8 @@ watch(
   },
   {
     immediate: true,
-    deep: true
-  }
+    deep: true,
+  },
 )
 
 function onTextareaInput() {
@@ -59,7 +59,10 @@ function pretify() {
 </script>
 
 <template>
-  <div class="UiInputJson" :class="{ 'UiInputJson--invalid': !isValid }">
+  <div
+    class="UiInputJson"
+    :class="{ 'UiInputJson--invalid': !isValid }"
+  >
     <textarea
       v-model="stringValue"
       class="ui-native UiInputJson__textarea"
@@ -68,7 +71,7 @@ function pretify() {
       @input="onTextareaInput"
       @focus="$emit('focus', $event)"
       @blur="$emit('blur', $event)"
-    ></textarea>
+    />
     <div class="UiInputJson__validator">
       <UiIcon
         v-if="isValid"
@@ -77,7 +80,10 @@ function pretify() {
         title="Format JSON"
         @click="pretify"
       />
-      <UiIcon v-else src="mdi:alert-circle" />
+      <UiIcon
+        v-else
+        src="mdi:alert-circle"
+      />
     </div>
   </div>
 </template>

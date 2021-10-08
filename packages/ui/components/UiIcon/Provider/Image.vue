@@ -1,5 +1,8 @@
 <template>
-  <div class="ui-icon-image" :style="styles"></div>
+  <div
+    class="ui-icon-image"
+    :style="styles"
+  />
 </template>
 
 <script>
@@ -9,8 +12,8 @@ export default {
   props: {
     fullValue: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
 
   computed: {
@@ -23,9 +26,9 @@ export default {
         width: '1em',
         height: '1em',
         backgroundImage: `url('${src}')`,
-        backgroundSize: 'cover'
+        backgroundSize: 'cover',
       }
-    }
-  }
+    },
+  },
 }
 </script>

@@ -5,20 +5,20 @@ const props = defineProps({
   modelValue: {
     validator: () => true,
     required: false,
-    default: null
+    default: null,
   },
 
   options: {
     type: Array,
     required: false,
-    default: () => []
+    default: () => [],
   },
 
   multiple: {
     type: Boolean,
     required: false,
-    default: false
-  }
+    default: false,
+  },
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -29,7 +29,7 @@ watch(
   (newValue) => {
     innerValue.value = Array.isArray(newValue) ? newValue : [newValue]
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 function toggleValue(value) {
@@ -45,7 +45,7 @@ function toggleValue(value) {
   }
   emit(
     'update:modelValue',
-    props.multiple ? innerValue.value : innerValue.value[0]
+    props.multiple ? innerValue.value : innerValue.value[0],
   )
 }
 </script>
@@ -63,7 +63,7 @@ function toggleValue(value) {
       }"
       @click="toggleValue(option.value)"
       v-text="option.text"
-    ></button>
+    />
   </div>
 </template>
 

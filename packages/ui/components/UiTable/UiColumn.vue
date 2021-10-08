@@ -1,6 +1,3 @@
-<template></template>
 <script>
-export default {
-  name: 'UiColumn'
-};
+export default { name: 'UiColumn' }
 </script>

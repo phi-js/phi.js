@@ -65,9 +65,11 @@ const records = ref(xrecords)
       option-value="$.id"
       option-text="$.email"
     >
-      <template #aggregator="{ options }"
-        >y otras {{ options.length }} personas</template
+      <template
+        #aggregator="{ options }"
       >
+        y otras {{ options.length }} personas
+      </template>
     </UiSelect>
   </section>
 

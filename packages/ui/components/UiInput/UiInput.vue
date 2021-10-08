@@ -3,55 +3,55 @@ import { computed, useAttrs, ref } from 'vue'
 import types from './types.js'
 
 // eslint-disable-next-line no-undef
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'click'])
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
   type: {
     type: String,
     required: false,
-    default: 'text'
+    default: 'text',
   },
 
   modelValue: {
     type: [String, Number, Boolean, Object, Array, Date],
     required: false,
-    default: null
+    default: null,
   },
 
   label: {
     type: String,
     required: false,
-    default: ''
+    default: '',
   },
 
   placeholder: {
     type: String,
     required: false,
-    default: ''
+    default: '',
   },
 
   subtext: {
     type: String,
     required: false,
-    default: ''
+    default: '',
   },
 
   disabled: {
     type: Boolean,
-    default: false
+    default: false,
   },
 
   required: {
     type: Boolean,
-    default: false
+    default: false,
   },
 
   errors: {
     type: Array,
     required: false,
-    default: () => []
-  }
+    default: () => [],
+  },
 })
 
 // focus management
@@ -76,8 +76,8 @@ const classNames = computed(() => {
       'ui-input--disabled': props.disabled,
       'ui-input--enabled': !props.disabled,
       'ui-input--required': props.required,
-      'ui-input--invalid': props.errors.length > 0
-    }
+      'ui-input--invalid': props.errors.length > 0,
+    },
   ]
 })
 
@@ -94,9 +94,9 @@ const elementProps = computed(() => {
   return {
     ...attrs,
     ...props,
-    onFocus: () => setFocused(true),
-    onBlur: () => setFocused(false),
-    'onUpdate:modelValue': (newValue) => emit('update:modelValue', newValue)
+    'onFocus': () => setFocused(true),
+    'onBlur': () => setFocused(false),
+    'onUpdate:modelValue': (newValue) => emit('update:modelValue', newValue),
   }
 })
 
@@ -104,7 +104,8 @@ const nativeElementProps = computed(() => {
   return {
     ...elementProps.value,
     value: elementProps.value?.modelValue,
-    onInput: (event) => emit('update:modelValue', event.target.value)
+    onInput: (event) => emit('update:modelValue', event.target.value),
+    onClick: (event) => emit('click', event),
   }
 })
 
@@ -112,18 +113,21 @@ const nativeCheckboxProps = computed(() => {
   return {
     ...elementProps.value,
     checked: elementProps.value?.modelValue,
-    onInput: (event) => emit('update:modelValue', event.target.checked)
+    onInput: (event) => emit('update:modelValue', event.target.checked),
   }
 })
 </script>
 
 <template>
-  <div class="ui-input" :class="classNames">
+  <div
+    class="ui-input"
+    :class="classNames"
+  >
     <label
       v-if="showLabel"
       class="ui-input__label"
       v-text="props.label"
-    ></label>
+    />
 
     <div class="ui-input__body">
       <slot name="default">
@@ -132,36 +136,41 @@ const nativeCheckboxProps = computed(() => {
           v-if="customComponent"
           class="ui-input__elem"
           v-bind="elementProps"
-        ></component>
+        />
         <textarea
           v-else-if="props.type == 'textarea'"
           class="ui-input__elem ui-native"
           v-bind="nativeElementProps"
-        ></textarea>
+        />
         <button
           v-else-if="props.type == 'button'"
           type="button"
           class="ui-input__elem ui-native"
           v-bind="nativeElementProps"
           v-text="props.label"
-        ></button>
+        />
         <label
           v-else-if="props.type == 'checkbox'"
           class="ui-input__elem ui-noselect"
           :type="props.type"
         >
-          <input type="checkbox" v-bind="nativeCheckboxProps" /><span>{{
+          <input
+            type="checkbox"
+            v-bind="nativeCheckboxProps"
+          ><span>{{
             props.placeholder
-          }}</span></label
-        >
+          }}</span></label>
         <input
           v-else
           class="ui-input__elem ui-native"
           :type="props.type"
           v-bind="nativeElementProps"
-        />
+        >
       </slot>
     </div>
-    <div class="ui-input__footer"></div>
+    <div
+      class="ui-input__subtext"
+      v-text="props.subtext"
+    />
   </div>
 </template>

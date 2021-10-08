@@ -9,7 +9,8 @@ import {
   watch,
   onMounted,
   onBeforeUnmount,
-  computed
+  computed,
+  reactive,
 } from 'vue'
 
 // UI components
@@ -29,8 +30,8 @@ const i18n = provideI18n({
     de: { globalWord: 'globales Wort' },
     en: { globalWord: 'Global Word' },
     es: { globalWord: 'Palabra Global' },
-    fr: { globalWord: 'mot global' }
-  }
+    fr: { globalWord: 'mot global' },
+  },
 })
 
 // Lista de paginas
@@ -47,7 +48,7 @@ function filterTree(arrTree, strFilter) {
         retval.push({
           ...node,
           children: filteredChildren,
-          isActive: filteredChildren.some((child) => child.isActive)
+          isActive: filteredChildren.some((child) => child.isActive),
         })
       }
     } else if (strFilter) {
@@ -55,13 +56,13 @@ function filterTree(arrTree, strFilter) {
       if (searchKey.includes(strFilter)) {
         retval.push({
           ...node,
-          isActive: true
+          isActive: true,
         })
       }
     } else {
       retval.push({
         ...node,
-        isActive: currentPage.value == node?.payload.href
+        isActive: currentPage.value == node?.payload.href,
       })
     }
   })
@@ -104,11 +105,10 @@ watch(
     } catch (e) {
       component.value = null
       error.value = e
+      throw e
     }
   },
-  {
-    immediate: true
-  }
+  { immediate: true },
 )
 
 // Importar el componente asociado a un nombre de pagina
@@ -124,42 +124,76 @@ function loadPageComponent(href) {
 
   return importCallback().then((mod) => mod.default)
 }
+
+// Control de APIs disponibles
+const apis = reactive([])
+for (let i = 0; i < 5; i++) {
+  apis.push({
+    id: i,
+    name: `API ${i}`,
+    baseURL: `https://some-api-${i}.example.com`,
+    isEnabled: Math.random() >= 0.5,
+  })
+}
+
+const enabledApis = computed(() => apis.filter((a) => a.isEnabled))
 </script>
 
 <template>
   <div id="app__top-bar">
     <!-- <button @click="apis.push(Math.random())">PUSH API</button> -->
-    <UiItem id="app__logo" text="Phidias.js" icon="/phidias.png" />
+    <UiItem
+      id="app__logo"
+      text="Phidias.js"
+      icon="/phidias.png"
+    />
 
     <UiPopover>
       <template #trigger>
         <UiItem
           class="api-dialog__trigger ui-clickable"
           icon="mdi:wifi"
-          text="APIs"
+          :text="`APIs ${enabledApis.length ? `(${enabledApis.length})` : ''}`"
+          :badge="!enabledApis.length ? 0 : null"
         />
       </template>
       <template #contents>
         <div class="api-dialog__contents">
           <UiItem
-            v-for="i in 10"
-            :key="i"
-            :text="`API ${i}`"
-            :subtext="`https://some-api-${i}.example.com`"
-            class="ui-clickable"
-            badge-color="var(--ui-color-success)"
-            badge=" "
+            v-for="api in apis"
+            :key="api.id"
+            :icon="
+              api.isEnabled
+                ? 'mdi:checkbox-marked'
+                : 'mdi:checkbox-blank-outline'
+            "
+            :text="api.name"
+            :subtext="api.baseURL"
+            :icon-color="api.isEnabled ? 'var(--ui-color-success)' : null"
+            class="api-item ui-clickable"
+            @click="api.isEnabled = !api.isEnabled"
           />
         </div>
       </template>
     </UiPopover>
 
     <UiItem icon="mdi:web">
-      <select v-model="i18n.locale" class="ui-native">
-        <option value="en">en</option>
-        <option value="es">es</option>
-        <option value="de">de</option>
-        <option value="fr">fr</option>
+      <select
+        v-model="i18n.locale"
+        class="ui-native"
+      >
+        <option value="en">
+          en
+        </option>
+        <option value="es">
+          es
+        </option>
+        <option value="de">
+          de
+        </option>
+        <option value="fr">
+          fr
+        </option>
       </select>
     </UiItem>
   </div>
@@ -175,7 +209,10 @@ function loadPageComponent(href) {
         @input="searchString = $event.target.value"
       />
 
-      <UiTree :value="filteredTree" class="app__tree">
+      <UiTree
+        :value="filteredTree"
+        class="app__tree"
+      >
         <template #item="{ item }">
           <a
             :class="{ '--active': currentPage == item.payload.href }"
@@ -192,7 +229,10 @@ function loadPageComponent(href) {
 
     <div id="app-body">
       <transition name="fade">
-        <div v-if="component" :key="currentPage">
+        <div
+          v-if="component"
+          :key="currentPage"
+        >
           <component :is="component" />
         </div>
       </transition>
@@ -208,14 +248,6 @@ function loadPageComponent(href) {
 <style lang="scss">
 #app {
   --app-sidebar-width: 240px;
-
-  .api-dialog {
-    &__contents {
-      .ui-item__badge {
-        background-color: var(--ui-color-success);
-      }
-    }
-  }
 
   a {
     text-decoration: none;
@@ -281,6 +313,12 @@ function loadPageComponent(href) {
   #app-body {
     flex: 1;
     padding: 18px 32px;
+  }
+
+  .api-item {
+    .ui-item__icon {
+      align-self: baseline;
+    }
   }
 
   // Estilos fijos para elementos class="docs-page"

@@ -1,0 +1,1 @@
+export { default as UiWindow } from './UiWindow.vue'

@@ -17,7 +17,7 @@ const placements = [
   'right-end',
   'left',
   'left-start',
-  'left-end'
+  'left-end',
 ]
 </script>
 

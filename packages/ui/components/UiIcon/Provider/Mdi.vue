@@ -1,5 +1,5 @@
 <template>
-  <span :class="['mdi', `mdi-${value}`]"></span>
+  <span :class="['mdi', `mdi-${value}`]" />
 </template>
 
 <script>
@@ -8,9 +8,9 @@ export default {
     value: {
       type: String,
       required: false,
-      default: 'help'
-    }
-  }
+      default: 'help',
+    },
+  },
 }
 </script>
 

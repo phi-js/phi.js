@@ -16,7 +16,7 @@ for (const path in pageFiles) {
     path,
     dir: path.replace('../', '').split('/').slice(0, -1).join('/'),
     import: pageFiles[path],
-    isLocal
+    isLocal,
   })
 }
 
@@ -36,7 +36,7 @@ for (const path in modules) {
     path,
     dir: path.replace('../packages', '').split('/').slice(0, -1).join('/'),
     import: modules[path],
-    isLocal
+    isLocal,
   })
 }
 
@@ -102,7 +102,7 @@ function spliceItem(arrTree, arrPath, payload) {
     node = {
       id: rootId,
       text: payload?.text || rootId,
-      children: []
+      children: [],
     }
     arrTree.push(node)
   }

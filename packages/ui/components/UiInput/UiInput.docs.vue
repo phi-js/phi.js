@@ -7,7 +7,7 @@ const options = [
   { value: 1, text: 'Uno' },
   { value: false, text: 'false' },
   { value: 2, text: 'Dos' },
-  { value: 3, text: 'Tres' }
+  { value: 3, text: 'Tres' },
 ]
 
 const modelValue = ref({
@@ -22,14 +22,14 @@ const modelValue = ref({
   obj: {
     foo: 'foo',
     bar: 'bar',
-    baz: [1, 2, 3]
-  }
+    baz: [1, 2, 3],
+  },
 })
 
 const themes = [
   { value: 'my-theme-wide', text: 'Wide' },
   { value: 'my-theme-material', text: 'Material' },
-  { value: 'my-theme-terminal', text: 'Terminal' }
+  { value: 'my-theme-terminal', text: 'Terminal' },
 ]
 
 const curTheme = ref('my-theme-wide')
@@ -47,10 +47,16 @@ const curTheme = ref('my-theme-wide')
     @input="curTheme = $event"
   />
 
-  <hr />
+  <hr>
 
-  <div class="docs-page ui-row --top" style="position: relative">
-    <div :class="curTheme" style="margin-right: var(--ui-breathe)">
+  <div
+    class="docs-page ui-row --top"
+    style="position: relative"
+  >
+    <div
+      :class="curTheme"
+      style="margin-right: var(--ui-breathe)"
+    >
       <section>
         <h2>Native types</h2>
         <UiInput
@@ -71,13 +77,40 @@ const curTheme = ref('my-theme-wide')
           label="checkbox"
           placeholder="Acepto tal cosa"
         />
-        <UiInput v-model="modelValue.number" type="number" label="number" />
-        <UiInput v-model="modelValue.string" type="search" label="search" />
-        <UiInput v-model="modelValue.date" type="date" label="date" />
-        <UiInput v-model="modelValue.time" type="time" label="time" />
-        <UiInput v-model="modelValue.date" type="date-time" label="date-time" />
-        <UiInput v-model="modelValue.color" type="color" label="color" />
-        <UiInput type="button" label="button" />
+        <UiInput
+          v-model="modelValue.number"
+          type="number"
+          label="number"
+        />
+        <UiInput
+          v-model="modelValue.string"
+          type="search"
+          label="search"
+        />
+        <UiInput
+          v-model="modelValue.date"
+          type="date"
+          label="date"
+        />
+        <UiInput
+          v-model="modelValue.time"
+          type="time"
+          label="time"
+        />
+        <UiInput
+          v-model="modelValue.date"
+          type="date-time"
+          label="date-time"
+        />
+        <UiInput
+          v-model="modelValue.color"
+          type="color"
+          label="color"
+        />
+        <UiInput
+          type="button"
+          label="button"
+        />
       </section>
 
       <section>

@@ -7,7 +7,7 @@ const options = [
   { text: 'Option 2', value: 2 },
   { text: 'Option 3', value: 3 },
   { text: 'Option 4', value: 4 },
-  { text: 'Option 5', value: 5 }
+  { text: 'Option 5', value: 5 },
 ]
 
 const singleValue = ref(null)
@@ -20,13 +20,20 @@ const multipleValues = ref([])
 
     <section>
       <label>Single:</label>
-      <UiSelectButtons v-model="singleValue" :options="options" />
+      <UiSelectButtons
+        v-model="singleValue"
+        :options="options"
+      />
       <pre>singleValue: {{ singleValue }}</pre>
     </section>
 
     <section>
       <label>Multiple:</label>
-      <UiSelectButtons v-model="multipleValues" multiple :options="options" />
+      <UiSelectButtons
+        v-model="multipleValues"
+        multiple
+        :options="options"
+      />
       <pre>multipleValues: {{ multipleValues }}</pre>
     </section>
   </div>

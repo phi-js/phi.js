@@ -6,22 +6,31 @@ defineProps({
   modelValue: {
     type: Object,
     required: false,
-    default: null
-  }
+    default: null,
+  },
 })
 
 const proxy = bindProp('modelValue', {
   foo: 'foo',
   bar: 420,
-  baz: 'baz'
+  baz: 'baz',
 })
 </script>
 
 <template>
   <h1>ModelChanger</h1>
   <div>
-    <input v-model="proxy.foo" type="text" />
-    <input v-model="proxy.bar" type="number" />
-    <input v-model="proxy.baz" type="text" />
+    <input
+      v-model="proxy.foo"
+      type="text"
+    >
+    <input
+      v-model="proxy.bar"
+      type="number"
+    >
+    <input
+      v-model="proxy.baz"
+      type="text"
+    >
   </div>
 </template>

@@ -9,19 +9,19 @@ const props = defineProps({
   multiple: {
     type: Boolean,
     required: false,
-    default: false
+    default: false,
   },
 
   modelValue: {
     validator: () => true,
     required: false,
-    default: null
+    default: null,
   },
 
   placeholder: {
     type: String,
     required: false,
-    default: ''
+    default: '',
   },
 
   /**
@@ -30,7 +30,7 @@ const props = defineProps({
   options: {
     type: Array,
     required: false,
-    default: () => []
+    default: () => [],
   },
 
   /**
@@ -42,7 +42,7 @@ const props = defineProps({
   optionValue: {
     type: String,
     required: false,
-    default: null
+    default: null,
   },
 
   /**
@@ -54,26 +54,26 @@ const props = defineProps({
   optionText: {
     type: String,
     required: false,
-    default: null
+    default: null,
   },
 
   optionSearch: {
     type: [String, Array],
     required: false,
-    default: null
-  }
+    default: null,
+  },
 })
 
 const { options } = useOptionsManager(toRef(props, 'options'), {
   optionText: props.optionText,
   optionValue: props.optionValue,
-  optionSearch: props.optionSearch
+  optionSearch: props.optionSearch,
 })
 
 const { isSelected, toggle } = useSelectionManager(
   toRef(props, 'modelValue'),
   toRef(props, 'multiple'),
-  (newValue) => emit('update:modelValue', newValue)
+  (newValue) => emit('update:modelValue', newValue),
 )
 
 // Nice tidy list of listed options
@@ -89,10 +89,9 @@ const arrOptions = computed(() =>
 
     return {
       ...option,
-      icon
+      icon,
     }
-  })
-)
+  }))
 </script>
 
 <template>

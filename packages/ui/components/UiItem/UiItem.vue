@@ -1,13 +1,20 @@
 <template>
-  <div class="ui-item" @click="$emit('click', $event)">
-    <div v-if="badge != null" class="ui-item__badge" v-text="badge"></div>
+  <div
+    class="ui-item"
+    @click="$emit('click', $event)"
+  >
+    <div
+      v-if="badge != null"
+      class="ui-item__badge"
+      v-text="badge"
+    />
 
     <div
       v-if="hasSlot('icon')"
       class="ui-item__icon"
       @click="$emit('click-icon', $event)"
     >
-      <slot name="icon"></slot>
+      <slot name="icon" />
     </div>
     <UiIcon
       v-else-if="icon"
@@ -23,13 +30,22 @@
       @click="$emit('click-body', $event)"
     >
       <slot name="default">
-        <h1 class="ui-item__text" v-text="text"></h1>
-        <p class="ui-item__subtext" v-text="subtext"></p>
+        <h1
+          class="ui-item__text"
+          v-text="text"
+        />
+        <p
+          class="ui-item__subtext"
+          v-text="subtext"
+        />
       </slot>
     </div>
 
-    <div v-if="hasSlot('actions')" class="ui-item__actions">
-      <slot name="actions"> </slot>
+    <div
+      v-if="hasSlot('actions')"
+      class="ui-item__actions"
+    >
+      <slot name="actions" />
     </div>
   </div>
 </template>
@@ -45,40 +61,40 @@ export default {
     text: {
       type: [String, Number],
       required: false,
-      default: null
+      default: null,
     },
 
     subtext: {
       type: [String, Number],
       required: false,
-      default: ''
+      default: '',
     },
 
     icon: {
       type: [String, Number],
       required: false,
-      default: null
+      default: null,
     },
 
     iconColor: {
       type: String,
       required: false,
-      default: 'rgba(0, 0, 0, 0.54)'
+      default: 'rgba(0, 0, 0, 0.54)',
     },
 
     badge: {
       type: [String, Number],
       required: false,
-      default: null
-    }
+      default: null,
+    },
   },
   emits: ['click', 'click-icon', 'click-body'],
 
   methods: {
     hasSlot(slotName) {
       return !!this.$slots[slotName]
-    }
-  }
+    },
+  },
 }
 </script>
 

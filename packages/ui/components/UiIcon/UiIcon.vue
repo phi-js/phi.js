@@ -1,14 +1,21 @@
 <template>
-  <span class="ui-icon" :style="styles" @click="$emit('click', $event)">
+  <span
+    class="ui-icon"
+    :style="styles"
+    @click="$emit('click', $event)"
+  >
     <component
       :is="provider.component"
       v-if="provider"
       :value="provider.value"
       :full-value="sanitizedSrc"
       :color="color"
-    ></component>
-    <span v-else :title="sanitizedSrc">�</span>
-    <slot></slot>
+    />
+    <span
+      v-else
+      :title="sanitizedSrc"
+    >�</span>
+    <slot />
   </span>
 </template>
 
@@ -22,14 +29,14 @@ export default {
     src: {
       type: String,
       required: false,
-      default: '�'
+      default: '�',
     },
 
     color: {
       type: String,
       required: false,
-      default: null
-    }
+      default: null,
+    },
   },
 
   emits: ['click'],
@@ -40,9 +47,7 @@ export default {
     },
 
     styles() {
-      return {
-        color: this.color || undefined
-      }
+      return { color: this.color || undefined }
     },
 
     provider() {
@@ -58,7 +63,7 @@ export default {
         return {
           key: this.sanitizedSrc,
           component: providers.file,
-          value: this.sanitizedSrc
+          value: this.sanitizedSrc,
         }
       }
 
@@ -69,10 +74,10 @@ export default {
       return {
         key: providerName,
         component: providers[providerName],
-        value: iconValue
+        value: iconValue,
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -10,7 +10,7 @@
         :open="doOpen"
         :close="doClose"
         :toggle="toggle"
-      ></slot>
+      />
     </div>
 
     <div
@@ -31,20 +31,20 @@
           :open="doOpen"
           :close="doClose"
           :toggle="toggle"
-        ></slot>
+        />
       </slot>
 
       <div
         v-if="showArrow"
         class="ui-popover-arrow"
         data-popper-arrow
-      ></div>
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { createPopper } from '@popperjs/core';
+import { createPopper } from '@popperjs/core'
 
 export default {
   name: 'UiPopover',
@@ -91,24 +91,14 @@ export default {
     },
   },
 
+  emits: ['update:open', 'open', 'close'],
+
   data() {
     return {
       popperInstance: null,
 
       isOpen: this.open,
       isLoaded: this.autoload,
-    };
-  },
-
-  mounted() {
-    // this.$nextTick(() => this.initPopperInstance());
-    setTimeout(() => this.initPopperInstance(), 100);
-  },
-
-  destroyed() {
-    if (this.popperInstance) {
-      this.popperInstance.destroy();
-      this.popperInstance = null;
     }
   },
 
@@ -117,19 +107,31 @@ export default {
       immediate: true,
       handler(newValue) {
         if (this.isOpen == newValue) {
-          return;
+          return
         }
 
-        newValue ? this.doOpen() : this.doClose();
+        newValue ? this.doOpen() : this.doClose()
       },
     },
+  },
+
+  mounted() {
+    // this.$nextTick(() => this.initPopperInstance());
+    setTimeout(() => this.initPopperInstance(), 100)
+  },
+
+  unmounted() {
+    if (this.popperInstance) {
+      this.popperInstance.destroy()
+      this.popperInstance = null
+    }
   },
 
   methods: {
     initPopperInstance() {
       if (this.popperInstance) {
-        this.popperInstance.destroy();
-        this.popperInstance = null;
+        this.popperInstance.destroy()
+        this.popperInstance = null
       }
 
       this.popperInstance = createPopper(
@@ -140,81 +142,79 @@ export default {
           placement: this.placement,
           modifiers: this.showArrow
             ? [
-                {
-                  name: 'offset',
-                  options: {
-                    offset: [0, 12],
-                  },
-                },
-              ]
+              {
+                name: 'offset',
+                options: { offset: [0, 12] },
+              },
+            ]
             : [],
-        }
-      );
+        },
+      )
     },
 
     doOpen() {
-      this.isLoaded = true;
+      this.isLoaded = true
       if (this.isOpen) {
-        return;
+        return
       }
-      this.isOpen = true;
+      this.isOpen = true
 
       // window.addEventListener('click', this.outsideClickListener);  // El event click se esta disparando de inmediato cuando doOpen fue disparado a su vez desde un @click
       // this.$nextTick(() => window.addEventListener('click', this.outsideClickListener));
       setTimeout(
         () => window.addEventListener('click', this.outsideClickListener, true),
-        100
-      );
-      document.addEventListener('keydown', this.keydownListener, true);
+        100,
+      )
+      document.addEventListener('keydown', this.keydownListener, true)
 
-      this.$emit('update:open', true);
-      this.$emit('open');
+      this.$emit('update:open', true)
+      this.$emit('open')
 
-      this.popperInstance.update();
+      this.popperInstance.update()
     },
 
     doClose() {
       if (!this.isOpen) {
-        return;
+        return
       }
-      this.isOpen = false;
+      this.isOpen = false
 
-      window.removeEventListener('click', this.outsideClickListener, true);
-      document.removeEventListener('keydown', this.keydownListener, true);
+      window.removeEventListener('click', this.outsideClickListener, true)
+      document.removeEventListener('keydown', this.keydownListener, true)
 
-      this.$emit('update:open', false);
-      this.$emit('close');
+      this.$emit('update:open', false)
+      this.$emit('close')
     },
 
     toggle() {
-      this.isOpen ? this.doClose() : this.doOpen();
+      this.isOpen ? this.doClose() : this.doOpen()
     },
 
     onClickTrigger() {
       if (this.trigger == 'click') {
-        this.toggle();
+        this.toggle()
       }
     },
 
     // listen for outside click (click outside click - comentario para ayudar a buscar "click outside" en el codigo :))
     outsideClickListener(event) {
       if (!this.$el.contains(event.target)) {
-        event.stopPropagation(); // importante detener el evento, sobre todo si se ha cambiado la propiedad "open" haciendo click en un elemento "outside"
-        event.preventDefault();
-        this.doClose();
+        event.stopPropagation() // importante detener el evento, sobre todo si se ha cambiado la propiedad "open" haciendo click en un elemento "outside"
+        event.preventDefault()
+        this.doClose()
       }
     },
 
     // listen for ESC key press
     keydownListener(event) {
       switch (event.key) {
-        case 'Escape':
-          this.doClose();
-          break;
+      case 'Escape':
+        this.doClose()
+        break
       }
     },
   },
-};
+}
 </script>
 
 <style lang="scss">

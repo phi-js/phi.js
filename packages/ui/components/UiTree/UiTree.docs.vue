@@ -6,7 +6,7 @@ const tree = [
     children: [
       {
         text: 'Hijo 1',
-        children: [{ text: 'Hijo 1' }, { text: 'Hijo 2' }, { text: 'Hijo 3' }]
+        children: [{ text: 'Hijo 1' }, { text: 'Hijo 2' }, { text: 'Hijo 3' }],
       },
       {
         text: 'Hijo 2',
@@ -17,21 +17,21 @@ const tree = [
             children: [
               { text: 'Hijo 1' },
               { text: 'Hijo 2' },
-              { text: 'Hijo 3' }
-            ]
+              { text: 'Hijo 3' },
+            ],
           },
-          { text: 'Hijo 3' }
-        ]
+          { text: 'Hijo 3' },
+        ],
       },
       {
         text: 'Hijo 3',
-        children: [{ text: 'Hijo 1' }, { text: 'Hijo 2' }, { text: 'Hijo 3' }]
-      }
-    ]
+        children: [{ text: 'Hijo 1' }, { text: 'Hijo 2' }, { text: 'Hijo 3' }],
+      },
+    ],
   },
   {
     text: 'Otro elemento',
-    subtext: 'Otro subtexto (sin hijos)'
+    subtext: 'Otro subtexto (sin hijos)',
   },
   {
     text: 'Otro elemento',
@@ -48,14 +48,14 @@ const tree = [
             children: [
               { text: 'Hijo 1' },
               { text: 'Hijo 2' },
-              { text: 'Hijo 3' }
-            ]
-          }
-        ]
+              { text: 'Hijo 3' },
+            ],
+          },
+        ],
       },
-      { text: 'Hijo 3' }
-    ]
-  }
+      { text: 'Hijo 3' },
+    ],
+  },
 ]
 
 import { UiTree } from './index.js'
@@ -63,5 +63,8 @@ import { UiTree } from './index.js'
 
 <template>
   <h1>UiTree</h1>
-  <UiTree :value="tree" style="max-width: 300px" />
+  <UiTree
+    :value="tree"
+    style="max-width: 300px"
+  />
 </template>

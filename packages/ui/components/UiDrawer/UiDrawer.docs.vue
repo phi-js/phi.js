@@ -5,7 +5,10 @@ import { UiItem } from '../UiItem'
 
 <template>
   <h1>UiDrawer</h1>
-  <UiDrawer v-for="n in 5" :key="n">
+  <UiDrawer
+    v-for="n in 5"
+    :key="n"
+  >
     <template #trigger="{ isOpen }">
       <UiItem
         class="ui-clickable"
@@ -29,10 +32,14 @@ import { UiItem } from '../UiItem'
     </template>
   </UiDrawer>
 
-  <hr />
+  <hr>
   Con drawer-group:
 
-  <UiDrawer v-for="n in 5" :key="n" drawer-group="test-drawer">
+  <UiDrawer
+    v-for="n in 5"
+    :key="n"
+    drawer-group="test-drawer"
+  >
     <template #trigger="{ isOpen }">
       <UiItem
         class="ui-clickable"

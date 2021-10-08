@@ -1,6 +1,11 @@
 <template>
-  <div class="ui-icon-text" :style="{ backgroundColor }">
-    <div :style="{ fontSize }">{{ value }}</div>
+  <div
+    class="ui-icon-text"
+    :style="{ backgroundColor }"
+  >
+    <div :style="{ fontSize }">
+      {{ value }}
+    </div>
   </div>
 </template>
 
@@ -11,14 +16,12 @@ export default {
   props: {
     value: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
 
   data() {
-    return {
-      backgroundColor: null
-    }
+    return { backgroundColor: null }
   },
 
   computed: {
@@ -33,12 +36,12 @@ export default {
       } else {
         return '0.2em'
       }
-    }
+    },
   },
 
   mounted() {
     this.backgroundColor = window.getComputedStyle(this.$el).color
-  }
+  },
 }
 </script>
 

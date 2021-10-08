@@ -7,21 +7,24 @@ export default {
     value: {
       type: Array,
       required: false,
-      default: () => []
+      default: () => [],
     },
 
     depth: {
       type: Number,
       required: false,
-      default: 0
-    }
+      default: 0,
+    },
   },
-  emits: ['click-item']
+  emits: ['click-item'],
 }
 </script>
 
 <template>
-  <div class="ui-tree" :class="{ 'ui-tree--submenu': depth > 0 }">
+  <div
+    class="ui-tree"
+    :class="{ 'ui-tree--submenu': depth > 0 }"
+  >
     <UiTreeItem
       v-for="(item, i) in value"
       :key="i"
@@ -29,8 +32,14 @@ export default {
       :depth="depth"
       @click-item="$emit('click-item', $event)"
     >
-      <template v-if="$slots.item" #item="itemSlotProps">
-        <slot name="item" v-bind="itemSlotProps"></slot>
+      <template
+        v-if="$slots.item"
+        #item="itemSlotProps"
+      >
+        <slot
+          name="item"
+          v-bind="itemSlotProps"
+        />
       </template>
     </UiTreeItem>
   </div>

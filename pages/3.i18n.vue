@@ -8,18 +8,18 @@ const messages = {
   en: {
     'i18n.page.globalLocale': 'Default locale',
     'i18n.page.fixedPropLocale': 'Set via prop (fixed: en)',
-    'i18n.page.varLocale': 'Set via prop (var)'
+    'i18n.page.varLocale': 'Set via prop (var)',
   },
   es: {
     'i18n.page.globalLocale': 'Locale predeterminado',
     'i18n.page.fixedPropLocale': 'Establecido via prop (valor fijo "en")',
-    'i18n.page.varLocale': 'Establecido via prop (variable)'
+    'i18n.page.varLocale': 'Establecido via prop (variable)',
   },
   fr: {
     'i18n.page.globalLocale': 'Localé predetrminé',
     'i18n.page.fixedPropLocale': 'Establité avec value fijé "en"',
-    'i18n.page.varLocale': 'Establité avec viariablu'
-  }
+    'i18n.page.varLocale': 'Establité avec viariablu',
+  },
 }
 const i18n = useI18n(messages)
 </script>
@@ -59,8 +59,7 @@ const now = new Date()
       </section>
 
       <section>
-        <label
-          >{{ i18n.t('i18n.page.varLocale') }}
+        <label>{{ i18n.t('i18n.page.varLocale') }}
           <select v-model="pickerValue">
             <option value="">--</option>
             <option value="de">de</option>

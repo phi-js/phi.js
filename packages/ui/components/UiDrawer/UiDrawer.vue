@@ -15,7 +15,7 @@
         :open="doOpen"
         :close="doClose"
         :isOpen="isOpen"
-      ></slot>
+      />
     </div>
 
     <div class="ui-drawer__contents">
@@ -28,7 +28,7 @@
         :isOpen="isOpen"
       >
         <!-- Si no hay slot contents, usar el slot default -->
-        <slot name="default"></slot>
+        <slot name="default" />
       </slot>
     </div>
   </div>
@@ -41,7 +41,6 @@ var DrawerGroups = {}
 
 export default {
   name: 'UiDrawer',
-
   props: {
     open: Boolean,
 
@@ -49,41 +48,42 @@ export default {
       type: Object,
       default: () => ({
         duration: 620,
-        easing: [500, 30]
-      })
+        easing: [500, 30],
+      }),
     },
 
     slideUp: {
       type: Object,
       default: () => ({
         duration: 420,
-        easing: [0.42, 0, 0.2, 1]
-      })
+        easing: [0.42, 0, 0.2, 1],
+      }),
     },
 
     linear: {
       type: Boolean,
-      default: true
+      default: true,
     },
 
     drawerGroup: {
       type: String,
       required: false,
-      default: null
+      default: null,
     },
 
     triggerEvent: {
       type: String,
       required: false,
-      default: 'mousedown'
-    }
+      default: 'mousedown',
+    },
   },
+  emits: ['update:open', 'animation-done'],
 
   data() {
     return {
       componentLoaded: false,
       isOpen: this.open,
-      element: null
+      element: null,
     }
   },
 
@@ -91,15 +91,15 @@ export default {
     velocityOptions() {
       return {
         up: this.linear ? { duration: 240 } : this.slideUp,
-        down: this.linear ? { duration: 240 } : this.slideDown
+        down: this.linear ? { duration: 240 } : this.slideDown,
       }
-    }
+    },
   },
 
   watch: {
     open() {
       this.set(this.open)
-    }
+    },
   },
 
   mounted() {
@@ -123,7 +123,7 @@ export default {
     if (this.drawerGroup) {
       DrawerGroups[this.drawerGroup].splice(
         DrawerGroups[this.drawerGroup].indexOf(this),
-        1
+        1,
       )
     }
   },
@@ -170,18 +170,15 @@ export default {
               Velocity(
                 this.element,
                 'slideDown',
-                this.velocityOptions.down
+                this.velocityOptions.down,
               ).then(() => this.$emit('animation-done'))
             })
           } else {
-            Velocity(this.element, 'slideDown', this.velocityOptions.down).then(
-              () => this.$emit('animation-done')
-            )
+            Velocity(this.element, 'slideDown', this.velocityOptions.down).then(() => this.$emit('animation-done'))
           }
         } else {
           Velocity(this.element, 'slideUp', this.velocityOptions.up).then(() =>
-            this.$emit('animation-done')
-          )
+            this.$emit('animation-done'))
         }
       }
 
@@ -193,8 +190,8 @@ export default {
           }
         })
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
