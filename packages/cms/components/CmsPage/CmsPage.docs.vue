@@ -59,12 +59,13 @@ const model = ref({
 </script>
 
 <template>
-  <div class="docs-page ui-row --top">
-    <div style="max-width: 50%;">
-      <CmsPageEditor v-model:page="page" />
-      <hr>
+  <div class="docs-page">
+    <CmsPageEditor v-model:page="page" />
+
+    <pre>
       <UiForm
         v-model="model"
+        style="display: flex; justify-content: space-between;"
         :fields="[
           { type: 'text', label: 'Nombre', model: '$.nombre' },
           { type: 'number', label: 'Parrafos', model: '$.cantidad', min: 1 },
@@ -72,7 +73,8 @@ const model = ref({
           { type: 'number', label: 'Limit', model: '$.limit', min: 0 },
         ]"
       />
-    </div>
+    </pre>
+
     <CmsPage
       v-model="model"
       :page="page"

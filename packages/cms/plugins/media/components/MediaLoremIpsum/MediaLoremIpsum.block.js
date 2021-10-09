@@ -52,12 +52,12 @@ export default {
         'props': {
           fields: [
             {
-              type: 'number',
+              type: 'text',
               label: 'Cantidad de parrafos',
               model: 'props.nParagraphs',
             },
             {
-              type: 'number',
+              type: 'text',
               label: 'Cantidad de palabras',
               model: 'props.nWords',
             },

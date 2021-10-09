@@ -58,7 +58,6 @@ const emit = defineEmits(['update:block'])
 .UiInputEditor {
   input.ui-button {
     display: inline-block;
-    width: 100%;
     font-family: var(--ui-font-secondary);
     font-size: 15px;
     font-weight: 500;

@@ -1,6 +1,16 @@
 <script setup>
 import { ref } from 'vue'
-import { UiIcon, UiWindow } from '../../../ui/components'
+import { UiIcon, UiItem, UiWindow, UiPopover } from '../../../ui/components'
+import BlockEditorActions from './BlockEditorActions.vue'
+
+const props = defineProps({
+  block: {
+    type: Object,
+    required: false,
+    default: null,
+  },
+})
+const emit = defineEmits(['update:block'])
 
 const isFocused = ref(false)
 const isWindowOpen = ref(false)
@@ -26,22 +36,55 @@ function openWindow(targetAction = null) {
         class="BlockEditorLayout__handle ui-clickable"
       />
       <slot name="toolbar" />
-      <button
-        class="ui-clickable"
-        @click="openWindow()"
-      >
-        openWindow()
-      </button>
+
+      <!-- dropdown options -->
+      <UiPopover>
+        <template #trigger>
+          <UiIcon
+            class="ui-clickable"
+            src="mdi:dots-vertical"
+          />
+        </template>
+        <template #contents="{close}">
+          <UiItem
+            icon="mdi:cog"
+            text="Source"
+            class="ui-clickable"
+            @click="openWindow(); close();"
+          />
+        </template>
+      </UiPopover>
     </div>
 
     <div class="BlockEditorLayout__face">
-      <slot>
-        Contenido default ?
-      </slot>
+      <slot />
     </div>
 
-    <UiWindow v-model:open="isWindowOpen">
-      Contenido de la ventana
+    <UiWindow
+      v-if="isWindowOpen"
+      v-model:open="isWindowOpen"
+    >
+      <template #contents>
+        <BlockEditorActions
+          :block="props.block"
+          @update:block="emit('update:block', $event)"
+        />
+      </template>
+
+      <template #footer="{hide}">
+        <button
+          type="button"
+          class="ui-button --main"
+          @click="hide"
+          v-text="'Aceptar'"
+        />
+        <button
+          type="button"
+          class="ui-button --cancel"
+          @click="hide"
+          v-text="'Cancelar'"
+        />
+      </template>
     </UiWindow>
   </div>
 </template>

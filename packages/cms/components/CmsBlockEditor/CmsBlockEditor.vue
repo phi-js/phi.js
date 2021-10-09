@@ -40,9 +40,16 @@ watch(
 
     if (definition?.editor?.face) {
       editorFace.value = definition.editor.face
-      if (typeof editorFace.value.component === 'function') {
-        editorFace.value.component = defineAsyncComponent(editorFace.value.component)
-      }
+    } else {
+      editorFace.value = definition.block
+    }
+
+    if (typeof editorFace.value.component === 'function') {
+      editorFace.value.component = defineAsyncComponent(editorFace.value.component)
+    }
+
+    if (!editorFace.value?.component) {
+      editorFace.value = null
     }
 
     if (definition?.editor?.custom) {
@@ -58,35 +65,39 @@ watch(
 </script>
 
 <template>
-  <!-- <pre>blockDefinition: {{ blockDefinition }}</pre> -->
-  <component
-    :is="customEditor"
-    v-if="customEditor"
-    class="CmsBlockEditor"
-    :block="props.block"
-    @update:block="emit('update:block', $event)"
-  />
-  <BlockEditorLayout
-    v-else
-    class="CmsBlockEditor"
-  >
-    <template #toolbarxxx>
-      sdkjlfh asdlkjfh aslkdfjhasdkjl
-    </template>
+  <template v-if="blockDefinition">
+    <component
+      :is="customEditor"
+      v-if="customEditor"
+      class="CmsBlockEditor"
+      :block="props.block"
+      @update:block="emit('update:block', $event)"
+    />
+    <BlockEditorLayout
+      v-else
+      class="CmsBlockEditor"
+      :block="props.block"
+      @update:block="emit('update:block', $event)"
+    >
+      <template #toolbarxxx>
+        sdkjlfh asdlkjfh aslkdfjhasdkjl
+      </template>
 
-    <template #default>
-      <component
-        :is="editorFace.component"
-        v-if="editorFace"
-        :block="props.block"
-        @update:block="emit('update:block', $event)"
-      />
-      <UiInput
-        v-else
-        type="json"
-        :model-value="props.block"
-        @update:modelValue="emit('update:block', $event)"
-      />
-    </template>
-  </BlockEditorLayout>
+      <template #default>
+        <component
+          :is="editorFace.component"
+          v-if="editorFace"
+          v-bind="props.block.props"
+          :block="props.block"
+          @update:block="emit('update:block', $event)"
+        />
+        <UiInput
+          v-else
+          type="json"
+          :model-value="props.block"
+          @update:modelValue="emit('update:block', $event)"
+        />
+      </template>
+    </BlockEditorLayout>
+  </template>
 </template>

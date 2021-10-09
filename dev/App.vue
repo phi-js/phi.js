@@ -323,7 +323,6 @@ const enabledApis = computed(() => apis.filter((a) => a.isEnabled))
 
   // Estilos fijos para elementos class="docs-page"
   .docs-page {
-    --ui-breathe: 32px;
 
     pre {
       padding: var(--ui-padding);

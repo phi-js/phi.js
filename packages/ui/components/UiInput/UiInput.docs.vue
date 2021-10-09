@@ -54,6 +54,7 @@ const curTheme = ref('my-theme-wide')
     style="position: relative"
   >
     <div
+      class="themed-form"
       :class="curTheme"
       style="margin-right: var(--ui-breathe)"
     >
@@ -198,6 +199,10 @@ const curTheme = ref('my-theme-wide')
 </template>
 
 <style lang="scss">
+.themed-form {
+  --ui-breathe: 32px;
+}
+
 .my-theme-wide {
   --input-label-width: 250px;
 

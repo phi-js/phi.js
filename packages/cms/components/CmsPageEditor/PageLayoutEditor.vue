@@ -22,10 +22,15 @@ const isDragging = ref(false)
 function onDraggableStart() {
   isDragging.value = true
 }
+
 function onDraggableEnd() {
   isDragging.value = false
 }
 
+function onDraggableUpdate() {
+  innerPage.value.sections[0] = clearEmptyColumns(innerPage.value.sections[0])
+  emit('update:page', innerPage.value)
+}
 
 // Creacion de columnas al arrastrar bloques a la izquierda o derecha del row (drop en ghost)
 var uidGenerator = 0
@@ -75,9 +80,32 @@ function createColumn(rowIndex, colIndex) {
   return newColumn
 }
 
+function clearEmptyColumns(section) {
+  let rows = []
+  for (let rowIndex = 0; rowIndex < section.rows.length; rowIndex++) {
+    let row = section.rows[rowIndex]
+    let rowColumns = []
+    for (let colIndex = 0; colIndex < row.columns.length; colIndex++) {
+      let column = row.columns[colIndex]
+      if (column?.blocks?.length) {
+        rowColumns.push(column)
+      }
+    }
+
+    row.columns = rowColumns
+    if (row.columns.length) {
+      rows.push(row)
+    }
+  }
+
+  section.rows = rows
+  return section
+}
+
 
 // Gestion de resize de columnas
 const resizerData = reactive({
+  el: null,
   isResizing: false,
   initialX: null,
   targetColumn: null,
@@ -106,9 +134,17 @@ function onResizerStart(evt, rowIndex, colIndex) {
   targetColumn.initialFlex = targetColumn.flex
   nextColumn.initialFlex = nextColumn.flex
 
-  resizerData.initialX = evt.type == 'touchstart' ? evt.touches[0].clientX : evt.clientX
+  let x = evt.type == 'touchstart' ? evt.touches[0].clientX : evt.clientX
+  let y = evt.type == 'touchstart' ? evt.touches[0].clientY : evt.clientY
+
+  resizerData.el = evt.target
+  resizerData.initialX = x
   resizerData.targetColumn = targetColumn
   resizerData.nextColumn = nextColumn
+
+  resizerData.el.style.setProperty('--resizer-x', `${x}px`)
+  resizerData.el.style.setProperty('--resizer-y', `${y}px`)
+  resizerData.el.style.setProperty('--resizer-diff', '\'0\'')
 }
 
 function onResizerMove(evt) {
@@ -118,10 +154,17 @@ function onResizerMove(evt) {
   evt.preventDefault()
 
   let x = evt.type == 'touchmove' ? evt.touches[0].clientX : evt.clientX
+  let y = evt.type == 'touchmove' ? evt.touches[0].clientY : evt.clientY
   let diff = x - resizerData.initialX
 
   resizerData.targetColumn.flex = resizerData.targetColumn.initialFlex + diff
   resizerData.nextColumn.flex = resizerData.nextColumn.initialFlex - diff
+
+  resizerData.el.style.setProperty('--resizer-x', `${x}px`)
+  resizerData.el.style.setProperty('--resizer-y', `${y}px`)
+  resizerData.el.style.setProperty('--resizer-flex-before', `'${resizerData.targetColumn.flex}'`)
+  resizerData.el.style.setProperty('--resizer-flex-after', `'${resizerData.nextColumn.flex}'`)
+  resizerData.el.style.setProperty('--resizer-diff', `'${diff}'`)
 }
 
 function onResizerEnd(evt) {
@@ -131,13 +174,17 @@ function onResizerEnd(evt) {
   evt.preventDefault()
   isResizing.value = false
   emit('update:page', innerPage.value)
+  resizerData.el.style.setProperty('--resizer-diff', '')
 }
 </script>
 
 <template>
   <div
     class="CmsPageLayoutEditor"
-    :class="{'CmsPageLayoutEditor--dragging': isDragging}"
+    :class="{
+      'CmsPageLayoutEditor--dragging': isDragging,
+      'CmsPageLayoutEditor--resizing': isResizing,
+    }"
     @mousemove="onResizerMove($event)"
     @mouseup="onResizerEnd($event)"
     @touchmove="onResizerMove($event)"
@@ -181,7 +228,9 @@ function onResizerEnd(evt) {
             class="CmsPageLayoutEditor__resizer"
             @mousedown="onResizerStart($event, rowIndex, colIndex)"
             @touchstart="onResizerStart($event, rowIndex, colIndex)"
-          />
+          >
+            <div class="CmsPageLayoutEditor__resizer__tooltip" />
+          </div>
 
           <draggable
             v-model="column.blocks"
@@ -189,7 +238,11 @@ function onResizerEnd(evt) {
             group="column-block"
             item-key="id"
             handle=".BlockEditorLayout__handle"
-            @update:modelValue="emit('update:page', innerPage)"
+            :animation="111"
+            :empty-insert-threshold="0"
+            :swap-threshold="0.25"
+
+            @update:modelValue="onDraggableUpdate"
             @start="onDraggableStart($event, column)"
             @end="onDraggableEnd($event, rowIndex, colIndex)"
           >
@@ -233,25 +286,24 @@ function onResizerEnd(evt) {
 <style lang="scss">
 .CmsPageLayoutEditor {
   &--dragging {
-    // border: 3px dashed red;
-
     // prevent dragging blocks into droppable elements (like editable texts or file uploads) present in the block
     .CmsBlockEditor {
       pointer-events: none;
     }
   }
 
-  // &__section {
-  //   border: 1px solid blue;
-  // }
+  &--resizing {
+    // show drag tooltip
+    .CmsPageLayoutEditor__resizer__tooltip {
+      opacity: 0.8;
+    }
+  }
 
   &__row {
-    // border: 1px solid orange;
     display: flex;
   }
 
   &__column {
-    // border: 1px solid red;
     flex: 1;
     position: relative;
 
@@ -266,19 +318,86 @@ function onResizerEnd(evt) {
   }
 
   &__resizer {
-    // border: 3px solid red;
     cursor: col-resize;
 
     position: absolute;
     top: 0;
     bottom: 0;
     right: -12px;
-    width: 24px;
+    width: 20px;
     z-index: 2;
-  }
 
-  // &__block {
-  //   border: 1px solid green;
-  // }
+    transition: opacity 200ms;
+    opacity: 0;
+    &:hover {
+      opacity: 1;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      bottom: 0;
+      width: 1px;
+      margin-left: -1px;
+
+      // border-left: 1px dashed rgba(0,0,0, 0.2);
+      border-left: 2px dotted var(--ui-color-primary);
+    }
+
+    &::before {
+      content: var(--resizer-diff);
+
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      right: 0;
+      height: 21px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-family: var(--ui-font-secondary);
+    }
+
+
+    &__tooltip {
+      pointer-events: none;
+      transition: opacity 200ms;
+      opacity: 0; // se pone visible en --dragging
+
+      display: flex;
+      align-items: center;
+      position: fixed;
+      top: var(--resizer-y);
+      left: var(--resizer-x);
+      width: 96px;
+      margin-top: -11px;
+      margin-left: -48px; //(96px / 2) * -1;
+
+      background: var(--ui-color-primary);
+      border-radius: var(--ui-radius);
+      font-size: 10px;
+      color: #fff;
+
+      &::before,
+      &::after {
+        flex: 1;
+        text-align: center;
+        padding: 3px 0;
+      }
+
+      &::before {
+        content: var(--resizer-flex-before);
+      }
+
+      &::after {
+        content: var(--resizer-flex-after);
+      }
+    }
+
+  }
 }
 </style>

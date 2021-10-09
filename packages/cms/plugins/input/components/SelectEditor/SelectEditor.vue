@@ -10,22 +10,21 @@
           :key="n"
           :value="selectProps.multiple ? 'mdi:checkbox-blank-outline' : 'mdi:radiobox-blank'"
           class="bullet-icon"
-        ></UiIcon>
+        />
       </div>
 
       <textarea
-        class="textarea-options"
         v-model="stringOptions"
-        @input="emitInput"
+        class="textarea-options"
         placeholder="Escribe una opción por línea"
-      ></textarea>
+        @input="emitInput"
+      />
     </div>
-
   </div>
 </template>
 
 <script>
-import { UiIcon } from '../../../../../ui';
+import { UiIcon } from '../../../../../ui'
 
 export default {
   name: 'SelectEditor',
@@ -43,7 +42,27 @@ export default {
     return {
       selectProps: {},
       stringOptions: '',
-    };
+    }
+  },
+
+  computed: {
+    arrayOptions() {
+      if (!this.stringOptions) {
+        return []
+      }
+
+      let lines = this.stringOptions.split('\n')
+      if (!lines.length) {
+        return []
+      }
+
+      return lines
+        .filter((line) => !!line.trim())
+        .map((line) => ({
+          text: line.trim(),
+          value: this.normalize(line),
+        }))
+    },
   },
 
   watch: {
@@ -51,12 +70,12 @@ export default {
       immediate: true,
       handler(newValue) {
         if (!newValue) {
-          return;
+          return
         }
 
-        this.selectProps = JSON.parse(JSON.stringify(newValue));
-        this.selectProps.native = !!this.selectProps.native;
-        this.selectProps.multiple = !!this.selectProps.multiple;
+        this.selectProps = JSON.parse(JSON.stringify(newValue))
+        this.selectProps.native = !!this.selectProps.native
+        this.selectProps.multiple = !!this.selectProps.multiple
       },
     },
   },
@@ -65,30 +84,10 @@ export default {
     if (this.value && this.value.options && this.value.options.length) {
       this.stringOptions = this.value.options
         .map((option) => option.text)
-        .join('\n');
+        .join('\n')
     }
 
-    this.$nextTick(this.resizeTextarea);
-  },
-
-  computed: {
-    arrayOptions() {
-      if (!this.stringOptions) {
-        return [];
-      }
-
-      let lines = this.stringOptions.split('\n');
-      if (!lines.length) {
-        return [];
-      }
-
-      return lines
-        .filter((line) => !!line.trim())
-        .map((line) => ({
-          text: line.trim(),
-          value: this.normalize(line),
-        }));
-    },
+    this.$nextTick(this.resizeTextarea)
   },
 
   methods: {
@@ -97,31 +96,31 @@ export default {
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '') // normalize('NFD').replace(/[\u0300-\u036f]/g, '') normaliza acentos y dieresis
         .toLowerCase()
-        .replace(/[^a-z0-9]/g, '');
+        .replace(/[^a-z0-9]/g, '')
     },
 
     resizeTextarea() {
-      let textarea = this.$el.querySelector('.textarea-options');
+      let textarea = this.$el.querySelector('.textarea-options')
 
       if (!textarea.scrollHeight) {
-        textarea.style.height = '';
-        return;
+        textarea.style.height = ''
+        return
       }
 
-      textarea.style.boxSizing = 'border-box';
-      let offset = textarea.offsetHeight - textarea.clientHeight;
-      textarea.style.height = '2px';
-      textarea.style.height = textarea.scrollHeight + offset + 'px';
+      textarea.style.boxSizing = 'border-box'
+      let offset = textarea.offsetHeight - textarea.clientHeight
+      textarea.style.height = '2px'
+      textarea.style.height = textarea.scrollHeight + offset + 'px'
     },
 
     emitInput() {
-      this.resizeTextarea();
+      this.resizeTextarea()
 
-      this.selectProps.options = this.arrayOptions;
-      this.$emit('input', JSON.parse(JSON.stringify(this.selectProps)));
+      this.selectProps.options = this.arrayOptions
+      this.$emit('input', JSON.parse(JSON.stringify(this.selectProps)))
     },
   },
-};
+}
 </script>
 
 <style lang="scss">

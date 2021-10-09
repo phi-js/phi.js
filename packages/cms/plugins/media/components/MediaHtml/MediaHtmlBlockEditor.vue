@@ -1,33 +1,174 @@
-<template>
-  <BlockEditorLayout class="MediaHtmlBlockEditor">
-    <template #toolbar>
-      <select
-        v-model="selectValue"
-        class="ui-clickable"
-      >
-        <option value="p">
-          P
-        </option>
-        <option value="h1">
-          H1
-        </option>
-        <option value="h2">
-          H2
-        </option>
-        <option value="h3">
-          H3
-        </option>
-      </select>
+<script setup>
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
+import { UiIcon } from '/packages/ui/components'
+import BlockEditorLayout from '../../../../components/CmsBlockEditor/BlockEditorLayout.vue'
 
-      <button
+import { Editor, EditorContent } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
+import Underline from '@tiptap/extension-underline'
+import TextAlign from '@tiptap/extension-text-align'
+
+const props = defineProps({
+  block: {
+    type: Object,
+    required: true,
+  },
+})
+const emit = defineEmits(['update:block', 'focus', 'blur'])
+
+const innerValue = ref('')
+
+const editor = new Editor({
+  extensions: [
+    StarterKit,
+    Underline,
+    TextAlign.configure({ types: ['heading', 'paragraph'] }),
+  ],
+  content: '',
+  onFocus: () => emit('focus'),
+  onBlur: () => emit('blur'),
+  onUpdate: () => {
+    innerValue.value = editor.getHTML()
+    emit('update:block', { ...props.block, props: { ...props.block.props, value: innerValue.value } })
+  },
+})
+onBeforeUnmount(() => editor.destroy())
+
+watch(
+  () => props.block,
+  (newValue) => {
+    let incomingValue = newValue?.props?.value || ''
+    if (incomingValue != innerValue.value) {
+      innerValue.value = incomingValue
+      editor.commands.setContent(innerValue.value, false)
+    }
+  },
+  { immediate: true },
+)
+
+const allCommands = computed(() => {
+  return {
+    p: {
+      text: 'P',
+      callback: () => editor.chain().focus().setParagraph().run(),
+      isActive: editor.isActive('paragraph'),
+    },
+    h1: {
+      text: 'H1',
+      callback: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
+      isActive: editor.isActive('heading', { level: 1 }),
+    },
+    h2: {
+      text: 'H2',
+      callback: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+      isActive: editor.isActive('heading', { level: 2 }),
+    },
+    h3: {
+      text: 'H3',
+      callback: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
+      isActive: editor.isActive('heading', { level: 3 }),
+    },
+    bold: {
+      text: 'B',
+      callback: () => editor.chain().focus().toggleBold().run(),
+      isActive: editor.isActive('bold'),
+    },
+    italic: {
+      text: 'I',
+      callback: () => editor.chain().focus().toggleItalic().run(),
+      isActive: editor.isActive('italic'),
+    },
+    underline: {
+      text: 'U',
+      callback: () => editor.chain().focus().toggleUnderline().run(),
+      isActive: editor.isActive('underline'),
+    },
+
+    alignClear: {
+      text: 'none',
+      callback: () => editor.chain().focus().unsetTextAlign().run(),
+      isActive: false,
+    },
+
+    alignLeft: {
+      icon: 'mdi:format-align-left',
+      text: 'lft',
+      callback: () => editor.chain().focus().setTextAlign('left').run(),
+      isActive: editor.isActive({ textAlign: 'left' }),
+    },
+
+    alignCenter: {
+      icon: 'mdi:format-align-center',
+      text: 'ctr',
+      callback: () => editor.chain().focus().setTextAlign('center').run(),
+      isActive: editor.isActive({ textAlign: 'center' }),
+    },
+
+    alignRight: {
+      icon: 'mdi:format-align-right',
+      text: 'right',
+      callback: () => editor.chain().focus().setTextAlign('right').run(),
+      isActive: editor.isActive({ textAlign: 'right' }),
+    },
+
+    alignJustify: {
+      icon: 'mdi:format-align-justify',
+      text: 'justify',
+      callback: () => editor.chain().focus().setTextAlign('justify').run(),
+      isActive: editor.isActive({ textAlign: 'justify' }),
+    },
+  }
+})
+
+const formatButtons = computed(() => {
+  let cmd = allCommands.value
+  return [
+    // cmd.p,
+    cmd.h1,
+    cmd.h2,
+    cmd.h3,
+    // ---
+    cmd.bold,
+    cmd.italic,
+    cmd.underline,
+    // ---
+    // cmd.alignClear,
+    cmd.alignLeft,
+    cmd.alignCenter,
+    cmd.alignRight,
+    cmd.alignJustify,
+  ]
+})
+</script>
+
+<template>
+  <BlockEditorLayout
+    class="MediaHtmlBlockEditor"
+    v-bind="$attrs"
+    :block="block"
+    @update:block="$emit('update:block', $event)"
+  >
+    <template #toolbar>
+      <template
         v-for="(option, i) in formatButtons"
         :key="i"
-        type="button"
-        class="ui-clickable"
-        :class="{'--active': option.isActive}"
-        @click="option.callback"
-        v-text="option.text"
-      />
+      >
+        <UiIcon
+          v-if="option.icon"
+          :src="option.icon"
+          class="ui-clickable"
+          :class="{'--active': option.isActive}"
+          @click="option.callback"
+        />
+        <button
+          v-else
+          type="button"
+          class="ui-clickable"
+          :class="{'--active': option.isActive}"
+          @click="option.callback"
+          v-text="option.text"
+        />
+      </template>
     </template>
 
     <template #default>
@@ -38,197 +179,6 @@
     </template>
   </BlockEditorLayout>
 </template>
-
-<script>
-// import { Editor, EditorContent } from 'tiptap'
-
-// import {
-//   Bold,
-//   Code,
-//   Italic,
-//   Link,
-//   Underline,
-//   Heading,
-//   History,
-//   Placeholder,
-//   HardBreak,
-//   // Image,
-// } from 'tiptap-extensions'
-// // import Image from './tiptap/Img.js'
-
-import { Editor, EditorContent } from '@tiptap/vue-3'
-import StarterKit from '@tiptap/starter-kit'
-import Underline from '@tiptap/extension-underline'
-
-
-import BlockEditorLayout from '../../../../components/CmsBlockEditor/BlockEditorLayout.vue'
-export default {
-  name: 'MediaHtmlBlockEditor',
-
-  components: { BlockEditorLayout, EditorContent },
-
-  props: {
-    block: {
-      type: Object,
-      required: true,
-    },
-  },
-
-  emits: ['update:block', 'focus', 'blur'],
-
-  data() {
-    return {
-      innerValue: '',
-
-      // Create an `Editor` instance with some default content. The editor is
-      // then passed to the `EditorContent` component as a `prop`
-      editor: new Editor({
-        extensions: [
-          StarterKit,
-          Underline,
-          // new Bold(),
-          // new Code(),
-          // new Italic(),
-          // new Link(),
-          // new Underline(),
-          // new Heading({ levels: [1, 2, 3] }),
-          // new HardBreak(),
-          // new History(),
-          // // new Image(),
-
-          // new Placeholder({
-          //   emptyEditorClass: 'is-editor-empty',
-          //   emptyNodeClass: 'is-empty',
-          //   emptyNodeText: 'Escribe aqui ...',
-          //   showOnlyWhenEditable: true,
-          //   showOnlyCurrent: true,
-          // }),
-        ],
-
-        content: '',
-
-        onUpdate: () => {
-          // get new content on update
-          this.innerValue = this.editor.getHTML()
-          this.emitInput()
-        },
-
-        onFocus: () => {
-          this.$emit('focus')
-        },
-
-        onBlur: () => {
-          this.$emit('blur')
-        },
-      }),
-    }
-  },
-
-  computed: {
-    selectValue: {
-      get() {
-        let options = ['p', 'h1', 'h2', 'h3']
-        for (let i = 0; i < options.length; i++) {
-          let optionName = options[i]
-          if (
-            this.allCommands[optionName] &&
-            this.allCommands[optionName].isActive
-          ) {
-            return optionName
-          }
-        }
-
-        return 'p'
-      },
-
-      set(newValue) {
-        if (!this.allCommands[newValue]) {
-          return
-        }
-
-        this.allCommands[newValue].callback()
-      },
-    },
-
-    allCommands() {
-      return {
-        p: {
-          text: 'P',
-          callback: () => this.editor.chain().focus().setParagraph().run(),
-          isActive: this.editor.isActive('paragraph'),
-        },
-        h1: {
-          text: 'H1',
-          callback: () => this.editor.chain().focus().toggleHeading({ level: 1 }).run(),
-          isActive: this.editor.isActive('heading', { level: 1 }),
-        },
-        h2: {
-          text: 'H2',
-          callback: () => this.editor.chain().focus().toggleHeading({ level: 2 }).run(),
-          isActive: this.editor.isActive('heading', { level: 2 }),
-        },
-        h3: {
-          text: 'H3',
-          callback: () => this.editor.chain().focus().toggleHeading({ level: 3 }).run(),
-          isActive: this.editor.isActive('heading', { level: 3 }),
-        },
-        bold: {
-          text: 'B',
-          callback: () => this.editor.chain().focus().toggleBold().run(),
-          isActive: this.editor.isActive('bold'),
-        },
-        italic: {
-          text: 'I',
-          callback: () => this.editor.chain().focus().toggleItalic().run(),
-          isActive: this.editor.isActive('italic'),
-        },
-        underline: {
-          text: 'U',
-          callback: () => this.editor.chain().focus().toggleUnderline().run(),
-          isActive: this.editor.isActive('underline'),
-        },
-      }
-    },
-
-    formatButtons() {
-      return [
-        this.allCommands.bold,
-        this.allCommands.italic,
-        this.allCommands.underline,
-      ]
-    },
-  },
-
-  watch: {
-    block: {
-      immediate: true,
-      handler(newValue) {
-        let incomingValue =
-          newValue && newValue.props && newValue.props.value
-            ? newValue.props.value
-            : ''
-
-        if (incomingValue != this.innerValue) {
-          this.innerValue = incomingValue
-          this.editor.commands.setContent(this.innerValue, false)
-        }
-      },
-    },
-  },
-
-  beforeUnmount() {
-    this.editor.destroy()
-  },
-
-  methods: {
-    emitInput() {
-      let clone = JSON.parse(JSON.stringify(this.block))
-      clone.props = Object.assign({}, clone.props, { value: this.innerValue })
-      this.$emit('update:block', clone)
-    },
-  },
-}
-</script>
 
 <style lang="scss">
 .tiptap-editor-contents [contenteditable] {
