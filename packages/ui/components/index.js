@@ -1,4 +1,5 @@
 export * from './UiDrawer'
+export * from './UiDialog'
 export * from './UiForm'
 export * from './UiIcon'
 export * from './UiInput'
