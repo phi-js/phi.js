@@ -1,5 +1,5 @@
 <script setup>
-import { normalize } from '../../../../ui/helpers'
+import { normalize } from '/packages/ui/helpers'
 import { UiIcon } from '/packages/ui/components'
 import { ref, watch, computed } from 'vue'
 
@@ -8,6 +8,12 @@ const props = defineProps({
     type: Array,
     required: false,
     default: () => [],
+  },
+
+  multiple: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 })
 const emit = defineEmits(['update:options'])
@@ -40,10 +46,10 @@ const strOptions = computed({
         text: line,
         value: normalize(line),
       }))
+
+    emit('update:options', innerOptions.value)
   },
 })
-
-const isMultiple = ref(false)
 </script>
 
 <template>
@@ -52,7 +58,7 @@ const isMultiple = ref(false)
       <UiIcon
         v-for="n in innerOptions.length || 1"
         :key="n"
-        :src="isMultiple ? 'mdi:checkbox-blank-outline' : 'mdi:radiobox-blank'"
+        :src="props.multiple ? 'mdi:checkbox-blank-outline' : 'mdi:radiobox-blank'"
         class="SelectOptionsEditor__bullet"
       />
     </div>

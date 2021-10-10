@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, watch } from 'vue'
+import { CmsBlockPicker } from '../CmsBlockPicker'
 import draggable from 'vuedraggable'
 
 const props = defineProps({
@@ -102,6 +103,11 @@ function clearEmptyColumns(section) {
   return section
 }
 
+
+function onBlockPickerInput(block, column) {
+  column.blocks.push(block)
+  emit('update:page', innerPage.value)
+}
 
 // Gestion de resize de columnas
 const resizerData = reactive({
@@ -263,7 +269,9 @@ function onResizerEnd(evt) {
               </div>
             </template>
           </draggable>
-        </div>
+
+          <CmsBlockPicker @input="onBlockPickerInput($event, column)" />
+        </div> <!-- /column -->
 
         <div class="CmsPageLayoutEditor__column CmsPageLayoutEditor__column--ghost">
           <draggable
@@ -313,7 +321,7 @@ function onResizerEnd(evt) {
 
     .CmsPageLayoutEditor__draggable {
       min-width: 18px;
-      height: 100%;
+      // height: 100%;  // Causa un bug raro, los elementos debajo de .PageLayoutEditor se desplazan hacia arriba (?!)
     }
   }
 

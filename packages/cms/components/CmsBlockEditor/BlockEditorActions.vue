@@ -1,7 +1,8 @@
 <script setup>
 import getEditors from '../../functions/getEditors.js'
 import { shallowRef, watch } from 'vue'
-import { UiTabs, UiTab, UiInput } from '../../../ui/components'
+import { UiTabs, UiTab, UiInput } from '/packages/ui/components'
+import { VmStatement } from '/packages/vm/components'
 
 const props = defineProps({
   block: {
@@ -41,6 +42,16 @@ watch(
         v-bind="action.props"
         :model-value="props.block"
         @update:modelValue="emit('update:block', $event)"
+      />
+    </UiTab>
+
+    <UiTab
+      text="v-if"
+      icon="mdi:vuejs"
+    >
+      <VmStatement
+        :model-value="props.block['v-if']"
+        @update:modelValue="emit('update:block', {...props.block, 'v-if': $event})"
       />
     </UiTab>
 

@@ -48,9 +48,9 @@ export function useI18n(dictionary = null) {
       const targetLocale = attrs?.['i18n-language'] || injected.locale
       return Number(value).toLocaleString(targetLocale, {
         style: 'currency',
-        currency: currency || injected.defaultCurrency
+        currency: currency || injected.defaultCurrency,
       })
-    }
+    },
   }
 }
 

@@ -66,3 +66,4 @@ Cms.plugin(pluginInput)
 // Cms.plugin(pluginGoogle)
 
 export default Cms
+export { blocks }

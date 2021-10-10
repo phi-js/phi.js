@@ -328,6 +328,10 @@ const enabledApis = computed(() => apis.filter((a) => a.isEnabled))
       padding: var(--ui-padding);
       border-radius: var(--ui-radius);
       background-color: var(--ui-color-darken);
+
+      overflow: auto;
+      max-height: 600px;
+      max-width: 80vw;
     }
 
     & > section {

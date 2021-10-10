@@ -1,15 +1,16 @@
 <script setup>
-import { computed, inject, defineAsyncComponent } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import { UiInput } from '/packages/ui/components'
 
-const StmtBoo = defineAsyncComponent(() => import('./statements/boo/StmtBoo.vue'))
-const StmtCall = defineAsyncComponent(() => import('./statements/call/StmtCall.vue'))
-const StmtChain = defineAsyncComponent(() => import('./statements/chain/StmtChain.vue'))
-const StmtFunction = defineAsyncComponent(() => import('./statements/function/StmtFunction.vue'))
-const StmtIf = defineAsyncComponent(() => import('./statements/if/StmtIf.vue'))
-const StmtNot = defineAsyncComponent(() => import('./statements/not/StmtNot.vue'))
-const StmtOp = defineAsyncComponent(() => import('./statements/op/StmtOp.vue'))
-const StmtSwitch = defineAsyncComponent(() => import('./statements/switch/StmtSwitch.vue'))
+const StmtAndOr = defineAsyncComponent(() => import('./statements/StmtAndOr.vue'))
+const StmtOp = defineAsyncComponent(() => import('./statements/StmtOp.vue'))
+
+const StmtCall = defineAsyncComponent(() => import('../VmExpression/statements/call/StmtCall.vue'))
+const StmtChain = defineAsyncComponent(() => import('../VmExpression/statements/chain/StmtChain.vue'))
+const StmtFunction = defineAsyncComponent(() => import('../VmExpression/statements/function/StmtFunction.vue'))
+const StmtIf = defineAsyncComponent(() => import('../VmExpression/statements/if/StmtIf.vue'))
+const StmtNot = defineAsyncComponent(() => import('../VmExpression/statements/not/StmtNot.vue'))
+const StmtSwitch = defineAsyncComponent(() => import('../VmExpression/statements/switch/StmtSwitch.vue'))
 
 const props = defineProps({
   modelValue: {
@@ -17,9 +18,18 @@ const props = defineProps({
     required: false,
     default: null,
   },
+
+  modelSchema: {
+    type: Object,
+    required: false,
+    default: null,
+  },
 })
 const emit = defineEmits(['update:modelValue'])
-const VmExpressionRoot = inject('VmExpressionRoot')
+
+// Provides "modelSchema" to be used by descendant components
+import useModelSchema from './useModelSchema'
+useModelSchema()
 
 const editor = computed(() => {
   if (
@@ -47,11 +57,6 @@ const editor = computed(() => {
   }
 
   if (typeof props.modelValue.call != 'undefined') {
-    let fnName = props.modelValue.call
-    if (VmExpressionRoot?.functions?.[fnName]?.editor) {
-      return VmExpressionRoot.functions[fnName].editor
-    }
-
     return { component: StmtCall }
   }
 
@@ -64,7 +69,7 @@ const editor = computed(() => {
   }
 
   if (Array.isArray(props.modelValue.and) || Array.isArray(props.modelValue.or)) {
-    return { component: StmtBoo }
+    return { component: StmtAndOr }
   }
 
   return { component: UiInput, props: { type: 'json' } }
@@ -75,7 +80,7 @@ const editor = computed(() => {
   <component
     :is="editor.component"
     v-bind="editor.props"
-    class="VmExpression"
+    class="VmStatement"
     :model-value="modelValue"
     @update:modelValue="emit('update:modelValue', $event)"
   />
