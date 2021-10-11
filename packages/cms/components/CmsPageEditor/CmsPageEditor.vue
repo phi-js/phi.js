@@ -20,7 +20,7 @@ watch(
   { immediate: true, deep: true },
 )
 
-function emitUpdate() {
+function emitUpdatePage() {
   emit('update:page', innerPage.value)
 }
 </script>
@@ -29,7 +29,7 @@ function emitUpdate() {
   <div class="CmsPageEditor">
     <PageLayoutEditor
       v-model:page="innerPage"
-      @update:page="emitUpdate"
+      @update:page="emitUpdatePage"
     >
       <template #block="slotData">
         <CmsBlockEditor
@@ -39,7 +39,8 @@ function emitUpdate() {
             .columns[slotData.colIndex]
             .blocks[slotData.blockIndex]"
 
-          @update:block="emitUpdate"
+          @update:block="emitUpdatePage"
+          @delete="slotData.deleteBlock"
         />
       </template>
     </PageLayoutEditor>

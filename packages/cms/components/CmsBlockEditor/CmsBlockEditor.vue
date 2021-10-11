@@ -1,8 +1,9 @@
 <script setup>
-import Cms from '../../singleton'
 import { shallowRef, watch, defineAsyncComponent } from 'vue'
+import { getBlockEditors, getBlockDefinition } from '../../composables'
 import { UiInput } from '/packages/ui/components'
 import BlockEditorLayout from './BlockEditorLayout.vue'
+import EditorAction from './EditorAction.vue'
 
 const props = defineProps({
   /**
@@ -22,8 +23,9 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:block'])
+const emit = defineEmits(['update:block', 'delete'])
 
+const editors = shallowRef(null)
 const blockDefinition = shallowRef(null)
 const editorFace = shallowRef(null)
 const customEditor = shallowRef(null)
@@ -31,7 +33,9 @@ const customEditor = shallowRef(null)
 watch(
   () => props.block?.component,
   async () => {
-    let definition = await Cms.getDefinition(props.block)
+    editors.value = await getBlockEditors(props.block)
+
+    let definition = await getBlockDefinition(props.block)
     if (!definition) {
       console.warn('Could not find definition for block', props.block)
       return
@@ -72,29 +76,38 @@ watch(
       class="CmsBlockEditor"
       :block="props.block"
       @update:block="emit('update:block', $event)"
+      @delete="emit('delete')"
     />
     <BlockEditorLayout
       v-else
       class="CmsBlockEditor"
       :block="props.block"
       @update:block="emit('update:block', $event)"
+      @delete="emit('delete')"
     >
-      <template #toolbarxxx>
-        sdkjlfh asdlkjfh aslkdfjhasdkjl
+      <template
+        v-if="editors.toolbar"
+        #toolbar
+      >
+        <EditorAction
+          :action="editors.toolbar"
+          :block="props.block"
+          @update:block="emit('update:block', $event)"
+        />
       </template>
 
-      <template #default>
+      <template #default="{ blockValue }">
         <component
           :is="editorFace.component"
           v-if="editorFace"
-          v-bind="props.block.props"
-          :block="props.block"
+          v-bind="blockValue.props"
+          :block="blockValue"
           @update:block="emit('update:block', $event)"
         />
         <UiInput
           v-else
           type="json"
-          :model-value="props.block"
+          :model-value="blockValue"
           @update:modelValue="emit('update:block', $event)"
         />
       </template>

@@ -24,10 +24,12 @@ Retorna todos los editores (listos para usar en <component>) relacionados al blo
 */
 
 import { defineAsyncComponent } from '@vue/runtime-core'
-import Cms from '../singleton'
+import getBlockDefinition from './getBlockDefinition.js'
+import { UiInput } from '/packages/ui/components'
+import { VmStatement } from '/packages/vm/components'
 
-export default async function getEditors(block) {
-  const definition = await Cms.getDefinition(block)
+export default async function getBlockEditors(block) {
+  const definition = await getBlockDefinition(block)
 
   const retval = {
     face: null,
@@ -46,6 +48,17 @@ export default async function getEditors(block) {
     retval.face = face
   }
 
+  if (definition?.editor?.toolbar?.component) {
+    const toolbar = {
+      component: definition.editor.toolbar.component,
+      props: definition.editor.toolbar?.props,
+    }
+    if (typeof toolbar.component === 'function') {
+      toolbar.component = defineAsyncComponent(toolbar.component)
+    }
+    retval.toolbar = toolbar
+  }
+
   if (Array.isArray(definition?.editor?.actions)) {
     const actions = definition.editor.actions
       .map((action) => {
@@ -61,6 +74,30 @@ export default async function getEditors(block) {
 
     retval.actions = actions
   }
+
+  retval.actions.push({
+    'title': 'v-if',
+    'icon': 'mdi:vuejs',
+    'component': VmStatement,
+    'v-model': 'block.v-if',
+  })
+
+  if (definition?.block?.['v-model']) {
+    retval.actions.push({
+      'title': 'v-model',
+      'icon': 'mdi:vuejs',
+      'component': UiInput,
+      'props': { type: 'text' },
+      'v-model': 'block.v-model',
+    })
+  }
+
+  retval.actions.push({
+    title: 'Source',
+    icon: 'mdi:vuejs',
+    component: UiInput,
+    props: { type: 'json' },
+  })
 
   return retval
 }

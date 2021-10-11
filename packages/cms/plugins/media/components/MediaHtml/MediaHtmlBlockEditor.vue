@@ -35,9 +35,8 @@ const editor = new Editor({
 onBeforeUnmount(() => editor.destroy())
 
 watch(
-  () => props.block,
-  (newValue) => {
-    let incomingValue = newValue?.props?.value || ''
+  () => props.block?.props?.value,
+  (incomingValue) => {
     if (incomingValue != innerValue.value) {
       innerValue.value = incomingValue
       editor.commands.setContent(innerValue.value, false)
@@ -145,7 +144,7 @@ const formatButtons = computed(() => {
   <BlockEditorLayout
     class="MediaHtmlBlockEditor"
     v-bind="$attrs"
-    :block="block"
+    :block="props.block"
     @update:block="$emit('update:block', $event)"
   >
     <template #toolbar>

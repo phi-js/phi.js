@@ -1,9 +1,7 @@
 <script>
-import { interpolate } from '../../functions'
 import Quicklaunch from './Quicklaunch/index.js'
-import useCms from '../../mixins/useCms'
+import { getBlockDefinition, listBlocks } from '../../composables'
 import { UiIcon, UiTabs, UiTab } from '/packages/ui/components'
-import listBlocks from '../../singleton/listBlocks'
 import { useI18n } from '../../../i18n'
 
 export default {
@@ -14,7 +12,6 @@ export default {
     UiTabs,
     UiTab,
   },
-  mixins: [useCms],
 
   props: {
     page: {
@@ -149,7 +146,7 @@ export default {
     },
 
     async launchBlock(block) {
-      let definition = await this.$cms.getDefinition(block)
+      let definition = await getBlockDefinition(block)
       if (!definition) {
         return
       }
@@ -157,10 +154,10 @@ export default {
       if (definition.launcher) {
         this.launcherComponent = definition.launcher
         if (this.launcherComponent.props) {
-          this.launcherComponent.props = interpolate(
-            this.launcherComponent.props,
-            { page: this.page },
-          )
+          // this.launcherComponent.props = interpolate(
+          //   this.launcherComponent.props,
+          //   { page: this.page },
+          // )
         }
         return
       }
@@ -174,12 +171,12 @@ export default {
         block.props,
       )
 
-      //
-      targetBlock.props = interpolate(
-        targetBlock.props,
-        { page: this.page },
-        true,
-      )
+      // //
+      // targetBlock.props = interpolate(
+      //   targetBlock.props,
+      //   { page: this.page },
+      //   true,
+      // )
 
       if (targetBlock['v-model']) {
         let count = this.countBlocks(definition.id)

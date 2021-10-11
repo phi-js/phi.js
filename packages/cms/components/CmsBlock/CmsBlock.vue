@@ -1,5 +1,5 @@
 <script setup>
-import Cms from '../../singleton'
+import { getBlockDefinition } from '../../composables'
 import { computed, shallowRef, watch, defineAsyncComponent } from 'vue'
 
 const props = defineProps({
@@ -14,7 +14,7 @@ const blockDefinition = shallowRef(null)
 watch(
   () => props.block?.component,
   async () => {
-    let definition = await Cms.getDefinition(props.block)
+    let definition = await getBlockDefinition(props.block)
     if (!definition?.block?.component) {
       console.warn('Could not find definition for block', props.block)
       return

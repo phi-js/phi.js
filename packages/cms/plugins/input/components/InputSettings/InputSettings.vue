@@ -1,151 +1,136 @@
+<script setup>
+import { ref, watch } from 'vue'
+import { UiInput } from '/packages/ui/components'
+import SelectOptionsEditor from '../SelectOptionsEditor/SelectOptionsEditor.vue'
+
+const props = defineProps({
+  modelValue: {
+    type: Object, // block object
+    required: true,
+  },
+})
+const emit = defineEmits(['update:modelValue'])
+
+const block = ref({ props: {} })
+watch(
+  () => props.modelValue,
+  (newValue) => block.value = JSON.parse(JSON.stringify(newValue)),
+  { immediate: true },
+)
+
+const input = function() {
+  emit('update:modelValue', block.value)
+}
+
+const types = [
+  {
+    icon: 'mdi:form-textbox',
+    text: 'Text',
+    value: 'text',
+  },
+  {
+    icon: 'mdi:form-textarea',
+    text: 'Textarea',
+    value: 'textarea',
+  },
+  {
+    icon: 'mdi:form-dropdown',
+    text: 'Select',
+    value: 'select',
+  },
+  {
+    icon: 'mdi:checkbox-blank-outline',
+    text: 'Checkbox',
+    value: 'checkbox',
+  },
+  {
+    icon: 'mdi:calendar',
+    text: 'Fecha',
+    value: 'timestamp',
+  },
+  {
+    icon: 'mdi:numeric',
+    text: 'Número',
+    value: 'number',
+  },
+  {
+    icon: 'mdi:form-textbox-password',
+    text: 'Contraseña',
+    value: 'password',
+  },
+  {
+    icon: 'mdi:paperclip',
+    text: 'Archivo',
+    value: 'file',
+  },
+  {
+    icon: 'mdi:paperclip',
+    text: 'Botón',
+    value: 'button',
+  },
+]
+</script>
+
 <template>
-  <div class="input-settings">
-    <!-- <UiInput
-      xxxxv-if="showTypePicker"
-      type="select"
-      label="Tipo"
-      :options="types"
+  <div class="InputSettings">
+    <UiInput
       v-model="block.props.type"
+      label="Tipo"
+      type="select-native"
+      :options="types"
       @input="input"
-    ></UiInput> -->
+    />
 
-    <UiField label="Tipo">
-      <select
-        class="ui-native"
-        v-model="block.props.type"
-        @change="input"
-      >
-        <option
-          v-for="type in types"
-          :key="type.value"
-          :value="type.value"
-        >{{ type.text}}</option>
-      </select>
-    </UiField>
-
-    <!-- <UiField
+    <UiInput
       v-if="block.props.type == 'select'"
       label="Opciones"
     >
       <SelectOptionsEditor
-        v-model="block.props.options"
+        v-model:options="block.props.options"
         @input="input"
-      ></SelectOptionsEditor>
-    </UiField> -->
-    <UiField
+      />
+    </UiInput>
+
+    <UiInput
       v-if="block.props.type == 'date' || block.props.type == 'timestamp'"
       label="Selector de hora"
     >
       <select
-        class="ui-native"
         v-model="block.props.time"
+        class="ui-native"
         @change="input"
       >
-        <option :value="undefined">Desactivado</option>
-        <option value="12">AM/PM</option>
-        <option value="24">24 horas</option>
+        <option :value="undefined">
+          Desactivado
+        </option>
+        <option value="12">
+          AM/PM
+        </option>
+        <option value="24">
+          24 horas
+        </option>
       </select>
-      <!-- !!! se debe usar @change en vez de @input, de lo contrario el cambio no es reactivo (?!) -->
-      <!--
-      <input
-        type="checkbox"
-        v-model="block.props.time"
-        @change="input"
-      />
-      -->
-    </UiField>
+    </UiInput>
 
     <UiInput
+      v-model="block.props.label"
       type="text"
       label="Etiqueta"
-      v-model="block.props.label"
       @input="input"
-    ></UiInput>
+    />
 
     <UiInput
-      type="text"
-      label="Subtexto"
-      v-model="block.props.message"
-      @input="input"
-    ></UiInput>
-
-    <UiInput
+      v-model="block.props.placeholder"
       type="text"
       label="Placeholder"
-      v-model="block.props.placeholder"
       @input="input"
-    ></UiInput>
+    />
+
+    <UiInput
+      v-model="block.props.subtext"
+      type="text"
+      label="Subtexto"
+      @input="input"
+    />
   </div>
 </template>
-
-<script>
-import BlockModel from '../../../../mixins/BlockModel.js';
-import { UiField, UiInput } from '../../../../../ui';
-// import SelectOptionsEditor from './SelectOptionsEditor.vue';
-
-export default {
-  name: 'InputSettings',
-  mixins: [BlockModel],
-  components: { UiField, UiInput },
-
-  props: {
-    showTypePicker: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-  },
-
-  data() {
-    return {
-      types: [
-        {
-          icon: 'mdi:form-textbox',
-          text: 'Text',
-          value: 'text',
-        },
-        {
-          icon: 'mdi:form-textarea',
-          text: 'Textarea',
-          value: 'textarea',
-        },
-        {
-          icon: 'mdi:form-dropdown',
-          text: 'Select',
-          value: 'select',
-        },
-        {
-          icon: 'mdi:checkbox-blank-outline',
-          text: 'Checkbox',
-          value: 'checkbox',
-        },
-        {
-          icon: 'mdi:calendar',
-          text: 'Fecha',
-          value: 'timestamp',
-        },
-        {
-          icon: 'mdi:numeric',
-          text: 'Número',
-          value: 'number',
-        },
-        {
-          icon: 'mdi:form-textbox-password',
-          text: 'Contraseña',
-          value: 'password',
-        },
-        {
-          icon: 'mdi:paperclip',
-          text: 'Archivo',
-          value: 'file',
-        },
-        {
-          icon: 'mdi:paperclip',
-          text: 'Botón',
-          value: 'button',
-        },
-      ],
-    };
-  },
-};
-</script>

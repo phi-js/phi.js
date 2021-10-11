@@ -103,9 +103,13 @@ function clearEmptyColumns(section) {
   return section
 }
 
-
 function onBlockPickerInput(block, column) {
   column.blocks.push(block)
+  emit('update:page', innerPage.value)
+}
+
+function deleteBlock(column, blockIndex) {
+  column.blocks.splice(blockIndex, 1)
   emit('update:page', innerPage.value)
 }
 
@@ -265,6 +269,7 @@ function onResizerEnd(evt) {
                   :blockIndex="index"
                   :column="column"
                   :block="element"
+                  :delete-block="() => deleteBlock(column, index)"
                 />
               </div>
             </template>

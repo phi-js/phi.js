@@ -1,7 +1,6 @@
 const UiInput = () => import('../../../../ui/components/UiInput/UiInput.vue')
 const InputEditor = () => import('../components/InputEditor/InputEditor.vue')
 const InputSettings = () => import('../components/InputSettings/InputSettings.vue')
-import { UiForm } from '/packages/ui/components'
 
 export default {
   tags: ['input'],
@@ -23,33 +22,10 @@ export default {
     },
 
     actions: [
-      // {
-      //   'title': 'Text',
-      //   'component': InputSettings,
-      //   'v-model': 'block',
-      // },
       {
-        title: 'UiInputText',
-        component: UiForm,
-        props: {
-          fields: [
-            {
-              type: 'text',
-              label: 'Label',
-              model: 'props.label',
-            },
-            {
-              type: 'text',
-              label: 'placeholder',
-              model: 'props.placeholder',
-            },
-            {
-              type: 'text',
-              label: 'subtext',
-              model: 'props.subtext',
-            },
-          ],
-        },
+        'title': 'Text',
+        'component': InputSettings,
+        'v-model': 'block',
       },
     ],
   },
