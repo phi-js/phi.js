@@ -88,6 +88,12 @@ const isWindowOpen = ref(false)
         >
           <VmStatement v-model="innerPage.setup" />
         </UiTab>
+        <UiTab
+          text="Source"
+          icon="mdi:cog"
+        >
+          <VmStatement v-model="innerPage" />
+        </UiTab>
       </UiTabs>
 
       <template #footer="{ hide }">

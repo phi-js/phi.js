@@ -15,6 +15,7 @@ const props = defineProps({
    *   "v-model": ...,
    *   "v-if": ...,
    *   "v-on": ...,
+   *   "v-for": ...,
    * }
    */
   block: {
@@ -97,11 +98,11 @@ watch(
       </template>
 
       <template #default="{ blockValue }">
-        <component
-          :is="editorFace.component"
+        <EditorAction
           v-if="editorFace"
-          v-bind="blockValue.props"
+          :action="editorFace"
           :block="blockValue"
+          v-bind="blockValue?.props"
           @update:block="emit('update:block', $event)"
         />
         <UiInput

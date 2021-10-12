@@ -6,6 +6,7 @@ import MediaImage from './components/MediaImage/MediaImage.block.js'
 import MediaLink from './components/MediaLink/MediaLink.block.js'
 import MediaLoremIpsum from './components/MediaLoremIpsum/MediaLoremIpsum.block.js'
 import MediaVideo from './components/MediaVideo/MediaVideo.block.js'
+import MediaItem from './components/MediaItem/MediaItem.block.js'
 
 export default {
   blocks: {
@@ -17,6 +18,7 @@ export default {
     MediaLink,
     MediaLoremIpsum,
     MediaVideo,
+    MediaItem,
   },
 
   actions: {},

@@ -35,18 +35,22 @@ const page = ref({
       // },
     },
     {
-      'component': 'MediaHtml',
+      'component': 'MediaItem',
       'props': {
-        value: '<li>{{$index}}: {{$item.name}} <small>{{$item.email}}</small></li>',
-        class: {
+        icon: 'mdi:badge-account',
+        text: '{{$item.name}}',
+        subtext: '{{$item.email}}',
+
+        badge: {
           if: {
             field: 'selectedUser.id',
             op: 'eq',
             args: '{{$item.id}}',
           },
-          then: 'ui-clickable ui-label',
-          else: 'ui-clickable',
+          then: '1',
+          else: null,
         },
+        class: 'ui-clickable',
       },
       'v-for': 'users',
       'v-on': {

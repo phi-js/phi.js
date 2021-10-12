@@ -16,11 +16,7 @@ export default {
   },
 
   editor: {
-    face: {
-      'component': InputEditor,
-      'v-model': 'block.props',
-    },
-
+    face: { component: InputEditor },
     actions: [
       {
         'title': 'Text',

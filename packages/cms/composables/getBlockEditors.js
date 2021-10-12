@@ -93,6 +93,21 @@ export default async function getBlockEditors(block) {
   }
 
   retval.actions.push({
+    'title': 'v-for',
+    'icon': 'mdi:vuejs',
+    'component': UiInput,
+    'props': { type: 'text' },
+    'v-model': 'block.v-for',
+  })
+
+  retval.actions.push({
+    'title': 'v-on (click)',
+    'icon': 'mdi:vuejs',
+    'component': VmStatement,
+    'v-model': 'block.v-on.click',
+  })
+
+  retval.actions.push({
     title: 'Source',
     icon: 'mdi:vuejs',
     component: UiInput,

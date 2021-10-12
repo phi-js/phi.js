@@ -38,6 +38,6 @@ const internalModel = computed({
     :is="action.component"
     v-if="action.component"
     v-model="internalModel"
-    v-bind="action.props"
+    v-bind="{ ...$attrs, ...action.props}"
   />
 </template>
