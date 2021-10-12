@@ -188,6 +188,12 @@ onUnmounted(() => {
     max-height: 800px;
   }
 
+  &__footer {
+    text-align: right;
+    padding: var(--ui-padding);
+    background-color: var(--ui-color-darken);
+  }
+
   &__transition {
     &-enter-active,
     &-leave-active {

@@ -6,7 +6,7 @@ const props = defineProps({
   modelValue: {
     validator: () => true,
     required: false,
-    default: undefined,
+    default: 0,
   },
 })
 const emit = defineEmits(['update:modelValue'])
@@ -54,7 +54,12 @@ const markedTabs = computed(() => {
 
 // Handle selected value
 const innerValue = ref()
-watch(() => props.modelValue, (newValue) => innerValue.value = newValue, { immediate: true })
+watch(
+  () => props.modelValue,
+  (newValue) => innerValue.value = newValue,
+  { immediate: true },
+)
+
 function selectTab(incomingTab, scrollIntoView = true) {
   if (!incomingTab || incomingTab.value === innerValue.value) {
     return
@@ -112,6 +117,7 @@ const currentContent = computed(() => tabs.value?.[selectedIndex.value]?.slotCon
           v-else
           v-bind="tab.props"
           class="ui-clickable ui-noselect"
+          style="white-space: nowrap"
           @click="selectTab(tab)"
         />
       </div>
