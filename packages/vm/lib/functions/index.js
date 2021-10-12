@@ -4,7 +4,11 @@ export default {
   },
 
   'console.log'(args) {
-    return console.log(args)
+    return console.log(
+      '%c[phi]',
+      'background: blue; color: #bada55',
+      args,
+    )
   },
 
   'window.alert'(args) {

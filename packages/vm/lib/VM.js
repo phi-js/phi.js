@@ -1,4 +1,4 @@
-import { getProperty, parse } from './utils'
+import { getProperty, setProperty, parse } from './utils'
 
 import vmFunctions from './functions/index.js'
 import vmOperators from './operators/index.js'
@@ -223,16 +223,18 @@ export default class VM {
       return
     }
 
+    let scope = localScope
     let res
     for (let i = 0; i < arrChain.length; i++) {
       let link = arrChain[i]
-      if (!link.do) {
+      if (typeof link?.do === 'undefined') {
         continue
       }
 
-      res = await this.eval(link.do, localScope)
-      if (link.assign && this.onModelSet) {
-        this.onModelSet(link.assign, res)
+      res = await this.eval(link.do, scope)
+      if (link.assign) {
+        setProperty(scope, link.assign, res)
+        this.onModelSet && this.onModelSet(link.assign, res, scope)
       }
     }
 
