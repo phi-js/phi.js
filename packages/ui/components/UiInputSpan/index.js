@@ -1,0 +1,1 @@
+export { default as UiInputSpan } from './UiInputSpan.vue';

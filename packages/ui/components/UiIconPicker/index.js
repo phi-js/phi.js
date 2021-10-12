@@ -1,0 +1,1 @@
+export { default as UiIconPicker } from './UiIconPicker.vue'
