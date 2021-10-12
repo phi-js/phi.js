@@ -121,6 +121,10 @@ onUnmounted(() => {
               name="contents"
               :close="close"
             />
+            <slot
+              name="default"
+              :close="close"
+            />
           </div>
 
           <div
