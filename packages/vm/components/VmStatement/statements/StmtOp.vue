@@ -2,7 +2,7 @@
 import { ref, computed, reactive, watch, nextTick } from 'vue'
 import { UiInput, UiItem } from '/packages/ui/components'
 import VmStatement from '../VmStatement.vue'
-import allOperators from '../../VmExpression/definitions/operators'
+import allOperators from '../operators'
 import useModelSchema from '../useModelSchema'
 
 const modelSchema = useModelSchema()

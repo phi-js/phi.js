@@ -16,7 +16,7 @@
     <div class="StmtAndOr__body">
       <div class="StmtAndOr__list">
         <div
-          v-for="(expr, i) in innerModel.list"
+          v-for="(_, i) in innerModel.list"
           :key="i"
           class="StmtAndOr__item"
           :class="{'--endangered': endangeredIndex == i}"

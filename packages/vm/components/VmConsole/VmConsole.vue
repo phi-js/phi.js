@@ -1,3 +1,46 @@
+<script setup>
+import { ref, watch } from 'vue'
+import VM from '../../lib/VM.js'
+import { UiInput, UiItem, UiTab, UiTabs } from '../../../ui/components'
+import VmStatement from '../VmStatement/VmStatement.vue'
+
+const props = defineProps({
+  /**
+   * La expresion a ejecutar
+   */
+  statement: {
+    required: false,
+    default: null,
+    validator: () => true,
+  },
+
+  modelValue: {
+    required: false,
+    default: null,
+    validator: () => true,
+  },
+})
+const emit = defineEmits(['update:modelValue'])
+
+const innerStmt = ref()
+watch(
+  () => props.statement,
+  (newValue) => innerStmt.value = newValue,
+  { immediate: true },
+)
+
+const vm = new VM()
+vm.onModelSet = (varName, value, scope) => {
+  emit('update:modelValue', scope)
+}
+
+const result = ref()
+async function exec() {
+  result.value = await vm.eval(innerStmt.value, props.modelValue)
+  // console.log('%cphi >', 'background: blue; color: #bada55', result.value)
+}
+</script>
+
 <template>
   <div class="VmConsole">
     <div class="console-body">
@@ -7,7 +50,7 @@
           text="Instrucciones"
           icon="mdi:format-list-bulleted-type"
         >
-          <VmExpression v-model="expression" />
+          <VmStatement v-model="innerStmt" />
         </UiTab>
 
         <!-- <UiTab
@@ -26,7 +69,7 @@
           icon="mdi:code-json"
         >
           <UiInput
-            v-model="expression"
+            v-model="innerStmt"
             type="json"
           />
         </UiTab>
@@ -34,109 +77,17 @@
     </div>
 
     <UiItem
-      class="run-button ui-button --main --inline"
+      class="ui-button --main"
       icon="mdi:play"
       icon-color="white"
       text="Run"
       @click="exec"
     />
-    <!--
-    <UiItem
-      class="run-button ui-button --main --inline"
-      icon="mdi:play"
-      icon-color="white"
-      text="Run"
-      secondary="POST /test/vmsql"
-      @click="postVmSql"
-    /> -->
 
-    <h2 class="ui-label">
-      Resultados
-    </h2>
     <UiInput
-      v-if="result"
       type="json"
-      :value="result"
+      label="Resultados"
+      :model-value="result"
     />
   </div>
 </template>
-
-<script>
-import VM from '../../lib/VM.js'
-
-import { UiInput, UiItem, UiTab, UiTabs } from '../../../ui/components'
-
-import VmExpression from '../VmExpression/VmExpression.vue'
-
-export default {
-  name: 'VmConsole',
-  components: {
-    UiInput,
-    UiItem,
-    UiTab,
-    UiTabs,
-    VmExpression,
-  },
-
-  props: {
-    /**
-     * La expresion a ejecutar
-     */
-    value: {
-      required: false,
-      default: null,
-      validator: () => true,
-    },
-  },
-
-  data() {
-    return {
-      vm: null,
-      expression: null,
-      result: null,
-      model: {},
-    }
-  },
-
-  watch: {
-    value: {
-      immediate: true,
-      handler(newValue) {
-        this.expression = newValue
-          ? JSON.parse(JSON.stringify(newValue))
-          : null
-      },
-    },
-  },
-
-  mounted() {
-    this.vm = new VM()
-    this.vm.onModelSet = (varName, value) =>
-      this.$set(this.model, varName, value)
-  },
-
-  methods: {
-    async exec() {
-      this.result = await this.vm.eval(this.expression, this.model)
-      this.$emit('result', this.result)
-
-      console.log(
-        '%cphi >',
-        'background: blue; color: #bada55',
-        this.result ? JSON.parse(JSON.stringify(this.result)) : this.result,
-      )
-    },
-
-    async postVmSql() {
-      this.result = await fetch('http://v4.local/test/vmsql', {
-        method: 'POST',
-        body: JSON.stringify(this.expression),
-      }).then((res) => res.json())
-    },
-
-    emitInput() {
-      this.$emit('input', JSON.parse(JSON.stringify(this.expression)))
-    },
-  },
-}
-</script>

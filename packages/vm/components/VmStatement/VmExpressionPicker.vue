@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import definitions from './definitions/index.js'
+import functionDefinitions from './functions/index.js'
 import { UiItem, UiPopover } from '../../../ui'
 
 export default {
@@ -57,8 +57,8 @@ export default {
   computed: {
     functions() {
       let retval = []
-      for (let fxName in definitions.functions) {
-        retval.push(Object.assign({ name: fxName }, definitions.functions[fxName]))
+      for (let fxName in functionDefinitions) {
+        retval.push(Object.assign({ name: fxName }, functionDefinitions[fxName]))
       }
       return retval
     },

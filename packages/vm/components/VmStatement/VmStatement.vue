@@ -4,13 +4,13 @@ import { UiInput } from '/packages/ui/components'
 
 const StmtAndOr = defineAsyncComponent(() => import('./statements/StmtAndOr.vue'))
 const StmtOp = defineAsyncComponent(() => import('./statements/StmtOp.vue'))
+const StmtCall = defineAsyncComponent(() => import('./statements/StmtCall.vue'))
+const StmtChain = defineAsyncComponent(() => import('./statements/StmtChain/StmtChain.vue'))
 
-const StmtCall = defineAsyncComponent(() => import('../VmExpression/statements/call/StmtCall.vue'))
-const StmtChain = defineAsyncComponent(() => import('../VmExpression/statements/chain/StmtChain.vue'))
-const StmtFunction = defineAsyncComponent(() => import('../VmExpression/statements/function/StmtFunction.vue'))
-const StmtIf = defineAsyncComponent(() => import('../VmExpression/statements/if/StmtIf.vue'))
-const StmtNot = defineAsyncComponent(() => import('../VmExpression/statements/not/StmtNot.vue'))
-const StmtSwitch = defineAsyncComponent(() => import('../VmExpression/statements/switch/StmtSwitch.vue'))
+// const StmtFunction = defineAsyncComponent(() => import('../VmExpression/statements/function/StmtFunction.vue'))
+// const StmtIf = defineAsyncComponent(() => import('../VmExpression/statements/if/StmtIf.vue'))
+// const StmtNot = defineAsyncComponent(() => import('../VmExpression/statements/not/StmtNot.vue'))
+// const StmtSwitch = defineAsyncComponent(() => import('../VmExpression/statements/switch/StmtSwitch.vue'))
 
 const props = defineProps({
   modelValue: {
@@ -74,6 +74,11 @@ const editor = computed(() => {
 
   return { component: UiInput, props: { type: 'json' } }
 })
+
+function emitUpdate(newValue) {
+  // emit('update:modelValue', JSON.parse(JSON.stringify(newValue)))
+  emit('update:modelValue', newValue)
+}
 </script>
 
 <template>
@@ -82,6 +87,6 @@ const editor = computed(() => {
     v-bind="editor.props"
     class="VmStatement"
     :model-value="modelValue"
-    @update:modelValue="emit('update:modelValue', $event)"
+    @update:modelValue="emitUpdate"
   />
 </template>

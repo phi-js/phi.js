@@ -1,8 +1,16 @@
 <script setup>
 import { ref } from 'vue'
 import VmStatement from './VmStatement.vue'
+import { UiInput } from '../../../ui/components'
 
-const stmt = ref({ and: [] })
+const stmt = ref({
+  chain: [
+    {
+      info: { text: 'Hacer la cosa 1' },
+      do: { call: 'console.log', args: 'Hola mundo' },
+    },
+  ],
+})
 
 const schema = {
   type: 'object',
@@ -35,6 +43,11 @@ const schema = {
 </script>
 
 <template>
+  <UiInput
+    v-model="stmt"
+    type="json"
+  />
+
   <VmStatement
     v-model="stmt"
     :model-schema="schema"
