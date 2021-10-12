@@ -1,1 +1,1 @@
-export { default as UiItemEditor } from './UiItemEditor.vue';
+export { default as UiItemEditor } from './UiItemEditor.vue'

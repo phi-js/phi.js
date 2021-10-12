@@ -100,7 +100,7 @@ export default {
 
 <style lang="scss">
 .ui-item {
-  position: relative;
+  position: relative;  // para posicionar el badge
   display: flex;
   align-items: stretch;
   padding: var(--ui-padding);
@@ -108,7 +108,6 @@ export default {
   &__badge {
     background-color: var(--ui-color-danger);
     color: #fff;
-    z-index: 1;
 
     position: absolute;
     top: 12px;
