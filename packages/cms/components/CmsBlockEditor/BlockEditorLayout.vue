@@ -26,10 +26,6 @@ function accept() {
 }
 
 function cancel() {
-  if (!confirm('Cancelar ?')) {
-    return false
-  }
-
   blockValue.value = JSON.parse(JSON.stringify(props.block))
   return true
 }

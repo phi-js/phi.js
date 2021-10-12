@@ -69,6 +69,7 @@ const PageHelper = {
     return {
       id: incoming?.id,
       theme: 'default',
+      setup: incoming?.setup,
       sections,
     }
   },

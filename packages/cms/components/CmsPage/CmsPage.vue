@@ -23,6 +23,9 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const pageVm = new VM()
+pageVm.onModelSet = (propertyName, propertyValue, scope) => {
+  emit('update:modelValue', scope)
+}
 
 async function evalPage(page) {
   let retval = JSON.parse(JSON.stringify(page))
@@ -41,6 +44,46 @@ async function evalPage(page) {
           if (typeof block['v-if'] !== 'undefined' && !(await pageVm.eval(block['v-if'], props.modelValue))) {
             continue
           }
+
+
+          ///// v-for
+          if (typeof block['v-for'] !== 'undefined') {
+            let iterable = getProperty(props.modelValue, block['v-for'])
+            if (!Array.isArray(iterable)) {
+              // console.warn('CmsPage:v-for> cannot iterate over variable', block['v-for'], iterable)
+              continue
+            }
+
+            let clone = JSON.parse(JSON.stringify(block))
+            for (let $index = 0; $index < iterable.length; $index++) {
+              let $item = iterable[$index]
+
+              // Create a block instance
+              let blockInstance = { ...clone }
+
+              // parse props
+              blockInstance.props = blockInstance?.props
+                ? await pageVm.eval(blockInstance.props, { ...props.modelValue, $item, $index })
+                : {}
+
+              // Handle listeners
+              if (typeof block['v-on'] !== 'undefined') {
+                let listeners = block['v-on']
+                for (let eventName in listeners) {
+                  let propName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
+                  blockInstance.props[propName] = async ($event) => {
+                    return await pageVm.eval(listeners[eventName], { ...props.modelValue, $event, $item, $index })
+                  }
+                }
+              }
+
+              targetBlocks.push(blockInstance)
+            }
+
+            continue
+          }
+          /////
+
 
           // Parse props
           let blockProps = block?.props ? await pageVm.eval(block.props, props.modelValue) : undefined
@@ -97,6 +140,14 @@ watch(
   () => props.modelValue,
   async () => page.value = await evalPage(sanitizedPage.value),
   { deep: true },
+)
+
+// run page setup
+watch(
+  // () => props.modelValue?.setup,
+  () => sanitizedPage.value?.setup,
+  (stmtSetup) => pageVm.eval(stmtSetup, props.modelValue),
+  { immediate: true, deep: true },
 )
 </script>
 

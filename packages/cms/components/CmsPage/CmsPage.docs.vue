@@ -9,41 +9,144 @@ const page = ref({
   blocks: [
     {
       component: 'MediaHtml',
-      props: { value: '<h2>Hola {{ nombre }}!</h2><p>Contenido <strong>HTML</strong> aqui {{ foo.nombre }}</p>' },
+      props: { value: '<h2>Hola {{ nombre }}!</h2>' },
     },
+    // {
+    //   'component': 'InputText',
+    //   'props': { placeholder: 'Nombre aqui' },
+    //   'v-model': 'nombre',
+    // },
+    // {
+    //   component: 'MediaHtml',
+    //   props: { value: '<h2>Hola de nuevo {{ nombre }}!</h2>' },
+    //   // 'v-if': true,
+    // },
     {
-      'component': 'InputText',
-      'props': { placeholder: 'Nombre aqui' },
-      'v-model': 'nombre',
+      component: 'MediaHtml',
+      props: { value: '<h2>{{users.length}} usuarios</h2><pre>selectedUser: {{selectedUser}}</pre>' },
+      // 'v-if': {
+      //   and: [
+      //     {
+      //       field: 'users.length',
+      //       op: 'gte',
+      //       args: '{{ limit }}',
+      //     },
+      //   ],
+      // },
     },
     {
       'component': 'MediaHtml',
-      'props': { value: '<h2>Se excede el limite de {{ limit }}! (Hay {{ cantidad }})</h2>' },
-      'v-if': {
-        field: 'cantidad',
-        op: 'gt',
-        args: '{{ limit }}',
+      'props': {
+        value: '<li>{{$index}}: {{$item.name}} <small>{{$item.email}}</small></li>',
+        class: {
+          if: {
+            field: 'selectedUser.id',
+            op: 'eq',
+            args: '{{$item.id}}',
+          },
+          then: 'ui-clickable ui-label',
+          else: 'ui-clickable',
+        },
+      },
+      'v-for': 'users',
+      'v-on': {
+        click: {
+          chain: [
+            {
+              do: {
+                call: 'console.log',
+                args: ['Clicked user {{$item.id}}', '{{$item}}'],
+              },
+            },
+            {
+              do: {
+                if: {
+                  field: '$item.id',
+                  op: 'eq',
+                  args: '{{selectedUser.id}}',
+                },
+                then: {
+                  chain: [{
+                    do: null,
+                    assign: 'selectedUser',
+                  } ],
+                },
+                else: {
+                  chain: [{
+                    do: '{{$item}}',
+                    assign: 'selectedUser',
+                  } ],
+                },
+              },
+            },
+            {
+              // do: '{{selectedUser.name}}',
+              do: '{{$item.name}}',
+              assign: 'nombre',
+            },
+          ],
+        },
       },
     },
+    // {
+    //   'component': 'MediaHtml',
+    //   'props': {
+    //     value: '<li><strong>{{$item.title}}</strong></li>',
+    //     class: 'ui-clickable',
+    //   },
+    //   'v-for': 'posts',
+    // },
     {
       component: 'MediaLoremIpsum',
       props: {
         nParagraphs: '{{ cantidad }}',
         nWords: '{{ palabras }}',
       },
-
     },
     {
       'component': 'InputButton',
       'props': { label: 'Test' },
       'v-on': {
         click: {
-          call: 'window.alert',
-          args: 'CLICK!',
+          chain: [
+            {
+              do: 'damn yu',
+              assign: 'nombre',
+            },
+            {
+              do: 'damn yu again',
+              assign: 'nombre',
+            },
+            {
+              do: 'damn yu again 2',
+              assign: 'nombre',
+            },
+          ],
         },
       },
     },
   ],
+
+  setup: {
+    chain: [
+      {
+        info: { text: 'fetch users', icon: 'mdi:plus-network' },
+        do: {
+          call: 'fetch',
+          args: { url: 'https://jsonplaceholder.typicode.com/users' },
+        },
+        assign: 'users',
+      },
+      {
+        info: { text: 'fetch posts', icon: 'mdi:plus-network' },
+        do: {
+          call: 'fetch',
+          args: { url: 'https://jsonplaceholder.typicode.com/posts' },
+        },
+        assign: 'posts',
+      },
+    ],
+  },
 })
 
 const model = ref({
@@ -56,11 +159,31 @@ const model = ref({
     apellido: 'a',
   },
 })
+
+const modelSchema = ref({
+  type: 'object',
+  properties: {
+    limit: { type: 'string', default: 2 },
+    nombre: { type: 'string', default: 'Santiago' },
+    cantidad: { text: 'No. de parrafos', type: 'string', default: 1 },
+    palabras: { type: 'string', default: 120 },
+    foo: {
+      type: 'object',
+      properties: {
+        nombre: { type: 'string', default: 'n' },
+        apellido: { type: 'string', default: 'a' },
+      },
+    },
+  },
+})
 </script>
 
 <template>
   <div class="docs-page">
-    <CmsPageEditor v-model:page="page" />
+    <CmsPageEditor
+      v-model:page="page"
+      :model-schema="modelSchema"
+    />
 
     <pre>
       <UiForm
