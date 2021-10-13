@@ -8,8 +8,14 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+
+  open: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'cancel'])
 
 const innerValue = ref({})
 const isIfStatement = ref(false)
@@ -28,15 +34,20 @@ function accept() {
 
 function cancel() {
   innerValue.value = JSON.parse(JSON.stringify(props.modelValue))
+  emit('cancel')
 }
 </script>
 
 <template>
   <div class="StmtChainItem">
-    <UiDialog @cancel="false">
+    <UiDialog
+      :open="props.open"
+      @cancel="false"
+    >
       <template #trigger>
         <UiItem
           class="StmtChainItem__face ui-clickable"
+          icon="mdi:vuejs"
           v-bind="props.modelValue.info"
           :subtext="props.modelValue.assign"
         >

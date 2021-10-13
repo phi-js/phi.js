@@ -1,12 +1,11 @@
-const FetchEditor = () => import('./FetchEditor.vue');
+const FetchEditor = () => import('./FetchEditor.vue')
 
 export default {
   icon: 'mdi:api',
-  text: 'HTTP',
-  secondary: 'Ejecutar request HTTP',
-
+  text: 'fetch',
+  subtext: 'Ejecutar request HTTP',
   editor: {
     component: FetchEditor,
-    props: null
-  }
+    props: null,
+  },
 }

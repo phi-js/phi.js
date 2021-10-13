@@ -1,77 +1,58 @@
+<script setup>
+import { ref, watch } from 'vue'
+import { UiInput } from '../../../../../ui'
+
+const props = defineProps({
+  modelValue: {
+    type: Object,
+    required: true,
+    default: null,
+  },
+})
+
+const emit = defineEmits(['update:modelValue'])
+function emitInput() {
+  emit('update:modelValue', JSON.parse(JSON.stringify(innerModel.value)))
+}
+
+const innerModel = ref(null)
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    let clone = newValue ? JSON.parse(JSON.stringify(newValue)) : newValue
+    if (typeof clone != 'object') {
+      clone = {}
+    }
+    innerModel.value = {
+      call: clone.call,
+      args: Object.assign(
+        {
+          message: '',
+          placeholder: '',
+        },
+        clone.args,
+      ),
+    }
+  },
+  { immediate: true },
+)
+</script>
+
 <template>
   <div class="WindowDialogEditor">
     <label class="ui-label">{{ innerModel.call }}</label>
-
-    <UiField label="Mensaje">
-      <input
-        type="text"
-        class="ui-native"
-        v-model="innerModel.args.message"
-        @input="emitInput"
-      >
-    </UiField>
-
-    <UiField
-      label="Valor predeterminado"
+    <UiInput
+      v-model="innerModel.args.message"
+      type="text"
+      label="Mensaje"
+      @input="emitInput"
+    />
+    <UiInput
       v-if="innerModel.call == 'window.prompt'"
-    >
-      <input
-        type="text"
-        class="ui-native"
-        v-model="innerModel.args.placeholder"
-        @input="emitInput"
-      >
-    </UiField>
+      v-model="innerModel.args.placeholder"
+      type="text"
+      label="Valor predeterminado"
+      @input="emitInput"
+    />
   </div>
 </template>
-
-<script>
-import { UiField } from '../../../../../../ui';
-
-export default {
-  name: 'WindowDialogEditor',
-  components: { UiField },
-
-  props: {
-    value: {
-      required: false,
-      default: null,
-    },
-  },
-
-  data() {
-    return {
-      innerModel: null,
-    };
-  },
-
-  watch: {
-    value: {
-      immediate: true,
-      handler(newValue) {
-        let clone = newValue ? JSON.parse(JSON.stringify(newValue)) : newValue;
-        if (typeof clone != 'object') {
-          clone = {};
-        }
-
-        this.innerModel = {
-          call: clone.call,
-          args: Object.assign(
-            {
-              message: '',
-              placeholder: '',
-            },
-            clone.args
-          ),
-        };
-      },
-    },
-  },
-
-  methods: {
-    emitInput() {
-      this.$emit('input', JSON.parse(JSON.stringify(this.innerModel)));
-    },
-  },
-};
-</script>

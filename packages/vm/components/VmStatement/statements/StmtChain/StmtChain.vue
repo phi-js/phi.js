@@ -1,5 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
+import draggable from 'vuedraggable'
+
 import StmtChainItem from './StmtChainItem.vue'
 import VmExpressionPicker from '../../VmExpressionPicker.vue'
 import { UiIcon } from '../../../../../ui'
@@ -28,13 +30,16 @@ function removeItem(index) {
   emitUpdate()
 }
 
+
+const stagedItem = ref(null)
+
 function onPickerInput({ expression, definition }) {
   if (expression.if) {
     expression.then = { chain: [] }
     expression.else = { chain: [] }
   }
 
-  const chainItem = {
+  stagedItem.value = {
     info: {
       text: definition.text,
       icon: definition.icon,
@@ -43,8 +48,11 @@ function onPickerInput({ expression, definition }) {
     do: expression,
     assign: null,
   }
+}
 
-  innerValue.value.chain.push(chainItem)
+function onStagedAccept() {
+  innerValue.value.chain.push(stagedItem.value)
+  stagedItem.value = null
   emitUpdate()
 }
 
@@ -74,36 +82,51 @@ function deifify(item, i) {
 
 <template>
   <div class="StmtChain">
-    <div class="StmtChain__items">
-      <StmtChainItem
-        v-for="(item, i) in innerValue.chain"
-        :key="i"
-        v-model="innerValue.chain[i]"
-        @update:modelValue="emitUpdate()"
-      >
-        <template #actions>
-          <UiIcon
-            v-if="!item?.do?.if"
-            class="item-action-icon ui-clickable"
-            src="mdi:help-rhombus"
-            title="IFify"
-            @click.stop="ifify(item, i)"
-          />
-          <UiIcon
-            v-else
-            class="item-action-icon ui-clickable"
-            src="mdi:close-network"
-            title="de-IFify"
-            @click.stop="deifify(item, i)"
-          />
-          <UiIcon
-            src="mdi:close"
-            class="ui-clickable"
-            @click.stop="removeItem(i)"
-          />
-        </template>
-      </StmtChainItem>
-    </div>
+    <draggable
+      v-model="innerValue.chain"
+      class="StmtChain__items"
+      item-key="nun"
+      handle=".StmtChainItem__face .ui-item__icon"
+      group="StmtChain__items"
+      @update:modelValue="emitUpdate()"
+    >
+      <template #item="{element, index}">
+        <StmtChainItem
+          v-model="innerValue.chain[index]"
+          @update:modelValue="emitUpdate()"
+        >
+          <template #actions>
+            <UiIcon
+              v-if="!element?.do?.if"
+              class="item-action-icon ui-clickable"
+              src="mdi:help-rhombus"
+              title="IFify"
+              @click.stop="ifify(element, index)"
+            />
+            <UiIcon
+              v-else
+              class="item-action-icon ui-clickable"
+              src="mdi:close-network"
+              title="de-IFify"
+              @click.stop="deifify(element, index)"
+            />
+            <UiIcon
+              src="mdi:close"
+              class="ui-clickable"
+              @click.stop="removeItem(index)"
+            />
+          </template>
+        </StmtChainItem>
+      </template>
+    </draggable>
+
+    <StmtChainItem
+      v-if="stagedItem"
+      v-model="stagedItem"
+      open
+      @update:modelValue="onStagedAccept()"
+      @cancel="stagedItem = null"
+    />
 
     <div class="StmtChain__adder">
       <VmExpressionPicker

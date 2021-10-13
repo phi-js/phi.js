@@ -1,74 +1,80 @@
 <template>
   <div class="FetchEditor">
     <div class="ui-group --block">
-      <UiField label="Method">
+      <UiInput label="Method">
         <select
-          class="ui-native"
           v-model="innerValue.args.options.method"
+          class="ui-native"
           @change="emitInput"
         >
-          <option value="get">GET</option>
-          <option value="post">POST</option>
-          <option value="put">PUT</option>
-          <option value="delete">DELETE</option>
+          <option value="get">
+            GET
+          </option>
+          <option value="post">
+            POST
+          </option>
+          <option value="put">
+            PUT
+          </option>
+          <option value="delete">
+            DELETE
+          </option>
         </select>
-      </UiField>
+      </UiInput>
 
-      <UiField
+      <UiInput
         label="URL"
         style="flex: 1"
       >
         <input
+          v-model="innerValue.args.url"
           class="ui-native fetch-url"
           type="text"
-          v-model="innerValue.args.url"
-          @input="emitInput"
           placeholder="https:// ... "
           style="width:100%"
-        />
-      </UiField>
+          @input="emitInput"
+        >
+      </UiInput>
     </div>
 
-    <UiField
-      label="Body"
+    <UiInput
       v-show="innerValue.args.options.method != 'get'"
-    >
-      <UiInputJson
-        v-model="innerValue.args.options.body"
-        @input="emitInput"
-      />
-    </UiField>
+      v-model="innerValue.args.options.body"
+      label="Body"
+      type="json"
+      @input="emitInput"
+    />
   </div>
 </template>
 
 <script>
-import { UiField, UiInputJson } from '../../../../../../ui';
+import { UiInput } from '../../../../../ui'
 
 export default {
   name: 'FetchEditor',
-  components: { UiField, UiInputJson },
+  components: { UiInput },
 
   props: {
-    value: {
-      required: false,
-      default: null,
+    modelValue: {
+      type: Object,
+      required: true,
     },
   },
 
+  emits: ['update:modelValue'],
+
   data() {
-    return {
-      innerValue: {},
-    };
+    return { innerValue: {} }
   },
 
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler(newValue) {
         let incoming = Object.assign(
           { call: 'fetch' },
-          newValue ? JSON.parse(JSON.stringify(newValue)) : null
-        );
+          newValue ? JSON.parse(JSON.stringify(newValue)) : null,
+        )
 
         incoming.args = Object.assign(
           {
@@ -78,18 +84,18 @@ export default {
               body: null,
             },
           },
-          typeof incoming.args == 'object' ? incoming.args : null
-        );
+          typeof incoming.args == 'object' ? incoming.args : null,
+        )
 
-        this.innerValue = incoming;
+        this.innerValue = incoming
       },
     },
   },
 
   methods: {
     emitInput() {
-      this.$emit('input', JSON.parse(JSON.stringify(this.innerValue)));
+      this.$emit('update:modelValue', JSON.parse(JSON.stringify(this.innerValue)))
     },
   },
-};
+}
 </script>
