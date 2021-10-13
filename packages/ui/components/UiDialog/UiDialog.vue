@@ -61,16 +61,16 @@ watch(
 )
 
 const widgetEl = ref()
-onMounted(() => {
-  document.body.appendChild(widgetEl.value)
-})
-onUnmounted(() => {
-  try {
-    document.body.removeChild(widgetEl.value)
-  } catch (e) {
-    // El elemento ya estaba desmontado (?)  pasa en casos cuando se usa <ui-dialog v-if="XXX">
-  }
-})
+// onMounted(() => {
+//   document.body.appendChild(widgetEl.value)
+// })
+// onUnmounted(() => {
+//   try {
+//     document.body.removeChild(widgetEl.value)
+//   } catch (e) {
+//     // El elemento ya estaba desmontado (?)  pasa en casos cuando se usa <ui-dialog v-if="XXX">
+//   }
+// })
 </script>
 
 <template>
