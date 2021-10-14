@@ -30,6 +30,17 @@
         <!-- Si no hay slot contents, usar el slot default -->
         <slot name="default" />
       </slot>
+
+      <div
+        v-if="$slots.footer"
+        class="ui-drawer__footer"
+      >
+        <slot
+          name="footer"
+          :close="doClose"
+          :toggle="toggle"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -74,7 +85,7 @@ export default {
     triggerEvent: {
       type: String,
       required: false,
-      default: 'mousedown',
+      default: 'click',
     },
   },
   emits: ['update:open', 'animation-done'],
