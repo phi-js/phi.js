@@ -144,9 +144,13 @@ watch(
 
 // run page setup
 watch(
-  // () => props.modelValue?.setup,
   () => sanitizedPage.value?.setup,
-  (stmtSetup) => pageVm.eval(stmtSetup, props.modelValue),
+  (newValue, oldValue) => {
+    if (oldValue && JSON.stringify(newValue) === JSON.stringify(oldValue)) {
+      return
+    }
+    pageVm.eval(sanitizedPage.value.setup, props.modelValue)
+  },
   { immediate: true, deep: true },
 )
 </script>

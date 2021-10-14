@@ -32,7 +32,7 @@ export default {
               },
               {
                 text: 'Único',
-                value: false,
+                value: null,
               },
             ],
           },

@@ -47,7 +47,7 @@ const isWindowOpen = ref(false)
 
 <template>
   <div class="CmsPageEditor">
-    <div class="CmsPageEditor__toolbar ui-toolbar --wide">
+    <div class="CmsPageEditor__toolbar ui-toolbar --wide --light">
       <slot name="toolbar" />
       <UiIcon
         class="ui-clickable"

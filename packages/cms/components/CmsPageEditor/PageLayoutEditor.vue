@@ -324,11 +324,14 @@ function onResizerEnd(evt) {
 
     &--ghost {
       flex: none;
+
+      .CmsPageLayoutEditor__draggable {
+        height: 100%;
+      }
     }
 
     .CmsPageLayoutEditor__draggable {
-      min-width: 18px;
-      // height: 100%;  // Causa un bug raro, los elementos debajo de .PageLayoutEditor se desplazan hacia arriba (?!)
+      min-width: 8px;
     }
   }
 

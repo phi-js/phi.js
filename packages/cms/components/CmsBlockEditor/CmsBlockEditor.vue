@@ -1,5 +1,5 @@
 <script setup>
-import { shallowRef, watch, defineAsyncComponent } from 'vue'
+import { shallowRef, ref, watch, defineAsyncComponent } from 'vue'
 import { getBlockEditors, getBlockDefinition } from '../../composables'
 import { UiInput } from '/packages/ui/components'
 import BlockEditorLayout from './BlockEditorLayout.vue'
@@ -67,6 +67,9 @@ watch(
   },
   { immediate: true },
 )
+
+const isFocused = ref(false)
+
 </script>
 
 <template>
@@ -83,6 +86,7 @@ watch(
       v-else
       class="CmsBlockEditor"
       :block="props.block"
+      :focused="isFocused"
       @update:block="emit('update:block', $event)"
       @delete="emit('delete')"
     >
@@ -103,8 +107,12 @@ watch(
           :action="editorFace"
           :block="blockValue"
           v-bind="blockValue?.props"
+          tabindex="0"
           @update:block="emit('update:block', $event)"
+          @focus="isFocused = true"
+          @blur="isFocused = false"
         />
+
         <UiInput
           v-else
           type="json"

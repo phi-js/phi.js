@@ -10,6 +10,12 @@ const props = defineProps({
     required: false,
     default: null,
   },
+
+  focused: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 const emit = defineEmits(['update:block', 'delete'])
 
@@ -30,7 +36,6 @@ function cancel() {
   return true
 }
 
-const isFocused = ref(false)
 const isWindowOpen = ref(false)
 const currentActionIndex = ref(null)
 const availableActions = shallowRef([])
@@ -57,7 +62,7 @@ function deleteBlock() {
   <div
     class="BlockEditorLayout"
     :class="{
-      'BlockEditorLayout--focused': isFocused,
+      'BlockEditorLayout--focused': props.focused,
       'BlockEditorLayout--open': isWindowOpen,
     }"
   >
@@ -69,7 +74,10 @@ function deleteBlock() {
       <slot name="toolbar" />
 
       <!-- dropdown options -->
-      <UiPopover>
+      <UiPopover
+        style="margin-left: auto"
+        placement="bottom-end"
+      >
         <template #trigger>
           <UiIcon
             class="ui-clickable"
@@ -146,7 +154,9 @@ function deleteBlock() {
 
   &__toolbar {
     position: absolute;
+    min-width: 100%;
     bottom: 100%;
+    margin-bottom: -3px;
 
     transition: opacity var(--ui-duration-snap);
     opacity: 0;

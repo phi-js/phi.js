@@ -14,9 +14,10 @@ const props = defineProps({
     required: true,
   },
 })
-const emit = defineEmits(['update:block', 'focus', 'blur'])
+const emit = defineEmits(['update:block'])
 
 const innerValue = ref('')
+const isFocused = ref(false)
 
 const editor = new Editor({
   extensions: [
@@ -25,8 +26,8 @@ const editor = new Editor({
     TextAlign.configure({ types: ['heading', 'paragraph'] }),
   ],
   content: '',
-  onFocus: () => emit('focus'),
-  onBlur: () => emit('blur'),
+  onFocus: () => isFocused.value = true,
+  onBlur: () => isFocused.value = false,
   onUpdate: () => {
     innerValue.value = editor.getHTML()
     emit('update:block', { ...props.block, props: { ...props.block.props, value: innerValue.value } })
@@ -145,6 +146,7 @@ const formatButtons = computed(() => {
     class="MediaHtmlBlockEditor"
     v-bind="$attrs"
     :block="props.block"
+    :focused="isFocused"
     @update:block="$emit('update:block', $event)"
   >
     <template #toolbar>

@@ -20,25 +20,17 @@ export default {
       'v-model': 'block',
       'component': UiForm,
       'props': {
-        inline: true,
+        class: 'ui-group',
         fields: [
           {
             type: 'text',
-            label: 'Cantidad de parrafos',
             model: 'props.nParagraphs',
-            props: {
-              size: 2,
-              style: 'width: 80px',
-            },
+            size: 2,
           },
           {
             type: 'text',
-            label: 'Cantidad de palabras',
             model: 'props.nWords',
-            props: {
-              size: 3,
-              style: 'width: 80px',
-            },
+            size: 2,
           },
         ],
       },
