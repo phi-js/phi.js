@@ -45,9 +45,9 @@ function openAction(targetActionIndex = null) {
 
 
 function deleteBlock() {
-  if (!confirm('Eliminar este bloque?')) {
-    return true
-  }
+  // if (!confirm('Eliminar este bloque?')) {
+  //   return true
+  // }
   emit('delete')
   return true
 }

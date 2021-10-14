@@ -1,7 +1,5 @@
-import { UiInput, UiForm } from '/packages/ui/components'
-const InputEditor = () => import('../components/InputEditor/InputEditor.vue')
+import { UiInput, UiInputEditor, UiForm } from '/packages/ui/components'
 const InputSettings = () => import('../components/InputSettings/InputSettings.vue')
-
 
 export default {
   tags: ['input'],
@@ -22,6 +20,7 @@ export default {
       'component': UiForm,
       'props': {
         inline: true,
+        class: 'ui-group',
         fields: [
           {
             model: 'props.multiple',
@@ -37,26 +36,34 @@ export default {
               },
             ],
           },
-          // {
-          //   "model": "props.native",
-          //   "type": "select-native",
-          //   "options": [
-          //     {
-          //       "text": "Lista desplegable",
-          //       "value": true
-          //     },
-          //     {
-          //       "text": "Lista con iconos",
-          //       "value": false
-          //     }
-          //   ],
-          // }
+          {
+            model: 'props.type',
+            type: 'select-native',
+            options: [
+              {
+                text: 'Picker',
+                value: 'select',
+              },
+              {
+                text: 'Nativo',
+                value: 'select-native',
+              },
+              {
+                text: 'Lista',
+                value: 'select-list',
+              },
+              {
+                text: 'Botones',
+                value: 'select-buttons',
+              },
+            ],
+          },
         ],
       },
     },
 
     face: {
-      'component': InputEditor,
+      'component': UiInputEditor,
       'v-model': 'block.props',
     },
 

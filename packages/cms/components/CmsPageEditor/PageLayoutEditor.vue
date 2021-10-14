@@ -103,8 +103,10 @@ function clearEmptyColumns(section) {
   return section
 }
 
+let idCounter = 10
 function onBlockPickerInput(block, column) {
-  column.blocks.push(block)
+  idCounter++
+  column.blocks.push({ id: `added-bl-${idCounter}`, ...block })
   emit('update:page', innerPage.value)
 }
 

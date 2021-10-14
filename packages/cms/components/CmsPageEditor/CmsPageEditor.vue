@@ -86,7 +86,10 @@ const isWindowOpen = ref(false)
           text="Setup"
           icon="mdi:cog"
         >
-          <VmStatement v-model="innerPage.setup" />
+          <VmStatement
+            v-model="innerPage.setup"
+            :default="{chain:[]}"
+          />
         </UiTab>
         <UiTab
           text="Source"

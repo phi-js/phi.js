@@ -27,6 +27,7 @@ import { defineAsyncComponent } from '@vue/runtime-core'
 import getBlockDefinition from './getBlockDefinition.js'
 import { UiInput } from '/packages/ui/components'
 import { VmStatement } from '/packages/vm/components'
+import BlockListenersEditor from '../components/CmsBlockEditor/BlockListenersEditor.vue'
 
 export default async function getBlockEditors(block) {
   const definition = await getBlockDefinition(block)
@@ -79,6 +80,7 @@ export default async function getBlockEditors(block) {
     'title': 'v-if',
     'icon': 'mdi:vuejs',
     'component': VmStatement,
+    'props': { default: { and: [] } },
     'v-model': 'block.v-if',
   })
 
@@ -101,10 +103,10 @@ export default async function getBlockEditors(block) {
   })
 
   retval.actions.push({
-    'title': 'v-on (click)',
+    'title': 'v-on',
     'icon': 'mdi:vuejs',
-    'component': VmStatement,
-    'v-model': 'block.v-on.click',
+    'component': BlockListenersEditor,
+    'v-model': 'block',
   })
 
   retval.actions.push({

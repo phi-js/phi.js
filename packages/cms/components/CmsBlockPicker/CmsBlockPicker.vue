@@ -10,7 +10,10 @@ const isOpen = ref(false)
     class="CmsBlockPicker"
     :class="{'CmsBlockPicker--open': isOpen, 'CmsBlockPicker--closed': !isOpen}"
   >
-    <UiPopover v-model:open="isOpen">
+    <UiPopover
+      v-model:open="isOpen"
+      placement="bottom-start"
+    >
       <template #trigger="slotData">
         <slot
           name="trigger"
@@ -47,7 +50,7 @@ const isOpen = ref(false)
 
   &__trigger {
     border: 2px dashed rgba(0, 0, 0, 0.1);
-    text-align: center;
+    border-radius: var(--ui-radius);
 
     .trigger-item {
       display: inline-flex;

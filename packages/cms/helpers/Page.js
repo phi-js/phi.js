@@ -74,93 +74,6 @@ const PageHelper = {
     }
   },
 
-  sanitizeLayout(incoming, blocks = []) {
-    console.log('PageHelper.sanitizeLayout', incoming, blocks)
-    if (!Array.isArray(blocks)) {
-      blocks = []
-    }
-
-    let retval = {
-      rows: [
-        {
-          title: 'Row I',
-          columns: [
-            {
-              title: 'Column I',
-              flex: 1,
-              blocks: [],
-            },
-          ],
-        },
-      ],
-    }
-
-    if (!incoming) {
-      return retval
-    }
-
-    // Layout "viejo".  Array de rows
-    if (Array.isArray(incoming)) {
-      incoming = { rows: incoming }
-    }
-
-    let seenBlocks = {}
-
-    retval.rows = [...(incoming.rows || [])]
-    for (let rowIndex = 0; rowIndex < retval.rows.length; rowIndex++) {
-      let row = retval.rows[rowIndex]
-
-      row.id = row.id || `row-${rowIndex}`
-      row.title = row.title || `Row ${rowIndex + 1}`
-      row.class = ''
-
-      row.columns = [...(row.columns || [])]
-      for (let colIndex = 0; colIndex < row.columns.length; colIndex++) {
-        let column = row.columns[colIndex]
-
-        column.id = column.id || `col-${colIndex}`
-        column.flex = 1
-        column.title = column.title || `Column ${colIndex + 1}`
-        column.class = ''
-
-        column.blocks = [...(column.blocks || [])]
-        for (
-          let blockIndex = 0;
-          blockIndex < column.blocks.length;
-          blockIndex++
-        ) {
-          let block = column.blocks[blockIndex] || {}
-          block.id = block.id || `block-${blockIndex}`
-          block.class = ''
-
-          if (block.index) {
-            seenBlocks[block.index] = block
-          }
-        }
-      }
-    }
-
-    // Asegurarse de que todos los bloques esten contenidos en el layout
-    for (let blockIndex = 0; blockIndex < blocks.length; blockIndex++) {
-      if (typeof seenBlocks[blockIndex] != 'undefined') {
-        continue
-      }
-
-      let block = blocks[blockIndex]
-      let targetRow = block?.layout?.row || 0
-      let targetColumn = block?.layout?.column || 0
-
-      retval.rows[targetRow].columns[targetColumn].blocks.push({
-        id: block.id || `block-${blockIndex}`,
-        class: '',
-        index: blockIndex,
-      })
-
-    }
-
-    return retval
-  },
-
   getPageValidationRules(page) {
     if (!page) {
       return []
@@ -243,37 +156,6 @@ const PageHelper = {
         }
 
         switch (block.component) {
-        case 'CmsInput':
-          switch (props.type) {
-          case 'select':
-            if (props.multiple) {
-              field.type = 'array'
-              field.items = {
-                type: 'string',
-                enum: props.options || [],
-              }
-            } else {
-              field.type = 'string'
-              field.enum = props.options || []
-            }
-            break
-
-          case 'text':
-          case 'textarea':
-            field.type = 'text'
-            break
-
-          case 'number':
-            field.type = 'number'
-            break
-
-          case 'checkbox':
-            field.type = 'boolean'
-            break
-          }
-          break
-
-        case 'CmsInputSelect':
         case 'InputSelect':
           if (props.multiple) {
             field.type = 'array'
@@ -287,27 +169,17 @@ const PageHelper = {
           }
           break
 
-        case 'CmsInputText':
-        case 'CmsInputTextarea':
         case 'InputText':
         case 'InputTextarea':
           field.type = 'text'
           break
 
-        case 'CmsInputNumber':
         case 'InputNumber':
           field.type = 'number'
           break
 
-        case 'CmsInputCheckbox':
         case 'InputCheckbox':
           field.type = 'boolean'
-          break
-
-        case 'CmsQuizQuestion':
-        case 'QuizQuestion':
-          field.type = 'string'
-          field.enum = props.options || []
           break
 
         default:
@@ -316,96 +188,6 @@ const PageHelper = {
         }
 
         retval.properties[field.name] = field
-      })
-
-    return retval
-  },
-
-  getPageFields(page) {
-    if (!page || !page.blocks || !page.blocks.length) {
-      return []
-    }
-
-    let retval = []
-    page.blocks
-      .filter((b) => !!b['v-model'])
-      .forEach((block) => {
-        let props = block.props || {}
-
-        let field = {
-          name: block['v-model'],
-          label: props.label || props.title || block['v-model'],
-          type: null,
-          options: null,
-        }
-
-        switch (block.component) {
-        case 'CmsInput':
-          switch (props.type) {
-          case 'select':
-            field.type = 'list'
-            field.options = {
-              multiple: props.multiple,
-              values: props.options,
-            }
-            break
-
-          case 'text':
-          case 'textarea':
-            field.type = 'text'
-            break
-
-          case 'number':
-            field.type = 'number'
-            break
-
-          case 'checkbox':
-            field.type = 'boolean'
-            break
-          }
-          break
-
-        case 'CmsInputSelect':
-        case 'InputSelect':
-          field.type = 'list'
-          field.options = {
-            multiple: props.multiple,
-            values: props.options,
-          }
-          break
-
-        case 'CmsInputText':
-        case 'CmsInputTextarea':
-        case 'InputText':
-        case 'InputTextarea':
-          field.type = 'text'
-          break
-
-        case 'CmsInputNumber':
-        case 'InputNumber':
-          field.type = 'number'
-          break
-
-        case 'CmsInputCheckbox':
-        case 'InputCheckbox':
-          field.type = 'boolean'
-          break
-
-        case 'CmsQuizQuestion':
-        case 'QuizQuestion':
-          field.type = 'list'
-          field.options = {
-            multiple: false,
-            values: props.options,
-          }
-          break
-
-        default:
-          field.type = 'text'
-          break
-        }
-
-        retval.push(field)
       })
 
     return retval

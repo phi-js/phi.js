@@ -1,34 +1,31 @@
-const UiInput = () => import('../../../../ui/components/UiInput/UiInput.vue')
-const InputEditor = () => import('../components/InputEditor/InputEditor.vue')
+import { UiInput, UiInputEditor } from '../../../../ui/components'
 const InputSettings = () => import('../components/InputSettings/InputSettings.vue')
 
 export default {
-  "tags": ["input"],
+  tags: ['input'],
 
-  "name": "InputNumber",
-  "title": "Número",
-  "icon": "mdi:numeric",
+  name: 'InputNumber',
+  title: 'Número',
+  icon: 'mdi:numeric',
 
-  "block": {
-    "component": UiInput,
-    "v-model": "number",
-    "props": {
-      "type": "number"
-    }
+  block: {
+    'component': UiInput,
+    'v-model': 'number',
+    'props': { type: 'number' },
   },
 
-  "editor": {
-    "face": {
-      "component": InputEditor,
-      "v-model": "block.props"
+  editor: {
+    face: {
+      'component': UiInputEditor,
+      'v-model': 'block.props',
     },
 
-    "actions": [
+    actions: [
       {
-        "title": "Número",
-        "component": InputSettings,
-        "v-model": "block"
-      }
-    ]
-  }
-};
+        'title': 'Número',
+        'component': InputSettings,
+        'v-model': 'block',
+      },
+    ],
+  },
+}

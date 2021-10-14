@@ -1,5 +1,4 @@
-const UiInput = () => import('../../../../ui/components/UiInput/UiInput.vue')
-const InputEditor = () => import('../components/InputEditor/InputEditor.vue')
+import { UiInput, UiInputEditor } from '../../../../ui/components'
 const InputSettings = () => import('../components/InputSettings/InputSettings.vue')
 
 export default {
@@ -16,7 +15,11 @@ export default {
   },
 
   editor: {
-    face: { component: InputEditor },
+    face: {
+      'component': UiInputEditor,
+      'v-model': 'block.props',
+    },
+
     actions: [
       {
         'title': 'Text',
