@@ -1,26 +1,27 @@
 <template>
   <div class="ui-video">
     <component
+      :is="videoComponent"
       v-if="videoComponent"
       ref="video"
-      :is="videoComponent"
       v-bind="$attrs"
-      v-on="$listeners"
       :url="url"
       @timeupdate="onTimeupdate"
-    ></component>
+    />
     <div
       v-else
       class="empty-video"
-    >{{ url ? 'URL inválida' : 'No hay URL' }}</div>
+    >
+      {{ url ? 'URL inválida' : 'No hay URL' }}
+    </div>
   </div>
 </template>
 
 <script>
-import VideoNative from './Native/Native.vue';
-import VideoYoutube from './Youtube/Youtube.vue';
-import VideoVimeo from './Vimeo/Vimeo.vue';
-import VideoMicrosoft from './Microsoft/Microsoft.vue';
+import VideoNative from './Native/Native.vue'
+import VideoYoutube from './Youtube/Youtube.vue'
+import VideoVimeo from './Vimeo/Vimeo.vue'
+import VideoMicrosoft from './Microsoft/Microsoft.vue'
 
 export default {
   name: 'UiVideo',
@@ -52,7 +53,8 @@ export default {
      * }
      * </pre>
      */
-    value: {
+    modelValue: {
+      type: Object,
       required: false,
       default: null,
     },
@@ -77,19 +79,41 @@ export default {
     },
   },
 
+  emits: ['update:chapters', 'chapter-enter', 'chapter-leave'],
+
   data() {
-    return {
-      innerChapters: [],
-    };
+    return { innerChapters: [] }
+  },
+
+  computed: {
+    videoComponent() {
+      if (!this.url) {
+        return null
+      }
+
+      if (/(youtube\.|youtu\.)/.test(this.url)) {
+        return 'VideoYoutube'
+      }
+
+      if (/(vimeo\.)/.test(this.url)) {
+        return 'VideoVimeo'
+      }
+
+      if (/(microsoftstream\.com)/.test(this.url)) {
+        return 'VideoMicrosoft'
+      }
+
+      return 'VideoNative'
+    },
   },
 
   mounted() {
-    this.innerChapters = [];
-    let incoming = Array.isArray(this.chapters) ? this.chapters : [];
+    this.innerChapters = []
+    let incoming = Array.isArray(this.chapters) ? this.chapters : []
     for (let i = 0; i < incoming.length; i++) {
-      let chapter = incoming[i];
+      let chapter = incoming[i]
       if (!chapter || typeof chapter != 'object') {
-        continue;
+        continue
       }
 
       this.innerChapters.push({
@@ -97,52 +121,30 @@ export default {
         start: chapter.start || 0,
         end: chapter.end || Infinity,
         _active: false,
-      });
+      })
     }
-  },
-
-  computed: {
-    videoComponent() {
-      if (!this.url) {
-        return null;
-      }
-
-      if (/(youtube\.|youtu\.)/.test(this.url)) {
-        return 'VideoYoutube';
-      }
-
-      if (/(vimeo\.)/.test(this.url)) {
-        return 'VideoVimeo';
-      }
-
-      if (/(microsoftstream\.com)/.test(this.url)) {
-        return 'VideoMicrosoft';
-      }
-
-      return 'VideoNative';
-    },
   },
 
   methods: {
     onTimeupdate(evt) {
-      let activeChapters = [];
-      let hasChanged = false;
+      let activeChapters = []
+      let hasChanged = false
       for (let i = 0; i < this.innerChapters.length; i++) {
-        let c = this.innerChapters[i];
-        let isActive = c.start <= evt.time && evt.time < c.end;
+        let c = this.innerChapters[i]
+        let isActive = c.start <= evt.time && evt.time < c.end
         if (isActive != c._active) {
-          c._active = isActive;
-          hasChanged = true;
-          this.$emit(isActive ? 'chapter-enter' : 'chapter-leave', c.name);
+          c._active = isActive
+          hasChanged = true
+          this.$emit(isActive ? 'chapter-enter' : 'chapter-leave', c.name)
         }
 
         if (isActive) {
-          activeChapters.push(c.name);
+          activeChapters.push(c.name)
         }
       }
 
       if (hasChanged) {
-        this.$emit('update:chapters', activeChapters);
+        this.$emit('update:chapters', activeChapters)
       }
     },
 
@@ -156,7 +158,7 @@ export default {
      * @fires play
      */
     play() {
-      this.$refs.video.play();
+      this.$refs.video.play()
     },
 
     /**
@@ -169,7 +171,7 @@ export default {
      * @fires pause
      */
     pause() {
-      this.$refs.video.pause();
+      this.$refs.video.pause()
     },
 
     /**
@@ -182,7 +184,7 @@ export default {
      * @fires stop
      */
     stop() {
-      this.$refs.video.stop();
+      this.$refs.video.stop()
     },
 
     /**
@@ -196,10 +198,10 @@ export default {
      * @fires timeupdate
      */
     async getCurrentTime() {
-      return this.$refs.video ? this.$refs.video.getCurrentTime() : null;
+      return this.$refs.video ? this.$refs.video.getCurrentTime() : null
     },
   },
-};
+}
 </script>
 
 <style lang="scss">

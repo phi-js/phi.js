@@ -340,6 +340,27 @@ const placeholderOption = computed(() => {
 </template>
 
 <style lang="scss">
+//// TESTING
+select.ui-native {
+  option {
+    padding: 6px 8px !important;
+  }
+
+  /*firefox only*/
+  scrollbar-width: thin;
+
+  /*webkit based browsers only*/
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+}
+
 .UiSelect {
   display: inline-block;
 

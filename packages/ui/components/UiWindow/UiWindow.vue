@@ -458,14 +458,14 @@ export default {
 
     display: flex;
     flex-wrap: wrap;
+
+    pointer-events: none;
   }
 
   .ui-window-contents {
+    pointer-events: initial;
     display: flex;
     flex-direction: column;
-
-    max-width: 98vw;
-    max-height: 98vh;
 
     .ui-window-body {
       flex: 1;

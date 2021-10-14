@@ -8,7 +8,8 @@ let videoData = ref(null)
   <UiVideo
     ref="myvideo"
     v-model="videoData"
-    url="https://www.youtube.com/watch?v=DSGyEsJ17cI"
+    url="https://www.youtube.com/watch?v=sPXTm6g0ejg"
+    style="min-height: 420px"
   />
 
   <button
