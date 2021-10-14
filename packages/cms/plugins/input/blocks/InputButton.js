@@ -16,8 +16,8 @@ export default {
 
   editor: {
     face: {
-      component: UiInputEditor,
-      props: 'block.props',
+      'component': UiInputEditor,
+      'v-model': 'block.props',
     },
 
     actions: [

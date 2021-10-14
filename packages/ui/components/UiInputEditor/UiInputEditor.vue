@@ -76,12 +76,19 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
         @update:modelValue="emitUpdate"
       />
     </div>
-    <div
-      v-else
-      class="UiInputEditor__body"
-    >
+    <div v-else>
       <UiInput
+        v-if="_inputProps.type == 'button'"
+        v-model="_inputProps.label"
+        type="text"
+        class="ui-button"
+        @update:modelValue="emitUpdate"
+        @focus="$event.target.select()"
+      />
+      <UiInput
+        v-else
         v-model="_inputProps.placeholder"
+        class="UiInputEditor__body"
         :type="_inputProps.type"
         @update:modelValue="emitUpdate"
         @focus="$event.target.select()"
