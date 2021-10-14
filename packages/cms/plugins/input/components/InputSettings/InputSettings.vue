@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { UiInput } from '/packages/ui/components'
-import SelectOptionsEditor from '../SelectOptionsEditor/SelectOptionsEditor.vue'
+// import SelectOptionsEditor from '../SelectOptionsEditor/SelectOptionsEditor.vue'
 
 const props = defineProps({
   modelValue: {
@@ -85,10 +85,11 @@ const types = [
       v-if="block.props.type == 'select'"
       label="Opciones"
     >
-      <SelectOptionsEditor
+      OOPS
+      <!-- <SelectOptionsEditor
         v-model:options="block.props.options"
         @input="input"
-      />
+      /> -->
     </UiInput>
 
     <UiInput
