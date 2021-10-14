@@ -58,7 +58,7 @@ export default {
 
     /**
      * Posicion del popover
-     * @see {@link https://popper.js.org/docs/v2/constructors/#placement}
+     * @see {@link https://popper.js.org/docs/v2/constructors/#options}
      */
     placement: {
       type: String,

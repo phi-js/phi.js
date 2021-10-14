@@ -150,7 +150,7 @@ const widgetEl = ref()
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 2; // !!! se pelea con el z-index de UiWindow (y otros elementos "fixed")
+    z-index: 4; // !!! se pelea con el z-index de UiWindow (y otros elementos "fixed")
 
     display: flex;
     justify-content: center;

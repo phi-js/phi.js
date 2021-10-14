@@ -10,7 +10,7 @@
   // Grupos de ui-input + ui-native
   .ui-native, .ui-button {
     box-sizing: border-box;
-    height: 48px;
+    // height: 48px;  // ... mmm, mejor no!
     border-radius: 0;
     border-right-width: 0;
   }
