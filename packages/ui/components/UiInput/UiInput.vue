@@ -1,9 +1,15 @@
+<script>
+export default { inheritAttrs: false }
+</script>
+
 <script setup>
 import { computed, useAttrs, ref } from 'vue'
 import types from './types.js'
 
+const attrs = useAttrs()
+
 // eslint-disable-next-line no-undef
-const emit = defineEmits(['update:modelValue', 'click'])
+const emit = defineEmits(['update:modelValue'])
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -90,10 +96,9 @@ const showLabel = computed(() => {
 })
 
 const elementProps = computed(() => {
-  const attrs = useAttrs()
   return {
-    ...attrs,
     ...props,
+    ...attrs,
     'onFocus': () => setFocused(true),
     'onBlur': () => setFocused(false),
     'onUpdate:modelValue': (newValue) => emit('update:modelValue', newValue),
@@ -105,7 +110,6 @@ const nativeElementProps = computed(() => {
     ...elementProps.value,
     value: elementProps.value?.modelValue,
     onInput: (event) => emit('update:modelValue', event.target.value),
-    onClick: (event) => emit('click', event),
   }
 })
 
@@ -122,6 +126,7 @@ const nativeCheckboxProps = computed(() => {
   <div
     class="ui-input"
     :class="classNames"
+    :style="attrs.style"
   >
     <label
       v-if="showLabel"
