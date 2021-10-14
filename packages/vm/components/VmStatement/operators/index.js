@@ -1,11 +1,13 @@
-import arrayOps from './array/index.js';
-import dateOps from './date/index.js';
-import numberOps from './number/index.js';
-import stringOps from './string/index.js';
+import arrayOps from './array'
+import dateOps from './date'
+import enumOps from './enum'
+import numberOps from './number'
+import stringOps from './string'
 
 export default [
   ...arrayOps,
   ...dateOps,
+  ...enumOps,
   ...numberOps,
   ...stringOps,
 ]

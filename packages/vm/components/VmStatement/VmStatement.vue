@@ -24,6 +24,12 @@ const props = defineProps({
     required: false,
     default: null,
   },
+
+  default: {
+    validator: () => true,
+    required: false,
+    default: null,
+  },
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -31,62 +37,73 @@ const emit = defineEmits(['update:modelValue'])
 import useModelSchema from './useModelSchema'
 useModelSchema()
 
-const editor = computed(() => {
-  if (
-    props.modelValue === null
-    || typeof props.modelValue != 'object'
-    || Array.isArray(props.modelValue)
-  ) {
-    return { component: UiInput, props: { type: 'json' } }
-  }
 
-  if (typeof props.modelValue.function != 'undefined') {
-    return { component: StmtFunction }
-  }
+//
+const _modelValue = computed({
+  get() {
+    return props.modelValue || props.default
+  },
 
-  if (typeof props.modelValue.switch != 'undefined') {
-    return { component: StmtSwitch }
-  }
-
-  if (typeof props.modelValue.if != 'undefined') {
-    return { component: StmtIf }
-  }
-
-  if (typeof props.modelValue.not != 'undefined') {
-    return { component: StmtNot }
-  }
-
-  if (typeof props.modelValue.call != 'undefined') {
-    return { component: StmtCall }
-  }
-
-  if (typeof props.modelValue.chain != 'undefined') {
-    return { component: StmtChain }
-  }
-
-  if (typeof props.modelValue.op != 'undefined') {
-    return { component: StmtOp }
-  }
-
-  if (Array.isArray(props.modelValue.and) || Array.isArray(props.modelValue.or)) {
-    return { component: StmtAndOr }
-  }
-
-  return { component: UiInput, props: { type: 'json' } }
+  set(newValue) {
+    emitUpdate(JSON.stringify(newValue) == JSON.stringify(props.default) ? null : newValue)
+  },
 })
 
 function emitUpdate(newValue) {
   // emit('update:modelValue', JSON.parse(JSON.stringify(newValue)))
   emit('update:modelValue', newValue)
 }
+
+const editor = computed(() => {
+  if (
+    _modelValue.value === null
+    || typeof _modelValue.value != 'object'
+    || Array.isArray(_modelValue.value)
+  ) {
+    return { component: UiInput, props: { type: 'json' } }
+  }
+
+  if (typeof _modelValue.value.function != 'undefined') {
+    return { component: StmtFunction }
+  }
+
+  if (typeof _modelValue.value.switch != 'undefined') {
+    return { component: StmtSwitch }
+  }
+
+  if (typeof _modelValue.value.if != 'undefined') {
+    return { component: StmtIf }
+  }
+
+  if (typeof _modelValue.value.not != 'undefined') {
+    return { component: StmtNot }
+  }
+
+  if (typeof _modelValue.value.call != 'undefined') {
+    return { component: StmtCall }
+  }
+
+  if (typeof _modelValue.value.chain != 'undefined') {
+    return { component: StmtChain }
+  }
+
+  if (typeof _modelValue.value.op != 'undefined') {
+    return { component: StmtOp }
+  }
+
+  if (Array.isArray(_modelValue.value.and) || Array.isArray(_modelValue.value.or)) {
+    return { component: StmtAndOr }
+  }
+
+  return { component: UiInput, props: { type: 'json' } }
+})
 </script>
 
 <template>
   <component
     :is="editor.component"
     v-bind="editor.props"
+    v-model="_modelValue"
     class="VmStatement"
-    :model-value="modelValue"
-    @update:modelValue="emitUpdate"
   />
 </template>

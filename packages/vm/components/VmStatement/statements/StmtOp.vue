@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, reactive, watch, nextTick } from 'vue'
+import { ref, unref, computed, reactive, watch, nextTick } from 'vue'
 import { UiInput, UiItem } from '/packages/ui/components'
 import VmStatement from '../VmStatement.vue'
 import allOperators from '../operators'
@@ -22,7 +22,7 @@ const fieldSchema = computed(() => {
   if (!innerModel.field) {
     return null
   }
-  return modelSchema?.properties?.[innerModel.field]
+  return unref(modelSchema)?.properties?.[innerModel.field]
 })
 
 const availableOperators = computed(() => {
@@ -165,12 +165,12 @@ watch(
           v-model="innerModel.args"
           v-bind="customArgsComponent.props"
           :field-schema="fieldSchema"
-          @input="emitInput"
+          @update:modelValue="emitInput"
         />
         <VmStatement
           v-else
           v-model="innerModel.args"
-          @input="emitInput"
+          @update:modelValue="emitInput"
         />
       </div>
     </div>

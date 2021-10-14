@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import VmStatement from './VmStatement.vue'
 import { UiInput } from '../../../ui/components'
 
-const stmt = ref({
+const _stmt = ref({
   chain: [
     {
       info: { text: 'Hacer la cosa 1' },
@@ -11,6 +11,8 @@ const stmt = ref({
     },
   ],
 })
+
+const stmt = ref(null)
 
 const schema = {
   type: 'object',
@@ -30,7 +32,7 @@ const schema = {
     date: { type: 'date' },
 
     color: {
-      type: 'text',
+      type: 'string',
       text: 'Color favorito',
       enum: [
         { value: 'am', text: 'Amarillo' },
@@ -43,14 +45,24 @@ const schema = {
 </script>
 
 <template>
-  <UiInput
-    v-model="stmt"
-    type="json"
-  />
+  <div class="ui-row --top">
+    <UiInput
+      v-model="stmt"
+      label="Stmt"
+      type="json"
+    />
+    <UiInput
+      v-model="schema"
+      label="schema"
+      type="json"
+    />
+  </div>
+  <hr>
 
   <VmStatement
     v-model="stmt"
     :model-schema="schema"
+    :default="{and:[]}"
   />
   <pre>stmt: {{ stmt }}</pre>
 </template>

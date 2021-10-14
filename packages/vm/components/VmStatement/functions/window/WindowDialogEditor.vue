@@ -43,16 +43,16 @@ watch(
     <label class="ui-label">{{ innerModel.call }}</label>
     <UiInput
       v-model="innerModel.args.message"
-      type="text"
+      type="textarea"
       label="Mensaje"
-      @input="emitInput"
+      @update:modelValue="emitInput"
     />
     <UiInput
       v-if="innerModel.call == 'window.prompt'"
       v-model="innerModel.args.placeholder"
       type="text"
       label="Valor predeterminado"
-      @input="emitInput"
+      @update:modelValue="emitInput"
     />
   </div>
 </template>

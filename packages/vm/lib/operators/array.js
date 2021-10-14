@@ -32,6 +32,10 @@ export default {
   },
 
   'array.eq'(value, args) {
+    if (!Array.isArray(value) || !Array.isArray(args)) {
+      return false
+    }
+
     if (value.length != args.length) {
       return false
     }

@@ -1,17 +1,17 @@
 <template>
-  <div class="ArrayHasAny">
+  <div class="ArrayEnumPicker">
     <UiInput
       v-if="availableValues.length"
       v-model="selectValue"
-      type="select"
-      :multiple="true"
+      type="select-list"
+      multiple
       :options="availableValues"
     />
     <UiInput
       v-else
       type="json"
-      :value="value"
-      @input="$emit('input', $event)"
+      :model-value="modelValue"
+      @input="$emit('update:modelValue', $event)"
     />
   </div>
 </template>
@@ -20,21 +20,25 @@
 import { UiInput } from '/packages/ui/components'
 
 export default {
-  name: 'ArrayHasAny',
+  name: 'ArrayEnumPicker',
   components: { UiInput },
 
   props: {
     // El atributo ARGS del statement  {"op": "hasAny", "field": "...", "args": XXXXXXXXXXX}
-    value: {
+    modelValue: {
+      validator: () => true,
       required: false,
       default: null,
     },
 
     fieldSchema: {
+      type: Object,
       required: false,
       default: null,
     },
   },
+
+  emits: ['update:modelValue'],
 
   computed: {
     availableValues() {
@@ -43,11 +47,11 @@ export default {
 
     selectValue: {
       get() {
-        return Array.isArray(this.value) ? this.value : []
+        return Array.isArray(this.modelValue) ? this.modelValue : []
       },
 
       set(value) {
-        this.$emit('input', value)
+        this.$emit('update:modelValue', value)
       },
     },
   },

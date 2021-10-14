@@ -5,7 +5,7 @@
         <UiItem
           class="ui-clickable"
           icon="mdi:plus-circle"
-          secondary="Agregar ..."
+          subtext="Agregar ..."
         />
       </template>
 
@@ -36,6 +36,13 @@
               @click="close(); launchFunction(fn)"
             />
           </div>
+
+          <UiItem
+            class="ui-clickable"
+            icon="mdi:state-machine"
+            text="Statement"
+            @click="close(); launchBlankStatement()"
+          />
         </div>
       </template>
     </UiPopover>
@@ -65,6 +72,16 @@ export default {
   },
 
   methods: {
+    launchBlankStatement() {
+      this.$emit('input', {
+        expression: {},
+        definition: {
+          icon: 'mdi:state-machine',
+          text: 'Custom statement',
+        },
+      })
+    },
+
     launchFunction(definition) {
       let expression = {
         call: definition.name,
