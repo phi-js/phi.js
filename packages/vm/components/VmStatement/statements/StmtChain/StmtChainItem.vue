@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { UiItem, UiDialog, UiItemEditor, UiInput } from '../../../../../ui'
+import { UiItem, UiDrawer, UiItemEditor, UiInput } from '../../../../../ui'
 import VmStatement from '../../VmStatement.vue'
 
 const props = defineProps({
@@ -40,7 +40,7 @@ function cancel() {
 
 <template>
   <div class="StmtChainItem">
-    <UiDialog
+    <UiDrawer
       :open="props.open"
       @cancel="false"
     >
@@ -56,39 +56,47 @@ function cancel() {
           </template>
         </UiItem>
       </template>
+
       <template #header>
         <UiItemEditor v-model="innerValue.info" />
       </template>
+
       <template #contents>
-        <VmStatement
-          v-if="isIfStatement"
-          v-model="innerValue.do.if"
-        />
-        <template v-else>
-          <VmStatement v-model="innerValue.do" />
-          <UiInput
-            v-model="innerValue.assign"
-            type="text"
+        <div class="StmtChainItem__contents">
+          <VmStatement
+            v-if="isIfStatement"
+            v-model="innerValue.do.if"
           />
-        </template>
+          <template v-else>
+            <VmStatement v-model="innerValue.do" />
+            <UiInput
+              v-model="innerValue.assign"
+              type="text"
+            />
+          </template>
+        </div>
       </template>
+
       <template #footer="{ close }">
-        <button
-          type="button"
-          class="ui-button --main"
-          @click="accept(); close()"
-        >
-          Aceptar
-        </button>
-        <button
-          type="button"
-          class="ui-button --cancel"
-          @click="cancel(); close()"
-        >
-          Cancelar
-        </button>
+        <div class="StmtChainItem__footer">
+          <button
+            type="button"
+            class="ui-button --main"
+            @click="accept(); close()"
+          >
+            Aceptar
+          </button>
+          <button
+            type="button"
+            class="ui-button --cancel"
+            @click="cancel(); close()"
+          >
+            Cancelar
+          </button>
+        </div>
       </template>
-    </UiDialog>
+    </UiDrawer>
+
     <div
       v-if="isIfStatement"
       class="StmtChainItem__paths"
@@ -133,6 +141,16 @@ function cancel() {
 
       margin-right: auto;
     }
+  }
+
+  &__footer,
+  &__contents {
+    padding: var(--ui-padding);
+    padding-left: 36px;
+  }
+
+  &__footer {
+    margin-bottom: 22px;
   }
 }
 </style>
