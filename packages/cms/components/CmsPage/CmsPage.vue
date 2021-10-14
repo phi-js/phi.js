@@ -45,8 +45,7 @@ async function evalPage(page) {
             continue
           }
 
-
-          ///// v-for
+          // v-for
           if (typeof block['v-for'] !== 'undefined') {
             let iterable = getProperty(props.modelValue, block['v-for'])
             if (!Array.isArray(iterable)) {
@@ -54,16 +53,14 @@ async function evalPage(page) {
               continue
             }
 
-            let clone = JSON.parse(JSON.stringify(block))
+            let _iterations = []
             for (let $index = 0; $index < iterable.length; $index++) {
               let $item = iterable[$index]
-
-              // Create a block instance
-              let blockInstance = { ...clone }
+              let iteration = { ...block }
 
               // parse props
-              blockInstance.props = blockInstance?.props
-                ? await pageVm.eval(blockInstance.props, { ...props.modelValue, $item, $index })
+              iteration.props = block?.props
+                ? await pageVm.eval(block.props, { ...props.modelValue, $item, $index })
                 : {}
 
               // Handle listeners
@@ -71,19 +68,18 @@ async function evalPage(page) {
                 let listeners = block['v-on']
                 for (let eventName in listeners) {
                   let propName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
-                  blockInstance.props[propName] = async ($event) => {
+                  iteration.props[propName] = async ($event) => {
                     return await pageVm.eval(listeners[eventName], { ...props.modelValue, $event, $item, $index })
                   }
                 }
               }
 
-              targetBlocks.push(blockInstance)
+              _iterations.push(iteration)
             }
 
+            targetBlocks.push({ ...block, _iterations })
             continue
           }
-          /////
-
 
           // Parse props
           let blockProps = block?.props ? await pageVm.eval(block.props, props.modelValue) : undefined
@@ -174,12 +170,24 @@ watch(
             class="CmsPage__column"
             :style="{flex: column.flex}"
           >
-            <CmsBlock
+            <template
               v-for="(block) in column.blocks"
               :key="block.id"
-              class="CmsPage__block"
-              :block="block"
-            />
+            >
+              <template v-if="block._iterations">
+                <CmsBlock
+                  v-for="(instance, k) in block._iterations"
+                  :key="k"
+                  class="CmsPage__block"
+                  :block="instance"
+                />
+              </template>
+              <CmsBlock
+                v-else
+                class="CmsPage__block"
+                :block="block"
+              />
+            </template>
           </div>
         </div>
       </div>
