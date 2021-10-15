@@ -9,7 +9,7 @@ import types from './types.js'
 const attrs = useAttrs()
 
 // eslint-disable-next-line no-undef
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'focus', 'blur'])
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -62,8 +62,9 @@ const props = defineProps({
 
 // focus management
 const isFocused = ref(false)
-function setFocused(newValue) {
-  return (isFocused.value = newValue)
+function setFocused(newValue, evt) {
+  isFocused.value = newValue
+  return isFocused.value ? emit('focus', evt) : emit('blur', evt)
 }
 
 const classNames = computed(() => {
@@ -99,8 +100,8 @@ const elementProps = computed(() => {
   return {
     ...props,
     ...attrs,
-    'onFocus': () => setFocused(true),
-    'onBlur': () => setFocused(false),
+    'onFocus': (evt) => setFocused(true, evt),
+    'onBlur': (evt) => setFocused(false, evt),
     'onUpdate:modelValue': (newValue) => emit('update:modelValue', newValue),
   }
 })
