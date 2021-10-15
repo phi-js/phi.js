@@ -18,23 +18,10 @@ watch(
   { immediate: true },
 )
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'focus', 'blur'])
 function emitUpdate() {
   emit('update:modelValue', JSON.parse(JSON.stringify(_inputProps.value)))
 }
-
-// const types = [
-//   'text',
-//   'textarea',
-//   'select',
-//   'select-native',
-//   'select-list',
-//   'select-buttons',
-//   'number',
-//   'date',
-//   'password',
-//   'search',
-// ]
 
 // custom editor component by type
 const editorComponent = computed(() => editors?.[_inputProps.value.type] || null)
@@ -48,23 +35,10 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
         type="text"
         placeholder="Etiqueta"
         @input="emitUpdate()"
-        @focus="$event.target.select()"
+        @focus="$event.target.select(); $emit('focus', $event)"
+        @blur="$emit('blur', $event)"
       >
     </div>
-
-    <!-- <div class="UiInputEditor__type">
-      <select
-        v-model="_inputProps.type"
-        @change="emitUpdate()"
-      >
-        <option
-          v-for="typeName in types"
-          :key="typeName"
-          :value="typeName"
-          v-text="typeName"
-        />
-      </select>
-    </div> -->
 
     <div
       v-if="editorComponent"
@@ -72,6 +46,7 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
     >
       <component
         :is="editorComponent"
+        v-bind="$attrs"
         v-model="_inputProps"
         @update:modelValue="emitUpdate"
       />
@@ -83,7 +58,8 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
         type="text"
         class="ui-button"
         @update:modelValue="emitUpdate"
-        @focus="$event.target.select()"
+        @focus="$event.target.select(); $emit('focus', $event)"
+        @blur="$emit('blur', $event)"
       />
       <UiInput
         v-else
@@ -91,7 +67,8 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
         class="UiInputEditor__body"
         :type="_inputProps.type"
         @update:modelValue="emitUpdate"
-        @focus="$event.target.select()"
+        @focus="$event.target.select(); $emit('focus', $event)"
+        @blur="$emit('blur', $event)"
       />
     </div>
   </div>
