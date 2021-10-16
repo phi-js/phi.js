@@ -72,7 +72,8 @@ function pretify() {
       @focus="$emit('focus', $event)"
       @blur="$emit('blur', $event)"
     />
-    <div class="UiInputJson__validator">
+
+    <div class="UiInputJson__footer">
       <UiIcon
         v-if="isValid"
         class="ui-clickable"
@@ -90,18 +91,16 @@ function pretify() {
 
 <style lang="scss">
 .UiInputJson {
-  position: relative;
+  display: flex;
+  flex-direction: column;
 
   &__textarea {
-    width: 100%;
     display: block;
     min-height: 200px;
   }
 
-  &__validator {
-    position: absolute;
-    top: 2px;
-    right: 22px;
+  &__footer {
+    text-align: right;
 
     &:hover {
       color: green;
