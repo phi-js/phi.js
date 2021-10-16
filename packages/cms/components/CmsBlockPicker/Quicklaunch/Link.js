@@ -3,7 +3,7 @@
 
 export default function (text) {
   if (!text.match(/^https?:\/\//)) {
-    return;
+    return
   }
 
   // Fetch the title (?)
@@ -11,12 +11,12 @@ export default function (text) {
 
 
   return {
-    component: "CmsMediaLink",
-    title: "Link",
+    component: 'MediaLink',
+    title: 'Link',
     props: {
       href: text,
       text: '',
-      secondary: text
-    }
-  };
+      secondary: text,
+    },
+  }
 }

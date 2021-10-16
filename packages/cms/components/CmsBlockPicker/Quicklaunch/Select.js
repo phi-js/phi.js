@@ -1,27 +1,24 @@
 export default function (text) {
-  let parts = text.split("|");
+  let parts = text.split('|')
   if (parts.length < 2) {
-    return;
+    return
   }
 
-  let options = [];
+  let options = []
 
-  parts.forEach(part => {
-    let text = part.trim();
+  parts.forEach((part) => {
+    let text = part.trim()
     if (text) {
       options.push({
         text,
-        value: text.replace(/\s+/g, "_").toLowerCase()
-      });
+        value: text.replace(/\s+/g, '_').toLowerCase(),
+      })
     }
-  });
+  })
 
   return {
-    component: "CmsInputSelect",
-    title: "Opcion",
-    props: {
-      options: options
-    },
-    'v-model': 'select'
-  };
+    'component': 'InputSelect',
+    'props': { options },
+    'v-model': 'select',
+  }
 }

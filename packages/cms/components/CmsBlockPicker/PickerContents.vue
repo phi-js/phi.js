@@ -231,6 +231,10 @@ export default {
         .toLowerCase()
         .replace(/[^a-z0-9]/g, '')
     },
+
+    focus() {
+      this.$el.querySelector('.PickerContents__search')?.focus()
+    },
   },
 }
 </script>
@@ -240,6 +244,7 @@ export default {
     <div class="launcher-input">
       <input
         v-model="text"
+        class="PickerContents__search"
         type="text"
         :placeholder="placeholder"
         @keydown.enter.prevent.stop="autoCreate()"

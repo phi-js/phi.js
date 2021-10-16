@@ -1,13 +1,11 @@
 export default function (text) {
   if (!text.match(/^.*(vimeo|youtube|youtu).*/)) {
-    return;
+    return
   }
 
   return {
-    component: "CmsMediaVideo",
-    title: "Video",
-    props: {
-      url: text
-    }
-  };
+    component: 'MediaVideo',
+    title: 'Video',
+    props: { url: text },
+  }
 }

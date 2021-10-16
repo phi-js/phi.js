@@ -4,12 +4,14 @@ import Link from './Link.js'
 import Select from './Select.js'
 import Video from './Video.js'
 
+// El orden importa!
+// Autolaunch usa el primer bloque sugerido, que se determina en éste orden:
 const generators = [
-  Html,
-  Input,
+  Video,
   Link,
   Select,
-  Video,
+  Input,
+  Html,
 ]
 
 export default {

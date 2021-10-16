@@ -1,8 +1,22 @@
+<script>
+export default { inheritAttrs: false }
+</script>
+
 <script setup>
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import PickerContents from './PickerContents.vue'
 import { UiItem, UiPopover } from '/packages/ui/components'
 const isOpen = ref(false)
+
+const refPickerContents = ref()
+async function onPopoverOpen() {
+  await nextTick()
+  if (!refPickerContents.value) {
+    return
+  }
+
+  refPickerContents.value.focus()
+}
 </script>
 
 <template>
@@ -13,6 +27,7 @@ const isOpen = ref(false)
     <UiPopover
       v-model:open="isOpen"
       placement="bottom-start"
+      @open="onPopoverOpen"
     >
       <template #trigger="slotData">
         <slot
@@ -32,6 +47,7 @@ const isOpen = ref(false)
       <template #contents="{close}">
         <div class="CmsBlockPicker__popover">
           <PickerContents
+            ref="refPickerContents"
             v-bind="$attrs"
             @input="close()"
           />
