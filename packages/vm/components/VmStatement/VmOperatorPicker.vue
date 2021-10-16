@@ -63,6 +63,12 @@ function onSelectChange($evt) {
       </option>
     </optgroup>
 
+    <optgroup label="Otras">
+      <option value="stmt">
+        Expresión
+      </option>
+    </optgroup>
+
     <!-- availableStatements ? -->
     <optgroup label="Condiciones">
       <option value="and">
