@@ -13,18 +13,11 @@ export default {
     props: { src: '' },
   },
 
-  settings: {
-    uploadURL: {
-      type: String,
-      required: true,
-    },
-  },
-
   editor: {
     face: {
       'component': MediaImagePicker,
       'v-model': 'block.props.src',
-      'props': { path: '{{$settings.uploadUrl}}' },
+      'props': { endpoint: '{{ $settings.uploads.endpoint }}' },
     },
 
     actions: [
@@ -34,21 +27,16 @@ export default {
         'v-model': 'block.props',
         'props': {
           fields: [
-            { model: 'src', type: 'text', label: 'URL de la imágen' },
+            {
+              model: 'src',
+              type: 'url',
+              label: 'URL de la imágen',
+              endpoint: '{{ $settings.uploads.endpoint }}',
+            },
             { model: 'href', type: 'text', label: 'Vínculo', props: { placeholder: 'http://' } },
           ],
         },
       },
-
-      // {
-      //   title: "Explorador de archivos",
-      //   component: "UrlPicker",
-      //   "v-model": "block.props.src",
-      //   props: {
-      //     path: "{{settings.uploadUrl}}"
-      //   }
-      // }
-
     ],
   },
 }

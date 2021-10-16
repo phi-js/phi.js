@@ -1,129 +1,114 @@
 <template>
   <div
-    class="media-image-picker"
-    :class="{'--empty': isEmpty, '--notempty': !isEmpty}"
+    class="MediaImagePicker"
+    :class="{'MediaImagePicker--empty': isEmpty, 'MediaImagePicker--notempty': !isEmpty}"
   >
-    <div class="input-url">
-      <input
-        class="ui-native"
-        placeholder="URL"
-        type="text"
-        :value="value"
-        @keyup.enter="$emit('input', $event.target.value)"
-        @keyup.esc="$event.target.value = value"
-        xxxxinput="$emit('input', $event.target.value)"
+    <MediaImage
+      class="MediaImagePicker__image"
+      :src="modelValue"
+      v-bind="$attrs"
+    />
+
+    <div class="MediaImagePicker__infobox">
+      <UiInput
+        v-if="isEmpty"
+        class="MediaImagePicker__uploader"
+        type="upload"
+        :endpoint="endpoint"
+        inline
+        auto-proceed
+        placeholder="Subir imágen"
+        @update:modelValue="$emit('update:modelValue', $event?.url)"
+      />
+      <UiInput
+        v-else
+        type="url"
+        :endpoint="endpoint"
+        :model-value="modelValue"
+        placeholder="Image URL"
+        @update:modelValue="$emit('update:modelValue', $event)"
       />
     </div>
-
-    <UiFileUploader
-      :path="path"
-      max-files="1"
-      @success="onUploadSuccess"
-      @error="onUploadError"
-      accepted-files="image/*"
-    >
-      <div class="image-picker-face">
-        <div class="image-picker-overlay">
-          <UiIcon value="mdi:upload"></UiIcon>
-          <p>Subir imagen</p>
-        </div>
-        <MediaImage :src="value"></MediaImage>
-      </div>
-    </UiFileUploader>
   </div>
 </template>
 
 <script>
-import MediaImage from './MediaImage.vue';
-import { UiIcon, UiFileUploader } from '../../../../../ui';
+import MediaImage from './MediaImage.vue'
+import { UiInput } from '../../../../../ui'
 
 export default {
   name: 'MediaImagePicker',
-  components: { MediaImage, UiFileUploader, UiIcon },
+  components: { MediaImage, UiInput },
   props: {
-    path: {
+    endpoint: {
       type: String,
       required: true,
     },
 
-    value: {
+    modelValue: {
       type: String,
       required: false,
       default: null,
     },
   },
+  emits: ['update:modelValue'],
 
   computed: {
     isEmpty() {
-      return !this.value || !this.value.trim();
+      return !this.modelValue?.trim?.()
     },
   },
 
   methods: {
     onUploadSuccess(e) {
-      this.$emit('input', e[0].url);
+      this.$emit('update:modelValue', e[0].url)
     },
 
     onUploadError(err) {
-      alert('Error subiendo archivo');
-      console.log('Error subiendo archivo', err);
+      alert('Error subiendo archivo')
+      console.log('Error subiendo archivo', err)
     },
   },
-};
+}
 </script>
 
 <style lang="scss">
-.media-image-picker {
+.MediaImagePicker {
   position: relative;
 
-  .input-url {
+  &__infobox {
     position: absolute;
     top: 0;
-    left: 0;
     right: 0;
-    z-index: 2;
+    bottom: 0;
+    left: 0;
 
     display: flex;
+    align-items: center;
+    justify-content: center;
 
-    input {
-      flex: 1;
-      margin: 5px;
-      background-color: rgba(255, 255, 255, 0.9);
+    opacity: 0;
+    transition: opacity var(--ui-duration-snap);
+
+    background-color: rgba(0,0,0, 0.5);
+  }
+
+  &__uploader {
+    min-width: 400px;
+  }
+
+  &--empty,
+  &:hover {
+    .MediaImagePicker__infobox {
+      opacity: 1;
     }
   }
 
-  .image-picker-face {
-    position: relative;
-
-    .image-picker-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      color: #fff;
-      opacity: 0.7;
-      text-shadow: 0 1px 2px #000, 0 0 2px #000, -1px 0 2px #000, 1px 0 2px #000;
-    }
-  }
-
-  &.--notempty {
-    .input-url,
-    .image-picker-overlay {
-      transition: opacity var(--ui-duration-quick);
-      opacity: 0;
-    }
-
-    &:hover {
-      .input-url,
-      .image-picker-overlay {
-        opacity: 1;
-      }
+  &--notempty {
+    .MediaImagePicker__infobox {
+      padding: var(--ui-padding);
+      align-items: flex-start;
+      justify-content: flex-end;
     }
   }
 }

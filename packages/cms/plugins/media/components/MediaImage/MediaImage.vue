@@ -1,19 +1,19 @@
 <template>
   <div
-    :class="['MediaImage', {'ui-clickable': !!this.href}]"
-    @click="onClick()"
+    :class="['MediaImage', {'ui-clickable': !!href}]"
     :style="containerStyle"
+    @click="onClick()"
   >
     <img
       v-if="src && !isError"
       :src="src"
       :style="imgStyle"
       @error="onImageError"
-    />
+    >
     <div
       v-else
       class="media-image-placeholder"
-    ></div>
+    />
   </div>
 </template>
 
@@ -65,22 +65,16 @@ export default {
   },
 
   data() {
-    return {
-      isError: false,
-    };
+    return { isError: false }
   },
 
   computed: {
     imgStyle() {
-      return {
-        width: this.width || '',
-      };
+      return { width: this.width || '' }
     },
 
     containerStyle() {
-      return {
-        textAlign: this.align,
-      };
+      return { textAlign: this.align }
       // return {
       //   backgroundImage: this.src ? `url(${this.src})` : '',
       //   backgroundSize: this.sizing,
@@ -96,26 +90,26 @@ export default {
     src: {
       immediate: true,
       handler() {
-        this.isError = false;
+        this.isError = false
       },
     },
   },
 
   methods: {
     onClick() {
-      this.$emit('click');
+      this.$emit('click')
       if (!this.href) {
-        return;
+        return
       }
 
-      window.open(this.href, '_system');
+      window.open(this.href, '_system')
     },
 
     onImageError() {
-      this.isError = true;
+      this.isError = true
     },
   },
-};
+}
 </script>
 
 <style lang="scss">

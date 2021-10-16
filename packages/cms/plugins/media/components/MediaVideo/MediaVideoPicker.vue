@@ -1,38 +1,39 @@
 <template>
-  <div class="media-video-picker">
-    <div class="media-video-picker-form">
+  <div class="MediaVideoPicker">
+    <div class="MediaVideoPicker__form">
       <input
         class="ui-native"
         type="text"
-        :value="value"
-        @input="$emit('input', $event.target.value)"
+        :model-value="modelValue"
         placeholder="URL (YouTube o Vimeo)"
-      />
+        @input="$emit('update:modelValue', $event.target.value)"
+      >
     </div>
 
-    <UiVideo :url="value"></UiVideo>
+    <UiVideo :url="modelValue" />
   </div>
 </template>
 
 <script>
-import { UiVideo } from '../../../../../ui';
+import { UiVideo } from '../../../../../ui'
 
 export default {
   name: 'MediaVideoPicker',
   components: { UiVideo },
   props: {
-    value: {
+    modelValue: {
       type: String,
       required: false,
       default: null,
     },
   },
-};
+  emits: ['update:modelValue'],
+}
 </script>
 
 <style lang="scss">
-.media-video-picker {
-  .media-video-picker-form {
+.MediaVideoPicker {
+  &__form {
     input {
       width: 100%;
       border-bottom: 0;
