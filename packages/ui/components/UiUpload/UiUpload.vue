@@ -21,7 +21,7 @@ import { UiItem } from '../UiItem'
 import { UiIcon } from '../UiIcon'
 
 const props = defineProps({
-  url: {
+  endpoint: {
     type: String,
     required: true,
   },
@@ -97,7 +97,7 @@ const uppy = computed(() => new Uppy({
 })
   .use(Webcam)
   .use(XHRUpload, {
-    endpoint: props.url,
+    endpoint: props.endpoint,
     fieldName: 'file',
   })
   .use(ImageEditor, { quality: 0.8 })

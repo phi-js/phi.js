@@ -39,7 +39,7 @@ const many = ref([
   Single:
   <UiUpload
     v-model="one"
-    url="http://v4.local/1/cms/pages/test/files"
+    endpoint="http://v4.local/1/cms/pages/test/files"
   />
 
   <hr>
@@ -48,7 +48,7 @@ const many = ref([
   <UiUpload
     v-model="one"
     inline
-    url="http://v4.local/1/cms/pages/test/files"
+    endpoint="http://v4.local/1/cms/pages/test/files"
   />
   <pre>one: {{ one }}</pre>
 
@@ -58,7 +58,7 @@ const many = ref([
   <UiUpload
     v-model="many"
     multiple
-    url="http://v4.local/1/cms/pages/test/files"
+    endpoint="http://v4.local/1/cms/pages/test/files"
   />
   <pre>many: {{ many }}</pre>
 </template>
