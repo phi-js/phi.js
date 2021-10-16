@@ -13,6 +13,11 @@
     "@tiptap/extension-underline": "^2.0.0-beta.16",
     "@tiptap/starter-kit": "^2.0.0-beta.117",
     "@tiptap/vue-3": "^2.0.0-beta.67",
+    "@uppy/image-editor": "^1.0.4",
+    "@uppy/locales": "^2.0.3",
+    "@uppy/vue": "^0.4.3",
+    "@uppy/webcam": "^2.0.4",
+    "@uppy/xhr-upload": "^2.0.5",
     "velocity-animate": "^1.5.2",
     "vue": "^3.2.6",
     "vuedraggable": "^4.1.0"
