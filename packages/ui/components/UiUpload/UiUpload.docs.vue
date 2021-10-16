@@ -41,6 +41,15 @@ const many = ref([
     v-model="one"
     url="http://v4.local/1/cms/pages/test/files"
   />
+
+  <hr>
+
+  Single (inline):
+  <UiUpload
+    v-model="one"
+    inline
+    url="http://v4.local/1/cms/pages/test/files"
+  />
   <pre>one: {{ one }}</pre>
 
   <hr>

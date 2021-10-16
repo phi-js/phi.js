@@ -16,7 +16,7 @@ import '@uppy/dashboard/dist/style.css'
 import '@uppy/webcam/dist/style.css'
 import '@uppy/image-editor/dist/style.css'
 
-import { DashboardModal } from '@uppy/vue'
+import { Dashboard, DashboardModal } from '@uppy/vue'
 import { UiItem } from '../UiItem'
 import { UiIcon } from '../UiIcon'
 
@@ -26,6 +26,19 @@ const props = defineProps({
     required: true,
   },
 
+  inline: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+
+  // si se autoprocede, no se puede usar ImageEditor
+  autoProceed: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+
   multiple: {
     type: Boolean,
     required: false,
@@ -33,9 +46,15 @@ const props = defineProps({
   },
 
   modelValue: {
-    type: [Array, Object],
+    type: [Array, Object, String],
     required: false,
     default: null,
+  },
+
+  placeholder: {
+    type: String,
+    required: false,
+    default: 'Upload files',
   },
 })
 const emit = defineEmits(['update:modelValue', 'upload'])
@@ -63,7 +82,9 @@ function deleteFile(file) {
 
 // UPPY uploader
 const uppy = computed(() => new Uppy({
-  autoProceed: true,
+  autoProceed: props.autoProceed, // si se autoprocede, no se puede usar ImageEditor
+
+  // i18n
   // locale: English,
   // locale: German,
   locale: Spanish,
@@ -95,7 +116,7 @@ const uppy = computed(() => new Uppy({
 
     if (uploads.length) {
       emit('upload', uploads)
-      innerFiles.value = innerFiles.value.concat(uploads)
+      innerFiles.value = props.multiple ? innerFiles.value.concat(uploads) : [uploads[0]]
       emitUpdate()
     }
   }))
@@ -107,41 +128,59 @@ const isOpen = ref(false)
 function onModalClose() {
   isOpen.value = false
 }
+
+const dashboardProps = computed(() => ({
+  onRequestCloseModal: onModalClose,
+  closeModalOnClickOutside: false,
+  closeAfterFinish: props.inline ? null : true,
+  height: '100%',
+  width: '100%',
+}))
 </script>
 
 <template>
   <div class="UiUpload">
     <div class="UiUpload__files">
-      <UiItem
+      <a
         v-for="file in innerFiles"
         :key="file.id"
-        :text="file.name"
-        :subtext="file.size"
-        :icon="file.thumbnail"
         class="ui-clickable ui-noselect"
+        target="_blank"
+        :href="file.url"
       >
-        <template #actions>
-          <UiIcon
-            src="mdi:close"
-            class="ui-clickable"
-            @click="deleteFile(file)"
-          />
-        </template>
-      </UiItem>
+        <UiItem
+          class="ui-clickable"
+          :text="file.name"
+          :subtext="file.size"
+          :icon="file.thumbnail"
+        >
+          <template #actions>
+            <UiIcon
+              src="mdi:close"
+              class="ui-clickable"
+              @click.prevent="deleteFile(file)"
+            />
+          </template>
+        </UiItem>
+      </a>
     </div>
+
     <button
+      v-if="!props.inline"
       type="button"
       class="UiUpload__trigger ui-native"
       @click="isOpen = !isOpen"
     >
-      Upload files
+      {{ props.placeholder }}
     </button>
-    <DashboardModal
+
+    <component
+      :is="props.inline ? Dashboard : DashboardModal"
       :open="isOpen"
       class="UiUpload__uploader"
       :uppy="uppy"
       :plugins="['Webcam', 'ImageEditor']"
-      :props="{onRequestCloseModal: onModalClose}"
+      :props="dashboardProps"
     />
   </div>
 </template>
