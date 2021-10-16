@@ -22,7 +22,6 @@ Retorna todos los editores (listos para usar en <component>) relacionados al blo
   ],
 }
 */
-
 import { defineAsyncComponent, unref, inject } from 'vue'
 import getBlockDefinition from './getBlockDefinition.js'
 import { UiInput } from '/packages/ui/components'
@@ -40,21 +39,25 @@ export default async function getBlockEditors(block) {
     actions: [],
   }
 
-  if (definition?.editor?.face?.component) {
-    const face = {
-      'component': definition.editor.face.component,
-      'props': definition.editor.face?.props,
-      'v-model': definition.editor.face?.['v-model'],
-    }
-    if (typeof face.component === 'function') {
-      face.component = defineAsyncComponent(face.component)
-    }
-    retval.face = face
-
-    // parse $settings in definitions
-    retval.face.props = parse(retval.face.props, { $settings }, true)
+  // Determine "face"
+  const face = definition?.editor?.face?.component ? {
+    'component': definition.editor.face.component,
+    'props': definition.editor.face?.props,
+    'v-model': definition.editor.face?.['v-model'],
+  } : {
+    component: definition.block.component,
+    props: definition.block?.props,
   }
 
+  if (typeof face.component === 'function') {
+    face.component = defineAsyncComponent(face.component)
+  }
+  retval.face = face
+  // parse $settings in definitions
+  retval.face.props = parse(retval.face.props, { $settings }, true)
+
+
+  // Determine "toolbar"
   if (definition?.editor?.toolbar?.component) {
     const toolbar = {
       component: definition.editor.toolbar.component,
@@ -69,6 +72,7 @@ export default async function getBlockEditors(block) {
     retval.toolbar.props = parse(retval.toolbar.props, { $settings }, true)
   }
 
+  // Determine "actions"
   if (Array.isArray(definition?.editor?.actions)) {
     const actions = definition.editor.actions
       .map((action) => {
