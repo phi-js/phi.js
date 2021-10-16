@@ -98,8 +98,6 @@ export default {
       }
 
       this.loadApi().then(() => {
-        console.log('loadApi is done')
-
         //eslint-disable-next-line
         this.player = new YT.Player(this.$el.querySelector('iframe'), {
           events: {
@@ -107,7 +105,6 @@ export default {
             onStateChange: this.onPlayerStateChange,
           },
         })
-        console.log('initds player', this.player)
       })
     },
 
@@ -125,8 +122,6 @@ export default {
         5: queued
       */
       clearInterval(this.interval)
-
-      console.log('onPlayerStateChange', event)
 
       switch (event.data) {
       case -1:
