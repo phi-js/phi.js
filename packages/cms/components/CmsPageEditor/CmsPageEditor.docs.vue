@@ -17,6 +17,8 @@ function pickPage(pageName) {
   page.value = samplePages[pageName]
 }
 
+const editorSettings = ref({ uploads: { endpoint: 'http://v4.local/1/cms/pages/test/files' } })
+
 const model = ref({
   limit: 2,
   nombre: 'Santiago',
@@ -58,6 +60,7 @@ const modelSchema = ref({
 
     <CmsPageEditor
       v-model:page="page"
+      :settings="editorSettings"
       :model-schema="modelSchema"
     />
     <hr>

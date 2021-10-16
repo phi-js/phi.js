@@ -48,7 +48,6 @@ function openAction(targetActionIndex = null) {
   return true
 }
 
-
 function deleteBlock() {
   // if (!confirm('Eliminar este bloque?')) {
   //   return true
@@ -56,13 +55,15 @@ function deleteBlock() {
   emit('delete')
   return true
 }
+
+const isPopoverOpen = ref(false)
 </script>
 
 <template>
   <div
     class="BlockEditorLayout"
     :class="{
-      'BlockEditorLayout--focused': props.focused,
+      'BlockEditorLayout--focused': props.focused || isPopoverOpen,
       'BlockEditorLayout--open': isWindowOpen,
     }"
   >
@@ -75,6 +76,7 @@ function deleteBlock() {
 
       <!-- dropdown options -->
       <UiPopover
+        v-model:open="isPopoverOpen"
         style="margin-left: auto"
         placement="bottom-end"
       >
@@ -154,8 +156,10 @@ function deleteBlock() {
 
   &__toolbar {
     position: absolute;
-    min-width: 100%;
     bottom: 100%;
+    min-width: 100%;
+    left: -8px;
+    right: -8px;
     margin-bottom: -3px;
 
     transition: opacity var(--ui-duration-snap);

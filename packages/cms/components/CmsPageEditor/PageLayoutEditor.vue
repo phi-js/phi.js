@@ -252,7 +252,9 @@ function onResizerEnd(evt) {
             handle=".BlockEditorLayout__handle"
             :animation="111"
             :empty-insert-threshold="0"
-            :swap-threshold="0.25"
+            :swap-threshold="0.5"
+            :inverted-swap-threshold="1"
+            direction="vertical"
 
             @update:modelValue="onDraggableUpdate"
             @start="onDraggableStart($event, column)"
@@ -332,6 +334,7 @@ function onResizerEnd(evt) {
 
     .CmsPageLayoutEditor__draggable {
       min-width: 8px;
+      min-height: 30px;
     }
   }
 

@@ -97,7 +97,6 @@ const isFocused = ref(false)
           @focus="isFocused = true"
           @blur="isFocused = false"
         />
-
         <UiInput
           v-else
           type="json"
