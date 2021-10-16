@@ -1,4 +1,5 @@
 import { UiInputJson } from '../UiInputJson'
+import { UiInputUrl } from '../UiInputUrl'
 import { UiSelect } from '../UiSelect'
 import { UiSelectButtons } from '../UiSelectButtons'
 import { UiSelectList } from '../UiSelectList'
@@ -12,4 +13,5 @@ export default {
   'select-list': UiSelectList,
   'select-native': UiSelectNative,
   'upload': UiUpload,
+  'url': UiInputUrl,
 }

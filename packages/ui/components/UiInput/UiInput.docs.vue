@@ -200,7 +200,7 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
         <UiInput
           v-model="modelValue.files.one"
           type="upload"
-          :url="testUrl"
+          :endpoint="testUrl"
           label="upload"
           placeholder="Sube un archivo"
         />
@@ -208,7 +208,7 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
         <UiInput
           v-model="modelValue.files.several"
           type="upload"
-          :url="testUrl"
+          :endpoint="testUrl"
           multiple
           label="upload (multiple)"
           placeholder="Sube varios archivos"
@@ -218,7 +218,7 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
           v-model="modelValue.files.one"
           type="upload"
           inline
-          :url="testUrl"
+          :endpoint="testUrl"
           label="upload (inline)"
           placeholder="Sube un archivo"
         />
@@ -226,7 +226,7 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
         <UiInput
           v-model="modelValue.files.several"
           type="upload"
-          :url="testUrl"
+          :endpoint="testUrl"
           inline
           multiple
           label="upload (inline, multiple)"
@@ -236,6 +236,14 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
 
       <section>
         <h2>Custom types</h2>
+        <UiInput
+          v-model="modelValue.url"
+          type="url"
+          label="url"
+          placeholder="Escribe URL aqui"
+          :endpoint="testUrl"
+        />
+
         <UiInput
           v-model="modelValue"
           type="json"
