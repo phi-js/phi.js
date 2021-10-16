@@ -24,6 +24,11 @@ const modelValue = ref({
     bar: 'bar',
     baz: [1, 2, 3],
   },
+
+  files: {
+    one: null,
+    several: [],
+  },
 })
 
 const themes = [
@@ -34,6 +39,8 @@ const themes = [
 
 const curTheme = ref('my-theme-wide')
 // const curTheme = ref('my-theme-material')
+const testUrl = ref('http://v4.local/1/cms/pages/test/files')
+
 </script>
 
 <template>
@@ -179,6 +186,51 @@ const curTheme = ref('my-theme-wide')
           :options="options"
           label="select-list(m)"
           placeholder="Escoge varias cosas"
+        />
+      </section>
+
+      <section>
+        <h2>Upload</h2>
+        <UiInput
+          v-model="testUrl"
+          label="Test URL"
+          type="text"
+        />
+
+        <UiInput
+          v-model="modelValue.files.one"
+          type="upload"
+          :url="testUrl"
+          label="upload"
+          placeholder="Sube un archivo"
+        />
+
+        <UiInput
+          v-model="modelValue.files.several"
+          type="upload"
+          :url="testUrl"
+          multiple
+          label="upload (multiple)"
+          placeholder="Sube varios archivos"
+        />
+
+        <UiInput
+          v-model="modelValue.files.one"
+          type="upload"
+          inline
+          :url="testUrl"
+          label="upload (inline)"
+          placeholder="Sube un archivo"
+        />
+
+        <UiInput
+          v-model="modelValue.files.several"
+          type="upload"
+          :url="testUrl"
+          inline
+          multiple
+          label="upload (inline, multiple)"
+          placeholder="Sube varios archivos"
         />
       </section>
 

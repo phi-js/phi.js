@@ -3,6 +3,7 @@ import { UiSelect } from '../UiSelect'
 import { UiSelectButtons } from '../UiSelectButtons'
 import { UiSelectList } from '../UiSelectList'
 import { UiSelectNative } from '../UiSelectNative'
+import { UiUpload } from '../UiUpload'
 
 export default {
   'json': UiInputJson,
@@ -10,4 +11,5 @@ export default {
   'select-buttons': UiSelectButtons,
   'select-list': UiSelectList,
   'select-native': UiSelectNative,
+  'upload': UiUpload,
 }
