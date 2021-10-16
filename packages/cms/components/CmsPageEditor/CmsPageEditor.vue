@@ -13,6 +13,12 @@ const props = defineProps({
     default: null,
   },
 
+  settings: {
+    type: Object,
+    required: false,
+    default: () => ({}),
+  },
+
   modelSchema: {
     type: Object,
     required: false,
@@ -21,12 +27,19 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:page'])
 
+provide('$_cms_settings', computed(() => props.settings))
+
 const innerPage = ref(null)
 watch(
   () => props.page,
   (newValue) => innerPage.value = pageHelper.sanitizePage(newValue),
   { immediate: true, deep: true },
 )
+
+function cancel() {
+  innerPage.value = pageHelper.sanitizePage(props.page)
+  return true
+}
 
 function emitUpdatePage() {
   emit('update:page', innerPage.value)
@@ -51,7 +64,7 @@ const isWindowOpen = ref(false)
       <slot name="toolbar" />
       <UiIcon
         class="ui-clickable"
-        src="mdi:cog"
+        src="mdi:application-cog"
         style="margin-left: auto"
         @click="isWindowOpen = !isWindowOpen"
       />
@@ -110,7 +123,7 @@ const isWindowOpen = ref(false)
         <button
           type="button"
           class="ui-button --cancel"
-          @click="hide()"
+          @click="cancel() && hide()"
         >
           Cancelar
         </button>

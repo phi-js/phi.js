@@ -23,13 +23,15 @@ Retorna todos los editores (listos para usar en <component>) relacionados al blo
 }
 */
 
-import { defineAsyncComponent } from '@vue/runtime-core'
+import { defineAsyncComponent, unref, inject } from 'vue'
 import getBlockDefinition from './getBlockDefinition.js'
 import { UiInput } from '/packages/ui/components'
 import { VmStatement } from '/packages/vm/components'
 import BlockListenersEditor from '../components/CmsBlockEditor/BlockListenersEditor.vue'
+import { parse } from '../../vm/lib/utils'
 
 export default async function getBlockEditors(block) {
+  const $settings = unref(inject('$_cms_settings'))
   const definition = await getBlockDefinition(block)
 
   const retval = {
@@ -40,13 +42,17 @@ export default async function getBlockEditors(block) {
 
   if (definition?.editor?.face?.component) {
     const face = {
-      component: definition.editor.face.component,
-      props: definition.editor.face?.props,
+      'component': definition.editor.face.component,
+      'props': definition.editor.face?.props,
+      'v-model': definition.editor.face?.['v-model'],
     }
     if (typeof face.component === 'function') {
       face.component = defineAsyncComponent(face.component)
     }
     retval.face = face
+
+    // parse $settings in definitions
+    retval.face.props = parse(retval.face.props, { $settings }, true)
   }
 
   if (definition?.editor?.toolbar?.component) {
@@ -58,6 +64,9 @@ export default async function getBlockEditors(block) {
       toolbar.component = defineAsyncComponent(toolbar.component)
     }
     retval.toolbar = toolbar
+
+    // parse $settings in definitions
+    retval.toolbar.props = parse(retval.toolbar.props, { $settings }, true)
   }
 
   if (Array.isArray(definition?.editor?.actions)) {
@@ -71,6 +80,11 @@ export default async function getBlockEditors(block) {
         } else {
           return action
         }
+      })
+      .map((action) => {
+        // parse $settings in definitions
+        action.props = parse(action.props, { $settings }, true)
+        return action
       })
 
     retval.actions = actions

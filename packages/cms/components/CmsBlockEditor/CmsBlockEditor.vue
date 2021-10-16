@@ -28,7 +28,6 @@ const emit = defineEmits(['update:block', 'delete'])
 
 const editors = shallowRef(null)
 const blockDefinition = shallowRef(null)
-const editorFace = shallowRef(null)
 const customEditor = shallowRef(null)
 
 watch(
@@ -42,20 +41,6 @@ watch(
       return
     }
     blockDefinition.value = { name: props.block.component, ...definition }
-
-    if (definition?.editor?.face) {
-      editorFace.value = definition.editor.face
-    } else {
-      editorFace.value = definition.block
-    }
-
-    if (typeof editorFace.value.component === 'function') {
-      editorFace.value.component = defineAsyncComponent(editorFace.value.component)
-    }
-
-    if (!editorFace.value?.component) {
-      editorFace.value = null
-    }
 
     if (definition?.editor?.custom) {
       if (typeof definition.editor.custom === 'function') {
@@ -103,8 +88,8 @@ const isFocused = ref(false)
 
       <template #default="{ blockValue }">
         <EditorAction
-          v-if="editorFace"
-          :action="editorFace"
+          v-if="editors.face"
+          :action="editors.face"
           :block="blockValue"
           v-bind="blockValue?.props"
           tabindex="0"
