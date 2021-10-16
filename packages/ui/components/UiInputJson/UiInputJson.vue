@@ -100,8 +100,6 @@ function pretify() {
   }
 
   &__footer {
-    text-align: right;
-
     &:hover {
       color: green;
     }
