@@ -1,3 +1,4 @@
+import { UiInputCode } from '../UiInputCode'
 import { UiInputJson } from '../UiInputJson'
 import { UiInputUrl } from '../UiInputUrl'
 import { UiSelect } from '../UiSelect'
@@ -7,6 +8,7 @@ import { UiSelectNative } from '../UiSelectNative'
 import { UiUpload } from '../UiUpload'
 
 export default {
+  'code': UiInputCode,
   'json': UiInputJson,
   'select': UiSelect,
   'select-buttons': UiSelectButtons,

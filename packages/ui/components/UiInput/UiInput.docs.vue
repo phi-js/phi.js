@@ -250,6 +250,13 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
           label="json"
           placeholder="Escribe JSON aqui"
         />
+
+        <UiInput
+          v-model="modelValue.code"
+          type="code"
+          label="code"
+          placeholder="Escribe JavaScript aqui"
+        />
       </section>
     </div>
     <div style="position: sticky; top: 0">
