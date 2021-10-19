@@ -144,7 +144,7 @@ const enabledApis = computed(() => apis.filter((a) => a.isEnabled))
     <!-- <button @click="apis.push(Math.random())">PUSH API</button> -->
     <UiItem
       id="app__logo"
-      text="Phidias.js"
+      text="Phi.js"
       icon="/phidias.png"
     />
 

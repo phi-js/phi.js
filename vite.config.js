@@ -9,8 +9,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'lib/index.js'),
-      name: 'Phidias',
-      fileName: (format) => `phidias.${format}.js`
+      name: 'Phi',
+      fileName: (format) => `phi.${format}.js`
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled

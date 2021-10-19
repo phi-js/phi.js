@@ -1,9 +1,9 @@
 <template>
   <div style="text-align: center">
     <img
-      alt="Phidias.js"
+      alt="Phi.js"
       src="/phidias.png"
     >
-    <h1>Phidias.js</h1>
+    <h1>Phi.js</h1>
   </div>
 </template>

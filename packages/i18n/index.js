@@ -3,12 +3,12 @@ import { toDate } from '/packages/ui/helpers'
 
 export function provideI18n(options) {
   const provided = reactive(options)
-  provide('$_phidias_i18n', provided)
+  provide('$_phi_i18n', provided)
   return provided
 }
 
 export function useI18n(dictionary = null) {
-  const injected = inject('$_phidias_i18n') || {}
+  const injected = inject('$_phi_i18n') || {}
   const attrs = useAttrs()
   const messages = deepMerge(injected?.messages, dictionary)
 
