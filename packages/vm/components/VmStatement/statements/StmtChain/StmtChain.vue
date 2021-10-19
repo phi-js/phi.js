@@ -39,7 +39,7 @@ function onPickerInput({ expression, definition }) {
     expression.else = { chain: [] }
   }
 
-  stagedItem.value = {
+  let newItem = {
     info: {
       text: definition.text,
       icon: definition.icon,
@@ -47,7 +47,12 @@ function onPickerInput({ expression, definition }) {
     },
     do: expression,
     assign: null,
+    _open: true,
   }
+
+  // stagedItem.value = newItem
+  innerValue.value.chain.push(newItem)
+  emitUpdate()
 }
 
 function onStagedAccept() {
@@ -93,6 +98,7 @@ function deifify(item, i) {
       <template #item="{element, index}">
         <StmtChainItem
           v-model="innerValue.chain[index]"
+          :open="element._open"
           @update:modelValue="emitUpdate()"
         >
           <template #actions>

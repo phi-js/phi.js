@@ -11,7 +11,7 @@ export default function useOptionsManager(arr, settings = null) {
     return arrData.map((item) => ({
       text: getProperty(item, settings?.optionText || '$.text'),
       value: getProperty(item, settings?.optionValue || '$.value'),
-      keywords: getKeywords(item, settings?.optionSearch).join(' ')
+      keywords: getKeywords(item, settings?.optionSearch).join(' '),
     }))
   })
 
@@ -25,8 +25,7 @@ export default function useOptionsManager(arr, settings = null) {
 
     let words = search.split(' ')
     return options.value.filter((option) =>
-      words.every((word) => option.keywords.includes(word))
-    )
+      words.every((word) => option.keywords.includes(word)))
   })
 
   return { options, searchQuery, filteredOptions }
@@ -45,10 +44,8 @@ function getKeywords(object, searchableProperties = null) {
 
   let retval = []
   if (Array.isArray(object)) {
-    object.forEach(
-      (item) =>
-        (retval = retval.concat(getKeywords(item, searchableProperties)))
-    )
+    object.forEach((item) =>
+      (retval = retval.concat(getKeywords(item, searchableProperties))))
   } else {
     if (Array.isArray(searchableProperties)) {
       searchableProperties.forEach((propPath) => {

@@ -40,11 +40,11 @@ watch(
 
 <template>
   <div class="WindowDialogEditor">
-    <label class="ui-label">{{ innerModel.call }}</label>
     <UiInput
       v-model="innerModel.args.message"
       type="textarea"
       label="Mensaje"
+      style="width: 100%"
       @update:modelValue="emitInput"
     />
     <UiInput

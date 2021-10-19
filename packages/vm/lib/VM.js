@@ -10,6 +10,10 @@ export default class VM {
     this.onModelSet = null
   }
 
+  defineFunctions(vmFunctions) {
+    Object.assign(this.functions, vmFunctions)
+  }
+
   async eval(expr, localScope = null) {
     if (!expr || (typeof expr != 'string' && typeof expr != 'object')) {
       return expr
@@ -74,6 +78,12 @@ export default class VM {
         }
       }
       return true
+    }
+
+    // JavaScript EVAL (!!!)
+    if (typeof expr.eval !== 'undefined') {
+      const fx = new Function(['$scope'], '"use strict"; var window = null; var document = null;' + expr.eval)
+      return await fx(localScope)
     }
 
     /**

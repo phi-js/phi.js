@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 export default function useSelectionManager(
   incomingValue,
   isMultiple,
-  onValueChange = null
+  onValueChange = null,
 ) {
   const selection = ref([])
   watch(
@@ -11,10 +11,10 @@ export default function useSelectionManager(
     (newValue) =>
       (selection.value = Array.isArray(newValue)
         ? newValue
-        : newValue !== undefined
-        ? [newValue]
-        : []),
-    { immediate: true }
+        : newValue !== undefined && newValue !== null
+          ? [newValue]
+          : []),
+    { immediate: true },
   )
 
   function select(value) {

@@ -3,6 +3,7 @@
     v-show="inner.open"
     class="UiWindow"
     :class="{
+      'UiWindow--dragging': isDragging,
       '--open': inner.open,
       '--closed': !inner.open,
       '--docked': !!inner.dock,
@@ -14,11 +15,11 @@
     @touchend="onResizerEnd($event)"
   >
     <div
-      class="ui-window-container"
+      class="UiWindow__container"
       :class="dock ? `--dock-${inner.dock}` : null"
     >
       <div
-        class="ui-window-contents ui-z-2"
+        class="UiWindow__contents ui-z-2"
         :style="contentsStyle"
       >
         <div
@@ -62,7 +63,7 @@
           @touchstart="onResizerStart($event, 'sw')"
         />
 
-        <div class="ui-window-header ui-toolbar --clear">
+        <div class="UiWindow__header ui-toolbar --clear">
           <div
             class="header-item"
             @mousedown="onResizerStart($event, 'move')"
@@ -134,11 +135,11 @@
           <UiIcon
             src="mdi:close"
             class="ui-clickable window-close"
-            @click="close()"
+            @click="hide(); close()"
           />
         </div>
 
-        <div class="ui-window-body">
+        <div class="UiWindow__body">
           <slot
             name="contents"
             :show="show"
@@ -152,7 +153,7 @@
           </slot>
         </div>
 
-        <footer class="ui-window-footer ui-footer">
+        <footer class="UiWindow__footer ui-footer">
           <slot
             name="footer"
             :show="show"
@@ -296,6 +297,7 @@ export default {
       immediate: true,
       handler(newValue) {
         this.inner.open = newValue
+        this.inner.open && this.setDock(this.inner.dock) // resize <body>
       },
     },
 
@@ -318,20 +320,19 @@ export default {
     show() {
       this.inner.open = true
       this.$emit('update:open', this.inner.open)
+
+      this.setDock(this.inner.dock) // resize <body>
     },
 
     hide() {
       this.inner.open = false
       this.$emit('update:open', this.inner.open)
-    },
 
-    setDock(newPosition) {
-      this.inner.dock = newPosition
-      this.$emit('update:dock', this.inner.dock)
-
-      if (newPosition == 'popup') {
-        this.$emit('popup')
-      }
+      /// !!! resize <body>
+      document.body.style.setProperty('margin-top', 'initial')
+      document.body.style.setProperty('margin-right', 'initial')
+      document.body.style.setProperty('margin-bottom', 'initial')
+      document.body.style.setProperty('margin-left', 'initial')
     },
 
     close() {
@@ -418,6 +419,20 @@ export default {
         this.newBounds.width = this.bounds.width - diff.x
         break
       }
+
+      /// !!! resize <body>
+      if (this.inner.dock) {
+        switch (this.inner.dock) {
+        case 'top':
+        case 'bottom':
+          document.body.style.setProperty(`margin-${this.inner.dock}`, `${this.newBounds.height}px`)
+          break
+        case 'left':
+        case 'right':
+          document.body.style.setProperty(`margin-${this.inner.dock}`, `${this.newBounds.width}px`)
+          break
+        }
+      }
     },
 
     onResizerEnd(evt) {
@@ -427,6 +442,36 @@ export default {
       evt.preventDefault()
       this.isDragging = false
       this.bounds = { ...this.newBounds }
+    },
+
+
+    setDock(newPosition) {
+      if (this.inner.dock != newPosition) {
+        this.inner.dock = newPosition
+        this.$emit('update:dock', this.inner.dock)
+        if (newPosition == 'popup') {
+          this.$emit('popup')
+        }
+      }
+
+      /// !!! resize <body>
+      document.body.style.setProperty('margin-top', 'initial')
+      document.body.style.setProperty('margin-right', 'initial')
+      document.body.style.setProperty('margin-bottom', 'initial')
+      document.body.style.setProperty('margin-left', 'initial')
+
+      if (this.inner.dock) {
+        switch (this.inner.dock) {
+        case 'top':
+        case 'bottom':
+          document.body.style.setProperty(`margin-${this.inner.dock}`, `${this.bounds.height}px`)
+          break
+        case 'left':
+        case 'right':
+          document.body.style.setProperty(`margin-${this.inner.dock}`, `${this.bounds.width}px`)
+          break
+        }
+      }
     },
   },
 }
@@ -442,13 +487,19 @@ export default {
   }
 
   &.--docked {
-    .ui-window-contents {
+    .UiWindow__contents {
       border-radius: 0;
     }
   }
 
-  .ui-window-container {
-    background-color: rgba(0, 0, 0, 0.16);
+  &--dragging {
+    .UiWindow__container {
+      pointer-events: initial !important;
+    }
+  }
+
+  .UiWindow__container {
+    background-color: rgba(0, 0, 0, 0.04); // SCRIM
     position: fixed;
     top: 0;
     left: 0;
@@ -462,25 +513,25 @@ export default {
     pointer-events: none;
   }
 
-  .ui-window-contents {
+  .UiWindow__contents {
     pointer-events: initial;
     display: flex;
     flex-direction: column;
 
-    .ui-window-body {
+    .UiWindow__body {
       flex: 1;
       overflow: auto;
     }
   }
 
-  .ui-window-header,
-  .ui-window-footer {
+  .UiWindow__header,
+  .UiWindow__footer {
     cursor: move;
     overflow: hidden;
     flex-wrap: nowrap;
   }
 
-  .ui-window-header {
+  .UiWindow__header {
     align-items: center;
     background-color: transparent;
 
@@ -497,7 +548,7 @@ export default {
     }
   }
 
-  .ui-window-contents {
+  .UiWindow__contents {
     position: absolute;
     min-width: 200px;
     min-height: 200px;

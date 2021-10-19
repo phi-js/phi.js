@@ -6,6 +6,7 @@ const StmtAndOr = defineAsyncComponent(() => import('./statements/StmtAndOr.vue'
 const StmtOp = defineAsyncComponent(() => import('./statements/StmtOp.vue'))
 const StmtCall = defineAsyncComponent(() => import('./statements/StmtCall.vue'))
 const StmtChain = defineAsyncComponent(() => import('./statements/StmtChain/StmtChain.vue'))
+const StmtEval = defineAsyncComponent(() => import('./statements/StmtEval.vue'))
 
 // const StmtFunction = defineAsyncComponent(() => import('../VmExpression/statements/function/StmtFunction.vue'))
 // const StmtIf = defineAsyncComponent(() => import('../VmExpression/statements/if/StmtIf.vue'))
@@ -89,6 +90,10 @@ const editor = computed(() => {
 
   if (typeof _modelValue.value.op != 'undefined') {
     return { component: StmtOp }
+  }
+
+  if (typeof _modelValue.value.eval != 'undefined') {
+    return { component: StmtEval }
   }
 
   if (Array.isArray(_modelValue.value.and) || Array.isArray(_modelValue.value.or)) {

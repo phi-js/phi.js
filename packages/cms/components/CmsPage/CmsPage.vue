@@ -18,11 +18,20 @@ const props = defineProps({
     required: false,
     default: null,
   },
+
+  // !!! testing.  custom vm functions
+  vmFunctions: {
+    type: Object,
+    required: false,
+    default: null,
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
 
 const pageVm = new VM()
+pageVm.defineFunctions(props.vmFunctions)
+
 pageVm.onModelSet = (propertyName, propertyValue, scope) => {
   emit('update:modelValue', scope)
 }
@@ -82,7 +91,7 @@ async function evalPage(page) {
           }
 
           // Parse props
-          let blockProps = block?.props ? await pageVm.eval(block.props, props.modelValue) : undefined
+          let blockProps = block?.props ? await pageVm.eval(block.props, props.modelValue) : {}
           block.props = blockProps
 
           // Handle v-model
@@ -145,6 +154,10 @@ watch(
     if (oldValue && JSON.stringify(newValue) === JSON.stringify(oldValue)) {
       return
     }
+    if (!sanitizedPage.value.setup) {
+      return
+    }
+
     pageVm.eval(sanitizedPage.value.setup, props.modelValue)
   },
   { immediate: true, deep: true },

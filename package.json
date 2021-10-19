@@ -20,6 +20,7 @@
     "@uppy/vue": "^0.4.3",
     "@uppy/webcam": "^2.0.4",
     "@uppy/xhr-upload": "^2.0.5",
+    "katex": "^0.13.18",
     "velocity-animate": "^1.5.2",
     "vue": "^3.2.6",
     "vuedraggable": "^4.1.0"

@@ -56,6 +56,11 @@ const stmt = ref({
     },
 
     {
+      info: { text: 'EVAL :)' },
+      do: { eval: 'window.alert("dude");\nconst a = 3;\nconst b = 5;\n\nreturn $scope.thing * 2' },
+    },
+
+    {
       info: { text: 'Finalizar' },
       do: {
         call: 'window.alert',
@@ -64,6 +69,8 @@ const stmt = ref({
     },
   ],
 })
+
+
 </script>
 
 <template>
@@ -71,5 +78,5 @@ const stmt = ref({
     v-model="model"
     :statement="stmt"
   />
-  <!-- <pre>model: {{ model }}</pre> -->
+  <pre>model: {{ model }}</pre>
 </template>

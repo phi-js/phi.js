@@ -46,7 +46,7 @@ function cancel() {
     >
       <template #trigger>
         <UiItem
-          class="StmtChainItem__face ui-clickable"
+          class="StmtChainItem__face ui-clickable ui-noselect"
           icon="mdi:vuejs"
           v-bind="props.modelValue.info"
           :subtext="props.modelValue.assign"
@@ -66,33 +66,20 @@ function cancel() {
           <VmStatement
             v-if="isIfStatement"
             v-model="innerValue.do.if"
+            @update:modelValue="accept()"
           />
           <template v-else>
-            <VmStatement v-model="innerValue.do" />
+            <VmStatement
+              v-model="innerValue.do"
+              @update:modelValue="accept()"
+            />
             <UiInput
               v-model="innerValue.assign"
               type="text"
+              label="Asignar resultado en:"
+              @update:modelValue="accept()"
             />
           </template>
-        </div>
-      </template>
-
-      <template #footer="{ close }">
-        <div class="StmtChainItem__footer">
-          <button
-            type="button"
-            class="ui-button --main"
-            @click="accept(); close()"
-          >
-            Aceptar
-          </button>
-          <button
-            type="button"
-            class="ui-button --cancel"
-            @click="cancel(); close()"
-          >
-            Cancelar
-          </button>
         </div>
       </template>
     </UiDrawer>

@@ -39,6 +39,10 @@ export default async function getBlockEditors(block) {
     actions: [],
   }
 
+  if (!definition) {
+    return retval
+  }
+
   // Determine "face"
   const face = definition?.editor?.face?.component ? {
     'component': definition.editor.face.component,
