@@ -2,7 +2,7 @@
   <div style="text-align: center">
     <img
       alt="Phi.js"
-      src="/phidias.png"
+      src="/phi.png"
     >
     <h1>Phi.js</h1>
   </div>

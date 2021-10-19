@@ -145,7 +145,7 @@ const enabledApis = computed(() => apis.filter((a) => a.isEnabled))
     <UiItem
       id="app__logo"
       text="Phi.js"
-      icon="/phidias.png"
+      icon="/phi.png"
     />
 
     <UiPopover>
