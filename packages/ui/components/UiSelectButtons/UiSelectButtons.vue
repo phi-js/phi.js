@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, toRef } from 'vue'
+import useOptionsManager from '../UiSelect/composables/useOptionsManager.js'
 
 const props = defineProps({
   modelValue: {
@@ -12,6 +13,30 @@ const props = defineProps({
     type: Array,
     required: false,
     default: () => [],
+  },
+
+  /**
+   * A JSON PATH string pointing to the item property
+   * to be used as a scalar VALUE identifier
+   *
+   * @default '$.value'
+   */
+  optionValue: {
+    type: String,
+    required: false,
+    default: null,
+  },
+
+  /**
+   * A JSON PATH string pointing to the item property
+   * to be used as a scalar TEXT identifier
+   *
+   * @default '$.text'
+   */
+  optionText: {
+    type: String,
+    required: false,
+    default: null,
   },
 
   multiple: {
@@ -48,6 +73,12 @@ function toggleValue(value) {
     props.multiple ? innerValue.value : innerValue.value[0],
   )
 }
+
+const { options } = useOptionsManager(toRef(props, 'options'), {
+  optionText: props.optionText,
+  optionValue: props.optionValue,
+  optionSearch: props.optionSearch,
+})
 </script>
 
 <template>
