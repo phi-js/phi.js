@@ -1,132 +1,162 @@
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { reactive, ref, watch, computed } from 'vue'
 import { UiDialog } from '/packages/ui/components'
 
 const props = defineProps({
-  modelValue: {
-    type: Object,
+  /*
+  String. Nombre/ID del nodo activo
+  */
+  active: {
+    type: [String, Number],
     required: false,
     default: null,
   },
+
+  /*
+  Function (async) que retorna un objeto (nodo) dado un Nombre/ID
+  */
+  onFetch: {
+    type: Function,
+    required: false,
+    default: () => () => null,
+  },
 })
 
-const story = ref({})
-const currentNodeId = ref(null)
-const history = ref([])
-const hasBack = computed(() => history.value?.length > 1)
+const emit = defineEmits(['update:active'])
+
+const history = reactive([])
 
 watch(
-  () => props.modelValue,
-  (newValue) => {
-    story.value = newValue ? JSON.parse(JSON.stringify(newValue)) : {}
-    if (!currentNodeId.value) {
-      goTo(story.value?.nodes?.[0])
-    }
-  },
+  () => props.active,
+  (newValue) => push(newValue, null),
   { immediate: true },
 )
 
-const currentNode = computed(() => {
-  if (!currentNodeId.value) {
-    return { id: null }
-  }
+const bodySlot = ref()
+const dialogSlot = ref()
 
-  const found = story.value.nodes.find((node) => node.id == currentNodeId.value) || { id: null }
-  return {
-    ...found,
-    exits: story.value.paths?.length ? story.value.paths.filter((path) => path.from == found.id) : [],
-  }
-})
-
-const dialogNode = ref()
-
-function goTo(nodeId) {
-  nodeId = nodeId?.id || nodeId
-  const fromId = currentNodeId.value
-  if (nodeId == fromId) {
+async function fetchNode(nodeId, target = null) {
+  const node = await props.onFetch(nodeId)
+  if (!node) {
+    console.warn('UiStory: node not found', nodeId)
     return
   }
 
-  currentNodeId.value = nodeId
+  switch (target) {
+  case 'dialog':
+    dialogSlot.value = {
+      nodeId,
+      node,
+      push,
+      back,
+    }
+    break
 
-  history.value.push({
-    from: fromId,
-    to: currentNodeId.value,
+  default:
+    bodySlot.value = {
+      nodeId,
+      node,
+      push,
+      back: computed(() => !dialogSlot.value && history.length > 1 ? back : undefined),
+    }
+
+    dialogSlot.value = null
+    break
+  }
+
+  return node
+}
+
+async function push(nodeId, target = null) {
+  if (nodeId === null || nodeId == history[history.length - 1]?.nodeId) {
+    return
+  }
+
+  await fetchNode(nodeId, target)
+
+  history.push({
+    nodeId,
+    target,
     timestamp: Math.floor(new Date().getTime() / 1000),
   })
+
+  emit('update:active', nodeId)
 }
 
-function openDialog(nodeId, onAccept = null, onCancel = null) {
-  dialogNode.value = story.value.nodes.find((node) => node.id == nodeId)
-}
 
-function goBack() {
-  if (!hasBack.value) {
+async function back() {
+  if (history?.length <= 1) {
     return
   }
-  const lastPath = history.value.pop()
-  currentNodeId.value = lastPath.from
+  history.pop()
+
+  const prevPath = history[history.length - 1]
+  await fetchNode(prevPath.nodeId, prevPath.target)
+  emit('update:active', prevPath.nodeId)
 }
 
-const duration = ref('0.3s')
-
 defineExpose({
-  currentNode,
+  push,
+  back,
   history,
-  hasBack,
-  goTo,
-  goBack,
-  openDialog,
 })
 </script>
 
 <template>
-  <div
-    class="UiStory"
-    :style="{'--ui-story-transition-duration': duration}"
-  >
-    <transition name="tr-page">
+  <div class="UiStory">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.0/animate.min.css"
+      rel="stylesheet"
+      type="text/css"
+    >
+
+    <transition
+      v-if="bodySlot"
+
+      name="tr-page"
+      xmode="out-in"
+      xname="custom-classes-transition"
+      xenter-active-class="animate__animated animate__bounceInRight"
+      xleave-active-class="animate__animated animate__bounceOutLeft"
+      :duration="222"
+    >
       <div
-        :key="currentNode.id"
+
+        :key="bodySlot.nodeId"
         class="UiStory__node"
       >
         <slot
-          name="contents"
-          :node="currentNode"
+          name="default"
+          v-bind="bodySlot"
+        />
+        <slot
+          name="footer"
+          v-bind="bodySlot"
         />
       </div>
     </transition>
 
     <UiDialog
-      :open="!!dialogNode"
+      :open="!!dialogSlot"
+      @update:open="back()"
     >
       <template
-        v-if="!!dialogNode"
+        v-if="!!dialogSlot"
         #contents
       >
         <slot
-          name="contents"
-          :node="dialogNode"
+          name="default"
+          v-bind="dialogSlot"
         />
       </template>
       <template
-        v-if="!!dialogNode"
-        #footer="{ close }"
+        v-if="!!dialogSlot"
+        #footer
       >
-        <button
-          type="button"
-          class="ui-button --main"
-          @click="close()"
-        >
-          Aceptar
-        </button>
-        <button
-          type="button"
-          class="ui-button --cancel"
-          @click="close()"
-        >
-          Cancelar
-        </button>
+        <slot
+          name="footer"
+          v-bind="dialogSlot"
+        />
       </template>
     </UiDialog>
   </div>
@@ -136,6 +166,10 @@ defineExpose({
 .UiStory {
   --ui-story-transition-duration: var(--ui-duration-quick);
   position: relative;
+
+  &__node {
+    border: 1px solid transparent; // prevent border/margin collapse
+  }
 
   .tr-page-enter-active {
     position: absolute;
