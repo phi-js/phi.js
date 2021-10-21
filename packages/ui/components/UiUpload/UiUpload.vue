@@ -2,6 +2,8 @@
 // Base sample in https://codesandbox.io/s/uppy-vue-example-buz4w?file=/src/components/HelloWorld.vue
 import { ref, watch, computed, onBeforeUnmount } from 'vue'
 
+import draggable from 'vuedraggable'
+
 import Uppy from '@uppy/core'
 import Webcam from '@uppy/webcam'
 import XHRUpload from '@uppy/xhr-upload'
@@ -19,6 +21,7 @@ import '@uppy/image-editor/dist/style.css'
 import { Dashboard, DashboardModal } from '@uppy/vue'
 import { UiItem } from '../UiItem'
 import { UiIcon } from '../UiIcon'
+import bytes from '../../filters/bytes.js'
 
 const props = defineProps({
   endpoint: {
@@ -51,8 +54,12 @@ const props = defineProps({
     default: null,
   },
 
+  /*
+  Cadena de placeholder a mostrar en el boton en modo inline.
+  Tambien puede ser un OBJETO con propiedades para UiItem
+  */
   placeholder: {
-    type: String,
+    type: [String, Object],
     required: false,
     default: 'Upload files',
   },
@@ -141,38 +148,57 @@ const dashboardProps = computed(() => ({
 <template>
   <div class="UiUpload">
     <div class="UiUpload__files">
-      <a
-        v-for="file in innerFiles"
-        :key="file.id"
-        class="ui-clickable ui-noselect"
-        target="_blank"
-        :href="file.url"
+      <draggable
+        v-model="innerFiles"
+        class="CmsPageLayoutEditor__draggable"
+        group="ui-upload-draggable"
+        item-key="id"
+        ccchandle=".ui-item__icon"
+        @update:modelValue="emitUpdate"
       >
-        <UiItem
-          class="ui-clickable"
-          :text="file.name"
-          :subtext="file.size"
-          :icon="file.thumbnail"
-        >
-          <template #actions>
-            <UiIcon
-              src="mdi:close"
-              class="ui-clickable"
-              @click.prevent="deleteFile(file)"
-            />
-          </template>
-        </UiItem>
-      </a>
+        <template #item="{element: file}">
+          <div>
+            <a
+              class="ui-clickable ui-noselect"
+              target="_blank"
+              :href="file.url"
+            >
+              <UiItem
+                class="ui-clickable"
+                :text="file.name"
+                :subtext="bytes(file.size)"
+                :icon="file.thumbnail"
+              >
+                <template #actions>
+                  <UiIcon
+                    src="mdi:close"
+                    class="ui-clickable"
+                    @click.prevent="deleteFile(file)"
+                  />
+                </template>
+              </UiItem>
+            </a>
+          </div>
+        </template>
+      </draggable>
     </div>
 
-    <button
-      v-if="!props.inline"
-      type="button"
-      class="UiUpload__trigger ui-native"
-      @click="isOpen = !isOpen"
-    >
-      {{ props.placeholder }}
-    </button>
+    <template v-if="!props.inline">
+      <UiItem
+        v-if="placeholder?.text"
+        class="UiUpload__trigger ui-clickable ui-noselect"
+        v-bind="placeholder"
+        @click="isOpen = !isOpen"
+      />
+      <button
+        v-else
+        type="button"
+        class="UiUpload__trigger ui-native"
+        @click="isOpen = !isOpen"
+      >
+        {{ props.placeholder }}
+      </button>
+    </template>
 
     <component
       :is="props.inline ? Dashboard : DashboardModal"
