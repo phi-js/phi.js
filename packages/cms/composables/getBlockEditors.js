@@ -60,12 +60,12 @@ export default async function getBlockEditors(block) {
   // parse $settings in definitions
   retval.face.props = parse(retval.face.props, { $settings }, true)
 
-
   // Determine "toolbar"
   if (definition?.editor?.toolbar?.component) {
     const toolbar = {
-      component: definition.editor.toolbar.component,
-      props: definition.editor.toolbar?.props,
+      'component': definition.editor.toolbar.component,
+      'props': definition.editor.toolbar?.props,
+      'v-model': definition.editor.toolbar?.['v-model'],
     }
     if (typeof toolbar.component === 'function') {
       toolbar.component = defineAsyncComponent(toolbar.component)

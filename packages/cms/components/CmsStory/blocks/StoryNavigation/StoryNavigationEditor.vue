@@ -1,12 +1,21 @@
 <script setup>
 import { inject } from 'vue'
-import { UiItem, UiIcon } from '/packages/ui/components'
+import { UiItem, UiIcon, UiInput } from '/packages/ui/components'
+
+const props = defineProps({
+  modelValue: {
+    type: Object,
+    required: false,
+    default: null,
+  },
+})
 
 const story = inject('$_cms_story', {})
+
 </script>
 
 <template>
-  <div class="StoryNavigation">
+  <div class="StoryNavigationEditor">
     <UiItem
       v-for="(exit, i) in story?.currentNode?.exits || []"
       :key="i"
@@ -18,5 +27,11 @@ const story = inject('$_cms_story', {})
         <UiIcon src="mdi:arrow-right-thick" />
       </template>
     </UiItem>
+
+    <UiInput
+      type="text"
+      placeholder="Crear página ..."
+      @keypress.enter="story.createNode($event.target.value, story.currentNode.id).then(() => $event.target.value = '')"
+    />
   </div>
 </template>

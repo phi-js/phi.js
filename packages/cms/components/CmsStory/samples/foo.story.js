@@ -352,7 +352,7 @@ export default {
             component: 'MediaHtml',
             props: { value: '<h1>Llegaste a la puerta secreta :)</h1>' },
           },
-          { component: 'StoryNavigation' },
+          // { component: 'StoryNavigation' },
         ],
       },
     },

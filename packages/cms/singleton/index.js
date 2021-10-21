@@ -14,8 +14,8 @@ const Cms = {
 }
 
 /* !!! load built-in plugins !!! */
-import pluginCode from '../plugins/core'
-Cms.plugin(pluginCode)
+// import pluginCore from '../plugins/core'
+// Cms.plugin(pluginCore)
 
 import pluginMedia from '../plugins/media'
 Cms.plugin(pluginMedia)

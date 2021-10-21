@@ -167,6 +167,7 @@ watch(
 <template>
   <div class="CmsPage">
     <template v-if="page">
+      <slot name="header" />
       <div
         v-for="section in page.sections"
         :key="section.id"

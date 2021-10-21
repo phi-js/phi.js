@@ -5,6 +5,7 @@ import BlockEditorLayout from '../../../../components/CmsBlockEditor/BlockEditor
 
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
+import Placeholder from '@tiptap/extension-placeholder'
 import Underline from '@tiptap/extension-underline'
 import TextAlign from '@tiptap/extension-text-align'
 
@@ -23,6 +24,7 @@ const editor = new Editor({
   extensions: [
     StarterKit,
     Underline,
+    Placeholder.configure({ placeholder: 'Escribe aquí ...' }),
     TextAlign.configure({ types: ['heading', 'paragraph'] }),
   ],
   content: '',
@@ -33,6 +35,7 @@ const editor = new Editor({
     emit('update:block', { ...props.block, props: { ...props.block.props, value: innerValue.value } })
   },
 })
+
 onBeforeUnmount(() => editor.destroy())
 
 watch(
@@ -174,7 +177,7 @@ const formatButtons = computed(() => {
 
     <template #default>
       <EditorContent
-        class="tiptap-editor-contents story-html"
+        class="tiptap-editor-contents"
         :editor="editor"
       />
     </template>
@@ -182,6 +185,16 @@ const formatButtons = computed(() => {
 </template>
 
 <style lang="scss">
+// SERIOUSLY ?! https://tiptap.dev/api/extensions/placeholder
+/* Placeholder (at the top) */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}
+
 .tiptap-editor-contents [contenteditable] {
   min-height: 32px;
   outline: none;

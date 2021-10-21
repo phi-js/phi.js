@@ -5,6 +5,8 @@ import { CmsStory } from '.'
 import sampleStory from './samples/foo.story.js'
 const dataModel = ref({})
 
+const activeNodeId = ref()
+
 // const fallbackNode = (nodeId) => ({
 //   id: 404,
 //   page: {
@@ -26,6 +28,14 @@ const dataModel = ref({})
 <template>
   <CmsStory
     v-model="dataModel"
+    v-model:activeNodeId="activeNodeId"
     :story="sampleStory"
   />
+  <pre>CmsStory.docs> activeNodeId: {{ activeNodeId }} </pre>
+  <button
+    type="button"
+    @click="activeNodeId = 'temaQui'"
+  >
+    set temaQui
+  </button>
 </template>

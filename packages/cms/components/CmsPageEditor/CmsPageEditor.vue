@@ -70,6 +70,8 @@ const isWindowOpen = ref(false)
       />
     </div>
 
+    <slot name="header" />
+
     <PageLayoutEditor
       v-model:page="innerPage"
       class="CmsPageEditor__layout"
