@@ -11,7 +11,7 @@ import { UiItem } from '../UiItem'
   >
     <template #trigger="{ isOpen }">
       <UiItem
-        class="ui-clickable"
+        class="ui--clickable"
         :text="`Toggle drawer ${n}`"
         :icon="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'"
       />
@@ -42,7 +42,7 @@ import { UiItem } from '../UiItem'
   >
     <template #trigger="{ isOpen }">
       <UiItem
-        class="ui-clickable"
+        class="ui--clickable"
         :text="`Toggle drawer ${n}`"
         :icon="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'"
       />

@@ -47,12 +47,12 @@ const editor = computed(() => {
 
 <template>
   <div class="StmtCall">
-    <input
+    <!-- <input
       v-model="innerModel.call"
       type="text"
-      class="ui-native"
+      class="ui__input"
       @input="emitUpdate"
-    >
+    > -->
     <component
       :is="editor.component"
       v-if="editor"

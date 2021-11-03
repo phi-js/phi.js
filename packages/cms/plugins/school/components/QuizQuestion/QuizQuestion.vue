@@ -11,7 +11,7 @@
         :key="i"
         :icon="option.value == value ? 'mdi:radiobox-marked' : 'mdi:radiobox-blank'"
         :text="option.text"
-        class="ui-clickable"
+        class="ui--clickable"
         @click="$emit('input', option.value)"
       />
     </div>

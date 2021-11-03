@@ -53,27 +53,27 @@ const item = reactive({
   </form>
 
   <UiItem
-    class="ui-clickable"
+    class="ui--clickable"
     v-bind="item"
   />
   <UiItem
-    class="ui-clickable ui-item--inline"
+    class="ui--clickable ui-item--inline"
     v-bind="item"
   />
   <UiItem
-    class="ui-clickable ui-item--inline"
+    class="ui--clickable ui-item--inline"
     v-bind="item"
   />
   <UiItem
-    class="ui-clickable ui-item--inline"
+    class="ui--clickable ui-item--inline"
     v-bind="item"
   />
   <UiItem
-    class="ui-clickable ui-item--inline"
+    class="ui--clickable ui-item--inline"
     v-bind="item"
   />
   <UiItem
-    class="ui-clickable ui-item--inline"
+    class="ui--clickable ui-item--inline"
     v-bind="item"
   />
 

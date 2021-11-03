@@ -160,14 +160,14 @@ const formatButtons = computed(() => {
         <UiIcon
           v-if="option.icon"
           :src="option.icon"
-          class="ui-clickable"
+          class="ui--clickable"
           :class="{'--active': option.isActive}"
           @click="option.callback"
         />
         <button
           v-else
           type="button"
-          class="ui-clickable"
+          class="ui--clickable"
           :class="{'--active': option.isActive}"
           @click="option.callback"
           v-text="option.text"

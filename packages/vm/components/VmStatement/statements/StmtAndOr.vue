@@ -29,7 +29,7 @@
           <div style="flex:none">
             <UiIcon
               src="mdi:close"
-              class="ui-clickable StmtAndOr__deleter"
+              class="ui--clickable StmtAndOr__deleter"
               @mouseover="onDeleterMouseover(i)"
               @mouseout="onDeleterMouseout"
               @click="removeCondition(i)"
@@ -127,7 +127,6 @@ export default {
     border: 0;
     background: transparent;
     font-family: var(--ui-font-secondary);
-    font-weight: bold;
   }
 
   .stmt-boo-adder {

@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['MediaImage', {'ui-clickable': !!href}]"
+    :class="['MediaImage', {'ui--clickable': !!href}]"
     :style="containerStyle"
     @click="onClick()"
   >

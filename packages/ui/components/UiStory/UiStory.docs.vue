@@ -108,7 +108,7 @@ const newName = ref('')
         v-if="back"
         :icon="target == 'dialog' ? 'mdi:close' : 'mdi:arrow-left-thick'"
         text="Back"
-        class="ui-clickable"
+        class="ui--clickable"
         @click="back()"
       />
 

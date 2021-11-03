@@ -39,7 +39,7 @@ export default {
                       then: '1',
                       else: null,
                     },
-                    class: 'ui-clickable',
+                    class: 'ui--clickable',
                   },
                   'v-for': 'users',
                   'v-on': {

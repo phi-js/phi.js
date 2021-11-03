@@ -1,6 +1,6 @@
 <script setup>
-import { ref, shallowRef, watch } from 'vue'
-import { UiIcon, UiItem, UiWindow, UiPopover, UiTabs, UiTab } from '../../../ui/components'
+import { ref, shallowRef, watch, computed } from 'vue'
+import { UiIcon, UiItem, UiInputWedge, UiWindow, UiPopover, UiTabs, UiTab } from '../../../ui/components'
 import EditorAction from './EditorAction.vue'
 import { getBlockEditors } from '../../composables'
 
@@ -57,6 +57,13 @@ function deleteBlock() {
 }
 
 const isPopoverOpen = ref(false)
+
+const actionsSelectOptions = computed(() =>
+  availableActions.value.map((action, i) => ({
+    value: i,
+    text: action.title,
+  })))
+
 </script>
 
 <template>
@@ -67,22 +74,31 @@ const isPopoverOpen = ref(false)
       'BlockEditorLayout--open': isWindowOpen,
     }"
   >
-    <div class="BlockEditorLayout__toolbar ui-toolbar">
+    <div class="BlockEditorLayout__toolbar ui-toolbar ui-theme-dark">
       <UiIcon
         src="mdi:cursor-move"
-        class="BlockEditorLayout__handle ui-clickable"
+        class="BlockEditorLayout__handle ui--clickable"
       />
+
+      <UiInputWedge
+        v-if="blockValue['v-model'] !== undefined"
+        v-model="blockValue['v-model']"
+        :color="blockValue['v-model'] ? 'var(--ui-color-primary)' : undefined"
+        placeholder="Variable"
+        @update:modelValue="accept()"
+      />
+
       <slot name="toolbar" />
 
       <!-- dropdown options -->
       <UiPopover
         v-model:open="isPopoverOpen"
-        style="margin-left: auto"
+        class="BlockPopover"
         placement="bottom-end"
       >
         <template #trigger>
           <UiIcon
-            class="ui-clickable"
+            class="ui--clickable"
             src="mdi:dots-vertical"
           />
         </template>
@@ -92,14 +108,14 @@ const isPopoverOpen = ref(false)
             :key="i"
             :text="action.title"
             :icon="action.icon"
-            class="ui-clickable"
+            class="BlockPopover__item BlockPopover__item--action"
             @click="openAction(i) && close()"
           />
 
           <UiItem
             text="Delete"
             icon="mdi:close"
-            class="ui-clickable"
+            class="BlockPopover__item BlockPopover__item--delete"
             @click="deleteBlock() && close()"
           />
         </template>
@@ -113,35 +129,49 @@ const isPopoverOpen = ref(false)
     <UiWindow
       v-if="isWindowOpen"
       v-model:open="isWindowOpen"
+      class="ui-theme-dark"
     >
       <template #contents>
-        <UiTabs v-model="currentActionIndex">
+        <!-- <UiInput
+          v-model="currentActionIndex"
+          class="Action__picker--input"
+          type="select-native"
+          :options="actionsSelectOptions"
+        /> -->
+        <UiTabs
+          v-model="currentActionIndex"
+          class="Action__picker--tabs"
+        >
           <UiTab
             v-for="(action, i) in availableActions"
             :key="i"
             :value="i"
             :text="action.title"
             :icon="action.icon || 'mdi:star'"
-          >
-            <EditorAction
-              v-model:block="blockValue"
-              :action="action"
-            />
-          </UiTab>
+          />
         </UiTabs>
+        <div
+          :key="currentActionIndex"
+          class="Tab__contents"
+        >
+          <EditorAction
+            v-model:block="blockValue"
+            :action="availableActions[currentActionIndex]"
+          />
+        </div>
       </template>
 
-      <template #footer="{hide}">
+      <template #footer="{close}">
         <button
           type="button"
-          class="ui-button --main"
-          @click="accept() && hide()"
+          class="ui__button ui__button--main"
+          @click="accept() && close()"
           v-text="'Aceptar'"
         />
         <button
           type="button"
-          class="ui-button --cancel"
-          @click="cancel() && hide()"
+          class="ui__button ui__button--cancel"
+          @click="cancel() && close()"
           v-text="'Cancelar'"
         />
       </template>
@@ -150,6 +180,28 @@ const isPopoverOpen = ref(false)
 </template>
 
 <style lang="scss">
+.Tab {
+  &__contents {
+    padding: var(--ui-padding);
+  }
+}
+
+.BlockPopover {
+  margin-left: auto;
+
+  .tippy-content {
+    padding: 0;
+  }
+
+  &__item {
+    padding: 4px 24px 4px var(--ui-padding-horizontal);
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
 .BlockEditorLayout {
   position: relative;
   border: 1px solid transparent;

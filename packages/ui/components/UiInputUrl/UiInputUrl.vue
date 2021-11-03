@@ -20,7 +20,7 @@ const emit = defineEmits(['update:modelValue'])
 
 <template>
   <div
-    class="UiInputUrl ui-inset"
+    class="UiInputUrl ui__inset"
     tabindex="0"
   >
     <input
@@ -49,11 +49,8 @@ const emit = defineEmits(['update:modelValue'])
 
   &__input {
     min-width: 300px;
-
-    padding: var(--ui-padding);
     border: 0;
     outline: none;
-
     font-size: 1em;
     font-family: inherit;
   }

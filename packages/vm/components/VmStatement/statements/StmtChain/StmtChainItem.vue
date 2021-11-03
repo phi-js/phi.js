@@ -46,7 +46,7 @@ function cancel() {
     >
       <template #trigger>
         <UiItem
-          class="StmtChainItem__face ui-clickable ui-noselect"
+          class="StmtChainItem__face ui--clickable ui--noselect"
           icon="mdi:vuejs"
           v-bind="props.modelValue.info"
           :subtext="props.modelValue.assign"

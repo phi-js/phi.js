@@ -5,6 +5,7 @@ import { CmsBlockEditor } from '../CmsBlockEditor'
 import PageLayoutEditor from './PageLayoutEditor.vue'
 import { VmStatement } from '../../../vm/components'
 import { UiWindow, UiIcon, UiTabs, UiTab } from '../../../ui/index.js'
+import { useHistory } from '/packages/ui/helpers'
 
 const props = defineProps({
   page: {
@@ -32,7 +33,9 @@ provide('$_cms_settings', computed(() => props.settings))
 const innerPage = ref(null)
 watch(
   () => props.page,
-  (newValue) => innerPage.value = pageHelper.sanitizePage(newValue),
+  (newValue) => {
+    innerPage.value = pageHelper.sanitizePage(newValue)
+  },
   { immediate: true, deep: true },
 )
 
@@ -41,7 +44,13 @@ function cancel() {
   return true
 }
 
+const { push, hasUndo, hasRedo, undo, redo } = useHistory(innerPage, (storedValue) => {
+  innerPage.value = storedValue
+  emitUpdatePage()
+})
+
 function emitUpdatePage() {
+  push(innerPage.value)
   emit('update:page', innerPage.value)
 }
 
@@ -56,6 +65,7 @@ const combinedSchema = computed(() => ({
 provide('$_vm_modelSchema', combinedSchema)
 
 const isWindowOpen = ref(false)
+
 </script>
 
 <template>
@@ -63,8 +73,23 @@ const isWindowOpen = ref(false)
     <div class="CmsPageEditor__toolbar ui-toolbar --wide --light">
       <slot name="toolbar" />
       <UiIcon
-        class="ui-clickable"
-        src="mdi:application-cog"
+        class="ui--clickable ui--padded"
+        :class="{'ui-disabled': !hasUndo}"
+        title="Deshacer"
+        src="mdi:undo"
+        @click="undo()"
+      />
+      <UiIcon
+        class="ui--clickable ui--padded"
+        :class="{'ui-disabled': !hasRedo}"
+        title="Rehacer"
+        src="mdi:redo"
+        @click="redo()"
+      />
+
+      <UiIcon
+        class="ui--clickable"
+        src="mdi:dots-vertical"
         style="margin-left: auto"
         @click="isWindowOpen = !isWindowOpen"
       />
@@ -95,6 +120,7 @@ const isWindowOpen = ref(false)
       v-model:open="isWindowOpen"
       text="Page settings"
       icon="mdi:cog"
+      class="PageEditor__window"
     >
       <UiTabs>
         <UiTab
@@ -114,18 +140,18 @@ const isWindowOpen = ref(false)
         </UiTab>
       </UiTabs>
 
-      <template #footer="{ hide }">
+      <template #footer="{ close }">
         <button
           type="button"
           class="ui-button --main"
-          @click="emitUpdatePage(); hide()"
+          @click="emitUpdatePage(); close()"
         >
           Aceptar
         </button>
         <button
           type="button"
           class="ui-button --cancel"
-          @click="cancel() && hide()"
+          @click="cancel() && close()"
         >
           Cancelar
         </button>
@@ -133,3 +159,28 @@ const isWindowOpen = ref(false)
     </UiWindow>
   </div>
 </template>
+
+<style lang="scss">
+.PageEditor__window {
+  .UiTabs {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &__contents {
+      flex: 1;
+    }
+
+    .VmStatement {
+      --ui-radius: 0;
+      width: 100%;
+      height: 100%;
+
+      .ui__input {
+        background-color: var(--ui-color-bg-1);
+        color: var(--ui-color-fg);
+      }
+    }
+  }
+}
+</style>

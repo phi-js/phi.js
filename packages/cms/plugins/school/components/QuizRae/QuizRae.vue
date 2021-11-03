@@ -1,7 +1,7 @@
 <template>
   <div class="quiz-rae">
 
-    <div class="quiz-rae-definitions ui-noselect">
+    <div class="quiz-rae-definitions ui--noselect">
       <p
         v-for="(definition,i) in definitions"
         :key="i"

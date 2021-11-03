@@ -100,7 +100,7 @@ const arrOptions = computed(() =>
       v-for="option in arrOptions"
       :key="option.value"
       v-bind="option"
-      class="ui-clickable"
+      class="ui--clickable"
       tabindex="0"
       @click="toggle(option.value)"
       @keydown.enter="toggle(option.value)"

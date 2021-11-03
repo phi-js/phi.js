@@ -11,14 +11,14 @@
 
     <div class="img__controls ui-toolbar">
       <UiIcon
-        class="ui-clickable"
+        class="ui--clickable"
         :class="{'--active': style.float == 'left'}"
         @click="toggleFloat('left')"
         value="mdi:format-float-left"
       />
 
       <UiIcon
-        class="ui-clickable"
+        class="ui--clickable"
         :class="{'--active': style.float == 'right'}"
         @click="toggleFloat('right')"
         value="mdi:format-float-right"

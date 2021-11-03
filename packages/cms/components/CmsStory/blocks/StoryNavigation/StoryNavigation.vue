@@ -11,7 +11,7 @@ const story = inject('$_cms_story', {})
       v-for="(exit, i) in story?.currentNode?.exits || []"
       :key="i"
       :text="exit.card.text"
-      class="StoryNavigation__exit ui-clickable ui-noselect ui-item--inline"
+      class="StoryNavigation__exit ui--clickable ui--noselect ui-item--inline"
       @click="story.goTo(exit.to)"
     >
       <template #actions>

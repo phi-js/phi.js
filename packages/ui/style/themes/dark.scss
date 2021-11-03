@@ -1,0 +1,89 @@
+.ui-theme-dark {
+  --ui-padding-vertical: 10px;
+  --ui-padding-horizontal: 16px;
+  --ui-padding: var(--ui-padding-vertical) var(--ui-padding-horizontal);
+
+  --ui-breathe: 9px;
+  --ui-radius: 4px;
+
+  --ui-color-accent: #1d7cbf;
+  --ui-color-success: #28c76f;
+  --ui-color-attention: #fff8c5;
+  --ui-color-danger: #ea5455;
+  --ui-color-warning: #ff9f43;
+
+  --ui-color-background: rgb(47 47 47);
+
+  --ui-color-bg: #2f2f2f;
+  --ui-color-bg-1: rgba(255, 255, 255, 0.1);
+
+  --ui-color-accent-fg: #0969da;
+  --ui-color-accent-emphasis: #0969da;
+  --ui-color-accent-muted: rgba(84,174,255,0.4);
+  --ui-color-accent-subtle: #ddf4ff;
+
+  --ui-color-attention-fg: #9a6700;
+  --ui-color-attention-emphasis: #bf8700;
+  --ui-color-attention-muted: rgba(212,167,44,0.4);
+  --ui-color-attention-subtle: #fff8c5;
+
+  --ui-color-fg: rgb(255 255 255 / 70%);
+  --ui-color-fg-default: rgb(255 255 255 / 70%);
+  --ui-color-fg-muted: #57606a;
+  --ui-color-fg-subtle: #6e7781;
+
+  --ui-color-fg-accent: var(--ui-color-accent-fg);
+  --ui-color-fg-success: var(--ui-color-success-fg);
+  --ui-color-fg-attention: var(--ui-color-attention-fg);
+  --ui-color-fg-severe: var(--ui-color-severe-fg);
+  --ui-color-fg-danger: var(--ui-color-danger-fg);
+  --ui-color-fg-done: var(--ui-color-done-fg);
+
+  .ui {
+    &__box {
+      background-color: var(--ui-color-bg);
+      border-radius: var(--ui-radius);
+      color: var(--ui-color-fg-default);
+    }
+
+    &__button {
+      padding: var(--ui-padding);
+      border-radius: var(--ui-radius);
+
+      border: none;
+      color: #eee;
+      background: #424557;
+      font-size: 16px;
+      font-weight: 500;
+
+      transition: background 0.2s,color 0.2s;
+      box-shadow: 0 1px 4px -2px black, inset 0 2px 1px -1px rgb(255 255 255 / 10%);
+
+      cursor: pointer;
+
+      &:hover {
+        color: #81edff;
+      }
+
+      &--cancel {
+        background: transparent;
+      }
+    }
+
+    &__input {
+      color: var(--ui-color-fg);
+      background-color: var(--ui-color-bg-1);
+
+      &::placeholder {
+        color: var(--ui-color-fg-muted);
+      }
+    }
+  }
+
+  select {
+    color: var(--ui-color-fg);
+    optgroup, option {
+      color: var(--ui-color-bg);
+    }
+  }
+}

@@ -50,7 +50,7 @@ defineProps({
         target="_blank"
       >
         <UiItem
-          class="ui-clickable ui-noselect"
+          class="ui--clickable ui--noselect"
           :text="file.name"
           :subtext="file.size"
           :icon="file.thumbnail || `mime:${file.mimetype}`"

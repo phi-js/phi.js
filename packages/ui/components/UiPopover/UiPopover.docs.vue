@@ -33,7 +33,7 @@ const placements = [
     >
       <template #trigger>
         <UiItem
-          class="ui-outset ui-clickable"
+          class="ui-outset ui--clickable"
           icon="mdi:window-maximize"
           text="Abrir Popover"
           :subtext="placement"

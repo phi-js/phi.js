@@ -116,7 +116,7 @@ const currentContent = computed(() => tabs.value?.[selectedIndex.value]?.slotCon
         <UiItem
           v-else
           v-bind="tab.props"
-          class="ui-clickable ui-noselect"
+          class="ui--clickable ui--noselect"
           style="white-space: nowrap"
           @click="selectTab(tab)"
         />

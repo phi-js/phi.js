@@ -159,12 +159,12 @@ const dashboardProps = computed(() => ({
         <template #item="{element: file}">
           <div>
             <a
-              class="ui-clickable ui-noselect"
+              class="ui--clickable ui--noselect"
               target="_blank"
               :href="file.url"
             >
               <UiItem
-                class="ui-clickable"
+                class="ui--clickable"
                 :text="file.name"
                 :subtext="bytes(file.size)"
                 :icon="file.thumbnail"
@@ -172,7 +172,7 @@ const dashboardProps = computed(() => ({
                 <template #actions>
                   <UiIcon
                     src="mdi:close"
-                    class="ui-clickable"
+                    class="ui--clickable"
                     @click.prevent="deleteFile(file)"
                   />
                 </template>
@@ -186,14 +186,14 @@ const dashboardProps = computed(() => ({
     <template v-if="!props.inline">
       <UiItem
         v-if="placeholder?.text"
-        class="UiUpload__trigger ui-clickable ui-noselect"
+        class="UiUpload__trigger ui--clickable ui--noselect"
         v-bind="placeholder"
         @click="isOpen = !isOpen"
       />
       <button
         v-else
         type="button"
-        class="UiUpload__trigger ui-native"
+        class="UiUpload__trigger ui__button"
         @click="isOpen = !isOpen"
       >
         {{ props.placeholder }}

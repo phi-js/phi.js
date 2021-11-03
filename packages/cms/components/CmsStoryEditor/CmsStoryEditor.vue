@@ -1,7 +1,8 @@
 <script setup>
 import { ref, watch, computed, provide } from 'vue'
-import { UiStory, UiItem, UiInput } from '/packages/ui/components'
+import { UiStory, UiItem, UiInput, UiIcon } from '/packages/ui/components'
 import { CmsPageEditor } from '../CmsPageEditor'
+import { useHistory } from '/packages/ui/helpers'
 
 const storyEl = ref()
 
@@ -34,6 +35,12 @@ const emit = defineEmits(['update:story', 'update:activeNodeId'])
 const story = ref()
 const currentNodeId = ref()
 
+const { hasUndo, hasRedo, undo, redo } = useHistory(story, (storedValue) => {
+  console.log('useHistory dice', storedValue)
+  story.value = storedValue
+  emitUpdate()
+})
+
 watch(
   () => props.story,
   (newValue) => {
@@ -53,6 +60,10 @@ watch(
   { immediate: true },
 )
 
+function emitUpdate() {
+  emit('update:story', story.value)
+}
+
 function fetchNode(nodeId) {
   return story.value.nodes.find((node) => node.id == nodeId)
 }
@@ -63,7 +74,7 @@ function updatePage(node, newPage) {
     return
   }
   story.value.nodes[index].page = newPage
-  emit('update:story', story.value)
+  emitUpdate()
 }
 
 async function createNode(nodeId, fromId = null) {
@@ -83,7 +94,7 @@ async function createNode(nodeId, fromId = null) {
     })
   }
 
-  emit('update:story', story.value)
+  emitUpdate()
 }
 
 const availableNodes = computed(() =>
@@ -109,6 +120,23 @@ provide('$_cms_story', computed(() => ({
 
 <template>
   <div>
+    <!-- <div>
+      <UiIcon
+        class="ui--clickable ui--padded"
+        :class="{'ui-disabled': !hasUndo}"
+        title="Deshacer"
+        src="mdi:undo"
+        @click="undo()"
+      />
+      <UiIcon
+        class="ui--clickable ui--padded"
+        :class="{'ui-disabled': !hasRedo}"
+        title="Rehacer"
+        src="mdi:redo"
+        @click="redo()"
+      />
+    </div> -->
+
     <UiStory
       ref="storyEl"
       v-model:active="currentNodeId"
@@ -133,7 +161,7 @@ provide('$_cms_story', computed(() => ({
           <template #header>
             <UiItem
               v-show="back"
-              class="ui-clickable ui-noselect ui-item--inline"
+              class="ui--clickable ui--noselect ui-item--inline"
               icon="mdi:arrow-left-thick"
               text="Regresar"
               @click="back()"

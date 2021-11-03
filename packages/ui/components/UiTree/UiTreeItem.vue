@@ -52,7 +52,7 @@ export default {
     >
       <template #trigger="{ isOpen }">
         <UiItem
-          class="ui-clickable"
+          class="ui--clickable"
           v-bind="value"
           :children="undefined"
         >

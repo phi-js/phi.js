@@ -1,7 +1,7 @@
 <template>
   <div class="UiIconPicker">
     <UiIcon
-      class="UiIconPicker__current ui-clickable"
+      class="UiIconPicker__current ui--clickable"
       :src="modelValue"
       :color="color"
       @click="isDialogOpen = true"
@@ -24,10 +24,10 @@
 
         <div
           v-show="!searchString"
-          class="UiIconPicker__pagination ui-noselect"
+          class="UiIconPicker__pagination ui--noselect"
         >
           <div
-            class="UiIconPicker__page-item ui-clickable --prev"
+            class="UiIconPicker__page-item ui--clickable --prev"
             @click="currentPage = Math.max(currentPage-1, 1)"
           >
             &lsaquo;
@@ -36,7 +36,7 @@
           <div
             v-for="n in nPages"
             :key="n"
-            class="UiIconPicker__page-item ui-clickable"
+            class="UiIconPicker__page-item ui--clickable"
             :class="{'--selected': currentPage == n}"
             @click="currentPage = n"
           >
@@ -44,7 +44,7 @@
           </div>
 
           <div
-            class="UiIconPicker__page-item ui-clickable --next"
+            class="UiIconPicker__page-item ui--clickable --next"
             @click="currentPage = Math.min(currentPage+1, nPages)"
           >
             &rsaquo;
@@ -57,7 +57,7 @@
           <span
             v-for="iconName in listedIcons"
             :key="iconName"
-            :class="['mdi', `mdi-${iconName}`, 'ui-clickable', {'--selected': modelValue == `mdi:${iconName}`}]"
+            :class="['mdi', `mdi-${iconName}`, 'ui--clickable', {'--selected': modelValue == `mdi:${iconName}`}]"
             :title="iconName"
             @click="selectIcon(iconName)"
           />

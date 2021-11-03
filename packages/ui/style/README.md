@@ -1,7 +1,7 @@
-## .ui-clickable
+## .ui--clickable
 ```
 <ui-item 
-  class="ui-clickable" 
+  class="ui--clickable" 
   text="hola mundo" 
   icon="mdi:vuejs"
 ></ui-item>

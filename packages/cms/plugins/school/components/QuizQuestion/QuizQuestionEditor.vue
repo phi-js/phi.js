@@ -20,7 +20,7 @@
         <UiItem
           v-for="(option,i) in innerValue.options"
           :key="i"
-          class="quiz-option-item ui-clickable"
+          class="quiz-option-item ui--clickable"
           icon="mdi:radiobox-blank"
         >
           <template #text>
@@ -47,7 +47,7 @@
           <template #right>
             <UiIcon
               value="mdi:delete"
-              class="ui-clickable"
+              class="ui--clickable"
               @click.stop="removeOption(i)"
             />
           </template>
@@ -55,7 +55,7 @@
       </draggable>
 
       <UiItem
-        class="quiz-option-adder ui-clickable"
+        class="quiz-option-adder ui--clickable"
         icon="mdi:plus-circle"
         text="Agregar opción"
         @click="addOption()"

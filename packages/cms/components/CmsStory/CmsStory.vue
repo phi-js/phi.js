@@ -165,7 +165,7 @@ provide('$_cms_story', computed(() => ({
         <template #header>
           <UiItem
             v-if="nodeBack"
-            class="ui-clickable ui-noselect ui-item--inline"
+            class="ui--clickable ui--noselect ui-item--inline"
             icon="mdi:arrow-left-thick"
             text="Regresar"
             @click="nodeBack()"

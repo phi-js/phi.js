@@ -75,15 +75,15 @@ const classNames = computed(() => {
     (Array.isArray(props.modelValue) && !props.modelValue.length)
 
   return [
-    `ui-input--type-${props.type}`,
+    `UiInput--type-${props.type}`,
     {
-      'ui-input--empty': isEmpty,
-      'ui-input--full': !isEmpty,
-      'ui-input--focused': isFocused.value,
-      'ui-input--disabled': props.disabled,
-      'ui-input--enabled': !props.disabled,
-      'ui-input--required': props.required,
-      'ui-input--invalid': props.errors.length > 0,
+      'UiInput--empty': isEmpty,
+      'UiInput--full': !isEmpty,
+      'UiInput--focused': isFocused.value,
+      'UiInput--disabled': props.disabled,
+      'UiInput--enabled': !props.disabled,
+      'UiInput--required': props.required,
+      'UiInput--invalid': props.errors.length > 0,
     },
   ]
 })
@@ -125,39 +125,39 @@ const nativeCheckboxProps = computed(() => {
 
 <template>
   <div
-    class="ui-input"
+    class="UiInput"
     :class="classNames"
     :style="attrs.style"
   >
     <label
       v-if="showLabel"
-      class="ui-input__label"
+      class="UiInput__label"
       v-text="props.label"
     />
 
-    <div class="ui-input__body">
+    <div class="UiInput__body">
       <slot name="default">
         <component
           :is="customComponent"
           v-if="customComponent"
-          class="ui-input__elem"
+          class="UiInput__elem"
           v-bind="elementProps"
         />
         <textarea
           v-else-if="props.type == 'textarea'"
-          class="ui-input__elem ui-native"
+          class="UiInput__elem ui__input"
           v-bind="nativeElementProps"
         />
         <button
           v-else-if="props.type == 'button'"
           type="button"
-          class="ui-input__elem ui-native"
+          class="UiInput__elem ui__button"
           v-bind="nativeElementProps"
           v-text="props.label"
         />
         <label
           v-else-if="props.type == 'checkbox'"
-          class="ui-input__elem ui-noselect"
+          class="UiInput__elem ui--noselect"
           :type="props.type"
         >
           <input
@@ -168,14 +168,14 @@ const nativeCheckboxProps = computed(() => {
           }}</span></label>
         <input
           v-else
-          class="ui-input__elem ui-native"
+          class="UiInput__elem ui__input"
           :type="props.type"
           v-bind="nativeElementProps"
         >
       </slot>
     </div>
     <div
-      class="ui-input__subtext"
+      class="UiInput__subtext"
       v-text="props.subtext"
     />
   </div>

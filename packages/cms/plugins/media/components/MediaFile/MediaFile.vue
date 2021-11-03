@@ -5,7 +5,7 @@
     target="_system"
   >
     <UiItem
-      class="ui-clickable"
+      class="ui--clickable"
       :text="text"
       :secondary="secondary"
       :icon="icon"

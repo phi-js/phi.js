@@ -140,106 +140,108 @@ const enabledApis = computed(() => apis.filter((a) => a.isEnabled))
 </script>
 
 <template>
-  <div id="app__top-bar">
-    <!-- <button @click="apis.push(Math.random())">PUSH API</button> -->
-    <UiItem
-      id="app__logo"
-      text="Phi.js"
-      icon="/phi.png"
-    />
-
-    <UiPopover>
-      <template #trigger>
-        <UiItem
-          class="api-dialog__trigger ui-clickable"
-          icon="mdi:wifi"
-          :text="`APIs ${enabledApis.length ? `(${enabledApis.length})` : ''}`"
-          :badge="!enabledApis.length ? 0 : null"
-        />
-      </template>
-      <template #contents>
-        <div class="api-dialog__contents">
-          <UiItem
-            v-for="api in apis"
-            :key="api.id"
-            :icon="
-              api.isEnabled
-                ? 'mdi:checkbox-marked'
-                : 'mdi:checkbox-blank-outline'
-            "
-            :text="api.name"
-            :subtext="api.baseURL"
-            :icon-color="api.isEnabled ? 'var(--ui-color-success)' : null"
-            class="api-item ui-clickable"
-            @click="api.isEnabled = !api.isEnabled"
-          />
-        </div>
-      </template>
-    </UiPopover>
-
-    <UiItem icon="mdi:web">
-      <select
-        v-model="i18n.locale"
-        class="ui-native"
-      >
-        <option value="en">
-          en
-        </option>
-        <option value="es">
-          es
-        </option>
-        <option value="de">
-          de
-        </option>
-        <option value="fr">
-          fr
-        </option>
-      </select>
-    </UiItem>
-  </div>
-
-  <div id="app__container">
-    <div id="app__sidebar">
-      <UiInput
-        v-model="searchString"
-        type="search"
-        class="app-search"
-        placeholder="Buscar..."
-        :value="searchString"
-        @input="searchString = $event.target.value"
+  <div class="ui-theme-default">
+    <div id="app__top-bar">
+      <!-- <button @click="apis.push(Math.random())">PUSH API</button> -->
+      <UiItem
+        id="app__logo"
+        text="Phi.js"
+        icon="/phi.png"
       />
 
-      <UiTree
-        :value="filteredTree"
-        class="app__tree"
-      >
-        <template #item="{ item }">
-          <a
-            :class="{ '--active': currentPage == item.payload.href }"
-            :href="`/#/${item.payload.href}`"
-          >
-            <UiItem
-              :text="item.text"
-              :subtext="item.payload.isLocal ? '.local' : ''"
-            />
-          </a>
+      <UiPopover>
+        <template #trigger>
+          <UiItem
+            class="api-dialog__trigger ui--clickable"
+            icon="mdi:wifi"
+            :text="`APIs ${enabledApis.length ? `(${enabledApis.length})` : ''}`"
+            :badge="!enabledApis.length ? 0 : null"
+          />
         </template>
-      </UiTree>
+        <template #contents>
+          <div class="api-dialog__contents">
+            <UiItem
+              v-for="api in apis"
+              :key="api.id"
+              :icon="
+                api.isEnabled
+                  ? 'mdi:checkbox-marked'
+                  : 'mdi:checkbox-blank-outline'
+              "
+              :text="api.name"
+              :subtext="api.baseURL"
+              :icon-color="api.isEnabled ? 'var(--ui-color-success)' : null"
+              class="api-item ui--clickable"
+              @click="api.isEnabled = !api.isEnabled"
+            />
+          </div>
+        </template>
+      </UiPopover>
+
+      <UiItem icon="mdi:web">
+        <select
+          v-model="i18n.locale"
+          class="ui__input"
+        >
+          <option value="en">
+            en
+          </option>
+          <option value="es">
+            es
+          </option>
+          <option value="de">
+            de
+          </option>
+          <option value="fr">
+            fr
+          </option>
+        </select>
+      </UiItem>
     </div>
 
-    <div id="app-body">
-      <transition name="fade">
-        <div
-          v-if="component"
-          :key="currentPage"
-        >
-          <component :is="component" />
-        </div>
-      </transition>
+    <div id="app__container">
+      <div id="app__sidebar">
+        <UiInput
+          v-model="searchString"
+          type="search"
+          class="app-search"
+          placeholder="Buscar..."
+          :value="searchString"
+          @input="searchString = $event.target.value"
+        />
 
-      <div v-if="error">
-        <h1>404</h1>
-        <p>'{{ currentPage }}' no encontrado</p>
+        <UiTree
+          :value="filteredTree"
+          class="app__tree"
+        >
+          <template #item="{ item }">
+            <a
+              :class="{ '--active': currentPage == item.payload.href }"
+              :href="`/#/${item.payload.href}`"
+            >
+              <UiItem
+                :text="item.text"
+                :subtext="item.payload.isLocal ? '.local' : ''"
+              />
+            </a>
+          </template>
+        </UiTree>
+      </div>
+
+      <div id="app-body">
+        <transition name="fade">
+          <div
+            v-if="component"
+            :key="currentPage"
+          >
+            <component :is="component" />
+          </div>
+        </transition>
+
+        <div v-if="error">
+          <h1>404</h1>
+          <p>'{{ currentPage }}' no encontrado</p>
+        </div>
       </div>
     </div>
   </div>
@@ -255,7 +257,7 @@ const enabledApis = computed(() => apis.filter((a) => a.isEnabled))
   }
 
   &__top-bar {
-    background-color: #fff;
+    // background-color: #fff;
     padding: 4px 8px;
     display: flex;
     align-items: center;
@@ -279,6 +281,7 @@ const enabledApis = computed(() => apis.filter((a) => a.isEnabled))
     overflow: hidden;
     overflow-y: auto;
     width: var(--app-sidebar-width);
+    padding: var(--ui-padding);
 
     .app-search {
       padding: var(--ui-breathe);

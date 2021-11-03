@@ -79,7 +79,7 @@ export default {
     iconColor: {
       type: String,
       required: false,
-      default: 'rgba(0, 0, 0, 0.54)',
+      default: 'inherit',
     },
 
     badge: {

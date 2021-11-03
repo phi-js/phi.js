@@ -1,178 +1,13 @@
-<template>
-  <div
-    v-show="inner.open"
-    class="UiWindow"
-    :class="{
-      'UiWindow--dragging': isDragging,
-      '--open': inner.open,
-      '--closed': !inner.open,
-      '--docked': !!inner.dock,
-      '--external': inner.dock == 'popup'
-    }"
-    @mousemove="onResizerMove($event)"
-    @mouseup="onResizerEnd($event)"
-    @touchmove="onResizerMove($event)"
-    @touchend="onResizerEnd($event)"
-  >
-    <div
-      class="UiWindow__container"
-      :class="dock ? `--dock-${inner.dock}` : null"
-    >
-      <div
-        class="UiWindow__contents ui-z-2"
-        :style="contentsStyle"
-      >
-        <div
-          class="hotzone --n"
-          @mousedown="onResizerStart($event, 'n')"
-          @touchstart="onResizerStart($event, 'n')"
-        />
-        <div
-          class="hotzone --e"
-          @mousedown="onResizerStart($event, 'e')"
-          @touchstart="onResizerStart($event, 'e')"
-        />
-        <div
-          class="hotzone --s"
-          @mousedown="onResizerStart($event, 's')"
-          @touchstart="onResizerStart($event, 's')"
-        />
-        <div
-          class="hotzone --w"
-          @mousedown="onResizerStart($event, 'w')"
-          @touchstart="onResizerStart($event, 'w')"
-        />
-        <div
-          class="hotzone --ne"
-          @mousedown="onResizerStart($event, 'ne')"
-          @touchstart="onResizerStart($event, 'ne')"
-        />
-        <div
-          class="hotzone --nw"
-          @mousedown="onResizerStart($event, 'nw')"
-          @touchstart="onResizerStart($event, 'nw')"
-        />
-        <div
-          class="hotzone --se"
-          @mousedown="onResizerStart($event, 'se')"
-          @touchstart="onResizerStart($event, 'se')"
-        />
-        <div
-          class="hotzone --sw"
-          @mousedown="onResizerStart($event, 'sw')"
-          @touchstart="onResizerStart($event, 'sw')"
-        />
-
-        <div class="UiWindow__header ui-toolbar --clear">
-          <div
-            class="header-item"
-            @mousedown="onResizerStart($event, 'move')"
-            @touchstart="onResizerStart($event, 'move')"
-          >
-            <UiItem
-              :text="inner.text || 'Ventana'"
-              :icon="inner.icon || 'mdi:rectangle-outline'"
-            />
-          </div>
-
-          <UiPopover>
-            <template #trigger>
-              <UiIcon
-                :src="inner.dock
-                  ? (inner.dock == 'popup' ? 'mdi:window-restore' : `mdi:dock-${inner.dock}`)
-                  : 'mdi:card-outline'"
-                class="ui-clickable"
-                :class="{'--active': !inner.dock}"
-              />
-            </template>
-            <template #contents="popover">
-              <div @click="popover.close()">
-                <UiIcon
-                  src="mdi:card-outline"
-                  class="ui-clickable"
-                  :class="{'--active': !inner.dock}"
-                  @click="setDock(null)"
-                />
-
-                <UiIcon
-                  src="mdi:dock-bottom"
-                  class="ui-clickable"
-                  :class="{'--active': inner.dock == 'bottom'}"
-                  @click="setDock('bottom')"
-                />
-
-                <UiIcon
-                  src="mdi:dock-top"
-                  class="ui-clickable"
-                  :class="{'--active': inner.dock == 'top'}"
-                  @click="setDock('top')"
-                />
-
-                <UiIcon
-                  src="mdi:dock-left"
-                  class="ui-clickable"
-                  :class="{'--active': inner.dock == 'left'}"
-                  @click="setDock('left')"
-                />
-
-                <UiIcon
-                  src="mdi:dock-right"
-                  class="ui-clickable"
-                  :class="{'--active': inner.dock == 'right'}"
-                  @click="setDock('right')"
-                />
-
-                <UiIcon
-                  src="mdi:window-restore"
-                  class="ui-clickable"
-                  :class="{'--active': inner.dock == 'popup'}"
-                  @click="setDock('popup')"
-                />
-              </div>
-            </template>
-          </UiPopover>
-
-          <UiIcon
-            src="mdi:close"
-            class="ui-clickable window-close"
-            @click="hide(); close()"
-          />
-        </div>
-
-        <div class="UiWindow__body">
-          <slot
-            name="contents"
-            :show="show"
-            :hide="hide"
-          >
-            <slot
-              name="default"
-              :show="show"
-              :hide="hide"
-            />
-          </slot>
-        </div>
-
-        <footer class="UiWindow__footer ui-footer">
-          <slot
-            name="footer"
-            :show="show"
-            :hide="hide"
-          />
-        </footer>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
 import { UiItem } from '../UiItem'
 import { UiIcon } from '../UiIcon'
 import { UiPopover } from '../UiPopover'
+import openWindow from './popup.js'
+import PopupBridge from './PopupBridge.vue'
 
 export default {
   name: 'UiWindow',
-  components: { UiItem, UiIcon, UiPopover },
+  components: { UiItem, UiIcon, UiPopover, PopupBridge },
 
   props: {
     dock: {
@@ -233,6 +68,8 @@ export default {
         width: null,
         height: null,
       },
+
+      dropTarget: null,
     }
   },
 
@@ -339,6 +176,12 @@ export default {
       this.inner.open = false
       this.$emit('update:open', this.inner.open)
       this.$emit('close')
+
+      /// !!! resize <body>
+      document.body.style.setProperty('margin-top', 'initial')
+      document.body.style.setProperty('margin-right', 'initial')
+      document.body.style.setProperty('margin-bottom', 'initial')
+      document.body.style.setProperty('margin-left', 'initial')
     },
 
     onResizerStart(evt, zone) {
@@ -442,8 +285,12 @@ export default {
       evt.preventDefault()
       this.isDragging = false
       this.bounds = { ...this.newBounds }
-    },
 
+      if (this.dropTarget) {
+        this.setDock(this.dropTarget)
+        this.dropTarget = null
+      }
+    },
 
     setDock(newPosition) {
       if (this.inner.dock != newPosition) {
@@ -451,6 +298,10 @@ export default {
         this.$emit('update:dock', this.inner.dock)
         if (newPosition == 'popup') {
           this.$emit('popup')
+          openWindow(this, () => {
+            this.setDock(null)
+            this.close()
+          })
         }
       }
 
@@ -477,13 +328,210 @@ export default {
 }
 </script>
 
+<template>
+  <div
+    v-show="inner.open"
+    class="UiWindow"
+    :class="{
+      'UiWindow--dragging': isDragging,
+      '--open': inner.open,
+      '--closed': !inner.open,
+      '--docked': !!inner.dock,
+      '--external': inner.dock == 'popup'
+    }"
+    @mousemove="onResizerMove($event)"
+    @mouseup="onResizerEnd($event)"
+    @touchmove="onResizerMove($event)"
+    @touchend="onResizerEnd($event)"
+  >
+    <div
+      class="UiWindow__container"
+      :class="dock ? `--dock-${inner.dock}` : null"
+    >
+      <div
+        class="UiWindow__dropzone UiWindow__dropzone--top"
+        @mouseenter="dropTarget = 'top'"
+        @mouseleave="dropTarget = null"
+      />
+      <div
+        class="UiWindow__dropzone UiWindow__dropzone--bottom"
+        @mouseenter="dropTarget = 'bottom'"
+        @mouseleave="dropTarget = null"
+      />
+      <div
+        class="UiWindow__dropzone UiWindow__dropzone--left"
+        @mouseenter="dropTarget = 'left'"
+        @mouseleave="dropTarget = null"
+      />
+      <div
+        class="UiWindow__dropzone UiWindow__dropzone--right"
+        @mouseenter="dropTarget = 'right'"
+        @mouseleave="dropTarget = null"
+      />
+
+      <div
+        class="UiWindow__contents ui__box ui--z"
+        :style="contentsStyle"
+      >
+        <div
+          class="hotzone --n"
+          @mousedown="onResizerStart($event, 'n')"
+          @touchstart="onResizerStart($event, 'n')"
+        />
+        <div
+          class="hotzone --e"
+          @mousedown="onResizerStart($event, 'e')"
+          @touchstart="onResizerStart($event, 'e')"
+        />
+        <div
+          class="hotzone --s"
+          @mousedown="onResizerStart($event, 's')"
+          @touchstart="onResizerStart($event, 's')"
+        />
+        <div
+          class="hotzone --w"
+          @mousedown="onResizerStart($event, 'w')"
+          @touchstart="onResizerStart($event, 'w')"
+        />
+        <div
+          class="hotzone --ne"
+          @mousedown="onResizerStart($event, 'ne')"
+          @touchstart="onResizerStart($event, 'ne')"
+        />
+        <div
+          class="hotzone --nw"
+          @mousedown="onResizerStart($event, 'nw')"
+          @touchstart="onResizerStart($event, 'nw')"
+        />
+        <div
+          class="hotzone --se"
+          @mousedown="onResizerStart($event, 'se')"
+          @touchstart="onResizerStart($event, 'se')"
+        />
+        <div
+          class="hotzone --sw"
+          @mousedown="onResizerStart($event, 'sw')"
+          @touchstart="onResizerStart($event, 'sw')"
+        />
+
+        <div class="UiWindow__header">
+          <slot name="header">
+            <UiItem
+              class="header-item"
+              :text="inner.text || 'Ventana'"
+              :icon="inner.icon || 'mdi:rectangle-outline'"
+              @mousedown="onResizerStart($event, 'move')"
+              @touchstart="onResizerStart($event, 'move')"
+            />
+          </slot>
+
+          <div
+            style="flex:1; align-self: stretch;"
+            @mousedown="onResizerStart($event, 'move')"
+            @touchstart="onResizerStart($event, 'move')"
+          />
+
+          <UiPopover>
+            <template #trigger>
+              <UiIcon
+                :src="inner.dock
+                  ? (inner.dock == 'popup' ? 'mdi:window-restore' : `mdi:dock-${inner.dock}`)
+                  : 'mdi:card-outline'"
+                class="ui--clickable"
+                :class="{'--active': !inner.dock}"
+              />
+            </template>
+            <template #contents="popover">
+              <div @click="popover.close()">
+                <UiIcon
+                  src="mdi:card-outline"
+                  class="ui--clickable"
+                  :class="{'--active': !inner.dock}"
+                  @click="setDock(null)"
+                />
+
+                <UiIcon
+                  src="mdi:dock-bottom"
+                  class="ui--clickable"
+                  :class="{'--active': inner.dock == 'bottom'}"
+                  @click="setDock('bottom')"
+                />
+
+                <UiIcon
+                  src="mdi:dock-top"
+                  class="ui--clickable"
+                  :class="{'--active': inner.dock == 'top'}"
+                  @click="setDock('top')"
+                />
+
+                <UiIcon
+                  src="mdi:dock-left"
+                  class="ui--clickable"
+                  :class="{'--active': inner.dock == 'left'}"
+                  @click="setDock('left')"
+                />
+
+                <UiIcon
+                  src="mdi:dock-right"
+                  class="ui--clickable"
+                  :class="{'--active': inner.dock == 'right'}"
+                  @click="setDock('right')"
+                />
+
+                <UiIcon
+                  src="mdi:window-restore"
+                  class="ui--clickable"
+                  :class="{'--active': inner.dock == 'popup'}"
+                  @click="setDock('popup')"
+                />
+              </div>
+            </template>
+          </UiPopover>
+
+          <UiIcon
+            src="mdi:close"
+            class="ui--clickable window-close"
+            @click="hide(); close()"
+          />
+        </div>
+
+        <PopupBridge ref="refBridge">
+          <template #default>
+            <div class="UiWindow__body">
+              <slot
+                name="contents"
+                :close="close"
+              >
+                <slot
+                  name="default"
+                  :close="close"
+                />
+              </slot>
+            </div>
+          </template>
+          <template #footer>
+            <footer class="UiWindow__footer ui-footer">
+              <slot
+                name="footer"
+                :close="close"
+              />
+            </footer>
+          </template>
+        </PopupBridge>
+      </div>
+    </div>
+  </div>
+</template>
+
 <style lang="scss">
 .UiWindow {
   $hotzone-size: 14px;
   $hotzone-offset: 12px; // distancia a desplazar el hotzone hacia afuera de la ventana
 
   &.--external {
-    display: none;
+    // display: none;
+    opacity: 0.4;
+    pointer-events: none;
   }
 
   &.--docked {
@@ -498,7 +546,7 @@ export default {
     }
   }
 
-  .UiWindow__container {
+  &__container {
     background-color: rgba(0, 0, 0, 0.04); // SCRIM
     position: fixed;
     top: 0;
@@ -513,27 +561,71 @@ export default {
     pointer-events: none;
   }
 
-  .UiWindow__contents {
-    pointer-events: initial;
-    display: flex;
-    flex-direction: column;
+  &__dropzone {
+    position: absolute;
+    z-index: 3;
 
-    .UiWindow__body {
-      flex: 1;
-      overflow: auto;
+    &:hover {
+      background-color: var(--ui-color-primary);
+      opacity: 0.2;
+    }
+
+    &--top {
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 72px;
+    }
+
+    &--bottom {
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 72px;
+    }
+
+    &--right {
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 128px;
+    }
+
+    &--left {
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 128px;
     }
   }
 
-  .UiWindow__header,
-  .UiWindow__footer {
+  &__contents {
+    pointer-events: initial;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__body {
+    flex: 1;
+    overflow: auto;
+  }
+
+  &__header,
+  &__footer {
     cursor: move;
     overflow: hidden;
     flex-wrap: nowrap;
   }
 
-  .UiWindow__header {
+  &__header {
+    display: flex;
     align-items: center;
     background-color: transparent;
+
+    .ui--clickable {
+      min-width: 32px;
+      min-height: 32px;
+    }
 
     .header-item {
       flex: 1;
@@ -548,14 +640,16 @@ export default {
     }
   }
 
-  .UiWindow__contents {
+  &__contents {
     position: absolute;
     min-width: 200px;
     min-height: 200px;
 
-    // background-color: var(--ui-color-background);
-    background-color: #fff;
-    border-radius: var(--ui-radius);
+    // // background-color: var(--ui-color-background);
+    // // background-color: #fff;
+    // background-color: #2f2f2f;
+    // color: rgb(255 255 255 / 70%);
+    // border-radius: var(--ui-radius);
 
     .hotzone {
       position: absolute;

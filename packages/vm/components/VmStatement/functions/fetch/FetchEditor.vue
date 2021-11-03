@@ -4,7 +4,7 @@
       <UiInput label="Method">
         <select
           v-model="innerValue.args.options.method"
-          class="ui-native"
+          class="ui__input"
           @change="emitInput"
         >
           <option value="get">
@@ -28,7 +28,7 @@
       >
         <input
           v-model="innerValue.args.url"
-          class="ui-native fetch-url"
+          class="ui__input fetch-url"
           type="text"
           placeholder="https:// ... "
           style="width:100%"

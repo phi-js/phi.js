@@ -15,7 +15,7 @@ item.--active
 */
 
 .ui-toolbar {
-  @extend .ui-noselect;
+  @extend .ui--noselect;
   display: inline-flex;
   // flex-wrap: wrap;
   // overflow-x: auto;
@@ -62,13 +62,13 @@ item.--active
     color: #333;
   }
 
-  .ui-clickable {
-    cursor: pointer;
-    &:hover {
-      color: #fff;
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-  }
+  // .ui--clickable {
+  //   cursor: pointer;
+  //   &:hover {
+  //     color: #fff;
+  //     background-color: rgba(255, 255, 255, 0.2);
+  //   }
+  // }
 }
 
 .ui-toolbar-item {
@@ -189,10 +189,10 @@ item.--active
   .ui-toolbar-item {
     color: rgba(0, 0, 0, 0.7);
 
-    .ui-clickable:hover,
-    &.ui-clickable:hover {
-      color: var(--ui-color-primary);
-    }
+    // .ui--clickable:hover,
+    // &.ui--clickable:hover {
+    //   color: var(--ui-color-primary);
+    // }
 
     &.--active {
       color: var(--ui-color-primary);

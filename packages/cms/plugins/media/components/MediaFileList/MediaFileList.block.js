@@ -29,7 +29,7 @@ export default {
       },
     },
 
-    face: {
+    _face: {
       'component': UiUpload,
       'v-model': 'block.props.files',
       'props': {

@@ -87,7 +87,6 @@ function onSelectChange($evt) {
   background: transparent;
   font-family: var(--ui-font-secondary);
   font-size: 13px;
-  font-weight: bold;
   max-width: 100%;
 
   cursor: pointer;

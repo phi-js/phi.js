@@ -7,7 +7,7 @@
       />
       <UiIcon
         value="mdi:pencil media-file-icon"
-        class="ui-clickable"
+        class="ui--clickable"
         @click="isEditing = true"
       ></UiIcon>
     </div>

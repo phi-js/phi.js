@@ -104,21 +104,21 @@ function deifify(item, i) {
           <template #actions>
             <UiIcon
               v-if="!element?.do?.if"
-              class="item-action-icon ui-clickable"
+              class="item-action-icon ui--clickable"
               src="mdi:help-rhombus"
               title="IFify"
               @click.stop="ifify(element, index)"
             />
             <UiIcon
               v-else
-              class="item-action-icon ui-clickable"
+              class="item-action-icon ui--clickable"
               src="mdi:close-network"
               title="de-IFify"
               @click.stop="deifify(element, index)"
             />
             <UiIcon
               src="mdi:close"
-              class="ui-clickable"
+              class="ui--clickable"
               @click.stop="removeItem(index)"
             />
           </template>

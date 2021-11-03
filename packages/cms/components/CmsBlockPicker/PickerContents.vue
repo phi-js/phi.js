@@ -233,7 +233,7 @@ export default {
     },
 
     focus() {
-      this.$el.querySelector('.PickerContents__search')?.focus()
+      this.$refs.inputSearch?.focus()
     },
   },
 }
@@ -243,8 +243,8 @@ export default {
   <div class="PickerContents">
     <div class="launcher-input">
       <input
+        ref="inputSearch"
         v-model="text"
-        class="PickerContents__search"
         type="text"
         :placeholder="placeholder"
         @keydown.enter.prevent.stop="autoCreate()"
@@ -272,7 +272,7 @@ export default {
         />
       </div>
 
-      <div class="launcher-picker">
+      <div class="launcher-picker ui--noselect">
         <div class="launcher-picker-items">
           <div
             v-for="component in currentTabBlocks"
@@ -315,21 +315,18 @@ export default {
       background: transparent;
       padding: var(--ui-padding);
       resize: vertical;
-      outline-color: var(--ui-color-primary);
-
-      &::placeholder {
-        color: rgba(0, 0, 0, 0.3);
-      }
+      color: inherit;
+      outline: none;
     }
   }
 
   .launcher-picker-items {
     display: flex;
-    align-items: flex-start;
+    align-items: stretch;
     flex-wrap: wrap;
 
     .launcher-picker-item {
-      width: 100px;
+      width: 110px;
 
       cursor: pointer;
       margin: 6px;
@@ -338,24 +335,23 @@ export default {
       text-align: center;
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.02);
+        background-color: rgba(255, 255, 255, 0.1);
       }
 
       .picker-item-icon {
-        color: #666;
         width: 48px;
         height: 48px;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: auto;
+
+        font-size: 1.8em;
       }
 
       h3 {
-        color: #333;
         font-family: var(--ui-font-secondary);
         font-size: 12px;
-        font-weight: 500;
       }
     }
   }

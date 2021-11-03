@@ -1,0 +1,76 @@
+.ui__input-base {
+  padding: $ui-padding-vertical;
+  font-size: 1em;
+  color: rgba(0, 0, 0, 0.8);
+
+  outline-color: var(--ui-color-primary);
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: rgba(0, 0, 0, 0.3);
+  }
+}
+
+.ui__input-input {
+  @extend .ui-inset;
+  @extend .ui__input-base;
+
+  min-height: 40px;
+}
+
+.ui__input-select {
+  @extend .ui-inset;
+  @extend .ui__input-base;
+
+  min-height: 40px;
+
+  &[multiple] {
+    padding: 0;
+  }
+
+  option {
+    // padding: $ui-padding;
+    padding: 3px;
+
+    &:hover {
+      // background-color: $ui-color-highlight;
+      background-color: var(--ui-color-highlight);
+    }
+
+    &:checked {
+      background-color: var(--ui-color-highlight);
+    }
+  }
+
+  // &:hover {
+  //     color: #444645;
+  //     background: #ddd;
+  // }
+}
+
+.ui__input-textarea {
+  @extend .ui-inset;
+  @extend .ui__input-base;
+
+  // display: block;  // Esto causa que chrome aplique una margen derecha al usar el resize nativo del textarea (!!!)
+  // min-height: 96px;
+}
+
+input.ui__input,
+.ui__input > input {
+  @extend .ui__input-input;
+}
+
+select.ui__input,
+.ui__input > select {
+  @extend .ui__input-select;
+}
+
+textarea.ui__input,
+.ui__input > textarea {
+  @extend .ui__input-textarea;
+}
+
+button.ui__input {
+  @extend .ui-button;
+}

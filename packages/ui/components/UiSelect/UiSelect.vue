@@ -225,12 +225,13 @@ const placeholderOption = computed(() => {
   >
     <UiPopover
       v-model:open="isOpen"
+      :tippy="{theme: 'light-border'}"
       placement="bottom-start"
       trigger=""
       @close="close()"
     >
       <template #trigger>
-        <div class="UiSelect__face ui-noselect ui-inset">
+        <div class="UiSelect__face ui--noselect ui__inset">
           <template
             v-for="option in visibleChips"
             :key="option.value"
@@ -238,12 +239,12 @@ const placeholderOption = computed(() => {
             <slot name="chip">
               <UiItem
                 v-bind="option"
-                class="UiChip ui-clickable"
+                class="UiChip ui--clickable"
                 @click="clickChip(option)"
               >
                 <template #actions>
                   <div
-                    class="UiChip__btn-close ui-clickable"
+                    class="UiChip__btn-close ui--clickable"
                     @click.stop="clickOption(option)"
                     @mouseenter="
                       $event.target
@@ -265,7 +266,7 @@ const placeholderOption = computed(() => {
 
           <div
             style="flex: 1; display: flex; align-items: center"
-            class="ui-clickable"
+            class="ui--clickable"
             @click="toggleDialog"
           >
             <slot
@@ -326,7 +327,7 @@ const placeholderOption = computed(() => {
                 v-bind="option"
               >
                 <UiItem
-                  class="UiOption ui-clickable ui-noselect"
+                  class="UiOption ui--clickable ui--noselect"
                   v-bind="option"
                   @click="clickOption(option)"
                 />

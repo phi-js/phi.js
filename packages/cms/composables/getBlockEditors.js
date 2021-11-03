@@ -92,6 +92,7 @@ export default async function getBlockEditors(block) {
       .map((action) => {
         // parse $settings in definitions
         action.props = parse(action.props, { $settings }, true)
+        action.icon = action?.icon || definition?.icon
         return action
       })
 

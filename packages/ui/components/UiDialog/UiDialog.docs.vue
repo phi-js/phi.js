@@ -31,7 +31,7 @@ function doCancel() {
   <UiDialog @cancel="doCancel">
     <template #trigger>
       <UiItem
-        class="ui-outset ui-clickable"
+        class="ui-outset ui--clickable"
         icon="mdi:window-maximize"
         text="Abrir Dialog"
       />
@@ -46,7 +46,7 @@ function doCancel() {
 
     <template #footer="{ close }">
       <div
-        class="ui-row --tight ui-padded"
+        class="ui-row --tight ui--padded"
         style="background-color: rgba(0, 0, 0, 0.02)"
       >
         <UiInput

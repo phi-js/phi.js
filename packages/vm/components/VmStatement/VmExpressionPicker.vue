@@ -3,7 +3,7 @@
     <UiPopover placement="bottom-start">
       <template #trigger>
         <UiItem
-          class="ui-clickable"
+          class="ui--clickable"
           icon="mdi:plus-circle"
           subtext="Agregar ..."
         />
@@ -13,14 +13,14 @@
         <div class="launcher-popover-contents">
           <div class="launcher-statements">
             <UiItem
-              class="ui-clickable"
+              class="ui--clickable"
               icon="mdi:help-rhombus"
               text="IF"
               @click="close(); launchIf()"
             />
 
             <UiItem
-              class="ui-clickable"
+              class="ui--clickable"
               icon="mdi:electric-switch"
               text="Switch"
               @click="close(); launchSwitch()"
@@ -32,13 +32,13 @@
               v-for="fn in functions"
               :key="fn.name"
               v-bind="fn"
-              class="ui-clickable"
+              class="ui--clickable"
               @click="close(); launchFunction(fn)"
             />
           </div>
 
           <UiItem
-            class="ui-clickable"
+            class="ui--clickable"
             icon="mdi:state-machine"
             text="Statement"
             @click="close(); launchBlankStatement()"

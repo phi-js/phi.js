@@ -46,6 +46,11 @@ const modelSchema = ref({
     },
   },
 })
+
+function debug() {
+  console.log('debug:', arguments)
+}
+
 </script>
 
 <template>
@@ -62,11 +67,12 @@ const modelSchema = ref({
       v-model:page="page"
       :settings="editorSettings"
       :model-schema="modelSchema"
+      @update:page="debug('page updated!')"
     />
-    <hr>
+    <!-- <hr>
     <CmsPage
       v-model="model"
       :page="page"
-    />
+    /> -->
   </div>
 </template>

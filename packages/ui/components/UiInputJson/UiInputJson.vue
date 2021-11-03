@@ -65,7 +65,7 @@ function pretify() {
   >
     <textarea
       v-model="stringValue"
-      class="ui-native UiInputJson__textarea"
+      class="UiInputJson__textarea ui__input"
       spellcheck="false"
       :placeholder="props.placeholder"
       @input="onTextareaInput"
@@ -76,7 +76,7 @@ function pretify() {
     <div class="UiInputJson__footer">
       <UiIcon
         v-if="isValid"
-        class="ui-clickable"
+        class="ui--clickable"
         src="mdi:check"
         title="Format JSON"
         @click="pretify"
@@ -97,6 +97,7 @@ function pretify() {
   &__textarea {
     display: block;
     min-height: 200px;
+    flex: 1;
   }
 
   &__footer {

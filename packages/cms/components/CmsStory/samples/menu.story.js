@@ -26,7 +26,7 @@ export default {
                         'props': {
                           text: 'Menú del día',
                           icon: 'mdi:food',
-                          class: 'ui-clickable',
+                          class: 'ui--clickable',
                         },
                         'v-on': {
                           click: {
@@ -42,7 +42,7 @@ export default {
                         'props': {
                           text: 'Entrantes',
                           icon: 'mdi:food',
-                          class: 'ui-clickable',
+                          class: 'ui--clickable',
                         },
                         'v-on': {
                           click: {
@@ -58,7 +58,7 @@ export default {
                         'props': {
                           text: 'Primeros',
                           icon: 'mdi:food',
-                          class: 'ui-clickable',
+                          class: 'ui--clickable',
                         },
                         'v-on': {
                           click: {

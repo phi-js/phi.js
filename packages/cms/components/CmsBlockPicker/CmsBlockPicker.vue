@@ -26,6 +26,7 @@ async function onPopoverOpen() {
   >
     <UiPopover
       v-model:open="isOpen"
+      class="CmsBlockPicker__popover"
       placement="bottom-start"
       @open="onPopoverOpen"
     >
@@ -34,9 +35,8 @@ async function onPopoverOpen() {
           name="trigger"
           v-bind="slotData"
         >
-          <div class="CmsBlockPicker__trigger ui-clickable">
+          <div class="CmsBlockPicker__trigger ui--clickable ui--noselect">
             <UiItem
-              class="trigger-item"
               icon="mdi:plus"
               text="Agregar contenido"
             />
@@ -45,13 +45,12 @@ async function onPopoverOpen() {
       </template>
 
       <template #contents="{close}">
-        <div class="CmsBlockPicker__popover">
-          <PickerContents
-            ref="refPickerContents"
-            v-bind="$attrs"
-            @input="close()"
-          />
-        </div>
+        <PickerContents
+          ref="refPickerContents"
+          class="CmsBlockPicker__tooltip"
+          v-bind="$attrs"
+          @input="close()"
+        />
       </template>
     </UiPopover>
   </div>
@@ -60,18 +59,19 @@ async function onPopoverOpen() {
 <style lang="scss">
 .CmsBlockPicker {
   &__popover {
-    max-width: 500px;
+    .tippy-arrow {
+      transform: translate(14px, 0) !important;
+    }
+  }
+
+  &__tooltip {
+    width: 490px;
     min-height: 300px;
   }
 
   &__trigger {
     border: 2px dashed rgba(0, 0, 0, 0.1);
     border-radius: var(--ui-radius);
-
-    .trigger-item {
-      display: inline-flex;
-      margin: auto;
-    }
   }
 }
 </style>

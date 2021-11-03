@@ -28,7 +28,7 @@ const selIndex = ref(0)
       <div
         v-for="file in files"
         :key="file.id"
-        class="UiPhotoGallery__thumbnail ui-clickable"
+        class="UiPhotoGallery__thumbnail ui--clickable"
         :style="{
           '--file-url': `url(${file.url})`,
           '--file-preview': `url(${file.preview})`,
@@ -44,7 +44,7 @@ const selIndex = ref(0)
     >
       <UiIcon
         src="mdi:close"
-        class="UiPhotoGallery__close ui-clickable"
+        class="UiPhotoGallery__close ui--clickable"
         @click="selectedFile = null"
       />
       <VueZoomerGallery

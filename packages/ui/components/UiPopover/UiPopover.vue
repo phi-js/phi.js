@@ -28,10 +28,11 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:open'])
+const emit = defineEmits(['update:open', 'open', 'close'])
 
 onMounted(() => {
   tippyInstance = tippy(elTrigger.value, {
+    plugins: [hideOnEsc],
     interactive: true,
     duration: [100, 50],
     content: elTooltip.value,
@@ -39,8 +40,15 @@ onMounted(() => {
     placement: props.placement,
     arrow: true,
     inertia: true,
-    onShow: () => emit('update:open', true),
-    onHide: () => emit('update:open', false),
+    maxWidth: 'none',
+    onShow: () => {
+      emit('update:open', true)
+      emit('open')
+    },
+    onHide: () => {
+      emit('update:open', false)
+      emit('close')
+    },
 
     ...props.tippy,
   })
@@ -51,6 +59,28 @@ onUnmounted(() => tippyInstance.destroy())
 function close() {
   tippyInstance.hide()
 }
+
+const hideOnEsc = {
+  name: 'hideOnEsc',
+  defaultValue: true,
+  fn({ hide }) {
+    function onKeyDown(event) {
+      if (event.keyCode === 27) {
+        hide()
+      }
+    }
+
+    return {
+      onShow() {
+        document.addEventListener('keydown', onKeyDown)
+      },
+      onHide() {
+        document.removeEventListener('keydown', onKeyDown)
+      },
+    }
+  },
+}
+
 </script>
 
 <template>

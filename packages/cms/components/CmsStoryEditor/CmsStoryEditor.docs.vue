@@ -47,4 +47,7 @@ const model = ref({
     v-model:activeNodeId="activeNodeId"
     :story="story"
   />
+
+  <hr>
+  <pre>story: {{ story }}</pre>
 </template>

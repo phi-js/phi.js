@@ -8,7 +8,7 @@
       @focus="doOpen"
     >
       <slot name="default">
-        <span class="ui-clickable">{{ innerValue || placeholder }}</span>
+        <span class="ui--clickable">{{ innerValue || placeholder }}</span>
       </slot>
     </div>
 

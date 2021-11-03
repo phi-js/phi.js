@@ -3,7 +3,7 @@
     <UiItem
       v-bind="sanitizedValue"
       @click="isEditing = true"
-      class="ui-clickable"
+      class="ui--clickable"
     />
 
     <div

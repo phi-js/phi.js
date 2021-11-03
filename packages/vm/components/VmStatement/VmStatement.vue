@@ -1,6 +1,6 @@
 <script setup>
 import { computed, defineAsyncComponent } from 'vue'
-import { UiInput } from '/packages/ui/components'
+import { UiInputJson } from '/packages/ui/components'
 
 const StmtAndOr = defineAsyncComponent(() => import('./statements/StmtAndOr.vue'))
 const StmtOp = defineAsyncComponent(() => import('./statements/StmtOp.vue'))
@@ -61,7 +61,7 @@ const editor = computed(() => {
     || typeof _modelValue.value != 'object'
     || Array.isArray(_modelValue.value)
   ) {
-    return { component: UiInput, props: { type: 'json' } }
+    return { component: UiInputJson }
   }
 
   if (typeof _modelValue.value.function != 'undefined') {
@@ -100,7 +100,7 @@ const editor = computed(() => {
     return { component: StmtAndOr }
   }
 
-  return { component: UiInput, props: { type: 'json' } }
+  return { component: UiInputJson }
 })
 </script>
 

@@ -26,7 +26,7 @@ const tabValue = ref('1')
       <template #tab="{select}">
         <h1>JEJEJE</h1>
         <small
-          class="ui-clickable"
+          class="ui--clickable"
           @click="select()"
         >select me</small>
       </template>

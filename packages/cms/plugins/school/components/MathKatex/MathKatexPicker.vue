@@ -2,7 +2,7 @@
   <div class="math-katex-picker">
     <MathKatex
       :value="value"
-      class="ui-clickable"
+      class="ui--clickable"
       @click.native="isOpen = !isOpen"
     />
 
@@ -40,7 +40,7 @@
           v-show="results.length > 0"
         >
           <MathKatex
-            class="ui-clickable"
+            class="ui--clickable"
             v-for="(result,i) in results"
             :key="i"
             @mousedown.native="onClickResult(result)"
