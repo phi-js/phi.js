@@ -1,5 +1,5 @@
 <script setup>
-import { ref, toRef, unref, computed, nextTick, watch } from 'vue'
+import { ref, toRef, unref, computed, watch } from 'vue'
 import { UiItem, UiIcon, UiPopover } from '/packages/ui/components'
 import useOptionsManager from './composables/useOptionsManager.js'
 import useSelectionManager from './composables/useSelectionManager.js'
@@ -154,8 +154,7 @@ async function open(setFocusedIndex = null) {
     }
   }
 
-  await nextTick()
-  searchElem.value.focus()
+  setTimeout(() => searchElem.value.focus(), 22)
   emit('focus')
 }
 
