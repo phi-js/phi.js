@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import tippy from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/light-border.css'
@@ -59,6 +59,15 @@ onUnmounted(() => tippyInstance.destroy())
 function close() {
   tippyInstance.hide()
 }
+
+watch(
+  () => props.open,
+  (newValue) => {
+    if (!newValue) {
+      tippyInstance.hide()
+    }
+  },
+)
 
 const hideOnEsc = {
   name: 'hideOnEsc',
