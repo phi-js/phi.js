@@ -75,6 +75,7 @@ const classNames = computed(() => {
     (Array.isArray(props.modelValue) && !props.modelValue.length)
 
   return [
+    attrs.class,
     `UiInput--type-${props.type}`,
     {
       'UiInput--empty': isEmpty,
@@ -100,6 +101,8 @@ const elementProps = computed(() => {
   return {
     ...props,
     ...attrs,
+    'class': undefined,
+    'style': undefined,
     'onFocus': (evt) => setFocused(true, evt),
     'onBlur': (evt) => setFocused(false, evt),
     'onUpdate:modelValue': (newValue) => emit('update:modelValue', newValue),
