@@ -1,7 +1,8 @@
 import { UiForm } from '/packages/ui/components'
 
 const MediaImage = () => import('./MediaImage.vue')
-const MediaImagePicker = () => import('./MediaImagePicker.vue')
+const MediaImageToolbar = () => import('./MediaImageToolbar.vue')
+const MediaImageEditor = () => import('./MediaImageEditor.vue')
 
 export default {
   name: 'MediaImage',
@@ -14,9 +15,14 @@ export default {
   },
 
   editor: {
+    toolbar: {
+      'component': MediaImageToolbar,
+      'v-model': 'block.props',
+    },
+
     face: {
-      'component': MediaImagePicker,
-      'v-model': 'block.props.src',
+      'component': MediaImageEditor,
+      'v-model': 'block.props',
       'props': { endpoint: '{{ $settings.uploads.endpoint }}' },
     },
 

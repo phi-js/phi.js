@@ -1,127 +1,110 @@
-<template>
-  <div
-    :class="['MediaImage', {'ui--clickable': !!href}]"
-    :style="containerStyle"
-    @click="onClick()"
-  >
-    <img
-      v-if="src && !isError"
-      :src="src"
-      :style="imgStyle"
-      @error="onImageError"
-    >
-    <div
-      v-else
-      class="media-image-placeholder"
-    />
-  </div>
-</template>
+<script setup>
+import { ref, computed, watch } from 'vue'
 
-<script>
-export default {
-  name: 'MediaImage',
-  props: {
-    src: {
-      type: String,
-      required: false,
-      default: null,
-    },
-
-    align: {
-      type: String,
-      required: false,
-      default: 'center', // left, right, center
-    },
-
-    width: {
-      type: String,
-      required: false,
-      default: 'auto', // CSS width property applied to <img> element
-    },
-
-    href: {
-      type: String,
-      required: false,
-      default: null,
-    },
-
-    height: {
-      type: [Number, String],
-      required: false,
-      default: 350,
-    },
-
-    sizing: {
-      type: String,
-      required: false,
-      default: 'contain', // "cover" o "contain"
-    },
-
-    attachment: {
-      type: String,
-      required: false,
-      default: null,
-    },
+const props = defineProps({
+  src: {
+    type: String,
+    required: false,
+    default: null,
   },
 
-  data() {
-    return { isError: false }
+  href: {
+    type: String,
+    required: false,
+    default: null,
   },
 
-  computed: {
-    imgStyle() {
-      return { width: this.width || '' }
-    },
-
-    containerStyle() {
-      return { textAlign: this.align }
-      // return {
-      //   backgroundImage: this.src ? `url(${this.src})` : '',
-      //   backgroundSize: this.sizing,
-      //   backgroundRepeat: 'no-repeat',
-      //   backgroundPosition: '50% 0',
-      //   backgroundAttachment: this.attachment,
-      //   height: parseInt(this.height) + 'px',
-      // };
-    },
+  align: {
+    type: String,
+    required: false,
+    default: 'center', // left, right, center
   },
 
-  watch: {
-    src: {
-      immediate: true,
-      handler() {
-        this.isError = false
-      },
-    },
+  width: {
+    type: String,
+    required: false,
+    default: 'auto', // CSS width property applied to <img> element
   },
 
-  methods: {
-    onClick() {
-      this.$emit('click')
-      if (!this.href) {
-        return
-      }
-
-      window.open(this.href, '_system')
-    },
-
-    onImageError() {
-      this.isError = true
-    },
+  height: {
+    type: [Number, String],
+    required: false,
+    default: null, // CSS height property applied to container element
   },
+
+})
+
+const isError = ref(false)
+const containerStyle = computed(() => ({
+  textAlign: props.align,
+  height: props.height || undefined,
+  backgroundPosition: `top ${props.align}`,
+  backgroundRepeat: 'no-repeat',
+  backgroundImage: `url(${props.src})`,
+  backgroundSize: 'contain',
+}))
+
+const imgStyle = computed(() => ({
+  width: props.width || undefined,
+  opacity: 0,
+  // opacity: 0.5, border: '2px dashed red',
+}))
+
+watch(
+  () => props.src,
+  (newValue) => isError.value = !newValue,
+  { immediate: true },
+)
+
+function onImageError() {
+  isError.value = true
 }
 </script>
 
+<template>
+  <div
+    class="MediaImage"
+    :style="containerStyle"
+  >
+    <div
+      v-if="isError"
+      class="MediaImage__placeholder"
+    />
+    <template v-else>
+      <a
+        v-if="href"
+        :href="href"
+        target="_system"
+        class="MediaImage__link ui--clickable"
+      >
+        <img
+          class="MediaImage__img"
+          :src="src"
+          :style="imgStyle"
+          @error="onImageError"
+        >
+      </a>
+      <img
+        v-else
+        class="MediaImage__img"
+        :src="src"
+        :style="imgStyle"
+        @error="onImageError"
+      >
+    </template>
+  </div>
+</template>
+
 <style lang="scss">
 .MediaImage {
-  & > img {
-    display: inline-block;
+  &__img {
+    display: inline-block; // inline-block para reacionar a text-align del padre
     margin: auto;
-    // width: 100%;
     max-width: 100%;
+    max-height: 100%;
   }
 
-  .media-image-placeholder {
+  &__placeholder {
     width: 100%;
     max-width: 100%;
     height: 256px;
