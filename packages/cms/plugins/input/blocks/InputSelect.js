@@ -44,10 +44,10 @@ export default {
                 text: 'Picker',
                 value: 'select',
               },
-              {
-                text: 'Nativo',
-                value: 'select-native',
-              },
+              // {
+              //   text: 'Nativo',
+              //   value: 'select-native',
+              // },
               {
                 text: 'Lista',
                 value: 'select-list',
