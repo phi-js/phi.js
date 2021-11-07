@@ -1,572 +1,360 @@
-<script>
-import { UiItem } from '../UiItem'
+<script setup>
+import { ref, watch, onMounted } from 'vue'
+
 import { UiIcon } from '../UiIcon'
 import { UiPopover } from '../UiPopover'
-import openWindow from './popup.js'
-import PopupBridge from './PopupBridge.vue'
+import { UiResizable } from '../UiResizable'
+import openWindow from './openWindow.js'
 
-export default {
-  name: 'UiWindow',
-  components: { UiItem, UiIcon, UiPopover, PopupBridge },
-
-  props: {
-    dock: {
-      type: String,
-      required: false,
-      default: null,
-      validator: (value) =>
-        ['top', 'right', 'bottom', 'left', 'popup', null].includes(value),
-    },
-
-    open: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-
-    icon: {
-      type: String,
-      required: false,
-      default: null,
-    },
-
-    text: {
-      type: String,
-      required: false,
-      default: null,
-    },
+const props = defineProps({
+  dock: {
+    type: String,
+    required: false,
+    default: null,
+    validator: (value) => [
+      'top',
+      'right',
+      'bottom',
+      'left',
+      'popup',
+      null,
+    ].includes(value),
   },
 
-  emits: ['update:open', 'update:dock', 'close', 'popup'],
+  open: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 
-  data() {
-    return {
-      inner: {
-        dock: null,
-        open: false,
-        icon: null,
-        text: null,
-      },
+  /** Nombre para guardar las coordenadas de la ventana en localStorage.  (null = no recordar) */
+  name: {
+    type: String,
+    required: false,
+    default: null,
+  },
+})
 
-      isDragging: false,
-      zone: null,
-      bounds: {
-        top: 10,
-        left: 10,
-        width: 800,
-        height: 600,
-      },
+const emit = defineEmits(['update:open', 'update:dock'])
 
-      start: {
-        x: null,
-        y: null,
-      },
+const coords = ref({
+  top: '64px',
+  left: '256px',
+  width: '1024px',
+  height: '768px',
+})
 
-      newBounds: {
-        top: null,
-        left: null,
-        width: null,
-        height: null,
-      },
-
-      dropTarget: null,
+onMounted(() => {
+  if (props.name) {
+    const storedCoords = JSON.parse(localStorage.getItem(`UiWindow-${props.name}`))
+    if (storedCoords) {
+      coords.value = storedCoords
+      dock.value = storedCoords.dock
     }
-  },
+  }
+})
 
-  computed: {
-    contentsStyle() {
-      let bounds = this.isDragging ? this.newBounds : this.bounds
+function storeCoords() {
+  if (!props.name) {
+    return
+  }
 
-      let retval = {
-        top: bounds.top + 'px',
-        left: bounds.left + 'px',
-        width: bounds.width + 'px',
-        height: bounds.height + 'px',
-      }
+  const targetValue = {
+    ...coords.value,
+    dock: dock.value,
+  }
 
-      switch (this.inner.dock) {
-      case 'top':
-        retval.top = 0
-        retval.right = 0
-        retval.bottom = null
-        retval.left = 0
-        retval.width = null
-        break
-
-      case 'right':
-        retval.top = 0
-        retval.right = 0
-        retval.bottom = 0
-        retval.left = null
-        retval.height = null
-        break
-
-      case 'bottom':
-        retval.top = null
-        retval.right = 0
-        retval.bottom = 0
-        retval.left = 0
-        retval.width = null
-        break
-
-      case 'left':
-        retval.top = 0
-        retval.right = null
-        retval.bottom = 0
-        retval.left = 0
-        retval.height = null
-        break
-      }
-
-      return retval
-    },
-  },
-
-  watch: {
-    dock: {
-      immediate: true,
-      handler(newValue) {
-        this.inner.dock = newValue
-      },
-    },
-
-    open: {
-      immediate: true,
-      handler(newValue) {
-        this.inner.open = newValue
-        this.inner.open && this.setDock(this.inner.dock) // resize <body>
-      },
-    },
-
-    icon: {
-      immediate: true,
-      handler(newValue) {
-        this.inner.icon = newValue
-      },
-    },
-
-    text: {
-      immediate: true,
-      handler(newValue) {
-        this.inner.text = newValue
-      },
-    },
-  },
-
-  methods: {
-    show() {
-      this.inner.open = true
-      this.$emit('update:open', this.inner.open)
-
-      this.setDock(this.inner.dock) // resize <body>
-    },
-
-    hide() {
-      this.inner.open = false
-      this.$emit('update:open', this.inner.open)
-
-      /// !!! resize <body>
-      document.body.style.setProperty('margin-top', 'initial')
-      document.body.style.setProperty('margin-right', 'initial')
-      document.body.style.setProperty('margin-bottom', 'initial')
-      document.body.style.setProperty('margin-left', 'initial')
-    },
-
-    close() {
-      this.inner.open = false
-      this.$emit('update:open', this.inner.open)
-      this.$emit('close')
-
-      /// !!! resize <body>
-      document.body.style.setProperty('margin-top', 'initial')
-      document.body.style.setProperty('margin-right', 'initial')
-      document.body.style.setProperty('margin-bottom', 'initial')
-      document.body.style.setProperty('margin-left', 'initial')
-    },
-
-    onResizerStart(evt, zone) {
-      if (!zone) {
-        return
-      }
-
-      evt.preventDefault()
-      let pointer = evt.type == 'touchstart' ? evt.touches[0] : evt
-
-      this.isDragging = true
-      this.zone = zone
-      this.start.x = pointer.clientX
-      this.start.y = pointer.clientY
-      this.newBounds = { ...this.bounds }
-    },
-
-    onResizerMove(evt) {
-      if (!this.isDragging) {
-        return
-      }
-
-      evt.preventDefault()
-      let pointer = evt.type == 'touchmove' ? evt.touches[0] : evt
-      let diff = {
-        x: pointer.clientX - this.start.x,
-        y: pointer.clientY - this.start.y,
-      }
-
-      switch (this.zone) {
-      case 'move':
-        this.newBounds.top = this.bounds.top + diff.y
-        this.newBounds.left = this.bounds.left + diff.x
-        break
-
-      case 'n':
-        this.newBounds.top = this.bounds.top + diff.y
-        this.newBounds.height = this.bounds.height - diff.y
-        break
-
-      case 'ne':
-        this.newBounds.top = this.bounds.top + diff.y
-        this.newBounds.height = this.bounds.height - diff.y
-
-        this.newBounds.width = this.bounds.width + diff.x
-        break
-
-      case 'e':
-        this.newBounds.width = this.bounds.width + diff.x
-        break
-
-      case 'se':
-        this.newBounds.width = this.bounds.width + diff.x
-        this.newBounds.height = this.bounds.height + diff.y
-        break
-
-      case 's':
-        this.newBounds.height = this.bounds.height + diff.y
-        break
-
-      case 'sw':
-        this.newBounds.height = this.bounds.height + diff.y
-
-        this.newBounds.left = this.bounds.left + diff.x
-        this.newBounds.width = this.bounds.width - diff.x
-        break
-
-      case 'w':
-        this.newBounds.left = this.bounds.left + diff.x
-        this.newBounds.width = this.bounds.width - diff.x
-        break
-
-      case 'nw':
-        this.newBounds.top = this.bounds.top + diff.y
-        this.newBounds.height = this.bounds.height - diff.y
-
-        this.newBounds.left = this.bounds.left + diff.x
-        this.newBounds.width = this.bounds.width - diff.x
-        break
-      }
-
-      /// !!! resize <body>
-      if (this.inner.dock) {
-        switch (this.inner.dock) {
-        case 'top':
-        case 'bottom':
-          document.body.style.setProperty(`margin-${this.inner.dock}`, `${this.newBounds.height}px`)
-          break
-        case 'left':
-        case 'right':
-          document.body.style.setProperty(`margin-${this.inner.dock}`, `${this.newBounds.width}px`)
-          break
-        }
-      }
-    },
-
-    onResizerEnd(evt) {
-      if (!this.isDragging) {
-        return
-      }
-      evt.preventDefault()
-      this.isDragging = false
-      this.bounds = { ...this.newBounds }
-
-      if (this.dropTarget) {
-        this.setDock(this.dropTarget)
-        this.dropTarget = null
-      }
-    },
-
-    setDock(newPosition) {
-      if (this.inner.dock != newPosition) {
-        this.inner.dock = newPosition
-        this.$emit('update:dock', this.inner.dock)
-        if (newPosition == 'popup') {
-          this.$emit('popup')
-          openWindow(this, () => {
-            this.setDock(null)
-            this.close()
-          })
-        }
-      }
-
-      /// !!! resize <body>
-      document.body.style.setProperty('margin-top', 'initial')
-      document.body.style.setProperty('margin-right', 'initial')
-      document.body.style.setProperty('margin-bottom', 'initial')
-      document.body.style.setProperty('margin-left', 'initial')
-
-      if (this.inner.dock) {
-        switch (this.inner.dock) {
-        case 'top':
-        case 'bottom':
-          document.body.style.setProperty(`margin-${this.inner.dock}`, `${this.bounds.height}px`)
-          break
-        case 'left':
-        case 'right':
-          document.body.style.setProperty(`margin-${this.inner.dock}`, `${this.bounds.width}px`)
-          break
-        }
-      }
-    },
-  },
+  localStorage.setItem(`UiWindow-${props.name}`, JSON.stringify(targetValue))
 }
+
+
+const isOpen = ref(false)
+watch(
+  () => props.open,
+  (newValue) => isOpen.value = newValue,
+  { immediate: true },
+)
+
+const dock = ref(false)
+watch(
+  () => props.dock,
+  (newValue) => dock.value = newValue,
+  { immediate: true },
+)
+
+const popupContents = ref()
+const isMoving = ref(false)
+const dropTarget = ref(null)
+
+function close() {
+  isOpen.value = false
+  emit('update:open', isOpen.value.value)
+}
+
+function dockTo(newPosition) {
+  dock.value = newPosition
+  emit('update:dock', dock.value)
+
+  if (dock.value == 'popup') {
+    openWindow(popupContents.value, () => close())
+  }
+
+  storeCoords()
+}
+
+const isHovered = ref(false)
 </script>
 
 <template>
   <div
-    v-show="inner.open"
-    class="UiWindow"
-    :class="{
-      'UiWindow--dragging': isDragging,
-      '--open': inner.open,
-      '--closed': !inner.open,
-      '--docked': !!inner.dock,
-      '--external': inner.dock == 'popup'
-    }"
-    @mousemove="onResizerMove($event)"
-    @mouseup="onResizerEnd($event)"
-    @touchmove="onResizerMove($event)"
-    @touchend="onResizerEnd($event)"
+    v-show="isOpen"
+    :class="[
+      'UiWindow UiWindow__scrim',
+      {
+        'UiWindow--moving': isMoving,
+        'UiWindow--open': isOpen,
+        'UiWindow--closed': !isOpen,
+        'UiWindow--docked': !!dock,
+        'UiWindow--external': dock == 'popup',
+        'UiWindow--seethru': isOpen && !isHovered
+      },
+      `UiWindow--docked-${dock}`
+    ]"
   >
     <div
-      class="UiWindow__container"
-      :class="dock ? `--dock-${inner.dock}` : null"
+      class="UiWindow__dockzone UiWindow__dockzone--top"
+      @mouseenter="dropTarget = 'top'"
+      @mouseleave="dropTarget = null"
+    />
+    <div
+      class="UiWindow__dockzone UiWindow__dockzone--bottom"
+      @mouseenter="dropTarget = 'bottom'"
+      @mouseleave="dropTarget = null"
+    />
+    <div
+      class="UiWindow__dockzone UiWindow__dockzone--left"
+      @mouseenter="dropTarget = 'left'"
+      @mouseleave="dropTarget = null"
+    />
+    <div
+      class="UiWindow__dockzone UiWindow__dockzone--right"
+      @mouseenter="dropTarget = 'right'"
+      @mouseleave="dropTarget = null"
+    />
+
+    <UiResizable
+      v-slot="{ startMove }"
+      v-model:coords="coords"
+      v-model:isMoving="isMoving"
+      class="UiWindow__box ui__box ui--z"
+      @update:coords="storeCoords"
+      @move-end="dockTo(dropTarget)"
+
+      @mouseenter="isHovered = true"
+      @mouseleave="isHovered = false"
     >
-      <div
-        class="UiWindow__dropzone UiWindow__dropzone--top"
-        @mouseenter="dropTarget = 'top'"
-        @mouseleave="dropTarget = null"
-      />
-      <div
-        class="UiWindow__dropzone UiWindow__dropzone--bottom"
-        @mouseenter="dropTarget = 'bottom'"
-        @mouseleave="dropTarget = null"
-      />
-      <div
-        class="UiWindow__dropzone UiWindow__dropzone--left"
-        @mouseenter="dropTarget = 'left'"
-        @mouseleave="dropTarget = null"
-      />
-      <div
-        class="UiWindow__dropzone UiWindow__dropzone--right"
-        @mouseenter="dropTarget = 'right'"
-        @mouseleave="dropTarget = null"
-      />
+      <div class="UiWindow__header">
+        <slot name="header" />
 
-      <div
-        class="UiWindow__contents ui__box ui--z"
-        :style="contentsStyle"
-      >
         <div
-          class="hotzone --n"
-          @mousedown="onResizerStart($event, 'n')"
-          @touchstart="onResizerStart($event, 'n')"
-        />
-        <div
-          class="hotzone --e"
-          @mousedown="onResizerStart($event, 'e')"
-          @touchstart="onResizerStart($event, 'e')"
-        />
-        <div
-          class="hotzone --s"
-          @mousedown="onResizerStart($event, 's')"
-          @touchstart="onResizerStart($event, 's')"
-        />
-        <div
-          class="hotzone --w"
-          @mousedown="onResizerStart($event, 'w')"
-          @touchstart="onResizerStart($event, 'w')"
-        />
-        <div
-          class="hotzone --ne"
-          @mousedown="onResizerStart($event, 'ne')"
-          @touchstart="onResizerStart($event, 'ne')"
-        />
-        <div
-          class="hotzone --nw"
-          @mousedown="onResizerStart($event, 'nw')"
-          @touchstart="onResizerStart($event, 'nw')"
-        />
-        <div
-          class="hotzone --se"
-          @mousedown="onResizerStart($event, 'se')"
-          @touchstart="onResizerStart($event, 'se')"
-        />
-        <div
-          class="hotzone --sw"
-          @mousedown="onResizerStart($event, 'sw')"
-          @touchstart="onResizerStart($event, 'sw')"
+          style="flex:1; align-self: stretch; cursor: move;"
+          @mousedown="startMove"
+          @touchstart="startMove"
         />
 
-        <div class="UiWindow__header">
-          <slot name="header">
-            <UiItem
-              class="header-item"
-              :text="inner.text || 'Ventana'"
-              :icon="inner.icon || 'mdi:rectangle-outline'"
-              @mousedown="onResizerStart($event, 'move')"
-              @touchstart="onResizerStart($event, 'move')"
+        <UiPopover>
+          <template #trigger>
+            <UiIcon
+              :src="dock
+                ? (dock == 'popup' ? 'mdi:window-restore' : `mdi:dock-${dock}`)
+                : 'mdi:card-outline'"
+              class="ui--clickable"
+              :class="{'--active': !dock}"
             />
-          </slot>
-
-          <div
-            style="flex:1; align-self: stretch;"
-            @mousedown="onResizerStart($event, 'move')"
-            @touchstart="onResizerStart($event, 'move')"
-          />
-
-          <UiPopover>
-            <template #trigger>
+          </template>
+          <template #contents="popover">
+            <div @click="popover.close()">
               <UiIcon
-                :src="inner.dock
-                  ? (inner.dock == 'popup' ? 'mdi:window-restore' : `mdi:dock-${inner.dock}`)
-                  : 'mdi:card-outline'"
+                src="mdi:card-outline"
                 class="ui--clickable"
-                :class="{'--active': !inner.dock}"
+                :class="{'--active': !dock}"
+                @click="dockTo(null)"
               />
-            </template>
-            <template #contents="popover">
-              <div @click="popover.close()">
-                <UiIcon
-                  src="mdi:card-outline"
-                  class="ui--clickable"
-                  :class="{'--active': !inner.dock}"
-                  @click="setDock(null)"
-                />
 
-                <UiIcon
-                  src="mdi:dock-bottom"
-                  class="ui--clickable"
-                  :class="{'--active': inner.dock == 'bottom'}"
-                  @click="setDock('bottom')"
-                />
+              <UiIcon
+                src="mdi:dock-bottom"
+                class="ui--clickable"
+                :class="{'--active': dock == 'bottom'}"
+                @click="dockTo('bottom')"
+              />
 
-                <UiIcon
-                  src="mdi:dock-top"
-                  class="ui--clickable"
-                  :class="{'--active': inner.dock == 'top'}"
-                  @click="setDock('top')"
-                />
+              <UiIcon
+                src="mdi:dock-top"
+                class="ui--clickable"
+                :class="{'--active': dock == 'top'}"
+                @click="dockTo('top')"
+              />
 
-                <UiIcon
-                  src="mdi:dock-left"
-                  class="ui--clickable"
-                  :class="{'--active': inner.dock == 'left'}"
-                  @click="setDock('left')"
-                />
+              <UiIcon
+                src="mdi:dock-left"
+                class="ui--clickable"
+                :class="{'--active': dock == 'left'}"
+                @click="dockTo('left')"
+              />
 
-                <UiIcon
-                  src="mdi:dock-right"
-                  class="ui--clickable"
-                  :class="{'--active': inner.dock == 'right'}"
-                  @click="setDock('right')"
-                />
+              <UiIcon
+                src="mdi:dock-right"
+                class="ui--clickable"
+                :class="{'--active': dock == 'right'}"
+                @click="dockTo('right')"
+              />
 
-                <UiIcon
-                  src="mdi:window-restore"
-                  class="ui--clickable"
-                  :class="{'--active': inner.dock == 'popup'}"
-                  @click="setDock('popup')"
-                />
-              </div>
-            </template>
-          </UiPopover>
-
-          <UiIcon
-            src="mdi:close"
-            class="ui--clickable window-close"
-            @click="hide(); close()"
-          />
-        </div>
-
-        <PopupBridge ref="refBridge">
-          <template #default>
-            <div class="UiWindow__body">
-              <slot
-                name="contents"
-                :close="close"
-              >
-                <slot
-                  name="default"
-                  :close="close"
-                />
-              </slot>
+              <UiIcon
+                src="mdi:window-restore"
+                class="ui--clickable"
+                :class="{'--active': dock == 'popup'}"
+                @click="dockTo('popup')"
+              />
             </div>
           </template>
-          <template #footer>
-            <footer class="UiWindow__footer ui-footer">
-              <slot
-                name="footer"
-                :close="close"
-              />
-            </footer>
-          </template>
-        </PopupBridge>
+        </UiPopover>
+
+        <UiIcon
+          src="mdi:close"
+          class="ui--clickable window-close"
+          @click="close"
+        />
       </div>
-    </div>
+
+      <div
+        ref="popupContents"
+        class="UiWindow__contents"
+      >
+        <div class="UiWindow__body">
+          <slot
+            name="default"
+            :close="close"
+          />
+        </div>
+        <footer class="UiWindow__footer ui-footer">
+          <slot
+            name="footer"
+            :close="close"
+          />
+        </footer>
+      </div>
+    </UiResizable>
   </div>
 </template>
 
 <style lang="scss">
+/* Activar pointer-events (i.e. hovers de los dockzones) solo cuando la ventana se esta MOVIENDO */
 .UiWindow {
-  $hotzone-size: 14px;
-  $hotzone-offset: 12px; // distancia a desplazar el hotzone hacia afuera de la ventana
-
-  &.--external {
-    // display: none;
-    opacity: 0.4;
+  &__scrim {
     pointer-events: none;
   }
 
-  &.--docked {
-    .UiWindow__contents {
-      border-radius: 0;
-    }
+  &__box {
+    pointer-events: initial;
   }
 
-  &--dragging {
-    .UiWindow__container {
-      pointer-events: initial !important;
-    }
+  &--moving.UiWindow__scrim {
+    pointer-events: initial !important;
+  }
+}
+
+/* Dock positions and decorations */
+.UiWindow {
+  &--docked &__box {
+    border-radius: 0;
   }
 
-  &__container {
-    background-color: rgba(0, 0, 0, 0.04); // SCRIM
+  &--docked-top &__box {
+    width: auto !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: initial;
+    left: 0 !important;
+  }
+
+  &--docked-bottom &__box {
+    width: auto !important;
+    top: auto !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+  }
+
+  &--docked-left &__box {
+    height: auto !important;
+    top: 0 !important;
+    right: initial;
+    bottom: 0 !important;
+    left: 0 !important;
+  }
+
+  &--docked-right &__box {
+    height: auto !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: auto !important;
+  }
+}
+
+.UiWindow {
+  &--external {
+    // display: none;
+    opacity: 0.4;
+    // pointer-events: none;
+  }
+
+  &__scrim {
+    background-color: rgba(0, 0, 0, 0.02); // SCRIM
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 3;
-
-    display: flex;
-    flex-wrap: wrap;
-
-    pointer-events: none;
+    z-index: 10;
   }
 
-  &__dropzone {
+  &__box {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__contents {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__body {
+    flex: 1;
+    overflow: auto;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+
+    .ui--clickable {
+      min-width: 32px;
+      min-height: 32px;
+    }
+  }
+
+  &__dockzone {
     position: absolute;
     z-index: 3;
 
+    transition: all var(--ui-duration-snap);
+    background-color: var(--ui-color-primary);
+    opacity: 0;
+
     &:hover {
-      background-color: var(--ui-color-primary);
       opacity: 0.2;
     }
 
@@ -598,131 +386,21 @@ export default {
       width: 128px;
     }
   }
-
-  &__contents {
-    pointer-events: initial;
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__body {
-    flex: 1;
-    overflow: auto;
-  }
-
-  &__header,
-  &__footer {
-    cursor: move;
-    overflow: hidden;
-    flex-wrap: nowrap;
-  }
-
-  &__header {
-    display: flex;
-    align-items: center;
-    background-color: transparent;
-
-    .ui--clickable {
-      min-width: 32px;
-      min-height: 32px;
-    }
-
-    .header-item {
-      flex: 1;
-
-      .item-body {
-        padding: 0;
-      }
-
-      h1 {
-        justify-content: left;
-      }
-    }
-  }
-
-  &__contents {
-    position: absolute;
-    min-width: 200px;
-    min-height: 200px;
-
-    // // background-color: var(--ui-color-background);
-    // // background-color: #fff;
-    // background-color: #2f2f2f;
-    // color: rgb(255 255 255 / 70%);
-    // border-radius: var(--ui-radius);
-
-    .hotzone {
-      position: absolute;
-      min-width: $hotzone-size;
-      min-height: $hotzone-size;
-
-      &.--n,
-      &.--s {
-        left: 0;
-        right: 0;
-
-        cursor: ns-resize;
-      }
-
-      &.--e,
-      &.--w {
-        top: 0;
-        bottom: 0;
-
-        cursor: ew-resize;
-      }
-
-      &.--ne,
-      &.--nw,
-      &.--n {
-        top: -$hotzone-offset;
-      }
-
-      &.--se,
-      &.--sw,
-      &.--s {
-        bottom: -$hotzone-offset;
-      }
-
-      &.--nw,
-      &.--sw,
-      &.--w {
-        left: -$hotzone-offset;
-      }
-
-      &.--ne,
-      &.--se,
-      &.--e {
-        right: -$hotzone-offset;
-      }
-
-      &.--n,
-      &.--e,
-      &.--s,
-      &.--w {
-        z-index: 1;
-      }
-
-      &.--nw,
-      &.--se {
-        cursor: nwse-resize;
-      }
-
-      &.--ne,
-      &.--sw {
-        cursor: nesw-resize;
-      }
-
-      &.--ne,
-      &.--nw,
-      &.--se,
-      &.--sw {
-        z-index: 2;
-
-        min-width: $hotzone-size + $hotzone-offset;
-        min-height: $hotzone-size + $hotzone-offset;
-      }
-    }
-  }
 }
+
+// .UiWindow {
+//   &--seethru {
+//     background-color: transparent;
+//   }
+
+//   &__box {
+//     transition: opacity var(--ui-duration-snap);
+//     opacity: 1;
+//   }
+
+//   &--seethru &__box {
+//     opacity: 0.5;
+//     backdrop-filter: blur(10px); // no esta funcionando en el contenido del scrim :(
+//   }
+// }
 </style>

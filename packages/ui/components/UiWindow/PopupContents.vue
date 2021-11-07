@@ -1,4 +1,6 @@
 <script setup>
+import { onMounted } from 'vue'
+
 const props = defineProps({
   uiWindow: {
     type: Object,
@@ -13,12 +15,18 @@ function close() {
 }
 
 const slotBindings = { close }
+
+onMounted(() => {
+  console.log('PopupContents montado', props.uiWindow)
+})
+
 </script>
 
 <template>
   <div class="PopupContents ui-theme-dark">
     <div class="ui__box">
-      <header>
+      <p>WELL WELL WELL</p>
+      <!-- <header>
         <component
           :is="props.uiWindow.$slots.header"
           v-bind="slotBindings"
@@ -39,7 +47,7 @@ const slotBindings = { close }
           :is="props.uiWindow.$slots.footer"
           v-bind="slotBindings"
         />
-      </footer>
+      </footer> -->
     </div>
   </div>
 </template>
