@@ -3,33 +3,31 @@ const UiVideoChaptersEditor = () => import('../../../../../ui/components/UiVideo
 const MediaVideoPicker = () => import('./MediaVideoPicker.vue')
 
 export default {
-  "id": "MediaVideo",
-  "title": "Video",
-  "icon": "mdi:youtube",
+  id: 'MediaVideo',
+  title: 'Video',
+  icon: 'mdi:youtube',
 
-  "block": {
-    "component": UiVideo,
-    "v-model": "video",
-    "props": {
-      "url": ""
-    }
+  block: {
+    'component': UiVideo,
+    'props': { url: '' },
+    'v-model': 'video',
+    'v-model:activeChapters': '',
   },
 
-  "editor": {
-    "face": {
-      "component": MediaVideoPicker,
-      "v-model": "block.props.url"
+  editor: {
+    face: {
+      'component': MediaVideoPicker,
+      'v-model': 'block.props.url',
+      'props': { endpoint: '{{ $settings.uploads.endpoint }}' },
     },
 
-    "actions": [
+    actions: [
       {
-        "title": "Capítulos",
-        "component": UiVideoChaptersEditor,
-        "v-model": "block.props.chapters",
-        "props": {
-          "url": "{{block.props.url}}"
-        }
-      }
-    ]
-  }
+        'title': 'Capítulos',
+        'component': UiVideoChaptersEditor,
+        'v-model': 'block.props.chapters',
+        'props': { url: '{{block.props.url}}' },
+      },
+    ],
+  },
 }

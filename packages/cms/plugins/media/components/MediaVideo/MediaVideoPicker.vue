@@ -1,6 +1,18 @@
 <template>
   <div class="MediaVideoPicker">
-    <div class="MediaVideoPicker__form">
+    <UiInput
+      v-if="endpoint"
+      type="url"
+      :endpoint="endpoint"
+      :model-value="modelValue"
+      placeholder="Video URL"
+      class="MediaVideoPicker__url"
+      @update:modelValue="$emit('update:modelValue', $event)"
+    />
+    <div
+      v-else
+      class="MediaVideoPicker__form"
+    >
       <input
         class="ui-native"
         type="text"
@@ -15,13 +27,19 @@
 </template>
 
 <script>
-import { UiVideo } from '../../../../../ui'
+import { UiVideo, UiInput } from '../../../../../ui'
 
 export default {
   name: 'MediaVideoPicker',
-  components: { UiVideo },
+  components: { UiVideo, UiInput },
   props: {
     modelValue: {
+      type: String,
+      required: false,
+      default: null,
+    },
+
+    endpoint: {
       type: String,
       required: false,
       default: null,
