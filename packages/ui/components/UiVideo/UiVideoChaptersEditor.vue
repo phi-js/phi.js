@@ -1,8 +1,8 @@
 <template>
   <div class="UiVideoChaptersEditor ui-row --top --tight">
     <div
-      class="editor-video"
       v-if="url"
+      class="editor-video"
     >
       <UiVideo
         :url="url"
@@ -20,90 +20,92 @@
         :class="{'ui-highlighted': chapter.isActive}"
       >
         <input
-          type="text"
-          class="ui-native"
           v-model="innerModel[i].name"
+          type="text"
+          class="ui__input"
           @input="emitInput"
-        />
+        >
         <input
-          type="number"
-          class="ui-native"
           v-model="innerModel[i].start"
-          placeholder="inicio (ms.)"
-          @input="emitInput"
-          style="width: 6em"
-        />
-        <input
           type="number"
-          class="ui-native"
-          v-model="innerModel[i].end"
-          placeholder="fin (ms.)"
-          @input="emitInput"
+          class="ui__input"
+          placeholder="inicio (ms.)"
           style="width: 6em"
-        />
+          @input="emitInput"
+        >
+        <input
+          v-model="innerModel[i].end"
+          type="number"
+          class="ui__input"
+          placeholder="fin (ms.)"
+          style="width: 6em"
+          @input="emitInput"
+        >
         <button
           type="button"
           class="ui-button"
           @click="removeChapter(i)"
         >
-          <UiIcon value="mdi:close" />
+          <UiIcon src="mdi:close" />
         </button>
       </div>
 
       <div class="chapter-item chapter-adder ui-group --block">
         <input
-          type="text"
-          class="ui-native"
           v-model="newChapter.name"
+          type="text"
+          class="ui__input"
           placeholder="Nombre"
-        />
+        >
         <input
-          type="number"
-          class="ui-native"
           v-model="newChapter.start"
+          type="number"
+          class="ui__input"
           placeholder="inicio (ms.)"
           style="width: 6em"
-        />
+        >
         <input
-          type="number"
-          class="ui-native"
           v-model="newChapter.end"
+          type="number"
+          class="ui__input"
           placeholder="fin (ms.)"
           style="width: 6em"
-        />
+        >
         <button
           type="button"
           class="ui-button"
-          @click="addChapter"
           :disabled="!newChapter.name || newChapter.start === null"
+          @click="addChapter"
         >
-          <UiIcon value="mdi:plus" />
+          <UiIcon src="mdi:plus" />
         </button>
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
-import UiVideo from './UiVideo.vue';
-import UiIcon from '../UiIcon/UiIcon.vue';
+import UiVideo from './UiVideo.vue'
+import UiIcon from '../UiIcon/UiIcon.vue'
 
 export default {
   name: 'UiVideoChaptersEditor',
   components: { UiVideo, UiIcon },
 
   props: {
-    value: {
-      required: false,
-      default: null,
+    url: {
+      type: String,
+      required: true,
     },
 
-    url: {
+    modelValue: {
+      type: Array,
       required: false,
       default: null,
     },
   },
+
+  emits: ['update:modelValue'],
 
   data() {
     return {
@@ -115,18 +117,7 @@ export default {
         start: null,
         end: null,
       },
-    };
-  },
-
-  watch: {
-    value: {
-      immediate: true,
-      handler(newValue) {
-        this.innerModel = Array.isArray(newValue)
-          ? JSON.parse(JSON.stringify(newValue))
-          : [];
-      },
-    },
+    }
   },
 
   computed: {
@@ -135,35 +126,46 @@ export default {
         ...chapter,
         isActive:
           chapter.start <= this.pointer && this.pointer < (chapter.end || Infinity),
-      }));
+      }))
+    },
+  },
+
+  watch: {
+    modelValue: {
+      immediate: true,
+      handler(newValue) {
+        this.innerModel = Array.isArray(newValue)
+          ? JSON.parse(JSON.stringify(newValue))
+          : []
+      },
     },
   },
 
   methods: {
     onTimeupdate(evt) {
-      this.pointer = evt.time;
-      this.newChapter.start = evt.time;
+      this.pointer = evt.time
+      this.newChapter.start = evt.time
     },
 
     emitInput() {
-      this.$emit('input', JSON.parse(JSON.stringify(this.innerModel)));
+      this.$emit('update:modelValue', JSON.parse(JSON.stringify(this.innerModel)))
     },
 
     addChapter() {
-      this.innerModel.push(this.newChapter);
+      this.innerModel.push(this.newChapter)
       this.newChapter = {
         name: '',
         start: null,
         end: null,
-      };
+      }
 
-      this.emitInput();
+      this.emitInput()
     },
 
     removeChapter(index) {
-      this.innerModel.splice(index, 1);
-      this.emitInput();
+      this.innerModel.splice(index, 1)
+      this.emitInput()
     },
   },
-};
+}
 </script>

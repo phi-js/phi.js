@@ -35,7 +35,7 @@ export default {
 
   props: {
     /**
-     * URL del video (YouTube, Vimeo o Microsoft)
+     * URL del video (YouTube, Vimeo, Microsoft, o URL para usar en <video src="URL" />)
      */
     url: {
       type: String,
@@ -79,7 +79,7 @@ export default {
     },
   },
 
-  emits: ['update:chapters', 'chapter-enter', 'chapter-leave'],
+  emits: ['update:activeChapters', 'chapter-enter', 'chapter-leave', 'timeupdate'],
 
   data() {
     return { innerChapters: [] }
@@ -107,33 +107,34 @@ export default {
     },
   },
 
-  mounted() {
-    this.innerChapters = []
-    let incoming = Array.isArray(this.chapters) ? this.chapters : []
-    for (let i = 0; i < incoming.length; i++) {
-      let chapter = incoming[i]
-      if (!chapter || typeof chapter != 'object') {
-        continue
-      }
-
-      this.innerChapters.push({
-        name: chapter.name || i,
-        start: chapter.start || 0,
-        end: chapter.end || Infinity,
-        _active: false,
-      })
-    }
+  watch: {
+    chapters: {
+      immediate: true,
+      handler(newChapters) {
+        let incoming = Array.isArray(newChapters) ? newChapters : []
+        this.innerChapters = incoming
+          .filter((chapter) => !!chapter && typeof chapter == 'object')
+          .map((chapter, i) => ({
+            name: chapter.name || i,
+            start: chapter.start || 0,
+            end: chapter.end || Infinity,
+            isActive: this.innerChapters[i]?.isActive,
+          }))
+      },
+    },
   },
 
   methods: {
     onTimeupdate(evt) {
+      this.$emit('timeupdate', evt)
+
       let activeChapters = []
       let hasChanged = false
       for (let i = 0; i < this.innerChapters.length; i++) {
         let c = this.innerChapters[i]
         let isActive = c.start <= evt.time && evt.time < c.end
-        if (isActive != c._active) {
-          c._active = isActive
+        if (isActive != c.isActive) {
+          c.isActive = isActive
           hasChanged = true
           this.$emit(isActive ? 'chapter-enter' : 'chapter-leave', c.name)
         }
@@ -144,7 +145,7 @@ export default {
       }
 
       if (hasChanged) {
-        this.$emit('update:chapters', activeChapters)
+        this.$emit('update:activeChapters', activeChapters)
       }
     },
 
