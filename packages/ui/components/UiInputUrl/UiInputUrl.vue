@@ -43,16 +43,25 @@ const emit = defineEmits(['update:modelValue'])
 
 <style lang="scss">
 .UiInputUrl {
-  display: inline-flex;
+  display: flex;
   overflow: hidden;
   flex-wrap: nowrap;
 
   &__input {
+    flex: 1;
     min-width: 300px;
     border: 0;
     outline: none;
     font-size: 1em;
     font-family: inherit;
+    background-color: transparent;
+    color: inherit;
+
+    padding: 0 var(--ui-padding-horizontal);
+
+    &::placeholder {
+      color: var(--ui-color-fg);
+    }
   }
 
   .UiUpload__files {

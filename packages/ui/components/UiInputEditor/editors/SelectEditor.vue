@@ -118,42 +118,34 @@ function deleteOption(index) {
   }
 
   &--type-select,
-  &--type-select-native {
+  &--type-select-native,
+  // &--type-select-list,
+  &--type-select-buttons {
     .SelectEditor__body {
-      max-width: 440px;
-
-      // Estilos de tippy-box
-      border-radius: 4px;
-      font-size: 14px;
-      line-height: 1.4;
-      white-space: normal;
-      outline: 0;
-      transition-property: transform,visibility,opacity;
-      background-color: #fff;
-      background-clip: padding-box;
-      border: 1px solid rgba(0,8,16,.15);
-      color: #333;
-      box-shadow: 0 4px 14px -2px rgb(0 8 16 / 8%);
+      border-radius: var(--ui-radius);
+      background-color: rgba(0,0,0, .035);
+      margin: var(--ui-breathe) 0;
     }
   }
-}
 
-.OptionEditor {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
+  // &--type-select,
+  // &--type-select-native {
+  //   .SelectEditor__body {
+  //     max-width: 440px;
 
-  &__input-text {
-    border: 0;
-    background: transparent;
-    font-size: inherit;
-  }
-
-  &__input-value {
-    border: 0;
-    border-radius: 3px;
-    padding: 4px 12px;
-    background-color: rgba(0, 0, 0, 0.06);
-  }
+  //     // Estilos de tippy-box
+  //     border-radius: 4px;
+  //     font-size: 14px;
+  //     line-height: 1.4;
+  //     white-space: normal;
+  //     outline: 0;
+  //     transition-property: transform,visibility,opacity;
+  //     background-color: #fff;
+  //     background-clip: padding-box;
+  //     border: 1px solid rgba(0,8,16,.15);
+  //     color: #333;
+  //     box-shadow: 0 4px 14px -2px rgb(0 8 16 / 8%);
+  //   }
+  // }
 }
 </style>

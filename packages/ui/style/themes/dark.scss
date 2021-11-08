@@ -15,7 +15,7 @@
   --ui-color-background: rgb(47 47 47);
 
   --ui-color-bg: #2f2f2f;
-  --ui-color-bg-1: rgba(255, 255, 255, 0.1);
+  --ui-color-bg-muted: rgba(255, 255, 255, 0.1);
 
   --ui-color-accent-fg: #0969da;
   --ui-color-accent-emphasis: #0969da;
@@ -46,6 +46,13 @@
       color: var(--ui-color-fg-default);
     }
 
+    &__inset {
+      background-color: var(--ui-color-bg-muted);
+      border-radius: var(--ui-radius);
+      color: var(--ui-color-fg-default);
+      padding: 2px;
+    }
+
     &__button {
       padding: var(--ui-padding);
       border-radius: var(--ui-radius);
@@ -72,7 +79,7 @@
 
     &__input {
       color: var(--ui-color-fg);
-      background-color: var(--ui-color-bg-1);
+      background-color: var(--ui-color-bg-muted);
 
       &::placeholder {
         color: var(--ui-color-fg-muted);

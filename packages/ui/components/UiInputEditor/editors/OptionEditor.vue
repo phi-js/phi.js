@@ -56,3 +56,26 @@ function onTextChange(newValue) {
     >
   </div>
 </template>
+
+<style lang="scss">
+
+.OptionEditor {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+
+  &__input-text {
+    border: 0;
+    background: transparent;
+    font-size: inherit;
+  }
+
+  &__input-value {
+    flex: 1;
+    border: 0;
+    border-radius: 3px;
+    padding: 4px 12px;
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+}
+</style>
