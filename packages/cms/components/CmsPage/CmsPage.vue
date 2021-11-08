@@ -94,13 +94,28 @@ async function evalPage(page) {
           let blockProps = block?.props ? await pageVm.eval(block.props, props.modelValue) : {}
           block.props = blockProps
 
-          // Handle v-model
+          // Handle v-model(s)
+          const changedModelValue = { ...props.modelValue }
+
+          // Default v-model
           if (typeof block['v-model'] !== 'undefined') {
             block.props.modelValue = getProperty(props.modelValue, block['v-model'])
             block.props['onUpdate:modelValue'] = (newValue) => {
-              let clone = { ...props.modelValue }
-              setProperty(clone, block['v-model'], newValue)
-              emit('update:modelValue', clone)
+              setProperty(changedModelValue, block['v-model'], newValue)
+              emit('update:modelValue', changedModelValue)
+            }
+          }
+
+          // Additional v-models (v-model:thing)
+          for (const propName in block) {
+            if (propName.substr(0, 8) === 'v-model:' && block[propName]) {
+              const targetName = block[propName]
+              const modelName = propName.substr(8)
+              block.props[modelName] = getProperty(props.modelValue, targetName)
+              block.props['onUpdate:' + modelName] = (newValue) => {
+                setProperty(changedModelValue, targetName, newValue)
+                emit('update:modelValue', changedModelValue)
+              }
             }
           }
 
