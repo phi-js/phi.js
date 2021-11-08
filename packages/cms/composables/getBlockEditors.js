@@ -27,6 +27,7 @@ import getBlockDefinition from './getBlockDefinition.js'
 import { UiInput } from '/packages/ui/components'
 import { VmStatement } from '/packages/vm/components'
 import BlockListenersEditor from '../components/CmsBlockEditor/BlockListenersEditor.vue'
+import BlockModelsEditor from '../components/CmsBlockEditor/BlockModelsEditor.vue'
 import { parse } from '../../vm/lib/utils'
 
 export default async function getBlockEditors(block) {
@@ -99,6 +100,9 @@ export default async function getBlockEditors(block) {
     retval.actions = actions
   }
 
+  // BUILT IN ACTIONS:
+
+  // v-if
   retval.actions.push({
     'title': 'v-if',
     'icon': 'mdi:vuejs',
@@ -107,16 +111,24 @@ export default async function getBlockEditors(block) {
     'v-model': 'block.v-if',
   })
 
-  if (definition?.block?.['v-model']) {
+  // v-model:* editor
+  let hasModels = false
+  for (const propName in definition.block) {
+    if (propName.substr(0, 7) === 'v-model') {
+      hasModels = true
+      break
+    }
+  }
+  if (hasModels) {
     retval.actions.push({
       'title': 'v-model',
       'icon': 'mdi:vuejs',
-      'component': UiInput,
-      'props': { type: 'text' },
-      'v-model': 'block.v-model',
+      'component': BlockModelsEditor,
+      'v-model': 'block',
     })
   }
 
+  // v-for
   retval.actions.push({
     'title': 'v-for',
     'icon': 'mdi:vuejs',
@@ -125,6 +137,7 @@ export default async function getBlockEditors(block) {
     'v-model': 'block.v-for',
   })
 
+  // v-on
   retval.actions.push({
     'title': 'v-on',
     'icon': 'mdi:vuejs',
@@ -132,6 +145,7 @@ export default async function getBlockEditors(block) {
     'v-model': 'block',
   })
 
+  // Raw block source editor
   retval.actions.push({
     title: 'Source',
     icon: 'mdi:vuejs',
