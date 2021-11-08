@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { getProperty, setProperty } from '../../functions'
+import { parse } from '../../../vm/lib/utils'
 
 const props = defineProps({
   block: {
@@ -31,6 +32,11 @@ const internalModel = computed({
     emit('update:block', newValue)
   },
 })
+
+const actionProps = computed(() => {
+  return parse(props.action.props, { block: props.block }, true)
+})
+
 </script>
 
 <template>
@@ -38,6 +44,6 @@ const internalModel = computed({
     :is="action.component"
     v-if="action.component"
     v-model="internalModel"
-    v-bind="{ ...$attrs, ...action.props}"
+    v-bind="{ ...$attrs, ...actionProps}"
   />
 </template>
