@@ -54,7 +54,7 @@ function emitUpdatePage() {
   emit('update:page', innerPage.value)
 }
 
-const pageSchema = computed(() => pageHelper.getDataSchema(innerPage.value))
+const pageSchema = computed(() => pageHelper.getModelSchema(innerPage.value))
 const combinedSchema = computed(() => ({
   type: 'object',
   properties: {
@@ -120,7 +120,8 @@ const isWindowOpen = ref(false)
       v-model:open="isWindowOpen"
       text="Page settings"
       icon="mdi:cog"
-      class="PageEditor__window"
+      class="PageEditor__window ui-theme-dark"
+      name="page-settings"
     >
       <UiTabs>
         <UiTab
@@ -137,6 +138,12 @@ const isWindowOpen = ref(false)
           icon="mdi:cog"
         >
           <VmStatement v-model="innerPage" />
+        </UiTab>
+        <UiTab
+          text="Schema"
+          icon="mdi:variable"
+        >
+          <pre>{{ pageSchema }}</pre>
         </UiTab>
       </UiTabs>
 

@@ -36,7 +36,6 @@ const story = ref()
 const currentNodeId = ref()
 
 const { hasUndo, hasRedo, undo, redo } = useHistory(story, (storedValue) => {
-  console.log('useHistory dice', storedValue)
   story.value = storedValue
   emitUpdate()
 })

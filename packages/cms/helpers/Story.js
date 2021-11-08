@@ -66,7 +66,7 @@ const Story = {
         continue;
       }
 
-      let schema = helperPage.getDataSchema(node.page);
+      let schema = helperPage.getModelSchema(node.page);
 
       retval.properties = {
         ...retval.properties,

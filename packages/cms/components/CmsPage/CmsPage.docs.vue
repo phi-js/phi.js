@@ -24,6 +24,12 @@ const model = ref({
     nombre: 'n',
     apellido: 'a',
   },
+  image: {
+    src: 'https://s3.amazonaws.com/phidias-api-1/desarrollodev/cms/pages/test/Best-Cheesecake-Recipe-2-1-of-1-4.jpg',
+    align: 'center',
+    width: 'auto',
+    href: 'https://phidias.co',
+  },
 })
 </script>
 

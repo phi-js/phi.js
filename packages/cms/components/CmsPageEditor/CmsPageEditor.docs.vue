@@ -6,7 +6,7 @@ import { UiInput } from '/packages/ui/components'
 
 import * as samplePages from '../../samples'
 
-const page = ref({ blocks: [] })
+const page = ref(samplePages.pageFoo)
 
 const availablePages = ref(Object.keys(samplePages).map((pageName) => ({
   text: `Page ${pageName}`,
@@ -51,6 +51,8 @@ function debug() {
   console.log('debug:', arguments)
 }
 
+const showPreview = ref(false)
+
 </script>
 
 <template>
@@ -69,10 +71,18 @@ function debug() {
       :model-schema="modelSchema"
       @update:page="debug('page updated!')"
     />
-    <!-- <hr>
+    <hr>
+    <label>
+      <input
+        v-model="showPreview"
+        type="checkbox"
+      >
+      Preview
+    </label>
     <CmsPage
+      v-if="showPreview"
       v-model="model"
       :page="page"
-    /> -->
+    />
   </div>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, shallowRef, watch, computed } from 'vue'
+import { ref, shallowRef, watch } from 'vue'
 import { UiIcon, UiItem, UiInputWedge, UiWindow, UiPopover, UiTabs, UiTab } from '../../../ui/components'
 import EditorAction from './EditorAction.vue'
 import { getBlockEditors } from '../../composables'
@@ -49,21 +49,16 @@ function openAction(targetActionIndex = null) {
 }
 
 function deleteBlock() {
-  // if (!confirm('Eliminar este bloque?')) {
-  //   return true
-  // }
   emit('delete')
   return true
 }
 
 const isPopoverOpen = ref(false)
 
-const actionsSelectOptions = computed(() =>
-  availableActions.value.map((action, i) => ({
-    value: i,
-    text: action.title,
-  })))
-
+function onClickEye() {
+  const ifActionIndex = availableActions.value.findIndex((action) => action['v-model'] == 'block.v-if')
+  openAction(ifActionIndex)
+}
 </script>
 
 <template>
@@ -75,9 +70,17 @@ const actionsSelectOptions = computed(() =>
     }"
   >
     <div class="BlockEditorLayout__toolbar ui-toolbar ui-theme-dark">
-      <UiIcon
-        src="mdi:cursor-move"
+      <UiItem
         class="BlockEditorLayout__handle ui--clickable"
+        icon="mdi:cursor-move"
+        text="Block"
+      />
+
+      <slot name="toolbar" />
+
+      <div
+        class="BlockEditorLayout__spacer"
+        style="flex:1"
       />
 
       <UiInputWedge
@@ -88,7 +91,13 @@ const actionsSelectOptions = computed(() =>
         @update:modelValue="accept()"
       />
 
-      <slot name="toolbar" />
+      <UiIcon
+        title="Visibility"
+        class="ui--clickable"
+        :src="blockValue['v-if'] ? 'mdi:eye' : 'mdi:eye-outline'"
+        :style="{color: blockValue['v-if'] ? 'var(--ui-color-primary)' : undefined}"
+        @click="onClickEye"
+      />
 
       <!-- dropdown options -->
       <UiPopover
@@ -129,37 +138,30 @@ const actionsSelectOptions = computed(() =>
     <UiWindow
       v-if="isWindowOpen"
       v-model:open="isWindowOpen"
+      name="block-settings"
       class="ui-theme-dark"
     >
-      <template #contents>
-        <!-- <UiInput
-          v-model="currentActionIndex"
-          class="Action__picker--input"
-          type="select-native"
-          :options="actionsSelectOptions"
-        /> -->
-        <UiTabs
-          v-model="currentActionIndex"
-          class="Action__picker--tabs"
-        >
-          <UiTab
-            v-for="(action, i) in availableActions"
-            :key="i"
-            :value="i"
-            :text="action.title"
-            :icon="action.icon || 'mdi:star'"
-          />
-        </UiTabs>
-        <div
-          :key="currentActionIndex"
-          class="Tab__contents"
-        >
-          <EditorAction
-            v-model:block="blockValue"
-            :action="availableActions[currentActionIndex]"
-          />
-        </div>
-      </template>
+      <UiTabs
+        v-model="currentActionIndex"
+        class="Action__picker--tabs"
+      >
+        <UiTab
+          v-for="(action, i) in availableActions"
+          :key="i"
+          :value="i"
+          :text="action.title"
+          :icon="action.icon || 'mdi:star'"
+        />
+      </UiTabs>
+      <div
+        :key="currentActionIndex"
+        class="Tab__contents"
+      >
+        <EditorAction
+          v-model:block="blockValue"
+          :action="availableActions[currentActionIndex]"
+        />
+      </div>
 
       <template #footer="{close}">
         <button
@@ -187,8 +189,6 @@ const actionsSelectOptions = computed(() =>
 }
 
 .BlockPopover {
-  margin-left: auto;
-
   .tippy-content {
     padding: 0;
   }
@@ -217,6 +217,22 @@ const actionsSelectOptions = computed(() =>
     transition: opacity var(--ui-duration-snap);
     opacity: 0;
     pointer-events: none;
+
+    z-index: 4;
+
+    flex-wrap: nowrap;
+    width: max-content; // No soportado en IE ni EDGE !!!
+  }
+
+  &__handle {
+    color: var(--ui-color-fg);
+    padding: 0;
+    padding-right: var(--ui-padding-horizontal);
+    margin-right: var(--ui-breathe);
+
+    &:hover {
+      background-color: var(--ui-color-bg-muted);
+    }
   }
 
   &--open,

@@ -129,7 +129,7 @@ const PageHelper = {
     return retval
   },
 
-  getDataSchema(page) {
+  getModelSchema(page) {
     let retval = {
       type: 'object',
       properties: {},
@@ -180,6 +180,28 @@ const PageHelper = {
 
         case 'InputCheckbox':
           field.type = 'boolean'
+          break
+
+        case 'MediaVideo':
+          field.type = 'object'
+          field.properties = { videoTime: { type: 'string' } }
+
+          if (Array.isArray(block?.props?.chapters)) {
+            field.properties.chapters = {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: block.props.chapters.map((chapter) => ({
+                  value: chapter.name,
+                  text: `${chapter.name} (${chapter.start}-${chapter.end})`,
+                })),
+              },
+            }
+          }
+
+          if (block?.['v-model:activeChapters']) {
+            retval.properties[block['v-model:activeChapters']] = field.properties.chapters
+          }
           break
 
         default:
