@@ -29,7 +29,7 @@ function onSelectChange($evt) {
   }
 
   if (parts[0] == 'prop') {
-    return emit('input', { field: parts[1], op: 'eq', args: '' })
+    return emit('input', { field: parts[1], op: null, args: null })
   }
 
   emit('input', {})

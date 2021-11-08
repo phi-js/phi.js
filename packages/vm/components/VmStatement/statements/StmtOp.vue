@@ -1,6 +1,6 @@
 <script setup>
-import { ref, unref, computed, reactive, watch, nextTick } from 'vue'
-import { UiInput, UiItem } from '/packages/ui/components'
+import { ref, unref, computed, reactive, watch, nextTick, onBeforeMount } from 'vue'
+import { UiItem } from '/packages/ui/components'
 import VmStatement from '../VmStatement.vue'
 import allOperators from '../operators'
 import useModelSchema from '../useModelSchema'
@@ -17,6 +17,32 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const innerModel = reactive({})
+
+onBeforeMount(() => {
+  if (innerModel.op === null) {
+    innerModel.op = availableOperators.value?.[0]?.operator
+  }
+})
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    let clone = newValue ? JSON.parse(JSON.stringify(newValue)) : newValue
+
+    Object.assign(
+      innerModel,
+      {
+        op: null,
+        field: null,
+        args: clone.args,
+      },
+      innerModel,
+      clone,
+    )
+  },
+  { immediate: true },
+)
+
 
 const fieldSchema = computed(() => {
   if (!innerModel.field) {
@@ -38,20 +64,8 @@ const isKnownOperator = computed(() => {
 })
 
 const customArgsComponent = computed(() => {
-  let operatorDefinition = availableOperators.value.find((opDef) => opDef.operator == innerModel?.op)
+  let operatorDefinition = availableOperators.value.find((opDef) => opDef.operator == innerModel.op)
   if (!operatorDefinition) {
-    // Fallback: Si hay un esquema con ENUM, mostrar simplemente un picker
-    if (fieldSchema.value?.enum) {
-      return {
-        component: UiInput,
-        props: {
-          type: 'select',
-          multiple: false,
-          options: fieldSchema.value.enum,
-        },
-      }
-    }
-
     return null
   }
 
@@ -67,6 +81,7 @@ function emitInput() {
 
 function onChangeOp() {
   emitInput()
+
   // Focus "custom" textarea
   if (!innerModel.op) {
     try {
@@ -76,25 +91,6 @@ function onChangeOp() {
     }
   }
 }
-
-watch(
-  () => props.modelValue,
-  (newValue) => {
-    let clone = newValue ? JSON.parse(JSON.stringify(newValue)) : newValue
-
-    Object.assign(
-      innerModel,
-      {
-        op: null,
-        field: null,
-        args: clone.args,
-      },
-      innerModel,
-      clone,
-    )
-  },
-  { immediate: true },
-)
 </script>
 
 <template>
@@ -121,7 +117,7 @@ watch(
         <select
           v-model="innerModel.op"
           class="op-picker-select"
-          @change="emitInput(); onChangeOp();"
+          @change="onChangeOp()"
         >
           <option
             v-for="(opDef, i) in availableOperators"

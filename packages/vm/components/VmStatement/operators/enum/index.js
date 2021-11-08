@@ -1,10 +1,22 @@
-import EqAny from './EqAny.vue'
+import EnumPicker from './EnumPicker.vue'
 
 export default [
   {
-    operator: 'eqAny',
+    operator: 'enum.any',
     icon: 'mdi:equal',
-    text: 'es cualquiera (enum)',
-    editor: { component: EqAny },
+    text: 'contiene cualquiera',
+    editor: { component: EnumPicker },
+  },
+  {
+    operator: 'enum.all',
+    icon: 'mdi:equal',
+    text: 'contiene todos',
+    editor: { component: EnumPicker },
+  },
+  {
+    operator: 'enum.eq',
+    icon: 'mdi:equal',
+    text: 'contiene exactamente',
+    editor: { component: EnumPicker },
   },
 ]

@@ -64,21 +64,21 @@ const editor = computed(() => {
     return { component: UiInputJson }
   }
 
-  if (typeof _modelValue.value.function != 'undefined') {
-    return { component: StmtFunction }
-  }
+  // if (typeof _modelValue.value.function != 'undefined') {
+  //   return { component: StmtFunction }
+  // }
 
-  if (typeof _modelValue.value.switch != 'undefined') {
-    return { component: StmtSwitch }
-  }
+  // if (typeof _modelValue.value.switch != 'undefined') {
+  //   return { component: StmtSwitch }
+  // }
 
-  if (typeof _modelValue.value.if != 'undefined') {
-    return { component: StmtIf }
-  }
+  // if (typeof _modelValue.value.if != 'undefined') {
+  //   return { component: StmtIf }
+  // }
 
-  if (typeof _modelValue.value.not != 'undefined') {
-    return { component: StmtNot }
-  }
+  // if (typeof _modelValue.value.not != 'undefined') {
+  //   return { component: StmtNot }
+  // }
 
   if (typeof _modelValue.value.call != 'undefined') {
     return { component: StmtCall }
