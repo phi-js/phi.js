@@ -162,6 +162,26 @@ function isLeftGhostVisible(colIndex) {
         class="LayoutRowEditor__sidebar-icon LayoutRowEditor__sidebar-icon--drag SlotEditor__handle"
         src="mdi:cursor-move"
       />
+
+      <UiIcon
+        v-show="!props.block.props?.alignItems || props.block.props?.alignItems == 'flex-start'"
+        class="LayoutRowEditor__sidebar-icon"
+        src="mdi:align-vertical-top"
+        @click="emit('update:block', {...props.block, props: {...props.block.props, alignItems: 'center'}})"
+      />
+      <UiIcon
+        v-show="props.block.props?.alignItems == 'center'"
+        class="LayoutRowEditor__sidebar-icon"
+        src="mdi:align-vertical-center"
+        @click="emit('update:block', {...props.block, props: {...props.block.props, alignItems: 'flex-end'}})"
+      />
+      <UiIcon
+        v-show="props.block.props?.alignItems == 'flex-end'"
+        class="LayoutRowEditor__sidebar-icon"
+        src="mdi:align-vertical-bottom"
+        @click="emit('update:block', {...props.block, props: {...props.block.props, alignItems: 'flex-start'}})"
+      />
+
       <BlockEditorWindow
         :block="props.block"
         @update:block="emit('update:block', $event)"
@@ -169,76 +189,104 @@ function isLeftGhostVisible(colIndex) {
       />
     </div>
 
-    <template
-      v-for="(column, colIndex) in columns"
-      :key="colIndex"
+    <div
+      class="LayoutRowEditor__body"
+      :style="{alignItems: props.block?.props?.alignItems}"
     >
+      <template
+        v-for="(column, colIndex) in columns"
+        :key="colIndex"
+      >
+        <div
+          v-show="isLeftGhostVisible(colIndex)"
+          class="LayoutRowEditor__ghost"
+        >
+          <CmsSlotEditor
+            v-model:dragging="isDragging"
+            v-model:slot="filler"
+            @update:slot="onUpdateGhost(colIndex, $event)"
+          />
+        </div>
+        <div
+          class="LayoutRowEditor__column"
+          :style="{flex: column?.props?.flex || 1}"
+        >
+          <CmsSlotEditor
+            v-model:slot="column.slot"
+            v-model:dragging="isDragging"
+            show-launcher
+            @update:slot="onUpdateColumn"
+            @update:dragging="draggedColumnIndex = $event ? colIndex : null"
+          />
+
+          <div
+            v-if="colIndex < columns.length - 1"
+            class="LayoutRowEditor__resizer"
+            @mousedown="onResizerStart($event, colIndex)"
+            @touchstart="onResizerStart($event, colIndex)"
+          />
+        </div>
+      </template>
       <div
-        v-show="isLeftGhostVisible(colIndex)"
+        v-show="isLeftGhostVisible(columns.length)"
         class="LayoutRowEditor__ghost"
       >
         <CmsSlotEditor
           v-model:dragging="isDragging"
           v-model:slot="filler"
-          @update:slot="onUpdateGhost(colIndex, $event)"
+          @update:slot="onUpdateGhost(columns.length, $event)"
         />
       </div>
-      <div
-        class="LayoutRowEditor__column"
-        :style="{flex: column?.props?.flex || 1}"
-      >
-        <CmsSlotEditor
-          v-model:slot="column.slot"
-          v-model:dragging="isDragging"
-          show-launcher
-          @update:slot="onUpdateColumn"
-          @update:dragging="draggedColumnIndex = $event ? colIndex : null"
-        />
-
-        <div
-          v-if="colIndex < columns.length - 1"
-          class="LayoutRowEditor__resizer"
-          @mousedown="onResizerStart($event, colIndex)"
-          @touchstart="onResizerStart($event, colIndex)"
-        />
-      </div>
-    </template>
-    <div
-      v-show="isLeftGhostVisible(columns.length)"
-      class="LayoutRowEditor__ghost"
-    >
-      <CmsSlotEditor
-        v-model:dragging="isDragging"
-        v-model:slot="filler"
-        @update:slot="onUpdateGhost(columns.length, $event)"
-      />
     </div>
   </div>
 </template>
 
 <style lang="scss">
 .LayoutRowEditor {
-  position: relative;
   display: flex;
+  margin: 8px 0;
 
-  border-left: 2px solid var(--ui-color-primary);
-  border-radius: var(--ui-radius);
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+
+    border-left: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding-left: 8px;
+  }
 
   &__sidebar {
-    position: absolute;
-    top: 5px;
-    right: 100%;
     border-radius: 4px;
-    background-color: var(--ui-color-primary);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+    margin-top: 4px;
 
     display: flex;
     flex-direction: column;
+    align-self: flex-start;
+  }
+
+  // Sidebar opacity hover effect
+  &__sidebar {
+    opacity: 0.3;
+  }
+
+  &:hover &__sidebar {
+    opacity: 1;
+  }
+
+  &:hover &__body {
+    border-left: 2px solid var(--ui-color-primary);
   }
 
   &__sidebar-icon {
+    cursor: pointer;
     width: 42px;
     height: 42px;
-    color: #fff;
+    // color: #fff;
+    color: var(--ui-color-primary);
 
     &--drag {
       cursor: move;

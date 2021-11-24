@@ -10,7 +10,7 @@ export default {
         },
         do: {
           call: 'fetch',
-          args: { url: 'https://jsonplaceholder.typicode.com/users?_limit=2' },
+          args: { url: 'https://jsonplaceholder.typicode.com/users?_limit={{limit}}' },
         },
         assign: 'users',
       },
@@ -26,7 +26,7 @@ export default {
           slot: [
             {
               component: 'MediaHtml',
-              props: { value: '<h1>JsonPlaceholder User manager</h1>' },
+              props: { value: '<h1>JsonPlaceholder User manager</h1><p>Mostrando {{limit}} usuarios</p>' },
             },
           ],
         },

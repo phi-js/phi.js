@@ -1,5 +1,18 @@
+<script setup>
+const props = defineProps({
+  alignItems: {
+    type: String,
+    required: false,
+    default: undefined,
+  },
+})
+</script>
+
 <template>
-  <div class="LayoutRow">
+  <div
+    class="LayoutRow"
+    :style="{alignItems: props.alignItems}"
+  >
     <slot />
   </div>
 </template>

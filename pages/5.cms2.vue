@@ -7,7 +7,7 @@ import somePage from '../packages/cms2/samples/1.jsonplaceholder.js'
 // import somePage from '../packages/cms2/samples/2.video.js'
 
 const block = ref(somePage)
-const modelValue = ref({})
+const modelValue = ref({ limit: 5 })
 const showPreview = ref(false)
 
 // watch(
