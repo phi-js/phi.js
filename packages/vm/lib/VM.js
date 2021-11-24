@@ -82,7 +82,7 @@ export default class VM {
 
     // JavaScript EVAL (!!!)
     if (typeof expr.eval !== 'undefined') {
-      const fx = new Function(['$scope'], '"use strict"; var window = null; var document = null;' + expr.eval)
+      const fx = new Function(['$modelValue'], '"use strict"; var window = null; var document = null;' + expr.eval)
       return await fx(localScope)
     }
 

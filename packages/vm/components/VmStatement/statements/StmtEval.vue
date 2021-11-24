@@ -28,10 +28,12 @@ watch(
 
 <template>
   <div class="StmtEval">
+    <span>function($modelValue) {</span>
     <UiInput
       v-model="innerModel.eval"
       type="code"
       @update:modelValue="emitUpdate"
     />
+    <span>}</span>
   </div>
 </template>
