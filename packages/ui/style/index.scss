@@ -16,11 +16,9 @@
 @import './classes/flex.scss';
 @import './classes/footer.scss';
 @import './classes/grid.scss';
-@import './classes/group.scss';
 @import './classes/highlighted.scss';
 @import './classes/inset.scss';
 @import './classes/label.scss';
-// @import './classes/native.scss';
 @import './classes/outset.scss';
 @import './classes/row.scss';
 @import './classes/selectable.scss';
@@ -34,5 +32,8 @@
 @import './modifiers/padded.scss';
 @import './modifiers/rounded.scss';
 
+@import './elements/button.scss';
+@import './elements/group.scss';
 @import './elements/input.scss';
+
 @import './themes/dark.scss';

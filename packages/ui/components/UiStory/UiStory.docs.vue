@@ -49,7 +49,7 @@ const newName = ref('')
 <template>
   <fieldset>
     <legend>Controles externos</legend>
-    <div class="ui-group --block">
+    <div class="ui__group --block">
       <UiInput
         v-model="active"
         type="select-list"
@@ -120,7 +120,7 @@ const newName = ref('')
     </template>
 
     <template #footer="{ node, push }">
-      <div class="ui-group">
+      <div class="ui__group">
         <UiInput
           v-for="(hijo, i) in myStory.hijos"
           :key="i"

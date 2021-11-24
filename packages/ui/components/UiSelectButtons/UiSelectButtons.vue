@@ -82,7 +82,7 @@ const { options } = useOptionsManager(toRef(props, 'options'), {
 </script>
 
 <template>
-  <div class="UiSelectButtons ui-group">
+  <div class="UiSelectButtons ui__group">
     <button
       v-for="option in options"
       :key="option.value"

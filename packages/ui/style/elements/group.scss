@@ -1,0 +1,23 @@
+.ui__group {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-wrap: nowrap;
+
+  & > .ui-button,
+  & > .ui__button,
+  & > .ui__input {
+    border-radius: 0;
+    border-right-width: 0;
+
+    &:first-of-type {
+      border-top-left-radius: var(--ui-radius);
+      border-bottom-left-radius: var(--ui-radius);
+    }
+
+    &:last-of-type {
+      border-top-right-radius: var(--ui-radius);
+      border-bottom-right-radius: var(--ui-radius);
+      border-right-width: 1px;
+    }
+  }
+}

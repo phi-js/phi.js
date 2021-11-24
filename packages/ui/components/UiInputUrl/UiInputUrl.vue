@@ -49,7 +49,6 @@ const emit = defineEmits(['update:modelValue'])
 
   &__input {
     flex: 1;
-    min-width: 300px;
     border: 0;
     outline: none;
     font-size: 1em;
