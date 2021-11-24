@@ -130,7 +130,7 @@ const draggedColumnIndex = ref(null)
 function isLeftGhostVisible(colIndex) {
   if (colIndex === columns.value.length) {
     return (draggedColumnIndex.value < columns.value.length - 1)
-      || columns.value[columns.value.length - 1].slot.length > 1
+      || columns.value[columns.value.length - 1]?.slot?.length > 1
   }
 
   if (colIndex === draggedColumnIndex.value) {

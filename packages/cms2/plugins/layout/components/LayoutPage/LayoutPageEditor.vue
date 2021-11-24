@@ -5,7 +5,6 @@ import { VmStatement } from '/packages/vm/components'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
 import { getBlockSchema } from '../../../../functions'
 
-
 const props = defineProps({
   block: {
     type: Object,
@@ -15,18 +14,19 @@ const props = defineProps({
 
 const emit = defineEmits(['update:block'])
 
-const blockSchema = computed(() => getBlockSchema(props.block))
-provide('$_vm_modelSchema', blockSchema)
-
 const pageSlot = ref([])
+const innerBlock = ref(null)
 watch(
-  () => props.block?.slot,
-  (newValue) => pageSlot.value = Array.isArray(newValue) ? newValue : [],
+  () => props.block,
+  (newValue) => {
+    innerBlock.value = JSON.parse(JSON.stringify(newValue))
+    pageSlot.value = Array.isArray(newValue?.slot) ? newValue.slot : []
+  },
   { immediate: true },
 )
 
 function launchRow() {
-  const newRow = {
+  pageSlot.value.push({
     component: 'LayoutRow',
     slot: [
       {
@@ -35,9 +35,7 @@ function launchRow() {
         slot: [],
       },
     ],
-  }
-
-  pageSlot.value.push(newRow)
+  })
   emit('update:block', { ...props.block, slot: pageSlot })
 }
 
@@ -46,6 +44,19 @@ function onSlotUpdate() {
 }
 
 const isWindowOpen = ref(false)
+
+function accept() {
+  emit('update:block', JSON.parse(JSON.stringify(innerBlock.value)))
+  return true
+}
+
+function cancel() {
+  innerBlock.value = JSON.parse(JSON.stringify(props.block))
+  return true
+}
+
+const blockSchema = computed(() => getBlockSchema(props.block))
+provide('$_vm_modelSchema', blockSchema)
 </script>
 
 <template>
@@ -85,7 +96,7 @@ const isWindowOpen = ref(false)
           icon="mdi:cog"
         >
           <VmStatement
-            :model-value="block.setup"
+            v-model="innerBlock.setup"
             :default="{chain:[]}"
           />
         </UiTab>
@@ -93,7 +104,7 @@ const isWindowOpen = ref(false)
           text="Source"
           icon="mdi:cog"
         >
-          <VmStatement :model-value="block" />
+          <VmStatement v-model="innerBlock" />
         </UiTab>
       </UiTabs>
 
@@ -101,14 +112,14 @@ const isWindowOpen = ref(false)
         <button
           type="button"
           class="ui-button --main"
-          @click="close()"
+          @click="accept() && close()"
         >
           Aceptar
         </button>
         <button
           type="button"
           class="ui-button --cancel"
-          @click="close()"
+          @click="cancel() && close()"
         >
           Cancelar
         </button>
