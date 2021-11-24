@@ -34,6 +34,10 @@ export default {
       options.body = JSON.stringify(options.body)
     }
 
+    if (options?.method) {
+      options.method = options.method.toUpperCase()
+    }
+
     return fetch(url, options).then((response) => response.json())
   },
 }

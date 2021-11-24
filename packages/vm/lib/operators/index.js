@@ -14,4 +14,8 @@ export default {
   ...enumOps,
   ...numberOps,
   ...stringOps,
+
+  eq(value, args) {
+    return value == args
+  },
 }
