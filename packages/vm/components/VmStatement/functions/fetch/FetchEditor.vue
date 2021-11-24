@@ -1,6 +1,6 @@
 <template>
   <div class="FetchEditor">
-    <div class="ui-group --block">
+    <div class="ui__group --block">
       <UiInput label="Method">
         <select
           v-model="innerValue.args.options.method"
@@ -15,6 +15,9 @@
           </option>
           <option value="put">
             PUT
+          </option>
+          <option value="patch">
+            PATCH
           </option>
           <option value="delete">
             DELETE
