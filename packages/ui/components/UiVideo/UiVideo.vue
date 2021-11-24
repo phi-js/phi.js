@@ -1,5 +1,5 @@
 <template>
-  <div class="ui-video">
+  <div class="UiVideo">
     <component
       :is="videoComponent"
       v-if="videoComponent"
@@ -10,7 +10,7 @@
     />
     <div
       v-else
-      class="empty-video"
+      class="UiVideo--empty"
     >
       {{ url ? 'URL inválida' : 'No hay URL' }}
     </div>
@@ -206,12 +206,12 @@ export default {
 </script>
 
 <style lang="scss">
-.ui-video {
+.UiVideo {
   width: 100%;
   height: 100%;
   min-height: 100px;
 
-  .empty-video {
+  &--empty {
     display: flex;
     align-items: center;
     justify-content: center;

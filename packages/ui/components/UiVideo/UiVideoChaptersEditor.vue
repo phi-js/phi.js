@@ -1,28 +1,28 @@
 <template>
-  <div class="UiVideoChaptersEditor ui-row --top --tight">
+  <div class="UiVideoChaptersEditor">
     <div
       v-if="url"
-      class="editor-video"
+      class="UiVideoChaptersEditor__video"
     >
       <UiVideo
         :url="url"
         style="width: 300px"
-        class="ui-breathe"
         @timeupdate="onTimeupdate"
       />
     </div>
 
-    <div class="editor-chapters">
+    <div class="UiVideoChaptersEditor__chapters">
       <div
         v-for="(chapter, i) in sanitizedChapters"
         :key="i"
-        class="chapter-item ui-group --block"
+        class="UiVideoChaptersEditor__chapter ui__group"
         :class="{'ui-highlighted': chapter.isActive}"
       >
         <input
           v-model="innerModel[i].name"
           type="text"
           class="ui__input"
+          placeholder="Nombre del capítulo"
           @input="emitInput"
         >
         <input
@@ -41,21 +41,20 @@
           style="width: 6em"
           @input="emitInput"
         >
-        <button
-          type="button"
-          class="ui-button"
+        <UiIcon
+          class="ui--clickable"
+          src="mdi:close"
+          style="width: 40px; height: 40px"
           @click="removeChapter(i)"
-        >
-          <UiIcon src="mdi:close" />
-        </button>
+        />
       </div>
 
-      <div class="chapter-item chapter-adder ui-group --block">
+      <div class="UiVideoChaptersEditor__chapter UiVideoChaptersEditor__chapter--adder ui__group">
         <input
           v-model="newChapter.name"
           type="text"
           class="ui__input"
-          placeholder="Nombre"
+          placeholder="Nombre del capítulo"
         >
         <input
           v-model="newChapter.start"
@@ -71,14 +70,13 @@
           placeholder="fin (ms.)"
           style="width: 6em"
         >
-        <button
-          type="button"
-          class="ui-button"
+        <UiIcon
+          src="mdi:plus"
+          class="ui--clickable"
+          style="width: 40px; height: 40px"
           :disabled="!newChapter.name || newChapter.start === null"
           @click="addChapter"
-        >
-          <UiIcon src="mdi:plus" />
-        </button>
+        />
       </div>
     </div>
   </div>
@@ -169,3 +167,28 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.UiVideoChaptersEditor {
+  display: flex;
+  flex-wrap: wrap;
+
+  &__chapters {
+    flex: 1;
+  }
+
+  &__video {
+    margin-right: var(--ui-padding-horizontal);
+  }
+
+  &__chapter {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    & > :first-child {
+      flex: 1;
+    }
+  }
+}
+</style>

@@ -6,7 +6,7 @@
     controls
     :src="url"
     v-bind="$attrs"
-    style="min-width: 300px; height: auto;"
+    style="width: auto; height: auto; max-width: 100%;"
     @play="onVideoPlay"
     @pause="onVideoPause"
     @timeupdate="onVideoTimeupdate"
