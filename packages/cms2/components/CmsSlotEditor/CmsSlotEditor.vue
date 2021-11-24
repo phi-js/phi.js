@@ -83,7 +83,7 @@ function onDraggableEnd() {
       v-model="innerSlot"
       :group="groupName"
       item-key="id"
-      handle=".SlotEditor__handle"
+      handle=".Block__drag-handle"
       :animation="111"
       :empty-insert-threshold="0"
       :swap-threshold="0.5"
@@ -122,8 +122,7 @@ function onDraggableEnd() {
 
   &--dragging {
     // prevent dragging blocks into droppable elements (like editable texts or file uploads) present in the block
-    // .CmsSlotEditor__item {
-    .BlockEditorLayout__face {
+    .BlockScaffold__face {
       pointer-events: none;
     }
   }

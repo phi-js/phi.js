@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, computed, provide } from 'vue'
-import { UiWindow, UiTabs, UiIcon, UiTab } from '/packages/ui/components'
+import { UiWindow, UiTabs, UiItem, UiTab } from '/packages/ui/components'
 import { VmStatement } from '/packages/vm/components'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
 import { getBlockSchema } from '../../../../functions'
@@ -62,10 +62,10 @@ provide('$_vm_modelSchema', blockSchema)
 <template>
   <div class="LayoutPageEditor">
     <div class="LayoutPageEditor__toolbar">
-      <UiIcon
-        class="ui--clickable"
-        src="mdi:dots-vertical"
-        style="margin-left: auto"
+      <UiItem
+        class="LayoutPageEditor__item ui--clickable"
+        text="Mi página"
+        icon="mdi:cog"
         @click="isWindowOpen = !isWindowOpen"
       />
     </div>
@@ -76,12 +76,12 @@ provide('$_vm_modelSchema', blockSchema)
       @update:slot="onSlotUpdate"
     />
 
-    <button
-      type="button"
+    <UiItem
+      class="RowLauncher ui--clickable"
+      text="Add section"
+      icon="mdi:arrow-split-horizontal"
       @click="launchRow"
-    >
-      launch row
-    </button>
+    />
 
     <UiWindow
       v-model:open="isWindowOpen"

@@ -43,6 +43,7 @@ const CmsBlockEditor = {
       // No hay editor Y no hay slots.  Usar BlockScaffold
       if (typeof props.block.slot === 'undefined') {
         return h(BlockScaffold, {
+          'class': 'BlockScaffold--default',
           'block': props.block,
           'onUpdate:block': (newValue) => emit('update:block', newValue),
           'onDelete': () => emit('delete'),

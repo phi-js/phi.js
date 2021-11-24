@@ -2,7 +2,7 @@
 import { ref, watch, reactive } from 'vue'
 import { UiIcon } from '/packages/ui/components'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
-import BlockEditorWindow from '../../../../components/CmsBlockEditor/BlockEditorWindow.vue'
+import BlockScaffold from '../../../../components/CmsBlockEditor/BlockScaffold.vue'
 
 const props = defineProps({
   block: {
@@ -148,50 +148,39 @@ function isLeftGhostVisible(colIndex) {
 </script>
 
 <template>
-  <div
-    ref="$el"
+  <BlockScaffold
     class="LayoutRowEditor"
-    :class="{'LayoutRowEditor--dragging': isDragging}"
-    @mousemove="onResizerMove($event)"
-    @mouseup="onResizerEnd($event)"
-    @touchmove="onResizerMove($event)"
-    @touchend="onResizerEnd($event)"
+    :block="props.block"
+    @update:block="emit('update:block', $event)"
+    @delete="emit('delete')"
   >
-    <div class="LayoutRowEditor__sidebar">
-      <UiIcon
-        class="LayoutRowEditor__sidebar-icon LayoutRowEditor__sidebar-icon--drag SlotEditor__handle"
-        src="mdi:cursor-move"
-      />
-
+    <!-- <template #toolbar>
       <UiIcon
         v-show="!props.block.props?.alignItems || props.block.props?.alignItems == 'flex-start'"
-        class="LayoutRowEditor__sidebar-icon"
         src="mdi:align-vertical-top"
         @click="emit('update:block', {...props.block, props: {...props.block.props, alignItems: 'center'}})"
       />
       <UiIcon
         v-show="props.block.props?.alignItems == 'center'"
-        class="LayoutRowEditor__sidebar-icon"
         src="mdi:align-vertical-center"
         @click="emit('update:block', {...props.block, props: {...props.block.props, alignItems: 'flex-end'}})"
       />
       <UiIcon
         v-show="props.block.props?.alignItems == 'flex-end'"
-        class="LayoutRowEditor__sidebar-icon"
         src="mdi:align-vertical-bottom"
         @click="emit('update:block', {...props.block, props: {...props.block.props, alignItems: 'flex-start'}})"
       />
-
-      <BlockEditorWindow
-        :block="props.block"
-        @update:block="emit('update:block', $event)"
-        @delete="emit('delete')"
-      />
-    </div>
+    </template> -->
 
     <div
+      ref="$el"
       class="LayoutRowEditor__body"
+      :class="{'LayoutRowEditor--dragging': isDragging}"
       :style="{alignItems: props.block?.props?.alignItems}"
+      @mousemove="onResizerMove($event)"
+      @mouseup="onResizerEnd($event)"
+      @touchmove="onResizerMove($event)"
+      @touchend="onResizerEnd($event)"
     >
       <template
         v-for="(column, colIndex) in columns"
@@ -238,7 +227,7 @@ function isLeftGhostVisible(colIndex) {
         />
       </div>
     </div>
-  </div>
+  </BlockScaffold>
 </template>
 
 <style lang="scss">
@@ -256,61 +245,39 @@ function isLeftGhostVisible(colIndex) {
     padding-left: 8px;
   }
 
-  &__sidebar {
-    border-radius: 4px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-
-    margin-top: 4px;
-
+  & > .BlockScaffold__toolbar {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    width: 36px;
+
     align-self: flex-start;
-  }
 
-  // Sidebar opacity hover effect
-  &__sidebar {
+    .Block__drag-handle .ui-item__icon {
+      margin: 0;
+    }
+    .Block__drag-handle .ui-item__body {
+      display: none;
+    }
+
     opacity: 0.3;
+    color: var(--ui-color-primary);
+    background-color: transparent;
   }
 
-  &:hover &__sidebar {
-    opacity: 1;
+  & > .BlockScaffold__face {
+    flex: 1;
+  }
+
+  &:hover {
+    & > .BlockScaffold__toolbar {
+      opacity: 1;
+    }
   }
 
   &:hover &__body {
     border-left: 2px solid var(--ui-color-primary);
   }
-
-  &__sidebar-icon {
-    cursor: pointer;
-    width: 42px;
-    height: 42px;
-    // color: #fff;
-    color: var(--ui-color-primary);
-
-    &--drag {
-      cursor: move;
-    }
-
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.3);
-    }
-  }
-
-  // Sidebar show/hide on hover
-  /*
-  &__sidebar {
-    transition: all var(--ui-duration-snap);
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  &:hover &__sidebar {
-    opacity: 0.8;
-    pointer-events: initial;
-  }
-  */
-
 
 
   &__ghost {

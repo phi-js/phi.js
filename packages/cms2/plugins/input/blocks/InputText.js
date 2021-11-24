@@ -1,4 +1,4 @@
-import { UiInput, UiInputEditor } from '../../../../ui/components'
+import { UiInput, UiInputEditor } from '/packages/ui/components'
 const InputSettings = () => import('../components/InputSettings/InputSettings.vue')
 
 export default {
