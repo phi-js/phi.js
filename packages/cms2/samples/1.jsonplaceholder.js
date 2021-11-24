@@ -19,8 +19,18 @@ export default {
 
   slot: [
     {
-      component: 'MediaHtml',
-      props: { value: '<h1>JsonPlaceholder User manager</h1>' },
+      component: 'LayoutRow',
+      slot: [
+        {
+          component: 'LayoutColumn',
+          slot: [
+            {
+              component: 'MediaHtml',
+              props: { value: '<h1>JsonPlaceholder User manager</h1>' },
+            },
+          ],
+        },
+      ],
     },
 
     {

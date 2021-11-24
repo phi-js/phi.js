@@ -115,6 +115,9 @@ function onResizerEnd(evt) {
 
   const elColumns = $el.value.querySelectorAll('.LayoutRowEditor__column')
   columns.value.forEach((column, i) => {
+    if (typeof column.props === 'undefined') {
+      column.props = {}
+    }
     column.props.flex = elColumns[i].offsetWidth
   })
 
@@ -182,7 +185,7 @@ function isLeftGhostVisible(colIndex) {
       </div>
       <div
         class="LayoutRowEditor__column"
-        :style="{flex: column.props.flex || 1}"
+        :style="{flex: column?.props?.flex || 1}"
       >
         <CmsSlotEditor
           v-model:slot="column.slot"

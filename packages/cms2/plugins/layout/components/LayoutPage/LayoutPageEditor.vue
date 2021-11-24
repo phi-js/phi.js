@@ -1,8 +1,10 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed, provide } from 'vue'
 import { UiWindow, UiTabs, UiIcon, UiTab } from '/packages/ui/components'
 import { VmStatement } from '/packages/vm/components'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
+import { getBlockSchema } from '../../../../functions'
+
 
 const props = defineProps({
   block: {
@@ -13,8 +15,10 @@ const props = defineProps({
 
 const emit = defineEmits(['update:block'])
 
-const pageSlot = ref([])
+const blockSchema = computed(() => getBlockSchema(props.block))
+provide('$_vm_modelSchema', blockSchema)
 
+const pageSlot = ref([])
 watch(
   () => props.block?.slot,
   (newValue) => pageSlot.value = Array.isArray(newValue) ? newValue : [],
