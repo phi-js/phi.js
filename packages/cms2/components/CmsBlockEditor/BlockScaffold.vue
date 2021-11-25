@@ -46,7 +46,7 @@ function emitDelete() {
 
 
 // Available block editors
-const $settings = inject('$_cms_settings')
+const $settings = inject('$_cms_settings', {})
 const editors = shallowRef({})
 const definition = ref({})
 watch(
@@ -246,8 +246,9 @@ function onClickEye() {
     display: inline-flex;
     align-items: stretch;
     background-color: #313131;
-    color: rgba(255, 255, 255, 0.5);
     border-radius: var(--ui-radius);
+
+    color: rgba(255, 255, 255, 0.5);
   }
 
 
@@ -255,16 +256,73 @@ function onClickEye() {
   &--default &__toolbar {
     position: absolute;
     bottom: 100%;
-    min-width: 100%;
     left: 0;
     right: 0;
     z-index: 4;
     flex-wrap: nowrap;
     width: max-content; // No soportado en IE ni EDGE !!!
 
+    max-width: 300px;
+    max-width: 600px;
+
     transition: opacity var(--ui-duration-snap);
     opacity: 0;
     pointer-events: none;
+
+
+    // Catch-all para todo tipo de item dentro del toolbar
+    .ui-icon,
+    button {
+      color: rgba(255, 255, 255, 0.5);
+      flex: none;
+      padding: 0 10px;
+      border: 0;
+      background: transparent;
+
+      outline: none;
+      display: block;
+
+      min-width: 12px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      transition: background-color var(--ui-duration-snap);
+
+      &.--active {
+        color: #fff;
+      }
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+
+    .ui-item {
+      .ui-icon {
+        padding: 0;
+      }
+    }
+
+    .ui__input {
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+
+      font-family: var(--ui-font-secondary);
+      color: rgba(255, 255, 255, 0.5);
+      outline: none;
+
+      option {
+        color: initial;
+      }
+    }
+
+    input[type=text].ui__input {
+      background-color: rgba(255, 255, 255, 0.1);
+      margin: 0 2px;
+    }
   }
 
   &--default:hover &__toolbar {

@@ -1,0 +1,86 @@
+// Transiciones.
+// Toda transicion tiene un nombre, seguido de un modificador --fw o --bw  (adelante/atras)
+// ej: slideX--fw, slideX--bw
+.slideX {
+  &--bw,
+  &--fw {
+    &-leave-active {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+
+    &-enter-active,
+    &-leave-active {
+      transition: all var(--cms-story-transition-duration) ease;
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    &-enter-from,
+    &-leave-to {
+      opacity: 0;
+    }
+
+    &-enter-from {
+      transform: translateX(64px);
+    }
+
+    &-leave-to {
+      transform: translateX(-64px);
+    }
+  }
+
+  &--bw {
+    &-enter-from {
+      transform: translateX(-64px);
+    }
+
+    &-leave-to {
+      transform: translateX(64px);
+    }
+  }
+}
+
+.slideY {
+  &--bw,
+  &--fw {
+    &-leave-active {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+
+    &-enter-active,
+    &-leave-active {
+      transition: all var(--cms-story-transition-duration) ease;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    &-enter-from,
+    &-leave-to {
+      opacity: 0;
+    }
+
+    &-enter-from {
+      transform: translateY(64px);
+    }
+
+    &-leave-to {
+      transform: translateY(-64px);
+    }
+  }
+
+  &--bw {
+    &-enter-from {
+      transform: translateY(-64px);
+    }
+
+    &-leave-to {
+      transform: translateY(64px);
+    }
+  }
+}

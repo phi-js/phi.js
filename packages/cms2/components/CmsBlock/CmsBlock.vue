@@ -31,7 +31,7 @@ export default {
     )
 
     // Render function
-    return () => parsedBlocks.value
+    return () => h('div', { class: 'CmsBlock' }, parsedBlocks.value)
   },
 }
 
@@ -107,7 +107,9 @@ async function getBlockPropsAndSlots(block, modelValue, vm) {
     slots[slotName] = () => childBlocks
   }
 
-  const blockProps = (await vm.eval(block.props, modelValue)) || {}
+  const definition = blocks[block.component]
+  const defaultProps = definition?.block?.props || {}
+  const blockProps = (await vm.eval({ ...defaultProps, ...block?.props }, modelValue))
 
   // Block v-model
   if (typeof block['v-model'] !== 'undefined') {

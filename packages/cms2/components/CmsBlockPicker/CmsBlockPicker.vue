@@ -70,8 +70,9 @@ async function onPopoverOpen() {
   }
 
   &__trigger {
-    border: 2px dashed rgba(0, 0, 0, 0.1);
     border-radius: var(--ui-radius);
+    background-color: rgba(0, 0, 0, 0.03);
+    color: rgba(0, 0, 0, 0.7);
   }
 }
 </style>

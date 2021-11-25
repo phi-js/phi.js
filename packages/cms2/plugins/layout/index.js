@@ -1,9 +1,7 @@
 import LayoutPage from './components/LayoutPage/LayoutPage.vue'
 import LayoutPageEditor from './components/LayoutPage/LayoutPageEditor.vue'
-
 import LayoutRow from './components/LayoutRow/LayoutRow.vue'
 import LayoutRowEditor from './components/LayoutRow/LayoutRowEditor.vue'
-
 import LayoutColumn from './components/LayoutColumn/LayoutColumn.vue'
 
 export default {

@@ -26,7 +26,7 @@ const CmsBlockEditor = {
       settings = { ...props.settings }
       provide('$_cms_settings', settings)
     } else {
-      settings = inject('$_cms_settings')
+      settings = inject('$_cms_settings', {})
     }
 
     return () => {
