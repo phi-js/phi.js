@@ -88,7 +88,7 @@ const dropTarget = ref(null)
 
 function close() {
   isOpen.value = false
-  emit('update:open', isOpen.value.value)
+  emit('update:open', isOpen.value)
 }
 
 function dockTo(newPosition) {
@@ -109,6 +109,7 @@ const isHovered = ref(false)
   <div
     v-show="isOpen"
     :class="[
+      'ui-theme-dark',
       'UiWindow UiWindow__scrim',
       {
         'UiWindow--moving': isMoving,

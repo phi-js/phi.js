@@ -29,7 +29,10 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
 
 <template>
   <div class="UiInputEditor">
-    <div class="UiInputEditor__label">
+    <div
+      v-if="_inputProps.type != 'button'"
+      class="UiInputEditor__label"
+    >
       <input
         v-model="_inputProps.label"
         type="text"
@@ -56,7 +59,7 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
         v-if="_inputProps.type == 'button'"
         v-model="_inputProps.label"
         type="text"
-        class="ui-button"
+        class="UiInputEditor__button ui__button"
         @update:modelValue="emitUpdate"
         @focus="$event.target.select(); $emit('focus', $event)"
         @blur="$emit('blur', $event)"
@@ -76,7 +79,7 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
 
 <style lang="scss">
 .UiInputEditor {
-  input.ui-button {
+  input.UiInputEditor__button {
     display: inline-block;
     font-family: var(--ui-font-secondary);
     font-size: 15px;
