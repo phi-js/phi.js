@@ -31,7 +31,7 @@ const isFullWidth = computed({
 </script>
 
 <template>
-  <div class="MediaImageToolbar ui-group">
+  <div class="MediaImageToolbar ui__group">
     <UiIcon
       title="Align left"
       src="mdi:format-align-left"

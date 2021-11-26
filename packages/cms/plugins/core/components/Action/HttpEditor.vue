@@ -1,6 +1,6 @@
 <template>
   <div class="cms-action-http-editor">
-    <div class="ui-group">
+    <div class="ui__group">
       <UiField label="Method">
         <select
           class="ui-native"

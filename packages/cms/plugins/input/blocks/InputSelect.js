@@ -20,7 +20,7 @@ export default {
       'component': UiForm,
       'props': {
         inline: true,
-        class: 'ui-group',
+        class: 'ui__group',
         fields: [
           {
             model: 'props.multiple',

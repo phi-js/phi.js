@@ -1,5 +1,5 @@
 <script setup>
-import { shallowRef, ref, watch, defineAsyncComponent } from 'vue'
+import { shallowRef, ref, watch, defineAsyncComponent, provide } from 'vue'
 import { getBlockEditors, getBlockDefinition } from '../../composables'
 import { UiInput } from '/packages/ui/components'
 import BlockEditorLayout from './BlockEditorLayout.vue'
@@ -55,6 +55,7 @@ watch(
 
 const isFocused = ref(false)
 
+provide('$_phi_block_definition', blockDefinition)
 </script>
 
 <template>

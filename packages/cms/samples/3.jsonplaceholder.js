@@ -103,20 +103,65 @@ export default {
               class: '',
               blocks: [
                 {
-                  component: 'MediaHtml',
-                  props: { value: '<p>{{users.length}} usuarios</p><h1>{{selectedUser.name}}</h1><pre><code>{{selectedUser}}</code></pre>' },
-                  id: 'block-1',
-                  class: '',
+                  'v-for': 'users',
+                  'component': 'MediaHtml',
+                  'props': { value: '<h1>{{$item.name}}</h1>' },
+                  'id': 'block-1',
+                  'class': '',
+
+                  'slot': [
+                    {
+                      component: 'MediaItem',
+                      props: {
+                        icon: 'mdi:badge-account',
+                        text: '{{$item.name}}',
+                        subtext: '{{$item.email}}',
+                        class: 'ui--noselect',
+                      },
+                    },
+                    {
+                      'component': 'InputText',
+                      'v-model': '$item.name',
+                    },
+                    {
+                      'component': 'InputText',
+                      'v-model': '$item.email',
+                    },
+                  ],
+
                 },
                 {
                   component: 'MediaLoremIpsum',
                   props: {
                     nParagraphs: '{{ cantidad }}',
                     nWords: '{{ palabras }}',
+                    style: { border: '{{cantidad}}px solid red' },
                   },
                   id: 'block-3',
                   class: '',
+
                 },
+                {
+                  'component': 'InputNumber',
+                  'v-model': 'cantidad',
+                  'props': { type: 'number' },
+                },
+                {
+                  'component': 'InputNumber',
+                  'v-model': 'palabras',
+                  'props': { type: 'number' },
+                },
+
+                // {
+                //   'v-for': 'users',
+                //   'component': 'InputText',
+                //   'v-model': '$item.name',
+                // },
+                // {
+                //   'v-for': 'users',
+                //   'component': 'InputText',
+                //   'v-model': '$item.email',
+                // },
               ],
               initialFlex: 974,
             },

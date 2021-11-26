@@ -20,7 +20,7 @@ export default {
       'v-model': 'block',
       'component': UiForm,
       'props': {
-        class: 'ui-group',
+        class: 'ui__group',
         fields: [
           {
             type: 'text',

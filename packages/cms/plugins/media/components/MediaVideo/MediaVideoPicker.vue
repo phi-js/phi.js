@@ -16,7 +16,7 @@
       <input
         class="ui-native"
         type="text"
-        :model-value="modelValue"
+        :value="modelValue"
         placeholder="URL (YouTube o Vimeo)"
         @input="$emit('update:modelValue', $event.target.value)"
       >

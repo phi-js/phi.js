@@ -1,5 +1,5 @@
 <script setup>
-import { ref, shallowRef, watch } from 'vue'
+import { ref, shallowRef, watch, inject } from 'vue'
 import { UiIcon, UiItem, UiInputWedge, UiWindow, UiPopover, UiTabs, UiTab } from '../../../ui/components'
 import EditorAction from './EditorAction.vue'
 import { getBlockEditors } from '../../composables'
@@ -18,6 +18,8 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['update:block', 'delete'])
+
+const blockDefinition = inject('$_phi_block_definition', null)
 
 const blockValue = ref(null)
 watch(
@@ -40,7 +42,7 @@ const isWindowOpen = ref(false)
 const currentActionIndex = ref(null)
 const availableActions = shallowRef([])
 
-getBlockEditors(props.block).then((r) => availableActions.value = r?.actions || [])
+getBlockEditors(props.block, inject('$_cms_settings')).then((r) => availableActions.value = r?.actions || [])
 
 function openAction(targetActionIndex = null) {
   currentActionIndex.value = targetActionIndex
@@ -71,9 +73,9 @@ function onClickEye() {
   >
     <div class="BlockEditorLayout__toolbar ui-toolbar ui-theme-dark">
       <UiItem
-        class="BlockEditorLayout__handle ui--clickable"
+        class="BlockEditorLayout__handle ui--clickable SlotEditor__handle"
         icon="mdi:cursor-move"
-        text="Block"
+        :text="blockDefinition?.title || ''"
       />
 
       <slot name="toolbar" />

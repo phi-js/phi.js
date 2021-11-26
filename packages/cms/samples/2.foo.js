@@ -83,6 +83,18 @@ export default {
                     multiple: true,
                   },
                 },
+                {
+                  'id': 'added-bl-14',
+                  'component': 'InputSelect',
+                  'v-model': 'capis',
+                  'props': { type: 'text' },
+                },
+                {
+                  'id': 'added-bl-15',
+                  'component': 'InputSelect',
+                  'v-model': 'msg',
+                  'props': { type: 'text' },
+                },
               ],
               id: 'col-0',
               flex: 1,

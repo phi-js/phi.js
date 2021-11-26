@@ -22,7 +22,7 @@ Retorna todos los editores (listos para usar en <component>) relacionados al blo
   ],
 }
 */
-import { defineAsyncComponent, unref, inject } from 'vue'
+import { defineAsyncComponent } from 'vue'
 import getBlockDefinition from './getBlockDefinition.js'
 import { UiInput } from '/packages/ui/components'
 import { VmStatement } from '/packages/vm/components'
@@ -30,8 +30,7 @@ import BlockListenersEditor from '../components/CmsBlockEditor/BlockListenersEdi
 import BlockModelsEditor from '../components/CmsBlockEditor/BlockModelsEditor.vue'
 import { parse } from '../../vm/lib/utils'
 
-export default async function getBlockEditors(block) {
-  const $settings = unref(inject('$_cms_settings'))
+export default async function getBlockEditors(block, $settings = {}) {
   const definition = await getBlockDefinition(block)
 
   const retval = {
@@ -104,8 +103,8 @@ export default async function getBlockEditors(block) {
 
   // v-if
   retval.actions.push({
-    'title': 'v-if',
-    'icon': 'mdi:vuejs',
+    'title': 'Visibilidad',
+    'icon': 'mdi:eye-outline',
     'component': VmStatement,
     'props': { default: { and: [] } },
     'v-model': 'block.v-if',
@@ -131,7 +130,7 @@ export default async function getBlockEditors(block) {
   // v-for
   retval.actions.push({
     'title': 'v-for',
-    'icon': 'mdi:vuejs',
+    'icon': block['v-for'] ? 'mdi:repeat' : 'mdi:repeat-off',
     'component': UiInput,
     'props': { type: 'text' },
     'v-model': 'block.v-for',
