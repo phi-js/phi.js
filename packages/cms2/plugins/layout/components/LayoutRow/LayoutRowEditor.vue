@@ -238,7 +238,7 @@ function isLeftGhostVisible(colIndex) {
   &__body {
     flex: 1;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 
     border-left: 2px solid rgba(0, 0, 0, 0.1);
     border-radius: 4px;
@@ -283,13 +283,21 @@ function isLeftGhostVisible(colIndex) {
   &__ghost {
     transition: all var(--ui-duration-snap);
     min-width: 0;
-    border-radius: var(--ui-radius);
-    background-color: rgba(0,0,0, 0.1);
+    border-radius: 2px;
+    border: 0;
+
+    .CmsSlotEditor,
+    .CmsSlotEditor > div {
+      height: 100%;
+    }
   }
 
   &--dragging &__ghost {
     min-width: 18px;
+    border: 1px dashed rgba(0,0,0, 0.2);
+    background-color: rgba(0,0,0, 0.02);
   }
+
 
   &__column {
     position: relative;
