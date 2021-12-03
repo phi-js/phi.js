@@ -1,4 +1,4 @@
-const WindowDialogEditor = () => import('./WindowDialogEditor.vue')
+import WindowDialogEditor from './WindowDialogEditor.vue'
 
 export default {
   'window.alert': {

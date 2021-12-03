@@ -46,8 +46,10 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue'
+const VmStatement = defineAsyncComponent(() => import('../VmStatement.vue'))
+
 import VmOperatorPicker from '../VmOperatorPicker.vue'
-import VmStatement from '../VmStatement.vue'
 import { UiIcon } from '/packages/ui/components'
 
 export default {

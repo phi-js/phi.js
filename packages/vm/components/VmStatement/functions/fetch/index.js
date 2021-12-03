@@ -1,4 +1,4 @@
-const FetchEditor = () => import('./FetchEditor.vue')
+import FetchEditor from './FetchEditor.vue'
 
 export default {
   icon: 'mdi:api',

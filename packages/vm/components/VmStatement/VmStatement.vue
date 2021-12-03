@@ -1,17 +1,18 @@
 <script setup>
-import { computed, defineAsyncComponent } from 'vue'
+import { computed } from 'vue'
 import { UiInputJson } from '/packages/ui/components'
 
-const StmtAndOr = defineAsyncComponent(() => import('./statements/StmtAndOr.vue'))
-const StmtOp = defineAsyncComponent(() => import('./statements/StmtOp.vue'))
-const StmtCall = defineAsyncComponent(() => import('./statements/StmtCall.vue'))
-const StmtChain = defineAsyncComponent(() => import('./statements/StmtChain/StmtChain.vue'))
-const StmtEval = defineAsyncComponent(() => import('./statements/StmtEval.vue'))
+import StmtAndOr from './statements/StmtAndOr.vue'
+import StmtOp from './statements/StmtOp.vue'
+import StmtCall from './statements/StmtCall.vue'
+import StmtChain from './statements/StmtChain/StmtChain.vue'
+import StmtEval from './statements/StmtEval.vue'
 
-// const StmtFunction = defineAsyncComponent(() => import('../VmExpression/statements/function/StmtFunction.vue'))
-// const StmtIf = defineAsyncComponent(() => import('../VmExpression/statements/if/StmtIf.vue'))
-// const StmtNot = defineAsyncComponent(() => import('../VmExpression/statements/not/StmtNot.vue'))
-// const StmtSwitch = defineAsyncComponent(() => import('../VmExpression/statements/switch/StmtSwitch.vue'))
+// const StmtAndOr = defineAsyncComponent(() => import('./statements/StmtAndOr.vue'))
+// const StmtOp = defineAsyncComponent(() => import('./statements/StmtOp.vue'))
+// const StmtCall = defineAsyncComponent(() => import('./statements/StmtCall.vue'))
+// const StmtChain = defineAsyncComponent(() => import('./statements/StmtChain/StmtChain.vue'))
+// const StmtEval = defineAsyncComponent(() => import('./statements/StmtEval.vue'))
 
 const props = defineProps({
   modelValue: {
