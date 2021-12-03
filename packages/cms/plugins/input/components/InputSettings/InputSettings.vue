@@ -78,7 +78,7 @@ const types = [
       label="Tipo"
       type="select-native"
       :options="types"
-      @input="input"
+      @update:modelValue="input"
     />
 
     <UiInput
@@ -88,7 +88,7 @@ const types = [
       OOPS
       <!-- <SelectOptionsEditor
         v-model:options="block.props.options"
-        @input="input"
+        @update:modelValue="input"
       /> -->
     </UiInput>
 
@@ -117,21 +117,21 @@ const types = [
       v-model="block.props.label"
       type="text"
       label="Etiqueta"
-      @input="input"
+      @update:modelValue="input"
     />
 
     <UiInput
       v-model="block.props.placeholder"
       type="text"
       label="Placeholder"
-      @input="input"
+      @update:modelValue="input"
     />
 
     <UiInput
       v-model="block.props.subtext"
       type="text"
       label="Subtexto"
-      @input="input"
+      @update:modelValue="input"
     />
   </div>
 </template>

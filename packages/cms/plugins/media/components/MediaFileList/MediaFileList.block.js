@@ -1,5 +1,5 @@
-const UiFileList = () => import('../../../../../ui/components/UiFileList/UiFileList.vue')
-const UiUpload = () => import('../../../../../ui/components/UiUpload/UiUpload.vue')
+import UiFileList from '../../../../../ui/components/UiFileList/UiFileList.vue'
+import UiUpload from '../../../../../ui/components/UiUpload/UiUpload.vue'
 import { UiInput } from '/packages/ui/components'
 
 export default {

@@ -1,6 +1,8 @@
 <script>
 import Quicklaunch from './Quicklaunch/index.js'
-import { getBlockDefinition, listBlocks } from '../../composables'
+
+import { blocks as cmsBlocks } from '../../singleton'
+import { getBlockDefinition } from '../../functions'
 import { UiIcon, UiTabs, UiTab } from '/packages/ui/components'
 import { useI18n } from '../../../i18n'
 
@@ -83,7 +85,6 @@ export default {
 
     availableBlocks() {
       let blocks = []
-      let cmsBlocks = listBlocks()
       for (let name in cmsBlocks) {
         let block = cmsBlocks[name]
         block.name = name

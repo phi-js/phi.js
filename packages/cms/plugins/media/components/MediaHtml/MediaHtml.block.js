@@ -1,6 +1,5 @@
-import { defineAsyncComponent } from 'vue'
-const MediaHtml = () => import('./MediaHtml.vue')
-const MediaHtmlBlockEditor = () => import('./MediaHtmlBlockEditor.vue')
+import MediaHtml from './MediaHtml.vue'
+import MediaHtmlBlockEditor from './MediaHtmlBlockEditor.vue'
 
 export default {
   title: 'Texto',
@@ -11,5 +10,5 @@ export default {
     props: { value: '' },
   },
 
-  editor: { component: defineAsyncComponent(MediaHtmlBlockEditor) },
+  editor: { component: MediaHtmlBlockEditor },
 }

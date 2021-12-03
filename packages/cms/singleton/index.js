@@ -13,21 +13,14 @@ const Cms = {
   },
 }
 
-/* !!! load built-in plugins !!! */
-// import pluginCore from '../plugins/core'
-// Cms.plugin(pluginCore)
+import pluginLayout from '../plugins/layout'
+Cms.plugin(pluginLayout)
 
 import pluginMedia from '../plugins/media'
 Cms.plugin(pluginMedia)
 
 import pluginInput from '../plugins/input'
 Cms.plugin(pluginInput)
-
-// import pluginSchool from '../plugins/school'
-// Cms.plugin(pluginSchool)
-
-// import pluginGoogle from '../plugins/google'
-// Cms.plugin(pluginGoogle)
 
 export default Cms
 export { blocks }

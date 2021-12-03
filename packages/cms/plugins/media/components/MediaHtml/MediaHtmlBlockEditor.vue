@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { UiIcon } from '/packages/ui/components'
-import BlockEditorLayout from '../../../../components/CmsBlockEditor/BlockEditorLayout.vue'
+import BlockScaffold from '../../../../components/CmsBlockEditor/BlockScaffold.vue'
 
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
@@ -145,8 +145,8 @@ const formatButtons = computed(() => {
 </script>
 
 <template>
-  <BlockEditorLayout
-    class="MediaHtmlBlockEditor"
+  <BlockScaffold
+    class="MediaHtmlBlockEditor BlockScaffold--default"
     v-bind="$attrs"
     :block="props.block"
     :focused="isFocused"
@@ -181,7 +181,7 @@ const formatButtons = computed(() => {
         :editor="editor"
       />
     </template>
-  </BlockEditorLayout>
+  </BlockScaffold>
 </template>
 
 <style lang="scss">

@@ -1,6 +1,6 @@
-const UiVideo = () => import('../../../../../ui/components/UiVideo/UiVideo.vue')
-const UiVideoChaptersEditor = () => import('../../../../../ui/components/UiVideo/UiVideoChaptersEditor.vue')
-const MediaVideoPicker = () => import('./MediaVideoPicker.vue')
+import UiVideo from '../../../../../ui/components/UiVideo/UiVideo.vue'
+import UiVideoChaptersEditor from '../../../../../ui/components/UiVideo/UiVideoChaptersEditor.vue'
+import MediaVideoPicker from './MediaVideoPicker.vue'
 
 export default {
   id: 'MediaVideo',

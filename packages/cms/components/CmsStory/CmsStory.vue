@@ -1,20 +1,12 @@
 <script setup>
-import { ref, provide, computed, watch, watchEffect } from 'vue'
+import { ref, computed, watch } from 'vue'
+import CmsBlock from '../CmsBlock/CmsBlock.vue'
 import { VM } from '/packages/vm'
-import { UiStory, UiItem } from '/packages/ui/components'
-import { CmsPage } from '../CmsPage'
-
-const storyEl = ref({})
-
-import customBlocks from './blocks'
-import CMS from '../../singleton'
-CMS.plugin({ blocks: customBlocks })
 
 const props = defineProps({
   story: {
     type: Object,
-    required: false,
-    default: () => ({}),
+    required: true,
   },
 
   modelValue: {
@@ -22,156 +14,156 @@ const props = defineProps({
     required: false,
     default: () => ({}),
   },
-
-  activeNodeId: {
-    type: [String, Number],
-    required: false,
-    default: null,
-  },
 })
 
-const emit = defineEmits(['update:modelValue', 'update:activeNodeId'])
+const emit = defineEmits(['update:modelValue'])
+const curIndex = ref(0)
+const transitionName = ref('slideX')
+const transitionDirection = ref('fw') // fw, bw
 
-const currentNodeId = ref()
+const curPage = computed(() => ({
+  ...(props.story.pages?.[curIndex.value]),
+  'v-if': undefined,
+}))
 
-watch(
-  () => props.activeNodeId,
-  (newValue) => currentNodeId.value = newValue,
-  { immediate: true },
-)
+const outgoingPaths = computed(() => {
+  return parsedStory.value.paths.filter((p) => p.from == curPage.value?.id)
+})
 
-const storyVm = new VM()
+
+
+const history = ref([])
+
+function traverse(path) {
+  const targetIndex = props.story.pages.findIndex((p) => p.id == path.to)
+  transitionDirection.value = targetIndex > curIndex.value ? 'fw' : 'bw'
+  curIndex.value = targetIndex
+
+  history.value.push({
+    path,
+    date: new Date(),
+  })
+}
+
+const next = computed(() => outgoingPaths.value.length ?
+  () => traverse(outgoingPaths.value[0])
+  : null)
+
+const back = computed(() => history.value.length > 0 ?
+  () => {
+    const prevEntry = history.value.pop()
+    curIndex.value = props.story.pages.findIndex((p) => p.id == prevEntry.path.from)
+    transitionDirection.value = 'bw'
+  }
+  : null)
+
+const storyVM = new VM()
 const parsedStory = ref({
-  nodes: [],
+  pages: [],
   paths: [],
 })
 
-async function parseStory(story, modelValue) {
-  var paths = []
-  for (const curPath of story.paths) {
-    let isVisible = curPath['v-if']
-      ? await storyVm.eval(curPath['v-if'], modelValue)
-      : true
-
-    if (isVisible) {
-      paths.push(curPath)
+watch(
+  () => props.modelValue,
+  async () => {
+    const pathPromises = []
+    for (const curPath of props.story.paths) {
+      if (curPath['v-if']) {
+        pathPromises.push(storyVM.eval(curPath['v-if'], props.modelValue))
+      } else {
+        pathPromises.push(true)
+      }
     }
-  }
+    const visiblePathIndexes = await Promise.all(pathPromises)
+    var paths = props.story.paths.filter((_, index) => visiblePathIndexes[index])
 
-  const nodes = []
-  for (const node of story.nodes) {
-    let isVisible = node['v-if']
-      ? await storyVm.eval(node['v-if'], modelValue)
-      : true
+    const pagePromises = []
+    for (const page of props.story.pages) {
+      if (page['v-if']) {
+        pagePromises.push(storyVM.eval(page['v-if'], props.modelValue))
+      } else {
+        pagePromises.push(true)
+      }
+    }
+    const visiblePageIndexes = await Promise.all(pagePromises)
 
-    if (isVisible) {
-      nodes.push(node)
-    } else {
-      // Bridge paths around node
+    for (const pageIndex in props.story.pages) {
+      if (!visiblePageIndexes[pageIndex]) {
+        // Bridge paths around node
 
-      // Obtain all incoming and outgoing paths
-      let incomingPaths = paths.filter((p) => p.to == node.id)
-      let outgoingPaths = paths.filter((p) => p.from == node.id)
+        // Obtain all incoming and outgoing paths
+        const page = props.story.pages[pageIndex]
+        const incomingPaths = paths.filter((p) => p.to == page.id)
+        const outgoingPaths = paths.filter((p) => p.from == page.id)
 
-      // Delete those paths (all connected to this node)
-      paths = paths.filter((p) => p.from != node.id && p.to != node.id)
+        // Delete all paths connected to this (now absent) node
+        paths = paths.filter((p) => p.from != page.id && p.to != page.id)
 
-      // Create a bridge between each incoming and outgoing path
-      incomingPaths.forEach((incoming) => {
-        outgoingPaths.forEach((outgoing) => {
-          paths.push(Object.assign({}, outgoing, {
-            from: incoming.from,
-            to: outgoing.to,
-          }))
+        // Create a bridge between each incoming and outgoing path
+        incomingPaths.forEach((incoming) => {
+          outgoingPaths.forEach((outgoing) => {
+            paths.push(Object.assign({}, outgoing, {
+              from: incoming.from,
+              to: outgoing.to,
+            }))
+          })
         })
-      })
+      }
     }
-  }
 
-  return {
-    ...story,
-    nodes,
-    paths,
-  }
-}
-
-let parserPromise = null
-function getParsedStory() {
-  if (parserPromise) {
-    return parserPromise
-  }
-
-  parserPromise = new Promise((resolve) => parseStory(props.story, props.modelValue).then(resolve))
-  return parserPromise
-}
-
-watchEffect(async () => {
-  parserPromise = null
-  parsedStory.value = await getParsedStory()
-
-  if (!currentNodeId.value) {
-    currentNodeId.value = parsedStory.value.nodes?.[0]?.id
-    emit('update:activeNodeId', currentNodeId.value)
-  }
-})
-
-async function fetchNode(nodeId) {
-  // const story = await getParsedStory()
-  // return story.nodes.find((n) => n.id == nodeId)
-  return props.story.nodes.find((n) => n.id == nodeId)
-}
-
-function goTo(nodeId, target = null) {
-  return storyEl.value.push(nodeId, target)
-}
-
-function back() {
-  return storyEl.value.back()
-}
-
-// CMS plugins and settings
-const vmFunctions = {
-  'Story.goTo': ({ nodeId, target }) => goTo(nodeId, target),
-  'Story.back': back,
-}
-
-// provide data for cms blocks
-provide('$_cms_story', computed(() => ({
-  currentNode: {
-    ...parsedStory.value.nodes.find((n) => n.id == currentNodeId.value),
-    exits: parsedStory.value.paths.filter((p) => p.from == currentNodeId.value),
+    parsedStory.value.paths = paths
+    parsedStory.value.pages = props.story.pages.filter((_, index) => visiblePageIndexes[index])
   },
-  goTo,
-  back,
-})))
+  { immediate: true, deep: true },
+)
 </script>
 
 <template>
-  <UiStory
-    ref="storyEl"
-    v-model:active="currentNodeId"
-    class="CmsStory"
-    @update:active="emit('update:activeNodeId', $event)"
-    @fetch="fetchNode"
-  >
-    <template #default="{ node, back: nodeBack }">
-      <CmsPage
-        class="CmsStory__page"
-        :page="node?.page"
-        :vm-functions="vmFunctions"
-        :model-value="modelValue"
-        @update:modelValue="emit('update:modelValue', $event)"
+  <div class="CmsStory">
+    <div class="CmsStory__header">
+      <button
+        :disabled="!back"
+        @click="back()"
       >
-        <template #header>
-          <UiItem
-            v-if="nodeBack"
-            class="ui--clickable ui--noselect ui-item--inline"
-            icon="mdi:arrow-left-thick"
-            text="Regresar"
-            @click="nodeBack()"
+        PREV
+      </button>
+      <button
+        v-for="(path, i) in outgoingPaths"
+        :key="i"
+        :disabled="!next"
+        @click="traverse(path)"
+        v-text="path.text"
+      />
+    </div>
+
+    <div class="CmsStory__container">
+      <transition :name="`${transitionName}--${transitionDirection}`">
+        <keep-alive>
+          <CmsBlock
+            v-if="curPage"
+            :key="curIndex"
+            class="CmsStory__page"
+            :block="curPage"
+            :model-value="modelValue"
+            @update:modelValue="emit('update:modelValue', $event)"
           />
-        </template>
-      </CmsPage>
-    </template>
-  </UiStory>
+        </keep-alive>
+      </transition>
+    </div>
+  </div>
 </template>
+
+<style lang="scss">
+.CmsStory {
+  @import './transitions.scss';
+  --cms-story-transition-duration: var(--ui-duration-quick);
+
+  &__container {
+    position: relative;
+  }
+
+  &__page {
+    border: 1px solid transparent; // prevent border/margin collapse
+  }
+}
+</style>

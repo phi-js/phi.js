@@ -1,1 +1,0 @@
-export { default as CmsBlockPicker } from './CmsBlockPicker.vue'

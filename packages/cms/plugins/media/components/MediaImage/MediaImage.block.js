@@ -1,8 +1,8 @@
 import { UiForm } from '/packages/ui/components'
 
-const MediaImage = () => import('./MediaImage.vue')
-const MediaImageToolbar = () => import('./MediaImageToolbar.vue')
-const MediaImageEditor = () => import('./MediaImageEditor.vue')
+import MediaImage from './MediaImage.vue'
+import MediaImageToolbar from './MediaImageToolbar.vue'
+import MediaImageEditor from './MediaImageEditor.vue'
 
 export default {
   name: 'MediaImage',

@@ -1,1 +1,0 @@
-export { default as CmsPage } from './CmsPage.vue'

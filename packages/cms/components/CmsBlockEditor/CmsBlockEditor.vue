@@ -1,110 +1,82 @@
-<script setup>
-import { shallowRef, ref, watch, defineAsyncComponent, provide } from 'vue'
-import { getBlockEditors, getBlockDefinition } from '../../composables'
-import { UiInput } from '/packages/ui/components'
-import BlockEditorLayout from './BlockEditorLayout.vue'
-import EditorAction from './EditorAction.vue'
+<script>
+import { h, provide, inject, defineAsyncComponent } from 'vue'
+import { blocks } from '../../singleton/index.js'
+import BlockScaffold from './BlockScaffold.vue'
 
-const props = defineProps({
-  /**
-   * @model
-   *
-   * {
-   *   "component": "x",
-   *   "props": { ... },
-   *   "v-model": ...,
-   *   "v-if": ...,
-   *   "v-on": ...,
-   *   "v-for": ...,
-   * }
-   */
-  block: {
-    type: Object,
-    required: true,
+const CmsBlockEditor = {
+  props: {
+    block: {
+      type: [Object, Array],
+      required: false,
+      default: null,
+    },
+
+    settings: {
+      type: Object,
+      required: false,
+      default: null,
+    },
   },
-})
 
-const emit = defineEmits(['update:block', 'delete'])
+  emits: ['update:block', 'delete'],
 
-const editors = shallowRef(null)
-const blockDefinition = shallowRef(null)
-const customEditor = shallowRef(null)
-
-watch(
-  () => props.block?.component,
-  async () => {
-    editors.value = await getBlockEditors(props.block)
-
-    let definition = await getBlockDefinition(props.block)
-    if (!definition) {
-      console.warn('Could not find definition for block', props.block)
-      return
+  setup(props, { emit }) {
+    var settings = {}
+    if (props.settings) {
+      settings = { ...props.settings }
+      provide('$_cms_settings', settings)
+    } else {
+      settings = inject('$_cms_settings', {})
     }
-    blockDefinition.value = { name: props.block.component, ...definition }
 
-    if (definition?.editor?.custom) {
-      if (typeof definition.editor.custom === 'function') {
-        customEditor.value = defineAsyncComponent(definition.editor.custom)
-      } else {
-        customEditor.value = definition.editor.custom
+    return () => {
+      const definition = blocks[props.block.component]
+
+      if (definition?.editor?.component) {
+        return h(definition.editor.component, {
+          'block': props.block,
+          'onUpdate:block': (newValue) => emit('update:block', newValue),
+          'onDelete': () => emit('delete'),
+        })
       }
+
+      // No hay editor Y no hay slots.  Usar BlockScaffold
+      if (typeof props.block.slot === 'undefined') {
+        return h(BlockScaffold, {
+          'class': 'BlockScaffold--default',
+          'block': props.block,
+          'onUpdate:block': (newValue) => emit('update:block', newValue),
+          'onDelete': () => emit('delete'),
+        })
+      }
+
+      // No hay editor.  Usar el componente del bloque
+      const defaultFace = typeof definition.block.component === 'function'
+        ? defineAsyncComponent(definition.block.component)
+        : definition.block.component
+
+      // Si tiene slots, reemplazar cada hijo del slot por un CmsBlockEditor
+      const defaultSlots = typeof props.block.slot !== 'undefined'
+        ? () => props.block.slot.map((slotItem, slotIndex) => h(CmsBlockEditor, {
+          'block': slotItem,
+          'settings': props.settings,
+          'onUpdate:block': (newValue) => {
+            const slotCopy = props.block.slot
+            slotCopy[slotIndex] = newValue
+            emit('update:block', { ...props.block, slot: slotCopy })
+          },
+          'onDelete': () => {
+            const slotCopy = props.block.slot
+            slotCopy.splice(slotIndex, 1)
+            emit('update:block', { ...props.block, slot: slotCopy })
+          },
+        }))
+        : undefined
+
+      return h(defaultFace, { ...props.block.props }, defaultSlots)
     }
   },
-  { immediate: true },
-)
+}
 
-const isFocused = ref(false)
-
-provide('$_phi_block_definition', blockDefinition)
+export default CmsBlockEditor
 </script>
-
-<template>
-  <template v-if="blockDefinition">
-    <component
-      :is="customEditor"
-      v-if="customEditor"
-      class="CmsBlockEditor"
-      :block="props.block"
-      @update:block="emit('update:block', $event)"
-      @delete="emit('delete')"
-    />
-    <BlockEditorLayout
-      v-else
-      class="CmsBlockEditor"
-      :block="props.block"
-      :focused="isFocused"
-      @update:block="emit('update:block', $event)"
-      @delete="emit('delete')"
-    >
-      <template
-        v-if="editors.toolbar"
-        #toolbar
-      >
-        <EditorAction
-          :action="editors.toolbar"
-          :block="props.block"
-          @update:block="emit('update:block', $event)"
-        />
-      </template>
-
-      <template #default="{ blockValue }">
-        <EditorAction
-          v-if="editors.face"
-          :action="editors.face"
-          :block="blockValue"
-          v-bind="blockValue?.props"
-          tabindex="0"
-          @update:block="emit('update:block', $event)"
-          @focus="isFocused = true"
-          @blur="isFocused = false"
-        />
-        <UiInput
-          v-else
-          type="json"
-          :model-value="blockValue"
-          @update:modelValue="emit('update:block', $event)"
-        />
-      </template>
-    </BlockEditorLayout>
-  </template>
-</template>

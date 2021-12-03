@@ -1,4 +1,4 @@
-const MediaLoremIpsum = () => import('./MediaLoremIpsum.vue')
+import MediaLoremIpsum from './MediaLoremIpsum.vue'
 import { UiForm } from '/packages/ui/components'
 
 export default {

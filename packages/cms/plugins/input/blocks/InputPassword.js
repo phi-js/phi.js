@@ -1,5 +1,5 @@
 import { UiInput, UiInputEditor } from '../../../../ui/components'
-const InputSettings = () => import('../components/InputSettings/InputSettings.vue')
+import InputSettings from '../components/InputSettings/InputSettings.vue'
 
 export default {
   tags: ['input'],

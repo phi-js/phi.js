@@ -1,5 +1,5 @@
 import { UiInput, UiInputEditor, UiForm } from '/packages/ui/components'
-const InputSettings = () => import('../components/InputSettings/InputSettings.vue')
+import InputSettings from '../components/InputSettings/InputSettings.vue'
 
 export default {
   tags: ['input'],
@@ -19,7 +19,6 @@ export default {
       'v-model': 'block',
       'component': UiForm,
       'props': {
-        inline: true,
         class: 'ui__group',
         fields: [
           {
@@ -28,11 +27,11 @@ export default {
             options: [
               {
                 text: 'Múltiple',
-                value: true,
+                value: '1',
               },
               {
                 text: 'Único',
-                value: null,
+                value: 0,
               },
             ],
           },
