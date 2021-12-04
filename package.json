@@ -23,7 +23,6 @@
     "@uppy/xhr-upload": "^2.0.5",
     "katex": "^0.13.18",
     "tippy.js": "^6.3.3",
-    "velocity-animate": "^1.5.2",
     "vue": "^3.2.6",
     "vue-zoomer": "^0.4.0-beta.1",
     "vuedraggable": "^4.1.0"

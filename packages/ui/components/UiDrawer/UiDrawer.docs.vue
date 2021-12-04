@@ -11,13 +11,13 @@ import { UiItem } from '../UiItem'
   >
     <template #trigger="{ isOpen }">
       <UiItem
-        class="ui--clickable"
+        class="ui--clickable ui--noselect"
         :text="`Toggle drawer ${n}`"
         :icon="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'"
       />
     </template>
 
-    <template #contents>
+    <template #contents="{ close }">
       <div style="border: 1px solid #ccc; background: #fff">
         <h2>Drawer {{ n }} contents</h2>
         <p>
@@ -28,6 +28,9 @@ import { UiItem } from '../UiItem'
           malesuada. Etiam eget pellentesque leo. In aliquet laoreet ante. In
           hac habitasse platea dictumst.
         </p>
+        <button @click="close()">
+          close
+        </button>
       </div>
     </template>
   </UiDrawer>
@@ -42,13 +45,13 @@ import { UiItem } from '../UiItem'
   >
     <template #trigger="{ isOpen }">
       <UiItem
-        class="ui--clickable"
+        class="ui--clickable ui--noselect"
         :text="`Toggle drawer ${n}`"
         :icon="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'"
       />
     </template>
 
-    <template #contents>
+    <template #contents="{ close }">
       <div style="border: 1px solid #ccc; background: #fff">
         <h2>Drawer {{ n }} contents</h2>
         <p>
@@ -59,6 +62,9 @@ import { UiItem } from '../UiItem'
           malesuada. Etiam eget pellentesque leo. In aliquet laoreet ante. In
           hac habitasse platea dictumst.
         </p>
+        <button @click="close()">
+          close
+        </button>
       </div>
     </template>
   </UiDrawer>
