@@ -1,6 +1,6 @@
 <template>
   <span
-    class="ui-icon"
+    class="UiIcon ui-icon"
     :style="styles"
     @click="$emit('click', $event)"
   >
