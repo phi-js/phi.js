@@ -59,23 +59,25 @@ function emitUpdate() {
 
 <template>
   <div class="CmsStoryEditor">
-    <div class="CmsStoryEditor__toolbar">
-      <UiInput
-        v-model="currentPageId"
-        type="select-native"
-        :options="pages"
-        option-text="$.id"
-        option-value="$.id"
-      />
-    </div>
-
     <keep-alive>
       <CmsBlockEditor
         v-if="currentPage"
         :key="currentPage.id"
         v-model:block="currentPage"
         :settings="settings"
-      />
+      >
+        <template #toolbar>
+          <div class="CmsStoryEditor__toolbar">
+            <UiInput
+              v-model="currentPageId"
+              type="select-native"
+              :options="pages"
+              option-text="$.id"
+              option-value="$.id"
+            />
+          </div>
+        </template>
+      </CmsBlockEditor>
     </keep-alive>
   </div>
 </template>

@@ -154,24 +154,29 @@ function isLeftGhostVisible(colIndex) {
     @update:block="emit('update:block', $event)"
     @delete="emit('delete')"
   >
-    <!-- <template #toolbar>
+    <template
+      v-if="columns.length > 1"
+      #toolbar
+    >
       <UiIcon
         v-show="!props.block.props?.alignItems || props.block.props?.alignItems == 'flex-start'"
+        class="BlockScaffold__toolbar-icon"
         src="mdi:align-vertical-top"
         @click="emit('update:block', {...props.block, props: {...props.block.props, alignItems: 'center'}})"
       />
       <UiIcon
         v-show="props.block.props?.alignItems == 'center'"
+        class="BlockScaffold__toolbar-icon"
         src="mdi:align-vertical-center"
         @click="emit('update:block', {...props.block, props: {...props.block.props, alignItems: 'flex-end'}})"
       />
       <UiIcon
         v-show="props.block.props?.alignItems == 'flex-end'"
+        class="BlockScaffold__toolbar-icon"
         src="mdi:align-vertical-bottom"
         @click="emit('update:block', {...props.block, props: {...props.block.props, alignItems: 'flex-start'}})"
       />
-    </template> -->
-
+    </template>
     <div
       ref="$el"
       class="LayoutRowEditor__body"
@@ -232,54 +237,6 @@ function isLeftGhostVisible(colIndex) {
 
 <style lang="scss">
 .LayoutRowEditor {
-  display: flex;
-  margin: 8px 0;
-
-  &__body {
-    flex: 1;
-    display: flex;
-    flex-wrap: nowrap;
-
-    border-left: 2px solid rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    padding-left: 8px;
-  }
-
-  & > .BlockScaffold__toolbar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 36px;
-
-    align-self: flex-start;
-
-    .Block__drag-handle .ui-item__icon {
-      margin: 0;
-    }
-    .Block__drag-handle .ui-item__body {
-      display: none;
-    }
-
-    opacity: 0.3;
-    color: var(--ui-color-primary);
-    background-color: transparent;
-  }
-
-  & > .BlockScaffold__face {
-    flex: 1;
-  }
-
-  &:hover {
-    & > .BlockScaffold__toolbar {
-      opacity: 1;
-    }
-  }
-
-  &:hover &__body {
-    border-left: 2px solid var(--ui-color-primary);
-  }
-
-
   &__ghost {
     transition: all var(--ui-duration-snap);
     min-width: 0;
@@ -297,7 +254,6 @@ function isLeftGhostVisible(colIndex) {
     border: 1px dashed rgba(0,0,0, 0.2);
     background-color: rgba(0,0,0, 0.02);
   }
-
 
   &__column {
     position: relative;

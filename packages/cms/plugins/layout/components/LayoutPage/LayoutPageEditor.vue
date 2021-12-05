@@ -5,6 +5,9 @@ import { VmStatement } from '/packages/vm/components'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
 import { getBlockSchema } from '../../../../functions'
 
+// Page editor theme
+import '../../style/index.scss'
+
 const props = defineProps({
   block: {
     type: Object,
@@ -63,36 +66,39 @@ provide('$_vm_modelSchema', blockSchema)
   <div class="LayoutPageEditor">
     <div class="LayoutPageEditor__toolbar">
       <UiItem
-        class="LayoutPageEditor__item ui--clickable"
+        class="LayoutPageEditor__item"
         text="Mi página"
         icon="mdi:cog"
         @click="isWindowOpen = !isWindowOpen"
       />
+      <slot name="toolbar" />
     </div>
 
-    <CmsSlotEditor
-      v-model:slot="pageSlot"
-      group-name="page-slot"
-      @update:slot="onSlotUpdate"
-    />
+    <div class="LayoutPageEditor__body">
+      <CmsSlotEditor
+        v-model:slot="pageSlot"
+        group-name="page-slot"
+        @update:slot="onSlotUpdate"
+      />
 
-    <UiItem
-      class="RowLauncher ui--clickable"
-      text="Add section"
-      icon="mdi:arrow-split-horizontal"
-      @click="launchRow"
-    />
+      <UiItem
+        class="RowLauncher"
+        text="Add section"
+        icon="mdi:plus"
+        @click="launchRow"
+      />
+    </div>
 
     <UiWindow
       v-model:open="isWindowOpen"
       text="Page settings"
       icon="mdi:cog"
-      class="PageEditor__window ui-theme-dark"
+      class="LayoutPageEditor__window ui-theme-dark"
       name="page-settings"
     >
       <UiTabs>
         <UiTab
-          text="Setup"
+          text="Startup"
           icon="mdi:cog"
         >
           <VmStatement
@@ -102,7 +108,7 @@ provide('$_vm_modelSchema', blockSchema)
         </UiTab>
         <UiTab
           text="Source"
-          icon="mdi:cog"
+          icon="mdi:code-json"
         >
           <VmStatement v-model="innerBlock" />
         </UiTab>
@@ -125,5 +131,7 @@ provide('$_vm_modelSchema', blockSchema)
         </button>
       </template>
     </UiWindow>
+
+    <div class="LayoutPageEditor__wedge" />
   </div>
 </template>

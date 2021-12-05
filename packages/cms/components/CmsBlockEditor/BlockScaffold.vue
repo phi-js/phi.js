@@ -75,67 +75,72 @@ function onClickEye() {
 
 <template>
   <div class="BlockScaffold">
-    <div class="BlockScaffold__toolbar ui--noselect">
-      <UiItem
-        class="Block__drag-handle ui--clickable"
-        icon="mdi:cursor-move"
-        :text="definition?.title || ''"
-      />
-      <slot name="toolbar">
-        <EditorAction
-          v-if="editors.toolbar"
-          v-model:block="innerBlock"
-          :action="editors.toolbar"
-          @update:block="accept"
+    <div class="BlockScaffold__toolbar-container">
+      <div class="BlockScaffold__toolbar ui--noselect">
+        <UiItem
+          class="Block__drag-handle ui--clickable"
+          icon="mdi:cursor-move"
+          :text="definition?.title || ''"
         />
-      </slot>
-
-      <div style="flex:1" />
-
-      <UiInputWedge
-        v-if="innerBlock['v-model'] !== undefined"
-        v-model="innerBlock['v-model']"
-        :color="innerBlock['v-model'] ? 'var(--ui-color-primary)' : undefined"
-        placeholder="Variable"
-        @update:modelValue="accept()"
-      />
-      <UiIcon
-        title="Visibility"
-        class="BlockScaffold__toolbar-icon ui--clickable"
-        :src="innerBlock['v-if'] || innerBlock['v-for'] ? 'mdi:eye' : 'mdi:eye-outline'"
-        :style="{color: innerBlock['v-if'] || innerBlock['v-for'] ? 'var(--ui-color-primary)' : undefined}"
-        @click="onClickEye"
-      />
-
-      <!-- dropdown options -->
-      <UiPopover
-        class="BlockPopover"
-        placement="bottom-end"
-      >
-        <template #trigger>
-          <UiIcon
-            class="ui--clickable BlockScaffold__toolbar-icon"
-            src="mdi:dots-vertical"
+        <slot name="toolbar">
+          <EditorAction
+            v-if="editors.toolbar"
+            v-model:block="innerBlock"
+            :action="editors.toolbar"
+            @update:block="accept"
           />
-        </template>
-        <template #contents="{close}">
-          <UiItem
-            v-for="(action,i) in availableActions"
-            :key="i"
-            :text="action.title"
-            :icon="action.icon"
-            class="BlockPopover__item BlockPopover__item--action"
-            @click="openAction(i) && close()"
-          />
+        </slot>
 
-          <UiItem
-            text="Delete"
-            icon="mdi:close"
-            class="BlockPopover__item BlockPopover__item--delete"
-            @click="emitDelete() && close()"
-          />
-        </template>
-      </UiPopover>
+        <div
+          class="Toolbar__spacer"
+          style="flex:1"
+        />
+
+        <UiInputWedge
+          v-if="innerBlock['v-model'] !== undefined"
+          v-model="innerBlock['v-model']"
+          :color="innerBlock['v-model'] ? 'var(--ui-color-primary)' : undefined"
+          placeholder="Variable"
+          @update:modelValue="accept()"
+        />
+        <UiIcon
+          v-if="innerBlock['v-if'] || innerBlock['v-for']"
+          title="Visibility"
+          class="BlockScaffold__toolbar-icon ui--clickable"
+          src="mdi:eye"
+          @click="onClickEye"
+        />
+
+        <!-- dropdown options -->
+        <UiPopover
+          class="BlockPopover"
+          placement="bottom-end"
+        >
+          <template #trigger>
+            <UiIcon
+              class="ui--clickable BlockScaffold__toolbar-icon"
+              src="mdi:dots-vertical"
+            />
+          </template>
+          <template #contents="{close}">
+            <UiItem
+              v-for="(action,i) in availableActions"
+              :key="i"
+              :text="action.title"
+              :icon="action.icon"
+              class="BlockPopover__item BlockPopover__item--action"
+              @click="openAction(i) && close()"
+            />
+
+            <UiItem
+              text="Delete"
+              icon="mdi:close"
+              class="BlockPopover__item BlockPopover__item--delete"
+              @click="emitDelete() && close()"
+            />
+          </template>
+        </UiPopover>
+      </div>
     </div>
 
     <div class="BlockScaffold__face">
@@ -342,6 +347,7 @@ function onClickEye() {
   &__toolbar-icon {
     width: 40px;
     min-height: 40px;
+    cursor: pointer;
 
     &:hover {
       background-color: rgba(255, 255, 255, 0.2);

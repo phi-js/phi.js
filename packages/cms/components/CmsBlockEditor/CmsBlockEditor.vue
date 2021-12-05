@@ -29,7 +29,7 @@ const CmsBlockEditor = {
       settings = inject('$_cms_settings', {})
     }
 
-    return () => {
+    return (instance) => {
       const definition = blocks[props.block.component]
 
       if (definition?.editor?.component) {
@@ -37,7 +37,7 @@ const CmsBlockEditor = {
           'block': props.block,
           'onUpdate:block': (newValue) => emit('update:block', newValue),
           'onDelete': () => emit('delete'),
-        })
+        }, instance.$slots)
       }
 
       // No hay editor Y no hay slots.  Usar BlockScaffold

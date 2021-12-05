@@ -1,0 +1,172 @@
+/* Default LayoutPageEditor + LayoutRowEditor + BlockEditor theme */
+
+.LayoutPageEditor {
+  --ridge-width: 44px;
+  position: relative;
+
+  &__toolbar {
+    display: flex;
+    align-items: center;
+  }
+
+  &__item,
+  .RowLauncher {
+    cursor: pointer;
+
+    .UiIcon {
+      transition: all var(--ui-duration-snap);
+
+      display: flex;
+      width: calc(var(--ridge-width) - 10px);
+      height: 30px;
+
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 4px;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+
+      color: #777 !important;
+    }
+
+    &:hover .UiIcon {
+      background-color: var(--ui-color-primary);
+      color: #fff !important;
+    }
+  }
+
+  &__wedge {
+    pointer-events: none;
+
+    overflow: hidden;
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--ridge-width) - 8px);
+    width: 10px;
+
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+
+      left: 12px;
+      top: 0;
+      bottom: 0;
+      right: -10px;
+
+      border-radius: 50%;
+      box-shadow: 0px 0px 6px 1px #000000aa;
+    }
+  }
+}
+
+
+
+/* Row Editor */
+.LayoutRowEditor {
+  position: relative;
+  display: flex;
+  margin: 8px 0;
+
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  & > .BlockScaffold__toolbar-container {
+    width: calc(var(--ridge-width) + 1px);
+    position: relative;
+    z-index: 2;
+
+    & > .BlockScaffold__toolbar {
+      height: 100%;
+
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+
+      border-radius: var(--ui-radius);
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+
+      background-color: var(--ui-color-primary);
+      color: #fff;
+
+      // Drag hangle item
+      .Block__drag-handle {
+        .ui-item__body {
+          display: none;
+        }
+        .ui-item__icon {
+          margin: 0;
+        }
+      }
+
+      .Toolbar__spacer {
+        display: none;
+      }
+    }
+  }
+
+  & > .BlockScaffold__face {
+    flex: 1;
+    padding-left: 12px;
+  }
+
+
+  // Show/Hide toolbar
+  & > .BlockScaffold__toolbar-container {
+    overflow: hidden;
+    &:hover {
+      overflow: initial;
+      animation-name: noverflow;
+      animation-duration: var(--ui-duration-snap);
+    }
+  }
+
+  & > .BlockScaffold__toolbar-container {
+    & > .BlockScaffold__toolbar {
+      transition: all var(--ui-duration-snap);
+      position: relative;
+      left: calc(var(--ridge-width) - 11px);
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .Block__drag-handle .UiIcon,
+    .BlockScaffold__toolbar-icon {
+      width: 100%;
+    }
+  }
+
+  &:hover > .BlockScaffold__toolbar-container {
+    & > .BlockScaffold__toolbar {
+      background-color: var(--ui-color-primary);
+      opacity: 0.3;
+    }
+  }
+
+  & > .BlockScaffold__toolbar-container:hover {
+    & > .BlockScaffold__toolbar {
+      left: 0;
+      background-color: var(--ui-color-primary);
+      opacity: 0.9;
+    }
+  }
+}
+
+@keyframes noverflow {
+  0% {overflow: hidden;}
+  99% {overflow: hidden;}
+  100% {overflow: initial;}
+}
+
+
+
+/* Prevent overflows on things when dragging */
+.CmsSlotEditor--dragging {
+  .LayoutRowEditor {
+    pointer-events: none;
+  }
+}
