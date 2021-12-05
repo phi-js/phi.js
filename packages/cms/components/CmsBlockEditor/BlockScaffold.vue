@@ -363,15 +363,14 @@ function onClickEye() {
       display: block;
       position: absolute;
       top: -18px;
-      left: -8px;
-      right: -8px;
-      bottom: -8px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
 
       border-radius: var(--ui-radius);
-      // border: 1px solid rgba(0, 0, 0, 0.5);
-      box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+      border: 1px solid rgba(0, 0, 0, 0.5);
+      // box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
       z-index: -1;
-      background-color: #f3f3f3;
 
       transition: all var(--ui-duration-snap);
       opacity: 0;

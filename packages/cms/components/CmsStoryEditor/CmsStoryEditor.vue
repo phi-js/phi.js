@@ -68,6 +68,7 @@ function emitUpdate() {
       >
         <template #toolbar>
           <div class="CmsStoryEditor__toolbar">
+            <span>/</span>
             <UiInput
               v-model="currentPageId"
               type="select-native"
@@ -81,3 +82,29 @@ function emitUpdate() {
     </keep-alive>
   </div>
 </template>
+
+<style lang="scss">
+.CmsStoryEditor {
+  &__toolbar {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    font-family: var(--ui-font-secondary);
+
+    .ui__input {
+      border: none;
+      background: transparent;
+      margin: 0;
+
+      font-family: var(--ui-font-secondary);
+      outline: none;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(0,0,0, 0.04);
+      }
+    }
+  }
+}
+</style>
