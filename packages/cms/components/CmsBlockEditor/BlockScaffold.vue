@@ -267,22 +267,27 @@ function onClickEye() {
 
 
   // Estilos "default":  toolbar posicionado absolutamente encima del bloque
-  &--default &__toolbar {
+  &--default &__toolbar-container {
     position: absolute;
     bottom: 100%;
     left: 0;
     right: 0;
     z-index: 4;
-    flex-wrap: nowrap;
-    width: max-content; // No soportado en IE ni EDGE !!!
-
-    max-width: 300px;
-    max-width: 600px;
 
     transition: opacity var(--ui-duration-snap);
     opacity: 0;
     pointer-events: none;
+  }
 
+  &--default:hover &__toolbar-container {
+    opacity: 1;
+    pointer-events: initial;
+  }
+
+  &--default &__toolbar {
+    flex-wrap: nowrap;
+    width: max-content; // No soportado en IE ni EDGE !!!
+    max-width: 600px;
 
     // Catch-all para todo tipo de item dentro del toolbar
     .ui-icon,
@@ -339,11 +344,6 @@ function onClickEye() {
     }
   }
 
-  &--default:hover &__toolbar {
-    opacity: 1;
-    pointer-events: initial;
-  }
-
   &__toolbar-icon {
     width: 40px;
     min-height: 40px;
@@ -351,6 +351,39 @@ function onClickEye() {
 
     &:hover {
       background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  // "Outline" on hover
+  &--default {
+    position: relative;
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: -18px;
+      left: -8px;
+      right: -8px;
+      bottom: -8px;
+
+      border-radius: var(--ui-radius);
+      // border: 1px solid rgba(0, 0, 0, 0.5);
+      box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+      z-index: -1;
+      background-color: #f3f3f3;
+
+      transition: all var(--ui-duration-snap);
+      opacity: 0;
+      // pointer-events: none;
+    }
+  }
+
+  &--default:hover {
+    z-index: 9;
+
+    &::before {
+      opacity: 1;
     }
   }
 }
