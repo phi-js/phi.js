@@ -147,6 +147,11 @@
     }
   }
 
+  &.BlockScaffold--focused > .BlockScaffold__toolbar-container {
+    overflow: initial;
+  }
+
+  &.BlockScaffold--focused > .BlockScaffold__toolbar-container,
   & > .BlockScaffold__toolbar-container:hover {
     & > .BlockScaffold__toolbar {
       left: 0;
@@ -161,7 +166,6 @@
   99% {overflow: hidden;}
   100% {overflow: initial;}
 }
-
 
 
 /* Prevent overflows on things when dragging */

@@ -71,10 +71,15 @@ function onClickEye() {
   openAction(ifActionIndex)
 }
 
+const isFocused = ref(false)
+
 </script>
 
 <template>
-  <div class="BlockScaffold">
+  <div
+    class="BlockScaffold"
+    :class="{'BlockScaffold--focused': isFocused}"
+  >
     <div class="BlockScaffold__toolbar-container">
       <div class="BlockScaffold__toolbar ui--noselect">
         <UiItem
@@ -115,6 +120,7 @@ function onClickEye() {
         <UiPopover
           class="BlockPopover"
           placement="bottom-end"
+          @update:open="isFocused = $event"
         >
           <template #trigger>
             <UiIcon
@@ -279,7 +285,9 @@ function onClickEye() {
     pointer-events: none;
   }
 
-  &--default:hover &__toolbar-container {
+  // Toolbar visible on hover or focused
+  &--focused > &__toolbar-container,
+  &--default:hover > &__toolbar-container {
     opacity: 1;
     pointer-events: initial;
   }

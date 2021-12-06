@@ -7,6 +7,7 @@ import LayoutColumn from './components/LayoutColumn/LayoutColumn.vue'
 export default {
   blocks: {
     LayoutPage: {
+      disabled: true, // hide from CmsBlockPicker
       title: 'Página',
       icon: 'mdi:page-layout-body',
       block: { component: LayoutPage },
@@ -14,6 +15,7 @@ export default {
     },
 
     LayoutRow: {
+      disabled: true, // hide from CmsBlockPicker
       title: 'Row',
       icon: 'mdi:page-layout-body',
       block: { component: LayoutRow },
@@ -21,6 +23,7 @@ export default {
     },
 
     LayoutColumn: {
+      disabled: true, // hide from CmsBlockPicker
       title: 'Column',
       icon: 'mdi:page-layout-sidebar-left',
       block: { component: LayoutColumn },
