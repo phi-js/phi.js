@@ -1,16 +1,20 @@
 const path = require('path')
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    visualizer(),
+  ],
 
   build: {
     lib: {
       entry: path.resolve(__dirname, 'lib/index.js'),
       name: 'Phi',
-      fileName: (format) => `phi.${format}.js`
+      fileName: (format) => `phi.${format}.js`,
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
@@ -19,10 +23,8 @@ export default defineConfig({
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps
-        globals: {
-          vue: 'Vue'
-        }
-      }
-    }
-  }
+        globals: { vue: 'Vue' },
+      },
+    },
+  },
 })
