@@ -24,8 +24,7 @@ Retorna todos los editores (listos para usar en <component>) relacionados al blo
 */
 import { defineAsyncComponent } from 'vue'
 import getBlockDefinition from './getBlockDefinition.js'
-import { UiInput } from '/packages/ui/components'
-import { VmStatement } from '/packages/vm/components'
+import { UiInputJson } from '/packages/ui/components'
 import BlockListenersEditor from '../components/CmsBlockEditor/BlockListenersEditor.vue'
 import BlockModelsEditor from '../components/CmsBlockEditor/BlockModelsEditor.vue'
 import BlockVisibilityEditor from '../components/CmsBlockEditor/BlockVisibilityEditor.vue'
@@ -143,8 +142,7 @@ export default async function getBlockEditors(block, $settings = {}) {
     id: 'source',
     title: 'Source',
     icon: 'mdi:code-json',
-    component: UiInput,
-    props: { type: 'json' },
+    component: UiInputJson,
   })
 
   return retval

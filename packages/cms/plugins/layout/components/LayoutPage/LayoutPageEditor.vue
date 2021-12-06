@@ -110,7 +110,10 @@ provide('$_vm_modelSchema', blockSchema)
           text="Source"
           icon="mdi:code-json"
         >
-          <VmStatement v-model="innerBlock" />
+          <VmStatement
+            v-model="innerBlock"
+            style="height:100%"
+          />
         </UiTab>
       </UiTabs>
 
@@ -135,3 +138,14 @@ provide('$_vm_modelSchema', blockSchema)
     <div class="LayoutPageEditor__wedge" />
   </div>
 </template>
+
+<style lang="scss">
+.LayoutPageEditor {
+  &__window {
+    .UiInputJson__textarea {
+      resize: none;
+      min-height: none;
+    }
+  }
+}
+</style>

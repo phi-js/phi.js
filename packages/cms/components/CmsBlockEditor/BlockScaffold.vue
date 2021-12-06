@@ -168,13 +168,17 @@ const isFocused = ref(false)
       </slot>
     </div>
 
-    <div class="BlockScaffold__window">
-      <UiWindow
-        name="block-scaffold"
-        :open="!!availableActions[currentActionIndex]"
-        @update:open="currentActionIndex = null"
-      >
-        <UiTabs v-model="currentActionIndex">
+
+    <UiWindow
+      name="block-scaffold"
+      :open="!!availableActions[currentActionIndex]"
+      @update:open="currentActionIndex = null"
+    >
+      <div class="WindowContents">
+        <UiTabs
+          v-model="currentActionIndex"
+          class="WindowContents__tabs"
+        >
           <UiTab
             v-for="(action, i) in availableActions"
             :key="i"
@@ -186,30 +190,30 @@ const isFocused = ref(false)
         <div
           v-if="availableActions[currentActionIndex]"
           :key="currentActionIndex"
-          :class="['WindowContents', `WindowContents--id-${availableActions[currentActionIndex].id}`]"
+          :class="['WindowContents__body', `WindowContents--id-${availableActions[currentActionIndex].id}`]"
         >
           <EditorAction
             v-model:block="innerBlock"
             :action="availableActions[currentActionIndex]"
           />
         </div>
+      </div>
 
-        <template #footer="{close}">
-          <button
-            type="button"
-            class="ui__button ui__button--main"
-            @click="accept() && close()"
-            v-text="'Aceptar'"
-          />
-          <button
-            type="button"
-            class="ui__button ui__button--cancel"
-            @click="cancel() && close()"
-            v-text="'Cancelar'"
-          />
-        </template>
-      </UiWindow>
-    </div>
+      <template #footer="{close}">
+        <button
+          type="button"
+          class="ui__button ui__button--main"
+          @click="accept() && close()"
+          v-text="'Aceptar'"
+        />
+        <button
+          type="button"
+          class="ui__button ui__button--cancel"
+          @click="cancel() && close()"
+          v-text="'Cancelar'"
+        />
+      </template>
+    </UiWindow>
   </div>
 </template>
 
@@ -222,10 +226,27 @@ const isFocused = ref(false)
 }
 
 .WindowContents {
-  padding: var(--ui-padding);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &__body {
+    flex: 1;
+    padding: var(--ui-padding);
+    overflow: auto;
+  }
 
   &--id-source {
     padding: 0;
+
+    .UiInputJson {
+      height: 100%;
+    }
+
+    .UiInputJson__textarea {
+      resize: none;
+      min-height: 0;
+    }
   }
 }
 
