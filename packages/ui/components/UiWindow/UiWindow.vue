@@ -82,7 +82,7 @@ watch(
   { immediate: true },
 )
 
-const popupContents = ref()
+// const popupContents = ref()
 const isMoving = ref(false)
 const dropTarget = ref(null)
 
@@ -95,9 +95,9 @@ function dockTo(newPosition) {
   dock.value = newPosition
   emit('update:dock', dock.value)
 
-  if (dock.value == 'popup') {
-    openWindow(popupContents.value, () => close())
-  }
+  // if (dock.value == 'popup') {
+  //   openWindow(popupContents.value, () => close())
+  // }
 
   storeCoords()
 }
@@ -227,23 +227,18 @@ const isHovered = ref(false)
         />
       </div>
 
-      <div
-        ref="popupContents"
-        class="UiWindow__contents"
-      >
-        <div class="UiWindow__body">
-          <slot
-            name="default"
-            :close="close"
-          />
-        </div>
-        <footer class="UiWindow__footer ui-footer">
-          <slot
-            name="footer"
-            :close="close"
-          />
-        </footer>
+      <div class="UiWindow__body">
+        <slot
+          name="default"
+          :close="close"
+        />
       </div>
+      <footer class="UiWindow__footer ui-footer">
+        <slot
+          name="footer"
+          :close="close"
+        />
+      </footer>
     </UiResizable>
   </div>
 </template>
@@ -306,8 +301,8 @@ const isHovered = ref(false)
 .UiWindow {
   &--external {
     // display: none;
-    opacity: 0.4;
     // pointer-events: none;
+    opacity: 0.4;
   }
 
   &__scrim {
@@ -326,17 +321,6 @@ const isHovered = ref(false)
     flex-direction: column;
   }
 
-  &__contents {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__body {
-    flex: 1;
-    overflow: auto;
-  }
-
   &__header {
     display: flex;
     align-items: center;
@@ -345,6 +329,11 @@ const isHovered = ref(false)
       min-width: 32px;
       min-height: 32px;
     }
+  }
+
+  &__body {
+    flex: 1;
+    overflow: auto;
   }
 
   &__dockzone {
@@ -389,19 +378,16 @@ const isHovered = ref(false)
   }
 }
 
-// .UiWindow {
-//   &--seethru {
-//     background-color: transparent;
-//   }
+/// !!! Tabs inside Window
+.UiWindow {
+  .UiTabs {
+    display: flex;
+    flex-direction: column;
 
-//   &__box {
-//     transition: opacity var(--ui-duration-snap);
-//     opacity: 1;
-//   }
-
-//   &--seethru &__box {
-//     opacity: 0.5;
-//     backdrop-filter: blur(10px); // no esta funcionando en el contenido del scrim :(
-//   }
-// }
+    &__contents {
+      flex: 1;
+      overflow: auto;
+    }
+  }
+}
 </style>
