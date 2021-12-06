@@ -5,3 +5,6 @@ dist-ssr
 *.local
 /pages/**/*.local.vue
 .vscode
+.notes.md
+compile.bat
+/trash
