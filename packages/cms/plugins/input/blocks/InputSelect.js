@@ -28,11 +28,11 @@ export default {
             options: [
               {
                 text: 'Múltiple',
-                value: '1',
+                value: true,
               },
               {
                 text: 'Único',
-                value: 0,
+                value: false,
               },
             ],
           },
