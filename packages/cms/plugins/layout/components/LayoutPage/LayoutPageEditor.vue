@@ -142,9 +142,8 @@ provide('$_vm_modelSchema', blockSchema)
 <style lang="scss">
 .LayoutPageEditor {
   &__window {
-    .UiInputJson__textarea {
-      resize: none;
-      min-height: none;
+    .UiTabs {
+      height: 100%;
     }
   }
 }

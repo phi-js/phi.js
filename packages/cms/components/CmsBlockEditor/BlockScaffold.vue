@@ -185,18 +185,17 @@ const isFocused = ref(false)
             :value="i"
             :text="action.title"
             :icon="action.icon || 'mdi:star'"
-          />
+          >
+            <div
+              :class="['WindowContents__body', `WindowContents--id-${availableActions[currentActionIndex].id}`]"
+            >
+              <EditorAction
+                v-model:block="innerBlock"
+                :action="action"
+              />
+            </div>
+          </UiTab>
         </UiTabs>
-        <div
-          v-if="availableActions[currentActionIndex]"
-          :key="currentActionIndex"
-          :class="['WindowContents__body', `WindowContents--id-${availableActions[currentActionIndex].id}`]"
-        >
-          <EditorAction
-            v-model:block="innerBlock"
-            :action="availableActions[currentActionIndex]"
-          />
-        </div>
       </div>
 
       <template #footer="{close}">

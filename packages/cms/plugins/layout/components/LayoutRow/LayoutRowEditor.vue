@@ -21,8 +21,13 @@ watch(
 )
 
 function onUpdateColumn() {
-  // emit('update:block', { ...props.block, slot: columns.value })
-  emit('update:block', { ...props.block, slot: columns.value.filter((column) => column?.slot?.length > 0) })
+  // Remove empty columns
+  if (columns.value.length > 1) {
+    emit('update:block', { ...props.block, slot: columns.value.filter((column) => column?.slot?.length > 0) })
+  } else {
+    emit('update:block', { ...props.block, slot: columns })
+  }
+
 }
 
 

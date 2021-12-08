@@ -21,5 +21,9 @@ const props = defineProps({
 .LayoutRow {
   display: flex;
   flex-wrap: wrap;
+
+  .LayoutColumn {
+    flex: 1;
+  }
 }
 </style>

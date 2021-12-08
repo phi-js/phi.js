@@ -137,6 +137,15 @@ export default async function getBlockEditors(block, $settings = {}) {
     'v-model': 'block',
   })
 
+  // "style" prop
+  retval.actions.push({
+    'id': 'style',
+    'title': 'Style',
+    'icon': 'mdi:palette',
+    'component': UiInputJson,
+    'v-model': 'block.props.style',
+  })
+
   // Raw block source editor
   retval.actions.push({
     id: 'source',
