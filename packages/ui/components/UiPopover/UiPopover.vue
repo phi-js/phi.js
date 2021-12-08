@@ -5,6 +5,8 @@ import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/light-border.css'
 
 var tippyInstance = null
+
+const elRoot = ref()
 const elTrigger = ref()
 const elTooltip = ref()
 
@@ -26,6 +28,12 @@ const props = defineProps({
     required: false,
     default: null,
   },
+
+  trigger: {
+    type: String,
+    required: false,
+    default: 'click',
+  },
 })
 
 const emit = defineEmits(['update:open', 'open', 'close'])
@@ -36,16 +44,19 @@ onMounted(() => {
     interactive: true,
     duration: [100, 50],
     content: elTooltip.value,
-    trigger: 'click',
+    trigger: 'manual',
+    hideOnClick: false,
     placement: props.placement,
     arrow: true,
     inertia: true,
     maxWidth: 'none',
     onShow: () => {
+      isOpen.value = true
       emit('update:open', true)
       emit('open')
     },
     onHide: () => {
+      isOpen.value = false
       emit('update:open', false)
       emit('close')
     },
@@ -60,15 +71,22 @@ function close() {
   tippyInstance.hide()
 }
 
+const isOpen = ref(false)
+
 watch(
   () => props.open,
   (newValue) => {
-    if (!newValue) {
-      tippyInstance.hide()
+    isOpen.value = newValue
+    if (tippyInstance) {
+      newValue ? tippyInstance.show() : tippyInstance.hide()
     }
   },
+  { immediate: true },
 )
 
+/*
+Tippy plugin to hide on esc AND hide on click outside (since onHideClick doesn't work properly with trigger=manual)
+*/
 const hideOnEsc = {
   name: 'hideOnEsc',
   defaultValue: true,
@@ -79,26 +97,44 @@ const hideOnEsc = {
       }
     }
 
+    function onClickOutside(event) {
+      if (!elRoot.value.contains(event.target)) {
+        hide()
+      }
+    }
+
     return {
       onShow() {
         document.addEventListener('keydown', onKeyDown)
+        document.addEventListener('click', onClickOutside)
       },
       onHide() {
         document.removeEventListener('keydown', onKeyDown)
+        document.removeEventListener('click', onClickOutside)
       },
     }
   },
 }
 
+function onTriggerClick() {
+  if (props.trigger !== 'click') {
+    return
+  }
+
+  isOpen.value = !isOpen.value
+  isOpen.value ? tippyInstance.show() : tippyInstance.hide()
+}
 </script>
 
 <template>
   <div
+    ref="elRoot"
     class="UiPopover"
   >
     <div
       ref="elTrigger"
       class="UiPopover__trigger"
+      @click="onTriggerClick"
     >
       <slot
         name="trigger"
