@@ -1,5 +1,5 @@
 .ui__input-base {
-  padding: $ui-padding-vertical;
+  padding: var(--ui-padding-vertical);
   font-size: 1em;
   color: rgba(0, 0, 0, 0.8);
 
@@ -29,11 +29,9 @@
   }
 
   option {
-    // padding: $ui-padding;
     padding: 3px;
 
     &:hover {
-      // background-color: $ui-color-highlight;
       background-color: var(--ui-color-highlight);
     }
 

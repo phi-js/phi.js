@@ -1,10 +1,12 @@
-@import './variables/breathe.scss';
-@import './variables/color.scss';
-@import './variables/duration.scss';
-@import './variables/font.scss';
-@import './variables/padding.scss';
-@import './variables/radius.scss';
-@import './variables/screen-size.scss';
+:root {
+  @import './variables/breathe.scss';
+  @import './variables/color.scss';
+  @import './variables/duration.scss';
+  @import './variables/font.scss';
+  @import './variables/padding.scss';
+  @import './variables/radius.scss';
+  @import './variables/screen-size.scss';
+}
 
 @import './classes/breathe.scss';
 @import './classes/button.scss';

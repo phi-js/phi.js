@@ -1,8 +1,7 @@
 .ui-native-base {
-  padding: $ui-padding-vertical;
+  padding: var(--ui-padding-vertical);
   font-size: 1em;
   color: rgba(0, 0, 0, 0.8);
-  // outline-color: $ui-color-primary;
   outline-color: var(--ui-color-primary);
   box-sizing: border-box;
 
@@ -29,11 +28,9 @@
   }
 
   option {
-    // padding: $ui-padding;
     padding: 3px;
 
     &:hover {
-      // background-color: $ui-color-highlight;
       background-color: var(--ui-color-highlight);
     }
 
@@ -41,11 +38,6 @@
       background-color: var(--ui-color-highlight);
     }
   }
-
-  // &:hover {
-  //     color: #444645;
-  //     background: #ddd;
-  // }
 }
 
 .ui-native-textarea {

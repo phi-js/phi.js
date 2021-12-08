@@ -42,7 +42,7 @@
 
     &.--breathe {
         & > * {
-            margin-left: $ui-breathe;
+            margin-left: var(--ui-breathe);
 
             &:first-child {
                 margin-left: 0;

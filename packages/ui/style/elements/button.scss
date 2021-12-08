@@ -1,3 +1,25 @@
 .ui__button {
   white-space: nowrap;
+  cursor: pointer;
+
+  appearance: auto;
+  text-rendering: auto;
+  color: black;
+  letter-spacing: normal;
+  word-spacing: normal;
+  line-height: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+  background-color: rgb(239, 239, 239);
+  margin: 0em;
+  padding: 1px 6px;
+  border-width: 1px;
+  border-style: outset;
+  border-color: rgb(118, 118, 118);
+  border-image: initial;
 }

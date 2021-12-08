@@ -1,5 +1,5 @@
 .ui-outset {
-  border-radius: $ui-radius;
+  border-radius: var(--ui-radius);
 
   border: 1px solid #dcdcdc;
   background: #f1f1f1;

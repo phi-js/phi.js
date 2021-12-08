@@ -10,6 +10,6 @@
     font-weight: bold;
 
     &:first-child {
-        margin-top: $ui-breathe;
+        margin-top: var(--ui-breathe);
     }
 }

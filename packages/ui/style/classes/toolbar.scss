@@ -135,7 +135,7 @@ item.--active
 
   flex: none;
   margin: 0;
-  margin-left: $ui-breathe;
+  margin-left: var(--ui-breathe);
 
   &:first-child {
     margin-left: 0;
@@ -153,7 +153,7 @@ item.--active
 .ui-toolbar.--vertical .ui-row {
   flex: none;
   margin: 0;
-  margin-top: $ui-breathe;
+  margin-top: var(--ui-breathe);
 
   &:first-child {
     margin-top: 0;
