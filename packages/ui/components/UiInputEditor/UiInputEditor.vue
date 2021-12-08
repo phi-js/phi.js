@@ -55,15 +55,16 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
       />
     </div>
     <div v-else>
-      <UiInput
+      <input
         v-if="_inputProps.type == 'button'"
         v-model="_inputProps.label"
         type="text"
         class="UiInputEditor__button ui__button"
-        @update:modelValue="emitUpdate"
+        onkeypress="this.size = this.value.length"
+        @input="emitUpdate"
         @focus="$event.target.select(); $emit('focus', $event)"
         @blur="$emit('blur', $event)"
-      />
+      >
       <UiInput
         v-else
         v-model="_inputProps.placeholder"
@@ -80,10 +81,11 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
 <style lang="scss">
 .UiInputEditor {
   input.UiInputEditor__button {
-    display: inline-block;
     font-family: var(--ui-font-secondary);
-    font-size: 15px;
+    font-size: 0.95em;
     font-weight: 500;
+    outline: none;
+    padding: 0;
   }
 
   &__label,

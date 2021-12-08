@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { UiInputEditor } from '.'
 import { UiInput } from '../UiInput'
 
-const inputProps = ref({ type: 'text' })
+const inputProps = ref({ type: 'button' })
 const value = ref()
 </script>
 
