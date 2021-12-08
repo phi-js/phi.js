@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { UiIcon } from '../UiIcon'
+import { UiInputCode } from '../UiInputCode'
 
 const emit = defineEmits(['update:modelValue', 'focus', 'blur'])
 const props = defineProps({
@@ -63,12 +64,12 @@ function pretify() {
     class="UiInputJson"
     :class="{ 'UiInputJson--invalid': !isValid }"
   >
-    <textarea
+    <UiInputCode
       v-model="stringValue"
-      class="UiInputJson__textarea ui__input"
-      spellcheck="false"
+      lang="json"
+      class="UiInputJson__code"
       :placeholder="props.placeholder"
-      @input="onTextareaInput"
+      @update:modelValue="onTextareaInput"
       @focus="$emit('focus', $event)"
       @blur="$emit('blur', $event)"
     />
