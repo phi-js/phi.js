@@ -4,7 +4,7 @@ import { ref, watch, onMounted } from 'vue'
 import { UiIcon } from '../UiIcon'
 import { UiPopover } from '../UiPopover'
 import { UiResizable } from '../UiResizable'
-import openWindow from './openWindow.js'
+// import openWindow from './openWindow.js'
 
 const props = defineProps({
   dock: {
@@ -299,6 +299,8 @@ const isHovered = ref(false)
 }
 
 .UiWindow {
+  --ui-window-dockzone-size: 64px;
+
   &--external {
     // display: none;
     // pointer-events: none;
@@ -319,6 +321,7 @@ const isHovered = ref(false)
     position: absolute;
     display: flex;
     flex-direction: column;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   }
 
   &__header {
@@ -343,37 +346,38 @@ const isHovered = ref(false)
     transition: all var(--ui-duration-snap);
     background-color: var(--ui-color-primary);
     opacity: 0;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 
     &:hover {
-      opacity: 0.2;
+      opacity: 0.33;
     }
 
     &--top {
       top: 0;
       left: 0;
       right: 0;
-      height: 72px;
+      height: var(--ui-window-dockzone-size);
     }
 
     &--bottom {
       bottom: 0;
       left: 0;
       right: 0;
-      height: 72px;
+      height: var(--ui-window-dockzone-size);
     }
 
     &--right {
       right: 0;
       top: 0;
       bottom: 0;
-      width: 128px;
+      width: var(--ui-window-dockzone-size);
     }
 
     &--left {
       left: 0;
       top: 0;
       bottom: 0;
-      width: 128px;
+      width: var(--ui-window-dockzone-size);
     }
   }
 }
