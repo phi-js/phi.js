@@ -25,11 +25,9 @@ function onUpdateColumn() {
   if (columns.value.length > 1) {
     emit('update:block', { ...props.block, slot: columns.value.filter((column) => column?.slot?.length > 0) })
   } else {
-    emit('update:block', { ...props.block, slot: columns })
+    emit('update:block', { ...props.block, slot: columns.value.concat([]) })
   }
-
 }
-
 
 const filler = ref([])
 function onUpdateGhost(colIndex, slotItems) {
