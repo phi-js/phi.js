@@ -1,24 +1,24 @@
 <template>
   <div
-    class="ui-item"
+    class="UiItem"
     @click="$emit('click', $event)"
   >
     <div
       v-if="badge != null"
-      class="ui-item__badge"
+      class="UiItem__badge"
       v-text="badge"
     />
 
     <div
       v-if="hasSlot('icon')"
-      class="ui-item__icon"
+      class="UiItem__icon"
       @click="$emit('click-icon', $event)"
     >
       <slot name="icon" />
     </div>
     <UiIcon
       v-else-if="icon"
-      class="ui-item__icon"
+      class="UiItem__icon"
       :src="icon"
       :color="iconColor"
       @click="$emit('click-icon', $event)"
@@ -26,16 +26,16 @@
 
     <div
       v-if="hasSlot('default') || text || subtext"
-      class="ui-item__body"
+      class="UiItem__body"
       @click="$emit('click-body', $event)"
     >
       <slot name="default">
         <h1
-          class="ui-item__text"
+          class="UiItem__text"
           v-text="text"
         />
         <p
-          class="ui-item__subtext"
+          class="UiItem__subtext"
           v-text="subtext"
         />
       </slot>
@@ -43,7 +43,7 @@
 
     <div
       v-if="hasSlot('actions')"
-      class="ui-item__actions"
+      class="UiItem__actions"
     >
       <slot name="actions" />
     </div>
@@ -99,7 +99,7 @@ export default {
 </script>
 
 <style lang="scss">
-.ui-item {
+.UiItem {
   position: relative;  // para posicionar el badge
   display: flex;
   align-items: stretch;
@@ -166,7 +166,7 @@ export default {
   }
 
   &--nowrap {
-    .ui-item {
+    .UiItem {
       &__text,
       &__subtext {
         white-space: nowrap;

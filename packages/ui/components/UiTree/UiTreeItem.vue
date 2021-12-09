@@ -36,6 +36,12 @@ export default {
       return null
       // return `ui-menu-${this.depth}`
     },
+
+    itemBindings() {
+      const copy = { ...this.value }
+      delete copy.children
+      return copy
+    },
   },
 }
 </script>
@@ -53,15 +59,10 @@ export default {
       <template #trigger="{ isOpen }">
         <UiItem
           class="ui--clickable"
-          v-bind="value"
-          :children="undefined"
+          v-bind="itemBindings"
         >
-          <template
-            #actions
-          >
-            <UiIcon
-              :src="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'"
-            />
+          <template #actions>
+            <UiIcon :src="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'" />
           </template>
         </UiItem>
       </template>
@@ -91,7 +92,7 @@ export default {
     </template>
     <UiItem
       v-else
-      v-bind="value"
+      v-bind="itemBindings"
       @click="$emit('click-item', value)"
     />
   </div>
