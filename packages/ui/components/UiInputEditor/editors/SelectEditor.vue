@@ -1,8 +1,6 @@
 <script setup>
-import { ref, watch, nextTick } from 'vue'
-import draggable from 'vuedraggable'
-import { UiItem, UiIcon, UiInput } from '/packages/ui/components'
-import OptionEditor from './OptionEditor.vue'
+import { ref, watch } from 'vue'
+import { UiInput } from '/packages/ui/components'
 
 const props = defineProps({
   /* Objeto PROPS del bloque:
@@ -33,21 +31,6 @@ function emitUpdate() {
     options: [...innerOptions.value],
   })
 }
-
-const refBody = ref()
-async function pushOption() {
-  innerOptions.value.push({ text: '', value: '' })
-  await nextTick()
-  const targetInput = refBody.value.querySelector('.SelectEditor__option-item:last-child input')
-  if (targetInput) {
-    targetInput.focus()
-  }
-}
-
-function deleteOption(index) {
-  innerOptions.value.splice(index, 1)
-  emitUpdate()
-}
 </script>
 
 <template>
@@ -56,56 +39,11 @@ function deleteOption(index) {
     :class="`SelectEditor--type-${modelValue.type}`"
   >
     <UiInput
-      v-if="modelValue.type != 'select-list'"
       class="SelectEditor__preview"
       v-bind="modelValue"
       :options="innerOptions"
       label=""
     />
-
-    <div
-      ref="refBody"
-      class="SelectEditor__body"
-    >
-      <draggable
-        v-model="innerOptions"
-        class="SelectEditor__options"
-        group="select-block"
-        :item-key="(foo) => innerOptions.indexOf(foo)"
-        handle=".ui-item__icon"
-        @update:modelValue="emitUpdate"
-      >
-        <template #item="{ index }">
-          <UiItem
-            class="SelectEditor__option-item"
-            :icon="modelValue.type == 'select-list'
-              ? (modelValue.multiple ? 'mdi:checkbox-blank-outline' : 'mdi:radiobox-blank')
-              : 'mdi:drag-vertical'"
-          >
-            <OptionEditor
-              v-model:option="innerOptions[index]"
-              @update:option="emitUpdate()"
-            />
-            <template #actions>
-              <UiIcon
-                src="mdi:close"
-                class="ui--clickable"
-                @click="deleteOption(index)"
-              />
-            </template>
-          </UiItem>
-        </template>
-      </draggable>
-
-      <UiItem
-        tabindex="0"
-        text="Agregar opción"
-        icon="mdi:plus"
-        class="ui--clickable"
-        @click="pushOption"
-        @keypress.enter="pushOption"
-      />
-    </div>
   </div>
 </template>
 

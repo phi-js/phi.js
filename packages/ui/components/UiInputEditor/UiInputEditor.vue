@@ -15,7 +15,10 @@ const _inputProps = ref()
 watch(
   () => props.modelValue,
   (newValue) => _inputProps.value = newValue ? JSON.parse(JSON.stringify(newValue)) : {},
-  { immediate: true },
+  {
+    immediate: true,
+    deep: true,
+  },
 )
 
 const emit = defineEmits(['update:modelValue', 'focus', 'blur'])
