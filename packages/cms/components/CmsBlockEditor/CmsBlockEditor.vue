@@ -37,6 +37,7 @@ const CmsBlockEditor = {
           'block': props.block,
           'onUpdate:block': (newValue) => emit('update:block', newValue),
           'onDelete': () => emit('delete'),
+          'style': props.block?.props?.style,
         }, instance.$slots)
       }
 
@@ -47,6 +48,7 @@ const CmsBlockEditor = {
           'block': props.block,
           'onUpdate:block': (newValue) => emit('update:block', newValue),
           'onDelete': () => emit('delete'),
+          'style': props.block?.props?.style,
         })
       }
 

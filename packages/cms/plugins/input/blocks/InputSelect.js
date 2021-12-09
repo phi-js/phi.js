@@ -1,6 +1,6 @@
 import { UiInput, UiInputEditor, UiForm } from '/packages/ui/components'
 import InputSettings from '../components/InputSettings/InputSettings.vue'
-import SelectEditor from '/packages/ui/components/UiInputEditor/editors/SelectEditor.vue'
+import OptionsEditor from '/packages/ui/components/UiInputEditor/editors/OptionsEditor.vue'
 
 export default {
   tags: ['input'],
@@ -69,14 +69,15 @@ export default {
 
     actions: [
       {
-        'title': 'Select',
-        'component': InputSettings,
-        'v-model': 'block',
+        'title': 'Options',
+        'component': OptionsEditor,
+        'v-model': 'block.props.options',
       },
       {
-        'title': 'Options',
-        'component': SelectEditor,
-        'v-model': 'block.props',
+        'title': 'Input',
+        'icon': 'mdi:form-textbox',
+        'component': InputSettings,
+        'v-model': 'block',
       },
     ],
   },
