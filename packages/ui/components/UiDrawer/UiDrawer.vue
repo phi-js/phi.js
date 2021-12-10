@@ -29,9 +29,25 @@ const emit = defineEmits(['update:open'])
 const isOpen = ref(false)
 watch(
   () => props.open,
-  (newValue) => isOpen.value = newValue,
-  { immediate: true },
+  (newValue) => setOpen(newValue),
 )
+
+const drawerInstance = {
+  isOpen,
+  setOpen,
+}
+
+onMounted(() => {
+  isOpen.value = props.open
+
+  // Store in global drawer group
+  if (props.drawerGroup) {
+    if (typeof UiDrawerGroups[props.drawerGroup] == 'undefined') {
+      UiDrawerGroups[props.drawerGroup] = []
+    }
+    UiDrawerGroups[props.drawerGroup].push(drawerInstance)
+  }
+})
 
 const contentsEl = ref()
 
@@ -58,9 +74,19 @@ function setOpen(newValue = false) {
   contentsEl.value.style.maxHeight = sourceHeight
   contentsEl.value.style.overflow = 'hidden'
 
-  setTimeout(() => contentsEl.value.style.maxHeight = targetHeight, 0)
+  setTimeout(() => {
+    if (!contentsEl.value) {
+      return
+    }
+
+    contentsEl.value.style.maxHeight = targetHeight
+  }, 0)
 
   setTimeout(() => {
+    if (!contentsEl.value) {
+      return
+    }
+
     contentsEl.value.style.transition = null
     contentsEl.value.style.maxHeight = null
     contentsEl.value.style.overflow = null
@@ -68,10 +94,6 @@ function setOpen(newValue = false) {
 
   isOpen.value = newValue
   emit('update:open', isOpen.value)
-}
-
-function onTriggerClick() {
-  setOpen(!isOpen.value)
 
   /* Close all other drawers in the group (if group is present) */
   if (props.drawerGroup && isOpen.value) {
@@ -83,20 +105,9 @@ function onTriggerClick() {
   }
 }
 
-const drawerInstance = {
-  isOpen,
-  setOpen,
+function onTriggerClick() {
+  setOpen(!isOpen.value)
 }
-
-onMounted(() => {
-  // Store in global drawer group
-  if (props.drawerGroup) {
-    if (typeof UiDrawerGroups[props.drawerGroup] == 'undefined') {
-      UiDrawerGroups[props.drawerGroup] = []
-    }
-    UiDrawerGroups[props.drawerGroup].push(drawerInstance)
-  }
-})
 </script>
 
 <template>
@@ -122,7 +133,12 @@ onMounted(() => {
       <slot
         name="contents"
         :close="() => setOpen(false)"
-      />
+      >
+        <slot
+          name="default"
+          :close="() => setOpen(false)"
+        />
+      </slot>
     </div>
   </div>
 </template>

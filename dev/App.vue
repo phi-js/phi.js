@@ -14,7 +14,7 @@ import {
 } from 'vue'
 
 // UI components
-import { UiInput, UiItem, UiTree, UiPopover } from '/packages/ui/components'
+import { UiIcon, UiInput, UiItem, UiTree, UiPopover } from '/packages/ui/components'
 
 // Modulo API: Definicion de clients globales
 import { provideApi } from '/packages/api'
@@ -211,20 +211,35 @@ const enabledApis = computed(() => apis.filter((a) => a.isEnabled))
         />
 
         <UiTree
+          v-slot="{item, children, isOpen, toggle}"
           :value="filteredTree"
           class="app__tree"
+          :initial-open="(item) => item.isActive"
         >
-          <template #item="{ item }">
-            <a
-              :class="{ '--active': currentPage == item.payload.href }"
-              :href="`/#/${item.payload.href}`"
+          <a
+            v-if="item?.payload?.href"
+            :class="{ '--active': currentPage == item.payload.href }"
+            :href="`/#/${item.payload.href}`"
+          >
+            <UiItem
+              :text="item.text"
+              :subtext="item.payload.isLocal ? '.local' : ''"
+            />
+          </a>
+          <div v-else>
+            <UiItem
+              v-bind="item"
+              class="ui--clickable"
+              @click="toggle()"
             >
-              <UiItem
-                :text="item.text"
-                :subtext="item.payload.isLocal ? '.local' : ''"
-              />
-            </a>
-          </template>
+              <template
+                v-if="children?.length"
+                #actions
+              >
+                <UiIcon :src="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'" />
+              </template>
+            </UiItem>
+          </div>
         </UiTree>
       </div>
 
@@ -254,6 +269,12 @@ const enabledApis = computed(() => apis.filter((a) => a.isEnabled))
   a {
     text-decoration: none;
     color: #257dba;
+  }
+
+  .app__tree {
+    .UiTree__children {
+      margin-left: 12px;
+    }
   }
 
   &__top-bar {
@@ -316,6 +337,8 @@ const enabledApis = computed(() => apis.filter((a) => a.isEnabled))
   #app-body {
     flex: 1;
     padding: 18px 32px;
+
+    max-width: calc(100% - var(--app-sidebar-width)); // !!!! fixes intental item overflow
   }
 
   .api-item {

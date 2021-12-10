@@ -1,6 +1,7 @@
 export * from './UiDialog'
 export * from './UiDrawer'
 export * from './UiForm'
+export * from './UiGraphGrid'
 export * from './UiIcon'
 export * from './UiInput'
 export * from './UiInputEditor'
