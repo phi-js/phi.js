@@ -66,7 +66,7 @@ function setOptionText(option, newValue) {
       v-model="innerOptions"
       group="select-block"
       :item-key="(foo) => innerOptions.indexOf(foo)"
-      handle=".ui-item__icon"
+      handle=".UiItem__icon"
       @update:modelValue="emitUpdate"
     >
       <template #item="{ index }">
