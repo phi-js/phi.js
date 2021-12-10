@@ -74,9 +74,19 @@ function setOpen(newValue = false) {
   contentsEl.value.style.maxHeight = sourceHeight
   contentsEl.value.style.overflow = 'hidden'
 
-  setTimeout(() => contentsEl.value.style.maxHeight = targetHeight, 0)
+  setTimeout(() => {
+    if (!contentsEl.value) {
+      return
+    }
+
+    contentsEl.value.style.maxHeight = targetHeight
+  }, 0)
 
   setTimeout(() => {
+    if (!contentsEl.value) {
+      return
+    }
+
     contentsEl.value.style.transition = null
     contentsEl.value.style.maxHeight = null
     contentsEl.value.style.overflow = null
