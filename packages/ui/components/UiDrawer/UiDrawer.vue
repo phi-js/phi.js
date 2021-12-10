@@ -84,10 +84,6 @@ function setOpen(newValue = false) {
 
   isOpen.value = newValue
   emit('update:open', isOpen.value)
-}
-
-function onTriggerClick() {
-  setOpen(!isOpen.value)
 
   /* Close all other drawers in the group (if group is present) */
   if (props.drawerGroup && isOpen.value) {
@@ -97,6 +93,10 @@ function onTriggerClick() {
       }
     })
   }
+}
+
+function onTriggerClick() {
+  setOpen(!isOpen.value)
 }
 </script>
 
