@@ -33,12 +33,19 @@ function getBlockFields(block) {
     name: block['v-model'],
     type: null,
     props: null,
+    info: {
+      text: block['v-model'],
+      subtext: block.props?.label || '',
+      icon: null,
+    },
   }
 
   const props = block.props
 
   switch (block.component) {
   case 'InputSelect':
+    field.info.icon = 'mdi:form-dropdown'
+
     if (props.multiple) {
       field.type = 'array'
       field.items = {
@@ -67,6 +74,7 @@ function getBlockFields(block) {
   case 'MediaVideo':
     field.type = 'object'
     field.properties = { videoTime: { type: 'string' } }
+    field.info.icon = 'mdi:youtube'
 
     if (Array.isArray(block?.props?.chapters)) {
       field.properties.chapters = {
@@ -86,6 +94,10 @@ function getBlockFields(block) {
       retval.push({
         name: block['v-model:activeChapters'],
         ...field.properties.chapters,
+        info: {
+          icon: 'mdi:youtube',
+          text: block['v-model:activeChapters'],
+        },
       })
     }
     break
