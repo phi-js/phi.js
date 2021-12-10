@@ -29,9 +29,25 @@ const emit = defineEmits(['update:open'])
 const isOpen = ref(false)
 watch(
   () => props.open,
-  (newValue) => isOpen.value = newValue,
-  { immediate: true },
+  (newValue) => setOpen(newValue),
 )
+
+const drawerInstance = {
+  isOpen,
+  setOpen,
+}
+
+onMounted(() => {
+  isOpen.value = props.open
+
+  // Store in global drawer group
+  if (props.drawerGroup) {
+    if (typeof UiDrawerGroups[props.drawerGroup] == 'undefined') {
+      UiDrawerGroups[props.drawerGroup] = []
+    }
+    UiDrawerGroups[props.drawerGroup].push(drawerInstance)
+  }
+})
 
 const contentsEl = ref()
 
@@ -82,21 +98,6 @@ function onTriggerClick() {
     })
   }
 }
-
-const drawerInstance = {
-  isOpen,
-  setOpen,
-}
-
-onMounted(() => {
-  // Store in global drawer group
-  if (props.drawerGroup) {
-    if (typeof UiDrawerGroups[props.drawerGroup] == 'undefined') {
-      UiDrawerGroups[props.drawerGroup] = []
-    }
-    UiDrawerGroups[props.drawerGroup].push(drawerInstance)
-  }
-})
 </script>
 
 <template>
@@ -122,7 +123,12 @@ onMounted(() => {
       <slot
         name="contents"
         :close="() => setOpen(false)"
-      />
+      >
+        <slot
+          name="default"
+          :close="() => setOpen(false)"
+        />
+      </slot>
     </div>
   </div>
 </template>
