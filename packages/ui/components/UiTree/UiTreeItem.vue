@@ -31,10 +31,14 @@ export default {
 
   emits: ['click-item'],
 
+  data() {
+    return { isOpen: this.isOpen }
+  },
+
   computed: {
     drawerGroupName() {
-      return null
-      // return `ui-menu-${this.depth}`
+      // return null
+      return `ui-menu-${this.depth}`
     },
 
     itemBindings() {
@@ -49,14 +53,14 @@ export default {
 <template>
   <div
     class="ui-tree__item"
-    :class="{ 'ui-tree__item--active': value.isActive }"
+    :class="{ 'ui-tree__item--active': isOpen }"
   >
     <UiDrawer
       v-if="value?.children?.length"
+      v-model:open="isOpen"
       :drawer-group="drawerGroupName"
-      :open="value.isActive"
     >
-      <template #trigger="{ isOpen }">
+      <template #trigger>
         <UiItem
           class="ui--clickable"
           v-bind="itemBindings"
