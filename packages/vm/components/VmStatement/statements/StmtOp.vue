@@ -98,8 +98,8 @@ function onChangeOp() {
     <div class="ui-row --top">
       <div style="flex:3">
         <UiItem
-          v-if="fieldSchema"
-          v-bind="fieldSchema"
+          v-if="fieldSchema?.info"
+          v-bind="fieldSchema.info"
         />
         <input
           v-else
