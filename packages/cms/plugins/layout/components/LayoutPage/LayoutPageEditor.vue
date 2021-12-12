@@ -114,6 +114,7 @@ provide('$_vm_modelSchema', blockSchema)
             :value="innerBlock.slot"
             children-prop="slot"
             class="StoryTree"
+            :initial-open="() => true"
           >
             <template #default="{item, isOpen, children, toggle}">
               <UiItem

@@ -176,10 +176,12 @@ const formatButtons = computed(() => {
     </template>
 
     <template #default>
-      <EditorContent
-        class="tiptap-editor-contents"
-        :editor="editor"
-      />
+      <div :style="props.block?.props?.style">
+        <EditorContent
+          class="tiptap-editor-contents"
+          :editor="editor"
+        />
+      </div>
     </template>
   </BlockScaffold>
 </template>
