@@ -49,6 +49,10 @@ export default {
       ...page1,
     },
     {
+      id: 'page1b',
+      ...page1,
+    },
+    {
       'id': 'page2',
       'v-if': {
         field: 'temas',
@@ -71,7 +75,9 @@ export default {
   paths: [
     { from: 'start', to: 'page1', text: 'Ir a matemáticas' },
     { from: 'page1', to: 'page2', text: 'Revisar Química' },
+    { from: 'page1', to: 'page1b', text: 'Secreto' },
+    { from: 'page1b', to: 'page2', text: 'Siguiente' },
     { from: 'page2', to: 'page3', text: 'Repasar sociales' },
-    { from: 'page3', to: 'start', text: 'Back to start' },
+    // { from: 'page3', to: 'start', text: 'Back to start' },
   ],
 }

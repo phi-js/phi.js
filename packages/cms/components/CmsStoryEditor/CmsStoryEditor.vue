@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, computed } from '@vue/runtime-core'
 import CmsBlockEditor from '../CmsBlockEditor/CmsBlockEditor.vue'
-import { UiInput } from '/packages/ui/components'
+import { UiItem, UiInput, UiGraphGrid, UiDrawer } from '/packages/ui/components'
 
 const props = defineProps({
   story: {
@@ -55,10 +55,31 @@ function emitUpdate() {
     pages: pages.value,
   })
 }
+
+const storyGraph = computed(() => ({
+  nodes: props.story.pages.map((page) => ({ id: page.id })),
+  paths: props.story.paths,
+}))
 </script>
 
 <template>
   <div class="CmsStoryEditor">
+    <UiDrawer>
+      <template #trigger>
+        <UiItem
+          icon="mdi:sitemap"
+          class="ui--clickable"
+          text="Show map"
+        />
+      </template>
+      <template #contents="{ close }">
+        <UiGraphGrid
+          :graph="storyGraph"
+          @click-node="currentPageId = $event; close();"
+        />
+      </template>
+    </UiDrawer>
+
     <keep-alive>
       <CmsBlockEditor
         v-if="currentPage"
@@ -76,6 +97,10 @@ function emitUpdate() {
               option-text="$.id"
               option-value="$.id"
             />
+
+            <div style="margin-left: auto">
+              <slot name="toolbar" />
+            </div>
           </div>
         </template>
       </CmsBlockEditor>
@@ -86,6 +111,8 @@ function emitUpdate() {
 <style lang="scss">
 .CmsStoryEditor {
   &__toolbar {
+    flex: 1;
+
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
