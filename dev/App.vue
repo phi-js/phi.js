@@ -228,7 +228,10 @@ const enabledApis = computed(() => apis.filter((a) => a.isEnabled))
           </a>
           <div v-else>
             <UiItem
-              v-bind="item"
+              :icon="item.icon"
+              :text="item.text"
+              :subtext="item.subtext"
+
               class="ui--clickable"
               @click="toggle()"
             >
