@@ -1,3 +1,7 @@
+<script>
+export default { inheritAttrs: false }
+</script>
+
 <script setup>
 import { ref, watch, computed } from 'vue'
 import { UiInput } from '../UiInput'
@@ -31,7 +35,10 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
 </script>
 
 <template>
-  <div class="UiInputEditor">
+  <div
+    class="UiInputEditor"
+    :style="$attrs.style"
+  >
     <div
       v-if="_inputProps.type != 'button'"
       class="UiInputEditor__label"
@@ -52,7 +59,7 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
     >
       <component
         :is="editorComponent"
-        v-bind="$attrs"
+        v-bind="{ ...$attrs, style: undefined }"
         v-model="_inputProps"
         @update:modelValue="emitUpdate"
       />

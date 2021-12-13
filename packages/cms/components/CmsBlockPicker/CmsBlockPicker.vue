@@ -6,6 +6,17 @@ export default { inheritAttrs: false }
 import { ref, nextTick } from 'vue'
 import PickerContents from './PickerContents.vue'
 import { UiItem, UiPopover } from '/packages/ui/components'
+
+const props = defineProps({
+  placement: {
+    type: String,
+    required: false,
+    default: 'bottom-start',
+  },
+})
+
+const emit = defineEmits(['input', 'update:open'])
+
 const isOpen = ref(false)
 
 const refPickerContents = ref()
@@ -21,13 +32,21 @@ async function onPopoverOpen() {
 
 <template>
   <div
-    class="CmsBlockPicker"
-    :class="{'CmsBlockPicker--open': isOpen, 'CmsBlockPicker--closed': !isOpen}"
+    :class="[
+      'CmsBlockPicker',
+      `CmsBlockPicker--placement-${props.placement}`,
+      {
+        'CmsBlockPicker--open': isOpen,
+        'CmsBlockPicker--closed': !isOpen
+      },
+      $attrs.class
+    ]"
   >
     <UiPopover
       v-model:open="isOpen"
       class="CmsBlockPicker__popover"
-      placement="bottom-start"
+      :placement="props.placement"
+      @update:open="emit('update:open', isOpen)"
       @open="onPopoverOpen"
     >
       <template #trigger="slotData">
@@ -48,8 +67,7 @@ async function onPopoverOpen() {
         <PickerContents
           ref="refPickerContents"
           class="CmsBlockPicker__tooltip"
-          v-bind="$attrs"
-          @input="close()"
+          @input="emit('input', $event); close()"
         />
       </template>
     </UiPopover>
@@ -58,7 +76,7 @@ async function onPopoverOpen() {
 
 <style lang="scss">
 .CmsBlockPicker {
-  &__popover {
+  &--placement-bottom-start &__popover {
     .tippy-arrow {
       transform: translate(14px, 0) !important;
     }

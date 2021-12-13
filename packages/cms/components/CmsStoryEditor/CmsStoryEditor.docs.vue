@@ -7,24 +7,31 @@ import CmsStory from '../CmsStory/CmsStory.vue'
 const modelValue = ref({ limit: 4 })
 const showPreview = ref(false)
 const settings = ref({ uploads: { endpoint: 'http://v4.local/1/cms/pages/test/files' } })
-
 </script>
 
 <template>
-  <label><input
-    v-model="showPreview"
-    type="checkbox"
-  >Show preview</label>
-
   <CmsStoryEditor
     v-show="!showPreview"
     v-model:story="story"
     :settings="settings"
-  />
+  >
+    <template #toolbar>
+      <label><input
+        v-model="showPreview"
+        type="checkbox"
+      >Preview</label>
+    </template>
+  </CmsStoryEditor>
 
-  <CmsStory
-    v-if="showPreview"
-    v-model="modelValue"
-    :story="story"
-  />
+  <template v-if="showPreview">
+    <label><input
+      v-model="showPreview"
+      type="checkbox"
+    >Preview</label>
+
+    <CmsStory
+      v-model="modelValue"
+      :story="story"
+    />
+  </template>
 </template>

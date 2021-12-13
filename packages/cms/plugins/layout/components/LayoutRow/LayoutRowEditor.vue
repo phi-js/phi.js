@@ -184,7 +184,7 @@ function isLeftGhostVisible(colIndex) {
       ref="$el"
       class="LayoutRowEditor__body"
       :class="{'LayoutRowEditor--dragging': isDragging}"
-      :style="{alignItems: props.block?.props?.alignItems}"
+      :style="{alignItems: props.block?.props?.alignItems, ...props.block?.props?.style}"
       @mousemove="onResizerMove($event)"
       @mouseup="onResizerEnd($event)"
       @touchmove="onResizerMove($event)"

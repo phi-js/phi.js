@@ -119,11 +119,6 @@
   // Show/Hide toolbar
   & > .BlockScaffold__toolbar-container {
     overflow: hidden;
-    &:hover {
-      overflow: initial;
-      animation-name: noverflow;
-      animation-duration: var(--ui-duration-snap);
-    }
   }
 
   & > .BlockScaffold__toolbar-container {
@@ -156,7 +151,7 @@
     & > .BlockScaffold__toolbar {
       left: 0;
       background-color: var(--ui-color-primary);
-      opacity: 0.9;
+      opacity: 1;
     }
   }
 }

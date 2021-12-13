@@ -1,5 +1,5 @@
 <script>
-import { h, ref, watch, defineAsyncComponent } from 'vue'
+import { h, ref, watch, defineAsyncComponent, Transition } from 'vue'
 
 import { blocks } from '../../singleton'
 import { VM } from '/packages/vm'
@@ -36,10 +36,6 @@ export default {
 }
 
 async function getBlockVNode(block, modelValue, vm) {
-  // Exclude blocks with non-passing v-if
-  if (typeof block['v-if'] !== 'undefined' && !(await vm.eval(block['v-if'], modelValue))) {
-    return undefined
-  }
 
   // Block v-for
   if (typeof block['v-for'] !== 'undefined') {
@@ -70,6 +66,22 @@ async function getBlockVNode(block, modelValue, vm) {
   const blockProps = {
     ...BandP.blockProps,
     onMounted: block.setup ? () => vm.eval(block.setup, modelValue) : undefined,
+  }
+
+  if (typeof block['v-if'] !== 'undefined' && block['v-if'] !== null) {
+    const isVisible = await vm.eval(block['v-if'], modelValue)
+
+    if (block.transition) {
+      return h(
+        Transition,
+        { name: 'transition-myfade', ...block.transition },
+        () => isVisible
+          ? h(getBlockComponent(block.component), blockProps, BandP.blockSlots)
+          : null,
+      )
+    } else if (!isVisible) {
+      return undefined
+    }
   }
 
   return h(getBlockComponent(block.component), blockProps, BandP.blockSlots)
@@ -162,3 +174,16 @@ async function getBlockPropsAndSlots(block, modelValue, vm) {
   }
 }
 </script>
+
+<style lang="scss">
+.transition-myfade-enter-active,
+.transition-myfade-leave-active {
+  // transition: opacity 0.5s ease;
+  transition: opacity var(--ui-duration-quick);
+}
+
+.transition-myfade-enter-from,
+.transition-myfade-leave-to {
+  opacity: 0;
+}
+</style>

@@ -253,35 +253,6 @@ const isFocused = ref(false)
   position: relative;
   border: 1px solid transparent;
 
-  /*
-  &__toolbar {
-    position: absolute;
-    bottom: 100%;
-    min-width: 100%;
-    left: 0;
-    right: 0;
-
-    transition: opacity var(--ui-duration-snap);
-    opacity: 0;
-    pointer-events: none;
-
-    z-index: 4;
-
-    flex-wrap: nowrap;
-    width: max-content; // No soportado en IE ni EDGE !!!
-  }
-
-  &--open,
-  &--focused,
-  &:hover {
-    // border: 1px solid var(--ui-color-primary);
-    .BlockScaffold__toolbar {
-      opacity: 1;
-      pointer-events: initial;
-    }
-  }
-  */
-
   &__toolbar {
     display: inline-flex;
     align-items: stretch;
@@ -297,19 +268,17 @@ const isFocused = ref(false)
     position: absolute;
     bottom: 100%;
     left: 0;
-    right: 0;
-    z-index: 4;
 
     transition: opacity var(--ui-duration-snap);
     opacity: 0;
-    pointer-events: none;
+    // pointer-events: none;
   }
 
   // Toolbar visible on hover or focused
   &--focused > &__toolbar-container,
   &--default:hover > &__toolbar-container {
     opacity: 1;
-    pointer-events: initial;
+    // pointer-events: initial;
   }
 
   &--default &__toolbar {
@@ -318,7 +287,9 @@ const isFocused = ref(false)
     max-width: 600px;
 
     // Catch-all para todo tipo de item dentro del toolbar
+    .UiIcon,
     .ui-icon,
+    .UiSelectNative,
     button {
       color: rgba(255, 255, 255, 0.5);
       flex: none;
@@ -346,9 +317,13 @@ const isFocused = ref(false)
       }
     }
 
-    .ui-item {
+    .UiItem {
       .ui-icon {
         padding: 0;
+
+        &:hover {
+          background-color: transparent;
+        }
       }
     }
 
@@ -381,34 +356,31 @@ const isFocused = ref(false)
       background-color: rgba(255, 255, 255, 0.2);
     }
   }
+}
 
-  // "Outline" on hover
+
+/* __outline.   Visible unicamente para --default.  */
+.BlockScaffold {
   &--default {
-    position: relative;
-
     &::before {
       content: '';
       display: block;
       position: absolute;
-      top: -18px;
+      top: -1px;
       left: -4px;
       right: -4px;
-      bottom: -4px;
+      bottom: -2px;
 
       border-radius: var(--ui-radius);
       border: 1px solid rgba(0, 0, 0, 0.5);
-      // box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-      z-index: -1;
 
       transition: all var(--ui-duration-snap);
       opacity: 0;
-      // pointer-events: none;
+      pointer-events: none;
     }
   }
 
   &--default:hover {
-    z-index: 9;
-
     &::before {
       opacity: 1;
     }

@@ -56,9 +56,9 @@ watch(
 <template>
   <div class="UiTree">
     <UiTreeItem
-      v-for="(item, i) in items"
+      v-for="(_, i) in items"
       :key="i"
-      :value="item"
+      :value="items[i]"
       :depth="props.depth"
       :children-prop="props.childrenProp"
       :initial-open="props.initialOpen"

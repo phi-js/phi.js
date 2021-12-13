@@ -3,13 +3,14 @@ import { ref } from 'vue'
 import CmsBlock from '../packages/cms/components/CmsBlock/CmsBlock.vue'
 import CmsBlockEditor from '../packages/cms/components/CmsBlockEditor/CmsBlockEditor.vue'
 
-import somePage from '../packages/cms/samples/0.empty.js'
+// import somePage from '../packages/cms/samples/0.empty.js'
 // import somePage from '../packages/cms/samples/1.jsonplaceholder.js'
 // import somePage from '../packages/cms/samples/2.video.js'
 // import somePage from '../packages/cms/samples/3.campestre.js'
 // import somePage from '../packages/cms/samples/campestre/clean.js'
+import somePage from '../packages/cms/samples/4.onoff.js'
 
-const showPreview = ref(false)
+const showPreview = ref(true)
 const block = ref(somePage)
 
 const settings = ref({ uploads: { endpoint: 'http://v4.local/1/cms/pages/test/files' } })

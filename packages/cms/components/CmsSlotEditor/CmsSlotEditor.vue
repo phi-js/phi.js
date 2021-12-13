@@ -72,6 +72,14 @@ function onDraggableEnd() {
   isDragging.value = false
   emit('update:dragging', isDragging.value)
 }
+
+function launchBlock(index, block, position) {
+  innerSlot.value.splice(position == 'top' ? index : index + 1, 0, block)
+  emitUpdate()
+}
+
+const focusedIndexes = ref({})
+
 </script>
 
 <template>
@@ -95,7 +103,30 @@ function onDraggableEnd() {
       @end="onDraggableEnd()"
     >
       <template #item="{element, index}">
-        <div>
+        <div
+          class="SlotBlock"
+          :class="{'SlotBlock--focused': focusedIndexes[index]}"
+        >
+          <template v-if="showLauncher">
+            <CmsBlockPicker
+              v-for="position in ['bottom', 'top']"
+              :key="position"
+
+              :class="`SlotBlock__launcher SlotBlock__launcher--${position}`"
+              :placement="position == 'bottom' ? 'bottom' : 'top'"
+              @input="launchBlock(index, $event, position)"
+              @update:open="focusedIndexes[index] = $event"
+            >
+              <template #trigger>
+                <div class="LauncherFace">
+                  <div class="LauncherFace__icon ui--noselect">
+                    +
+                  </div>
+                </div>
+              </template>
+            </CmsBlockPicker>
+          </template>
+
           <CmsBlockEditor
             class="CmsSlotEditor__item"
             :block="element"
@@ -107,13 +138,165 @@ function onDraggableEnd() {
     </draggable>
 
     <CmsBlockPicker
-      v-if="showLauncher"
+      v-if="showLauncher && !innerSlot.length"
       @input="appendBlock"
     />
   </div>
 </template>
 
 <style lang="scss">
+.SlotBlock {
+  position: relative;
+
+  &:hover {
+    z-index: 2;
+  }
+
+  // Show/hide __launcher on hover
+  & > &__launcher {
+    transition: all var(--ui-duration-snap);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &:hover > &__launcher,
+  &--focused > &__launcher {
+    opacity: 1;
+    pointer-events: initial;
+  }
+
+
+  &__launcher {
+    cursor: pointer;
+
+    position: absolute;
+    left: 0;
+    right: 0;
+
+    &--top {
+      bottom: 100%;
+
+      .LauncherFace::after {
+        bottom: 0;
+      }
+    }
+
+    &--bottom {
+      top: 100%;
+      z-index: 2;
+
+      .LauncherFace::after {
+        top: 0;
+      }
+
+    }
+  }
+
+
+  // Launcher face opacity on hover
+  &__launcher {
+    .LauncherFace {
+      opacity: 0.33;
+    }
+
+    &:hover {
+      .LauncherFace {
+        opacity: 1;
+      }
+    }
+  }
+
+
+
+  .LauncherFace {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 28px;
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 16px;
+      font-weight: bold;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: #313131;
+      color: #fff;
+    }
+
+    &:hover {
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+
+        border-top: 1px solid var(--ui-color-primary);
+        border-bottom: 1px solid var(--ui-color-primary);
+        z-index: 2;
+      }
+    }
+
+    &:hover .LauncherFace__icon {
+      background-color: var(--ui-color-primary);
+    }
+  }
+}
+
+
+// Launcher arrow
+.SlotBlock__launcher {
+  --triangle-color: #313131;
+  &:hover {
+    --triangle-color: var(--ui-color-primary);
+  }
+
+  .LauncherFace::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 50%;
+    margin-left: -6px;
+  }
+
+  &--top {
+    .LauncherFace::before {
+      // Triangle
+      bottom: 0;
+
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid var(--triangle-color);
+
+      // margin-left: -7px;
+    }
+  }
+
+  &--bottom {
+    .LauncherFace::before {
+      // Triangle
+      top: 0;
+
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 8px solid var(--triangle-color);
+
+      // margin-left: -5px;
+    }
+  }
+}
+
+
 .CmsSlotEditor {
   & > div:first-child { // draggable container
     min-width: 100%;

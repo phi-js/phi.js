@@ -40,7 +40,7 @@ function emitUpdate() {
   >
     <UiInput
       class="SelectEditor__preview"
-      v-bind="modelValue"
+      v-bind="{ ...modelValue, style: undefined }"
       :options="innerOptions"
       label=""
     />
