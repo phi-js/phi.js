@@ -14,17 +14,41 @@ const props = defineProps({
     required: false,
     default: () => ({}),
   },
+
+  currentPageId: {
+    type: String,
+    required: false,
+    default: null,
+  },
 })
 
-const emit = defineEmits(['update:modelValue'])
-const curIndex = ref(0)
-const transitionName = ref('slideX')
-const transitionDirection = ref('fw') // fw, bw
+const emit = defineEmits(['update:modelValue', 'update:currentPageId'])
 
+const curIndex = ref(0)
 const curPage = computed(() => ({
   ...(props.story.pages?.[curIndex.value]),
   'v-if': undefined,
 }))
+
+watch(
+  () => props.currentPageId,
+  (newValue) => {
+    curIndex.value = newValue !== null ? props.story?.pages.findIndex((pg) => pg.id == newValue) : 0
+    if (curPage.value?.id !== newValue) {
+      emitCurrentPageId()
+    }
+  },
+  { immediate: true },
+)
+
+function emitCurrentPageId() {
+  const foundPage = props.story.pages?.[curIndex.value]
+  emit('update:currentPageId', foundPage?.id)
+}
+
+const transitionName = ref('slideX')
+const transitionDirection = ref('fw') // fw, bw
+
 
 const outgoingPaths = computed(() => {
   return parsedStory.value.paths.filter((p) => p.from == curPage.value?.id)
@@ -38,6 +62,7 @@ function traverse(path) {
   const targetIndex = props.story.pages.findIndex((p) => p.id == path.to)
   transitionDirection.value = targetIndex > curIndex.value ? 'fw' : 'bw'
   curIndex.value = targetIndex
+  emitCurrentPageId()
 
   history.value.push({
     path,
@@ -53,6 +78,7 @@ const back = computed(() => history.value.length > 0 ?
   () => {
     const prevEntry = history.value.pop()
     curIndex.value = props.story.pages.findIndex((p) => p.id == prevEntry.path.from)
+    emitCurrentPageId()
     transitionDirection.value = 'bw'
   }
   : null)
@@ -67,15 +93,19 @@ watch(
   () => props.modelValue,
   async () => {
     const pathPromises = []
-    for (const curPath of props.story.paths) {
-      if (curPath['v-if']) {
-        pathPromises.push(storyVM.eval(curPath['v-if'], props.modelValue))
-      } else {
-        pathPromises.push(true)
+    var paths = []
+
+    if (props.story?.paths?.length) {
+      for (const curPath of props.story.paths) {
+        if (curPath['v-if']) {
+          pathPromises.push(storyVM.eval(curPath['v-if'], props.modelValue))
+        } else {
+          pathPromises.push(true)
+        }
       }
+      const visiblePathIndexes = await Promise.all(pathPromises)
+      paths = props.story.paths.filter((_, index) => visiblePathIndexes[index])
     }
-    const visiblePathIndexes = await Promise.all(pathPromises)
-    var paths = props.story.paths.filter((_, index) => visiblePathIndexes[index])
 
     const pagePromises = []
     for (const page of props.story.pages) {
@@ -120,7 +150,22 @@ watch(
 
 <template>
   <div class="CmsStory">
-    <div class="CmsStory__header">
+    <div class="CmsStory__container">
+      <Transition :name="`${transitionName}--${transitionDirection}`">
+        <KeepAlive>
+          <CmsBlock
+            v-if="curPage"
+            :key="curIndex"
+            class="CmsStory__page"
+            :block="curPage"
+            :model-value="modelValue"
+            @update:modelValue="emit('update:modelValue', $event)"
+          />
+        </KeepAlive>
+      </Transition>
+    </div>
+
+    <div class="CmsStory__footer">
       <button
         :disabled="!back"
         @click="back()"
@@ -134,21 +179,6 @@ watch(
         @click="traverse(path)"
         v-text="path.text"
       />
-    </div>
-
-    <div class="CmsStory__container">
-      <transition :name="`${transitionName}--${transitionDirection}`">
-        <keep-alive>
-          <CmsBlock
-            v-if="curPage"
-            :key="curIndex"
-            class="CmsStory__page"
-            :block="curPage"
-            :model-value="modelValue"
-            @update:modelValue="emit('update:modelValue', $event)"
-          />
-        </keep-alive>
-      </transition>
     </div>
   </div>
 </template>

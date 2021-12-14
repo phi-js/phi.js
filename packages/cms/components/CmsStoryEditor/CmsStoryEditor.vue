@@ -1,7 +1,16 @@
 <script setup>
 import { ref, watch, computed } from '@vue/runtime-core'
 import CmsBlockEditor from '../CmsBlockEditor/CmsBlockEditor.vue'
-import { UiItem, UiInput, UiGraphGrid, UiDrawer } from '/packages/ui/components'
+import CmsBlock from '../CmsBlock/CmsBlock.vue'
+import LayoutPageWindow from '../../plugins/layout/components/LayoutPage/LayoutPageWindow.vue'
+
+import {
+  UiDrawer,
+  UiGraphGrid,
+  UiInput,
+  UiItem,
+  UiIcon,
+} from '/packages/ui/components'
 
 const props = defineProps({
   story: {
@@ -19,7 +28,13 @@ const props = defineProps({
 const emit = defineEmits(['update:story'])
 
 const pages = ref([])
+const curPage = ref()
+
+const modelValue = ref({})
+const showPreview = ref(false)
 const currentPageId = ref(null)
+const windowIsOpen = ref(false)
+const mapIsOpen = ref(false)
 
 watch(
   () => props.story,
@@ -28,31 +43,34 @@ watch(
     if (pages.value.length && !currentPageId.value) {
       currentPageId.value = pages.value[0].id
     }
+
+    const foundPage = pages.value.find((p) => p.id == currentPageId.value)
+    curPage.value = foundPage ? JSON.parse(JSON.stringify(foundPage)) : null
   },
   { immediate: true },
 )
 
+function setCurrentPageId(pageId) {
+  const foundPage = pages.value.find((p) => p.id == pageId)
+  if (!foundPage) {
+    currentPageId.value = null
+    curPage.value = null
+    return
+  }
 
-const currentPage = computed({
-  get() {
-    return currentPageId.value ? pages.value.find((p) => p.id == currentPageId.value) : null
-  },
+  currentPageId.value = pageId
+  curPage.value = JSON.parse(JSON.stringify(foundPage))
+}
 
-  set(newValue) {
-    if (!currentPageId.value) {
-      return
-    }
-
-    const currentPageIndex = pages.value.findIndex((p) => p.id == currentPageId.value)
-    pages.value[currentPageIndex] = newValue
-    emitUpdate()
-  },
-})
+function windowOnCancel() {
+  const foundPage = pages.value.find((p) => p.id == currentPageId.value)
+  curPage.value = foundPage ? JSON.parse(JSON.stringify(foundPage)) : null
+}
 
 function emitUpdate() {
   emit('update:story', {
     ...props.story,
-    pages: pages.value,
+    pages: pages.value.map((page) => page.id == currentPageId.value ? { ...curPage.value } : page),
   })
 }
 
@@ -64,47 +82,79 @@ const storyGraph = computed(() => ({
 
 <template>
   <div class="CmsStoryEditor">
-    <UiDrawer>
-      <template #trigger>
-        <UiItem
-          icon="mdi:sitemap"
-          class="ui--clickable"
-          text="Show map"
-        />
-      </template>
+    <div class="CmsStoryEditor__toolbar ui--noselect">
+      <UiItem
+        v-if="pages.length > 1"
+        icon="mdi:sitemap"
+        class="LayoutPageEditor__item"
+        :text="currentPageId"
+        @click="mapIsOpen = !mapIsOpen"
+      >
+        <template #actions>
+          <UiIcon :src="mapIsOpen ? 'mdi:chevron-up' : 'mdi:chevron-down'" />
+        </template>
+      </UiItem>
+
+      <UiItem
+        icon="mdi:cog"
+        class="ui--clickable"
+        @click="windowIsOpen = true"
+      />
+
+      <label style="margin-left: auto"><input
+        v-model="showPreview"
+        type="checkbox"
+      >Preview</label>
+    </div>
+
+    <UiDrawer v-model:open="mapIsOpen">
       <template #contents="{ close }">
         <UiGraphGrid
           :graph="storyGraph"
-          @click-node="currentPageId = $event; close();"
+          @click-node="setCurrentPageId($event); close();"
         />
       </template>
     </UiDrawer>
 
-    <keep-alive>
-      <CmsBlockEditor
-        v-if="currentPage"
-        :key="currentPage.id"
-        v-model:block="currentPage"
-        :settings="settings"
+    <TransitionGroup
+      class="CmsStoryEditor__body"
+      name="dotrans"
+      tag="div"
+    >
+      <div
+        v-show="!showPreview"
+        key="bench"
+        class="CmsStoryEditor__bench"
       >
-        <template #toolbar>
-          <div class="CmsStoryEditor__toolbar">
-            <span>/</span>
-            <UiInput
-              v-model="currentPageId"
-              type="select-native"
-              :options="pages"
-              option-text="$.id"
-              option-value="$.id"
-            />
+        <KeepAlive>
+          <CmsBlockEditor
+            v-if="curPage"
+            :key="curPage.id"
+            v-model:block="curPage"
+            :settings="settings"
+            @update:block="emitUpdate"
+          />
+        </KeepAlive>
+      </div>
 
-            <div style="margin-left: auto">
-              <slot name="toolbar" />
-            </div>
-          </div>
-        </template>
-      </CmsBlockEditor>
-    </keep-alive>
+      <div
+        v-if="showPreview"
+        key="preview"
+        class="CmsStoryEditor__preview"
+      >
+        <CmsBlock
+          v-model="modelValue"
+          :block="{ ...curPage, 'v-if': undefined }"
+        />
+      </div>
+    </TransitionGroup>
+
+    <LayoutPageWindow
+      v-model:open="windowIsOpen"
+      v-model:block="curPage"
+      @accept="emitUpdate"
+      @cancel="windowOnCancel"
+    />
   </div>
 </template>
 
@@ -131,6 +181,45 @@ const storyGraph = computed(() => ({
       &:hover {
         background-color: rgba(0,0,0, 0.04);
       }
+    }
+
+    position: relative;
+    z-index: 2;
+  }
+}
+
+/* TRANSITION */
+.CmsStoryEditor {
+  --ridge-width: 38px;
+
+  &__body {
+    position: relative;
+  }
+
+  .dotrans-enter-active,
+  .dotrans-leave-active {
+    transition: all var(--ui-duration-snap);
+    opacity: 1;
+  }
+
+  .dotrans-leave-active {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .dotrans-enter-from,
+  .dotrans-leave-to {
+    opacity: 0;
+
+    &.CmsStoryEditor__bench {
+      --ridge-width: 0px;
+    }
+
+    &.CmsStoryEditor__preview {
+      margin-left: var(--ridge-width);
+      padding-left: 12px;
     }
   }
 }

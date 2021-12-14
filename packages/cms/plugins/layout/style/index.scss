@@ -1,7 +1,7 @@
 /* Default LayoutPageEditor + LayoutRowEditor + BlockEditor theme */
 
 .LayoutPageEditor {
-  --ridge-width: 38px;
+  // --ridge-width: 38px;
   position: relative;
 
   &__toolbar {
@@ -13,7 +13,7 @@
   .RowLauncher {
     cursor: pointer;
 
-    .UiIcon {
+    .UiItem__icon {
       transition: all var(--ui-duration-snap);
 
       display: flex;
@@ -28,18 +28,33 @@
       color: #777 !important;
     }
 
-    &:hover .UiIcon {
+    &:hover .UiItem__icon {
       background-color: var(--ui-color-primary);
       color: #fff !important;
     }
   }
 
+  .RowLauncher {
+    display: inline-flex;
+
+    .UiItem__text {
+      transition: all var(--ui-duration-snap);
+      opacity: 0;
+    }
+
+    &:hover .UiItem__text {
+      opacity: 1;
+    }
+  }
+
   &__wedge {
+    transition: all var(--ui-duration-snap);
+
     pointer-events: none;
 
     overflow: hidden;
     position: absolute;
-    z-index: 2;
+    z-index: 1;
     top: 0;
     bottom: 0;
     left: calc(var(--ridge-width) - 8px);
@@ -67,7 +82,8 @@
 .LayoutRowEditor {
   position: relative;
   display: flex;
-  margin: 8px 0;
+  // margin: 8px 0;
+  margin-bottom: 8px;
 
   &__body {
     flex: 1;
@@ -76,6 +92,7 @@
   }
 
   & > .BlockScaffold__toolbar-container {
+    transition: all var(--ui-duration-snap);
     width: calc(var(--ridge-width) + 1px);
     position: relative;
     z-index: 2;
@@ -155,13 +172,6 @@
     }
   }
 }
-
-@keyframes noverflow {
-  0% {overflow: hidden;}
-  99% {overflow: hidden;}
-  100% {overflow: initial;}
-}
-
 
 /* Prevent overflows on things when dragging */
 .CmsSlotEditor--dragging {

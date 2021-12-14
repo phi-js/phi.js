@@ -157,29 +157,36 @@ function isLeftGhostVisible(colIndex) {
     @update:block="emit('update:block', $event)"
     @delete="emit('delete')"
   >
-    <template
-      v-if="columns.length > 1"
-      #toolbar
-    >
-      <UiIcon
-        v-show="!props.block.props?.alignItems || props.block.props?.alignItems == 'flex-start'"
-        class="BlockScaffold__toolbar-icon"
-        src="mdi:align-vertical-top"
-        @click="emit('update:block', {...props.block, props: {...props.block.props, alignItems: 'center'}})"
-      />
-      <UiIcon
-        v-show="props.block.props?.alignItems == 'center'"
-        class="BlockScaffold__toolbar-icon"
-        src="mdi:align-vertical-center"
-        @click="emit('update:block', {...props.block, props: {...props.block.props, alignItems: 'flex-end'}})"
-      />
-      <UiIcon
-        v-show="props.block.props?.alignItems == 'flex-end'"
-        class="BlockScaffold__toolbar-icon"
-        src="mdi:align-vertical-bottom"
-        @click="emit('update:block', {...props.block, props: {...props.block.props, alignItems: 'flex-start'}})"
-      />
+    <template #toolbar>
+      <template v-if="columns.length > 1">
+        <UiIcon
+          v-show="!props.block.props?.alignItems || props.block.props?.alignItems == 'flex-start'"
+          class="BlockScaffold__toolbar-icon"
+          src="mdi:align-vertical-top"
+          @click="emit('update:block', {...props.block, props: {...props.block.props, alignItems: 'center'}})"
+        />
+        <UiIcon
+          v-show="props.block.props?.alignItems == 'center'"
+          class="BlockScaffold__toolbar-icon"
+          src="mdi:align-vertical-center"
+          @click="emit('update:block', {...props.block, props: {...props.block.props, alignItems: 'flex-end'}})"
+        />
+        <UiIcon
+          v-show="props.block.props?.alignItems == 'flex-end'"
+          class="BlockScaffold__toolbar-icon"
+          src="mdi:align-vertical-bottom"
+          @click="emit('update:block', {...props.block, props: {...props.block.props, alignItems: 'flex-start'}})"
+        />
+      </template>
     </template>
+
+    <!-- <template #toolbar-end>
+      <UiIcon
+        class="BlockScaffold__toolbar-icon"
+        src="mdi:content-cut"
+      />
+    </template> -->
+
     <div
       ref="$el"
       class="LayoutRowEditor__body"
