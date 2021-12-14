@@ -4,26 +4,28 @@ export default {
       id: "admin",
       icon: "",
       text: "Administración",
+      color: "red",
       subtext: "",
-      children: [
+      subitems: [
         {
           text: "Institución",
           subtext: "",
           icon: "",
+          color: "blue",
           href: "",
-          children: [
+          subitems: [
             {
               text: "Reportes",
               subtext: "",
               icon: "",
+              color: "orange",
               href: "",
-              children: [
+              subitems: [
                 {
                   text: "Hoy",
                   subtext: "",
                   icon: "",
                   href: "",
-                  children: [],
                   url: "school",
                 },
                 {
@@ -31,7 +33,6 @@ export default {
                   subtext: "",
                   icon: "",
                   href: "",
-                  children: [],
                   url: "person/set",
                 },
                 {
@@ -39,21 +40,18 @@ export default {
                   subtext: "",
                   icon: "",
                   href: "",
-                  children: []
                 },
                 {
                   text: "Estadistica",
                   subtext: "",
                   icon: "",
                   href: "",
-                  children: []
                 },
                 {
                   text: "Acceso",
                   subtext: "",
                   icon: "",
                   href: "",
-                  children: []
                 }
               ]
             },
@@ -62,14 +60,12 @@ export default {
               subtext: "",
               icon: "",
               href: "",
-              children: []
             },
             {
               text: "Configuración",
               subtext: "",
               icon: "",
               href: "",
-              children: []
             }
           ]
         },
@@ -79,13 +75,13 @@ export default {
           subtext: "",
           icon: "",
           href: "",
-          children: [
+          subitems: [
             {
               text: "Configuración",
               subtext: "",
               icon: "",
               href: "",
-              children: [
+              subitems: [
                 {
                   text: "Tipos",
                   subtext: "",

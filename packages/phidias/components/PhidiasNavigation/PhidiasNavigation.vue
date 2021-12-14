@@ -27,27 +27,54 @@ watch(
   <div class="phidias-navigation">
     <p>Hola menu izq: {{ personId }}</p>
 
-    <UiTree v-if="menu" :value="menu.tabs">
-      <template #item="{ item }">
-        <div>
-          {{ item.text }}
+    <UiTree v-if="menu" :value="menu.tabs" children-prop="subitems" class="PhidiasMenu">
+      <template #default="{ item, toggle, isOpen }">
+        <div
+          :class="['PhidiasMenu__item', { 'PhidiasMenu__item--open': isOpen, 'PhidiasMenu__item--closed': !isOpen }]"
+          :style="{'background': isOpen ? item.color : null}"
+          @click="toggle"
+        >
+          {{ item.text }} - {{ isOpen }}
           <small>{{ item.url }}</small>
         </div>
-        <!-- <pre>{{ item }}</pre> -->
       </template>
     </UiTree>
 
     <p v-else>Cargando...</p>
+
+    <!-- <pre>{{ menu }}</pre> -->
   </div>
 </template>
 
 <style lang="scss">
-.phidias-navigation {
-  .ui-tree {
-    transition: all 0.2s ease;
+.PhidiasMenu {
+  border: 1px solid blue;
 
-    &__item--active {
+  &__item {
+    transition: all .2s ease;
+    border: 1px solid red;
+
+    &--open {
       background: red;
+    }
+
+    &--closed {
+      background: #dedede;
+    }
+  }
+
+  .UiTree {
+    &__face {
+
+    }
+
+    &__children {
+      margin-left: 0px;
+      transition: all .3s ease;
+      
+      &--open {
+        margin-left: 20px;
+      }
     }
   }
 }
