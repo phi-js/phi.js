@@ -71,7 +71,12 @@ function storeCoords() {
 const isOpen = ref(false)
 watch(
   () => props.open,
-  (newValue) => isOpen.value = newValue,
+  (newValue) => {
+    isOpen.value = newValue
+    if (isOpen.value) {
+      resizeBody(coords.value)
+    }
+  },
   { immediate: true },
 )
 
@@ -89,9 +94,33 @@ const dropTarget = ref(null)
 function close() {
   isOpen.value = false
   emit('update:open', isOpen.value)
+  resizeBody()
+}
+
+function resizeBody(coords = null) {
+  if (coords === null || (dock.value !== 'left' && dock.value !== 'right')) {
+    document.body.style.marginLeft = 'initial'
+    document.body.style.marginRight = 'initial'
+    return
+  }
+
+  const offsetLeft = 240
+
+  switch (dock.value) {
+  case 'left':
+    document.body.style.marginLeft = Math.max(parseInt(coords.width) - offsetLeft, 0) + 'px'
+    break
+  case 'right':
+    document.body.style.marginRight = Math.max(parseInt(coords.width), 0) + 'px'
+    break
+  }
 }
 
 function dockTo(newPosition) {
+  if (dock.value === newPosition) {
+    return
+  }
+
   dock.value = newPosition
   emit('update:dock', dock.value)
 
@@ -99,6 +128,14 @@ function dockTo(newPosition) {
   //   openWindow(popupContents.value, () => close())
   // }
 
+  if (newPosition === null) {
+    coords.value.top = '25vh'
+    coords.value.left = '25vw'
+    coords.value.width = '50vw'
+    coords.value.height = '50vh'
+  }
+
+  resizeBody(coords.value)
   storeCoords()
 }
 
@@ -153,6 +190,7 @@ const isHovered = ref(false)
 
       @mouseenter="isHovered = true"
       @mouseleave="isHovered = false"
+      @step="resizeBody"
     >
       <div class="UiWindow__header">
         <slot name="header" />
@@ -210,12 +248,12 @@ const isHovered = ref(false)
                 @click="dockTo('right')"
               />
 
-              <UiIcon
+              <!-- <UiIcon
                 src="mdi:window-restore"
                 class="ui--clickable"
                 :class="{'--active': dock == 'popup'}"
                 @click="dockTo('popup')"
-              />
+              /> -->
             </div>
           </template>
         </UiPopover>
@@ -300,6 +338,7 @@ const isHovered = ref(false)
 
 .UiWindow {
   --ui-window-dockzone-size: 64px;
+  text-align: left;
 
   &--external {
     // display: none;
