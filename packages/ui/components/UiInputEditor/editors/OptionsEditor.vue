@@ -117,7 +117,7 @@ function setOptionText(option, newValue) {
 <style lang="scss">
 .OptionsEditor {
   &__option-item {
-    .ui-item__icon {
+    .UiItem__icon {
       cursor: move;
     }
   }
@@ -132,6 +132,7 @@ function setOptionText(option, newValue) {
     border: 0;
     background: transparent;
     font-size: inherit;
+    color: inherit;
   }
 
   &__value {
@@ -140,6 +141,7 @@ function setOptionText(option, newValue) {
     border-radius: 3px;
     padding: 4px 12px;
     background-color: rgba(0, 0, 0, 0.06);
+    color: inherit;
   }
 }
 
