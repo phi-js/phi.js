@@ -84,7 +84,7 @@ const proxyValue = computed({
   <select
     v-model="proxyValue"
     class="UiSelectNative ui__input"
-    :multiple="props.multiple"
+    :multiple="!!props.multiple"
   >
     <option
       v-if="props.placeholder && !props.multiple"

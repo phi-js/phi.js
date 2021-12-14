@@ -46,7 +46,7 @@ function getKeywords(object, searchableProperties = null) {
   if (Array.isArray(object)) {
     object.forEach((item) =>
       (retval = retval.concat(getKeywords(item, searchableProperties))))
-  } else {
+  } else if (typeof object === 'object') {
     if (Array.isArray(searchableProperties)) {
       searchableProperties.forEach((propPath) => {
         retval = retval.concat(getKeywords(getProperty(object, propPath)))
