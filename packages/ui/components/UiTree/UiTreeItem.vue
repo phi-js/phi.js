@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineAsyncComponent, watch, onMounted } from 'vue'
+import { ref, defineAsyncComponent, watch } from 'vue'
 const UiTree = defineAsyncComponent(() => import('./UiTree.vue'))
 import { UiDrawer } from '../UiDrawer'
 
@@ -48,12 +48,6 @@ const props = defineProps({
 
 const children = ref()
 const isOpen = ref(false)
-
-// onMounted(() => {
-//   if (typeof props.initialOpen === 'function') {
-//     isOpen.value = props.initialOpen(props.value)
-//   }
-// })
 
 watch(
   () => props.value,
