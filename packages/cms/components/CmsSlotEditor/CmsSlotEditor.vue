@@ -220,8 +220,10 @@ const focusedIndexes = ref({})
       align-items: center;
       justify-content: center;
 
+      font-family: var(--ui-font-secondary);
       font-size: 16px;
-      font-weight: bold;
+      font-weight: 500;
+
       width: 18px;
       height: 18px;
       border-radius: 50%;

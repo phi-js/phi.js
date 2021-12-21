@@ -119,7 +119,7 @@ const isFocused = ref(false)
         <!-- dropdown options -->
         <UiPopover
           class="BlockPopover"
-          placement="bottom-end"
+          placement="bottom"
           @update:open="isFocused = $event"
         >
           <template #trigger>
@@ -266,8 +266,8 @@ const isFocused = ref(false)
   // Estilos "default":  toolbar posicionado absolutamente encima del bloque
   &--default &__toolbar-container {
     position: absolute;
-    bottom: 100%;
-    left: 0;
+    bottom: calc(100% - 4px);
+    left: 2px;
 
     transition: opacity var(--ui-duration-snap);
     opacity: 0;

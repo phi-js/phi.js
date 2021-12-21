@@ -61,7 +61,6 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 2;
 
     padding: 8px;
     background-color: rgba(0,0,0, 0.5);
@@ -78,14 +77,5 @@ export default {
   &:hover &__infobox {
     opacity: 1;
   }
-
-  // &__form {
-  //   input {
-  //     width: 100%;
-  //     border-bottom: 0;
-  //     border-bottom-left-radius: 0;
-  //     border-bottom-right-radius: 0;
-  //   }
-  // }
 }
 </style>

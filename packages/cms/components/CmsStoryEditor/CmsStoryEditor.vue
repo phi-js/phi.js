@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from '@vue/runtime-core'
+import { ref, watch, computed } from 'vue'
 import CmsBlockEditor from '../CmsBlockEditor/CmsBlockEditor.vue'
 import CmsBlock from '../CmsBlock/CmsBlock.vue'
 import LayoutPageWindow from '../../plugins/layout/components/LayoutPage/LayoutPageWindow.vue'
@@ -7,7 +7,6 @@ import LayoutPageWindow from '../../plugins/layout/components/LayoutPage/LayoutP
 import {
   UiDrawer,
   UiGraphGrid,
-  UiInput,
   UiItem,
   UiIcon,
 } from '/packages/ui/components'
@@ -24,13 +23,18 @@ const props = defineProps({
     required: false,
     default: null,
   },
+
+  modelValue: {
+    type: Object,
+    required: false,
+    default: null,
+  },
 })
-const emit = defineEmits(['update:story'])
+const emit = defineEmits(['update:story', 'update:modelValue'])
 
 const pages = ref([])
 const curPage = ref()
 
-const modelValue = ref({})
 const showPreview = ref(false)
 const currentPageId = ref(null)
 const windowIsOpen = ref(false)
@@ -143,8 +147,9 @@ const storyGraph = computed(() => ({
         class="CmsStoryEditor__preview"
       >
         <CmsBlock
-          v-model="modelValue"
+          :model-value="modelValue"
           :block="{ ...curPage, 'v-if': undefined }"
+          @update:modelValue="emit('update:modelValue', $event)"
         />
       </div>
     </TransitionGroup>
