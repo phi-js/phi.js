@@ -24,10 +24,7 @@ const defaultStory = {
                 },
                 {
                   component: 'MediaHtml',
-                  props: {
-                    value: '<h1>Phi.js</h1>',
-                    style: { textAlign: 'center' },
-                  },
+                  props: { value: '<h1 style="text-align: center">Phi.js</h1>' },
                 },
               ],
             },
