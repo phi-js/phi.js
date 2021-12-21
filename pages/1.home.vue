@@ -9,7 +9,6 @@ const defaultStory = {
       slot: [
         {
           component: 'LayoutRow',
-          props: { style: { textAlign: 'center' } },
           slot: [
             {
               component: 'LayoutColumn',
@@ -20,11 +19,15 @@ const defaultStory = {
                     alt: 'Phi.js',
                     title: 'Hello world!',
                     src: '/phi.png',
+                    align: 'center',
                   },
                 },
                 {
                   component: 'MediaHtml',
-                  props: { value: '<h1>Phi.js</h1>' },
+                  props: {
+                    value: '<h1>Phi.js</h1>',
+                    style: { textAlign: 'center' },
+                  },
                 },
               ],
             },
@@ -42,11 +45,14 @@ function saveStory() {
   localStorage.setItem('phijs:home', JSON.stringify(story.value))
 }
 
+const settings = ref({ uploads: { endpoint: 'http://v4.local/1/cms/pages/test/files' } })
+
 </script>
 
 <template>
   <CmsStoryEditor
     v-model:story="story"
+    :settings="settings"
     @update:story="saveStory()"
   />
 </template>
