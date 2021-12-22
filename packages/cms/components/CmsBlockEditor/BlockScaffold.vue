@@ -267,7 +267,7 @@ const isFocused = ref(false)
   &--default &__toolbar-container {
     position: absolute;
     bottom: calc(100% - 4px);
-    left: 2px;
+    left: 4px;
 
     transition: opacity var(--ui-duration-snap);
     opacity: 0;
@@ -366,12 +366,12 @@ const isFocused = ref(false)
       content: '';
       display: block;
       position: absolute;
-      top: -1px;
-      left: -4px;
-      right: -4px;
-      bottom: -2px;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
 
-      border-radius: var(--ui-radius);
+      border-radius: 4px;
       border: 1px solid rgba(0, 0, 0, 0.5);
 
       transition: all var(--ui-duration-snap);

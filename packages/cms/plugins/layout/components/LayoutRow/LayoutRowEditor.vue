@@ -277,7 +277,7 @@ function isLeftGhostVisible(colIndex) {
     bottom: 0;
     right: -12px;
     width: 20px;
-    z-index: 2;
+    z-index: 1;
 
     transition: opacity 200ms;
     opacity: 0;
