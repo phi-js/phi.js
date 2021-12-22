@@ -12,7 +12,10 @@ export default {
   block: {
     'component': UiInput,
     'v-model': 'select',
-    'props': { type: 'select' },
+    'props': {
+      type: 'select',
+      multiple: false,
+    },
   },
 
   editor: {

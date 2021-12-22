@@ -16,7 +16,7 @@ const defaultStory = {
                 {
                   component: 'MediaImage',
                   props: {
-                    alt: 'Phi.js',
+                    alt: 'Phi',
                     title: 'Hello world!',
                     src: '/phi.png',
                     align: 'center',
@@ -24,7 +24,7 @@ const defaultStory = {
                 },
                 {
                   component: 'MediaHtml',
-                  props: { value: '<h1 style="text-align: center">Phi.js</h1>' },
+                  props: { value: '<h1 style="text-align: center">Phi</h1>' },
                 },
               ],
             },

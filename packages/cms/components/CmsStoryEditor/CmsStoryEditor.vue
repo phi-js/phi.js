@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
-import CmsBlockEditor from '../CmsBlockEditor/CmsBlockEditor.vue'
-import CmsBlock from '../CmsBlock/CmsBlock.vue'
+import { CmsBlockEditor } from '../CmsBlockEditor'
+import { CmsBlock } from '../CmsBlock'
 import LayoutPageWindow from '../../plugins/layout/components/LayoutPage/LayoutPageWindow.vue'
 
 import {
@@ -82,6 +82,14 @@ const storyGraph = computed(() => ({
   nodes: props.story.pages.map((page) => ({ id: page.id })),
   paths: props.story.paths,
 }))
+
+
+const innerModelValue = ref({})
+watch(
+  () => props.modelValue,
+  (newValue) => innerModelValue.value = newValue || {},
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -147,7 +155,7 @@ const storyGraph = computed(() => ({
         class="CmsStoryEditor__preview"
       >
         <CmsBlock
-          :model-value="modelValue"
+          v-model="innerModelValue"
           :block="{ ...curPage, 'v-if': undefined }"
           @update:modelValue="emit('update:modelValue', $event)"
         />
@@ -196,6 +204,10 @@ const storyGraph = computed(() => ({
 /* TRANSITION */
 .CmsStoryEditor {
   --ridge-width: 38px;
+
+  * {
+    box-sizing: border-box;
+  }
 
   &__body {
     position: relative;
