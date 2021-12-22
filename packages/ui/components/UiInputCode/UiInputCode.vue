@@ -3,6 +3,13 @@ import { ref, onMounted, watch } from 'vue'
 import { EditorState, EditorView, basicSetup } from '@codemirror/basic-setup'
 import { javascript } from '@codemirror/lang-javascript'
 import { json } from '@codemirror/lang-json'
+import { css } from '@codemirror/lang-css'
+
+const availableLanguages = {
+  javascript,
+  json,
+  css,
+}
 
 const props = defineProps({
   modelValue: {
@@ -23,7 +30,7 @@ const codeEl = ref()
 var cmView = null
 
 onMounted(() => {
-  const langExtension = props.lang == 'json' ? json : javascript
+  const langExtension = availableLanguages?.[props.lang] || javascript
 
   cmView = new EditorView({
     state: EditorState.create({
