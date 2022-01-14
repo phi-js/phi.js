@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { UiTabs, UiTab } from '../'
 import { UiWindow } from '.'
-import LoremIpsum from '/packages/cms/plugins/media/components/MediaLoremIpsum/MediaLoremIpsum.vue'
+import LoremIpsum from '@/packages/cms/plugins/media/components/MediaLoremIpsum/MediaLoremIpsum.vue'
 
 const isOpen = ref(false)
 const msg = ref('Hola mundo')

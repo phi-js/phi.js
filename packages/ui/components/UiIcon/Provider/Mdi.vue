@@ -15,5 +15,5 @@ export default {
 </script>
 
 <style>
-@import '/public/material-design-icons/css/materialdesignicons.css';
+@import '../../../../../public/material-design-icons/css/materialdesignicons.css';
 </style>

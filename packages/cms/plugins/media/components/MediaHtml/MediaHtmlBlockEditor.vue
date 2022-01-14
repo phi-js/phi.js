@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
-import { UiIcon } from '/packages/ui/components'
+import { UiIcon } from '@/packages/ui/components'
 import BlockScaffold from '../../../../components/CmsBlockEditor/BlockScaffold.vue'
 
 import { Editor, EditorContent } from '@tiptap/vue-3'

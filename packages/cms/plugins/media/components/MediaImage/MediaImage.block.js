@@ -1,4 +1,4 @@
-import { UiForm } from '/packages/ui/components'
+import { UiForm } from '@/packages/ui/components'
 
 import MediaImage from './MediaImage.vue'
 import MediaImageToolbar from './MediaImageToolbar.vue'

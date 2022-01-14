@@ -1,6 +1,6 @@
 <script setup>
 import { ref, unref, computed, reactive, watch, nextTick, onBeforeMount } from 'vue'
-import { UiItem } from '/packages/ui/components'
+import { UiItem } from '@/packages/ui/components'
 import VmStatement from '../VmStatement.vue'
 import allOperators from '../operators'
 import useModelSchema from '../useModelSchema'

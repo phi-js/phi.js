@@ -2,7 +2,7 @@
 import { h, ref, watch, defineAsyncComponent, Transition } from 'vue'
 
 import { blocks } from '../../singleton'
-import { VM } from '/packages/vm'
+import { VM } from '@/packages/vm'
 import { getProperty, setProperty } from '../../functions'
 
 export default {

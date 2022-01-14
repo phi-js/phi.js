@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { UiWindow, UiTabs, UiItem, UiTab, UiTree, UiIcon } from '/packages/ui/components'
-import { VmStatement } from '/packages/vm/components'
+import { UiWindow, UiTabs, UiItem, UiTab, UiTree, UiIcon } from '@/packages/ui/components'
+import { VmStatement } from '@/packages/vm/components'
 
 const props = defineProps({
   block: {

@@ -10,6 +10,8 @@ export default defineConfig({
     visualizer(),
   ],
 
+  resolve: { alias: { '@': path.resolve(__dirname, './') } },
+
   build: {
     lib: {
       entry: path.resolve(__dirname, 'lib/index.js'),

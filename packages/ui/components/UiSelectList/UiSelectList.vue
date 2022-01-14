@@ -1,6 +1,6 @@
 <script setup>
 import { toRef, computed } from 'vue'
-import { UiItem } from '/packages/ui/components'
+import { UiItem } from '@/packages/ui/components'
 import useOptionsManager from '../UiSelect/composables/useOptionsManager.js'
 import useSelectionManager from '../UiSelect/composables/useSelectionManager.js'
 

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, reactive } from 'vue'
-import { UiIcon } from '/packages/ui/components'
+import { UiIcon } from '@/packages/ui/components'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
 import BlockScaffold from '../../../../components/CmsBlockEditor/BlockScaffold.vue'
 

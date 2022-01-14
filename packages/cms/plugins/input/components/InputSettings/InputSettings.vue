@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { UiInput } from '/packages/ui/components'
+import { UiInput } from '@/packages/ui/components'
 // import SelectOptionsEditor from '../SelectOptionsEditor/SelectOptionsEditor.vue'
 
 const props = defineProps({

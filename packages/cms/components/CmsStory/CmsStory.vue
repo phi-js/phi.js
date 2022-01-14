@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import CmsBlock from '../CmsBlock/CmsBlock.vue'
-import { VM } from '/packages/vm'
+import { VM } from '@/packages/vm'
 
 const props = defineProps({
   story: {
@@ -165,7 +165,7 @@ watch(
       </Transition>
     </div>
 
-    <div class="CmsStory__footer">
+    <!-- <div class="CmsStory__footer">
       <button
         :disabled="!back"
         @click="back()"
@@ -179,7 +179,7 @@ watch(
         @click="traverse(path)"
         v-text="path.text"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 

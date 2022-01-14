@@ -9,7 +9,7 @@ import {
   UiGraphGrid,
   UiItem,
   UiIcon,
-} from '/packages/ui/components'
+} from '@/packages/ui/components'
 
 const props = defineProps({
   story: {

@@ -1,8 +1,8 @@
 ```js
 // en el setup() del componente
-import { useApi } from '/packages/api';
-import { default as apiv4, grading, posts } from '/packages/phidias/api/v4'
-import { default as apiCore, permisos, facturas } from '/packages/phidias/api/core'
+import { useApi } from '@/packages/api';
+import { default as apiv4, grading, posts } from '@/packages/phidias/api/v4'
+import { default as apiCore, permisos, facturas } from '@/packages/phidias/api/core'
 
 const soloGrading = useApi(apiV4, grading);
 soloGrading.getGrades().then();

@@ -11,7 +11,7 @@ import {
   UiWindow,
   UiTabs,
   UiTab,
-} from '/packages/ui/components'
+} from '@/packages/ui/components'
 
 const props = defineProps({
   block: {

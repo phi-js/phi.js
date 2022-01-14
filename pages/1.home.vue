@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { CmsStoryEditor } from '/packages/cms'
+import { CmsStoryEditor } from '@/packages/cms'
 
 const defaultStory = {
   pages: [
@@ -44,6 +44,15 @@ function saveStory() {
 
 const settings = ref({ uploads: { endpoint: 'http://v4.local/1/cms/pages/test/files' } })
 
+function reset() {
+  if (!confirm('Reset story?')) {
+    return
+  }
+
+  story.value = defaultStory
+  saveStory()
+}
+
 </script>
 
 <template>
@@ -52,4 +61,13 @@ const settings = ref({ uploads: { endpoint: 'http://v4.local/1/cms/pages/test/fi
     :settings="settings"
     @update:story="saveStory()"
   />
+
+  <footer style="text-align: right">
+    <button
+      type="button"
+      @click="reset()"
+    >
+      Reset
+    </button>
+  </footer>
 </template>

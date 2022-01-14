@@ -50,7 +50,7 @@ import { defineAsyncComponent } from 'vue'
 const VmStatement = defineAsyncComponent(() => import('../VmStatement.vue'))
 
 import VmOperatorPicker from '../VmOperatorPicker.vue'
-import { UiIcon } from '/packages/ui/components'
+import { UiIcon } from '@/packages/ui/components'
 
 export default {
   name: 'StmtAndOr',

@@ -1,8 +1,8 @@
 <script setup>
 import { ref, watch, nextTick } from 'vue'
 import draggable from 'vuedraggable'
-import { UiItem, UiIcon } from '/packages/ui/components'
-import { normalize } from '/packages/ui/helpers'
+import { UiItem, UiIcon } from '@/packages/ui/components'
+import { normalize } from '@/packages/ui/helpers'
 
 const props = defineProps({
   /* Arreglo de OPTIONS

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import { VM } from '/packages/vm'
-import { UiInput } from '/packages/ui/components'
+import { VM } from '@/packages/vm'
+import { UiInput } from '@/packages/ui/components'
 
 const model = ref({
   id: 21,

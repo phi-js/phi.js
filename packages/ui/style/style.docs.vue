@@ -1,5 +1,5 @@
 <script>
-import '/packages/ui/style/themes/dark.scss'
+import '@/packages/ui/style/themes/dark.scss'
 </script>
 
 <template>

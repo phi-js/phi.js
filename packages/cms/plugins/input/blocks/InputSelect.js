@@ -1,6 +1,6 @@
-import { UiInput, UiInputEditor, UiForm } from '/packages/ui/components'
+import { UiInput, UiInputEditor, UiForm } from '@/packages/ui/components'
 import InputSettings from '../components/InputSettings/InputSettings.vue'
-import OptionsEditor from '/packages/ui/components/UiInputEditor/editors/OptionsEditor.vue'
+import OptionsEditor from '@/packages/ui/components/UiInputEditor/editors/OptionsEditor.vue'
 
 export default {
   tags: ['input'],

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { UiInput } from '/packages/ui/components'
+import { UiInput } from '@/packages/ui/components'
 
 const props = defineProps({
   modelValue: {

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { UiInputJson } from '/packages/ui/components'
+import { UiInputJson } from '@/packages/ui/components'
 
 import StmtAndOr from './statements/StmtAndOr.vue'
 import StmtOp from './statements/StmtOp.vue'

@@ -1,5 +1,5 @@
 <script setup>
-import { bindProp } from '/packages/ui/helpers'
+import { bindProp } from '@/packages/ui/helpers'
 
 defineEmits(['update:modelValue'])
 defineProps({

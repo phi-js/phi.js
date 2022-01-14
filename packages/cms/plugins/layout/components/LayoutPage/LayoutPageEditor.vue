@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, computed, provide } from 'vue'
-import { UiItem } from '/packages/ui/components'
+import { UiItem } from '@/packages/ui/components'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
 import { getBlockSchema } from '../../../../functions'
 

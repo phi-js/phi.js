@@ -1,4 +1,4 @@
-import { UiForm } from '/packages/ui/components'
+import { UiForm } from '@/packages/ui/components'
 
 const MediaFile = () => import('./MediaFile.vue')
 const MediaFileEditor = () => import('./MediaFileEditor.vue')

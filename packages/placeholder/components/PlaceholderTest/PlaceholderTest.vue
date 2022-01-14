@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { UiItem, UiInput } from '/packages/ui/components'
-import { useApi } from '/packages/api/'
+import { UiItem, UiInput } from '@/packages/ui/components'
+import { useApi } from '@/packages/api/'
 import {
   default as jpApi,
   users as apiUsers,

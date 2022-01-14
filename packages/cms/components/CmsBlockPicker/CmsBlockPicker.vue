@@ -5,7 +5,7 @@ export default { inheritAttrs: false }
 <script setup>
 import { ref, nextTick } from 'vue'
 import PickerContents from './PickerContents.vue'
-import { UiItem, UiPopover } from '/packages/ui/components'
+import { UiItem, UiPopover } from '@/packages/ui/components'
 
 const props = defineProps({
   placement: {

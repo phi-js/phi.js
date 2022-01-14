@@ -1,4 +1,4 @@
-import { UiItem, UiItemEditor } from '/packages/ui/components'
+import { UiItem, UiItemEditor } from '@/packages/ui/components'
 
 export default {
   name: 'MediaItem',

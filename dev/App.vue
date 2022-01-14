@@ -1,7 +1,7 @@
 <script setup>
 // Estilos globales
-import '/packages/ui/style/normalize.scss'
-import '/packages/ui/style/index.scss'
+import '@/packages/ui/style/normalize.scss'
+import '@/packages/ui/style/index.scss'
 
 import {
   shallowRef,
@@ -14,14 +14,14 @@ import {
 } from 'vue'
 
 // UI components
-import { UiIcon, UiInput, UiItem, UiTree, UiPopover } from '/packages/ui/components'
+import { UiIcon, UiInput, UiItem, UiTree, UiPopover } from '@/packages/ui/components'
 
 // Modulo API: Definicion de clients globales
-import { provideApi } from '/packages/api'
-import placeholderApi from '/packages/placeholder/api'
+import { provideApi } from '@/packages/api'
+import placeholderApi from '@/packages/placeholder/api'
 provideApi(placeholderApi)
 
-import { provideI18n } from '/packages/i18n'
+import { provideI18n } from '@/packages/i18n'
 const i18n = provideI18n({
   locale: 'es', // set locale
   fallbackLocale: 'en', // set fallback locale,
@@ -36,7 +36,7 @@ const i18n = provideI18n({
 
 // Lista de paginas
 // (por ahora VITE no da una forma de listar archivos locales)
-import { normalize } from '/packages/ui/helpers'
+import { normalize } from '@/packages/ui/helpers'
 import { default as pages, docsTree } from './pages.js'
 
 function filterTree(arrTree, strFilter) {

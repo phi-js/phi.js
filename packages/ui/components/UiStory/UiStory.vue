@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref, watch, computed } from 'vue'
-import { UiDialog } from '/packages/ui/components'
+import { UiDialog } from '@/packages/ui/components'
 
 const props = defineProps({
   /*

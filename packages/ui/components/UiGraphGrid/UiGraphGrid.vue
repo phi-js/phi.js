@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import { UiItem } from '/packages/ui/components'
+import { UiItem } from '@/packages/ui/components'
 
 export default {
   name: 'UiGraphGrid',

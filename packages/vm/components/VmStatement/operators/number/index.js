@@ -1,4 +1,4 @@
-import { UiInput } from '/packages/ui/components'
+import { UiInput } from '@/packages/ui/components'
 
 export default [
   {

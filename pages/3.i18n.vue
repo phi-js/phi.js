@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from 'vue'
-import { Sample as I18nSample } from '/packages/i18n/components/Sample'
+import { Sample as I18nSample } from '@/packages/i18n/components/Sample'
 const pickerValue = ref('')
 
-import { useI18n } from '/packages/i18n'
+import { useI18n } from '@/packages/i18n'
 const messages = {
   en: {
     'i18n.page.globalLocale': 'Default locale',
@@ -31,7 +31,7 @@ const i18n = useI18n(messages)
 
     <pre class="docs-code"><code lang="vue">
 &lt;script setup>
-import { useI18n } from '/packages/i18n'
+import { useI18n } from '@/packages/i18n'
 import * as myDictionary from './i18n'
 const i18n = useI18n(myDictionary)
 const now = new Date()

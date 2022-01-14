@@ -1,5 +1,5 @@
 import MediaLoremIpsum from './MediaLoremIpsum.vue'
-import { UiForm } from '/packages/ui/components'
+import { UiForm } from '@/packages/ui/components'
 
 export default {
   name: 'MediaLoremIpsum',

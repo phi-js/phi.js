@@ -1,5 +1,5 @@
 import { provide, inject, reactive, useAttrs } from 'vue'
-import { toDate } from '/packages/ui/helpers'
+import { toDate } from '@/packages/ui/helpers'
 
 export function provideI18n(options) {
   const provided = reactive(options)

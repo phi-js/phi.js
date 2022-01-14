@@ -3,7 +3,7 @@ import Quicklaunch from './Quicklaunch/index.js'
 
 import { blocks as cmsBlocks } from '../../singleton'
 import { getBlockDefinition } from '../../functions'
-import { UiIcon, UiTabs, UiTab } from '/packages/ui/components'
+import { UiIcon, UiTabs, UiTab } from '@/packages/ui/components'
 import { useI18n } from '../../../i18n'
 
 export default {

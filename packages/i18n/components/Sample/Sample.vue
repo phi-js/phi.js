@@ -1,5 +1,5 @@
 <script setup>
-import { useI18n } from '/packages/i18n'
+import { useI18n } from '@/packages/i18n'
 import * as myDictionary from './i18n'
 const i18n = useI18n(myDictionary)
 const now = new Date()
