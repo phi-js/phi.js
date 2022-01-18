@@ -145,8 +145,8 @@ const enabledApis = computed(() => apis.filter((a) => a.isEnabled))
       <!-- <button @click="apis.push(Math.random())">PUSH API</button> -->
       <UiItem
         id="app__logo"
-        text="Phi"
-        icon="/phi.png"
+        text="Phi.js"
+        icon="/phi.svg"
       />
 
       <UiPopover>
@@ -269,9 +269,18 @@ const enabledApis = computed(() => apis.filter((a) => a.isEnabled))
 #app {
   --app-sidebar-width: 240px;
 
+  --ui-color-primary:#41b883;
+
   a {
     text-decoration: none;
-    color: #257dba;
+    color: var(--ui-color-primary);
+  }
+
+  em {
+    font-size: 0.9em;
+    font-weight: 500;
+    font-style: normal;
+    color: var(--ui-color-primary);
   }
 
   .app__tree {
@@ -331,7 +340,7 @@ const enabledApis = computed(() => apis.filter((a) => a.isEnabled))
       }
 
       &.--active {
-        background-color: #257dba;
+        background-color: var(--ui-color-primary);
         color: #fff;
       }
     }
