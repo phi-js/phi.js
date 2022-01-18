@@ -4,10 +4,15 @@
   color: rgba(0, 0, 0, 0.8);
 
   outline-color: var(--ui-color-primary);
+
   box-sizing: border-box;
 
   &::placeholder {
     color: rgba(0, 0, 0, 0.3);
+  }
+
+  &:focus {
+    outline: 1px solid var(--ui-color-primary);
   }
 }
 

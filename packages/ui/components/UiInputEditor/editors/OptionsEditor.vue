@@ -83,6 +83,9 @@ function setOptionText(option, newValue) {
               class="OptionEditor__text"
               placeholder="Texto"
               @input="setOptionText(innerOptions[index], $event.target.value)"
+              @keypress.enter="pushOption"
+              @keydown.backspace="!innerOptions[index].text && deleteOption(index)"
+              @keydown.delete="!innerOptions[index].text && deleteOption(index)"
             >
             <input
               v-model="innerOptions[index].value"
@@ -90,6 +93,7 @@ function setOptionText(option, newValue) {
               class="OptionEditor__value"
               placeholder="Valor"
               @input="emitUpdate"
+              @keypress.enter="pushOption"
             >
           </div>
           <template #actions>
