@@ -32,17 +32,9 @@ function emitUpdate() {
 </script>
 
 <template>
-  <section>
-    <label>Show this block IF</label>
-    <VmStatement
-      v-model="block['v-if']"
-      :default="{ and: [] }"
-      @update:model-value="emitUpdate"
-    />
-  </section>
-  <label>Repeat for every item in</label>
-  <UiInput
-    v-model="block['v-for']"
+  <VmStatement
+    v-model="block['v-if']"
+    :default="{ and: [] }"
     @update:model-value="emitUpdate"
   />
 </template>

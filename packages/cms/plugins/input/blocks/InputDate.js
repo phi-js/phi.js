@@ -24,7 +24,7 @@ export default {
     actions: [
       {
         'id': 'InputSettings',
-        'title': 'Fecha',
+        'title': 'Field options',
         'component': InputSettings,
         'v-model': 'block',
       },

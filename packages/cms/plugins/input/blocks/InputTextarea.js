@@ -24,7 +24,7 @@ export default {
     actions: [
       {
         'id': 'InputSettings',
-        'title': 'Textarea',
+        'title': 'Field options',
         'component': InputSettings,
         'v-model': 'block',
       },

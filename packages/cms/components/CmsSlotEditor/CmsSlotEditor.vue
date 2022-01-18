@@ -240,8 +240,8 @@ const focusedIndexes = ref({})
         left: 0;
         right: 0;
 
-        border-top: 1px solid var(--ui-color-primary);
-        border-bottom: 1px solid var(--ui-color-primary);
+        border-top: 2px solid var(--ui-color-primary);
+        border-bottom: 2px solid var(--ui-color-primary);
         z-index: 2;
       }
     }

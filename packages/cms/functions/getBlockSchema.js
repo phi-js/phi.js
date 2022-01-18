@@ -40,38 +40,48 @@ function getBlockFields(block) {
     },
   }
 
-  const props = block.props
+  const props = block.props || {}
 
-  switch (block.component) {
-  case 'InputSelect':
-    field.info.icon = 'mdi:form-dropdown'
+  if (block.component.substring(0, 5) == 'Input') {
+    const inputType = props?.type || 'text'
 
-    if (props.multiple) {
-      field.type = 'array'
-      field.items = {
-        type: 'string',
-        enum: props.options || [],
-      }
-    } else {
+    switch (inputType) {
+    case 'text':
+    case 'textarea':
       field.type = 'string'
-      field.enum = props.options || []
+      break
+
+    case 'number':
+      field.type = 'number'
+      break
+
+    case 'checkbox':
+      field.type = 'boolean'
+      break
+
+    case 'select':
+    case 'select-list':
+    case 'select-buttons':
+      field.info.icon = 'mdi:form-dropdown'
+
+      if (props.multiple) {
+        field.type = 'array'
+        field.items = {
+          type: 'string',
+          enum: props.options || [],
+        }
+      } else {
+        field.type = 'string'
+        field.enum = props.options || []
+      }
+      break
     }
-    break
 
-  case 'InputText':
-  case 'InputTextarea':
-    field.type = 'string'
-    break
+    retval.push(field)
+    return retval
+  }
 
-  case 'InputNumber':
-    field.type = 'number'
-    break
-
-  case 'InputCheckbox':
-    field.type = 'boolean'
-    break
-
-  case 'MediaVideo':
+  if (block.component == 'MediaVideo') {
     field.type = 'object'
     field.properties = { videoTime: { type: 'string' } }
     field.info.icon = 'mdi:youtube'
@@ -100,14 +110,13 @@ function getBlockFields(block) {
         },
       })
     }
-    break
 
-  default:
-    field.type = 'string'
-    break
+    retval.push(field)
+    return retval
   }
 
+  // Block has v-model property, but no block specific field options were determined.  Default to type: string
+  field.type = 'string'
   retval.push(field)
-
   return retval
 }

@@ -24,7 +24,7 @@ Retorna todos los editores (listos para usar en <component>) relacionados al blo
 */
 import { defineAsyncComponent } from 'vue'
 import getBlockDefinition from './getBlockDefinition.js'
-import { UiInputJson } from '@/packages/ui/components'
+import { UiForm, UiInputJson } from '@/packages/ui/components'
 import BlockListenersEditor from '../components/CmsBlockEditor/BlockListenersEditor.vue'
 import BlockModelsEditor from '../components/CmsBlockEditor/BlockModelsEditor.vue'
 import BlockVisibilityEditor from '../components/CmsBlockEditor/BlockVisibilityEditor.vue'
@@ -144,6 +144,25 @@ export default async function getBlockEditors(block, $settings = {}) {
     'icon': 'mdi:palette',
     'component': UiInputJson,
     'v-model': 'block.props.style',
+  })
+
+  // v-for
+  retval.actions.push({
+    'id': 'v-for',
+    'title': 'Repeat',
+    'icon': 'mdi:repeat-variant',
+    'component': UiForm,
+    'props': {
+      fields: [
+        {
+          type: 'text',
+          model: 'v-for',
+          label: 'Repeat for every item in',
+          subtext: 'The iterated value is available as $item',
+        },
+      ],
+    },
+    'v-model': 'block',
   })
 
   // Raw block source editor
