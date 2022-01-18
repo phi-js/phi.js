@@ -180,6 +180,7 @@ function onChangeOp() {
 .StmtOp {
   .op-picker {
     text-align: center;
+    margin: var(--ui-breathe);
   }
 
   .op-picker-select {

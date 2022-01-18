@@ -1,17 +1,19 @@
 <template>
-  <div class="StmtAndOr">
-    <select
-      v-model="innerModel.operator"
-      class="StmtAndOr__select"
-      @change="emitInput"
-    >
-      <option value="and">
-        Todas las siguientes
-      </option>
-      <option value="or">
-        Cualquiera de las siguientes
-      </option>
-    </select>
+  <fieldset class="StmtAndOr">
+    <legend>
+      <select
+        v-model="innerModel.operator"
+        class="StmtAndOr__select"
+        @change="emitInput"
+      >
+        <option value="and">
+          Todas las siguientes
+        </option>
+        <option value="or">
+          Cualquiera de las siguientes
+        </option>
+      </select>
+    </legend>
 
     <div class="StmtAndOr__body">
       <div class="StmtAndOr__list">
@@ -42,7 +44,7 @@
         <VmOperatorPicker @input="pushOperator" />
       </div>
     </div>
-  </div>
+  </fieldset>
 </template>
 
 <script>
@@ -124,11 +126,20 @@ export default {
 
 <style lang="scss">
 .StmtAndOr {
+  border-radius: var(--ui-radius);
+  border: 1px inset #666;
+  padding: 0 20px 0 0px;
+
+  & > legend {
+    margin-left: 8px;
+  }
+
   .StmtAndOr__select {
-    padding: var(--ui-padding);
     border: 0;
     background: transparent;
     font-family: var(--ui-font-secondary);
+    // margin-bottom: 6px;
+    padding: 3px 6px;
   }
 
   .stmt-boo-adder {
@@ -136,7 +147,7 @@ export default {
   }
 
   .StmtAndOr__body {
-    padding-left: 24px;
+    padding-left: 8px;
   }
 
   .StmtAndOr__item {
@@ -146,8 +157,8 @@ export default {
 
     .StmtAndOr__deleter {
       position: absolute;
-      top: 8px;
-      right: 6px;
+      top: 0;
+      right: -16px;
       z-index: 2;
 
       &:hover {
