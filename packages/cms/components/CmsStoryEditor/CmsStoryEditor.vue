@@ -33,10 +33,10 @@ const emit = defineEmits(['update:story', 'update:currentPageId', 'update:isSett
 
 const currentPage = ref()
 watch(
-  () => props.currentPageId,
-  (newValue) => {
+  () => [props.story?.pages, props.currentPageId],
+  () => {
     const pages = Array.isArray(props.story?.pages) ? props.story.pages : []
-    const foundPage = pages.find((p) => p.id == newValue)
+    const foundPage = pages.find((p) => p.id == props.currentPageId)
     currentPage.value = foundPage ? JSON.parse(JSON.stringify(foundPage)) : null
   },
   { immediate: true },
