@@ -159,14 +159,14 @@ function onChangeOp() {
       >
         <component
           :is="customArgsComponent.component"
-          v-if="customArgsComponent"
+          v-if="customArgsComponent?.component"
           v-model="innerModel.args"
           v-bind="customArgsComponent.props"
           :field-schema="fieldSchema"
           @update:modelValue="emitInput"
         />
         <VmStatement
-          v-else
+          v-else-if="customArgsComponent !== false"
           v-model="innerModel.args"
           @update:modelValue="emitInput"
         />

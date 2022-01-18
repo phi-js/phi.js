@@ -34,11 +34,11 @@ export default {
   },
 
   'string.beginsWith'(value, args) {
-    return value.indexOf(args) === 0
+    return value && value.indexOf(args) === 0
   },
 
   'string.endsWith'(value, args) {
-    return value.indexOf(args) === (value.length - args.length)
+    return value && value.indexOf(args) === (value.length - args.length)
   },
 
   'string.empty'(value) {
