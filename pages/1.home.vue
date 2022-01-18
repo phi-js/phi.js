@@ -16,15 +16,15 @@ const defaultStory = {
                 {
                   component: 'MediaImage',
                   props: {
-                    alt: 'Phi',
+                    alt: 'Phi.js',
                     title: 'Hello world!',
-                    src: '/phi.png',
+                    src: '/phi.svg',
                     align: 'center',
                   },
                 },
                 {
                   component: 'MediaHtml',
-                  props: { value: '<h1 style="text-align: center">Phi</h1>' },
+                  props: { value: '<h1 style="text-align: center">Phi<em>.js</em></h1>' },
                 },
               ],
             },
