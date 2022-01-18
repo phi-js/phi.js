@@ -180,13 +180,6 @@ function isLeftGhostVisible(colIndex) {
       </template>
     </template>
 
-    <!-- <template #toolbar-end>
-      <UiIcon
-        class="BlockScaffold__toolbar-icon"
-        src="mdi:content-cut"
-      />
-    </template> -->
-
     <div
       ref="$el"
       class="LayoutRowEditor__body"

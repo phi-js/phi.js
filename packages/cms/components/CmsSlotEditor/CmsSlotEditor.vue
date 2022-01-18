@@ -2,7 +2,7 @@
 import { ref, watch, nextTick } from 'vue'
 import CmsBlockEditor from '../CmsBlockEditor/CmsBlockEditor.vue'
 import { CmsBlockPicker } from '../CmsBlockPicker'
-import draggable from 'vuedraggable'
+import draggable from 'vuedraggable/src/vuedraggable'
 
 const props = defineProps({
   slot: {
@@ -139,6 +139,7 @@ const focusedIndexes = ref({})
 
     <CmsBlockPicker
       v-if="showLauncher && !innerSlot.length"
+      class="LoneBlockPicker"
       @input="appendBlock"
     />
   </div>
@@ -311,5 +312,9 @@ const focusedIndexes = ref({})
       pointer-events: none;
     }
   }
+}
+
+.LoneBlockPicker {
+  margin: 0 12px;
 }
 </style>

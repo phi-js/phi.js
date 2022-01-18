@@ -17,3 +17,13 @@ const props = defineProps({
     <slot />
   </div>
 </template>
+
+<style lang="scss">
+.LayoutColumn {
+  // prevent margin collapse within children
+  // also, guarantee that LayoutColumn will be EXACTLY spaced when comparend with LayoutRowEditor
+  & > * {
+    border: 1px solid transparent;
+  }
+}
+</style>

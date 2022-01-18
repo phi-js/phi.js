@@ -1,7 +1,8 @@
 .ui-button {
   border: none;
   color: #fff;
-  background: #424557;
+  // background: #424557;
+  background: var(--ui-color-primary);
   will-change: opacity;
   font-size: 16px;
   font-weight: 500;

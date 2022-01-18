@@ -1,6 +1,10 @@
 <script setup>
 import { ref, toRef, unref, computed, watch } from 'vue'
-import { UiItem, UiIcon, UiPopover } from '@/packages/ui/components'
+
+import { UiItem } from '../UiItem'
+import { UiIcon } from '../UiIcon'
+import { UiPopover } from '../UiPopover'
+
 import useOptionsManager from './composables/useOptionsManager.js'
 import useSelectionManager from './composables/useSelectionManager.js'
 

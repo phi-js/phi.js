@@ -51,21 +51,17 @@ provide('$_vm_modelSchema', blockSchema)
 
 <template>
   <div class="LayoutPageEditor">
-    <div class="LayoutPageEditor__body">
-      <CmsSlotEditor
-        v-model:slot="pageSlot"
-        group-name="page-slot"
-        @update:slot="onSlotUpdate"
-      />
+    <CmsSlotEditor
+      v-model:slot="pageSlot"
+      group-name="page-slot"
+      @update:slot="onSlotUpdate"
+    />
 
-      <UiItem
-        class="RowLauncher"
-        text="Add section"
-        icon="mdi:plus"
-        @click="launchRow"
-      />
-    </div>
-
-    <div class="LayoutPageEditor__wedge" />
+    <UiItem
+      class="RowLauncher"
+      text="Add section"
+      icon="mdi:plus"
+      @click="launchRow"
+    />
   </div>
 </template>
