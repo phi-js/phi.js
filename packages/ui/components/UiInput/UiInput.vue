@@ -183,3 +183,21 @@ const nativeCheckboxProps = computed(() => {
     />
   </div>
 </template>
+
+<style lang="scss">
+.UiInput {
+  margin: var(--ui-breathe);
+
+  &__label {
+    font-family: var(--ui-font-secondary);
+    font-weight: bold;
+    opacity: 0.7;
+  }
+
+  &__subtext {
+    font-family: var(--ui-font-secondary);
+    opacity: 0.8;
+    font-size: 12px;
+  }
+}
+</style>

@@ -104,7 +104,8 @@ function resizeBody(coords = null) {
     return
   }
 
-  const offsetLeft = 240
+  // const offsetLeft = 240 // test
+  const offsetLeft = 0
 
   switch (dock.value) {
   case 'left':
@@ -376,6 +377,16 @@ const isHovered = ref(false)
   &__body {
     flex: 1;
     overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.4);
+      border-radius: 6px;
+      border: 2px solid #333;
+    }
   }
 
   &__dockzone {

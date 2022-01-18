@@ -22,4 +22,28 @@
   border-style: outset;
   border-color: rgb(118, 118, 118);
   border-image: initial;
+
+  min-height: 2em;
+  min-width: 3em;
+
+  padding: var(--ui-padding);
+  border-radius: var(--ui-radius);
+  border: none;
+  color: #eee;
+  background: var(--ui-color-primary);
+  font-size: 16px;
+  font-weight: 500;
+
+  transition: background 0.2s,color 0.2s;
+  box-shadow: 0 1px 4px -2px black, inset 0 2px 1px -1px rgb(255 255 255 / 10%);
+
+  cursor: pointer;
+
+  &:hover {
+    color: #81edff;
+  }
+
+  &--cancel {
+    background: transparent;
+  }
 }
