@@ -56,6 +56,7 @@ const availableOperators = computed(() => {
   return allOperators.filter((op) => {
     return op.type == fieldType
       || (op.operator.substring(0, 5) === 'enum.' && fieldSchema.value?.enum?.length)
+      || (op.operator.substring(0, 5) === 'enum.' && fieldType == 'array')
   })
 })
 

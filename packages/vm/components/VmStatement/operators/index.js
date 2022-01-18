@@ -5,8 +5,8 @@ import stringOps from './string'
 
 // El orden importa!  Es el orden en el que se listan en StmtOp.vue
 export default [
+  ...enumOps,
   ...numberOps,
   ...stringOps,
   ...dateOps,
-  ...enumOps,
 ]
