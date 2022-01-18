@@ -1,6 +1,6 @@
-import { UiInput, UiInputEditor, UiForm } from '@/packages/ui/components'
+import { UiInput } from '@/packages/ui/components'
 import InputSettings from '../components/InputSettings/InputSettings.vue'
-import OptionsEditor from '@/packages/ui/components/UiInputEditor/editors/OptionsEditor.vue'
+import InputFace from '../components/InputFace.vue'
 
 export default {
   tags: ['input'],
@@ -19,66 +19,15 @@ export default {
   },
 
   editor: {
-    toolbar: {
-      'v-model': 'block',
-      'component': UiForm,
-      'props': {
-        class: 'ui__group',
-        fields: [
-          {
-            model: 'props.multiple',
-            type: 'select-native',
-            options: [
-              {
-                text: 'Múltiple',
-                value: true,
-              },
-              {
-                text: 'Único',
-                value: false,
-              },
-            ],
-          },
-          {
-            model: 'props.type',
-            type: 'select-native',
-            options: [
-              {
-                text: 'Picker',
-                value: 'select',
-              },
-              // {
-              //   text: 'Nativo',
-              //   value: 'select-native',
-              // },
-              {
-                text: 'Lista',
-                value: 'select-list',
-              },
-              {
-                text: 'Botones',
-                value: 'select-buttons',
-              },
-            ],
-          },
-        ],
-      },
-    },
-
     face: {
-      'component': UiInputEditor,
+      'component': InputFace,
       'v-model': 'block.props',
     },
 
     actions: [
       {
-        'title': 'Options',
-        'component': OptionsEditor,
-        'v-model': 'block.props.options',
-      },
-      {
+        'id': 'InputSettings',
         'title': 'Input',
-        'icon': 'mdi:form-textbox',
         'component': InputSettings,
         'v-model': 'block',
       },

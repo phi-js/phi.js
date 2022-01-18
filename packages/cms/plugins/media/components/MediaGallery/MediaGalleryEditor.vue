@@ -5,28 +5,34 @@
         v-model="innerValue.view"
         @change="emitInput"
       >
-        <option value="list">Lista</option>
-        <option value="grid">Cuadrícula</option>
-        <option value="gallery">Galería</option>
+        <option value="list">
+          Lista
+        </option>
+        <option value="grid">
+          Cuadrícula
+        </option>
+        <option value="gallery">
+          Galería
+        </option>
       </select>
     </UiField>
 
     <UiField
-      label="Max. a mostrar en vista previa"
       v-show="innerValue.view == 'gallery'"
+      label="Max. a mostrar en vista previa"
     >
       <input
+        v-model="innerValue.previewLimit"
         type="number"
         min="1"
-        v-model="innerValue.previewLimit"
         @input="emitInput"
-      />
+      >
     </UiField>
 
     <draggable
+      v-model="innerValue.files"
       class="media-gallery-editor-list"
       handle=".image-preview"
-      v-model="innerValue.files"
       @input="emitInput"
     >
       <div
@@ -35,15 +41,15 @@
         class="editor-list-item"
       >
         <div class="image-preview">
-          <img :src="image.preview" />
+          <img :src="image.preview">
         </div>
         <div class="image-title-wrapper">
           <input
+            v-model="innerValue.files[i].title"
             class="ui-native"
             type="text"
-            v-model="innerValue.files[i].title"
             @input="emitInput"
-          />
+          >
         </div>
         <UiIcon
           class="image-delete-icon"
@@ -56,18 +62,20 @@
 
     <UiFileUploader
       :path="path"
+      accepted-files="image/*"
       @success="onUploadSuccess"
       @error="onUploadError"
-      accepted-files="image/*"
     >
-      <div class="gallery-editor-uploader">Subir imágenes</div>
+      <div class="gallery-editor-uploader">
+        Subir imágenes
+      </div>
     </UiFileUploader>
   </div>
 </template>
 
 <script>
-import { UiFileUploader, UiField, UiIcon } from '../../../../../ui';
-import draggable from 'vuedraggable';
+import { UiFileUploader, UiField, UiIcon } from '../../../../../ui'
+import draggable from 'vuedraggable/src/vuedraggable'
 
 export default {
   name: 'MediaGalleryEditor',
@@ -80,8 +88,7 @@ export default {
   },
 
   props: {
-    value: {
-      type: Object, //block.props (files and vue)
+    value: { type: Object, //block.props (files and vue)
     },
 
     path: {
@@ -91,18 +98,16 @@ export default {
   },
 
   data() {
-    return {
-      innerValue: {},
-    };
+    return { innerValue: {} }
   },
 
   watch: {
     value: {
       immediate: true,
       handler(newValue) {
-        this.innerValue = JSON.parse(JSON.stringify(newValue));
+        this.innerValue = JSON.parse(JSON.stringify(newValue))
         if (!Array.isArray(this.innerValue.files) || !this.innerValue.files) {
-          this.$set(this.innerValue, 'files', []);
+          this.$set(this.innerValue, 'files', [])
         }
       },
     },
@@ -111,16 +116,16 @@ export default {
   methods: {
     removeImage(index) {
       if (!confirm('Eliminar esta imagen?')) {
-        return;
+        return
       }
-      this.innerValue.files.splice(index, 1);
-      this.emitInput();
+      this.innerValue.files.splice(index, 1)
+      this.emitInput()
     },
 
     onUploadSuccess(files) {
       files.forEach((file) => {
         if (!file.preview) {
-          return;
+          return
         }
 
         this.innerValue.files.push({
@@ -128,22 +133,22 @@ export default {
           url: file.url,
           thumbnail: file.thumbnail,
           preview: file.preview,
-        });
-      });
+        })
+      })
 
-      this.emitInput();
+      this.emitInput()
     },
 
     onUploadError(err) {
-      alert('Error subiendo archivos');
-      console.log('GalleryEditor.vue: Error subiendo archivos', err);
+      alert('Error subiendo archivos')
+      console.log('GalleryEditor.vue: Error subiendo archivos', err)
     },
 
     emitInput() {
-      this.$emit('input', JSON.parse(JSON.stringify(this.innerValue)));
+      this.$emit('input', JSON.parse(JSON.stringify(this.innerValue)))
     },
   },
-};
+}
 </script>
 
 <style lang="scss">

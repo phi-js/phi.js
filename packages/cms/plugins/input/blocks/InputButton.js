@@ -1,5 +1,6 @@
-import { UiInput, UiInputEditor } from '../../../../ui/components'
+import { UiInput } from '../../../../ui/components'
 import InputSettings from '../components/InputSettings/InputSettings.vue'
+import InputFace from '../components/InputFace.vue'
 
 export default {
   tags: ['input'],
@@ -16,12 +17,13 @@ export default {
 
   editor: {
     face: {
-      'component': UiInputEditor,
+      'component': InputFace,
       'v-model': 'block.props',
     },
 
     actions: [
       {
+        'id': 'InputSettings',
         'title': 'Button',
         'component': InputSettings,
         'v-model': 'block',

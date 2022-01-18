@@ -17,6 +17,8 @@
   .RowLauncher {
     position: relative;
     left: -40px;
+    padding-right: 2px;
+    border-radius: var(--ui-radius);
 
     cursor: pointer;
     display: inline-flex;
@@ -33,20 +35,27 @@
       border-bottom-right-radius: 0;
 
       color: #777 !important;
-    }
 
-    &:hover .UiItem__icon {
-      background-color: var(--ui-color-primary);
-      color: #fff !important;
+      margin: 0;
     }
 
     .UiItem__text {
       transition: all var(--ui-duration-snap);
+      display: none;
       opacity: 0;
     }
 
-    &:hover .UiItem__text {
-      opacity: 1;
+    &:hover {
+      .UiItem__icon {
+        background-color: var(--ui-color-primary);
+        color: #fff !important;
+        margin-right: 12px;
+      }
+
+      .UiItem__text {
+        display: block;
+        opacity: 0.7;
+      }
     }
   }
 }

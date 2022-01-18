@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
-import { UiIcon } from '@/packages/ui/components'
+import { UiIcon, UiPopover } from '@/packages/ui/components'
 import BlockScaffold from '../../../../components/CmsBlockEditor/BlockScaffold.vue'
 
 import { Editor, EditorContent } from '@tiptap/vue-3'
@@ -56,31 +56,37 @@ const allCommands = computed(() => {
       callback: () => editor.chain().focus().setParagraph().run(),
       isActive: editor.isActive('paragraph'),
     },
+
     h1: {
       text: 'H1',
       callback: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
       isActive: editor.isActive('heading', { level: 1 }),
     },
+
     h2: {
       text: 'H2',
       callback: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
       isActive: editor.isActive('heading', { level: 2 }),
     },
+
     h3: {
       text: 'H3',
       callback: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
       isActive: editor.isActive('heading', { level: 3 }),
     },
+
     bold: {
       text: 'B',
       callback: () => editor.chain().focus().toggleBold().run(),
       isActive: editor.isActive('bold'),
     },
+
     italic: {
       text: 'I',
       callback: () => editor.chain().focus().toggleItalic().run(),
       isActive: editor.isActive('italic'),
     },
+
     underline: {
       text: 'U',
       callback: () => editor.chain().focus().toggleUnderline().run(),
@@ -124,24 +130,40 @@ const allCommands = computed(() => {
 })
 
 const formatButtons = computed(() => {
-  let cmd = allCommands.value
+  const cmd = allCommands.value
   return [
-    // cmd.p,
-    cmd.h1,
-    cmd.h2,
-    cmd.h3,
-    // ---
     cmd.bold,
     cmd.italic,
     cmd.underline,
-    // ---
-    // cmd.alignClear,
+  ]
+})
+
+const heading = computed(() => {
+  const cmd = allCommands.value
+  const available = [
+    cmd.p,
+    cmd.h1,
+    cmd.h2,
+    cmd.h3,
+  ]
+
+  const current = available.find((c) => c.isActive)
+  return { current, available }
+})
+
+const alignment = computed(() => {
+  const cmd = allCommands.value
+  const available = [
     cmd.alignLeft,
     cmd.alignCenter,
     cmd.alignRight,
     cmd.alignJustify,
   ]
+
+  const current = available.find((c) => c.isActive)
+  return { current, available }
 })
+
 </script>
 
 <template>
@@ -153,26 +175,65 @@ const formatButtons = computed(() => {
     @update:block="$emit('update:block', $event)"
   >
     <template #toolbar>
-      <template
+      <UiPopover>
+        <template #trigger>
+          <button
+            type="button"
+            class="ui--clickable ui-toolbar-item expansible"
+            v-text="heading.current.text"
+          />
+        </template>
+        <template #contents="{ close }">
+          <div
+            class="ui-row --tight"
+            @click="close"
+          >
+            <button
+              v-for="(cmd, i) in heading.available"
+              :key="i"
+              type="button"
+              class="ui--clickable"
+              :class="{'--active': cmd.isActive}"
+              @click="cmd.callback"
+              v-text="cmd.text"
+            />
+          </div>
+        </template>
+      </UiPopover>
+
+      <UiPopover>
+        <template #trigger>
+          <UiIcon
+            :src="alignment.current.icon"
+            class="ui--clickable ui-toolbar-item expansible"
+          />
+        </template>
+        <template #contents="{ close }">
+          <div
+            class="ui-row --tight"
+            @click="close"
+          >
+            <UiIcon
+              v-for="(cmd, i) in alignment.available"
+              :key="i"
+              :src="cmd.icon"
+              class="ui--clickable"
+              :class="{'--active': cmd.isActive}"
+              @click="cmd.callback"
+            />
+          </div>
+        </template>
+      </UiPopover>
+
+      <button
         v-for="(option, i) in formatButtons"
         :key="i"
-      >
-        <UiIcon
-          v-if="option.icon"
-          :src="option.icon"
-          class="ui--clickable"
-          :class="{'--active': option.isActive}"
-          @click="option.callback"
-        />
-        <button
-          v-else
-          type="button"
-          class="ui--clickable"
-          :class="{'--active': option.isActive}"
-          @click="option.callback"
-          v-text="option.text"
-        />
-      </template>
+        type="button"
+        class="ui--clickable text-format-button"
+        :class="{'--active': option.isActive}"
+        @click="option.callback"
+        v-text="option.text"
+      />
     </template>
 
     <template #default>
@@ -200,5 +261,17 @@ const formatButtons = computed(() => {
 .tiptap-editor-contents [contenteditable] {
   min-height: 32px;
   outline: none;
+}
+
+.MediaHtmlBlockEditor {
+  .text-format-button {
+    min-width: 34px !important;
+  }
+
+  .expansible {
+    &::after {
+      content: '▾'
+    }
+  }
 }
 </style>

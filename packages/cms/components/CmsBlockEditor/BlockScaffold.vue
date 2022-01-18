@@ -66,13 +66,16 @@ function openAction(actionIndex) {
   return true
 }
 
-function onClickEye() {
-  const ifActionIndex = availableActions.value.findIndex((action) => action.id == 'visibility')
-  openAction(ifActionIndex)
+function openActionId(actionId) {
+  const foundActionIndex = availableActions.value.findIndex((action) => action.id == actionId)
+  if (foundActionIndex >= 0) {
+    openAction(foundActionIndex)
+  } else {
+    console.warn('Could not find block action:', actionId)
+  }
 }
 
 const isFocused = ref(false)
-
 </script>
 
 <template>
@@ -113,7 +116,7 @@ const isFocused = ref(false)
           title="Visibility"
           class="BlockScaffold__toolbar-icon ui--clickable"
           src="mdi:eye"
-          @click="onClickEye"
+          @click="openActionId('visibility')"
         />
 
         <!-- dropdown options -->
@@ -157,6 +160,7 @@ const isFocused = ref(false)
           :action="editors.face"
           v-bind="innerBlock?.props"
           tabindex="0"
+          :open-action="openActionId"
           @update:block="accept()"
         />
         <UiInput
@@ -167,7 +171,6 @@ const isFocused = ref(false)
         />
       </slot>
     </div>
-
 
     <UiWindow
       name="block-scaffold"

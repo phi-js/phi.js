@@ -59,7 +59,7 @@ provide('$_vm_modelSchema', blockSchema)
 
     <UiItem
       class="RowLauncher"
-      text="Add section"
+      text="Add row"
       icon="mdi:plus"
       @click="launchRow"
     />
