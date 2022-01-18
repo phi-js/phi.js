@@ -24,7 +24,18 @@ export default [
   },
 
   {
-    operator: 'string.beginsWith',
+    operator: 'string.includes',
+    type: 'string',
+    icon: 'mdi:equal',
+    text: 'contiene',
+    editor: {
+      component: UiInput,
+      props: { type: 'text' },
+    },
+  },
+
+  {
+    operator: 'string.startsWith',
     type: 'string',
     icon: 'mdi:equal',
     text: 'empieza con',

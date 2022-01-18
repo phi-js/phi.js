@@ -29,16 +29,16 @@ export default {
     return value != args
   },
 
-  'string.contains'(value, args) {
-    return value.indexOf(args) !== -1
+  'string.includes'(value, args) {
+    return value && value.includes(args)
   },
 
-  'string.beginsWith'(value, args) {
-    return value && value.indexOf(args) === 0
+  'string.startsWith'(value, args) {
+    return value && value.startsWith(args)
   },
 
   'string.endsWith'(value, args) {
-    return value && value.indexOf(args) === (value.length - args.length)
+    return value && value.endsWith(args)
   },
 
   'string.empty'(value) {
