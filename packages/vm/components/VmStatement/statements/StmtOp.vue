@@ -53,9 +53,11 @@ const fieldSchema = computed(() => {
 
 const availableOperators = computed(() => {
   let fieldType = fieldSchema.value?.type || 'string'
-  return allOperators.filter((op) => op.type == fieldType || !op.type)
+  return allOperators.filter((op) => {
+    return op.type == fieldType
+      || (op.operator.substring(0, 5) === 'enum.' && fieldSchema.value?.enum?.length)
+  })
 })
-
 
 const isKnownOperator = computed(() => {
   return (

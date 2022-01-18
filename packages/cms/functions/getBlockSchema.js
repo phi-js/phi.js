@@ -60,7 +60,7 @@ function getBlockFields(block) {
 
   case 'InputText':
   case 'InputTextarea':
-    field.type = 'text'
+    field.type = 'string'
     break
 
   case 'InputNumber':
