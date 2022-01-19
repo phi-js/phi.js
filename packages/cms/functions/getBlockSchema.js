@@ -82,9 +82,29 @@ function getBlockFields(block) {
   }
 
   if (block.component == 'MediaVideo') {
+
+    retval.push({
+      name: block['v-model'] + '.isPlaying',
+      type: 'boolean',
+      info: {
+        icon: 'mdi:youtube',
+        text: 'Video is playing',
+      },
+    })
+
+    retval.push({
+      name: block['v-model'] + '.time',
+      type: 'number',
+      info: {
+        text: 'Video time',
+        subtext: '(milliseconds)',
+        icon: 'mdi:youtube',
+      },
+    })
+
+    field.info.icon = 'mdi:youtube'
     field.type = 'object'
     field.properties = { videoTime: { type: 'string' } }
-    field.info.icon = 'mdi:youtube'
 
     if (Array.isArray(block?.props?.chapters)) {
       field.properties.chapters = {
@@ -111,7 +131,7 @@ function getBlockFields(block) {
       })
     }
 
-    retval.push(field)
+    // retval.push(field)
     return retval
   }
 
