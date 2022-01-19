@@ -1,9 +1,9 @@
 export default {
-  'boolean.true'(value) {
-    return !!value;
+  'boolean.isTrue'(value) {
+    return !!value
   },
 
-  'boolean.false'(value) {
-    return !value;
-  }
+  'boolean.isFalse'(value) {
+    return !value
+  },
 }

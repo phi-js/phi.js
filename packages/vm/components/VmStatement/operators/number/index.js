@@ -2,7 +2,7 @@ import { UiInput } from '@/packages/ui/components'
 
 export default [
   {
-    operator: 'eq',
+    operator: 'number.eq',
     type: 'number',
     icon: 'mdi:equal',
     text: 'es igual a',
@@ -13,7 +13,7 @@ export default [
   },
 
   {
-    operator: 'neq',
+    operator: 'number.neq',
     type: 'number',
     icon: 'mdi:not-equal',
     text: 'no es igual a',
@@ -24,7 +24,7 @@ export default [
   },
 
   {
-    operator: 'gt',
+    operator: 'number.gt',
     type: 'number',
     icon: 'mdi:greater-than',
     text: 'es mayor que',
@@ -35,7 +35,7 @@ export default [
   },
 
   {
-    operator: 'gte',
+    operator: 'number.gte',
     type: 'number',
     icon: 'mdi:greater-than-or-equal',
     text: 'es mayor o igual que',
@@ -46,7 +46,7 @@ export default [
   },
 
   {
-    operator: 'lt',
+    operator: 'number.lt',
     type: 'number',
     icon: 'mdi:less-than',
     text: 'es menor que',
@@ -57,7 +57,7 @@ export default [
   },
 
   {
-    operator: 'lte',
+    operator: 'number.lte',
     type: 'number',
     icon: 'mdi:less-than-or-equal',
     text: 'es menor o igual que',
