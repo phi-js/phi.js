@@ -32,9 +32,18 @@ function emitUpdate() {
 </script>
 
 <template>
-  <VmStatement
-    v-model="block['v-if']"
-    :default="{ and: [] }"
-    @update:model-value="emitUpdate"
-  />
+  <div class="BlockVisibilityEditor">
+    <VmStatement
+      v-model="block['v-if']"
+      :default="{ and: [] }"
+      @update:model-value="emitUpdate"
+    />
+
+    <UiInput
+      v-model="block.transition"
+      type="checkbox"
+      placeholder="Usar animación"
+      @update:model-value="emitUpdate"
+    />
+  </div>
 </template>
