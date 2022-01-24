@@ -2,19 +2,16 @@
 import { ref, onMounted } from 'vue'
 import { UiItem, UiInput } from '@/packages/ui/components'
 import { useApi } from '@/packages/api/'
-import {
-  default as jpApi,
-  users as apiUsers,
-  posts as apiPosts,
-} from '../../api'
 
-const users = ref([])
-const posts = ref([])
-const $api = useApi(jpApi, { users: apiUsers, posts: apiPosts })
+import { users, posts } from '../../api'
+const $api = useApi({ users, posts })
+
+const arrUsers = ref([])
+const arrPosts = ref([])
 
 onMounted(() => {
-  $api.users.getUsers().then((r) => (users.value = r))
-  $api.posts.getPosts().then((r) => (posts.value = r))
+  $api.users.getUsers().then((r) => (arrUsers.value = r))
+  $api.posts.getPosts().then((r) => (arrPosts.value = r))
 })
 </script>
 
@@ -24,12 +21,12 @@ onMounted(() => {
       <label class="ui-label">Users</label>
       <UiInput
         type="select"
-        :options="users"
+        :options="arrUsers"
         option-value="$.id"
         option-text="$.username"
       />
       <UiItem
-        v-for="user in users"
+        v-for="user in arrUsers"
         :key="user.id"
         :text="user.name"
         :subtext="user.username"
@@ -41,13 +38,13 @@ onMounted(() => {
 
       <UiInput
         type="select"
-        :options="posts"
+        :options="arrPosts"
         option-value="$.id"
         option-text="$.title"
       />
 
       <UiItem
-        v-for="post in posts"
+        v-for="post in arrPosts"
         :key="post.id"
         :text="post.title"
         :subtext="post.body"

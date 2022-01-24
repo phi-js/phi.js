@@ -21,6 +21,6 @@ export default (client) => ({
 
   deleteUser(userId) {
     return client.delete(`/users/${userId}`)
-  }
+  },
 
 })

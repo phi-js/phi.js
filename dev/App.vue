@@ -16,10 +16,10 @@ import {
 // UI components
 import { UiIcon, UiInput, UiItem, UiTree, UiPopover } from '@/packages/ui/components'
 
-// Modulo API: Definicion de clients globales
-import { provideApi } from '@/packages/api'
-import placeholderApi from '@/packages/placeholder/api'
-provideApi(placeholderApi)
+// // Modulo API: Definicion de clients globales
+// import { provideApi } from '@/packages/api'
+// import placeholderApi from '@/packages/placeholder/api'
+// provideApi(placeholderApi)
 
 import { provideI18n } from '@/packages/i18n'
 const i18n = provideI18n({
