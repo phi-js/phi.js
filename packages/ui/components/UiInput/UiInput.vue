@@ -177,10 +177,11 @@ const nativeCheckboxProps = computed(() => {
         >
       </slot>
     </div>
-    <div
-      class="UiInput__subtext"
-      v-text="props.subtext"
-    />
+    <div class="UiInput__subtext">
+      <slot name="subtext">
+        {{ props.subtext }}
+      </slot>
+    </div>
   </div>
 </template>
 
