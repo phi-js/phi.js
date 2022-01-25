@@ -45,5 +45,8 @@
 
   &--cancel {
     background: transparent;
+    border: 0;
+    box-shadow: none;
+    color: var(--ui-color-primary);
   }
 }

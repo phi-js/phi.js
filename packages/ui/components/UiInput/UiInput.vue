@@ -94,7 +94,7 @@ const customComponent = computed(() => {
 })
 
 const showLabel = computed(() => {
-  return props.type != 'button'
+  return props.type != 'button' && props.type != 'submit'
 })
 
 const elementProps = computed(() => {
@@ -154,6 +154,13 @@ const nativeCheckboxProps = computed(() => {
         <button
           v-else-if="props.type == 'button'"
           type="button"
+          class="UiInput__elem ui__button"
+          v-bind="nativeElementProps"
+          v-text="props.label"
+        />
+        <button
+          v-else-if="props.type == 'submit'"
+          type="submit"
           class="UiInput__elem ui__button"
           v-bind="nativeElementProps"
           v-text="props.label"

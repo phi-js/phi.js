@@ -119,6 +119,10 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
           type="button"
           label="button"
         />
+        <UiInput
+          type="submit"
+          label="submit"
+        />
       </section>
 
       <section>
