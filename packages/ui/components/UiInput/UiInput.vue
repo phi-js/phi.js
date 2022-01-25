@@ -124,6 +124,9 @@ const nativeCheckboxProps = computed(() => {
     onInput: (event) => emit('update:modelValue', event.target.checked),
   }
 })
+
+const element = ref()
+defineExpose({ element })
 </script>
 
 <template>
@@ -143,16 +146,19 @@ const nativeCheckboxProps = computed(() => {
         <component
           :is="customComponent"
           v-if="customComponent"
+          ref="element"
           class="UiInput__elem"
           v-bind="elementProps"
         />
         <textarea
           v-else-if="props.type == 'textarea'"
+          ref="element"
           class="UiInput__elem ui__input"
           v-bind="nativeElementProps"
         />
         <button
           v-else-if="props.type == 'button'"
+          ref="element"
           type="button"
           class="UiInput__elem ui__button"
           v-bind="nativeElementProps"
@@ -160,6 +166,7 @@ const nativeCheckboxProps = computed(() => {
         />
         <button
           v-else-if="props.type == 'submit'"
+          ref="element"
           type="submit"
           class="UiInput__elem ui__button"
           v-bind="nativeElementProps"
@@ -171,16 +178,18 @@ const nativeCheckboxProps = computed(() => {
           :type="props.type"
         >
           <input
-            type="checkbox"
             v-bind="nativeCheckboxProps"
+            ref="element"
+            type="checkbox"
           ><span>{{
             props.placeholder
           }}</span></label>
         <input
           v-else
+          v-bind="nativeElementProps"
+          ref="element"
           class="UiInput__elem ui__input"
           :type="props.type"
-          v-bind="nativeElementProps"
         >
       </slot>
     </div>
