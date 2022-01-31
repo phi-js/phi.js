@@ -124,7 +124,7 @@ export default class Client {
       .then((response) => {
         if (!response.ok) {
           return response.json().then((json) => {
-            console.log('fetch error', response)
+            // console.warn('phi/api fetch error', response)
             throw { body: json, status: response.status, statusText: response.statusText }
           })
         }
