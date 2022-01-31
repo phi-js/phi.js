@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import story from './sample.js'
 import CmsStory from './CmsStory.vue'
+import story from './sample.js'
 
 const modelValue = ref({ limit: 3 })
 const curPageId = ref()
@@ -14,7 +14,7 @@ const curPageId = ref()
     :story="story"
   />
 
-  <select v-model="curPageId">
+  <!-- <select v-model="curPageId">
     <option
       v-for="page in story.pages"
       :key="page.id"
@@ -22,5 +22,5 @@ const curPageId = ref()
     >
       {{ page.id }}
     </option>
-  </select>
+  </select> -->
 </template>

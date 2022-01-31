@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
+import { sanitizeStory } from '../../functions'
 import { CmsBlockEditor } from '../CmsBlockEditor'
 import LayoutPageWindow from '../../plugins/layout/components/LayoutPage/LayoutPageWindow.vue'
 
@@ -7,7 +8,7 @@ const props = defineProps({
   story: {
     type: Object,
     required: false,
-    default: () => ({}),
+    default: null,
   },
 
   settings: {
@@ -31,13 +32,20 @@ const props = defineProps({
 
 const emit = defineEmits(['update:story', 'update:currentPageId', 'update:isSettingsOpen'])
 
+// Sanitize incoming story
+const sanitizedStory = ref(null)
+watch(
+  () => props.story,
+  (incomingStory) => sanitizedStory.value = sanitizeStory(incomingStory),
+  { immediate: true },
+)
+
 const currentPage = ref()
 watch(
-  () => [props.story?.pages, props.currentPageId],
+  () => props.currentPageId,
   () => {
-    const pages = Array.isArray(props.story?.pages) ? props.story.pages : []
-    const foundPage = pages.find((p) => p.id == props.currentPageId)
-    currentPage.value = foundPage ? JSON.parse(JSON.stringify(foundPage)) : null
+    const foundPage = sanitizedStory.value.pages.find((p) => p.id == props.currentPageId)
+    currentPage.value = foundPage ? JSON.parse(JSON.stringify(foundPage)) : sanitizedStory.value.pages?.[0]
   },
   { immediate: true },
 )
@@ -76,6 +84,7 @@ const transitionDirection = ref('fw') // fw, bw
     </Transition>
 
     <LayoutPageWindow
+      v-if="currentPage"
       v-model:block="currentPage"
       :open="isSettingsOpen"
       @update:open="emit('update:isSettingsOpen', $event)"

@@ -2,11 +2,13 @@
 import { ref, computed, watch } from 'vue'
 import CmsBlock from '../CmsBlock/CmsBlock.vue'
 import { VM } from '@/packages/vm'
+import { sanitizeStory } from '../../functions'
 
 const props = defineProps({
   story: {
     type: Object,
-    required: true,
+    required: false,
+    default: null,
   },
 
   modelValue: {
@@ -24,6 +26,29 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'update:currentPageId'])
 
+// Sanitize incoming story
+const sanitizedStory = ref(null)
+watch(
+  () => props.story,
+  (incomingStory) => sanitizedStory.value = sanitizeStory(incomingStory),
+  { immediate: true },
+)
+
+// Determine current page
+const currentPage = ref(null)
+const transitionName = ref('slideX')
+const transitionDirection = ref('fw') // fw, bw
+
+watch(
+  () => props.currentPageId,
+  (newPageId) => {
+    const foundPage = sanitizedStory.value.pages.find((page) => page.id == newPageId)
+    currentPage.value = foundPage || sanitizedStory.value.pages?.[0]
+  },
+  { immediate: true },
+)
+
+/*
 const curIndex = ref(0)
 const curPage = computed(() => ({
   ...(props.story.pages?.[curIndex.value]),
@@ -146,6 +171,7 @@ watch(
   },
   { immediate: true, deep: true },
 )
+*/
 </script>
 
 <template>
@@ -154,32 +180,16 @@ watch(
       <Transition :name="`${transitionName}--${transitionDirection}`">
         <KeepAlive>
           <CmsBlock
-            v-if="curPage"
-            :key="curIndex"
+            v-if="currentPage"
+            :key="currentPage.id"
             class="CmsStory__page"
-            :block="curPage"
-            :model-value="modelValue"
+            :block="currentPage"
+            :model-value="props.modelValue"
             @update:modelValue="emit('update:modelValue', $event)"
           />
         </KeepAlive>
       </Transition>
     </div>
-
-    <!-- <div class="CmsStory__footer">
-      <button
-        :disabled="!back"
-        @click="back()"
-      >
-        PREV
-      </button>
-      <button
-        v-for="(path, i) in outgoingPaths"
-        :key="i"
-        :disabled="!next"
-        @click="traverse(path)"
-        v-text="path.text"
-      />
-    </div> -->
   </div>
 </template>
 
