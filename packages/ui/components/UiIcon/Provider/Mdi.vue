@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import './material-design-icons/css/materialdesignicons.css'
+
 export default {
   props: {
     value: {
@@ -13,7 +15,3 @@ export default {
   },
 }
 </script>
-
-<style>
-@import '../../../../../public/material-design-icons/css/materialdesignicons.css';
-</style>
