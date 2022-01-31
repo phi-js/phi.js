@@ -1,4 +1,11 @@
 <script setup>
+// Base story styles
+import '../../style/base.scss'
+
+// Editor and subcomponents styles
+import '../../style/editor.scss'
+
+
 import { ref, watch } from 'vue'
 import { sanitizeStory } from '../../functions'
 import { CmsBlockEditor } from '../CmsBlockEditor'
@@ -55,7 +62,7 @@ watch(
 function emitUpdate() {
   emit('update:story', {
     ...sanitizedStory.value,
-    pages: sanitizedStory.value.pages.map((page) => page.id == props.currentPageId ? { ...currentPage.value } : page),
+    pages: sanitizedStory.value.pages.map((page) => page.id == currentPage.value.id ? { ...currentPage.value } : page),
   })
 }
 

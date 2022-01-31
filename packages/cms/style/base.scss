@@ -1,0 +1,21 @@
+/* This stylesheet declares the base CSS for all block / block editor components */
+
+:root {
+  --cms-page-padding: 0 0;
+  --cms-row-padding: 0 0;
+  --cms-row-content-width: auto;
+}
+
+.LayoutPage {
+  padding: var(--cms-page-padding);
+}
+
+.LayoutRow {
+  margin: auto;
+  padding: var(--cms-row-padding);
+
+  .ui__content {
+    margin: auto;
+    width: var(--cms-row-content-width);
+  }
+}

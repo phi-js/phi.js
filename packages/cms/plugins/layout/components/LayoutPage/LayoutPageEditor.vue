@@ -4,9 +4,6 @@ import { UiItem } from '@/packages/ui/components'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
 import { getBlockSchema } from '../../../../functions'
 
-// Page editor theme
-import '../../style/index.scss'
-
 const props = defineProps({
   block: {
     type: Object,
@@ -50,7 +47,10 @@ provide('$_vm_modelSchema', blockSchema)
 </script>
 
 <template>
-  <div class="LayoutPageEditor">
+  <div
+    class="LayoutPageEditor LayoutPage"
+    :style="block.props?.style"
+  >
     <CmsSlotEditor
       v-model:slot="pageSlot"
       group-name="page-slot"

@@ -1,4 +1,7 @@
 <script setup>
+// Base story styles
+import '../../style/base.scss'
+
 import { ref, computed, watch } from 'vue'
 import CmsBlock from '../CmsBlock/CmsBlock.vue'
 import { VM } from '@/packages/vm'
@@ -202,8 +205,8 @@ watch(
     position: relative;
   }
 
-  &__page {
-    border: 1px solid transparent; // prevent border/margin collapse
-  }
+  // &__page {
+  //   border: 1px solid transparent; // prevent border/margin collapse
+  // }
 }
 </style>

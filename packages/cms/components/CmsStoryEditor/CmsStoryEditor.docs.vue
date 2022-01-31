@@ -1,8 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import story from '../CmsStory/sample.js'
 import CmsStoryEditor from './CmsStoryEditor.vue'
-
+// import story from '../CmsStory/sample.js'
 // const refStory = ref(story)
 const refStory = ref(null)
 const settings = ref({ uploads: { endpoint: 'http://v4.local/1/cms/pages/test/files' } })
@@ -13,5 +12,5 @@ const settings = ref({ uploads: { endpoint: 'http://v4.local/1/cms/pages/test/fi
     v-model:story="refStory"
     :settings="settings"
   />
-  <!-- <pre>{{ refStory }}</pre> -->
+  <pre>{{ refStory }}</pre>
 </template>

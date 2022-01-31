@@ -182,7 +182,7 @@ function isLeftGhostVisible(colIndex) {
 
     <div
       ref="$el"
-      class="LayoutRowEditor__body"
+      class="LayoutRowEditor__body LayoutRow"
       :class="{'LayoutRowEditor--dragging': isDragging}"
       :style="{alignItems: props.block?.props?.alignItems, ...props.block?.props?.style}"
       @mousemove="onResizerMove($event)"
@@ -190,49 +190,51 @@ function isLeftGhostVisible(colIndex) {
       @touchmove="onResizerMove($event)"
       @touchend="onResizerEnd($event)"
     >
-      <template
-        v-for="(column, colIndex) in columns"
-        :key="colIndex"
-      >
+      <div class="ui__content">
+        <template
+          v-for="(column, colIndex) in columns"
+          :key="colIndex"
+        >
+          <div
+            v-show="isLeftGhostVisible(colIndex)"
+            class="LayoutRowEditor__ghost"
+          >
+            <CmsSlotEditor
+              v-model:dragging="isDragging"
+              v-model:slot="filler"
+              @update:slot="onUpdateGhost(colIndex, $event)"
+            />
+          </div>
+          <div
+            class="LayoutRowEditor__column LayoutColumn"
+            :style="{flex: column?.props?.flex || 1}"
+          >
+            <CmsSlotEditor
+              v-model:slot="column.slot"
+              v-model:dragging="isDragging"
+              show-launcher
+              @update:slot="onUpdateColumn"
+              @update:dragging="draggedColumnIndex = $event ? colIndex : null"
+            />
+
+            <div
+              v-if="colIndex < columns.length - 1"
+              class="LayoutRowEditor__resizer"
+              @mousedown="onResizerStart($event, colIndex)"
+              @touchstart="onResizerStart($event, colIndex)"
+            />
+          </div>
+        </template>
         <div
-          v-show="isLeftGhostVisible(colIndex)"
+          v-show="isLeftGhostVisible(columns.length)"
           class="LayoutRowEditor__ghost"
         >
           <CmsSlotEditor
             v-model:dragging="isDragging"
             v-model:slot="filler"
-            @update:slot="onUpdateGhost(colIndex, $event)"
+            @update:slot="onUpdateGhost(columns.length, $event)"
           />
         </div>
-        <div
-          class="LayoutRowEditor__column"
-          :style="{flex: column?.props?.flex || 1}"
-        >
-          <CmsSlotEditor
-            v-model:slot="column.slot"
-            v-model:dragging="isDragging"
-            show-launcher
-            @update:slot="onUpdateColumn"
-            @update:dragging="draggedColumnIndex = $event ? colIndex : null"
-          />
-
-          <div
-            v-if="colIndex < columns.length - 1"
-            class="LayoutRowEditor__resizer"
-            @mousedown="onResizerStart($event, colIndex)"
-            @touchstart="onResizerStart($event, colIndex)"
-          />
-        </div>
-      </template>
-      <div
-        v-show="isLeftGhostVisible(columns.length)"
-        class="LayoutRowEditor__ghost"
-      >
-        <CmsSlotEditor
-          v-model:dragging="isDragging"
-          v-model:slot="filler"
-          @update:slot="onUpdateGhost(columns.length, $event)"
-        />
       </div>
     </div>
   </BlockScaffold>

@@ -11,8 +11,7 @@
   position: relative;
 
   /* Shadowed wedge on the left side */
-  // box-shadow: -5px 0 5px -5px #999;
-  box-shadow: -9px 0 9px -10px rgba(0, 0, 0, 0.4);
+  // box-shadow: -9px 0 9px -10px rgba(0, 0, 0, 0.4);
 
   .RowLauncher {
     position: relative;
@@ -65,6 +64,8 @@
 .LayoutRowEditor {
   position: relative;
   min-height: 82px;
+
+  // box-shadow: -9px 0 9px -10px rgba(0, 0, 0, 0.4);
 
   &__body {
     flex: 1;

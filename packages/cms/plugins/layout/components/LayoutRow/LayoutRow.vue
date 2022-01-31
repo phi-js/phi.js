@@ -13,7 +13,9 @@ const props = defineProps({
     class="LayoutRow"
     :style="{alignItems: props.alignItems}"
   >
-    <slot />
+    <div class="ui__content">
+      <slot />
+    </div>
   </div>
 </template>
 
