@@ -45,16 +45,17 @@ watch(
   () => props.currentPageId,
   () => {
     const foundPage = sanitizedStory.value.pages.find((p) => p.id == props.currentPageId)
-    currentPage.value = foundPage ? JSON.parse(JSON.stringify(foundPage)) : sanitizedStory.value.pages?.[0]
+    currentPage.value = foundPage
+      ? JSON.parse(JSON.stringify(foundPage))
+      : JSON.parse(JSON.stringify(sanitizedStory.value.pages?.[0]))
   },
   { immediate: true },
 )
 
 function emitUpdate() {
-  const pages = Array.isArray(props.story?.pages) ? props.story.pages : []
   emit('update:story', {
-    ...props.story,
-    pages: pages.map((page) => page.id == props.currentPageId ? { ...currentPage.value } : page),
+    ...sanitizedStory.value,
+    pages: sanitizedStory.value.pages.map((page) => page.id == props.currentPageId ? { ...currentPage.value } : page),
   })
 }
 
