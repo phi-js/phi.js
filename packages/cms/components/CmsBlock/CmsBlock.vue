@@ -157,13 +157,8 @@ async function getBlockPropsAndSlots(block, modelValue, vm) {
         }
 
         const initial = vm.onModelSet
-        vm.onModelSet = (varname, newValue) => {
-          const fooObj = getProperty(modelValue, varname)
-          Object.assign(fooObj, newValue)
-        }
-
-        vm.eval(listeners[eventName], { ...modelValue, $event })
-          .then(() => vm.onModelSet = initial)
+        vm.onModelSet = (varname, newValue) => setProperty(modelValue, varname, newValue)
+        vm.eval(listeners[eventName], { ...modelValue, $event }).then(() => vm.onModelSet = initial)
       }
     }
   }
