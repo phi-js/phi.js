@@ -2,7 +2,7 @@
 // Base story styles
 import '../../style/base.scss'
 
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, watchEffect } from 'vue'
 import CmsBlock from '../CmsBlock/CmsBlock.vue'
 import { VM } from '@/packages/vm'
 import { sanitizeStory } from '../../functions'
@@ -42,14 +42,10 @@ const currentPage = ref(null)
 const transitionName = ref('slideX')
 const transitionDirection = ref('fw') // fw, bw
 
-watch(
-  () => props.currentPageId,
-  (newPageId) => {
-    const foundPage = sanitizedStory.value.pages.find((page) => page.id == newPageId)
-    currentPage.value = foundPage || sanitizedStory.value.pages?.[0]
-  },
-  { immediate: true },
-)
+watchEffect(() => {
+  const foundPage = sanitizedStory.value.pages.find((page) => page.id == props.currentPageId)
+  currentPage.value = foundPage || sanitizedStory.value.pages?.[0]
+})
 
 /*
 const curIndex = ref(0)
