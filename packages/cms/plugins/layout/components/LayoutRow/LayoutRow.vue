@@ -21,11 +21,13 @@ const props = defineProps({
 
 <style lang="scss">
 .LayoutRow {
-  display: flex;
-  flex-wrap: wrap;
+  .ui__content {
+    display: flex;
+    flex-wrap: wrap;
 
-  .LayoutColumn {
-    flex: 1;
+    .LayoutColumn {
+      flex: 1;
+    }
   }
 }
 </style>
