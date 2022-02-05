@@ -88,7 +88,7 @@ const { options } = useOptionsManager(toRef(props, 'options'), {
       :key="option.value"
       :value="option.value"
       type="button"
-      class="UiSelectButtons__button ui-button"
+      class="UiSelectButtons__button ui__group-item"
       :class="{
         'UiSelectButtons__button--selected': innerValue.includes(option.value)
       }"
@@ -101,7 +101,19 @@ const { options } = useOptionsManager(toRef(props, 'options'), {
 <style lang="scss">
 .UiSelectButtons {
   &__button {
-    &--selected {
+    border: 1px solid #ccc;
+    font-size: 1em;
+    padding: 8px 16px;
+    color: #444;
+    cursor: pointer;
+    background-color: rgba(0,0,0, 0.05);
+
+    &:hover {
+      background-color: rgba(0,0,0, 0.025);
+    }
+
+    &--selected,
+    &--selected:hover {
       background: var(--ui-color-primary);
       color: #fff;
     }
