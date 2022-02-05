@@ -13,6 +13,7 @@ export default defineConfig({
   resolve: { alias: { '@': path.resolve(__dirname, './') } },
 
   build: {
+    sourcemap: false,
     lib: {
       entry: path.resolve(__dirname, 'lib/index.js'),
       name: 'Phi',
