@@ -14,11 +14,9 @@ const props = defineProps({
 const emit = defineEmits(['update:block'])
 
 const pageSlot = ref([])
-const innerBlock = ref(null)
 watch(
   () => props.block,
   (newValue) => {
-    innerBlock.value = JSON.parse(JSON.stringify(newValue))
     pageSlot.value = Array.isArray(newValue?.slot) ? newValue.slot : []
   },
   { immediate: true },
