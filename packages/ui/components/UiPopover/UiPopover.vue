@@ -67,10 +67,6 @@ onMounted(() => {
 
 onUnmounted(() => tippyInstance.destroy())
 
-function close() {
-  tippyInstance.hide()
-}
-
 const isOpen = ref(false)
 
 watch(
@@ -124,6 +120,20 @@ function onTriggerClick() {
   isOpen.value = !isOpen.value
   isOpen.value ? tippyInstance.show() : tippyInstance.hide()
 }
+
+function open() {
+  isOpen.value = true
+  tippyInstance.show()
+}
+
+function close() {
+  isOpen.value = false
+  tippyInstance.hide()
+}
+
+function toggle() {
+  isOpen.value ? close() : open()
+}
 </script>
 
 <template>
@@ -138,7 +148,9 @@ function onTriggerClick() {
     >
       <slot
         name="trigger"
+        :open="open"
         :close="close"
+        :toggle="toggle"
       />
     </div>
     <div
