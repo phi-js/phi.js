@@ -147,7 +147,7 @@ const heading = computed(() => {
     cmd.h3,
   ]
 
-  const current = available.find((c) => c.isActive)
+  const current = available.find((c) => c.isActive) || available[0]
   return { current, available }
 })
 
@@ -160,7 +160,7 @@ const alignment = computed(() => {
     cmd.alignJustify,
   ]
 
-  const current = available.find((c) => c.isActive)
+  const current = available.find((c) => c.isActive) || available[0]
   return { current, available }
 })
 
