@@ -138,7 +138,7 @@ const focusedIndexes = ref({})
     </draggable>
 
     <CmsBlockPicker
-      v-if="showLauncher && !innerSlot.length"
+      v-if="showLauncher"
       class="LoneBlockPicker"
       @input="appendBlock"
     />
@@ -315,6 +315,6 @@ const focusedIndexes = ref({})
 }
 
 .LoneBlockPicker {
-  margin: 0 12px;
+  margin: 12px;
 }
 </style>
