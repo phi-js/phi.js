@@ -16,6 +16,7 @@
 
   .ui__content {
     margin: auto;
-    width: var(--cms-row-content-width);
+    width: 100%;
+    max-width: var(--cms-row-content-width);
   }
 }

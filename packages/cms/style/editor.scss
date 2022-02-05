@@ -68,9 +68,11 @@
   // box-shadow: -9px 0 9px -10px rgba(0, 0, 0, 0.4);
 
   &__body {
-    flex: 1;
-    display: flex;
-    flex-wrap: nowrap;
+    .ui__content {
+      flex: 1;
+      display: flex;
+      flex-wrap: nowrap;
+    }
   }
 
   & > .BlockScaffold__toolbar-container {
