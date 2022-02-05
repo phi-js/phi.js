@@ -6,7 +6,7 @@ import '../../style/base.scss'
 import '../../style/editor.scss'
 
 
-import { ref, watch } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 import { sanitizeStory } from '../../functions'
 import { CmsBlockEditor } from '../CmsBlockEditor'
 import LayoutPageWindow from '../../plugins/layout/components/LayoutPage/LayoutPageWindow.vue'
@@ -48,16 +48,13 @@ watch(
 )
 
 const currentPage = ref()
-watch(
-  () => props.currentPageId,
-  () => {
-    const foundPage = sanitizedStory.value.pages.find((p) => p.id == props.currentPageId)
-    currentPage.value = foundPage
-      ? JSON.parse(JSON.stringify(foundPage))
-      : JSON.parse(JSON.stringify(sanitizedStory.value.pages?.[0]))
-  },
-  { immediate: true },
-)
+watchEffect(() => {
+  const foundPage = sanitizedStory.value.pages.find((p) => p.id == props.currentPageId)
+  currentPage.value = foundPage
+    ? JSON.parse(JSON.stringify(foundPage))
+    : JSON.parse(JSON.stringify(sanitizedStory.value.pages?.[0]))
+})
+
 
 function emitUpdate() {
   emit('update:story', {
