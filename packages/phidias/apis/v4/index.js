@@ -6,3 +6,4 @@ export default {
 }
 
 export { default as people } from './people/index.js'
+export { default as location } from './location.js'
