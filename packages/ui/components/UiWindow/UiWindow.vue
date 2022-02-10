@@ -33,6 +33,12 @@ const props = defineProps({
     required: false,
     default: null,
   },
+
+  container: {
+    type: String,
+    required: false,
+    default: 'body',
+  },
 })
 
 const emit = defineEmits(['update:open', 'update:dock'])
@@ -43,6 +49,8 @@ const coords = ref({
   width: '1024px',
   height: '768px',
 })
+
+const dock = ref(false)
 
 onMounted(() => {
   if (props.name) {
@@ -80,7 +88,6 @@ watch(
   { immediate: true },
 )
 
-const dock = ref(false)
 watch(
   () => props.dock,
   (newValue) => dock.value = newValue,
@@ -144,110 +151,111 @@ const isHovered = ref(false)
 </script>
 
 <template>
-  <div
-    v-show="isOpen"
-    :class="[
-      'ui-theme-dark',
-      'UiWindow UiWindow__scrim',
-      {
-        'UiWindow--moving': isMoving,
-        'UiWindow--open': isOpen,
-        'UiWindow--closed': !isOpen,
-        'UiWindow--docked': !!dock,
-        'UiWindow--external': dock == 'popup',
-        'UiWindow--seethru': isOpen && !isHovered
-      },
-      `UiWindow--docked-${dock}`
-    ]"
-  >
+  <Teleport :to="props.container">
     <div
-      class="UiWindow__dockzone UiWindow__dockzone--top"
-      @mouseenter="dropTarget = 'top'"
-      @mouseleave="dropTarget = null"
-    />
-    <div
-      class="UiWindow__dockzone UiWindow__dockzone--bottom"
-      @mouseenter="dropTarget = 'bottom'"
-      @mouseleave="dropTarget = null"
-    />
-    <div
-      class="UiWindow__dockzone UiWindow__dockzone--left"
-      @mouseenter="dropTarget = 'left'"
-      @mouseleave="dropTarget = null"
-    />
-    <div
-      class="UiWindow__dockzone UiWindow__dockzone--right"
-      @mouseenter="dropTarget = 'right'"
-      @mouseleave="dropTarget = null"
-    />
-
-    <UiResizable
-      v-slot="{ startMove }"
-      v-model:coords="coords"
-      v-model:isMoving="isMoving"
-      class="UiWindow__box ui__box ui--z"
-      @update:coords="storeCoords"
-      @move-end="dockTo(dropTarget)"
-
-      @mouseenter="isHovered = true"
-      @mouseleave="isHovered = false"
-      @step="resizeBody"
+      v-show="isOpen"
+      :class="[
+        'ui-theme-dark',
+        'UiWindow UiWindow__scrim',
+        {
+          'UiWindow--moving': isMoving,
+          'UiWindow--open': isOpen,
+          'UiWindow--closed': !isOpen,
+          'UiWindow--docked': !!dock,
+          'UiWindow--external': dock == 'popup',
+          'UiWindow--seethru': isOpen && !isHovered
+        },
+        `UiWindow--docked-${dock}`
+      ]"
     >
-      <div class="UiWindow__header">
-        <slot name="header" />
+      <div
+        class="UiWindow__dockzone UiWindow__dockzone--top"
+        @mouseenter="dropTarget = 'top'"
+        @mouseleave="dropTarget = null"
+      />
+      <div
+        class="UiWindow__dockzone UiWindow__dockzone--bottom"
+        @mouseenter="dropTarget = 'bottom'"
+        @mouseleave="dropTarget = null"
+      />
+      <div
+        class="UiWindow__dockzone UiWindow__dockzone--left"
+        @mouseenter="dropTarget = 'left'"
+        @mouseleave="dropTarget = null"
+      />
+      <div
+        class="UiWindow__dockzone UiWindow__dockzone--right"
+        @mouseenter="dropTarget = 'right'"
+        @mouseleave="dropTarget = null"
+      />
 
-        <div
-          style="flex:1; align-self: stretch; cursor: move;"
-          @mousedown="startMove"
-          @touchstart="startMove"
-        />
+      <UiResizable
+        v-slot="{ startMove }"
+        v-model:coords="coords"
+        v-model:isMoving="isMoving"
+        class="UiWindow__box ui__box ui--z"
+        @update:coords="storeCoords"
+        @move-end="dockTo(dropTarget)"
 
-        <UiPopover>
-          <template #trigger>
-            <UiIcon
-              :src="dock
-                ? (dock == 'popup' ? 'mdi:window-restore' : `mdi:dock-${dock}`)
-                : 'mdi:card-outline'"
-              class="ui--clickable"
-              :class="{'--active': !dock}"
-            />
-          </template>
-          <template #contents="popover">
-            <div @click="popover.close()">
+        @mouseenter="isHovered = true"
+        @mouseleave="isHovered = false"
+        @step="resizeBody"
+      >
+        <div class="UiWindow__header">
+          <slot name="header" />
+
+          <div
+            style="flex:1; align-self: stretch; cursor: move;"
+            @mousedown="startMove"
+            @touchstart="startMove"
+          />
+
+          <UiPopover>
+            <template #trigger>
               <UiIcon
-                src="mdi:card-outline"
+                :src="dock
+                  ? (dock == 'popup' ? 'mdi:window-restore' : `mdi:dock-${dock}`)
+                  : 'mdi:card-outline'"
                 class="ui--clickable"
                 :class="{'--active': !dock}"
-                @click="dockTo(null)"
               />
+            </template>
+            <template #contents="popover">
+              <div @click="popover.close()">
+                <UiIcon
+                  src="mdi:card-outline"
+                  class="ui--clickable"
+                  :class="{'--active': !dock}"
+                  @click="dockTo(null)"
+                />
 
-              <UiIcon
-                src="mdi:dock-bottom"
-                class="ui--clickable"
-                :class="{'--active': dock == 'bottom'}"
-                @click="dockTo('bottom')"
-              />
+                <UiIcon
+                  src="mdi:dock-bottom"
+                  class="ui--clickable"
+                  :class="{'--active': dock == 'bottom'}"
+                  @click="dockTo('bottom')"
+                />
 
-              <UiIcon
-                src="mdi:dock-top"
-                class="ui--clickable"
-                :class="{'--active': dock == 'top'}"
-                @click="dockTo('top')"
-              />
+                <UiIcon
+                  src="mdi:dock-top"
+                  class="ui--clickable"
+                  :class="{'--active': dock == 'top'}"
+                  @click="dockTo('top')"
+                />
 
-              <UiIcon
-                src="mdi:dock-left"
-                class="ui--clickable"
-                :class="{'--active': dock == 'left'}"
-                @click="dockTo('left')"
-              />
+                <UiIcon
+                  src="mdi:dock-left"
+                  class="ui--clickable"
+                  :class="{'--active': dock == 'left'}"
+                  @click="dockTo('left')"
+                />
 
-              <UiIcon
-                src="mdi:dock-right"
-                class="ui--clickable"
-                :class="{'--active': dock == 'right'}"
-                @click="dockTo('right')"
-              />
+                <UiIcon
+                  src="mdi:dock-right"
+                  class="ui--clickable"
+                  :class="{'--active': dock == 'right'}"
+                  @click="dockTo('right')"
+                />
 
               <!-- <UiIcon
                 src="mdi:window-restore"
@@ -255,31 +263,32 @@ const isHovered = ref(false)
                 :class="{'--active': dock == 'popup'}"
                 @click="dockTo('popup')"
               /> -->
-            </div>
-          </template>
-        </UiPopover>
+              </div>
+            </template>
+          </UiPopover>
 
-        <UiIcon
-          src="mdi:close"
-          class="ui--clickable window-close"
-          @click="close"
-        />
-      </div>
+          <UiIcon
+            src="mdi:close"
+            class="ui--clickable window-close"
+            @click="close"
+          />
+        </div>
 
-      <div class="UiWindow__body">
-        <slot
-          name="default"
-          :close="close"
-        />
-      </div>
-      <footer class="UiWindow__footer ui-footer">
-        <slot
-          name="footer"
-          :close="close"
-        />
-      </footer>
-    </UiResizable>
-  </div>
+        <div class="UiWindow__body">
+          <slot
+            name="default"
+            :close="close"
+          />
+        </div>
+        <footer class="UiWindow__footer ui-footer">
+          <slot
+            name="footer"
+            :close="close"
+          />
+        </footer>
+      </UiResizable>
+    </div>
+  </Teleport>
 </template>
 
 <style lang="scss">
@@ -359,6 +368,7 @@ const isHovered = ref(false)
 
   &__box {
     position: absolute;
+
     display: flex;
     flex-direction: column;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;

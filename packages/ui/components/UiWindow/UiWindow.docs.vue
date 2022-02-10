@@ -13,10 +13,7 @@ const msg = ref('Hola mundo')
     Toggle window ({{ isOpen }}) - {{ msg }}
   </button>
 
-  <UiWindow
-    v-model:open="isOpen"
-    class="ui-theme-dark"
-  >
+  <UiWindow v-model:open="isOpen">
     <template #default>
       <UiTabs style="height: 100%">
         <UiTab text="tab1">
