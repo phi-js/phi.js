@@ -173,6 +173,8 @@ const isFocused = ref(false)
     </div>
 
     <UiWindow
+      v-if="!!availableActions[currentActionIndex]"
+
       name="block-scaffold"
       :open="!!availableActions[currentActionIndex]"
       @update:open="currentActionIndex = null"
