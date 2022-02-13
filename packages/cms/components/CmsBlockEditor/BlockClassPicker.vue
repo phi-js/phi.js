@@ -1,6 +1,6 @@
 <script setup>
 import { watch, ref, computed } from 'vue'
-import { UiItem } from '/packages/ui'
+import { UiItem } from '@/packages/ui'
 
 const props = defineProps({
   /*
