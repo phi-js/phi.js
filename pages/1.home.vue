@@ -1,8 +1,12 @@
 <script setup>
 import { ref } from 'vue'
-import { CmsStoryEditor } from '@/packages/cms'
+import { CmsStoryEditor, CmsStory } from '@/packages/cms'
+import { UiInput } from '@/packages/ui/components'
+import * as themes from '@/packages/cms/themes'
 
 const defaultStory = {
+  id: 'story-test-1',
+
   pages: [
     {
       component: 'LayoutPage',
@@ -20,11 +24,16 @@ const defaultStory = {
                     title: 'Hello world!',
                     src: '/phi.svg',
                     align: 'center',
+                    class: 'svgbg',
                   },
                 },
                 {
                   component: 'MediaHtml',
                   props: { value: '<h1 style="text-align: center">Phi<em>.js</em></h1>' },
+                },
+                {
+                  component: 'MediaLoremIpsum',
+                  props: { nParagraphs: 3 },
                 },
               ],
             },
@@ -53,15 +62,42 @@ function reset() {
   saveStory()
 }
 
+const modelValue = ref({})
+
+function setTheme(theme) {
+  story.value.theme = theme || null
+  saveStory()
+}
 </script>
 
 <template>
+  <select
+    :value="story?.theme?.id"
+    @change="setTheme(themes[$event.target.value])"
+  >
+    <option>Choose theme</option>
+    <option
+      v-for="(theme,key) in themes"
+      :key="key"
+      :value="key"
+      v-text="theme.text"
+    />
+  </select>
+
+  <UiInput
+    v-model="story.css"
+    type="code"
+    lang="css"
+  />
+  <br>
+  <br>
+  <br>
+
   <CmsStoryEditor
     v-model:story="story"
     :settings="settings"
     @update:story="saveStory()"
   />
-
   <footer style="text-align: right">
     <button
       type="button"
@@ -70,4 +106,10 @@ function reset() {
       Reset
     </button>
   </footer>
+
+  <CmsStory
+    v-model="modelValue"
+    :story="story"
+    :settings="settings"
+  />
 </template>

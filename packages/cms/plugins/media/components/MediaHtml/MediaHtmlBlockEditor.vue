@@ -236,10 +236,13 @@ const alignment = computed(() => {
       />
     </template>
 
-    <template #default>
-      <div :style="props.block?.props?.style">
+    <template #default="{ innerBlock }">
+      <div
+        :style="innerBlock?.props?.style"
+        :class="innerBlock?.props?.class"
+      >
         <EditorContent
-          class="tiptap-editor-contents"
+          class="tiptap-editor-contents story-html"
           :editor="editor"
         />
       </div>

@@ -28,10 +28,10 @@ watch(
           modelName: 'default',
           targetName: newValue[propName],
         })
-      } else if (propName.substr(0, 8) === 'v-model:') {
+      } else if (propName.substring(0, 8) === 'v-model:') {
         models.value.push({
           propName,
-          modelName: propName.substr(8),
+          modelName: propName.substring(8),
           targetName: newValue[propName],
         })
       }

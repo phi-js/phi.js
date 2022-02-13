@@ -133,9 +133,9 @@ async function getBlockPropsAndSlots(block, modelValue, vm) {
 
   // Additional v-models (v-model:modelName=targetName)
   for (const propName in block) {
-    if (propName.substr(0, 8) === 'v-model:' && block[propName]) {
+    if (propName.substring(0, 8) === 'v-model:' && block[propName]) {
       const targetName = block[propName]
-      const modelName = propName.substr(8)
+      const modelName = propName.substring(8)
       blockProps[modelName] = getProperty(modelValue, targetName)
       blockProps['onUpdate:' + modelName] = (newValue) => {
         setProperty(modelValue, targetName, newValue)

@@ -3,7 +3,7 @@
 :root {
   --cms-page-padding: 0 0;
   --cms-row-padding: 0 0;
-  --cms-row-content-width: auto;
+  --ui-content-width: auto;
 }
 
 .LayoutPage {
@@ -17,6 +17,6 @@
   .ui__content {
     margin: auto;
     width: 100%;
-    max-width: var(--cms-row-content-width);
+    max-width: var(--ui-content-width);
   }
 }

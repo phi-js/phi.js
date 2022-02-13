@@ -5,7 +5,7 @@ import '../../style/base.scss'
 import { ref, computed, watch, watchEffect } from 'vue'
 import CmsBlock from '../CmsBlock/CmsBlock.vue'
 import { VM } from '@/packages/vm'
-import { sanitizeStory } from '../../functions'
+import { sanitizeStory, applyTheme } from '../../functions'
 
 const props = defineProps({
   story: {
@@ -46,6 +46,9 @@ watchEffect(() => {
   const foundPage = sanitizedStory.value.pages.find((page) => page.id == props.currentPageId)
   currentPage.value = foundPage || sanitizedStory.value.pages?.[0]
 })
+
+// Handle <link> containing story's CSS
+watchEffect(() => applyTheme(sanitizedStory.value.theme, sanitizedStory.value.id))
 
 /*
 const curIndex = ref(0)
@@ -200,9 +203,5 @@ watch(
   &__container {
     position: relative;
   }
-
-  // &__page {
-  //   border: 1px solid transparent; // prevent border/margin collapse
-  // }
 }
 </style>

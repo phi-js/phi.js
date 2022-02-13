@@ -44,9 +44,7 @@ function cancel() {
 <template>
   <UiWindow
     :open="props.open"
-    text="Page settings"
-    icon="mdi:cog"
-    class="LayoutPageWindow ui-theme-dark"
+    class="LayoutPageWindow"
     name="page-settings"
     @update:open="emit('update:open', $event)"
   >

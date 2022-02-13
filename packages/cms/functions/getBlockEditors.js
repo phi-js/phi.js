@@ -28,6 +28,7 @@ import { UiForm, UiInputJson } from '@/packages/ui/components'
 import BlockListenersEditor from '../components/CmsBlockEditor/BlockListenersEditor.vue'
 import BlockModelsEditor from '../components/CmsBlockEditor/BlockModelsEditor.vue'
 import BlockVisibilityEditor from '../components/CmsBlockEditor/BlockVisibilityEditor.vue'
+import BlockStyleEditor from '../components/CmsBlockEditor/BlockStyleEditor.vue'
 import { parse } from '../../vm/lib/utils'
 
 export default async function getBlockEditors(block, $settings = {}) {
@@ -100,12 +101,23 @@ export default async function getBlockEditors(block, $settings = {}) {
   }
 
   // BUILT IN ACTIONS:
+  // Shown in the block options dropdown in the order declared here
 
-  // Visibility: v-if  and v-for
+  // Block Style (block class and style props)
+  retval.actions.push({
+    'id': 'style',
+    'title': 'Style',
+    'icon': 'mdi:palette',
+    'component': BlockStyleEditor,
+    'v-model': 'block',
+  })
+
+
+  // Visibility: v-if
   retval.actions.push({
     'id': 'visibility',
     'title': 'Visibility',
-    'icon': block['v-if'] || block['v-for'] ? 'mdi:eye' : 'mdi:eye-outline',
+    'icon': block['v-if'] ? 'mdi:eye' : 'mdi:eye-outline',
     'component': BlockVisibilityEditor,
     'v-model': 'block',
   })
@@ -113,7 +125,7 @@ export default async function getBlockEditors(block, $settings = {}) {
   // v-model:* editor
   let hasModels = false
   for (const propName in definition.block) {
-    if (propName.substr(0, 7) === 'v-model') {
+    if (propName.substring(0, 7) === 'v-model') {
       hasModels = true
       break
     }
@@ -135,15 +147,6 @@ export default async function getBlockEditors(block, $settings = {}) {
     'icon': 'mdi:gesture-tap',
     'component': BlockListenersEditor,
     'v-model': 'block',
-  })
-
-  // "style" prop
-  retval.actions.push({
-    'id': 'style',
-    'title': 'Style',
-    'icon': 'mdi:palette',
-    'component': UiInputJson,
-    'v-model': 'block.props.style',
   })
 
   // v-for

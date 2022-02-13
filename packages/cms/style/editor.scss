@@ -68,6 +68,8 @@
   // box-shadow: -9px 0 9px -10px rgba(0, 0, 0, 0.4);
 
   &__body {
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.4);
+
     .ui__content {
       flex: 1;
       display: flex;
@@ -107,7 +109,7 @@
         }
       }
 
-      .Toolbar__spacer {
+      .BlockScaffold__toolbar-spacer {
         display: none;
       }
     }

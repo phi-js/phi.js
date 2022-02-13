@@ -5,9 +5,8 @@ import '../../style/base.scss'
 // Editor and subcomponents styles
 import '../../style/editor.scss'
 
-
 import { ref, watch, watchEffect } from 'vue'
-import { sanitizeStory } from '../../functions'
+import { sanitizeStory, applyTheme } from '../../functions'
 import { CmsBlockEditor } from '../CmsBlockEditor'
 import LayoutPageWindow from '../../plugins/layout/components/LayoutPage/LayoutPageWindow.vue'
 
@@ -71,17 +70,21 @@ function windowOnCancel() {
 
 const transitionName = ref('slideX')
 const transitionDirection = ref('fw') // fw, bw
+
+
+// Handle <link> containing story's CSS
+watchEffect(() => applyTheme(sanitizedStory.value.theme, sanitizedStory.value.id))
 </script>
 
 <template>
-  <div class="CmsStoryEditor">
+  <div class="CmsStoryEditor CmsStory">
     <Transition :name="`${transitionName}--${transitionDirection}`">
       <KeepAlive>
         <CmsBlockEditor
           v-if="currentPage"
           :key="currentPage.id"
           v-model:block="currentPage"
-          class="CmsStoryEditor__page"
+          class="CmsStoryEditor__page CmsStory__page"
           :settings="settings"
           @update:block="emitUpdate"
         />

@@ -99,9 +99,31 @@ const isFocused = ref(false)
           />
         </slot>
 
-        <div
-          class="Toolbar__spacer"
-          style="flex:1"
+        <div class="BlockScaffold__toolbar-spacer" />
+
+        <!-- Quick access buttons -->
+        <UiIcon
+          v-if="innerBlock?.props?.class?.length || innerBlock?.props?.style"
+          title="Block styles"
+          class="BlockScaffold__toolbar-icon ui--clickable"
+          src="mdi:palette"
+          @click="openActionId('style')"
+        />
+
+        <UiIcon
+          v-if="innerBlock['v-if']"
+          title="This block has conditional visibility"
+          class="BlockScaffold__toolbar-icon ui--clickable"
+          src="mdi:eye"
+          @click="openActionId('visibility')"
+        />
+
+        <UiIcon
+          v-if="innerBlock['v-for']"
+          title="This block repeats"
+          class="BlockScaffold__toolbar-icon ui--clickable"
+          src="mdi:repeat-variant"
+          @click="openActionId('v-for')"
         />
 
         <UiInputWedge
@@ -110,13 +132,6 @@ const isFocused = ref(false)
           :color="innerBlock['v-model'] ? 'var(--ui-color-primary)' : undefined"
           placeholder="Variable"
           @update:modelValue="accept()"
-        />
-        <UiIcon
-          v-if="innerBlock['v-if'] || innerBlock['v-for']"
-          title="Visibility"
-          class="BlockScaffold__toolbar-icon ui--clickable"
-          src="mdi:eye"
-          @click="openActionId('visibility')"
         />
 
         <!-- dropdown options -->
@@ -153,7 +168,10 @@ const isFocused = ref(false)
     </div>
 
     <div class="BlockScaffold__face">
-      <slot name="default">
+      <slot
+        name="default"
+        :innerBlock="innerBlock"
+      >
         <EditorAction
           v-if="editors.face"
           v-model:block="innerBlock"
@@ -265,6 +283,11 @@ const isFocused = ref(false)
     border-radius: var(--ui-radius);
 
     color: rgba(255, 255, 255, 0.5);
+  }
+
+  &__toolbar-spacer {
+    flex: 1;
+    // margin-left: 2em;
   }
 
 

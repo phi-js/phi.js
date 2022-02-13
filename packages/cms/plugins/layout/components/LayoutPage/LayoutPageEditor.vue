@@ -46,11 +46,12 @@ provide('$_vm_modelSchema', blockSchema)
 
 <template>
   <div
-    class="LayoutPageEditor LayoutPage"
+    class="LayoutPageEditor"
     :style="block.props?.style"
   >
     <CmsSlotEditor
       v-model:slot="pageSlot"
+      class="LayoutPage"
       group-name="page-slot"
       @update:slot="onSlotUpdate"
     />
