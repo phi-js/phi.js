@@ -102,6 +102,14 @@ const isFocused = ref(false)
         <div class="BlockScaffold__toolbar-spacer" />
 
         <!-- Quick access buttons -->
+        <UiInputWedge
+          v-if="innerBlock['v-model'] !== undefined"
+          v-model="innerBlock['v-model']"
+          :color="innerBlock['v-model'] ? 'var(--ui-color-primary)' : undefined"
+          placeholder="Variable"
+          @update:modelValue="accept()"
+        />
+
         <UiIcon
           v-if="innerBlock?.props?.class?.length || innerBlock?.props?.style"
           title="Block styles"
@@ -124,14 +132,6 @@ const isFocused = ref(false)
           class="BlockScaffold__toolbar-icon ui--clickable"
           src="mdi:repeat-variant"
           @click="openActionId('v-for')"
-        />
-
-        <UiInputWedge
-          v-if="innerBlock['v-model'] !== undefined"
-          v-model="innerBlock['v-model']"
-          :color="innerBlock['v-model'] ? 'var(--ui-color-primary)' : undefined"
-          placeholder="Variable"
-          @update:modelValue="accept()"
         />
 
         <!-- dropdown options -->
@@ -274,7 +274,6 @@ const isFocused = ref(false)
 
 .BlockScaffold {
   position: relative;
-  border: 1px solid transparent;
 
   &__toolbar {
     display: inline-flex;
