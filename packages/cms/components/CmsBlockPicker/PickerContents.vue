@@ -52,6 +52,7 @@ export default {
         'CmsLauncher.Tab.academia': 'Academia',
         'CmsLauncher.Tab.ecommerce': 'eCommerce',
         'CmsLauncher.Tab.cms': 'CMS',
+        'CmsLauncher.Tab.navigation': 'Navegación',
       },
 
       en: {
@@ -61,6 +62,7 @@ export default {
         'CmsLauncher.Tab.academia': 'Academia',
         'CmsLauncher.Tab.ecommerce': 'eCommerce',
         'CmsLauncher.Tab.cms': 'CMS',
+        'CmsLauncher.Tab.navigation': 'Navigation',
       },
     })
 

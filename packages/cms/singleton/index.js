@@ -22,5 +22,8 @@ Cms.plugin(pluginMedia)
 import pluginInput from '../plugins/input'
 Cms.plugin(pluginInput)
 
+import pluginNavigation from '../plugins/navigation'
+Cms.plugin(pluginNavigation)
+
 export default Cms
 export { blocks }
