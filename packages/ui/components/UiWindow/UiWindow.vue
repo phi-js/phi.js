@@ -1,10 +1,16 @@
+<script>
+export default { inheritAttrs: false }
+</script>
+
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { useAttrs, ref, watch, onMounted } from 'vue'
 
 import { UiIcon } from '../UiIcon'
 import { UiPopover } from '../UiPopover'
 import { UiResizable } from '../UiResizable'
 // import openWindow from './openWindow.js'
+
+const attrs = useAttrs()
 
 const props = defineProps({
   dock: {
@@ -154,6 +160,7 @@ const isHovered = ref(false)
   <Teleport :to="props.container">
     <div
       v-show="isOpen"
+      v-bind="attrs"
       :class="[
         'ui-theme-dark',
         'UiWindow UiWindow__scrim',
