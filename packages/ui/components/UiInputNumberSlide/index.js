@@ -1,0 +1,1 @@
+export { default as UiInputNumberSlide } from './UiInputNumberSlide.vue'
