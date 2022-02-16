@@ -40,10 +40,11 @@ watch(
 
 let initialX = null
 let initialValue = null
+let stepValue = parseFloat(props.step)
 
 function onDragStart(evt) {
   initialX = evt.type == 'touchstart' ? evt.touches[0].clientX : evt.clientX
-  initialValue = innerValue.value || 0
+  initialValue = parseFloat(innerValue.value || 0)
 
   window.addEventListener('mousemove', onDragMove)
   window.addEventListener('touchmove', onDragMove)
@@ -56,7 +57,7 @@ function onDragMove(evt) {
   let pointer = evt.type == 'touchmove' ? evt.touches[0] : evt
   let diff = pointer.clientX - initialX
 
-  innerValue.value = initialValue + Math.floor(diff / props.stepWidth) * props.step
+  innerValue.value = initialValue + Math.floor(diff / props.stepWidth) * stepValue
   emit('update:modelValue', innerValue.value)
 }
 
@@ -72,7 +73,7 @@ function onDragEnd() {
   <input
     v-model="innerValue"
     v-bind="attrs"
-    class="UiInputNumberSlide"
+    class="UiInputNumberSlide ui-native"
     type="number"
     :step="step"
     style="cursor: col-resize"
