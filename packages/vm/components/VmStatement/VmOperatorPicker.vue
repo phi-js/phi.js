@@ -38,7 +38,7 @@ function onSelectChange($evt) {
 
 <template>
   <select
-    class="VmOperatorPicker xui-native"
+    class="VmOperatorPicker"
     @change="onSelectChange"
   >
     <option value="">

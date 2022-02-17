@@ -108,7 +108,7 @@ function onChangeOp() {
           v-else
           v-model="innerModel.field"
           type="text"
-          class="ui-native op-field-input"
+          class="ui__input op-field-input"
           @input="emitInput"
         >
       </div>
@@ -149,7 +149,7 @@ function onChangeOp() {
           ref="optionOther"
           v-model="innerModel.op"
           type="text"
-          class="ui-native op-option-other"
+          class="ui__input op-option-other"
           @input="emitInput"
         >
       </div>

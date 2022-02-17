@@ -1,54 +1,3 @@
-<template>
-  <div class="VmExpressionPicker">
-    <UiPopover placement="bottom-start">
-      <template #trigger>
-        <UiItem
-          class="ui--clickable"
-          icon="mdi:plus-circle"
-          subtext="Agregar ..."
-        />
-      </template>
-
-      <template #contents="{close}">
-        <div class="launcher-popover-contents">
-          <div class="launcher-statements">
-            <UiItem
-              class="ui--clickable"
-              icon="mdi:help-rhombus"
-              text="IF"
-              @click="close(); launchIf()"
-            />
-
-            <UiItem
-              class="ui--clickable"
-              icon="mdi:electric-switch"
-              text="Switch"
-              @click="close(); launchSwitch()"
-            />
-          </div>
-
-          <div class="launcher-functions">
-            <UiItem
-              v-for="fn in functions"
-              :key="fn.name"
-              v-bind="fn"
-              class="ui--clickable"
-              @click="close(); launchFunction(fn)"
-            />
-          </div>
-
-          <UiItem
-            class="ui--clickable"
-            icon="mdi:state-machine"
-            text="Statement"
-            @click="close(); launchBlankStatement()"
-          />
-        </div>
-      </template>
-    </UiPopover>
-  </div>
-</template>
-
 <script>
 import functionDefinitions from './functions/index.js'
 import { UiItem, UiPopover } from '../../../ui'
@@ -56,6 +5,8 @@ import { UiItem, UiPopover } from '../../../ui'
 export default {
   name: 'VmExpressionPicker',
   components: { UiItem, UiPopover },
+
+  emits: ['input'],
 
   data() {
     return {}
@@ -100,7 +51,7 @@ export default {
       this.$emit('input', {
         expression,
         definition: {
-          icon: 'mdi:help-rhombus',
+          icon: 'mdi:directions-fork',
           text: 'IF',
         },
       })
@@ -122,6 +73,16 @@ export default {
       })
     },
 
+    launchEval() {
+      this.$emit('input', {
+        expression: { eval: '' },
+        definition: {
+          icon: 'mdi:language-javascript',
+          text: 'JavaScript function',
+        },
+      })
+    },
+
     // launchOperator(op) {
     //   this.$emit('input', {
     //     op: op.name,
@@ -132,6 +93,64 @@ export default {
   },
 }
 </script>
+
+<template>
+  <div class="VmExpressionPicker">
+    <UiPopover placement="bottom-start">
+      <template #trigger>
+        <UiItem
+          class="ui--clickable"
+          icon="mdi:plus-circle"
+          subtext="Agregar ..."
+        />
+      </template>
+
+      <template #contents="{close}">
+        <div class="launcher-popover-contents">
+          <div class="launcher-statements">
+            <UiItem
+              class="ui--clickable"
+              icon="mdi:directions-fork"
+              text="IF"
+              @click="close(); launchIf()"
+            />
+
+            <UiItem
+              class="ui--clickable"
+              icon="mdi:electric-switch"
+              text="Switch"
+              @click="close(); launchSwitch()"
+            />
+          </div>
+
+          <div class="launcher-functions">
+            <UiItem
+              v-for="fn in functions"
+              :key="fn.name"
+              v-bind="fn"
+              class="ui--clickable"
+              @click="close(); launchFunction(fn)"
+            />
+          </div>
+
+          <UiItem
+            class="ui--clickable"
+            icon="mdi:language-javascript"
+            text="JavaScript function"
+            @click="close(); launchEval()"
+          />
+
+          <UiItem
+            class="ui--clickable"
+            icon="mdi:state-machine"
+            text="Statement"
+            @click="close(); launchBlankStatement()"
+          />
+        </div>
+      </template>
+    </UiPopover>
+  </div>
+</template>
 
 <style lang="scss">
 .VmExpressionPicker {

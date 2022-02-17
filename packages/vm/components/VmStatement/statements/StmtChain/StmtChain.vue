@@ -31,7 +31,7 @@ function removeItem(index) {
 }
 
 
-const stagedItem = ref(null)
+const latestAddedIndexes = ref([]) // used to open drawers of newly created items
 
 function onPickerInput({ expression, definition }) {
   if (expression.if) {
@@ -47,17 +47,10 @@ function onPickerInput({ expression, definition }) {
     },
     do: expression,
     assign: null,
-    _open: true,
   }
 
-  // stagedItem.value = newItem
   innerValue.value.chain.push(newItem)
-  emitUpdate()
-}
-
-function onStagedAccept() {
-  innerValue.value.chain.push(stagedItem.value)
-  stagedItem.value = null
+  latestAddedIndexes.value.push(innerValue.value.chain.length - 1)
   emitUpdate()
 }
 
@@ -65,7 +58,7 @@ function ifify(item, i) {
   const ifItem = {
     info: {
       text: 'IF ...',
-      icon: 'mdi:help-rhombus',
+      icon: 'mdi:directions-fork',
     },
     do: {
       if: { and: [] },
@@ -98,22 +91,22 @@ function deifify(item, i) {
       <template #item="{element, index}">
         <StmtChainItem
           v-model="innerValue.chain[index]"
-          :open="element._open"
+          :open="latestAddedIndexes.includes(index)"
           @update:modelValue="emitUpdate()"
         >
           <template #actions>
             <UiIcon
               v-if="!element?.do?.if"
               class="item-action-icon ui--clickable"
-              src="mdi:help-rhombus"
-              title="IFify"
+              src="mdi:directions-fork"
+              title="Wrap in conditional"
               @click.stop="ifify(element, index)"
             />
             <UiIcon
               v-else
               class="item-action-icon ui--clickable"
-              src="mdi:close-network"
-              title="de-IFify"
+              src="mdi:minus-network"
+              title="Remove conditional"
               @click.stop="deifify(element, index)"
             />
             <UiIcon
@@ -125,14 +118,6 @@ function deifify(item, i) {
         </StmtChainItem>
       </template>
     </draggable>
-
-    <StmtChainItem
-      v-if="stagedItem"
-      v-model="stagedItem"
-      open
-      @update:modelValue="onStagedAccept()"
-      @cancel="stagedItem = null"
-    />
 
     <div class="StmtChain__adder">
       <VmExpressionPicker

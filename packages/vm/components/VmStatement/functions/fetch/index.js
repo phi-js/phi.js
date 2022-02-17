@@ -2,7 +2,7 @@ import FetchEditor from './FetchEditor.vue'
 
 export default {
   icon: 'mdi:api',
-  text: 'fetch',
+  text: 'Fetch',
   subtext: 'Ejecutar request HTTP',
   editor: {
     component: FetchEditor,

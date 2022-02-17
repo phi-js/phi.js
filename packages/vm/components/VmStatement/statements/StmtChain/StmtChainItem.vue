@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { UiItem, UiDrawer, UiItemEditor, UiInput } from '../../../../../ui'
+import { UiIcon, UiItem, UiDrawer, UiInput } from '../../../../../ui'
 import VmStatement from '../../VmStatement.vue'
 
 const props = defineProps({
@@ -15,10 +15,12 @@ const props = defineProps({
     default: false,
   },
 })
-const emit = defineEmits(['update:modelValue', 'cancel'])
+const emit = defineEmits(['update:modelValue'])
 
+const isOpen = ref(props.open)
 const innerValue = ref({})
 const isIfStatement = ref(false)
+
 watch(
   () => props.modelValue,
   (newValue) => {
@@ -32,33 +34,38 @@ function accept() {
   emit('update:modelValue', JSON.parse(JSON.stringify(innerValue.value)))
 }
 
-function cancel() {
-  innerValue.value = JSON.parse(JSON.stringify(props.modelValue))
-  emit('cancel')
+function rename() {
+  const newName = window.prompt('New display name', innerValue.value.info?.text)
+  if (newName && newName.trim()) {
+    innerValue.value.info.text = newName
+    accept()
+  }
 }
+
 </script>
 
 <template>
   <div class="StmtChainItem">
-    <UiDrawer
-      :open="props.open"
-      @cancel="false"
-    >
+    <UiDrawer v-model:open="isOpen">
       <template #trigger>
-        <UiItem
-          class="StmtChainItem__face ui--clickable ui--noselect"
-          icon="mdi:vuejs"
-          v-bind="props.modelValue.info"
-          :subtext="props.modelValue.assign"
-        >
-          <template #actions>
-            <slot name="actions" />
-          </template>
-        </UiItem>
-      </template>
+        <div class="StmtChainItem__trigger ui--clickable">
+          <UiItem
+            class="StmtChainItem__face ui--noselect"
+            icon="mdi:vuejs"
+            v-bind="props.modelValue.info"
+            :subtext="props.modelValue.assign"
+          />
 
-      <template #header>
-        <UiItemEditor v-model="innerValue.info" />
+          <div class="StmtChainItem__actions">
+            <UiIcon
+              src="mdi:pencil"
+              class="ui--clickable"
+              title="Rename this action"
+              @click.stop="rename()"
+            />
+            <slot name="actions" />
+          </div>
+        </div>
       </template>
 
       <template #contents>
@@ -108,14 +115,19 @@ function cancel() {
 
 <style lang="scss">
 .StmtChainItem {
+
+  &__trigger {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
   &__paths {
     padding-left: 42px;
   }
 
   &__face {
-    // .ui-icon {
-    //   cursor: move;
-    // }
+    display: inline-flex;
 
     .ui-item__subtext {
       display: inline-block;
@@ -138,6 +150,20 @@ function cancel() {
 
   &__footer {
     margin-bottom: 22px;
+  }
+
+  &__actions {
+    margin-left: auto;
+
+    .UiIcon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--ui-radius);
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
   }
 }
 </style>
