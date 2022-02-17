@@ -14,7 +14,7 @@ const item = reactive({
   <form>
     <select
       v-model="item.icon"
-      class="ui-native"
+      class="ui__input"
     >
       <option value="mdi:account">
         mdi:account
@@ -34,19 +34,19 @@ const item = reactive({
     </select>
     <input
       v-model="item.text"
-      class="ui-native"
+      class="ui__input"
       type="text"
       placeholder="text"
     >
     <input
       v-model="item.subtext"
-      class="ui-native"
+      class="ui__input"
       type="text"
       placeholder="subtext"
     >
     <input
       v-model="item.badge"
-      class="ui-native"
+      class="ui__input"
       type="text"
       placeholder="badge"
     >

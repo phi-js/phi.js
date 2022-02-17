@@ -203,18 +203,20 @@ defineExpose({ element })
 
 <style lang="scss">
 .UiInput {
-  margin: var(--ui-breathe);
+  // margin: var(--ui-breathe);
 
   &__label {
     font-family: var(--ui-font-secondary);
     font-weight: bold;
-    opacity: 0.7;
+    // opacity: 0.7; // opacity changes the stacking order
+    color: rgba(0, 0, 0, 0.7);
   }
 
   &__subtext {
     font-family: var(--ui-font-secondary);
-    opacity: 0.8;
     font-size: 12px;
+    // opacity: 0.8;
+    color: rgba(0, 0, 0, 0.8);
   }
 }
 </style>

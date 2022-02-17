@@ -35,6 +35,7 @@
           v-text="text"
         />
         <p
+          v-if="subtext"
           class="UiItem__subtext"
           v-text="subtext"
         />

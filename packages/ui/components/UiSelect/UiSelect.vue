@@ -345,7 +345,7 @@ const placeholderOption = computed(() => {
 
 <style lang="scss">
 //// TESTING
-select.ui-native {
+select.ui__input {
   option {
     padding: 6px 8px !important;
   }

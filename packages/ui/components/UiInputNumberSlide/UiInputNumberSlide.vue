@@ -73,7 +73,7 @@ function onDragEnd() {
   <input
     v-model="innerValue"
     v-bind="attrs"
-    class="UiInputNumberSlide ui-native"
+    class="UiInputNumberSlide ui__input"
     type="number"
     :step="step"
     style="cursor: col-resize"

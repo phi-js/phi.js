@@ -90,8 +90,36 @@
 
   select {
     color: var(--ui-color-fg);
+    background-color: var(--ui-color-bg-muted);
+
     optgroup, option {
       color: var(--ui-color-bg);
+    }
+  }
+
+  .UiInput {
+    &__label {
+      color: var(--ui-color-fg);
+      font-weight: normal;
+    }
+
+    .ui__input {
+      color: var(--ui-color-fg);
+      background-color: var(--ui-color-bg-muted);
+    }
+  }
+
+  fieldset {
+    border: 1px inset #666;
+    border-radius: var(--ui-radius);
+    margin: 12px 0 24px 0;
+    padding: 12px 24px;
+
+    legend {
+      font-family: var(--ui-font-secondary);
+      font-size: 12px;
+      padding: 0 12px;
+      opacity: 0.7;
     }
   }
 }

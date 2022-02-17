@@ -372,7 +372,7 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
 
     .ui-button,
     .ui-inset,
-    .ui-native {
+    .ui__input {
       border: 0;
       background: transparent;
       border-radius: 0;
@@ -430,7 +430,7 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
     }
 
     .ui-inset,
-    .ui-native {
+    .ui__input {
       border: 0;
       background: transparent;
       border-radius: 0;
@@ -461,7 +461,7 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
     }
   }
 
-  button.ui-native {
+  button.ui__input {
     border-radius: var(--ui-radius);
     background: var(--ui-color-primary) !important;
     color: #fff;
