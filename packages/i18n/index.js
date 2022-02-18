@@ -35,7 +35,6 @@ export function useI18n(dictionary = null) {
 
     if (params && typeof params === 'object') {
       for (let name in params) {
-        console.log('name', name, params[name])
         translated = translated.replaceAll(`%${name}%`, params[name])
       }
     }
