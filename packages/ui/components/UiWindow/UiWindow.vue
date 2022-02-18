@@ -209,13 +209,14 @@ const isHovered = ref(false)
         @step="resizeBody"
       >
         <div class="UiWindow__header">
-          <slot name="header" />
 
           <div
             style="flex:1; align-self: stretch; cursor: move;"
             @mousedown="startMove"
             @touchstart="startMove"
-          />
+          >
+            <slot name="header" />
+          </div>
 
           <UiPopover>
             <template #trigger>
