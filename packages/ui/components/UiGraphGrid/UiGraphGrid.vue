@@ -1,117 +1,3 @@
-<template>
-  <div class="ui-graph-grid">
-    <!-- <label class="ui-noselect ui-clickable">
-      <input
-        type="checkbox"
-        v-model="showGuides"
-      >
-      Grid
-    </label> -->
-
-    <div class="grid-dom">
-      <div
-        v-for="(col,i) in limits.x"
-        :key="i"
-        class="grid-column"
-        :style="{minWidth: width+'px'}"
-      >
-        <div
-          v-for="(node, j) in nodes.filter((n) => n.x == i)"
-          :key="j"
-          class="grid-item"
-          :style="{
-            position: 'absolute',
-            top: (node.y*height - height/2)+'px',
-            left: (-width/2)+'px',
-            minWidth: width+'px',
-          }"
-        >
-          <slot
-            name="node"
-            :node="node"
-          >
-            <UiItem
-              :style="node.style"
-              class="grid-node ui-z ui-noselect --nowrap"
-              :class="node.class"
-              :text="node.text || node.id"
-              v-bind="node"
-              @click="$emit('click-node', node.id)"
-            />
-          </slot>
-        </div>
-      </div>
-    </div>
-
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="grid-svg"
-      :class="{'--guides': showGuides}"
-      :style="{width: (limits.x * width)+'px', minHeight: (limits.y * height)+'px'}"
-    >
-      <defs>
-        <marker
-          id="arrow"
-          :markerWidth="arrow.length"
-          :markerHeight="arrow.base"
-          refX="0"
-          :refY="arrow.base/2"
-          orient="auto"
-          markerUnits="strokeWidth"
-        >
-          <path
-            :d="`M0,0 L0,${arrow.base} L${arrow.length},${arrow.base/2} z`"
-            fill="var(--ui-color-primary)"
-          />
-        </marker>
-      </defs>
-
-      <!-- paths -->
-      <path
-        v-for="(line,i) in lines"
-        :key="i"
-        :d="line"
-        marker-end="url(#arrow)"
-        stroke="var(--ui-color-primary)"
-        stroke-width="2"
-        fill="transparent"
-        @click="$emit('click-path', paths[i])"
-      />
-
-      <!-- grid guides -->
-      <!-- <path
-        v-for="col in limits.x+1"
-        :key="`col${col}`"
-        :d="`M${(col-1) * width} 0 v500`"
-        stroke="#80808033"
-        fill="transparent"
-        class="grid-guide --vertical"
-      />
-      <path
-        v-for="row in limits.y+1"
-        :key="`row${row}`"
-        :d="`M0 ${(row-1) * height} h${limits.x * width}`"
-        stroke="#80808033"
-        fill="transparent"
-        class="grid-guide --horizontal"
-      /> -->
-
-      <!-- intersection points -->
-      <!-- <template v-for="col in 20">
-        <template v-for="row in 20">
-          <circle
-            class="really"
-            :key="`point-${col}-${row}`"
-            :cx="(col-1) * width"
-            :cy="(row-1) * height"
-            r="20"
-            fill="transparent"
-          />
-        </template>
-      </template> -->
-    </svg>
-  </div>
-</template>
 
 <script>
 import { UiItem } from '@/packages/ui/components'
@@ -462,6 +348,123 @@ export default {
 }
 </script>
 
+<template>
+  <div class="ui-graph-grid">
+    <!-- <label class="ui-noselect ui-clickable">
+      <input
+        type="checkbox"
+        v-model="showGuides"
+      >
+      Grid
+    </label> -->
+
+    <div class="grid-dom">
+      <div
+        v-for="(col,i) in limits.x"
+        :key="i"
+        class="grid-column"
+        :style="{minWidth: width+'px'}"
+      >
+        <div
+          v-for="(node, j) in nodes.filter((n) => n.x == i)"
+          :key="j"
+          class="grid-item"
+          :style="{
+            position: 'absolute',
+            top: (node.y*height - height/2)+'px',
+            left: (-width/2)+'px',
+            minWidth: width+'px',
+          }"
+        >
+          <slot
+            name="node"
+            :node="node"
+          >
+            <UiItem
+              :style="node.style"
+              class="grid-node ui-z ui-noselect --nowrap"
+              :class="node.class"
+              :text="node.text || node.id"
+              v-bind="node"
+              @click="$emit('click-node', node.id)"
+            />
+          </slot>
+        </div>
+      </div>
+    </div>
+
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="grid-svg"
+      :class="{'--guides': showGuides}"
+      :style="{width: (limits.x * width)+'px', minHeight: (limits.y * height)+'px'}"
+    >
+      <defs>
+        <marker
+          id="arrow"
+          :markerWidth="arrow.length"
+          :markerHeight="arrow.base"
+          refX="0"
+          :refY="arrow.base/2"
+          orient="auto"
+          markerUnits="strokeWidth"
+        >
+          <path
+            :d="`M0,0 L0,${arrow.base} L${arrow.length},${arrow.base/2} z`"
+            fill="var(--ui-color-primary)"
+          />
+        </marker>
+      </defs>
+
+      <!-- paths -->
+      <path
+        v-for="(line,i) in lines"
+        :key="i"
+        :d="line"
+        marker-end="url(#arrow)"
+        stroke="var(--ui-color-primary)"
+        stroke-width="2"
+        fill="transparent"
+        @click="$emit('click-path', paths[i])"
+      />
+
+      <!-- grid guides -->
+      <!-- <path
+        v-for="col in limits.x+1"
+        :key="`col${col}`"
+        :d="`M${(col-1) * width} 0 v500`"
+        stroke="#80808033"
+        fill="transparent"
+        class="grid-guide --vertical"
+      />
+      <path
+        v-for="row in limits.y+1"
+        :key="`row${row}`"
+        :d="`M0 ${(row-1) * height} h${limits.x * width}`"
+        stroke="#80808033"
+        fill="transparent"
+        class="grid-guide --horizontal"
+      /> -->
+
+      <!-- intersection points -->
+      <!-- <template v-for="col in 20">
+        <template
+          v-for="row in 20"
+          :key="`point-${col}-${row}`"
+        >
+          <circle
+            class="really"
+            :cx="(col-1) * width"
+            :cy="(row-1) * height"
+            r="20"
+            fill="transparent"
+          />
+        </template>
+      </template> -->
+    </svg>
+  </div>
+</template>
+
 <style lang="scss">
 .ui-graph-grid {
   overflow: auto;
@@ -494,17 +497,17 @@ export default {
     }
   }
 
-  .grid-svg {
-    .grid-guide {
-      visibility: hidden;
-    }
+  // .grid-svg {
+  //   .grid-guide {
+  //     visibility: hidden;
+  //   }
 
-    &.--guides {
-      .grid-guide {
-        visibility: visible;
-      }
-    }
-  }
+  //   &.--guides {
+  //     .grid-guide {
+  //       visibility: visible;
+  //     }
+  //   }
+  // }
 }
 
 .really {
