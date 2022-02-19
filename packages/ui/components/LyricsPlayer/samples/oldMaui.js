@@ -70,55 +70,52 @@ For now we're bound from the arc|tic ground
 roll|ing down to Old Ma|ui
 `,
 
-  // classes: {
-  //   wBlue: {
-  //     color: "cyan"
-  //   },
+  classes: {
+    wBlue: {
+      color: "cyan"
+    },
 
-  //   wRoll: {
-  //     // transform: scale(1.1) rotate(360deg); //scale() must be present for rotate() to work  (!)
-  //     animation: 'roll 0.1s',
-  //     transform: 'none'
-  //   },
+    wRoll: {
+      // transform: scale(1.1) rotate(360deg); //scale() must be present for rotate() to work  (!)
+      animation: 'roll 0.1s',
+      transform: 'none'
+    },
 
-  //   wWaxed: {
-  //     transform: 'scale(1.4) rotate(-5deg)',
-  //     transitionDuration: '0.5s'
-  //   },
+    wWaxed: {
+      transform: 'scale(1.4) rotate(-5deg)',
+      transitionDuration: '0.5s'
+    },
 
-  //   wWaned: {
-  //     transform: 'scale(1.4) rotate(5deg)',
-  //     transitionDuration: '0.5s'
-  //   },
+    wWaned: {
+      transform: 'scale(1.4) rotate(5deg)',
+      transitionDuration: '0.5s'
+    },
 
-  //   wOld: {
-  //     transform: 'scale(1.4) rotate(-5deg)',
-  //     color: 'brown'
-  //   },
+    wOld: {
+      transform: 'scale(1.4) rotate(-5deg)',
+      color: 'brown'
+    },
 
-  //   wMa: {
-  //     transform: 'scale(1.4) rotate(-15deg)',
-  //     color: 'red'
-  //   },
+    wMa: {
+      transform: 'scale(1.4) rotate(-15deg)',
+      color: 'red'
+    },
 
-  //   wUi: {
-  //     transform: 'scale(1.4) rotate(15deg)',
-  //     color: 'red'
-  //   },
+    wUi: {
+      transform: 'scale(1.4) rotate(15deg)',
+      color: 'red'
+    },
 
-  //   wMe: {
-  //     transform: 'scale(0.7) rotate(-10deg)',
-  //     color: '#999'
-  //   },
+    wMe: {
+      transform: 'scale(0.7) rotate(-10deg)',
+      color: '#999'
+    },
 
-  //   wBoys: {
-  //     transform: 'scale(0.7) rotate(10deg)',
-  //     color: '#999',
-  //     // &::after {
-  //     //   content: "!";
-  //     // }
-  //   }
-  // },
+    wBoys: {
+      transform: 'scale(0.7) rotate(10deg)',
+      color: '#999'
+    }
+  },
 
   lines: [
     {
@@ -276,9 +273,9 @@ roll|ing down to Old Ma|ui
         { timestamp: 44560, value: 'a ' },
         { timestamp: 44756, value: 'blow ' },
         { timestamp: 45213, value: 'of ' },
-        { timestamp: 45602, value: 'frost ' },
+        { timestamp: 45602, value: 'frost ', class: 'wWaxed' },
         { timestamp: 46028, value: 'and ' },
-        { timestamp: 46444, value: 'snow' },
+        { timestamp: 46444, value: 'snow', class: 'wWaned' },
       ],
     },
     {

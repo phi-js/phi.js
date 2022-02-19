@@ -53,15 +53,17 @@ allLines.forEach((line, l) => {
 // simulate bursts to update more frequently:
 const currentTime = ref(props.currentTime)
 let timer = null
+const burst = 75
+
 watch(
   () => props.currentTime,
   (newCurrentTime) => {
     clearTimeout(timer)
     currentTime.value = newCurrentTime
     timer = setTimeout(() => {
-      currentTime.value = newCurrentTime + 50
-      timer = setTimeout(() => currentTime.value = newCurrentTime + 100, 50)
-    }, 50)
+      currentTime.value += burst
+      timer = setTimeout(() => currentTime.value += burst, burst)
+    }, burst)
   }
 )
 
