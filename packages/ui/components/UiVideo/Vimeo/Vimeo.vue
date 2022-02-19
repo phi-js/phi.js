@@ -10,10 +10,7 @@
       mozallowfullscreen
       allowfullscreen
     ></iframe>
-    <div
-      v-else
-      class="empty-video"
-    >{{ url ? 'URL inválida' : 'No hay URL' }}</div>
+    <div v-else class="empty-video">{{ url ? 'URL inválida' : 'No hay URL' }}</div>
   </div>
 </template>
 
@@ -90,31 +87,35 @@ export default {
       }
 
       this.loadApi().then(() => {
-        this.player = new Vimeo.Player(this.$el.querySelector('iframe')); // eslint-disable-line
+        // this.player is a PROXY object, which fucks up .on('xxx') calls.  use as const instead
+        // this.player = new Vimeo.Player(this.$el.querySelector('iframe'));
+        const player = new Vimeo.Player(this.$el.querySelector('iframe'));
 
-        this.player.on('play', (/*eventData*/) => {
+        player.on('play', (/*eventData*/) => {
           this.videoData.isPlaying = true;
           this.$emit('play', this.videoData);
           this.$emit('input', this.videoData);
         });
 
-        this.player.on('pause', (/*eventData*/) => {
+        player.on('pause', (/*eventData*/) => {
           this.videoData.isPlaying = false;
           this.$emit('pause', this.videoData);
           this.$emit('input', this.videoData);
         });
 
-        this.player.on('end', (/*eventData*/) => {
+        player.on('end', (/*eventData*/) => {
           this.videoData.isPlaying = false;
           this.$emit('end', this.videoData);
           this.$emit('input', this.videoData);
         });
 
-        this.player.on('timeupdate', (eventData) => {
+        player.on('timeupdate', (eventData) => {
           this.videoData.time = eventData.seconds * 1000;
           this.$emit('timeupdate', this.videoData);
           this.$emit('input', this.videoData);
         });
+
+        this.player = player
       });
     },
 
