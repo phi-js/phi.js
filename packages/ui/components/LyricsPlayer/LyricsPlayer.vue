@@ -1,7 +1,7 @@
 <script setup>
 /*
-The lyrics player receives "lines" array and a "currentTime" number (in milliseconds)
-and adds classes --active, --past --present to the lines and words, according to the currentTime
+The lyrics player receives "lyrics" object (must have a .lines array) and a "currentTime" number (in milliseconds)
+and adds classes --active, --past --present to the lines and words according to the currentTime
 */
 import { ref, computed, watch } from 'vue'
 
