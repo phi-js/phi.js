@@ -49,4 +49,8 @@
     box-shadow: none;
     color: var(--ui-color-primary);
   }
+
+  &:disabled {
+    opacity: 0.5;
+  }
 }
