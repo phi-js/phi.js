@@ -3,11 +3,11 @@
 The lyrics player receives "lines" array and a "currentTime" number (in milliseconds)
 and adds classes --active, --past --present to the lines and words, according to the currentTime
 */
-import { computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 const props = defineProps({
-  lines: {
-    type: Array,
+  lyrics: {
+    type: Object,
     required: true,
   },
 
@@ -18,11 +18,23 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['wordEnter'])
+
+const allLines = props.lyrics.lines.filter(line => line?.words?.length > 0)
+
 const allWords = []
-props.lines.forEach((line, l) => {
+allLines.forEach((line, l) => {
   line.words.forEach((word, w) => {
     if (word.timestamp == null) {
       return
+    }
+
+    // If the block has a "class" attribute that is declared in lyrics.classes,
+    // copy the lyrics.classes definition into a prop to be assigned as "style" when the word is active
+    let activeStyle = {}
+    if (word.class) {
+      const parts = word.class.split(' ')
+      parts.forEach(part => Object.assign(activeStyle, props.lyrics?.classes?.[part]))
     }
 
     allWords.push({
@@ -30,21 +42,41 @@ props.lines.forEach((line, l) => {
       class: word.class,
       value: word.value,
       lineIndex: l,
-      wordIndex: w
+      wordIndex: w,
+      original: word,
+      activeStyle
     })
   })
 })
 
+// video players emit currentTime every 250ms or so.
+// simulate bursts to update more frequently:
+const currentTime = ref(props.currentTime)
+let timer = null
+watch(
+  () => props.currentTime,
+  (newCurrentTime) => {
+    clearTimeout(timer)
+    currentTime.value = newCurrentTime
+    timer = setTimeout(() => {
+      currentTime.value = newCurrentTime + 50
+      timer = setTimeout(() => currentTime.value = newCurrentTime + 100, 50)
+    }, 50)
+  }
+)
+
 const currentWord = computed(() => allWords.find((word, i) => {
   const nextWordTime = allWords[i + 1]?.timestamp || Infinity
-  return word.timestamp <= props.currentTime && props.currentTime < nextWordTime
+  return word.timestamp <= currentTime.value && currentTime.value < nextWordTime
 }))
+
+watch(currentWord, () => currentWord.value && emit('wordEnter', currentWord.value.original))
 </script>
 
 <template>
   <div class="LyricsPlayer ui--noselect">
     <div
-      v-for="(line, l) in props.lines"
+      v-for="(line, l) in allLines"
       :key="l"
       class="LyricsPlayer__line"
       :class="{
@@ -58,6 +90,7 @@ const currentWord = computed(() => allWords.find((word, i) => {
         v-for="(word, k) in line.words"
         :key="k"
         :class="currentWord?.lineIndex == l && currentWord?.wordIndex == k ? ['LyricsPlayer__word--active', word.class] : null"
+        :style="currentWord?.lineIndex == l && currentWord?.wordIndex == k ? currentWord.activeStyle : null"
         v-text="word.value"
       />
     </div>
@@ -81,13 +114,13 @@ const currentWord = computed(() => allWords.find((word, i) => {
     transition: all 0.1s ease;
     transform: scale(1);
 
-    overflow: hidden;
-
     &--past {
+      overflow: hidden;
       height: 0;
     }
 
     &--future {
+      overflow: hidden;
       opacity: 0.2;
       height: 0;
     }

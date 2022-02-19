@@ -2,20 +2,42 @@
 import { ref } from 'vue'
 import { UiVideo } from '../UiVideo'
 import LyricsPlayer from './LyricsPlayer.vue'
-import sample from './sample.js'
+
+import beethoven from './samples/beethoven/beethoven.js'
+import aroundTheBend from './samples/bend/aroundTheBend.js'
+import dance from './samples/dance/lyrics.js'
+import letItGo from './samples/letitgo/letItGo.js'
+import mozart from './samples/mozart/mozart.js'
+import oldmaui from './samples/oldmaui/lyrics.js'
+
+const availableLyrics = [
+  dance,
+  mozart,
+  beethoven,
+  aroundTheBend,
+  letItGo,
+  oldmaui,
+]
+
+const lyrics = ref(availableLyrics[0])
 
 const currentTime = ref(0)
 
-const curClass = ref(false)
+function onWordEnter(word) {
+  console.log('LyricsPlayer.docs onWordEnter', word)
+}
 </script>
 
 <template>
-  <div class="LyricsPlayerDemo">
-    <UiVideo
-      url="https://www.youtube.com/watch?v=sPXTm6g0ejg"
-      @timeupdate="currentTime = $event.time"
-    />
-    <LyricsPlayer :lines="sample.lines" :currentTime="currentTime" />
+  <select @change="lyrics = availableLyrics[$event.target.value]; currentTime = 0">
+    <option v-for="(lyr, k) in availableLyrics" :key="k" :value="k">{{ lyr.title }}</option>
+  </select>
+
+  <pre>currentTime: {{ currentTime }}</pre>
+
+  <div class="LyricsPlayerDemo" :key="lyrics.title">
+    <UiVideo class="video" :url="lyrics.url" @timeupdate="currentTime = $event.time" />
+    <LyricsPlayer :lyrics="lyrics" :currentTime="currentTime" @wordEnter="onWordEnter" />
   </div>
 </template>
 
@@ -30,7 +52,7 @@ const curClass = ref(false)
   display: flex;
   align-items: center;
 
-  .UiVideo {
+  .video {
     flex: 1;
     height: 400px;
   }
@@ -40,13 +62,23 @@ const curClass = ref(false)
     font-size: 1.8em;
   }
 
-  // word classes (called by words in sample.js)
+  // Old maui
+  .wBlue {
+    color: cyan;
+  }
   .wRoll {
     // transform: scale(1.1) rotate(360deg); //scale() must be present for rotate() to work  (!)
     animation: roll 0.1s;
     transform: none;
   }
-
+  .wWaxed {
+    transform: scale(1.4) rotate(-5deg);
+    transition-duration: 0.4s;
+  }
+  .wWaned {
+    transform: scale(1.4) rotate(5deg);
+    transition-duration: 0.4s;
+  }
   .wOld {
     transform: scale(1.4) rotate(-5deg);
     color: brown;

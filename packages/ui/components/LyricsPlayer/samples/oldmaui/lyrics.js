@@ -1,20 +1,5 @@
-/*
-A lyrics sobject has the following properties:
-
-text:
-A full text containing the entire lyrics.
-Newlines, spaces and "|" are interpreted as breakpoints.
-
-e.g.
-Once more we sail by the nor|thern gail
-and boun|ding over the main
-And not the hills of those tro|pic isles
-we soon shall see a|gain
-
-lines:
-An array of LINE objects.
-*/
 export default {
+  title: 'Rolling Down to Old Maui',
   url: 'https://www.youtube.com/watch?v=sPXTm6g0ejg',
 
   text: `
@@ -85,11 +70,61 @@ For now we're bound from the arc|tic ground
 roll|ing down to Old Ma|ui
 `,
 
+  // classes: {
+  //   wBlue: {
+  //     color: "cyan"
+  //   },
+
+  //   wRoll: {
+  //     // transform: scale(1.1) rotate(360deg); //scale() must be present for rotate() to work  (!)
+  //     animation: 'roll 0.1s',
+  //     transform: 'none'
+  //   },
+
+  //   wWaxed: {
+  //     transform: 'scale(1.4) rotate(-5deg)',
+  //     transitionDuration: '0.5s'
+  //   },
+
+  //   wWaned: {
+  //     transform: 'scale(1.4) rotate(5deg)',
+  //     transitionDuration: '0.5s'
+  //   },
+
+  //   wOld: {
+  //     transform: 'scale(1.4) rotate(-5deg)',
+  //     color: 'brown'
+  //   },
+
+  //   wMa: {
+  //     transform: 'scale(1.4) rotate(-15deg)',
+  //     color: 'red'
+  //   },
+
+  //   wUi: {
+  //     transform: 'scale(1.4) rotate(15deg)',
+  //     color: 'red'
+  //   },
+
+  //   wMe: {
+  //     transform: 'scale(0.7) rotate(-10deg)',
+  //     color: '#999'
+  //   },
+
+  //   wBoys: {
+  //     transform: 'scale(0.7) rotate(10deg)',
+  //     color: '#999',
+  //     // &::after {
+  //     //   content: "!";
+  //     // }
+  //   }
+  // },
+
   lines: [
     {
       words: [
         { timestamp: 3231, value: 'Once ' },
-        { timestamp: 3383, value: 'more ' },
+        { timestamp: 3383, value: 'more ', foo: ['any', 'custom', { data: 1 }] },
         { timestamp: 3796, value: 'we ' },
         { timestamp: 4195, value: 'sail ' },
         { timestamp: 4614, value: 'by ' },
@@ -140,9 +175,9 @@ roll|ing down to Old Ma|ui
         { timestamp: 17304, value: 'ish ' },
         { timestamp: 17717, value: 'moons ' },
         { timestamp: 18122, value: 'have ' },
-        { timestamp: 18532, value: 'waxed ' },
+        { timestamp: 18532, value: 'waxed ', class: 'wWaxed' },
         { timestamp: 18940, value: 'and ' },
-        { timestamp: 19350, value: 'waned' },
+        { timestamp: 19350, value: 'waned', class: 'wWaned' },
       ],
     },
     {
@@ -163,8 +198,8 @@ roll|ing down to Old Ma|ui
         { timestamp: 24469, value: 'bound ' },
         { timestamp: 24892, value: 'from ' },
         { timestamp: 25097, value: 'the ' },
-        { timestamp: 25306, value: 'arc' },
-        { timestamp: 25728, value: 'tic ' },
+        { timestamp: 25306, value: 'arc', class: 'wBlue' },
+        { timestamp: 25728, value: 'tic ', class: 'wBlue' },
         { timestamp: 26166, value: 'ground' },
       ],
     },
@@ -214,8 +249,8 @@ roll|ing down to Old Ma|ui
         { timestamp: 37986, value: 'bound ' },
         { timestamp: 38421, value: 'from ' },
         { timestamp: 38611, value: 'the ' },
-        { timestamp: 38819, value: 'arc' },
-        { timestamp: 39251, value: 'tic ' },
+        { timestamp: 38819, value: 'arc', class: 'wBlue' },
+        { timestamp: 39251, value: 'tic ', class: 'wBlue' },
         { timestamp: 39677, value: 'ground' },
       ],
     },
@@ -301,8 +336,8 @@ roll|ing down to Old Ma|ui
         { timestamp: 60359, value: 'That ' },
         { timestamp: 60791, value: 'deck ' },
         { timestamp: 61186, value: 'the ' },
-        { timestamp: 61603, value: 'arc' },
-        { timestamp: 62029, value: 'tic ' },
+        { timestamp: 61603, value: 'arc', class: 'wBlue' },
+        { timestamp: 62029, value: 'tic ', class: 'wBlue' },
         { timestamp: 62473, value: 'sea' },
       ],
     },
@@ -363,8 +398,8 @@ roll|ing down to Old Ma|ui
         { timestamp: 78575, value: 'bound ' },
         { timestamp: 78998, value: 'from ' },
         { timestamp: 79179, value: 'the ' },
-        { timestamp: 79415, value: 'arc' },
-        { timestamp: 79828, value: 'tic ' },
+        { timestamp: 79415, value: 'arc', class: 'wBlue' },
+        { timestamp: 79828, value: 'tic ', class: 'wBlue' },
         { timestamp: 80223, value: 'ground' },
       ],
     },
