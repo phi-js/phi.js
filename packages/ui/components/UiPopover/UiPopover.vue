@@ -137,35 +137,22 @@ function toggle() {
 </script>
 
 <template>
-  <div
-    ref="elRoot"
-    class="UiPopover"
-  >
-    <div
-      ref="elTrigger"
-      class="UiPopover__trigger"
-      @click="onTriggerClick"
-    >
-      <slot
-        name="trigger"
-        :open="open"
-        :close="close"
-        :toggle="toggle"
-      />
+  <div ref="elRoot" class="UiPopover">
+    <div ref="elTrigger" class="UiPopover__trigger" @click="onTriggerClick">
+      <slot name="trigger" :open="open" :close="close" :toggle="toggle" />
     </div>
-    <div
-      ref="elTooltip"
-      class="UiPopover__tooltip"
-    >
-      <slot
-        name="contents"
-        :close="close"
-      >
-        <slot
-          name="default"
-          :close="close"
-        />
+    <div ref="elTooltip" class="UiPopover__tooltip">
+      <slot name="contents" :close="close">
+        <slot name="default" :close="close" />
       </slot>
     </div>
   </div>
 </template>
+
+<style lang="scss">
+.UiPopover {
+  .tippy-content {
+    padding: 0;
+  }
+}
+</style>
