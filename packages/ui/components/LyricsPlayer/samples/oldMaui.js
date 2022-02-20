@@ -2058,7 +2058,7 @@ roll|ing down to Old Ma|ui
         },
         {
           "timestamp": 145333,
-          "class": "",
+          "class": "wStrong",
           "value": "think "
         },
         {
@@ -2491,17 +2491,17 @@ roll|ing down to Old Ma|ui
         },
         {
           "timestamp": 176648,
-          "class": "wOld",
+          "class": "wOld wRoll",
           "value": "Old "
         },
         {
           "timestamp": 177074,
-          "class": "wMa",
+          "class": "wMa wRoll",
           "value": "Ma"
         },
         {
           "timestamp": 177503,
-          "class": "wUi",
+          "class": "wUi wRoll",
           "value": "ui"
         },
         {
