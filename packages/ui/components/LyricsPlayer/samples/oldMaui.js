@@ -1,5 +1,5 @@
 export default {
-  title: 'Rolling Down to Old Maui',
+  title: 'Rolling Down to Old Maui (2)',
   url: 'https://www.youtube.com/watch?v=sPXTm6g0ejg',
 
   text: `
@@ -23,7 +23,7 @@ and bi|tter squalls of hail
 our spars were bent and our can|vas rent
 as we braved the nor|thern gale
 
-And the ho|rrid isled of ice cut tiles
+And the ho|rrid isles of ice cut tiles
 that deck the arc|tic Sea
 now lie ma|ny leages as|tern
 as we sail to Old Ma|ui
@@ -75,6 +75,11 @@ roll|ing down to Old Ma|ui
       color: "cyan"
     },
 
+    wStrong: {
+      color: "red",
+      transform: 'scale(1.5)',
+    },
+
     wRoll: {
       // transform: scale(1.1) rotate(360deg); //scale() must be present for rotate() to work  (!)
       animation: 'roll 0.1s',
@@ -117,605 +122,2393 @@ roll|ing down to Old Ma|ui
     }
   },
 
-  lines: [
+  "lines": [
     {
-      words: [
-        { timestamp: 3231, value: 'Once ' },
-        { timestamp: 3383, value: 'more ', foo: ['any', 'custom', { data: 1 }] },
-        { timestamp: 3796, value: 'we ' },
-        { timestamp: 4195, value: 'sail ' },
-        { timestamp: 4614, value: 'by ' },
-        { timestamp: 4826, value: 'the ' },
-        { timestamp: 5055, value: 'Nor' },
-        { timestamp: 5494, value: 'thern ' },
-        { timestamp: 5907, value: 'gale' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 2999,
+          "class": "",
+          "value": "Once "
+        },
+        {
+          "timestamp": 3370,
+          "class": "",
+          "value": "more "
+        },
+        {
+          "timestamp": 3765,
+          "class": "",
+          "value": "we "
+        },
+        {
+          "timestamp": 4197,
+          "class": "",
+          "value": "sail "
+        },
+        {
+          "timestamp": 4635,
+          "class": "",
+          "value": "by "
+        },
+        {
+          "timestamp": 4828,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 5082,
+          "class": "",
+          "value": "north"
+        },
+        {
+          "timestamp": 5508,
+          "class": "",
+          "value": "ern "
+        },
+        {
+          "timestamp": 5964,
+          "class": "",
+          "value": "gail"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: 6336, value: 'And ' },
-        { timestamp: 6759, value: 'boun' },
-        { timestamp: 7163, value: 'ding ' },
-        { timestamp: 7586, value: 'o' },
-        { timestamp: 7816, value: 'ver ' },
-        { timestamp: 8021, value: 'the ' },
-        { timestamp: 8456, value: 'main' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 6378,
+          "class": "",
+          "value": "and "
+        },
+        {
+          "timestamp": 6773,
+          "class": "",
+          "value": "boun"
+        },
+        {
+          "timestamp": 7175,
+          "class": "",
+          "value": "ding "
+        },
+        {
+          "timestamp": 7610,
+          "class": "",
+          "value": "o"
+        },
+        {
+          "timestamp": 7797,
+          "class": "",
+          "value": "ver "
+        },
+        {
+          "timestamp": 8002,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 8434,
+          "class": "wWaned",
+          "value": "main"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: 9718, value: 'And ' },
-        { timestamp: 10141, value: 'now ' },
-        { timestamp: 10555, value: 'the ' },
-        { timestamp: 10980, value: 'hills ' },
-        { timestamp: 11403, value: 'of ' },
-        { timestamp: 11621, value: 'those ' },
-        { timestamp: 11844, value: 'tro' },
-        { timestamp: 12239, value: 'pic ' },
-        { timestamp: 12653, value: 'isles' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 9684,
+          "class": "",
+          "value": "And "
+        },
+        {
+          "timestamp": 10125,
+          "class": "",
+          "value": "now "
+        },
+        {
+          "timestamp": 10551,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 10986,
+          "class": "",
+          "value": "hills "
+        },
+        {
+          "timestamp": 11408,
+          "class": "",
+          "value": "of "
+        },
+        {
+          "timestamp": 11614,
+          "class": "",
+          "value": "those "
+        },
+        {
+          "timestamp": 11791,
+          "class": "",
+          "value": "tro"
+        },
+        {
+          "timestamp": 12242,
+          "class": "",
+          "value": "pic "
+        },
+        {
+          "timestamp": 12686,
+          "class": "",
+          "value": "isles"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: 13070, value: 'We ' },
-        { timestamp: 13486, value: 'soon ' },
-        { timestamp: 13928, value: 'shall ' },
-        { timestamp: 14344, value: 'see ' },
-        { timestamp: 14755, value: 'a' },
-        { timestamp: 15190, value: 'gain' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 13084,
+          "class": "",
+          "value": "we "
+        },
+        {
+          "timestamp": 13507,
+          "class": "",
+          "value": "soon "
+        },
+        {
+          "timestamp": 13942,
+          "class": "",
+          "value": "shall "
+        },
+        {
+          "timestamp": 14365,
+          "class": "",
+          "value": "see "
+        },
+        {
+          "timestamp": 14763,
+          "class": "",
+          "value": "a"
+        },
+        {
+          "timestamp": 15226,
+          "class": "",
+          "value": "gain"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: 16458, value: 'Five ' },
-        { timestamp: 16887, value: 'hell' },
-        { timestamp: 17304, value: 'ish ' },
-        { timestamp: 17717, value: 'moons ' },
-        { timestamp: 18122, value: 'have ' },
-        { timestamp: 18532, value: 'waxed ', class: 'wWaxed' },
-        { timestamp: 18940, value: 'and ' },
-        { timestamp: 19350, value: 'waned', class: 'wWaned' },
-      ],
+      "class": "",
+      "words": []
     },
     {
-      words: [
-        { timestamp: 19813, value: 'Since ' },
-        { timestamp: 20257, value: 'from ' },
-        { timestamp: 20640, value: 'those ' },
-        { timestamp: 21056, value: 'shores ' },
-        { timestamp: 21485, value: 'sailed ' },
-        { timestamp: 21917, value: 'we' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 16409,
+          "class": "",
+          "value": "Five "
+        },
+        {
+          "timestamp": 16855,
+          "class": "",
+          "value": "hell"
+        },
+        {
+          "timestamp": 17281,
+          "class": "",
+          "value": "ish "
+        },
+        {
+          "timestamp": 17707,
+          "class": "",
+          "value": "moons "
+        },
+        {
+          "timestamp": 18124,
+          "class": "",
+          "value": "have "
+        },
+        {
+          "timestamp": 18547,
+          class: 'wWaxed',
+          "value": "waxed "
+        },
+        {
+          "timestamp": 18923,
+          "class": "",
+          "value": "and "
+        },
+        {
+          "timestamp": 19355,
+          class: 'wWaned',
+          "value": "waned"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: 23201, value: 'For ' },
-        { timestamp: 23618, value: 'now ' },
-        { timestamp: 24068, value: 'we\'re ' },
-        { timestamp: 24469, value: 'bound ' },
-        { timestamp: 24892, value: 'from ' },
-        { timestamp: 25097, value: 'the ' },
-        { timestamp: 25306, value: 'arc', class: 'wBlue' },
-        { timestamp: 25728, value: 'tic ', class: 'wBlue' },
-        { timestamp: 26166, value: 'ground' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 19769,
+          "class": "",
+          "value": "since "
+        },
+        {
+          "timestamp": 20213,
+          "class": "",
+          "value": "from "
+        },
+        {
+          "timestamp": 20621,
+          "class": "",
+          "value": "those "
+        },
+        {
+          "timestamp": 21056,
+          "class": "",
+          "value": "shores "
+        },
+        {
+          "timestamp": 21481,
+          "class": "",
+          "value": "sailed "
+        },
+        {
+          "timestamp": 21944,
+          "class": "wWaned",
+          "value": "we"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: 26577, value: 'Roll' },
-        { timestamp: 26782, value: 'ing ' },
-        { timestamp: 27021, value: 'down ' },
-        { timestamp: 27429, value: 'to ' },
-        { timestamp: 27873, value: 'Old ', class: 'wOld' },
-        { timestamp: 28317, value: 'Ma', class: 'wMa' },
-        { timestamp: 28715, value: 'ui', class: 'wUi' },
-      ],
-    },
-    // {
-    //   words: [],
-    // },
-    {
-      words: [
-        { timestamp: 29573, value: 'Roll', class: 'wRoll' },
-        { timestamp: 30014, value: 'ing ', class: 'wRoll' },
-        { timestamp: 30437, value: 'down ', class: 'wRoll' },
-        { timestamp: 31062, value: 'to ' },
-        { timestamp: 31243, value: 'old ', class: 'wOld' },
-        { timestamp: 31678, value: 'Ma', class: 'wMa' },
-        { timestamp: 32082, value: 'ui, ', class: 'wUi' },
-        { timestamp: 32686, value: 'me ', class: 'wMe' },
-        { timestamp: 32894, value: 'boys', class: 'wBoys' },
-      ],
-    },
-    {
-      words: [
-        { timestamp: 33308, value: 'Roll', class: 'wRoll' },
-        { timestamp: 33528, value: 'ing ', class: 'wRoll' },
-        { timestamp: 33779, value: 'down ', class: 'wRoll' },
-        { timestamp: 34389, value: 'to ' },
-        { timestamp: 34585, value: 'old ', class: 'wOld' },
-        { timestamp: 35002, value: 'Ma', class: 'wMa' },
-        { timestamp: 35434, value: 'ui', class: 'wUi' },
-      ],
-    },
-    {
-      words: [
-        { timestamp: 36766, value: 'For ' },
-        { timestamp: 37149, value: 'now ' },
-        { timestamp: 37575, value: 'we\'re ' },
-        { timestamp: 37986, value: 'bound ' },
-        { timestamp: 38421, value: 'from ' },
-        { timestamp: 38611, value: 'the ' },
-        { timestamp: 38819, value: 'arc', class: 'wBlue' },
-        { timestamp: 39251, value: 'tic ', class: 'wBlue' },
-        { timestamp: 39677, value: 'ground' },
-      ],
-    },
-    {
-      words: [
-        { timestamp: 40115, value: 'Roll', class: 'wRoll' },
-        { timestamp: 40299, value: 'ing ', class: 'wRoll' },
-        { timestamp: 40495, value: 'down ', class: 'wRoll' },
-        { timestamp: 40933, value: 'to ' },
-        { timestamp: 41350, value: 'old ', class: 'wOld' },
-        { timestamp: 41797, value: 'Ma', class: 'wMa' },
-        { timestamp: 42235, value: 'ui', class: 'wUi' },
-      ],
-    },
-    // {
-    //   words: [],
-    // },
-    {
-      words: [
-        { timestamp: 43522, value: 'Through ' },
-        { timestamp: 43984, value: 'ma' },
-        { timestamp: 44370, value: 'ny ' },
-        { timestamp: 44560, value: 'a ' },
-        { timestamp: 44756, value: 'blow ' },
-        { timestamp: 45213, value: 'of ' },
-        { timestamp: 45602, value: 'frost ', class: 'wWaxed' },
-        { timestamp: 46028, value: 'and ' },
-        { timestamp: 46444, value: 'snow', class: 'wWaned' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 23148,
+          "class": "",
+          "value": "for "
+        },
+        {
+          "timestamp": 23595,
+          "class": "",
+          "value": "now "
+        },
+        {
+          "timestamp": 24033,
+          "class": "",
+          "value": "we're "
+        },
+        {
+          "timestamp": 24441,
+          "class": "",
+          "value": "bound "
+        },
+        {
+          "timestamp": 24928,
+          "class": "",
+          "value": "from "
+        },
+        {
+          "timestamp": 25146,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 25369,
+          "class": "wBlue",
+          "value": "arc"
+        },
+        {
+          "timestamp": 25777,
+          "class": "wBlue",
+          "value": "tic "
+        },
+        {
+          "timestamp": 26190,
+          "class": "",
+          "value": "ground"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: 46876, value: 'And ' },
-        { timestamp: 47296, value: 'bi' },
-        { timestamp: 47722, value: 'tter ' },
-        { timestamp: 48083, value: 'squalls ' },
-        { timestamp: 48555, value: 'of ' },
-        { timestamp: 48999, value: 'hail' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 26610,
+          "class": "",
+          "value": "roll"
+        },
+        {
+          "timestamp": 26806,
+          "class": "",
+          "value": "ing "
+        },
+        {
+          "timestamp": 27048,
+          "class": "",
+          "value": "down "
+        },
+        {
+          "timestamp": 27452,
+          "class": "",
+          "value": "to "
+        },
+        {
+          "timestamp": 27884,
+          "class": "",
+          "value": "Old "
+        },
+        {
+          "timestamp": 28319,
+          "class": "",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 28761,
+          "class": "",
+          "value": "ui"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: 50485, value: 'Our ' },
-        { timestamp: 50773, value: 'spars ' },
-        { timestamp: 51184, value: 'were ' },
-        { timestamp: 51570, value: 'bent ' },
-        { timestamp: 51980, value: 'and ' },
-        { timestamp: 52173, value: 'our ' },
-        { timestamp: 52369, value: 'can' },
-        { timestamp: 52807, value: 'vas ' },
-        { timestamp: 53212, value: 'rent' },
-      ],
+      "class": "",
+      "words": []
     },
     {
-      words: [
-        { timestamp: 53616, value: 'As ' },
-        { timestamp: 53843, value: 'we ' },
-        { timestamp: 54061, value: 'braved ' },
-        { timestamp: 54495, value: 'the ' },
-        { timestamp: 54822, value: 'nor' },
-        { timestamp: 55362, value: 'thern ' },
-        { timestamp: 55736, value: 'gale' },
-      ],
-    },
-    // {
-    //   words: [],
-    // },
-    {
-      words: [
-        { timestamp: 56992, value: 'And ' },
-        { timestamp: 57207, value: 'the ' },
-        { timestamp: 57397, value: 'ho' },
-        { timestamp: 57597, value: 'rrid ' },
-        { timestamp: 57826, value: 'isles ' },
-        { timestamp: 58668, value: 'of ' },
-        { timestamp: 59112, value: 'ice ' },
-        { timestamp: 59510, value: 'cut ' },
-        { timestamp: 59909, value: 'tiles' },
-      ],
-    },
-    {
-      words: [
-        { timestamp: 60359, value: 'That ' },
-        { timestamp: 60791, value: 'deck ' },
-        { timestamp: 61186, value: 'the ' },
-        { timestamp: 61603, value: 'arc', class: 'wBlue' },
-        { timestamp: 62029, value: 'tic ', class: 'wBlue' },
-        { timestamp: 62473, value: 'sea' },
-      ],
-    },
-    {
-      words: [
-        { timestamp: 63726, value: 'Now ' },
-        { timestamp: 64565, value: 'lie ' },
-        { timestamp: 65031, value: 'ma' },
-        { timestamp: 65454, value: 'ny ' },
-        { timestamp: 65861, value: 'leagues ' },
-        { timestamp: 66299, value: 'as' },
-        { timestamp: 66743, value: 'tern' },
-      ],
-    },
-    {
-      words: [
-        { timestamp: 67163, value: 'As ' },
-        { timestamp: 67365, value: 'we ' },
-        { timestamp: 67595, value: 'sail ' },
-        { timestamp: 67990, value: 'to ' },
-        { timestamp: 68373, value: 'old ', class: 'wOld' },
-        { timestamp: 68814, value: 'Ma', class: 'wMa' },
-        { timestamp: 69271, value: 'ui', class: 'wUi' },
-      ],
-    },
-    // {
-    //   words: [],
-    // },
-    {
-      words: [
-        { timestamp: 70116, value: 'Roll', class: 'wRoll' },
-        { timestamp: 70564, value: 'ing ', class: 'wRoll' },
-        { timestamp: 71005, value: 'down ', class: 'wRoll' },
-        { timestamp: 71627, value: 'to ' },
-        { timestamp: 71841, value: 'old ', class: 'wOld' },
-        { timestamp: 72276, value: 'Ma', class: 'wMa' },
-        { timestamp: 72669, value: 'ui, ', class: 'wUi' },
-        { timestamp: 73278, value: 'me ', class: 'wMe' },
-        { timestamp: 73496, value: 'boys', class: 'wBoys' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 29585,
+          "class": "wRoll",
+          "value": "Roll"
+        },
+        {
+          "timestamp": 30029,
+          "class": "wRoll",
+          "value": "ing "
+        },
+        {
+          "timestamp": 30467,
+          "class": "wRoll",
+          "value": "down "
+        },
+        {
+          "timestamp": 31064,
+          "class": "wRoll",
+          "value": "to "
+        },
+        {
+          "timestamp": 31273,
+          "class": "wOld",
+          "value": "Old "
+        },
+        {
+          "timestamp": 31702,
+          "class": "wMa",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 32134,
+          "class": "wUi",
+          "value": "ui, "
+        },
+        {
+          "timestamp": 32713,
+          "class": "wMe",
+          "value": "me "
+        },
+        {
+          "timestamp": 32952,
+          "class": "wBoys",
+          "value": "boys"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: 73931, value: 'Roll', class: 'wRoll' },
-        { timestamp: 74105, value: 'ing ', class: 'wRoll' },
-        { timestamp: 74342, value: 'down ', class: 'wRoll' },
-        { timestamp: 74935, value: 'to ' },
-        { timestamp: 75138, value: 'old ', class: 'wOld' },
-        { timestamp: 75591, value: 'Ma', class: 'wMa' },
-        { timestamp: 76017, value: 'ui', class: 'wUi' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 33383,
+          "class": "wRoll",
+          "value": "Roll"
+        },
+        {
+          "timestamp": 33543,
+          "class": "wRoll",
+          "value": "ing "
+        },
+        {
+          "timestamp": 33788,
+          "class": "wRoll",
+          "value": "down "
+        },
+        {
+          "timestamp": 34394,
+          "class": "wRoll",
+          "value": "to "
+        },
+        {
+          "timestamp": 34618,
+          "class": "wOld",
+          "value": "Old "
+        },
+        {
+          "timestamp": 35056,
+          "class": "wMa",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 35491,
+          "class": "wUi",
+          "value": "ui"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: 77307, value: 'For ' },
-        { timestamp: 77720, value: 'now ' },
-        { timestamp: 78152, value: 'we\'re ' },
-        { timestamp: 78575, value: 'bound ' },
-        { timestamp: 78998, value: 'from ' },
-        { timestamp: 79179, value: 'the ' },
-        { timestamp: 79415, value: 'arc', class: 'wBlue' },
-        { timestamp: 79828, value: 'tic ', class: 'wBlue' },
-        { timestamp: 80223, value: 'ground' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 36723,
+          "class": "",
+          "value": "For "
+        },
+        {
+          "timestamp": 37164,
+          "class": "",
+          "value": "now "
+        },
+        {
+          "timestamp": 37602,
+          "class": "",
+          "value": "we're "
+        },
+        {
+          "timestamp": 38003,
+          "class": "wWaxed",
+          "value": "bound "
+        },
+        {
+          "timestamp": 38432,
+          "class": "",
+          "value": "from "
+        },
+        {
+          "timestamp": 38650,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 38876,
+          "class": "wBlue",
+          "value": "arc"
+        },
+        {
+          "timestamp": 39293,
+          "class": "wBlue",
+          "value": "tic "
+        },
+        {
+          "timestamp": 39694,
+          "class": "wWaned",
+          "value": "ground"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: 80655, value: 'Roll', class: 'wRoll' },
-        { timestamp: 80864, value: 'ing ', class: 'wRoll' },
-        { timestamp: 81099, value: 'down ', class: 'wRoll' },
-        { timestamp: 81510, value: 'to ' },
-        { timestamp: 81933, value: 'old ', class: 'wOld' },
-        { timestamp: 82368, value: 'Ma', class: 'wMa' },
-        { timestamp: 82806, value: 'ui', class: 'wUi' },
-      ],
-    },
-    // {
-    //   words: [],
-    // },
-    {
-      words: [
-        { timestamp: null, value: 'Oh ' },
-        { timestamp: null, value: 'welcome ' },
-        { timestamp: null, value: 'the ' },
-        { timestamp: null, value: 'seas ' },
-        { timestamp: null, value: 'and ' },
-        { timestamp: null, value: 'the ' },
-        { timestamp: null, value: 'fragrant ' },
-        { timestamp: null, value: 'breeze' },
-      ],
-    },
-    {
-      words: [
-        { timestamp: null, value: 'That ' },
-        { timestamp: null, value: 'is ' },
-        { timestamp: null, value: 'laden ' },
-        { timestamp: null, value: 'with ' },
-        { timestamp: null, value: 'odors ' },
-        { timestamp: null, value: 'rare' },
-      ],
-    },
-    {
-      words: [
-        { timestamp: null, value: 'And ' },
-        { timestamp: null, value: 'the ' },
-        { timestamp: null, value: 'pretty ' },
-        { timestamp: null, value: 'maids ' },
-        { timestamp: null, value: 'in ' },
-        { timestamp: null, value: 'the ' },
-        { timestamp: null, value: 'sunny ' },
-        { timestamp: null, value: 'glades' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 40129,
+          "class": "wRoll",
+          "value": "roll"
+        },
+        {
+          "timestamp": 40322,
+          "class": "wRoll",
+          "value": "ing "
+        },
+        {
+          "timestamp": 40534,
+          "class": "wRoll",
+          "value": "down "
+        },
+        {
+          "timestamp": 40954,
+          "class": "wRoll",
+          "value": "to "
+        },
+        {
+          "timestamp": 41401,
+          "class": "wOld",
+          "value": "Old "
+        },
+        {
+          "timestamp": 41842,
+          "class": "wMa",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 42259,
+          "class": "wUi",
+          "value": "ui"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'Who ' },
-        { timestamp: null, value: 'are ' },
-        { timestamp: null, value: 'gentle, ' },
-        { timestamp: null, value: 'kind ' },
-        { timestamp: null, value: 'and ' },
-        { timestamp: null, value: 'fair' },
-      ],
+      "class": "",
+      "words": []
     },
     {
-      words: [
-        { timestamp: null, value: 'And ' },
-        { timestamp: null, value: 'their ' },
-        { timestamp: null, value: 'pretty ' },
-        { timestamp: null, value: 'eyes ' },
-        { timestamp: null, value: 'look ' },
-        { timestamp: null, value: 'towards ' },
-        { timestamp: null, value: 'the ' },
-        { timestamp: null, value: 'skies' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 43490,
+          "class": "",
+          "value": "Through "
+        },
+        {
+          "timestamp": 43956,
+          "class": "",
+          "value": "ma"
+        },
+        {
+          "timestamp": 44360,
+          "class": "",
+          "value": "ny "
+        },
+        {
+          "timestamp": 44547,
+          "class": "",
+          "value": "a "
+        },
+        {
+          "timestamp": 44755,
+          "class": "",
+          "value": "blow "
+        },
+        {
+          "timestamp": 45194,
+          "class": "",
+          "value": "of "
+        },
+        {
+          "timestamp": 45632,
+          "class": "wWaxed",
+          "value": "frost "
+        },
+        {
+          "timestamp": 46045,
+          "class": "",
+          "value": "and "
+        },
+        {
+          "timestamp": 46474,
+          "class": "wWaned",
+          "value": "snow"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'Hoping ' },
-        { timestamp: null, value: 'some ' },
-        { timestamp: null, value: 'day ' },
-        { timestamp: null, value: 'to ' },
-        { timestamp: null, value: 'see' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 46903,
+          "class": "",
+          "value": "and "
+        },
+        {
+          "timestamp": 47338,
+          "class": "",
+          "value": "bi"
+        },
+        {
+          "timestamp": 47770,
+          "class": "",
+          "value": "tter "
+        },
+        {
+          "timestamp": 48159,
+          "class": "",
+          "value": "squalls "
+        },
+        {
+          "timestamp": 48585,
+          "class": "",
+          "value": "of "
+        },
+        {
+          "timestamp": 49026,
+          "class": "wWaned",
+          "value": "hail"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'Our ' },
-        { timestamp: null, value: 'snow-white ' },
-        { timestamp: null, value: 'sails ' },
-        { timestamp: null, value: 'before ' },
-        { timestamp: null, value: 'the ' },
-        { timestamp: null, value: 'gales' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 50242,
+          "class": "",
+          "value": "our "
+        },
+        {
+          "timestamp": 50693,
+          "class": "",
+          "value": "spars "
+        },
+        {
+          "timestamp": 51131,
+          "class": "",
+          "value": "were "
+        },
+        {
+          "timestamp": 51578,
+          "class": "",
+          "value": "bent "
+        },
+        {
+          "timestamp": 51995,
+          "class": "",
+          "value": "and "
+        },
+        {
+          "timestamp": 52172,
+          "class": "",
+          "value": "our "
+        },
+        {
+          "timestamp": 52371,
+          "class": "",
+          "value": "can"
+        },
+        {
+          "timestamp": 52779,
+          "class": "",
+          "value": "vas "
+        },
+        {
+          "timestamp": 53214,
+          "class": "",
+          "value": "rent"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'Rolling ' },
-        { timestamp: null, value: 'down ' },
-        { timestamp: null, value: 'to ' },
-        { timestamp: null, value: 'old ', class: 'wOld' },
-        { timestamp: null, value: 'Maui', class: 'wMa' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 53667,
+          "class": "",
+          "value": "as "
+        },
+        {
+          "timestamp": 53857,
+          "class": "",
+          "value": "we "
+        },
+        {
+          "timestamp": 54066,
+          "class": "",
+          "value": "braved "
+        },
+        {
+          "timestamp": 54479,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 54798,
+          "class": "",
+          "value": "nor"
+        },
+        {
+          "timestamp": 55331,
+          "class": "",
+          "value": "thern "
+        },
+        {
+          "timestamp": 55790,
+          "class": "wWaned",
+          "value": "gale"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'Rolling ' },
-        { timestamp: null, value: 'down ' },
-        { timestamp: null, value: 'to ' },
-        { timestamp: null, value: 'old ', class: 'wOld' },
-        { timestamp: null, value: 'Maui, ', class: 'wMa' },
-        { timestamp: null, value: 'me ', class: 'wUi' },
-        { timestamp: null, value: 'boys' },
-      ],
+      "class": "",
+      "words": []
     },
     {
-      words: [
-        { timestamp: null, value: 'Rolling ' },
-        { timestamp: null, value: 'down ' },
-        { timestamp: null, value: 'to ' },
-        { timestamp: null, value: 'old ', class: 'wOld' },
-        { timestamp: null, value: 'Maui', class: 'wMa' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 57004,
+          "class": "",
+          "value": "And "
+        },
+        {
+          "timestamp": 57212,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 57411,
+          "class": "",
+          "value": "ho"
+        },
+        {
+          "timestamp": 57840,
+          "class": "",
+          "value": "rrid "
+        },
+        {
+          "timestamp": 58281,
+          "class": "",
+          "value": "isles "
+        },
+        {
+          "timestamp": 58689,
+          "class": "",
+          "value": "of "
+        },
+        {
+          "timestamp": 59133,
+          "class": "wBlue",
+          "value": "ice "
+        },
+        {
+          "timestamp": 59556,
+          "class": "wStrong",
+          "value": "cut "
+        },
+        {
+          "timestamp": 59963,
+          "class": "wStrong",
+          "value": "tiles"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'For ' },
-        { timestamp: null, value: 'now ' },
-        { timestamp: null, value: 'we\'re ' },
-        { timestamp: null, value: 'bound ' },
-        { timestamp: null, value: 'from ' },
-        { timestamp: null, value: 'the ' },
-        { timestamp: null, value: 'arctic ' },
-        { timestamp: null, value: 'ground' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 60361,
+          "class": "",
+          "value": "that "
+        },
+        {
+          "timestamp": 60827,
+          "class": "",
+          "value": "deck "
+        },
+        {
+          "timestamp": 61259,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 61694,
+          "class": "wBlue",
+          "value": "arc"
+        },
+        {
+          "timestamp": 62089,
+          "class": "wBlue",
+          "value": "tic "
+        },
+        {
+          "timestamp": 62530,
+          "class": "wWaned",
+          "value": "Sea"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'Rolling ' },
-        { timestamp: null, value: 'down ' },
-        { timestamp: null, value: 'to ' },
-        { timestamp: null, value: 'old ', class: 'wOld' },
-        { timestamp: null, value: 'Maui', class: 'wMa' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 64209,
+          "class": "",
+          "value": "now "
+        },
+        {
+          "timestamp": 64638,
+          "class": "",
+          "value": "lie "
+        },
+        {
+          "timestamp": 65049,
+          "class": "",
+          "value": "ma"
+        },
+        {
+          "timestamp": 65474,
+          "class": "",
+          "value": "ny "
+        },
+        {
+          "timestamp": 65897,
+          "class": "",
+          "value": "leages "
+        },
+        {
+          "timestamp": 66314,
+          "class": "",
+          "value": "as"
+        },
+        {
+          "timestamp": 66770,
+          "class": "",
+          "value": "tern"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'It\'s ' },
-        { timestamp: null, value: 'a ' },
-        { timestamp: null, value: 'damn ' },
-        { timestamp: null, value: 'tough ' },
-        { timestamp: null, value: 'life ' },
-        { timestamp: null, value: 'of ' },
-        { timestamp: null, value: 'toil ' },
-        { timestamp: null, value: 'and ' },
-        { timestamp: null, value: 'strife' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 67205,
+          "class": "",
+          "value": "as "
+        },
+        {
+          "timestamp": 67398,
+          "class": "",
+          "value": "we "
+        },
+        {
+          "timestamp": 67605,
+          "class": "",
+          "value": "sail "
+        },
+        {
+          "timestamp": 68017,
+          "class": "",
+          "value": "to "
+        },
+        {
+          "timestamp": 68452,
+          "class": "",
+          "value": "Old "
+        },
+        {
+          "timestamp": 68866,
+          "class": "",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 69285,
+          "class": "",
+          "value": "ui"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'We ' },
-        { timestamp: null, value: 'whalemen ' },
-        { timestamp: null, value: 'undergo;' },
-      ],
+      "class": "",
+      "words": []
     },
     {
-      words: [
-        { timestamp: null, value: 'And ' },
-        { timestamp: null, value: 'we ' },
-        { timestamp: null, value: 'don\'t ' },
-        { timestamp: null, value: 'give ' },
-        { timestamp: null, value: 'a ' },
-        { timestamp: null, value: 'damn' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 70122,
+          "class": "wRoll",
+          "value": "Roll"
+        },
+        {
+          "timestamp": 70584,
+          "class": "wRoll",
+          "value": "ing "
+        },
+        {
+          "timestamp": 71010,
+          "class": "wRoll",
+          "value": "down "
+        },
+        {
+          "timestamp": 71623,
+          "class": "wRoll",
+          "value": "to "
+        },
+        {
+          "timestamp": 71847,
+          "class": "wOld",
+          "value": "Old "
+        },
+        {
+          "timestamp": 72263,
+          "class": "wMa",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 72686,
+          "class": "wUi",
+          "value": "ui, "
+        },
+        {
+          "timestamp": 73237,
+          "class": "wMe",
+          "value": "me "
+        },
+        {
+          "timestamp": 73495,
+          "class": "wBoys",
+          "value": "boys"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'When ' },
-        { timestamp: null, value: 'the ' },
-        { timestamp: null, value: 'gails ' },
-        { timestamp: null, value: 'have ' },
-        { timestamp: null, value: 'stoped' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 73982,
+          "class": "wRoll",
+          "value": "Roll"
+        },
+        {
+          "timestamp": 74160,
+          "class": "wRoll",
+          "value": "ing "
+        },
+        {
+          "timestamp": 74374,
+          "class": "wRoll",
+          "value": "down "
+        },
+        {
+          "timestamp": 75008,
+          "class": "wRoll",
+          "value": "to "
+        },
+        {
+          "timestamp": 75171,
+          "class": "wOld",
+          "value": "Old "
+        },
+        {
+          "timestamp": 75618,
+          "class": "wMa",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 76059,
+          "class": "wUi",
+          "value": "ui"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'How ' },
-        { timestamp: null, value: 'hard ' },
-        { timestamp: null, value: 'the ' },
-        { timestamp: null, value: 'wind ' },
-        { timestamp: null, value: 'did ' },
-        { timestamp: null, value: 'blow' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 77284,
+          "class": "",
+          "value": "For "
+        },
+        {
+          "timestamp": 77729,
+          "class": "",
+          "value": "now "
+        },
+        {
+          "timestamp": 78158,
+          "class": "",
+          "value": "we're "
+        },
+        {
+          "timestamp": 78593,
+          "class": "",
+          "value": "bound "
+        },
+        {
+          "timestamp": 79015,
+          "class": "",
+          "value": "from "
+        },
+        {
+          "timestamp": 79196,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 79423,
+          "class": "wBlue",
+          "value": "arc"
+        },
+        {
+          "timestamp": 79843,
+          "class": "wBlue",
+          "value": "tic "
+        },
+        {
+          "timestamp": 80259,
+          "class": "",
+          "value": "ground"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'We ' },
-        { timestamp: null, value: 'are ' },
-        { timestamp: null, value: 'homeward ' },
-        { timestamp: null, value: 'bound, ' },
-        { timestamp: null, value: '\'tis ' },
-        { timestamp: null, value: 'a ' },
-        { timestamp: null, value: 'glorious ' },
-        { timestamp: null, value: 'sound' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 80694,
+          "class": "wRoll",
+          "value": "roll"
+        },
+        {
+          "timestamp": 80884,
+          "class": "wRoll",
+          "value": "ing "
+        },
+        {
+          "timestamp": 81114,
+          "class": "wRoll",
+          "value": "down "
+        },
+        {
+          "timestamp": 81534,
+          "class": "wRoll",
+          "value": "to "
+        },
+        {
+          "timestamp": 81969,
+          "class": "wOld",
+          "value": "Old "
+        },
+        {
+          "timestamp": 82397,
+          "class": "wMa",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 82833,
+          "class": "wUi",
+          "value": "ui"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'On ' },
-        { timestamp: null, value: 'a ' },
-        { timestamp: null, value: 'good ' },
-        { timestamp: null, value: 'ship, ' },
-        { timestamp: null, value: 'taut ' },
-        { timestamp: null, value: 'and ' },
-        { timestamp: null, value: 'free' },
-      ],
+      "class": "",
+      "words": []
     },
     {
-      words: [
-        { timestamp: null, value: 'And ' },
-        { timestamp: null, value: 'we\'ll ' },
-        { timestamp: null, value: 'think ' },
-        { timestamp: null, value: 'of ' },
-        { timestamp: null, value: 'that ' },
-        { timestamp: null, value: 'as ' },
-        { timestamp: null, value: 'we ' },
-        { timestamp: null, value: 'drink ' },
-        { timestamp: null, value: 'and ' },
-        { timestamp: null, value: 'chat' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 84055,
+          "class": "",
+          "value": "Oh "
+        },
+        {
+          "timestamp": 84518,
+          "class": "",
+          "value": "wel"
+        },
+        {
+          "timestamp": 84922,
+          "class": "",
+          "value": "come "
+        },
+        {
+          "timestamp": 85121,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 85323,
+          "class": "",
+          "value": "seas "
+        },
+        {
+          "timestamp": 85767,
+          "class": "",
+          "value": "and "
+        },
+        {
+          "timestamp": 85973,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 86163,
+          "class": "",
+          "value": "fra"
+        },
+        {
+          "timestamp": 86585,
+          "class": "",
+          "value": "grant "
+        },
+        {
+          "timestamp": 86999,
+          "class": "wManed",
+          "value": "breeze"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'With ' },
-        { timestamp: null, value: 'the ' },
-        { timestamp: null, value: 'girls ' },
-        { timestamp: null, value: 'of ' },
-        { timestamp: null, value: 'old ', class: 'wOld' },
-        { timestamp: null, value: 'Mohee', class: 'wMa' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 87462,
+          "class": "",
+          "value": "that "
+        },
+        {
+          "timestamp": 87652,
+          "class": "",
+          "value": "is "
+        },
+        {
+          "timestamp": 87829,
+          "class": "",
+          "value": "la"
+        },
+        {
+          "timestamp": 88270,
+          "class": "",
+          "value": "den "
+        },
+        {
+          "timestamp": 88452,
+          "class": "",
+          "value": "with "
+        },
+        {
+          "timestamp": 88685,
+          "class": "",
+          "value": "o"
+        },
+        {
+          "timestamp": 89098,
+          "class": "",
+          "value": "dors "
+        },
+        {
+          "timestamp": 89542,
+          "class": "",
+          "value": "rare"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'Rolling ' },
-        { timestamp: null, value: 'down ' },
-        { timestamp: null, value: 'to ' },
-        { timestamp: null, value: 'old ', class: 'wOld' },
-        { timestamp: null, value: 'Maui, ', class: 'wMa' },
-        { timestamp: null, value: 'me ', class: 'wUi' },
-        { timestamp: null, value: 'boys' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 90792,
+          "class": "",
+          "value": "and "
+        },
+        {
+          "timestamp": 91018,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 91224,
+          "class": "",
+          "value": "pre"
+        },
+        {
+          "timestamp": 91649,
+          "class": "",
+          "value": "tty "
+        },
+        {
+          "timestamp": 92091,
+          "class": "",
+          "value": "maids "
+        },
+        {
+          "timestamp": 92526,
+          "class": "",
+          "value": "in "
+        },
+        {
+          "timestamp": 92722,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 92912,
+          "class": "",
+          "value": "su"
+        },
+        {
+          "timestamp": 93353,
+          "class": "",
+          "value": "nny "
+        },
+        {
+          "timestamp": 93794,
+          "class": "",
+          "value": "glades"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'Rolling ' },
-        { timestamp: null, value: 'down ' },
-        { timestamp: null, value: 'to ' },
-        { timestamp: null, value: 'old ', class: 'wOld' },
-        { timestamp: null, value: 'Maui', class: 'wMa' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 94232,
+          "class": "",
+          "value": "who "
+        },
+        {
+          "timestamp": 94410,
+          "class": "",
+          "value": "are "
+        },
+        {
+          "timestamp": 94630,
+          "class": "",
+          "value": "gen"
+        },
+        {
+          "timestamp": 95075,
+          "class": "",
+          "value": "tle, "
+        },
+        {
+          "timestamp": 95507,
+          "class": "wWaxed",
+          "value": "kind "
+        },
+        {
+          "timestamp": 95929,
+          "class": "",
+          "value": "and "
+        },
+        {
+          "timestamp": 96343,
+          "class": "wWaned",
+          "value": "fair"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'For ' },
-        { timestamp: null, value: 'now ' },
-        { timestamp: null, value: 'we\'re ' },
-        { timestamp: null, value: 'bound ' },
-        { timestamp: null, value: 'from ' },
-        { timestamp: null, value: 'the ' },
-        { timestamp: null, value: 'arctic ' },
-        { timestamp: null, value: 'ground' },
-      ],
+      "class": "",
+      "words": []
     },
     {
-      words: [
-        { timestamp: null, value: 'Rolling ' },
-        { timestamp: null, value: 'down ' },
-        { timestamp: null, value: 'to ' },
-        { timestamp: null, value: 'old ', class: 'wOld' },
-        { timestamp: null, value: 'Maui', class: 'wMa' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 97565,
+          "class": "",
+          "value": "And "
+        },
+        {
+          "timestamp": 97780,
+          "class": "",
+          "value": "their "
+        },
+        {
+          "timestamp": 98000,
+          "class": "",
+          "value": "pre"
+        },
+        {
+          "timestamp": 98426,
+          "class": "",
+          "value": "tty "
+        },
+        {
+          "timestamp": 98843,
+          "class": "",
+          "value": "eyes "
+        },
+        {
+          "timestamp": 99272,
+          "class": "",
+          "value": "look "
+        },
+        {
+          "timestamp": 99455,
+          "class": "",
+          "value": "to"
+        },
+        {
+          "timestamp": 100059,
+          "class": "",
+          "value": "wards "
+        },
+        {
+          "timestamp": 100546,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 100745,
+          "class": "",
+          "value": "skies"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'Rolling ' },
-        { timestamp: null, value: 'down ' },
-        { timestamp: null, value: 'to ' },
-        { timestamp: null, value: 'old ', class: 'wOld' },
-        { timestamp: null, value: 'Maui, ', class: 'wMa' },
-        { timestamp: null, value: 'me ', class: 'wUi' },
-        { timestamp: null, value: 'boys' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 101419,
+          "class": "",
+          "value": "ho"
+        },
+        {
+          "timestamp": 101578,
+          "class": "",
+          "value": "ping "
+        },
+        {
+          "timestamp": 101802,
+          "class": "",
+          "value": "some "
+        },
+        {
+          "timestamp": 102216,
+          "class": "",
+          "value": "day "
+        },
+        {
+          "timestamp": 102632,
+          "class": "",
+          "value": "to "
+        },
+        {
+          "timestamp": 103083,
+          "class": "wWaned",
+          "value": "see"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'Rolling ' },
-        { timestamp: null, value: 'down ' },
-        { timestamp: null, value: 'to ' },
-        { timestamp: null, value: 'old ', class: 'wOld' },
-        { timestamp: null, value: 'Maui', class: 'wMa' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 104308,
+          "class": "",
+          "value": "our "
+        },
+        {
+          "timestamp": 104749,
+          "class": "",
+          "value": "snow"
+        },
+        {
+          "timestamp": 105148,
+          "class": "",
+          "value": "-white "
+        },
+        {
+          "timestamp": 105580,
+          "class": "",
+          "value": "sails "
+        },
+        {
+          "timestamp": 106011,
+          "class": "",
+          "value": "be"
+        },
+        {
+          "timestamp": 106443,
+          "class": "",
+          "value": "fore "
+        },
+        {
+          "timestamp": 106854,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 107301,
+          "class": "",
+          "value": "gales"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'For ' },
-        { timestamp: null, value: 'now ' },
-        { timestamp: null, value: 'we\'re ' },
-        { timestamp: null, value: 'bound ' },
-        { timestamp: null, value: 'from ' },
-        { timestamp: null, value: 'the ' },
-        { timestamp: null, value: 'arctic ' },
-        { timestamp: null, value: 'ground' },
-      ],
+      "class": "",
+      "words": [
+        {
+          "timestamp": 107761,
+          "class": "",
+          "value": "roll"
+        },
+        {
+          "timestamp": 107938,
+          "class": "",
+          "value": "ing "
+        },
+        {
+          "timestamp": 108165,
+          "class": "",
+          "value": "down "
+        },
+        {
+          "timestamp": 108594,
+          "class": "",
+          "value": "to "
+        },
+        {
+          "timestamp": 109032,
+          "class": "",
+          "value": "Old "
+        },
+        {
+          "timestamp": 109427,
+          "class": "",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 109856,
+          "class": "",
+          "value": "ui"
+        }
+      ]
     },
     {
-      words: [
-        { timestamp: null, value: 'Rolling ' },
-        { timestamp: null, value: 'down ' },
-        { timestamp: null, value: 'to ' },
-        { timestamp: null, value: 'old ', class: 'wOld' },
-        { timestamp: null, value: 'Maui', class: 'wMa' },
-      ],
+      "class": "",
+      "words": []
     },
-  ],
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 110708,
+          "class": "wRoll",
+          "value": "Roll"
+        },
+        {
+          "timestamp": 111167,
+          "class": "wRoll",
+          "value": "ing "
+        },
+        {
+          "timestamp": 111593,
+          "class": "wRoll",
+          "value": "down "
+        },
+        {
+          "timestamp": 112163,
+          "class": "wRoll",
+          "value": "to "
+        },
+        {
+          "timestamp": 112359,
+          "class": "wOld",
+          "value": "Old "
+        },
+        {
+          "timestamp": 112813,
+          "class": "wMa",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 113241,
+          "class": "wUi",
+          "value": "ui, "
+        },
+        {
+          "timestamp": 113827,
+          "class": "wMe",
+          "value": "me "
+        },
+        {
+          "timestamp": 114072,
+          "class": "wBoys",
+          "value": "boys"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 114522,
+          "class": "wRoll",
+          "value": "Roll"
+        },
+        {
+          "timestamp": 114700,
+          "class": "wRoll",
+          "value": "ing "
+        },
+        {
+          "timestamp": 114942,
+          "class": "wRoll",
+          "value": "down "
+        },
+        {
+          "timestamp": 115533,
+          "class": "wRoll",
+          "value": "to "
+        },
+        {
+          "timestamp": 115720,
+          "class": "wOld",
+          "value": "Old "
+        },
+        {
+          "timestamp": 116164,
+          "class": "wMa",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 116590,
+          "class": "wUi",
+          "value": "ui"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 117877,
+          "class": "",
+          "value": "For "
+        },
+        {
+          "timestamp": 118299,
+          "class": "",
+          "value": "now "
+        },
+        {
+          "timestamp": 118722,
+          "class": "",
+          "value": "we're "
+        },
+        {
+          "timestamp": 119142,
+          "class": "wWaxed",
+          "value": "bound "
+        },
+        {
+          "timestamp": 119580,
+          "class": "",
+          "value": "from "
+        },
+        {
+          "timestamp": 119773,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 119997,
+          "class": "wBlue",
+          "value": "arc"
+        },
+        {
+          "timestamp": 120423,
+          "class": "wBlue",
+          "value": "tic "
+        },
+        {
+          "timestamp": 120873,
+          "class": "wWaned",
+          "value": "ground"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 121308,
+          "class": "wRoll",
+          "value": "roll"
+        },
+        {
+          "timestamp": 121483,
+          "class": "wRoll",
+          "value": "ing "
+        },
+        {
+          "timestamp": 121709,
+          "class": "wRoll",
+          "value": "down "
+        },
+        {
+          "timestamp": 122114,
+          "class": "wRoll",
+          "value": "to "
+        },
+        {
+          "timestamp": 122561,
+          "class": "wOld",
+          "value": "Old "
+        },
+        {
+          "timestamp": 122962,
+          "class": "wMa",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 123413,
+          "class": "wUi",
+          "value": "ui"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": []
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 124632,
+          "class": "",
+          "value": "It's "
+        },
+        {
+          "timestamp": 124816,
+          "class": "",
+          "value": "a "
+        },
+        {
+          "timestamp": 125050,
+          "class": "",
+          "value": "damn "
+        },
+        {
+          "timestamp": 125481,
+          "class": "wStrong",
+          "value": "tough "
+        },
+        {
+          "timestamp": 125934,
+          "class": "wStrong",
+          "value": "life "
+        },
+        {
+          "timestamp": 126341,
+          "class": "",
+          "value": "full "
+        },
+        {
+          "timestamp": 126540,
+          "class": "",
+          "value": "of "
+        },
+        {
+          "timestamp": 126767,
+          "class": "wStrong",
+          "value": "toil "
+        },
+        {
+          "timestamp": 127193,
+          "class": "",
+          "value": "and "
+        },
+        {
+          "timestamp": 127604,
+          "class": "wStrong",
+          "value": "strife"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 128045,
+          "class": "",
+          "value": "we "
+        },
+        {
+          "timestamp": 128455,
+          "class": "",
+          "value": "whale"
+        },
+        {
+          "timestamp": 128878,
+          "class": "",
+          "value": "men "
+        },
+        {
+          "timestamp": 129307,
+          "class": "",
+          "value": "un"
+        },
+        {
+          "timestamp": 129715,
+          "class": "",
+          "value": "der"
+        },
+        {
+          "timestamp": 130162,
+          "class": "wWaned",
+          "value": "go"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 131412,
+          "class": "",
+          "value": "And "
+        },
+        {
+          "timestamp": 131617,
+          "class": "",
+          "value": "we "
+        },
+        {
+          "timestamp": 131831,
+          "class": "",
+          "value": "don't "
+        },
+        {
+          "timestamp": 132236,
+          "class": "",
+          "value": "give "
+        },
+        {
+          "timestamp": 132453,
+          "class": "",
+          "value": "a "
+        },
+        {
+          "timestamp": 132665,
+          "class": "wStrong",
+          "value": "damn"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 133106,
+          "class": "",
+          "value": "when "
+        },
+        {
+          "timestamp": 133283,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 133519,
+          "class": "",
+          "value": "gails "
+        },
+        {
+          "timestamp": 133942,
+          "class": "",
+          "value": "have "
+        },
+        {
+          "timestamp": 134377,
+          "class": "",
+          "value": "stoped"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 134815,
+          "class": "",
+          "value": "how "
+        },
+        {
+          "timestamp": 135238,
+          "class": "",
+          "value": "hard "
+        },
+        {
+          "timestamp": 135667,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 136102,
+          "class": "",
+          "value": "wind "
+        },
+        {
+          "timestamp": 136525,
+          "class": "",
+          "value": "did "
+        },
+        {
+          "timestamp": 136947,
+          "class": "wWaned",
+          "value": "blow"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": []
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 138173,
+          "class": "",
+          "value": "We "
+        },
+        {
+          "timestamp": 138357,
+          "class": "",
+          "value": "are "
+        },
+        {
+          "timestamp": 138581,
+          "class": "",
+          "value": "home"
+        },
+        {
+          "timestamp": 139021,
+          "class": "",
+          "value": "ward "
+        },
+        {
+          "timestamp": 139450,
+          "class": "",
+          "value": "bound, "
+        },
+        {
+          "timestamp": 139882,
+          "class": "",
+          "value": "'tis "
+        },
+        {
+          "timestamp": 140063,
+          "class": "",
+          "value": "a "
+        },
+        {
+          "timestamp": 140293,
+          "class": "",
+          "value": "glo"
+        },
+        {
+          "timestamp": 140728,
+          "class": "",
+          "value": "rious "
+        },
+        {
+          "timestamp": 141123,
+          "class": "wWaned",
+          "value": "sound"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 141546,
+          "class": "",
+          "value": "on "
+        },
+        {
+          "timestamp": 141727,
+          "class": "",
+          "value": "a "
+        },
+        {
+          "timestamp": 141904,
+          "class": "",
+          "value": "good "
+        },
+        {
+          "timestamp": 142358,
+          "class": "",
+          "value": "ship, "
+        },
+        {
+          "timestamp": 142805,
+          "class": "wWaxed",
+          "value": "taut "
+        },
+        {
+          "timestamp": 143209,
+          "class": "",
+          "value": "and "
+        },
+        {
+          "timestamp": 143658,
+          "class": "wWaned",
+          "value": "free"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 144934,
+          "class": "",
+          "value": "and "
+        },
+        {
+          "timestamp": 145136,
+          "class": "",
+          "value": "we'll "
+        },
+        {
+          "timestamp": 145333,
+          "class": "",
+          "value": "think "
+        },
+        {
+          "timestamp": 145772,
+          "class": "",
+          "value": "of "
+        },
+        {
+          "timestamp": 146184,
+          "class": "wStrong",
+          "value": "that "
+        },
+        {
+          "timestamp": 146628,
+          "class": "",
+          "value": "as "
+        },
+        {
+          "timestamp": 146800,
+          "class": "",
+          "value": "we "
+        },
+        {
+          "timestamp": 147011,
+          "class": "wStrong",
+          "value": "drink "
+        },
+        {
+          "timestamp": 147434,
+          "class": "",
+          "value": "and "
+        },
+        {
+          "timestamp": 147860,
+          "class": "wStrong wChat",
+          "value": "chat"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 148286,
+          "class": "",
+          "value": "with "
+        },
+        {
+          "timestamp": 148469,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 148672,
+          "class": "",
+          "value": "girls "
+        },
+        {
+          "timestamp": 149131,
+          "class": "",
+          "value": "of "
+        },
+        {
+          "timestamp": 149551,
+          "class": "",
+          "value": "Old "
+        },
+        {
+          "timestamp": 149974,
+          "class": "",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 150412,
+          "class": "",
+          "value": "ui"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": []
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 151245,
+          "class": "wRoll",
+          "value": "Roll"
+        },
+        {
+          "timestamp": 151705,
+          "class": "wRoll",
+          "value": "ing "
+        },
+        {
+          "timestamp": 152124,
+          "class": "wRoll",
+          "value": "down "
+        },
+        {
+          "timestamp": 152743,
+          "class": "wRoll",
+          "value": "to "
+        },
+        {
+          "timestamp": 152936,
+          "class": "wOld",
+          "value": "Old "
+        },
+        {
+          "timestamp": 153387,
+          "class": "wMa",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 153822,
+          "class": "wUi",
+          "value": "ui, "
+        },
+        {
+          "timestamp": 154443,
+          "class": "wMe",
+          "value": "me "
+        },
+        {
+          "timestamp": 154627,
+          "class": "wBoys",
+          "value": "boys"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 155099,
+          "class": "wRoll",
+          "value": "Roll"
+        },
+        {
+          "timestamp": 155264,
+          "class": "wRoll",
+          "value": "ing "
+        },
+        {
+          "timestamp": 155477,
+          "class": "wRoll",
+          "value": "down "
+        },
+        {
+          "timestamp": 156104,
+          "class": "wRoll",
+          "value": "to "
+        },
+        {
+          "timestamp": 156297,
+          "class": "wOld",
+          "value": "Old "
+        },
+        {
+          "timestamp": 156747,
+          "class": "wMa",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 157198,
+          "class": "wUi",
+          "value": "ui"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 158426,
+          "class": "",
+          "value": "For "
+        },
+        {
+          "timestamp": 158849,
+          "class": "",
+          "value": "now "
+        },
+        {
+          "timestamp": 159278,
+          "class": "",
+          "value": "we're "
+        },
+        {
+          "timestamp": 159704,
+          "class": "wStrong",
+          "value": "bound "
+        },
+        {
+          "timestamp": 160148,
+          "class": "",
+          "value": "from "
+        },
+        {
+          "timestamp": 160344,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 160534,
+          "class": "wBlue",
+          "value": "arc"
+        },
+        {
+          "timestamp": 160963,
+          "class": "wBlue",
+          "value": "tic "
+        },
+        {
+          "timestamp": 161389,
+          "class": "wStrong",
+          "value": "ground"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 161790,
+          "class": "wRoll",
+          "value": "roll"
+        },
+        {
+          "timestamp": 161996,
+          "class": "wRoll",
+          "value": "ing "
+        },
+        {
+          "timestamp": 162222,
+          "class": "wRoll",
+          "value": "down "
+        },
+        {
+          "timestamp": 162649,
+          "class": "wRoll",
+          "value": "to "
+        },
+        {
+          "timestamp": 163080,
+          "class": "wOld",
+          "value": "Old "
+        },
+        {
+          "timestamp": 163496,
+          "class": "wMa",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 163944,
+          "class": "wUi",
+          "value": "ui"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": []
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 164798,
+          "class": "wRoll",
+          "value": "Roll"
+        },
+        {
+          "timestamp": 165227,
+          "class": "wRoll",
+          "value": "ing "
+        },
+        {
+          "timestamp": 165619,
+          "class": "wRoll",
+          "value": "down "
+        },
+        {
+          "timestamp": 166266,
+          "class": "wRoll",
+          "value": "to "
+        },
+        {
+          "timestamp": 166453,
+          "class": "wOld",
+          "value": "Old "
+        },
+        {
+          "timestamp": 166915,
+          "class": "wMa",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 167341,
+          "class": "wUi",
+          "value": "ui, "
+        },
+        {
+          "timestamp": 167948,
+          "class": "wMe",
+          "value": "me "
+        },
+        {
+          "timestamp": 168150,
+          "class": "wBoys",
+          "value": "boys"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 168591,
+          "class": "wRoll",
+          "value": "Roll"
+        },
+        {
+          "timestamp": 168760,
+          "class": "wRoll",
+          "value": "ing "
+        },
+        {
+          "timestamp": 168992,
+          "class": "wRoll",
+          "value": "down "
+        },
+        {
+          "timestamp": 169651,
+          "class": "wRoll",
+          "value": "to "
+        },
+        {
+          "timestamp": 169835,
+          "class": "wOld",
+          "value": "Old "
+        },
+        {
+          "timestamp": 170267,
+          "class": "wMa",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 170711,
+          "class": "wUi",
+          "value": "ui"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 171927,
+          "class": "",
+          "value": "For "
+        },
+        {
+          "timestamp": 172368,
+          "class": "",
+          "value": "now "
+        },
+        {
+          "timestamp": 172791,
+          "class": "",
+          "value": "we're "
+        },
+        {
+          "timestamp": 173214,
+          "class": "wStrong",
+          "value": "bound "
+        },
+        {
+          "timestamp": 173652,
+          "class": "",
+          "value": "from "
+        },
+        {
+          "timestamp": 173851,
+          "class": "",
+          "value": "the "
+        },
+        {
+          "timestamp": 174057,
+          "class": "wBlue",
+          "value": "arc"
+        },
+        {
+          "timestamp": 174495,
+          "class": "wBlue",
+          "value": "tic "
+        },
+        {
+          "timestamp": 174902,
+          "class": "wStrong",
+          "value": "ground"
+        }
+      ]
+    },
+    {
+      "class": "",
+      "words": [
+        {
+          "timestamp": 175331,
+          "class": "wRoll",
+          "value": "roll"
+        },
+        {
+          "timestamp": 175527,
+          "class": "wRoll",
+          "value": "ing "
+        },
+        {
+          "timestamp": 175754,
+          "class": "wRoll",
+          "value": "down "
+        },
+        {
+          "timestamp": 176201,
+          "class": "wRoll",
+          "value": "to "
+        },
+        {
+          "timestamp": 176648,
+          "class": "wOld",
+          "value": "Old "
+        },
+        {
+          "timestamp": 177074,
+          "class": "wMa",
+          "value": "Ma"
+        },
+        {
+          "timestamp": 177503,
+          "class": "wUi",
+          "value": "ui"
+        },
+        {
+          "timestamp": 178503,
+          "value": ""
+        }
+      ]
+    }
+  ]
 }

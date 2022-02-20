@@ -11,12 +11,12 @@ import mozart from './samples/mozart.js'
 import oldMaui from './samples/oldMaui.js'
 
 const availableLyrics = [
+  oldMaui,
   aroundTheBend,
   beethoven,
   doTheDance,
   letItGo,
   mozart,
-  oldMaui,
 ]
 
 const lyrics = ref(availableLyrics[0])
@@ -66,6 +66,15 @@ function onWordEnter(word) {
   // Old maui extras
   .wBoys::after {
     content: "!";
+  }
+
+  .wChat {
+    &::before {
+      content: '"';
+    }
+    &::after {
+      content: '"';
+    }
   }
 }
 </style>
