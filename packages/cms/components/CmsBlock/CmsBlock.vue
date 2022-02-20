@@ -1,9 +1,9 @@
 <script>
-import { h, ref, watch, defineAsyncComponent, Transition } from 'vue'
+import { h, ref, watch, defineAsyncComponent, Transition, inject } from 'vue'
 
 import { blocks } from '../../singleton'
 import { VM } from '@/packages/vm'
-import { getProperty, setProperty } from '../../functions'
+import { getProperty, setProperty, getCssObjectAttributes } from '../../functions'
 
 export default {
   props: {
@@ -23,6 +23,15 @@ export default {
   setup(props) {
     const blockVM = new VM()
     const parsedBlocks = ref([])
+
+    // provided story methods
+    const injectedStory = inject('$_cms_story', null)
+    if (injectedStory) {
+      blockVM.defineFunctions({
+        'Story.goTo': injectedStory.goTo,
+        'Story.goBack': injectedStory.goBack,
+      })
+    }
 
     watch(
       props,
@@ -160,6 +169,20 @@ async function getBlockPropsAndSlots(block, modelValue, vm) {
         vm.onModelSet = (varname, newValue) => setProperty(modelValue, varname, newValue)
         vm.eval(listeners[eventName], { ...modelValue, $event }).then(() => vm.onModelSet = initial)
       }
+    }
+  }
+
+  // block "css" propery
+  if (block?.css && typeof block.css === 'object') {
+    const evaldCss = await vm.eval(block.css, modelValue)
+    const cssProps = getCssObjectAttributes(evaldCss)
+
+    if (cssProps.class) {
+      blockProps.class = blockProps?.class ? [blockProps.class, ...cssProps.class] : cssProps.class
+    }
+
+    if (cssProps.style) {
+      blockProps.style = blockProps?.style ? cssProps.style + blockProps.style : cssProps.style
     }
   }
 

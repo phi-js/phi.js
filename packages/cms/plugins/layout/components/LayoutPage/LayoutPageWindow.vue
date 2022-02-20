@@ -1,7 +1,8 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { UiWindow, UiTabs, UiItem, UiTab, UiTree, UiIcon } from '@/packages/ui/components'
+import { UiWindow, UiTabs, UiTab, UiItem } from '@/packages/ui/components'
 import { VmStatement } from '@/packages/vm/components'
+import BlockCssEditor from '../../../../components/CmsBlockEditor/BlockCssEditor.vue'
 
 const props = defineProps({
   block: {
@@ -9,14 +10,14 @@ const props = defineProps({
     required: true,
   },
 
-  open: {
-    type: Boolean,
+  currentTab: {
+    type: [String, Boolean],
     required: false,
-    default: false,
-  },
+    default: null
+  }
 })
 
-const emit = defineEmits(['update:block', 'update:open', 'accept', 'cancel'])
+const emit = defineEmits(['update:block', 'accept', 'cancel', 'update:currentTab'])
 
 const innerBlock = ref(null)
 watch(
@@ -39,82 +40,60 @@ function cancel() {
   return true
 }
 
+const currentTab = ref()
+watch(
+  () => props.currentTab,
+  (newTabValue) => currentTab.value = newTabValue === true ? 'actions' : newTabValue,
+  { immediate: true }
+)
 </script>
 
 <template>
   <UiWindow
-    :open="props.open"
+    :open="!!props.currentTab"
     class="LayoutPageWindow"
-    name="page-settings"
-    @update:open="emit('update:open', $event)"
+    name="phi"
+    @update:open="emit('update:currentTab', null)"
   >
-    <UiTabs>
-      <UiTab
-        text="Startup"
-        icon="mdi:cog"
-      >
-        <VmStatement
-          v-model="innerBlock.setup"
-          :default="{chain:[]}"
-          @update:modelValue="emit('update:block', innerBlock)"
-        />
-      </UiTab>
+    <template #header>
+      <UiItem
+        icon="mdi:pound"
+        :text="innerBlock?.info?.text || 'Page settings'"
+        class="ui--noselect"
+      />
+    </template>
 
-      <UiTab
-        text="Layers"
-        icon="mdi:layers"
-      >
-        <UiTree
-          :value="innerBlock.slot"
-          children-prop="slot"
-          class="StoryTree"
-          :initial-open="() => true"
-        >
-          <template #default="{item, isOpen, children, toggle}">
-            <UiItem
-              icon="mdi:package-variant"
-              :text="item.component"
-              class="ui--clickable ui--noselect"
-              @click="toggle"
-            >
-              <template
-                v-if="children?.length"
-                #actions
-              >
-                <UiIcon :src="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'" />
-              </template>
-            </UiItem>
-          </template>
-        </UiTree>
-      </UiTab>
+    <template #default>
+      <UiTabs v-model="currentTab" @update:modelValue="emit('update:currentTab', $event)">
+        <UiTab text="Actions" icon="mdi:state-machine" value="actions">
+          <VmStatement
+            v-model="innerBlock.setup"
+            :default="{ chain: [] }"
+            @update:modelValue="emit('update:block', innerBlock)"
+          />
+        </UiTab>
 
-      <UiTab
-        text="Source"
-        icon="mdi:code-json"
-      >
-        <VmStatement
-          v-model="innerBlock"
-          style="height:100%"
-          @update:modelValue="emit('update:block', innerBlock)"
-        />
-      </UiTab>
-    </UiTabs>
+        <UiTab text="Style" icon="mdi:palette-advanced" value="style">
+          <BlockCssEditor
+            v-model="innerBlock"
+            @update:modelValue="emit('update:block', innerBlock)"
+            style="margin: 0 var(--ui-breathe)"
+          />
+        </UiTab>
+
+        <UiTab text="Source" icon="mdi:code-json" value="source">
+          <VmStatement
+            v-model="innerBlock"
+            style="height:100%"
+            @update:modelValue="emit('update:block', innerBlock)"
+          />
+        </UiTab>
+      </UiTabs>
+    </template>
 
     <template #footer="{ close }">
-      <button
-        type="button"
-        class="ui-button --main"
-        @click="accept() && close()"
-      >
-        Aceptar
-      </button>
-      <button
-        type="button"
-        class="ui-button --cancel"
-        @click="cancel() && close()"
-      >
-        Cancelar
-      </button>
+      <button type="button" class="ui-button --main" @click="accept() && close()">Aceptar</button>
+      <button type="button" class="ui-button --cancel" @click="cancel() && close()">Cancelar</button>
     </template>
   </UiWindow>
 </template>

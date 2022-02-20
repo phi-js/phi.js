@@ -1,6 +1,12 @@
+<script>
+export default { inheritAttrs: false }
+</script>
+
 <script setup>
-import { computed } from 'vue'
+import { useAttrs, computed } from 'vue'
 import { UiItem, UiInput } from '@/packages/ui/components'
+
+const attrs = useAttrs()
 
 const props = defineProps({
   modelValue: {
@@ -21,6 +27,8 @@ const isSelect = computed(() => props.modelValue?.type && props.modelValue.type.
 <template>
   <div
     class="InputFace"
+    :class="attrs?.class"
+    :style="attrs?.style"
     @click="openAction('InputSettings')"
   >
     <template v-if="isSelect">
@@ -47,7 +55,6 @@ const isSelect = computed(() => props.modelValue?.type && props.modelValue.type.
 <style lang="scss">
 .InputFace {
   cursor: pointer;
-  padding: var(--ui-breathe);
 
   &:hover {
     background-color: rgba(0,0,0, 0.05);

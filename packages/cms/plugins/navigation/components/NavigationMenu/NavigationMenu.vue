@@ -44,9 +44,10 @@ const props = defineProps({
     display: block;
 
     padding: var(--ui-padding);
+    margin: var(--ui-breathe);
     border-radius: var(--ui-radius);
     font-family: var(--ui-font-secondary);
-    margin: var(--ui-breathe);
+    color: inherit;
 
     &--important {
       color: #fff !important;

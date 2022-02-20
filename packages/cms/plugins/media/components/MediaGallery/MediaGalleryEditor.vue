@@ -46,7 +46,7 @@
         <div class="image-title-wrapper">
           <input
             v-model="innerValue.files[i].title"
-            class="ui-native"
+            class="ui__input"
             type="text"
             @input="emitInput"
           >

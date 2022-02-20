@@ -1,6 +1,40 @@
+/*
+https://www.squarespace.com/templates
+
+Array.from(document.querySelectorAll('.TemplateThumbnail-AspectRatio-Xolhs img')).map(img => img.src).forEach(src => document.write(src + '<br>'))
+
+https://static1.squarespace.com/static/images/5dd2c5c0ce90f5420a82e1f2?format=1000w
+https://static1.squarespace.com/static/images/5dce9ecb4ae4182acc76c841?format=1000w
+https://static1.squarespace.com/static/images/5dce9e719c39bf265866e6a0?format=1000w
+https://static1.squarespace.com/static/images/5dcdaf58bd95e63be015ec26?format=1000w
+https://static1.squarespace.com/static/images/5dd2a8bc2ed49f029ebca185?format=1000w
+https://static1.squarespace.com/static/images/5dcdabeb58ca2746afd71f36?format=1000w
+https://static1.squarespace.com/static/images/5dce9e1fd7c37454bcbea40c?format=1000w
+https://static1.squarespace.com/static/images/5dce9f131a9b990037c4143d?format=1000w
+https://static1.squarespace.com/static/images/5dd2ab32649b54696546a9b0?format=1000w
+https://static1.squarespace.com/static/images/5dcdb235bd95e63be016297f?format=1000w
+https://static1.squarespace.com/static/images/5dce9f4d2288341b18da0acf?format=1000w
+https://static1.squarespace.com/static/images/5dcda2f45642dc01219e676e?format=1000w
+https://static1.squarespace.com/static/images/5dce9c42ded6bc4dbf7f534f?format=1000w
+https://static1.squarespace.com/static/images/5dce9b77be6b8f27bb365451?format=1000w
+https://static1.squarespace.com/static/images/5dcee431f4a43b2d8c504ea7?format=1000w
+https://static1.squarespace.com/static/images/5dce99f81a9b990037c3dcd5?format=1000w
+https://static1.squarespace.com/static/images/5dce9bca4a2f6b4b1c4b4c5a?format=1000w
+https://static1.squarespace.com/static/images/5dce9a7a4a2f6b4b1c4b3e27?format=1000w
+https://static1.squarespace.com/static/images/5dce99598faea2040d33a697?format=1000w
+https://static1.squarespace.com/static/images/5dce9d940b827213edfeab81?format=1000w
+https://static1.squarespace.com/static/images/5dd2db3ff8402f09886c6d07?format=1000w
+https://static1.squarespace.com/static/images/5dcee49ce0772e173c40d0f8?format=1000w
+https://static1.squarespace.com/static/images/5dce9b2e1a9b990037c3e7ce?format=1000w
+https://static1.squarespace.com/static/images/5dce9f7f2288341b18da0d47?format=1000w
+https://static1.squarespace.com/static/images/5dcdbfd0c2627411a293bdf1?format=1000w
+https://static1.squarespace.com/static/images/5dd2db1ddb8269618be4872d?format=1000w
+*/
+
 export const theme1 = {
   id: 'theme1',
   text: 'Tema 1',
+  thumbnail: 'https://static1.squarespace.com/static/images/5dd2c5c0ce90f5420a82e1f2?format=500w',
   css: `
     .LayoutPage {
       border-radius: var(--ui-radius);
@@ -128,6 +162,7 @@ export const theme1 = {
 export const theme2 = {
   id: 'theme2',
   text: 'Tema 2',
+  thumbnail: 'https://static1.squarespace.com/static/images/5dce9ecb4ae4182acc76c841?format=500w',
   css: `.LayoutPage {
   border-radius: 30px;
   border: 2px solid orange;
@@ -147,6 +182,7 @@ export const theme2 = {
 export const theme3 = {
   id: 'theme3',
   text: 'Tema 3',
+  thumbnail: 'https://static1.squarespace.com/static/images/5dce9e719c39bf265866e6a0?format=500w',
   css: `.LayoutPage {
   --ui-content-width: 70%;
   --ui-color-primary: blue;
@@ -160,4 +196,10 @@ export const theme3 = {
   margin: 1em 0;
 }
 `,
+}
+
+export const theme4 = {
+  id: 'theme4',
+  text: 'Tema 4',
+  thumbnail: 'https://static1.squarespace.com/static/images/5dcdaf58bd95e63be015ec26?format=500w',
 }

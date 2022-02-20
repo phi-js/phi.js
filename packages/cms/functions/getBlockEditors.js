@@ -28,7 +28,7 @@ import { UiForm, UiInputJson } from '@/packages/ui/components'
 import BlockListenersEditor from '../components/CmsBlockEditor/BlockListenersEditor.vue'
 import BlockModelsEditor from '../components/CmsBlockEditor/BlockModelsEditor.vue'
 import BlockVisibilityEditor from '../components/CmsBlockEditor/BlockVisibilityEditor.vue'
-import BlockStyleEditor from '../components/CmsBlockEditor/BlockStyleEditor.vue'
+import BlockCssEditor from '../components/CmsBlockEditor/BlockCssEditor.vue'
 import { parse } from '../../vm/lib/utils'
 
 export default async function getBlockEditors(block, $settings = {}) {
@@ -103,15 +103,14 @@ export default async function getBlockEditors(block, $settings = {}) {
   // BUILT IN ACTIONS:
   // Shown in the block options dropdown in the order declared here
 
-  // Block Style (block class and style props)
+  // Block CSS property
   retval.actions.push({
-    'id': 'style',
+    'id': 'css',
     'title': 'Style',
-    'icon': 'mdi:palette',
-    'component': BlockStyleEditor,
+    'icon': 'mdi:palette-advanced',
+    'component': BlockCssEditor,
     'v-model': 'block',
   })
-
 
   // Visibility: v-if
   retval.actions.push({

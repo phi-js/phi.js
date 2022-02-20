@@ -114,15 +114,6 @@ const multipleOptions = [
       />
     </div>
 
-    <fieldset v-if="isSelect">
-      <legend>Options</legend>
-
-      <OptionsEditor
-        v-model="block.props.options"
-        @update:modelValue="input"
-      />
-    </fieldset>
-
     <fieldset>
       <legend>Display</legend>
 
@@ -148,13 +139,22 @@ const multipleOptions = [
       />
     </fieldset>
 
+    <fieldset v-if="isSelect">
+      <legend>Options</legend>
+
+      <OptionsEditor
+        v-model="block.props.options"
+        @update:modelValue="input"
+      />
+    </fieldset>
+
     <UiInput
       v-if="block.props.type == 'date' || block.props.type == 'timestamp'"
       label="Selector de hora"
     >
       <select
         v-model="block.props.time"
-        class="ui-native"
+        class="ui__input"
         @change="input"
       >
         <option :value="undefined">

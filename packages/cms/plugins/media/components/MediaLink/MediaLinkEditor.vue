@@ -13,25 +13,25 @@
       <input
         v-model="innerValue.href"
         type="text"
-        class="ui-native"
+        class="ui__input"
         placeholder="http://..."
       >
       <input
         v-model="innerValue.text"
         type="text"
-        class="ui-native"
+        class="ui__input"
         placeholder="Titulo"
       >
       <input
         v-model="innerValue.secondary"
         type="text"
-        class="ui-native"
+        class="ui__input"
         placeholder="Descripcion"
       >
 
       <select
         v-model="innerValue.target"
-        class="ui-native"
+        class="ui__input"
       >
         <option>Destino</option>
         <option value="_system">

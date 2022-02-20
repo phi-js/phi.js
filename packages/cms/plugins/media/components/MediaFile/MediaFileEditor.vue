@@ -9,7 +9,7 @@
         value="mdi:pencil media-file-icon"
         class="ui--clickable"
         @click="isEditing = true"
-      ></UiIcon>
+      />
     </div>
 
     <div
@@ -17,37 +17,41 @@
       class="file-editor-form"
     >
       <input
-        type="text"
-        class="ui-native"
-        placeholder="Titulo"
         v-model="innerValue.text"
-      />
-      <input
         type="text"
-        class="ui-native"
-        placeholder="Descripción"
+        class="ui__input"
+        placeholder="Titulo"
+      >
+      <input
         v-model="innerValue.secondary"
-      />
+        type="text"
+        class="ui__input"
+        placeholder="Descripción"
+      >
 
       <div class="file-editor-form-footer">
         <button
           type="button"
           class="ui-button --main"
           @click="accept"
-        >OK</button>
+        >
+          OK
+        </button>
         <button
           type="button"
           class="ui-button --cancel"
           @click="cancel"
-        >Cancelar</button>
+        >
+          Cancelar
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import MediaFile from './MediaFile.vue';
-import { UiIcon } from '../../../../../ui';
+import MediaFile from './MediaFile.vue'
+import { UiIcon } from '../../../../../ui'
 
 export default {
   name: 'MediaFileEditor',
@@ -63,17 +67,7 @@ export default {
     return {
       innerValue: null,
       isEditing: false,
-    };
-  },
-
-  watch: {
-    value: {
-      immediate: true,
-      handler(newValue) {
-        this.innerValue = JSON.parse(JSON.stringify(newValue));
-        this.isEditing = this.isEmpty;
-      },
-    },
+    }
   },
 
   computed: {
@@ -82,7 +76,7 @@ export default {
         !this.innerValue.href &&
         !this.innerValue.text &&
         !this.innerValue.secondary
-      );
+      )
     },
 
     sanitizedValue() {
@@ -91,26 +85,36 @@ export default {
         text: this.innerValue.text || 'Sin título',
         secondary: this.innerValue.secondary,
         icon: this.innerValue.icon || 'mdi:file',
-      };
+      }
+    },
+  },
+
+  watch: {
+    value: {
+      immediate: true,
+      handler(newValue) {
+        this.innerValue = JSON.parse(JSON.stringify(newValue))
+        this.isEditing = this.isEmpty
+      },
     },
   },
 
   methods: {
     accept() {
-      this.$emit('input', JSON.parse(JSON.stringify(this.innerValue)));
-      this.isEditing = false;
+      this.$emit('input', JSON.parse(JSON.stringify(this.innerValue)))
+      this.isEditing = false
     },
 
     cancel() {
-      this.innerValue = JSON.parse(JSON.stringify(this.value));
-      this.isEditing = false;
+      this.innerValue = JSON.parse(JSON.stringify(this.value))
+      this.isEditing = false
 
       if (this.isEmpty) {
-        this.$emit('delete');
+        this.$emit('delete')
       }
     },
   },
-};
+}
 </script>
 
 <style lang="scss">

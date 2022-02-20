@@ -70,6 +70,7 @@ Theme definition:
   ]
 }
 */
+import allClasses from '../style/classes/index.js'
 
 export default function applyTheme(theme, sheetId) {
   var sheetEl = document.getElementById(sheetId)
@@ -83,21 +84,25 @@ export default function applyTheme(theme, sheetId) {
 }
 
 function getCSS(theme) {
-  if (!theme?.css) {
-    return ''
-  }
+  let output = theme?.css ? theme.css + '\n' : ''
 
-  let output = theme.css ? theme.css + '\n' : ''
+  allClasses.forEach((themeClass) => {
+    output += getClassCSS(themeClass)
+  })
 
   if (theme?.classes?.length) {
     theme.classes.forEach((themeClass) => {
-      output += themeClass.css + '\n'
-
-      if (themeClass.variations?.length) {
-        themeClass.variations.forEach((variation) => output += variation.css + '\n')
-      }
+      output += getClassCSS(themeClass)
     })
   }
 
+  return output
+}
+
+function getClassCSS(objClass) {
+  let output = objClass?.css + '\n'
+  if (objClass?.variations?.length) {
+    objClass.variations.forEach((variation) => output += variation.css + '\n')
+  }
   return output
 }

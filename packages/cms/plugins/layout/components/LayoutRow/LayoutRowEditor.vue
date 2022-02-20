@@ -179,12 +179,13 @@ function isLeftGhostVisible(colIndex) {
       </template>
     </template>
 
-    <template #default="{ innerBlock }">
+    <template #default="{ blockCssAttributes }">
       <div
         ref="$el"
+        v-bind="blockCssAttributes"
         class="LayoutRowEditor__body LayoutRow"
-        :class="[{'LayoutRowEditor--dragging': isDragging}, innerBlock?.props?.class]"
-        :style="{alignItems: props.block?.props?.alignItems, ...innerBlock?.props?.style}"
+        :class="{'LayoutRowEditor--dragging': isDragging}"
+        :style="{alignItems: props.block?.props?.alignItems}"
         @mousemove="onResizerMove($event)"
         @mouseup="onResizerEnd($event)"
         @touchmove="onResizerMove($event)"

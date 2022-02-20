@@ -2,7 +2,7 @@
 // Base story styles
 import '../../style/base.scss'
 
-import { ref, computed, watch, watchEffect } from 'vue'
+import { ref, computed, watch, watchEffect, provide } from 'vue'
 import CmsBlock from '../CmsBlock/CmsBlock.vue'
 import { VM } from '@/packages/vm'
 import { sanitizeStory, applyTheme } from '../../functions'
@@ -21,7 +21,7 @@ const props = defineProps({
   },
 
   currentPageId: {
-    type: String,
+    type: [String, Number],
     required: false,
     default: null,
   },
@@ -49,6 +49,46 @@ watchEffect(() => {
 
 // Handle <link> containing story's CSS
 watchEffect(() => applyTheme(sanitizedStory.value.theme, sanitizedStory.value.id))
+
+
+// Story navigation
+const navigationHistory = ref([]) // array of page IDs
+
+watch(
+  () => props.currentPageId,
+  (newPageId) => {
+    navigationHistory.value.push(newPageId)
+  },
+  { immediate: true },
+)
+
+function goTo(pageId) {
+  const foundPage = sanitizedStory.value.pages.find((page) => page.id == pageId)
+  if (!foundPage) {
+    console.warn(`CmsStory.goTo: page '${pageId}' not found`)
+    return
+  }
+
+  currentPage.value = foundPage
+  emit('update:currentPageId', pageId)
+}
+
+function goBack() {
+  navigationHistory.value.pop() // remove THIS page from history
+  const lastPageId = navigationHistory.value.pop()
+  if (!lastPageId) {
+    console.warn('CmsStory.goBack: Already at start')
+    return
+  }
+
+  goTo(lastPageId)
+}
+
+// Provide global story methods (used by CmsBlock)
+provide('$_cms_story', {
+  goTo,
+  goBack
+})
 
 /*
 const curIndex = ref(0)

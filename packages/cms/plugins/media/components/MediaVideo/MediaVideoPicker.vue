@@ -15,7 +15,7 @@
         class="MediaVideoPicker__form"
       >
         <input
-          class="ui-native"
+          class="ui__input"
           type="text"
           :value="modelValue"
           placeholder="URL (YouTube o Vimeo)"

@@ -1,3 +1,7 @@
+<script>
+export default { inheritAttrs: false }
+</script>
+
 <script setup>
 import { computed, nextTick } from 'vue'
 import MediaImage from './MediaImage.vue'
@@ -44,7 +48,7 @@ async function toggleHeightAuto(setAuto = true, refresh) {
     >
       <MediaImage
         class="MediaImageEditor__image"
-        v-bind="modelValue"
+        v-bind="{...$attrs, ...modelValue}"
         :height="isDragging ? newBounds.height+'px' : modelValue.height"
       />
 

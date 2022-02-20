@@ -2,7 +2,7 @@
 import { ref, watch, computed, provide } from 'vue'
 import { UiItem } from '@/packages/ui/components'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
-import { getBlockSchema } from '../../../../functions'
+import { getBlockSchema, getCssObjectAttributes } from '../../../../functions'
 
 const props = defineProps({
   block: {
@@ -42,12 +42,15 @@ function onSlotUpdate() {
 
 const blockSchema = computed(() => getBlockSchema(props.block))
 provide('$_vm_modelSchema', blockSchema)
+
+const cssAttributes = computed(() => getCssObjectAttributes(props.block?.css))
+
 </script>
 
 <template>
   <div
     class="LayoutPageEditor"
-    :style="block.props?.style"
+    v-bind="cssAttributes"
   >
     <CmsSlotEditor
       v-model:slot="pageSlot"
