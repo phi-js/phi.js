@@ -1,19 +1,7 @@
 <template>
-  <div
-    class="UiItem"
-    @click="$emit('click', $event)"
-  >
-    <div
-      v-if="badge != null"
-      class="UiItem__badge"
-      v-text="badge"
-    />
-
-    <div
-      v-if="hasSlot('icon')"
-      class="UiItem__icon"
-      @click="$emit('click-icon', $event)"
-    >
+  <div class="UiItem" @click="$emit('click', $event)">
+    <div v-if="badge != null" class="UiItem__badge" v-text="badge" />
+    <div v-if="hasSlot('icon')" class="UiItem__icon" @click="$emit('click-icon', $event)">
       <slot name="icon" />
     </div>
     <UiIcon
@@ -30,21 +18,15 @@
       @click="$emit('click-body', $event)"
     >
       <slot name="default">
-        <h1
-          class="UiItem__text"
-          v-text="text"
-        />
-        <p
-          v-if="subtext"
-          class="UiItem__subtext"
-          v-text="subtext"
-        />
+        <h1 class="UiItem__text" v-text="text" />
+        <p v-if="subtext" class="UiItem__subtext" v-text="subtext" />
       </slot>
     </div>
 
     <div
       v-if="hasSlot('actions')"
       class="UiItem__actions"
+      @click.stop="$emit('click-actions', $event)"
     >
       <slot name="actions" />
     </div>
@@ -89,7 +71,7 @@ export default {
       default: null,
     },
   },
-  emits: ['click', 'click-icon', 'click-body'],
+  emits: ['click', 'click-icon', 'click-body', 'click-actions'],
 
   methods: {
     hasSlot(slotName) {
@@ -101,10 +83,9 @@ export default {
 
 <style lang="scss">
 .UiItem {
-  position: relative;  // para posicionar el badge
+  position: relative; // para posicionar el badge
   display: flex;
   align-items: stretch;
-  padding: var(--ui-padding);
 
   &__badge {
     background-color: var(--ui-color-danger);
@@ -127,14 +108,13 @@ export default {
   }
 
   &__icon {
-    margin-right: var(--ui-breathe);
+    padding: var(--ui-padding);
     &:last-child {
-      margin-right: 0;
+      padding-right: 0;
     }
   }
 
   &__actions {
-    margin-left: var(--ui-padding-horizontal);
     display: flex;
     align-items: stretch;
   }
@@ -145,6 +125,12 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: var(--ui-padding);
+
+    padding-left: 0;
+    &:first-child {
+      padding-left: var(--ui-padding-horizontal);
+    }
   }
 
   &__text {
