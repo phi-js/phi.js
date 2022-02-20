@@ -1,7 +1,9 @@
 import fetch from './fetch'
-import fxWindow from './window'
+import fnsWindow from './window'
+import fnsStory from '../../../../cms/plugins/navigation/functions/story'
 
 export default {
   fetch,
-  ...fxWindow,
+  ...fnsWindow,
+  ...fnsStory,
 }
