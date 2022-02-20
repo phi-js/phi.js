@@ -1,6 +1,7 @@
 <script setup>
 import { watch, ref, computed } from 'vue'
 import { UiItem } from '@/packages/ui'
+import availableClasses from '../../style/classes/index.js'
 
 const props = defineProps({
   /*
@@ -15,96 +16,20 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-const availableClassess = ref([
-  {
-    class: 'FullHeight',
-    text: 'Altura completa',
-    subtext: 'Ocupar todo el alto de la pantalla',
-    css: '',
-  },
-
-  {
-    class: 'FlexCenter',
-    text: 'Centered flex',
-    subtext: 'Content will be centered horizontally and vertically',
-  },
-
-  {
-    class: 'BlockCard',
-    text: 'Card',
-    subtext: 'Una tarjeta, varia segun el tema',
-    css: '',
-  },
-
-  {
-    class: 'BlockShadow',
-    text: 'Sombra',
-    subtext: 'Ilusión de relieve',
-    css: '',
-
-    variations: [
-      {
-        class: 'BlockShadow--z-1',
-        text: 'Altura 1',
-      },
-      {
-        class: 'BlockShadow--z-2',
-        text: 'Altura 2',
-      },
-      {
-        class: 'BlockShadow--z-3',
-        text: 'Altura 3',
-      },
-      {
-        class: 'BlockShadow--z-4',
-        text: 'Altura 4',
-      },
-    ],
-  },
-
-  {
-    class: 'BlockOpacity',
-    text: 'Opacidad',
-    subtext: 'Nivel de opacidad',
-    css: '',
-
-    variations: [
-      {
-        class: 'BlockOpacity--75',
-        text: '75%',
-      },
-      {
-        class: 'BlockOpacity--50',
-        text: '50%',
-      },
-      {
-        class: 'BlockOpacity--25',
-        text: '25%',
-      },
-    ],
-  },
-
-  {
-    class: 'BlackBox',
-    text: 'Black box',
-    subtext: 'Square with black background and high contrast font',
-  },
-])
-
 const selectedClasses = ref([])
 
-const allClases = computed(() => availableClassess.value.map((objClass) => {
+const allClases = computed(() => availableClasses.map((objClass) => {
   let selectedVariation = ''
   if (objClass.variations?.length) {
-    const foundVariation = objClass.variations.find((variation) => selectedClasses.value.includes(variation.class))
+    const foundVariation = objClass.variations.find((variation) => selectedClasses.value.includes(variation.name))
     if (foundVariation) {
-      selectedVariation = foundVariation.class
+      selectedVariation = foundVariation.name
     }
   }
 
   return {
     ...objClass,
-    isSelected: selectedClasses.value.includes(objClass.class),
+    isSelected: selectedClasses.value.includes(objClass.name),
     selectedVariation,
   }
 }))
@@ -121,23 +46,23 @@ function emitUpdate() {
 
 function selectClass(objClass) {
   if (objClass.isSelected) {
-    removeClass(objClass.class)
+    removeClass(objClass.name)
     if (objClass?.variations?.length) {
-      objClass.variations.forEach((variation) => removeClass(variation.class))
+      objClass.variations.forEach((variation) => removeClass(variation.name))
     }
   } else {
-    addClass(objClass.class)
+    addClass(objClass.name)
     if (objClass?.variations?.length) {
-      addClass(objClass.variations[0].class)
+      addClass(objClass.variations[0].name)
     }
   }
 
   emitUpdate()
 }
 
-function setVariation(objClass, variationClass) {
-  objClass.variations.forEach((variation) => removeClass(variation.class))
-  addClass(variationClass)
+function setVariation(objClass, variationClassName) {
+  objClass.variations.forEach((variation) => removeClass(variation.name))
+  addClass(variationClassName)
   emitUpdate()
 }
 
@@ -158,10 +83,10 @@ function removeClass(className) {
 </script>
 
 <template>
-  <div class="BlockClassPicker">
+  <div class="BlockCssClasses">
     <div
       v-for="objClass in allClases"
-      :key="objClass.class"
+      :key="objClass.name"
       class="BlockClass ui--clickable ui--noselect"
     >
       <UiItem
@@ -177,14 +102,14 @@ function removeClass(className) {
         class="BlockClass__options"
       >
         <select
-          class="ui-native"
+          class="ui__input"
           :value="objClass.selectedVariation"
           @change="setVariation(objClass, $event.target.value)"
         >
           <option
             v-for="variation in objClass.variations"
-            :key="variation.class"
-            :value="variation.class"
+            :key="variation.name"
+            :value="variation.name"
             v-text="variation.text"
           />
         </select>
@@ -194,7 +119,7 @@ function removeClass(className) {
 </template>
 
 <style lang="scss">
-.BlockClassPicker {
+.BlockCssClasses {
   .BlockClass {
     display: flex;
     align-items: flex-start;

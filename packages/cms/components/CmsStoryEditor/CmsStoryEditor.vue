@@ -3,9 +3,9 @@
 import '../../style/base.scss'
 
 // Editor and subcomponents styles
-import '../../style/editor.scss'
+import './style.scss'
 
-import { ref, watch, watchEffect } from 'vue'
+import { ref, watch, watchEffect, provide } from 'vue'
 import { sanitizeStory, applyTheme } from '../../functions'
 import { CmsBlockEditor } from '../CmsBlockEditor'
 import LayoutPageWindow from '../../plugins/layout/components/LayoutPage/LayoutPageWindow.vue'
@@ -24,19 +24,19 @@ const props = defineProps({
   },
 
   currentPageId: {
-    type: String,
+    type: [String, Number],
     required: false,
     default: null,
   },
 
-  isSettingsOpen: {
-    type: [Boolean, Number, String],
+  currentSettingsTab: {
+    type: [Boolean, String],
     required: false,
     default: false,
   },
 })
 
-const emit = defineEmits(['update:story', 'update:currentPageId', 'update:isSettingsOpen'])
+const emit = defineEmits(['update:story', 'update:currentPageId', 'update:currentSettingsTab', 'update:draft'])
 
 // Sanitize incoming story
 const sanitizedStory = ref(null)
@@ -61,6 +61,15 @@ function emitUpdate() {
     pages: sanitizedStory.value.pages.map((page) => page.id == currentPage.value.id ? { ...currentPage.value } : page),
   })
 }
+
+function emitDraft(pageDraft) {
+  emit('update:draft', {
+    ...sanitizedStory.value,
+    pages: sanitizedStory.value.pages.map((page) => page.id == currentPage.value.id ? pageDraft : page),
+  })
+}
+
+provide('$_cms_story_editor', { story: sanitizedStory })
 
 function windowOnCancel() {
   const pages = Array.isArray(props.story?.pages) ? props.story.pages : []
@@ -87,6 +96,7 @@ watchEffect(() => applyTheme(sanitizedStory.value.theme, sanitizedStory.value.id
           class="CmsStoryEditor__page CmsStory__page"
           :settings="settings"
           @update:block="emitUpdate"
+          @update:draft="emitDraft"
         />
       </KeepAlive>
     </Transition>
@@ -94,8 +104,8 @@ watchEffect(() => applyTheme(sanitizedStory.value.theme, sanitizedStory.value.id
     <LayoutPageWindow
       v-if="currentPage"
       v-model:block="currentPage"
-      :open="isSettingsOpen"
-      @update:open="emit('update:isSettingsOpen', $event)"
+      :currentTab="currentSettingsTab"
+      @update:currentTab="emit('update:currentSettingsTab', $event)"
       @accept="emitUpdate"
       @cancel="windowOnCancel"
     />

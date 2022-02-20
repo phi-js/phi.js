@@ -1,6 +1,6 @@
 <script setup>
 import { ref, shallowRef, watch, inject, computed } from 'vue'
-import { getBlockEditors, getBlockDefinition } from '../../functions'
+import { getBlockEditors, getBlockDefinition, getCssObjectAttributes } from '../../functions'
 import EditorAction from './EditorAction.vue'
 import {
   UiInput,
@@ -19,10 +19,11 @@ const props = defineProps({
     required: true,
   },
 })
-const emit = defineEmits(['update:block', 'delete'])
+const emit = defineEmits(['update:block', 'delete', 'update:draft'])
 
 // Internal value manager (innerBlock)
 const innerBlock = ref()
+
 watch(
   () => props.block,
   (newValue) => innerBlock.value = JSON.parse(JSON.stringify(newValue)),
@@ -36,6 +37,7 @@ function accept() {
 
 function cancel() {
   innerBlock.value = JSON.parse(JSON.stringify(props.block))
+  onInnerBlockChange()
   return true
 }
 
@@ -44,6 +46,7 @@ function emitDelete() {
   return true
 }
 
+const blockCssAttributes = computed(() => getCssObjectAttributes(innerBlock.value?.css))
 
 // Available block editors
 const $settings = inject('$_cms_settings', {})
@@ -76,17 +79,18 @@ function openActionId(actionId) {
 }
 
 const isFocused = ref(false)
+
+function onInnerBlockChange() {
+  emit('update:draft', innerBlock.value)
+}
 </script>
 
 <template>
-  <div
-    class="BlockScaffold"
-    :class="{'BlockScaffold--focused': isFocused}"
-  >
+  <div class="BlockScaffold" :class="{ 'BlockScaffold--focused': isFocused }">
     <div class="BlockScaffold__toolbar-container">
       <div class="BlockScaffold__toolbar ui--noselect">
         <UiItem
-          class="Block__drag-handle ui--clickable"
+          class="BlockScaffold__toolbar-title Block__drag-handle ui--clickable"
           icon="mdi:cursor-move"
           :text="definition?.title || ''"
         />
@@ -111,11 +115,11 @@ const isFocused = ref(false)
         />
 
         <UiIcon
-          v-if="innerBlock?.props?.class?.length || innerBlock?.props?.style"
+          v-if="innerBlock?.css"
           title="Block styles"
           class="BlockScaffold__toolbar-icon ui--clickable"
-          src="mdi:palette"
-          @click="openActionId('style')"
+          src="mdi:palette-advanced"
+          @click="openActionId('css')"
         />
 
         <UiIcon
@@ -135,20 +139,13 @@ const isFocused = ref(false)
         />
 
         <!-- dropdown options -->
-        <UiPopover
-          class="BlockPopover"
-          placement="bottom"
-          @update:open="isFocused = $event"
-        >
+        <UiPopover class="BlockPopover" placement="bottom" @update:open="isFocused = $event">
           <template #trigger>
-            <UiIcon
-              class="ui--clickable BlockScaffold__toolbar-icon"
-              src="mdi:dots-vertical"
-            />
+            <UiIcon class="ui--clickable BlockScaffold__toolbar-icon" src="mdi:dots-vertical" />
           </template>
-          <template #contents="{close}">
+          <template #contents="{ close }">
             <UiItem
-              v-for="(action,i) in availableActions"
+              v-for="(action, i) in availableActions"
               :key="i"
               :text="action.title"
               :icon="action.icon"
@@ -168,40 +165,28 @@ const isFocused = ref(false)
     </div>
 
     <div class="BlockScaffold__face">
-      <slot
-        name="default"
-        :innerBlock="innerBlock"
-      >
+      <slot name="default" :innerBlock="innerBlock" :blockCssAttributes="blockCssAttributes">
         <EditorAction
           v-if="editors.face"
           v-model:block="innerBlock"
           :action="editors.face"
-          v-bind="innerBlock?.props"
+          v-bind="{ ...innerBlock?.props, ...blockCssAttributes }"
           tabindex="0"
           :open-action="openActionId"
           @update:block="accept()"
         />
-        <UiInput
-          v-else
-          v-model="innerBlock"
-          type="json"
-          @update:modelValue="accept()"
-        />
+        <UiInput v-else v-model="innerBlock" type="json" @update:modelValue="accept()" />
       </slot>
     </div>
 
     <UiWindow
       v-if="!!availableActions[currentActionIndex]"
-
-      name="block-scaffold"
+      name="phi"
       :open="!!availableActions[currentActionIndex]"
       @update:open="currentActionIndex = null"
     >
       <div class="WindowContents">
-        <UiTabs
-          v-model="currentActionIndex"
-          class="WindowContents__tabs"
-        >
+        <UiTabs v-model="currentActionIndex" class="WindowContents__tabs">
           <UiTab
             v-for="(action, i) in availableActions"
             :key="i"
@@ -215,13 +200,14 @@ const isFocused = ref(false)
               <EditorAction
                 v-model:block="innerBlock"
                 :action="action"
+                @update:block="onInnerBlockChange()"
               />
             </div>
           </UiTab>
         </UiTabs>
       </div>
 
-      <template #footer="{close}">
+      <template #footer="{ close }">
         <button
           type="button"
           class="ui__button ui__button--main"
@@ -289,7 +275,6 @@ const isFocused = ref(false)
     // margin-left: 2em;
   }
 
-
   // Estilos "default":  toolbar posicionado absolutamente encima del bloque
   &--default &__toolbar-container {
     position: absolute;
@@ -345,12 +330,8 @@ const isFocused = ref(false)
     }
 
     .UiItem {
-      .ui-icon {
-        padding: 0;
-
-        &:hover {
-          background-color: transparent;
-        }
+      .ui-icon:hover {
+        background-color: transparent;
       }
     }
 
@@ -368,7 +349,7 @@ const isFocused = ref(false)
       }
     }
 
-    input[type=text].ui__input {
+    input[type="text"].ui__input {
       background-color: rgba(255, 255, 255, 0.1);
       margin: 0 2px;
     }
@@ -385,12 +366,11 @@ const isFocused = ref(false)
   }
 }
 
-
 /* __outline.   Visible unicamente para --default.  */
 .BlockScaffold {
   &--default {
     &::before {
-      content: '';
+      content: "";
       display: block;
       position: absolute;
       top: 0;

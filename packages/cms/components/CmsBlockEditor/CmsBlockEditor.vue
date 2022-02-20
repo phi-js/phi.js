@@ -18,7 +18,7 @@ const CmsBlockEditor = {
     },
   },
 
-  emits: ['update:block', 'delete'],
+  emits: ['update:block', 'delete', 'update:draft'],
 
   setup(props, { emit }) {
     var settings = {}
@@ -46,6 +46,7 @@ const CmsBlockEditor = {
           'class': 'BlockScaffold--default',
           'block': props.block,
           'onUpdate:block': (newValue) => emit('update:block', newValue),
+          'onUpdate:draft': (newValue) => emit('update:draft', newValue),
           'onDelete': () => emit('delete'),
         })
       }
@@ -70,6 +71,7 @@ const CmsBlockEditor = {
             slotCopy.splice(slotIndex, 1)
             emit('update:block', { ...props.block, slot: slotCopy })
           },
+          'onUpdate:draft': (newValue) => emit('update:draft', newValue),
         }))
         : undefined
 
