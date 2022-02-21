@@ -1,8 +1,8 @@
 export default {
-  title: 'Rolling Down to Old Maui (2)',
-  url: 'https://www.youtube.com/watch?v=sPXTm6g0ejg',
+  "title": "Rolling Down to Old Maui",
+  "url": "https://www.youtube.com/watch?v=sPXTm6g0ejg",
 
-  text: `
+  "text": `
 Once more we sail by the north|ern gail
 and boun|ding o|ver the main
 And now the hills of those tro|pic isles
@@ -24,7 +24,7 @@ our spars were bent and our can|vas rent
 as we braved the nor|thern gale
 
 And the ho|rrid isles of ice cut tiles
-that deck the arc|tic Sea
+that deck the arc|tic sea
 now lie ma|ny leages as|tern
 as we sail to Old Ma|ui
 
@@ -50,7 +50,7 @@ roll|ing down to Old Ma|ui
 
 It's a damn tough life full of toil and strife
 we whale|men un|der|go
-And we don't give a damn
+And we don'ts give a damn
 when the gails have stoped
 how hard the wind did blow
 
@@ -70,55 +70,54 @@ For now we're bound from the arc|tic ground
 roll|ing down to Old Ma|ui
 `,
 
-  classes: {
-    wBlue: {
-      color: "cyan"
+  "classes": {
+    "wBlue": {
+      "color": "cyan"
     },
 
-    wStrong: {
-      color: "red",
-      transform: 'scale(1.5)',
+    "wStrong": {
+      "color": "red",
+      "transform": "scale(1.5)"
     },
 
-    wRoll: {
-      // transform: scale(1.1) rotate(360deg); //scale() must be present for rotate() to work  (!)
-      animation: 'roll 0.1s',
-      transform: 'none'
+    "wRoll": {
+      "animation": "roll 0.1s",
+      "transform": "none"
     },
 
-    wWaxed: {
-      transform: 'scale(1.4) rotate(-5deg)',
-      transitionDuration: '0.5s'
+    "wWaxed": {
+      "transform": "scale(1.4) rotate(-5deg)",
+      "transitionDuration": "0.5s"
     },
 
-    wWaned: {
-      transform: 'scale(1.4) rotate(5deg)',
-      transitionDuration: '0.5s'
+    "wWaned": {
+      "transform": "scale(1.4) rotate(5deg)",
+      "transitionDuration": "0.5s"
     },
 
-    wOld: {
-      transform: 'scale(1.4) rotate(-5deg)',
-      color: 'brown'
+    "wOld": {
+      "transform": "scale(1.4) rotate(-5deg)",
+      "color": "brown"
     },
 
-    wMa: {
-      transform: 'scale(1.4) rotate(-15deg)',
-      color: 'red'
+    "wMa": {
+      "transform": "scale(1.4) rotate(-15deg)",
+      "color": "red"
     },
 
-    wUi: {
-      transform: 'scale(1.4) rotate(15deg)',
-      color: 'red'
+    "wUi": {
+      "transform": "scale(1.4) rotate(15deg)",
+      "color": "red"
     },
 
-    wMe: {
-      transform: 'scale(0.7) rotate(-10deg)',
-      color: '#999'
+    "wMe": {
+      "transform": "scale(0.7) rotate(-10deg)",
+      "color": "#999"
     },
 
-    wBoys: {
-      transform: 'scale(0.7) rotate(10deg)',
-      color: '#999'
+    "wBoys": {
+      "transform": "scale(0.7) rotate(10deg)",
+      "color": "#999"
     }
   },
 
@@ -312,12 +311,12 @@ roll|ing down to Old Ma|ui
         },
         {
           "timestamp": 16855,
-          "class": "",
+          "class": "wStrong",
           "value": "hell"
         },
         {
           "timestamp": 17281,
-          "class": "",
+          "class": "wStrong",
           "value": "ish "
         },
         {
@@ -332,7 +331,7 @@ roll|ing down to Old Ma|ui
         },
         {
           "timestamp": 18547,
-          class: 'wWaxed',
+          "class": "wWaxed",
           "value": "waxed "
         },
         {
@@ -342,7 +341,7 @@ roll|ing down to Old Ma|ui
         },
         {
           "timestamp": 19355,
-          class: 'wWaned',
+          "class": "wWaned",
           "value": "waned"
         }
       ]
@@ -854,12 +853,12 @@ roll|ing down to Old Ma|ui
         },
         {
           "timestamp": 57411,
-          "class": "",
+          "class": "wStrong",
           "value": "ho"
         },
         {
           "timestamp": 57840,
-          "class": "",
+          "class": "wStrong",
           "value": "rrid "
         },
         {
@@ -920,7 +919,7 @@ roll|ing down to Old Ma|ui
         {
           "timestamp": 62530,
           "class": "wWaned",
-          "value": "Sea"
+          "value": "sea"
         }
       ]
     },
@@ -1859,8 +1858,8 @@ roll|ing down to Old Ma|ui
         },
         {
           "timestamp": 131831,
-          "class": "",
-          "value": "don't "
+          "class": "wStrong",
+          "value": "don'ts "
         },
         {
           "timestamp": 132236,

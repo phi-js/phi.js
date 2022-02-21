@@ -9,6 +9,7 @@ import doTheDance from './samples/doTheDance.js'
 import letItGo from './samples/letItGo.js'
 import mozart from './samples/mozart.js'
 import oldMaui from './samples/oldMaui.js'
+import haza from './samples/haza.js'
 
 const availableLyrics = [
   oldMaui,
@@ -17,6 +18,7 @@ const availableLyrics = [
   doTheDance,
   letItGo,
   mozart,
+  haza,
 ]
 
 const lyrics = ref(availableLyrics[0])
