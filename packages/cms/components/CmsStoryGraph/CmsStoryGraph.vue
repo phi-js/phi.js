@@ -1,6 +1,8 @@
 <script setup>
-import { ref, watch, nextTick } from 'vue'
-import { UiGraphGrid, UiIcon, UiItem, UiPopover } from '@/packages/ui/components'
+import { ref, watchEffect } from 'vue'
+import { UiGraphGrid, UiItem, UiIcon } from '@/packages/ui/components'
+import GraphNodeItem from './GraphNodeItem.vue'
+import GraphNodeCreator from './GraphNodeCreator.vue'
 
 const props = defineProps({
   story: {
@@ -14,20 +16,34 @@ const props = defineProps({
     default: null,
   },
 })
-const emit = defineEmits(['update:currentPageId', 'createPage', 'createPath'])
+const emit = defineEmits(['update:currentPageId', 'createPage', 'createPath', 'updatePage', 'deletePage'])
 
 const graph = ref({
   nodes: [],
   paths: [],
 })
 
-watch(
-  () => props.story?.pages.map(p => p.id).join(),
+const targetPickerParent = ref()
+
+/*
+Graph nodes are page objects, with only the properties:
+{
+  id: ...,
+  hash: ...,
+  info: {
+    text: ...
+  }
+}
+*/
+watchEffect(
   () => {
     graph.value.nodes = props.story?.pages?.length
       ? props.story.pages.map((p, index) => ({
         id: p.id || index,
-        text: p.info?.text || `Page ${index}`
+        hash: p.hash || p.id || index,
+        info: {
+          text: p.info?.text || p.hash || p.id || `Page ${index}`
+        }
       }))
       : []
     graph.value.paths = props.story?.paths?.length ? [...props.story.paths] : []
@@ -40,110 +56,69 @@ watch(
       to: node.id
     }))
 
-    // // Add a "Create new page" node after every node
-    // graph.value.nodes.forEach(node => {
-    //   graph.value.nodes.push({
-    //     id: `create-after-${node.id}`,
-    //     text: 'Create page'
-    //   })
-
-    //   graph.value.paths.push({
-    //     from: node.id,
-    //     to: `create-after-${node.id}`,
-    //   })
-    // })
-
-    // Add a "Create new page" node root
-    graph.value.nodes.push({ id: '--creator--' })
-    graph.value.paths.push({ from: '--root--', to: '--creator--' })
-  },
-  { immediate: true },
-)
-
-function onClickNode(nodeId) {
-  if (targetPickerParent.value) {
-    const newPath = {
-      from: targetPickerParent.value,
-      to: nodeId
-    }
-    cancelTargetPicker()
-
-    if (newPath.from == newPath.to) {
-      console.warn('Cannot create path to self')
+    if (targetPickerParent.value) {
       return
     }
 
-    emit('createPath', newPath)
-    graph.value.paths.push(newPath)
-    return
-  }
+    // Add a "Create new page" after every end node
+    const endNodes = graph.value.nodes.filter(node => !graph.value.paths.find(path => path.from == node.id))
+    endNodes.forEach(node => {
+      graph.value.nodes.push({
+        id: `--creator--${node.id}`,
+        isCreator: true,
+        parentId: node.id
+      })
 
+      graph.value.paths.push({
+        from: node.id,
+        to: `--creator--${node.id}`
+      })
+    })
+
+    // Add a "Create new page" after root node
+    graph.value.nodes.push({
+      id: '--creator--root',
+      isCreator: true,
+      parentId: null
+    })
+
+    graph.value.paths.push({
+      from: '--root--',
+      to: '--creator--root'
+    })
+  }
+)
+
+function onClickNode(nodeId) {
   emit('update:currentPageId', nodeId)
 }
 
-
-// Page creation widget
-const inputEl = ref()
-const isCreatorOpen = ref(false)
-const newPage = ref({
-  name: '',
-  hash: '',
-  parent: null
-})
-
-async function openPageCreator() {
-  isCreatorOpen.value = true
-  await nextTick()
-  inputEl.value.focus()
+function onCreateNode(nodeData) {
+  emit('createPage', nodeData)
 }
 
-
-function cancelPageCreator() {
-  newPage.value = {
-    name: '',
-    hash: '',
-    parent: null
-  }
-  isCreatorOpen.value = false
+function onUpdateNode(nodeData) {
+  emit('updatePage', nodeData)
 }
 
-function createPage() {
-  newPage.value.name = newPage.value.name.trim()
-  if (!newPage.value.name) {
-    return false
-  }
-
-  newPage.value.hash = toValidHash(newPage.value.name)
-  emit('createPage', { ...newPage.value })
-
-  isCreatorOpen.value = false
-  newPage.value = {
-    name: '',
-    hash: '',
-    parent: null
-  }
+function onDeleteNode(nodeId) {
+  emit('deletePage', nodeId)
 }
 
-function toValidHash(string) {
-  if (!string) {
-    return ''
-  }
-
-  return string
-    .toString()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/ +/g, '-')
-    .replace(/[^a-z0-9._-]/g, '')
-}
 
 // Target picker mode
-const targetPickerParent = ref()
-
 function startTargetPicker(parentId) {
   targetPickerParent.value = parentId
   document.addEventListener('keydown', escapeListener)
+}
+
+function clickPathTarget(targetId) {
+  if (!targetPickerParent.value || targetPickerParent.value == targetId) {
+    return
+  }
+  const newPath = { from: targetPickerParent.value, to: targetId }
+  cancelTargetPicker()
+  emit('createPath', newPath)
 }
 
 function cancelTargetPicker() {
@@ -159,95 +134,54 @@ function escapeListener(event) {
 </script>
 
 <template>
-  <UiGraphGrid
-    class="CmsStoryGraph"
-    :class="{ 'CmsStoryGraph--picking': !!targetPickerParent }"
-    :graph="graph"
-    @click-node="onClickNode"
-  >
+  <UiGraphGrid class="CmsStoryGraph" :graph="graph">
     <template #node="{ node }">
       <div v-if="node.id == '--root--'" class="CmsStoryGraph__dot"></div>
-      <div v-else-if="node.id == '--creator--'">
+      <template v-else-if="!!targetPickerParent">
         <UiItem
-          v-show="!isCreatorOpen"
-          class="CmsStoryGraph__node CmsStoryGraph__creator-item ui--noselect --nowrap"
-          :class="{ 'CmsStoryGraph__node--active': currentPageId == node.id }"
-          text="Create page"
-          icon="mdi:plus"
-          @click="openPageCreator()"
+          v-if="targetPickerParent == node.id"
+          icon="mdi:close"
+          :text="`From ${node.info.text} ...`"
+          @click="cancelTargetPicker"
+          class="CmsStoryGraph__item-from"
+        >
+          <template #actions>
+            <UiIcon src="mdi:arrow-right-thick" />
+          </template>
+        </UiItem>
+        <UiItem
+          v-else
+          :text="`to ${node.info.text}`"
+          icon="mdi:arrow-right-thick"
+          @click="clickPathTarget(node.id)"
+          class="CmsStoryGraph__item-to"
         />
-        <div v-show="isCreatorOpen" class="CmsStoryGraph__creator-form">
-          <input
-            type="text"
-            class="ui__input"
-            placeholder="Page name"
-            v-model="newPage.name"
-            ref="inputEl"
-            @keydown.esc="cancelPageCreator()"
-            @keydown.enter="createPage()"
-          />
-          <button
-            :disabled="!newPage.name.trim()"
-            type="button"
-            class="ui__button"
-            @click="createPage()"
-          >Create</button>
-          <button
-            type="button"
-            class="ui__button ui__button--cancel"
-            @click="cancelPageCreator()"
-          >Cancel</button>
-        </div>
-      </div>
-      <UiItem
-        v-else
-        class="CmsStoryGraph__node ui--noselect --nowrap"
-        :class="{ 'CmsStoryGraph__node--active': currentPageId == node.id }"
-        :text="node.text || node.id"
-        @click="onClickNode(node.id)"
-      >
-        <template #actions>
-          <UiPopover>
-            <template #trigger>
-              <UiIcon src="mdi:dots-vertical" class="CmsStoryGraph__node-trigger" />
-            </template>
-            <template #contents="{ close }">
-              <div class="CmsStoryGraph__node-menu">
-                <UiItem class="ui--clickable" text="Rename" icon="mdi:pencil" />
-                <UiItem
-                  class="ui--clickable"
-                  text="Add path to ..."
-                  icon="mdi:arrow-right-thick"
-                  @click="startTargetPicker(node.id); close();"
-                />
-                <UiItem class="ui--clickable" text="Delete" icon="mdi:delete" />
-              </div>
-            </template>
-          </UiPopover>
-        </template>
-      </UiItem>
+      </template>
+      <template v-else>
+        <GraphNodeCreator
+          v-if="node.isCreator"
+          @create="onCreateNode({ ...$event, parentId: node.parentId || null })"
+        />
+        <GraphNodeItem
+          v-else
+          :active="currentPageId == node.id"
+          :node="node"
+          @update:node="onUpdateNode"
+          @click="onClickNode(node.id)"
+          @start-path="startTargetPicker(node.id)"
+          @delete="onDeleteNode(node.id)"
+        />
+      </template>
     </template>
   </UiGraphGrid>
 </template>
 
 <style lang="scss">
 .CmsStoryGraph {
-  &__creator-form {
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-
+  // Fine-tuning node position inside UiGraphGrid (which has an expected node height of 50px)
+  .grid-item > * {
     position: relative;
-    top: -6px;
-
-    font-size: 14px;
-    border-radius: var(--ui-radius);
-    padding: var(--ui-padding);
-    background-color: #f4f4f4;
-
-    .ui__input {
-      margin-right: 16px;
-    }
+    top: 7px;
   }
 
   &__dot {
@@ -258,81 +192,36 @@ function escapeListener(event) {
     background-color: var(--ui-color-primary);
 
     position: relative;
-    top: 12px;
+    top: 12px !important;
   }
 
-  &__node {
+  // Target picker mode
+  &__item-from,
+  &__item-to {
     cursor: pointer;
     border-radius: var(--ui-radius);
     font-size: 14px;
     font-weight: bold;
     background-color: #f4f4f4;
-
     white-space: nowrap;
     max-width: 200px;
-    // &.UiItem {
-    //   .UiItem__body {
-    //     white-space: nowrap;
-    //   }
+  }
 
-    //   & > .UiItem__body {
-    //     font-weight: bold;
-    //     padding: 9px 10px 9px 20px;
-    //   }
+  &__item-from {
+    background-color: var(--ui-color-primary);
+    color: #fff;
 
-    //   & > .UiItem__icon {
-    //     padding: 9px 0 9px 10px;
-    //     margin: 0;
-    //   }
+    &:hover {
+      background-color: #ffbbaa;
+    }
+  }
 
-    //   & > .UiItem__actions {
-    //     padding: 9px 10px 9px 0;
-    //   }
-    // }
+  &__item-to {
+    border: 2px dashed var(--ui-color-primary);
+    color: #666;
 
     &:hover {
       background-color: #ffffaa;
-    }
-
-    &--active {
-      background-color: var(--ui-color-primary);
-      color: #fff;
-
-      &:hover {
-        background-color: var(--ui-color-primary);
-        opacity: 1;
-      }
-    }
-  }
-
-  &__node-trigger {
-    padding: var(--ui-padding);
-  }
-
-  &__node-menu {
-    .UiItem {
-      font-weight: normal;
-      white-space: nowrap;
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-    }
-  }
-
-  // Target picker mode
-  &--picking {
-    .CmsStoryGraph__creator-item {
-      pointer-events: none;
-      opacity: 0.4;
-      border: none !important;
-    }
-
-    .UiItem {
-      border: 2px dashed var(--ui-color-primary);
-
-      &__actions {
-        display: none;
-      }
     }
   }
 }
