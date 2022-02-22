@@ -51,7 +51,7 @@ function arrayMove(arr, fromIndex, toIndex) {
               <UiIcon
                 src="mdi:close"
                 class="AppTabBar__close"
-                @click="closeTab(tab)"
+                @click.prevent="closeTab(tab)"
                 @mouseenter="endangeredTabId = tab.id"
                 @mouseleave="endangeredTabId = null"
               />

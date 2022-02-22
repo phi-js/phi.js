@@ -12,6 +12,7 @@ const tree = reactive({
         {
           text: 'Inicio',
           icon: 'mdi:home',
+          isActive: true,
           href: '#/home'
         },
         {
@@ -48,7 +49,12 @@ const tree = reactive({
         {
           text: 'Inicio',
           icon: 'mdi:home',
-          href: '#/person/1'
+          href: '#/person/1/home'
+        },
+        {
+          text: 'Calendario',
+          icon: 'mdi:calendar',
+          href: '#/person/1/calendar'
         },
         {
           text: 'Comunicación',
@@ -62,12 +68,28 @@ const tree = reactive({
             {
               text: 'Redactar',
               icon: 'mdi:email-plus',
-              href: '#/compose'
+              href: '#/person/1/compose'
             },
             {
               text: 'Papelera',
               icon: 'mdi:delete',
               href: '#/person/1/mail/trash'
+            },
+          ]
+        },
+        {
+          text: 'Academia',
+          icon: 'mdi:school',
+          children: [
+            {
+              text: 'Aula',
+              icon: 'mdi:google-classroom',
+              href: '#/person/1/classroom'
+            },
+            {
+              text: 'Historial',
+              icon: 'mdi:history',
+              href: '#/person/1/history'
             },
           ]
         }
@@ -84,7 +106,12 @@ const tree = reactive({
         {
           text: 'Inicio',
           icon: 'mdi:home',
-          href: '#/person/2'
+          href: '#/person/2/home'
+        },
+        {
+          text: 'Calendario',
+          icon: 'mdi:calendar',
+          href: '#/person/2/calendar'
         },
         {
           text: 'Comunicación',
@@ -98,7 +125,7 @@ const tree = reactive({
             {
               text: 'Redactar',
               icon: 'mdi:email-plus',
-              href: '#/compose'
+              href: '#/person/2/compose'
             },
             {
               text: 'Papelera',
@@ -120,7 +147,12 @@ const tree = reactive({
         {
           text: 'Inicio',
           icon: 'mdi:home',
-          href: '#/person/3'
+          href: '#/person/3/home'
+        },
+        {
+          text: 'Calendario',
+          icon: 'mdi:calendar',
+          href: '#/person/3/calendar'
         },
         {
           text: 'Comunicación',
@@ -134,7 +166,7 @@ const tree = reactive({
             {
               text: 'Redactar',
               icon: 'mdi:email-plus',
-              href: '#/compose'
+              href: '#/person/3/compose'
             },
             {
               text: 'Papelera',

@@ -1,5 +1,6 @@
 export { default as activeTab } from './activeTab.js'
 export { default as appTree } from './appTree.js'
 export { default as closeTab } from './closeTab.js'
+export { default as navData } from './navData.js'
 export { default as obtainTab } from './obtainTab.js'
 export { default as selectTab } from './selectTab.js'

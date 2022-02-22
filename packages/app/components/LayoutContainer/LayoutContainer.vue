@@ -1,6 +1,6 @@
 <script setup>
 import AppTabBar from '../AppTabBar/AppTabBar.vue'
-import { activeTab } from '../../composables'
+import { navData } from '../../composables'
 </script>
 
 <template>
@@ -9,11 +9,9 @@ import { activeTab } from '../../composables'
     <AppTabBar class="LayoutContainer__tabBar" />
 
     <div class="LayoutContainer__contents">
-      <router-view v-slot="{ Component, route }">
-        <Transition name="tabSwap">
-          <KeepAlive>
-            <component :is="Component" :key="activeTab?.id" />
-          </KeepAlive>
+      <router-view v-slot="{ Component }">
+        <Transition :name="`tabSwap--${navData.tab.isForward ? 'forward' : 'backward'}`">
+          <component :is="Component" :key="navData.tab.key" />
         </Transition>
       </router-view>
     </div>
@@ -33,31 +31,99 @@ import { activeTab } from '../../composables'
 }
 
 // Tab transition
-.LayoutContainer {
-  .tabSwap-enter-active,
-  .tabSwap-leave-active {
-    transition: all 0.5s ease;
+.LayoutContainer .tabSwap {
+  &--forward,
+  &--backward {
+    &-enter-active,
+    &-leave-active {
+      transition: all var(--ui-duration-quick);
+      overflow: hidden;
+
+      .TabContainer {
+        &__body {
+          transition: all var(--ui-duration-quick);
+        }
+
+        &__menu {
+          transition: all var(--ui-duration-quick);
+        }
+      }
+    }
+
+    &-leave-active {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 2;
+    }
+
+    &-enter-active {
+      position: relative;
+      z-index: 1;
+    }
+
+    &-leave-to {
+      .TabContainer {
+        &__body,
+        &__menu,
+        &__cover {
+          opacity: 0;
+        }
+      }
+    }
   }
 
-  // .tabSwap-enter-active,
-  .tabSwap-leave-active {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+  &--forward {
+    &-enter-from {
+      .TabContainer {
+        &__body {
+          transform: translateX(61px);
+        }
+
+        &__menu {
+          transform: translateX(100%);
+        }
+      }
+    }
+
+    &-leave-to {
+      .TabContainer {
+        &__body {
+          transform: translateX(-61px);
+        }
+
+        &__menu {
+          transform: translateX(-100%);
+        }
+      }
+    }
   }
 
-  .tabSwap-enter-from,
-  .tabSwap-leave-to {
-    opacity: 0;
-  }
+  &--backward {
+    &-enter-from {
+      .TabContainer {
+        &__body {
+          transform: translateX(-61px);
+        }
 
-  .tabSwap-enter-from {
-    transform: translateX(30px);
-  }
+        &__menu {
+          transform: translateX(-100%);
+        }
+      }
+    }
 
-  .tabSwap-leave-to {
-    transform: translateX(-30px);
+    &-leave-to {
+      .TabContainer {
+        &__body {
+          transform: translateX(61px);
+        }
+
+        &__menu {
+          transform: translateX(100%);
+        }
+      }
+    }
   }
 }
 </style>

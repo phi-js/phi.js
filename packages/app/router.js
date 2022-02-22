@@ -22,7 +22,7 @@ router.beforeEach((to, from, next) => {
 
   if (to.meta?.tab) {
     const targetTabId = (typeof to.meta.tab == 'function') ? to.meta.tab(to.params) : to.meta.tab;
-    obtainTab(targetTabId, true)
+    obtainTab(targetTabId, true, to.href)
       .then(() => next())
       .catch((error) => {
         console.warn('Navigation error', error);
