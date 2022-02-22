@@ -1,17 +1,16 @@
 <script setup>
-import { activeTab } from '../../../app/composables'
-
 const props = defineProps({
-  personId: {
+  title: {
     type: String,
-    required: true
+    required: false,
+    default: 'Dummy module'
   }
 })
 </script>
 
 <template>
   <div class="PersonHome">
-    <h1>Home {{ props.personId }} &bull; {{ activeTab?.text || 'N.N.' }}</h1>
+    <h1>{{ props.title }}</h1>
     <div class="ui-card ui--padded">
       <p>Lorem asdkljf ashdflkjsahfdlkjas dfhklasdjfh sdlakjf hsalkdfjhaslkdjfh dklsjfhkajlsdh fkljasdh flaksjdfh aksjldfh slakjdf hsa</p>
     </div>
