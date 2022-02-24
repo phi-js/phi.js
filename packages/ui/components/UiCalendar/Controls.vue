@@ -6,7 +6,7 @@
     <button type="button" class="ui-button" @click="setToday()">{{ i18n.t('UiCalendar.Today') }}</button>
 
     <span class="view-selector">
-      <select class="ui-native" :value="currentView" @change="setCurrentView($event.target.value)">
+      <select class="ui__input" :value="currentView" @change="setCurrentView($event.target.value)">
         <option value="month">{{ i18n.t('UiCalendar.Month') }}</option>
         <option value="week">{{ i18n.t('UiCalendar.Week') }}</option>
         <option value="schedule">{{ i18n.t('UiCalendar.Schedule') }}</option>
@@ -26,7 +26,7 @@
 
     <span class="month-selector">
       <select
-        class="ui-native"
+        class="ui__input"
         :value="innerDate.getMonth()"
         @change="setMonth($event.target.value)"
       >
@@ -227,6 +227,8 @@ export default {
 .ui-calendar-controls {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+
   padding: var(--ui-breathe);
   border-radius: var(--ui-radius);
   background-color: #fff;
@@ -236,13 +238,19 @@ export default {
   }
 
   .month-selector {
-    flex: 1;
-    text-align: right;
-    margin: 0 12px;
+    margin: 0 12px 0 0;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
 
     select {
-      margin: 0 12px;
+      margin: 0 12px 0 0;
     }
+  }
+
+  .month-controls {
+    justify-content: center;
+    margin-left: auto;
   }
 
   .month-controls,

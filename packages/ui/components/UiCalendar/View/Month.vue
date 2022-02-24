@@ -7,7 +7,7 @@
           :key="dk"
           valign="top"
           class="ui-noselect"
-        >{{ i18n.d(day.date, { weekday: 'long' }) }}</td>
+        >{{ i18n.d(day.date, { weekday: 'short' }) }}</td>
       </tr>
     </thead>
     <tbody>
