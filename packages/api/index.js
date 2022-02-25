@@ -1,49 +1,46 @@
 import { provide, inject, useAttrs } from 'vue'
 import Client from './Client.js'
+
 export { default as Client } from './Client.js'
 
-export function provideApi(apiSpec, apiName = 'client') {
-  const client = typeof apiSpec === 'object' ? apiSpec : new Client(apiSpec)
-  provide(`$_phi_api_${apiName}`, client)
-}
+export function useApi(apiClasses) {
+  let retval = {}
+  if (typeof apiClasses == 'object') {
+    Object.keys(apiClasses).forEach(key => {
+      retval[key] = new apiClasses[key]
+    })
 
-export function useApi(wrapperBuilder = null, apiName = undefined) {
-  const client = obtainClient(apiName)
-  if (!client) {
-    throw 'cannot determine API client'
+    return retval
   }
 
-  return wrapClient(client, wrapperBuilder)
+  if (typeof apiClasses == 'function') {
+    return new apiClasses()
+  }
+
+  console.error(`invalid arguments for '%cuseApi'`, 'color: cyan')
+  throw 'Could not initialize http client'
 }
 
+export function provideClient(clientName, clientData) {
+  const client = new Client(clientData)
+  provide(`$_phi_api_${clientName}`, client)
+}
 
-function obtainClient(apiName = 'client') {
-  const injected = inject(`$_phi_api_${apiName}`, null)
+export function getClient(clientName) {
+  const injected = inject(`$_phi_api_${clientName}`, null)
   if (injected) {
     return injected
   }
 
   // Buscar en attrs
   const attrs = useAttrs()
-  return attrs?.[`api-${apiName}`]
-}
-
-function wrapClient(client, wrapper) {
-  if (!wrapper) {
-    throw 'No wrapper specified'
+  if (attrs?.[`api-${clientName}`]) {
+    return attrs?.[`api-${clientName}`]
   }
 
-  if (typeof wrapper == 'function') {
-    return wrapper(client)
-  }
+  console.error(`http client '%c${clientName}%c' not provided
+You must call provideClient('${clientName}', ...) from your root component
+`, 'color: cyan', '')
 
-  if (typeof wrapper == 'object') {
-    let retval = {}
-    for (let prop in wrapper) {
-      retval[prop] = wrapClient(client, wrapper[prop])
-    }
-    return retval
-  }
-
-  return undefined
+  throw 'Could not initialize http client'
 }
