@@ -74,71 +74,33 @@ const widgetEl = ref()
 </script>
 
 <template>
-  <div
-    class="UiDialog"
-    :class="{'UiDialog--open': isOpen}"
-  >
-    <div
-      v-if="$slots.trigger"
-      class="UiDialog__trigger"
-      @click="open()"
-    >
-      <slot
-        name="trigger"
-        :is-open="isOpen"
-        :open="open"
-        :close="close"
-      />
+  <div class="UiDialog" :class="{ 'UiDialog--open': isOpen }">
+    <div v-if="$slots.trigger" class="UiDialog__trigger" @click="open()">
+      <slot name="trigger" :is-open="isOpen" :open="open" :close="close" />
     </div>
 
-    <transition name="UiDialog__transition">
-      <div
-        v-show="isOpen"
-        ref="widgetEl"
-        class="UiDialog__widget"
-      >
-        <div
-          class="UiDialog__scrim"
-          @click="cancel()"
-        />
+    <Teleport to="body">
+      <transition name="UiDialog__transition">
+        <div v-show="isOpen" ref="widgetEl" class="UiDialog__widget">
+          <div class="UiDialog__scrim" @click="cancel()" />
 
-        <div class="UiDialog__container">
-          <div
-            v-if="$slots.header"
-            class="UiDialog__header"
-          >
-            <slot
-              name="header"
-              :close="close"
-            />
-          </div>
+          <div class="UiDialog__container">
+            <div v-if="$slots.header" class="UiDialog__header">
+              <slot name="header" :close="close" />
+            </div>
 
-          <div
-            v-if="$slots.contents"
-            class="UiDialog__contents"
-          >
-            <slot
-              name="contents"
-              :close="close"
-            />
-            <slot
-              name="default"
-              :close="close"
-            />
-          </div>
+            <div v-if="$slots.contents" class="UiDialog__contents">
+              <slot name="contents" :close="close" />
+              <slot name="default" :close="close" />
+            </div>
 
-          <div
-            v-if="$slots.footer"
-            class="UiDialog__footer"
-          >
-            <slot
-              name="footer"
-              :close="close"
-            />
+            <div v-if="$slots.footer" class="UiDialog__footer">
+              <slot name="footer" :close="close" />
+            </div>
           </div>
         </div>
-      </div>
-    </transition>
+      </transition>
+    </Teleport>
   </div>
 </template>
 
