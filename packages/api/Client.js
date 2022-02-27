@@ -43,6 +43,10 @@ export default class Client {
 
     //backwards compatibility
     this.host = this.baseURL
+
+    if (sanitizedOptions.token) {
+      this.setToken(sanitizedOptions.token)
+    }
   }
 
   setDefaultHeader(headerName, headerValue) {
