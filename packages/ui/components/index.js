@@ -1,3 +1,4 @@
+export * from './UiButton'
 export * from './UiCalendar'
 export * from './UiDialog'
 export * from './UiDrawer'
