@@ -269,11 +269,6 @@ function onInnerBlockChange() {
     border-radius: 5px;
   }
 
-  &__toolbar-spacer {
-    flex: 1;
-    // margin-left: 2em;
-  }
-
   &__toolbar-title {
     cursor: move !important;
   }
@@ -282,7 +277,8 @@ function onInnerBlockChange() {
   &--default &__toolbar-container {
     position: absolute;
     bottom: calc(100% - 4px);
-    left: 4px;
+    // left: 4px;
+    right: 4px;
 
     transition: opacity var(--ui-duration-snap);
     opacity: 0;
