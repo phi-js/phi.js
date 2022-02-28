@@ -24,7 +24,7 @@
 
         <div
           v-show="!searchString"
-          class="UiIconPicker__pagination ui--noselect"
+          class="UiIconPicker__pagination"
         >
           <div
             class="UiIconPicker__page-item ui--clickable --prev"
@@ -154,7 +154,6 @@ export default {
 <style lang="scss">
 .UiIconPicker {
   &__current {
-    padding: var(--ui-padding);
     --ui-icon-size: 28px;
   }
 
@@ -164,7 +163,6 @@ export default {
     font: inherit;
     border: 0;
     background-color: rgba(0, 0, 0, 0.03);
-    padding: var(--ui-padding);
   }
 
   &__pagination {
@@ -177,7 +175,6 @@ export default {
   &__page-item {
     display: block;
     padding: 8px 12px;
-    border-radius: var(--ui-radius);
 
     &.--selected {
       font-weight: bold;
@@ -199,7 +196,6 @@ export default {
       &.--selected {
         color: var(--ui-color-primary);
         border: 1px solid var(--ui-color-primary);
-        border-radius: var(--ui-radius);
       }
     }
   }

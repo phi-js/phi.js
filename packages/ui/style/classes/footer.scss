@@ -1,9 +1,0 @@
-.ui-footer {
-  padding: var(--ui-padding);
-  background-color: var(--ui-color-darken);
-  text-align: right;
-
-  & > .ui-button {
-    @extend .ui-breathe;
-  }
-}

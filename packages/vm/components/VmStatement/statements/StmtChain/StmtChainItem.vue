@@ -41,7 +41,6 @@ function rename() {
     accept()
   }
 }
-
 </script>
 
 <template>
@@ -50,7 +49,7 @@ function rename() {
       <template #trigger>
         <div class="StmtChainItem__trigger ui--clickable">
           <UiItem
-            class="StmtChainItem__face ui--noselect"
+            class="StmtChainItem__face"
             icon="mdi:vuejs"
             v-bind="props.modelValue.info"
             :subtext="props.modelValue.assign"
@@ -76,10 +75,7 @@ function rename() {
             @update:modelValue="accept()"
           />
           <template v-else>
-            <VmStatement
-              v-model="innerValue.do"
-              @update:modelValue="accept()"
-            />
+            <VmStatement v-model="innerValue.do" @update:modelValue="accept()" />
             <UiInput
               v-model="innerValue.assign"
               type="text"
@@ -91,23 +87,14 @@ function rename() {
       </template>
     </UiDrawer>
 
-    <div
-      v-if="isIfStatement"
-      class="StmtChainItem__paths"
-    >
+    <div v-if="isIfStatement" class="StmtChainItem__paths">
       <div class="StmtChainItem__path StmtChainItem__path--then">
         <label>then</label>
-        <VmStatement
-          v-model="innerValue.do.then"
-          @update:modelValue="accept()"
-        />
+        <VmStatement v-model="innerValue.do.then" @update:modelValue="accept()" />
       </div>
       <div class="StmtChainItem__path StmtChainItem__path--else">
         <label>else</label>
-        <VmStatement
-          v-model="innerValue.do.else"
-          @update:modelValue="accept()"
-        />
+        <VmStatement v-model="innerValue.do.else" @update:modelValue="accept()" />
       </div>
     </div>
   </div>
@@ -115,7 +102,6 @@ function rename() {
 
 <style lang="scss">
 .StmtChainItem {
-
   &__trigger {
     display: flex;
     flex-wrap: nowrap;
@@ -128,23 +114,10 @@ function rename() {
 
   &__face {
     display: inline-flex;
-
-    .ui-item__subtext {
-      display: inline-block;
-      font-size: 12px;
-      line-height: 18px;
-      border-radius: var(--ui-radius);
-      padding: 0 12px;
-      background-color: var(--ui-color-primary);
-      color: #fff;
-
-      margin-right: auto;
-    }
   }
 
   &__footer,
   &__contents {
-    padding: var(--ui-padding);
     padding-left: 36px;
   }
 
@@ -158,7 +131,6 @@ function rename() {
     .UiIcon {
       width: 32px;
       height: 32px;
-      border-radius: var(--ui-radius);
 
       &:hover {
         background-color: rgba(255, 255, 255, 0.1);

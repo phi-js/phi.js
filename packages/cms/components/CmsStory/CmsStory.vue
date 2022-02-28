@@ -214,6 +214,10 @@ watch(
   { immediate: true, deep: true },
 )
 */
+
+function onUpdateModelValue(event) {
+  emit('update:modelValue', event)
+}
 </script>
 
 <template>
@@ -227,7 +231,7 @@ watch(
             class="CmsStory__page"
             :block="currentPage"
             :model-value="props.modelValue"
-            @update:modelValue="emit('update:modelValue', $event)"
+            @update:modelValue="onUpdateModelValue"
           />
         </KeepAlive>
       </Transition>
@@ -237,7 +241,7 @@ watch(
 
 <style lang="scss">
 .CmsStory {
-  @import './transitions.scss';
+  @import "./transitions.scss";
   --cms-story-transition-duration: var(--ui-duration-quick);
 
   &__container {

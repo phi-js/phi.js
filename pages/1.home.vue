@@ -1,8 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { CmsStoryEditor, CmsStory } from '@/packages/cms'
-import { UiInput } from '@/packages/ui/components'
-import * as themes from '@/packages/cms/themes'
+import { UiTabs, UiTab } from '@/packages/ui'
 
 const defaultStory = {
   id: 'story-test-1',
@@ -24,7 +23,6 @@ const defaultStory = {
                     title: 'Hello world!',
                     src: '/phi.svg',
                     align: 'center',
-                    class: 'svgbg',
                   },
                 },
                 {
@@ -63,53 +61,31 @@ function reset() {
 }
 
 const modelValue = ref({})
+const currentTab = ref('editor')
 
-function setTheme(theme) {
-  story.value.theme = theme || null
-  saveStory()
+function onDraft(foo) {
+  console.log('draft!', foo)
 }
 </script>
 
 <template>
-  <select
-    :value="story?.theme?.id"
-    @change="setTheme(themes[$event.target.value])"
-  >
-    <option>Choose theme</option>
-    <option
-      v-for="(theme,key) in themes"
-      :key="key"
-      :value="key"
-      v-text="theme.text"
-    />
-  </select>
+  <UiTabs v-model="currentTab">
+    <UiTab text="Editor" value="editor">
+      <br><br><br>
+      <CmsStoryEditor
+        v-model:story="story"
+        :settings="settings"
+        @update:story="saveStory()"
+        @update:draft="onDraft"
+      />
+      <footer style="text-align: right">
+        <button type="button" @click="reset()">Reset</button>
+      </footer>
+    </UiTab>
 
-  <UiInput
-    v-model="story.css"
-    type="code"
-    lang="css"
-  />
-  <br>
-  <br>
-  <br>
-
-  <CmsStoryEditor
-    v-model:story="story"
-    :settings="settings"
-    @update:story="saveStory()"
-  />
-  <footer style="text-align: right">
-    <button
-      type="button"
-      @click="reset()"
-    >
-      Reset
-    </button>
-  </footer>
-
-  <CmsStory
-    v-model="modelValue"
-    :story="story"
-    :settings="settings"
-  />
+    <UiTab text="Preview" value="preview">
+      <br><br><br>
+      <CmsStory v-model="modelValue" :story="story" :settings="settings" />
+    </UiTab>
+  </UiTabs>
 </template>

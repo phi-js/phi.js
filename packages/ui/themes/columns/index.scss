@@ -1,0 +1,26 @@
+.ui-theme-columns {
+  @import '../base/variables.scss';
+  @import '../base/blocks/UiButton.scss';
+  @import '../base/blocks/UiGroup.scss';
+  @import '../base/blocks/UiInput.scss';
+  @import '../base/modifiers/clickable.scss';
+
+  --input-label-width: 250px;
+  --input-breathe: 12px;
+
+  .UiInput {
+    position: relative;
+    padding-left: var(--input-label-width);
+
+    padding-bottom: var(--input-breathe);
+    margin-bottom: var(--input-breathe);
+    border-bottom: 1px dotted #ccc;
+
+    &__label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: var(--input-label-width);
+    }
+  }
+}

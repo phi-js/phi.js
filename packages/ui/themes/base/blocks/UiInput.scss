@@ -1,0 +1,38 @@
+.UiInputNativeElement {
+  box-sizing: border-box;
+  min-height: 40px;
+
+  outline-color: var(--ui-color-primary);
+  padding: 8px 12px;
+
+  border-radius: 5px;
+  border: 1px solid rgba(0,0,0, 0.15);
+  border-top: 1px solid rgba(0,0,0, .26);
+  border-left: 1px solid rgba(0,0,0, .26);
+
+  font-size: 1em;
+  color: rgba(0, 0, 0, 0.8);
+  background-color: #fcfcfc;
+
+  &::placeholder {
+    color: rgba(0, 0, 0, 0.3);
+  }
+
+  &:focus {
+    outline: 1px solid var(--ui-color-primary);
+  }
+}
+
+.UiInput {
+  &__element {
+    @extend .UiInputNativeElement;
+  }
+}
+
+input,
+textarea,
+select {
+  &.UiInput {
+    @extend .UiInputNativeElement;
+  }
+}

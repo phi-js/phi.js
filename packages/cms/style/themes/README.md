@@ -26,7 +26,6 @@ cada una en un archivo JS que especifica:
 
   "css": `
     .bigBlackBox {
-      border-radius: var(--ui-radius);
       background: black;
       color: #eee;
     }

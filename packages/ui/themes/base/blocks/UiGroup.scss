@@ -1,0 +1,33 @@
+.UiGroup {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+
+  .UiInput {
+    border-radius: 0;
+    .UiInput__element {
+      border-radius: 0;
+    }
+
+    &:first-child {
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+      border-right: 0;
+      .UiInput__element {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        border-right: 0;
+      }
+    }
+
+    &:last-child {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      .UiInput__element {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+    }
+  }
+}

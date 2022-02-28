@@ -1,6 +1,6 @@
 <template>
   <div class="MediaVideoPicker">
-    <div class="MediaVideoPicker__infobox ui-theme-dark">
+    <div class="MediaVideoPicker__infobox">
       <UiInput
         v-if="endpoint"
         type="url"
@@ -10,17 +10,14 @@
         class="MediaVideoPicker__url"
         @update:modelValue="$emit('update:modelValue', $event)"
       />
-      <div
-        v-else
-        class="MediaVideoPicker__form"
-      >
+      <div v-else class="MediaVideoPicker__form">
         <input
-          class="ui__input"
+          class="UiInput"
           type="text"
           :value="modelValue"
           placeholder="URL (YouTube o Vimeo)"
           @input="$emit('update:modelValue', $event.target.value)"
-        >
+        />
       </div>
     </div>
 
@@ -63,7 +60,7 @@ export default {
     bottom: 0;
 
     padding: 8px;
-    background-color: rgba(0,0,0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
 
     opacity: 0;
     transition: opacity var(--ui-duration-snap);

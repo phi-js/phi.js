@@ -96,7 +96,7 @@ const multipleOptions = [
 
 <template>
   <div class="InputSettings">
-    <div class="ui-row --tight --bottom">
+    <div class="UiGroup">
       <UiInput
         v-model="block.props.type"
         label="Tipo"
@@ -154,7 +154,7 @@ const multipleOptions = [
     >
       <select
         v-model="block.props.time"
-        class="ui__input"
+        class="UiButton"
         @change="input"
       >
         <option :value="undefined">
@@ -170,21 +170,3 @@ const multipleOptions = [
     </UiInput>
   </div>
 </template>
-
-<style lang="scss">
-.InputSettings {
-  fieldset {
-    border: 1px inset #666;
-    border-radius: var(--ui-radius);
-    margin: 24px 0;
-    padding: 4px 4px 12px 8px;
-
-    legend {
-      font-family: var(--ui-font-secondary);
-      font-size: 12px;
-      padding: 0 12px;
-      opacity: 0.7;
-    }
-  }
-}
-</style>

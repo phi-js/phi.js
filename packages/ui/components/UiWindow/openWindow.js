@@ -17,7 +17,6 @@ export default async function openWindow(element, onClose = null) {
     frog.document.title = 'Phi.popup'
 
     const app = document.createElement('div')
-    app.className = 'ui-theme-dark'
     app.id = 'app'
     app.style.height = '100%'
 
@@ -36,7 +35,7 @@ export default async function openWindow(element, onClose = null) {
   }, false)
 
   // Detectar close
-  var popupTick = setInterval(function() {
+  var popupTick = setInterval(function () {
     if (frog.closed) {
       clearInterval(popupTick)
       if (onClose) {

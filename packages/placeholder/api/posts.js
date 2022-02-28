@@ -1,26 +1,31 @@
-export default (client) => ({
+import { Client } from '@/packages/api'
+
+export default class {
+  constructor() {
+    this.http = new Client('https://jsonplaceholder.typicode.com')
+  }
+
   getPosts(queryParams = null) {
-    return client.get('/posts', queryParams)
-  },
+    return this.http.get('/posts', queryParams)
+  }
 
   getPost(postId) {
-    return client.get(`/posts/${postId}`)
-  },
+    return this.http.get(`/posts/${postId}`)
+  }
 
   createPost(body) {
-    return client.post('/posts', body)
-  },
+    return this.http.post('/posts', body)
+  }
 
   updatePost(postId, body) {
-    return client.post(`/posts/${postId}`, body)
-  },
+    return this.http.post(`/posts/${postId}`, body)
+  }
 
   patchPost(postId, body) {
-    return client.patch(`/posts/${postId}`, body)
-  },
+    return this.http.patch(`/posts/${postId}`, body)
+  }
 
   deletePost(postId) {
-    return client.delete(`/posts/${postId}`)
-  },
-
-})
+    return this.http.delete(`/posts/${postId}`)
+  }
+}

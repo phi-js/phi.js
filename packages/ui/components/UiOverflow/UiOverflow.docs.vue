@@ -44,7 +44,7 @@ function arrayMove(arr, fromIndex, toIndex) {
           <div
             v-for="(item, i) in items"
             :key="item.text"
-            class="Block ui--clickable ui--noselect"
+            class="Block ui--clickable"
             :class="{'Block--occluded': i == counter.visible}"
             @click="items.splice(i, 1)"
             v-text="item.text"
@@ -79,10 +79,7 @@ function arrayMove(arr, fromIndex, toIndex) {
 <style lang="scss">
 .Block {
   white-space: nowrap;
-  border-radius: var(--ui-radius);
-  padding: var(--ui-padding);
   background-color: #ddd;
-  margin-right: var(--ui-breathe);
 
   overflow: hidden;
   width: 128px;

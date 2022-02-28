@@ -20,7 +20,7 @@
         <input
           v-model="innerValue"
           type="text"
-          class="ui__input --autofocus"
+          class="--autofocus"
           @keydown.esc="cancel()"
           @keydown.enter="accept()"
           @blur="accept()"

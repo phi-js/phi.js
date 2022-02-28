@@ -84,11 +84,11 @@ function deifify(item, i) {
       v-model="innerValue.chain"
       class="StmtChain__items"
       item-key="nun"
-      handle=".StmtChainItem__face .ui-item__icon"
+      handle=".StmtChainItem__face"
       group="StmtChain__items"
       @update:modelValue="emitUpdate()"
     >
-      <template #item="{element, index}">
+      <template #item="{ element, index }">
         <StmtChainItem
           v-model="innerValue.chain[index]"
           :open="latestAddedIndexes.includes(index)"
@@ -109,21 +109,14 @@ function deifify(item, i) {
               title="Remove conditional"
               @click.stop="deifify(element, index)"
             />
-            <UiIcon
-              src="mdi:close"
-              class="ui--clickable"
-              @click.stop="removeItem(index)"
-            />
+            <UiIcon src="mdi:close" class="ui--clickable" @click.stop="removeItem(index)" />
           </template>
         </StmtChainItem>
       </template>
     </draggable>
 
     <div class="StmtChain__adder">
-      <VmExpressionPicker
-        class="chain-expression-picker"
-        @input="onPickerInput"
-      />
+      <VmExpressionPicker class="chain-expression-picker" @input="onPickerInput" />
     </div>
   </div>
 </template>

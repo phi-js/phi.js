@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue'
 import UiButton from './UiButton.vue'
-import '../../style/blocks/UiButton.scss'
 
 const isLoading = ref(false)
 function doLoad() {
@@ -16,13 +15,11 @@ function doLoad() {
 
     <fieldset>
       <legend>Button nativo</legend>
-      <button type="button" />
-
-      <!-- Button no toma el TEXTO de ninguna propiedad, solo del slot (name y value son propiedades de <button>)
-      <button type="button" name="Este es un name" />
-      <button type="button" value="Este es un valor" />
-      <button type="button" text="Este es un text" />-->
       <button type="button">Este es un slot</button>
+
+      <button type="button" class="UiButton">Boton .UiButton</button>
+      <button type="button" class="UiButton UiButton--loading">.UiButton--loading</button>
+      <button type="button" class="UiButton UiButton--error">.UiButton--error</button>
     </fieldset>
 
     <fieldset>

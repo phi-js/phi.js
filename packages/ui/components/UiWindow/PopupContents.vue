@@ -23,7 +23,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="PopupContents ui-theme-dark">
+  <div class="PopupContents">
     <div class="ui__box">
       <p>WELL WELL WELL</p>
       <!-- <header>
@@ -47,7 +47,7 @@ onMounted(() => {
           :is="props.uiWindow.$slots.footer"
           v-bind="slotBindings"
         />
-      </footer> -->
+      </footer>-->
     </div>
   </div>
 </template>

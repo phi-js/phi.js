@@ -39,46 +39,46 @@ async function toggleHeightAuto(setAuto = true, refresh) {
 <template>
   <div
     class="MediaImageEditor"
-    :class="{'MediaImageEditor--empty': isEmpty, 'MediaImageEditor--notempty': !isEmpty}"
+    :class="{ 'MediaImageEditor--empty': isEmpty, 'MediaImageEditor--notempty': !isEmpty }"
   >
     <UiResizable
       v-slot="{ isDragging, newBounds, refresh }"
       :enabled="['s']"
-      @update:coords="emit('update:modelValue', { ...modelValue, height: $event.height})"
+      @update:coords="emit('update:modelValue', { ...modelValue, height: $event.height })"
     >
       <MediaImage
         class="MediaImageEditor__image"
-        v-bind="{...$attrs, ...modelValue}"
-        :height="isDragging ? newBounds.height+'px' : modelValue.height"
+        v-bind="{ ...$attrs, ...modelValue }"
+        :height="isDragging ? newBounds.height + 'px' : modelValue.height"
       />
 
-      <div class="MediaImageEditor__infobox ui-theme-dark">
+      <div class="MediaImageEditor__infobox">
         <UiInput
           type="url"
           :endpoint="props.endpoint"
           :model-value="modelValue.src"
           placeholder="Image URL"
           class="MediaImageEditor__url"
-          @update:modelValue="emit('update:modelValue', { ...modelValue, src: $event})"
+          @update:modelValue="emit('update:modelValue', { ...modelValue, src: $event })"
         />
 
         <div
           v-if="!isEmpty"
-          class="MediaImageEditor__heightenator ui-row --tight"
-          :style="{justifyContent: modelValue?.align || 'center'}"
+          class="MediaImageEditor__heightenator UiGroup"
+          :style="{ justifyContent: modelValue?.align || 'center' }"
         >
           <UiInput
             type="text"
             placeholder="Height"
-            :model-value="newBounds.height+'px'"
-            @update:modelValue="emit('update:modelValue', { ...modelValue, height: $event})"
+            :model-value="newBounds.height + 'px'"
+            @update:modelValue="emit('update:modelValue', { ...modelValue, height: $event })"
           />
-          <label style="color: var(--ui-color-fg)">
+          <label>
             <input
               type="checkbox"
               :checked="modelValue.height == 'auto'"
               @change="toggleHeightAuto($event.target.checked, refresh)"
-            >
+            />
             auto
           </label>
         </div>
@@ -106,7 +106,7 @@ async function toggleHeightAuto(setAuto = true, refresh) {
     opacity: 0;
     transition: opacity var(--ui-duration-snap);
 
-    background-color: rgba(0,0,0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   &__uploader {
@@ -133,7 +133,6 @@ async function toggleHeightAuto(setAuto = true, refresh) {
 
   &--notempty {
     .MediaImageEditor__infobox {
-      padding: var(--ui-padding);
       align-items: flex-start;
       // justify-content: flex-end;
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="media-document-picker">
-    <div class="document-picker-header ui-row --top">
+    <div class="document-picker-header UiGroup">
       <UiFileUploader
         :path="path"
         max-files="1"

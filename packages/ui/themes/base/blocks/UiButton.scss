@@ -1,0 +1,114 @@
+.UiButton {
+  --ui-button-padding: 8px 12px;
+
+  cursor: pointer;
+  white-space: nowrap;
+
+  box-sizing: border-box;
+  min-height: 40px;
+
+  margin: 0em;
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+
+  background: var(--ui-color-primary) !important; // !important on account of tailwindcss being a dick
+  color: #eee;
+  font: inherit;
+  font-weight: bold;
+
+  transition: background 0.2s, color 0.2s;
+  box-shadow: 0 1px 4px -2px black, inset 0 2px 1px -1px rgb(255 255 255 / 10%);
+
+  /* darkener layer */
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0, 0.2);
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  &:hover {
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+
+  &--cancel {
+    background: transparent !important;
+    border: 0;
+    box-shadow: none;
+    color: var(--ui-color-primary);
+  }
+
+  &--loading {
+    background: orange !important;
+    color: #fff;
+  }
+
+  &--error {
+    background: var(--ui-color-danger) !important;
+    color: #fff;
+  }
+}
+
+// Native elements <button class="UiButton">
+button.UiButton {
+  padding: var(--ui-button-padding);
+
+  &--component {
+    padding: 0;
+    --ui-item-padding: var(--ui-button-padding);
+  }
+}
+
+// Loading Animation
+.UiButton {
+  .UiItem {
+    &__icon,
+    &__actions {
+      overflow: hidden;
+      max-width: 100px;
+      transition: all 0.2s;
+    }
+
+    &__actions {
+      opacity: 0;
+      max-width: 0;
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  &--loading {
+    .UiItem {
+      &__body {
+        padding: var(--ui-item-padding);
+      }
+
+      &__icon {
+        opacity: 0;
+        min-width: 0;
+        max-width: 0;
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      &__actions {
+        opacity: 1;
+        max-width: 100px;
+        padding: var(--ui-item-padding);
+      }
+    }
+  }
+}

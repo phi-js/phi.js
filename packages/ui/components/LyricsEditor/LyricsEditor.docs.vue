@@ -8,11 +8,9 @@ const editor = ref()
 
 <template>
   <UiVideo
-    url="https://www.youtube.com/watch?v=sPXTm6g0ejg"
+    url="https://www.youtube.com/watch?v=n-6OmEYAeOE"
     style="min-height: 420px"
     @play="editor.start()"
   />
-  <LyricsEditor
-    ref="editor"
-  />
+  <LyricsEditor ref="editor" />
 </template>

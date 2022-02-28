@@ -17,7 +17,6 @@
     position: relative;
     left: -30px;
     padding-right: 2px;
-    border-radius: var(--ui-radius);
 
     cursor: pointer;
     display: inline-flex;
@@ -92,22 +91,11 @@
       flex-direction: column;
       align-items: stretch;
 
-      border-radius: var(--ui-radius);
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
 
       background-color: var(--ui-color-primary);
       color: #fff;
-
-      // Drag hangle item
-      .Block__drag-handle {
-        .ui-item__body {
-          display: none;
-        }
-        .ui-item__icon {
-          margin: 0;
-        }
-      }
 
       .BlockScaffold__toolbar-spacer {
         display: none;
@@ -167,6 +155,16 @@
     margin-left: 1em;
     border-left: 1px solid rgba(255, 255, 255, 0.08);
   }
+
+  // UiInput inside scaffold toolbar
+  &__toolbar {
+    input.UiInput,
+    .UiInput__element {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #bbb;
+      font-size: 14px;
+    }
+  }
 }
 
 
@@ -174,7 +172,6 @@
 .StmtChainItem {
   margin: 8px;
   border: 1px outset #555;
-  border-radius: var(--ui-radius);
   background-color: rgba(255, 255, 255, 0.1);
 
   &__trigger {
@@ -188,7 +185,7 @@
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      justify-content: end;
+      justify-content: flex-end;
 
       .UiInput__label {
         font-size: 13px;
@@ -200,7 +197,6 @@
   &__face .UiItem__subtext {
     color: #fff;
     background-color: var(--ui-color-primary);
-    border-radius: var(--ui-radius);
     padding: 1px 8px;
     align-self: baseline;
   }

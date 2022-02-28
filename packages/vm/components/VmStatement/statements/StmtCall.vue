@@ -50,7 +50,7 @@ const editor = computed(() => {
     <!-- <input
       v-model="innerModel.call"
       type="text"
-      class="ui__input"
+      class="UiInput"
       @input="emitUpdate"
     > -->
     <component

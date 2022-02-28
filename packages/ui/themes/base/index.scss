@@ -1,0 +1,11 @@
+.ui-theme-base {
+  @import './variables.scss';
+
+  @import './blocks/UiButton.scss';
+  @import './blocks/UiGroup.scss';
+  @import './blocks/UiInput.scss';
+  @import './blocks/UiTab.scss';
+  @import './blocks/UiWindow.scss';
+
+  @import './modifiers/clickable.scss';
+}

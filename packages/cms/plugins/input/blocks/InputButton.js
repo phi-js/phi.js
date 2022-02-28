@@ -15,6 +15,13 @@ export default {
     'props': { type: 'button' },
   },
 
+  emits: [
+    {
+      event: 'click',
+      text: 'The button is clicked'
+    }
+  ],
+
   editor: {
     face: {
       'component': InputFace,
@@ -24,7 +31,7 @@ export default {
     actions: [
       {
         'id': 'InputSettings',
-        'title': 'Field options',
+        'title': 'Button options',
         'component': InputSettings,
         'v-model': 'block',
       },

@@ -13,7 +13,7 @@ const value = ref()
     <UiInputEditor v-model="inputProps" />
   </fieldset>
 
-  <fieldset class="ui-row --top">
+  <fieldset class="UiGroup">
     <legend>Result</legend>
     <UiInput
       v-model="value"

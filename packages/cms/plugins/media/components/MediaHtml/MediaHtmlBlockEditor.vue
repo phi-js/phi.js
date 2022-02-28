@@ -179,13 +179,13 @@ const alignment = computed(() => {
         <template #trigger>
           <button
             type="button"
-            class="ui--clickable ui-toolbar-item expansible"
+            class="ui--clickable expansible"
             v-text="heading.current.text"
           />
         </template>
         <template #contents="{ close }">
           <div
-            class="ui-row --tight"
+            class="UiGroup"
             @click="close"
           >
             <button
@@ -205,12 +205,12 @@ const alignment = computed(() => {
         <template #trigger>
           <UiIcon
             :src="alignment.current.icon"
-            class="ui--clickable ui-toolbar-item expansible"
+            class="ui--clickable expansible"
           />
         </template>
         <template #contents="{ close }">
           <div
-            class="ui-row --tight"
+            class="UiGroup"
             @click="close"
           >
             <UiIcon

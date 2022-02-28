@@ -9,8 +9,6 @@ block
 
     variables: { // object with CSS variables/properties
       '--ui-content-width': '60px',
-      '--ui-radius': '5px',
-      '--ui-breathe': '12px',
       '--ui-color-primary': '#aabbcc00'
       ...
     },

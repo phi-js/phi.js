@@ -350,7 +350,7 @@ export default {
 
 <template>
   <div class="ui-graph-grid">
-    <!-- <label class="ui-noselect ui-clickable">
+    <!-- <label class="ui-clickable">
       <input
         type="checkbox"
         v-model="showGuides"
@@ -382,7 +382,7 @@ export default {
           >
             <UiItem
               :style="node.style"
-              class="grid-node ui-z ui-noselect --nowrap"
+              class="grid-node"
               :class="node.class"
               :text="node.text || node.id"
               v-bind="node"
@@ -469,10 +469,6 @@ export default {
 .ui-graph-grid {
   overflow: auto;
 
-  .ui-group {
-    display: flex;
-  }
-
   .grid-dom {
     display: flex;
     flex-wrap: nowrap;
@@ -487,7 +483,6 @@ export default {
       // justify-content: center;
       // align-items: center;
 
-      border-radius: var(--ui-radius);
       background-color: #fff;
       cursor: pointer;
 

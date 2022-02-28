@@ -54,7 +54,7 @@ async function onPopoverOpen() {
           name="trigger"
           v-bind="slotData"
         >
-          <div class="CmsBlockPicker__trigger ui--clickable ui--noselect">
+          <div class="CmsBlockPicker__trigger ui--clickable">
             <UiItem
               icon="mdi:plus"
               text="Agregar contenido"
@@ -88,7 +88,6 @@ async function onPopoverOpen() {
   }
 
   &__trigger {
-    border-radius: var(--ui-radius);
     background-color: rgba(0, 0, 0, 0.03);
     color: rgba(0, 0, 0, 0.7);
   }

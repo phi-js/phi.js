@@ -35,14 +35,8 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
 </script>
 
 <template>
-  <div
-    class="UiInputEditor"
-    :style="$attrs.style"
-  >
-    <div
-      v-if="_inputProps.type != 'button'"
-      class="UiInputEditor__label"
-    >
+  <div class="UiInputEditor" :style="$attrs.style">
+    <div v-if="_inputProps.type != 'button'" class="UiInputEditor__label">
       <input
         v-model="_inputProps.label"
         type="text"
@@ -50,13 +44,10 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
         @input="emitUpdate()"
         @focus="$event.target.select(); $emit('focus', $event)"
         @blur="$emit('blur', $event)"
-      >
+      />
     </div>
 
-    <div
-      v-if="editorComponent"
-      class="UiInputEditor__custom"
-    >
+    <div v-if="editorComponent" class="UiInputEditor__custom">
       <component
         :is="editorComponent"
         v-bind="{ ...$attrs, style: undefined }"
@@ -69,12 +60,12 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
         v-if="_inputProps.type == 'button'"
         v-model="_inputProps.label"
         type="text"
-        class="UiInputEditor__button ui__button"
+        class="UiInputEditor__button UiButton"
         onkeypress="this.size = this.value.length"
         @input="emitUpdate"
         @focus="$event.target.select(); $emit('focus', $event)"
         @blur="$emit('blur', $event)"
-      >
+      />
       <UiInput
         v-else
         v-model="_inputProps.placeholder"
@@ -91,7 +82,6 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
 <style lang="scss">
 .UiInputEditor {
   input.UiInputEditor__button {
-    font-family: var(--ui-font-secondary);
     font-size: 0.95em;
     font-weight: 500;
     outline: none;
@@ -109,12 +99,6 @@ const editorComponent = computed(() => editors?.[_inputProps.value.type] || null
 
     &:hover {
       background-color: #ff8;
-    }
-  }
-
-  &__label {
-    input {
-      font-family: var(--ui-font-secondary);
     }
   }
 

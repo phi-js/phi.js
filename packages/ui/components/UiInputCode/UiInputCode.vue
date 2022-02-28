@@ -64,6 +64,6 @@ watch(
 <template>
   <div
     ref="codeEl"
-    class="UiInputCode ui-inset"
+    class="UiInputCode"
   />
 </template>

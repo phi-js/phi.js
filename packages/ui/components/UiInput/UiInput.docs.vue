@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, inject, computed } from 'vue'
 import { UiInput } from './index.js'
 
 const options = [
@@ -31,40 +31,19 @@ const modelValue = ref({
   },
 })
 
-const themes = [
-  { value: 'my-theme-wide', text: 'Wide' },
-  { value: 'my-theme-material', text: 'Material' },
-  { value: 'my-theme-terminal', text: 'Terminal' },
-]
-
-const curTheme = ref('my-theme-wide')
-// const curTheme = ref('my-theme-material')
 const testUrl = ref('http://v4.local/1/cms/pages/test/files')
 
+import { availableThemes, currentTheme } from '../../../../dev/theme-utils.js'
 </script>
 
 <template>
   <h1>UiInput</h1>
-  <UiInput
-    v-model="curTheme"
-    :value="curTheme"
-    type="select-buttons"
-    label="Theme"
-    :options="themes"
-    @input="curTheme = $event"
-  />
+  <UiInput v-model="testUrl" type="text" label="Upload URL" />
+  <UiInput v-model="currentTheme" type="select-buttons" label="Theme" :options="availableThemes" />
+  <hr />
 
-  <hr>
-
-  <div
-    class="docs-page ui-row --top"
-    style="position: relative"
-  >
-    <div
-      class="themed-form"
-      :class="curTheme"
-      style="margin-right: var(--ui-breathe)"
-    >
+  <div class="UiInputDocs">
+    <div class="UiInputDocs__list">
       <section>
         <h2>Native types</h2>
         <UiInput
@@ -85,44 +64,14 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
           label="checkbox"
           placeholder="Acepto tal cosa"
         />
-        <UiInput
-          v-model="modelValue.number"
-          type="number"
-          label="number"
-        />
-        <UiInput
-          v-model="modelValue.string"
-          type="search"
-          label="search"
-        />
-        <UiInput
-          v-model="modelValue.date"
-          type="date"
-          label="date"
-        />
-        <UiInput
-          v-model="modelValue.time"
-          type="time"
-          label="time"
-        />
-        <UiInput
-          v-model="modelValue.date"
-          type="date-time"
-          label="date-time"
-        />
-        <UiInput
-          v-model="modelValue.color"
-          type="color"
-          label="color"
-        />
-        <UiInput
-          type="button"
-          label="button"
-        />
-        <UiInput
-          type="submit"
-          label="submit"
-        />
+        <UiInput v-model="modelValue.number" type="number" label="number" />
+        <UiInput v-model="modelValue.string" type="search" label="search" />
+        <UiInput v-model="modelValue.date" type="date" label="date" />
+        <UiInput v-model="modelValue.time" type="time" label="time" />
+        <UiInput v-model="modelValue.date" type="date-time" label="date-time" />
+        <UiInput v-model="modelValue.color" type="color" label="color" />
+        <UiInput type="button" label="button" />
+        <UiInput type="submit" label="submit" />
       </section>
 
       <section>
@@ -195,11 +144,6 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
 
       <section>
         <h2>Upload</h2>
-        <UiInput
-          v-model="testUrl"
-          label="Test URL"
-          type="text"
-        />
 
         <UiInput
           v-model="modelValue.files.one"
@@ -248,12 +192,7 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
           :endpoint="testUrl"
         />
 
-        <UiInput
-          v-model="modelValue"
-          type="json"
-          label="json"
-          placeholder="Escribe JSON aqui"
-        />
+        <UiInput v-model="modelValue" type="json" label="json" placeholder="Escribe JSON aqui" />
 
         <UiInput
           v-model="modelValue.code"
@@ -263,243 +202,26 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
         />
       </section>
     </div>
-    <div style="position: sticky; top: 0">
+    <div class="UiInputDocs__data">
       <pre>modelValue: {{ modelValue }}</pre>
     </div>
   </div>
 </template>
 
 <style lang="scss">
-.themed-form {
-  --ui-breathe: 32px;
-}
-
-.my-theme-wide {
-  --input-label-width: 250px;
-
-  .ui-input {
-    position: relative;
-    padding-left: var(--input-label-width);
-    padding-bottom: var(--ui-breathe);
-    margin-bottom: var(--ui-breathe);
-    border-bottom: 1px dotted #ccc;
-
-    &__label {
-      display: block;
-      width: var(--input-label-width);
-      position: absolute;
-      top: 0;
-      left: 0;
-      padding: var(--ui-padding);
-      font-weight: bold;
-    }
-  }
-}
-
-.my-theme-terminal {
-  padding: 12px;
-  color: green;
+.UiInputDocs {
+  display: flex;
   position: relative;
 
-  background-color: black;
-  background-image: radial-gradient(rgba(0, 150, 0, 0.25), black 120%);
+  &__list {
+    flex: 2;
+  }
 
-  &::after {
-    pointer-events: none;
-    content: '';
-    position: absolute;
+  &__data {
+    flex: 1;
+
+    position: sticky; // not working
     top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      rgba(black, 0.15),
-      rgba(black, 0.15) 1px,
-      transparent 1px,
-      transparent 2px
-    );
-  }
-
-  & > * {
-    // color: green !important;
-    color: white;
-    font: 1rem Inconsolata, monospace;
-    text-shadow: 0 0 5px #c8c8c8;
-  }
-
-  --ui-font-primary: monospace;
-  --ui-font-secondary: monospace;
-
-  .ui-input {
-    display: flex;
-    align-items: stretch;
-
-    border: 1px solid transparent;
-    &:hover {
-      border: 1px dashed green;
-    }
-
-    &__body {
-      flex: 1;
-    }
-
-    &__label {
-      display: flex;
-      align-items: center;
-      padding-right: 12px;
-      font-weight: bold;
-
-      &::after {
-        content: ' > ';
-      }
-    }
-
-    &__elem {
-      display: block;
-      width: 100%;
-      outline: none;
-      background: transparent;
-
-      border: 0;
-      border-radius: unset;
-      margin: 0;
-      padding: 0;
-
-      color: white;
-      text-shadow: 0 0 5px #c8c8c8;
-    }
-
-    .ui-button,
-    .ui-inset,
-    .ui__input {
-      border: 0;
-      background: transparent;
-      border-radius: 0;
-
-      color: white;
-      text-shadow: 0 0 5px #c8c8c8;
-
-      &.UiSelectButtons__button--selected {
-        font-weight: bold;
-        &::before {
-          content: ' *';
-        }
-        &::after {
-          content: '* ';
-        }
-      }
-    }
-  }
-}
-
-.my-theme-material {
-  --label-transition-duration: 0.17s;
-  max-width: 320px;
-
-  // bottom border animation on focus
-  .ui-input {
-    &__elem {
-      display: block;
-      width: 100%;
-      outline: none;
-    }
-
-    &__body {
-      position: relative;
-      border-bottom: 1px solid #ccc;
-
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: -1px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background-color: var(--ui-color-primary);
-        transition: all var(--label-transition-duration);
-      }
-    }
-
-    &--focused {
-      .ui-input__body {
-        &::after {
-          width: 100%;
-        }
-      }
-    }
-
-    .ui-inset,
-    .ui__input {
-      border: 0;
-      background: transparent;
-      border-radius: 0;
-      width: 100%;
-
-      &::placeholder {
-        color: transparent;
-      }
-    }
-
-    &--type-date,
-    &--type-time,
-    &--type-color,
-    &--type-select {
-      .ui-input__label {
-        opacity: 0 !important;
-      }
-    }
-
-    &--type-select-buttons,
-    &--type-checkbox {
-      .ui-input__body {
-        border: 0;
-        &::after {
-          content: unset;
-        }
-      }
-    }
-  }
-
-  button.ui__input {
-    border-radius: var(--ui-radius);
-    background: var(--ui-color-primary) !important;
-    color: #fff;
-  }
-
-  .ui-input {
-    margin-bottom: var(--ui-breathe);
-    position: relative;
-    padding-top: 1.4em;
-
-    &__label {
-      pointer-events: none;
-      display: block;
-      position: absolute;
-      left: 0;
-      top: 0;
-      font-size: 0.8em;
-      transition: all var(--label-transition-duration);
-    }
-
-    &--empty {
-      .ui-input__label {
-        // left: var(--ui-padding-horizontal);
-        left: 5px;
-        top: 30px;
-        font-size: 1em;
-        opacity: 1;
-      }
-    }
-
-    &--focused {
-      .ui-input__label {
-        left: 0;
-        top: 0;
-        font-size: 0.8em;
-        opacity: 1 !important;
-      }
-    }
   }
 }
 </style>

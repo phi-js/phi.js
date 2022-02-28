@@ -43,7 +43,7 @@ function deleteNode() {
   <div class="GraphNodeItem" :class="{ 'GraphNodeItem--active': props.active }">
     <UiItem
       v-show="!isFormOpen"
-      class="GraphNodeItem__item ui--noselect --nowrap"
+      class="GraphNodeItem__item"
       :text="node.info.text"
       xxx-subtext="`#/${node.hash}`"
       @click="emit('click')"
@@ -94,7 +94,6 @@ function deleteNode() {
 .GraphNodeItem {
   &__item {
     cursor: pointer;
-    border-radius: var(--ui-radius);
     font-size: 14px;
     font-weight: bold;
     background-color: #f4f4f4;
@@ -127,10 +126,6 @@ function deleteNode() {
         }
       }
     }
-  }
-
-  &__trigger {
-    padding: var(--ui-padding);
   }
 
   &__menu {

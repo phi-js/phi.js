@@ -51,12 +51,12 @@ const alignment = computed(() => {
       <template #trigger>
         <UiIcon
           :src="alignment.current.icon"
-          class="ui-toolbar-item ui--clickable expansible"
+          class="ui--clickable expansible"
         />
       </template>
       <template #contents="{ close }">
         <div
-          class="ui-row --tight"
+          class="UiGroup"
           @click="close()"
         >
           <UiIcon

@@ -45,7 +45,7 @@ const schema = {
 </script>
 
 <template>
-  <div class="ui-row --top">
+  <div class="UiGroup">
     <UiInput
       v-model="stmt"
       label="Stmt"

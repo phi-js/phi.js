@@ -1,1 +1,0 @@
-export { default as PhiStory } from './PhiStory.vue'

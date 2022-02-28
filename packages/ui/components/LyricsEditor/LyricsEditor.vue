@@ -1,26 +1,14 @@
 <template>
   <div class="lyrics-editor">
-    <textarea
-      v-model="input"
-      style="display: block; width: 100%; height: 16em"
-    />
-    <button
-      type="button"
-      @click="generateOutput"
-    >
-      Continuar
-    </button>
+    <textarea v-model="input" style="display: block; width: 100%; height: 16em" />
+    <button type="button" @click="generateOutput">Continuar</button>
 
     <template v-if="output">
-      <input
-        type="text"
-        placeholder="Focus me, space to tap"
-        @keydown.space.prevent="onTap"
-      >
+      <input type="text" placeholder="Focus me, space to tap" @keydown.space.prevent="onTap" />
 
       <div class="text-container">
         <div
-          v-for="(line,i) in output.lines"
+          v-for="(line, i) in output.lines"
           :key="i"
           :class="[
             'line',
@@ -32,7 +20,7 @@
           ]"
         >
           <span
-            v-for="(word,k) in line.words"
+            v-for="(word, k) in line.words"
             :key="k"
             :class="[
               'word',
@@ -123,7 +111,7 @@ export default {
         let words = []
         let rawWords = line.split(' ')
         rawWords.forEach((word, i) => {
-          let parts = word.split('+')
+          let parts = word.split('|')
           if (i < rawWords.length - 1) {
             parts[parts.length - 1] += ' '
           }
@@ -181,7 +169,6 @@ export default {
 .lyrics-editor {
   .text-container {
     font-size: 1.4em;
-    font-family: var(--ui-font-secondary);
     font-weight: 500;
 
     .line {
@@ -216,7 +203,7 @@ export default {
       transform: scale(1);
 
       &.--active {
-        color: var(--ui-color-warning);
+        color: var(--ui-color-danger);
       }
 
       &.--past {

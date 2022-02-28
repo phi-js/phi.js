@@ -47,7 +47,7 @@ const now = new Date()
 &lt;/template>
     </code></pre>
 
-    <div class="ui-row --top">
+    <div class="UiGroup">
       <section>
         <label>{{ i18n.t('i18n.page.globalLocale') }}</label>
         <I18nSample />

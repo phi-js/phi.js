@@ -141,20 +141,12 @@ const widgetEl = ref()
     overflow: hidden;
 
     background-color: #fff;
-    border-radius: var(--ui-radius);
   }
 
   &__contents {
     flex: 1;
     overflow: auto;
-    padding: var(--ui-padding);
     max-height: 800px;
-  }
-
-  &__footer {
-    text-align: right;
-    padding: var(--ui-padding);
-    background-color: var(--ui-color-darken);
   }
 
   &__transition {

@@ -73,10 +73,12 @@ Theme definition:
 import allClasses from '../style/classes/index.js'
 
 export default function applyTheme(theme, sheetId) {
-  var sheetEl = document.getElementById(sheetId)
+  var sheetElId = `phi-sheet-${sheetId}`  // prevent clashes with elements with that id (discovered it when using "app" id)
+
+  var sheetEl = document.getElementById(sheetElId)
   if (!sheetEl) {
     sheetEl = document.createElement('style')
-    sheetEl.id = sheetId
+    sheetEl.id = sheetElId
     const header = document.getElementsByTagName('HEAD')[0]
     header.appendChild(sheetEl)
   }

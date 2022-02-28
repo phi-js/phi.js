@@ -119,7 +119,7 @@ const focusedIndexes = ref({})
             >
               <template #trigger>
                 <div class="LauncherFace">
-                  <div class="LauncherFace__icon ui--noselect">
+                  <div class="LauncherFace__icon">
                     +
                   </div>
                 </div>
@@ -221,7 +221,6 @@ const focusedIndexes = ref({})
       align-items: center;
       justify-content: center;
 
-      font-family: var(--ui-font-secondary);
       font-size: 16px;
       font-weight: 500;
 

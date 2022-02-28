@@ -1,4 +1,6 @@
+// See https://vitejs.dev/guide/features.html#glob-import
 const pageFiles = import.meta.glob('../pages/**/*.vue')
+
 const pages = []
 for (const path in pageFiles) {
   let name = path.slice(9, -4) // remove .vue

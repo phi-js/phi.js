@@ -25,15 +25,10 @@ const placements = [
   <h1>UiPopover</h1>
 
   <div style="text-align: center">
-    <UiPopover
-      v-for="placement in placements"
-      :key="placement"
-      :placement="placement"
-      class="ui-item--inline"
-    >
+    <UiPopover v-for="placement in placements" :key="placement" :placement="placement">
       <template #trigger>
         <UiItem
-          class="ui-outset ui--clickable"
+          class="ui--clickable"
           icon="mdi:window-maximize"
           text="Abrir Popover"
           :subtext="placement"

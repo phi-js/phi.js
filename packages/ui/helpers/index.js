@@ -1,4 +1,3 @@
-export { default as bindProp } from './bindProp.js'
 export { default as getProperty } from './getProperty.js'
 export { default as isMobile } from './isMobile.js'
 export { default as normalize } from './normalize.js'

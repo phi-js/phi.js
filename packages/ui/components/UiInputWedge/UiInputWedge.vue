@@ -71,13 +71,13 @@ function onEscape(inputEl) {
 <template>
   <div
     class="UiInputWedge"
-    :class="{'UiInputWedge--open': innerOpen, 'UiInputWedge--closed': !innerOpen}"
+    :class="{ 'UiInputWedge--open': innerOpen, 'UiInputWedge--closed': !innerOpen }"
   >
     <UiIcon
       ref="refIcon"
       class="UiInputWedge__icon ui--clickable"
       :src="props.icon"
-      :style="{color: props.color}"
+      :style="{ color: props.color }"
       tabindex="0"
       @click="setOpen(!innerOpen)"
       @keypress.enter="setOpen(!innerOpen)"
@@ -85,13 +85,13 @@ function onEscape(inputEl) {
     <input
       ref="refInput"
       type="text"
-      class="UiInputWedge__input ui__input"
+      class="UiInputWedge__input UiInput"
       :value="props.modelValue"
       tabindex="-1"
       :placeholder="props.placeholder"
       @keydown.esc="onEscape($event.target)"
       @keypress.enter="onEnter($event.target.value)"
-    >
+    />
   </div>
 </template>
 

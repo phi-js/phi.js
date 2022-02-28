@@ -88,7 +88,7 @@ function onInnerBlockChange() {
 <template>
   <div class="BlockScaffold" :class="{ 'BlockScaffold--focused': isFocused }">
     <div class="BlockScaffold__toolbar-container">
-      <div class="BlockScaffold__toolbar ui--noselect">
+      <div class="BlockScaffold__toolbar">
         <UiItem
           class="BlockScaffold__toolbar-title Block__drag-handle ui--clickable"
           icon="mdi:cursor-move"
@@ -210,13 +210,13 @@ function onInnerBlockChange() {
       <template #footer="{ close }">
         <button
           type="button"
-          class="ui__button ui__button--main"
+          class="UiButton UiButton--main"
           @click="accept() && close()"
           v-text="'Aceptar'"
         />
         <button
           type="button"
-          class="ui__button ui__button--cancel"
+          class="UiButton UiButton--cancel"
           @click="cancel() && close()"
           v-text="'Cancelar'"
         />
@@ -240,8 +240,8 @@ function onInnerBlockChange() {
 
   &__body {
     flex: 1;
-    padding: var(--ui-padding);
     overflow: auto;
+    padding: 16px;
   }
 
   &--id-source {
@@ -265,14 +265,17 @@ function onInnerBlockChange() {
     display: inline-flex;
     align-items: stretch;
     background-color: #313131;
-    border-radius: var(--ui-radius);
-
     color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
   }
 
   &__toolbar-spacer {
     flex: 1;
     // margin-left: 2em;
+  }
+
+  &__toolbar-title {
+    cursor: move !important;
   }
 
   // Estilos "default":  toolbar posicionado absolutamente encima del bloque
@@ -299,10 +302,12 @@ function onInnerBlockChange() {
     max-width: 600px;
 
     // Catch-all para todo tipo de item dentro del toolbar
-    .UiIcon,
-    .ui-icon,
+    .ui--clickable,
     .UiSelectNative,
     button {
+      min-width: 40px;
+      min-height: 40px;
+
       color: rgba(255, 255, 255, 0.5);
       flex: none;
       padding: 0 10px;
@@ -311,8 +316,6 @@ function onInnerBlockChange() {
 
       outline: none;
       display: block;
-
-      min-width: 12px;
 
       display: flex;
       align-items: center;
@@ -327,31 +330,6 @@ function onInnerBlockChange() {
       &:hover {
         background-color: rgba(255, 255, 255, 0.2);
       }
-    }
-
-    .UiItem {
-      .ui-icon:hover {
-        background-color: transparent;
-      }
-    }
-
-    .ui__input {
-      background: transparent;
-      border: 0;
-      border-radius: 0;
-
-      font-family: var(--ui-font-secondary);
-      color: rgba(255, 255, 255, 0.5);
-      outline: none;
-
-      option {
-        color: initial;
-      }
-    }
-
-    input[type="text"].ui__input {
-      background-color: rgba(255, 255, 255, 0.1);
-      margin: 0 2px;
     }
   }
 
@@ -395,14 +373,16 @@ function onInnerBlockChange() {
 }
 
 .BlockPopover {
+  user-select: none;
+
   .tippy-content {
     padding: 0;
   }
 
   &__item {
-    padding: var(--ui-padding);
     cursor: pointer;
     color: #ccc;
+    --ui-item-padding: 8px 12px;
 
     &:hover {
       color: #fff;

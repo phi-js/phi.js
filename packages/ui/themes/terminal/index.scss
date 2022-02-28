@@ -1,0 +1,80 @@
+.ui-theme-terminal {
+  .UiInput {
+    padding: 12px;
+    color: green;
+    position: relative;
+
+    background-color: black;
+    background-image: radial-gradient(rgba(0, 150, 0, 0.25), black 120%);
+
+    &::after {
+      pointer-events: none;
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(black, 0.15),
+        rgba(black, 0.15) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+    }
+
+    & > * {
+      color: white;
+      font: 1rem Inconsolata, monospace;
+      text-shadow: 0 0 5px #c8c8c8;
+    }
+
+    .UiInput {
+      display: flex;
+      align-items: center;
+      border: 1px solid transparent;
+      padding: 4px 8px;
+
+      &--focused,
+      &:hover {
+        border: 1px dashed green;
+      }
+
+      &__body {
+        flex: 1;
+      }
+
+      &__label {
+        padding-right: 12px;
+        font-size: 14px;
+
+        &::after {
+          content: ' > ';
+        }
+      }
+
+      &__element {
+        display: block;
+        width: 100%;
+        outline: none;
+        background: transparent;
+
+        border: 0;
+        border-radius: unset;
+        margin: 0;
+        padding: 0;
+
+        color: white;
+        text-shadow: 0 0 5px #c8c8c8;
+      }
+
+      button {
+        border: 0;
+        border-radius: unset;
+        margin: 0;
+        padding: 4px 8px;
+      }
+    }
+  }
+}

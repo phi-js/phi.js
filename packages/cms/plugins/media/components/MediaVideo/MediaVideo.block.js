@@ -3,6 +3,8 @@ import UiVideoChaptersEditor from '../../../../../ui/components/UiVideo/UiVideoC
 import MediaVideoPicker from './MediaVideoPicker.vue'
 
 export default {
+  tags: ['video'],
+
   id: 'MediaVideo',
   title: 'Video',
   icon: 'mdi:youtube',

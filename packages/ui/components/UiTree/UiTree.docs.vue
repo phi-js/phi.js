@@ -40,7 +40,7 @@ function clickItem(item, toggleFx) {
     <template #default="{item, children, isOpen, toggle}">
       <UiItem
         v-bind="(({ children, ...o }) => o)(item)"
-        class="myTreeItem ui--clickable ui--noselect"
+        class="myTreeItem ui--clickable"
         :class="{'myTreeItem--open': isOpen, 'myTreeItem--active': item.isActive}"
         :style="{'--item-color': item.color}"
         @click="clickItem(item, toggle)"
@@ -76,7 +76,6 @@ function clickItem(item, toggleFx) {
 }
 
 .myTreeItem {
-  border-radius: var(--ui-radius);
   transition: all var(--ui-duration-snap);
 
   &--open {

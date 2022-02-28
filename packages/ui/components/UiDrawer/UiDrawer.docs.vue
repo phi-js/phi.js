@@ -21,7 +21,7 @@ const isOpen = ref(false)
   <UiDrawer v-model:open="isOpen">
     <template #trigger>
       <UiItem
-        class="ui--clickable ui--noselect"
+        class="ui--clickable"
         text="Toggle drawer"
         :icon="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'"
       />
@@ -52,7 +52,7 @@ const isOpen = ref(false)
   >
     <template #trigger="{ isOpen }">
       <UiItem
-        class="ui--clickable ui--noselect"
+        class="ui--clickable"
         :text="`Toggle drawer ${n}`"
         :icon="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'"
       />
@@ -86,7 +86,7 @@ const isOpen = ref(false)
   >
     <template #trigger="{ isOpen }">
       <UiItem
-        class="ui--clickable ui--noselect"
+        class="ui--clickable"
         :text="`Toggle drawer ${n}`"
         :icon="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'"
       />

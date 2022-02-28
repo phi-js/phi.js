@@ -76,7 +76,7 @@ watch(currentWord, () => currentWord.value && emit('wordEnter', currentWord.valu
 </script>
 
 <template>
-  <div class="LyricsPlayer ui--noselect">
+  <div class="LyricsPlayer">
     <div
       v-for="(line, l) in allLines"
       :key="l"
@@ -102,7 +102,6 @@ watch(currentWord, () => currentWord.value && emit('wordEnter', currentWord.valu
 <style lang="scss">
 .LyricsPlayer {
   font-size: 1.4em;
-  font-family: var(--ui-font-secondary);
   font-weight: 500;
 
   &__line {

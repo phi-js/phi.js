@@ -1,38 +1,3 @@
-<template>
-  <div class="UiItem" @click="$emit('click', $event)">
-    <div v-if="badge != null" class="UiItem__badge" v-text="badge" />
-    <div v-if="hasSlot('icon')" class="UiItem__icon" @click="$emit('click-icon', $event)">
-      <slot name="icon" />
-    </div>
-    <UiIcon
-      v-else-if="icon"
-      class="UiItem__icon"
-      :src="icon"
-      :color="iconColor"
-      @click="$emit('click-icon', $event)"
-    />
-
-    <div
-      v-if="hasSlot('default') || text || subtext"
-      class="UiItem__body"
-      @click="$emit('click-body', $event)"
-    >
-      <slot name="default">
-        <h1 class="UiItem__text" v-text="text" />
-        <p v-if="subtext" class="UiItem__subtext" v-text="subtext" />
-      </slot>
-    </div>
-
-    <div
-      v-if="hasSlot('actions')"
-      class="UiItem__actions"
-      @click.stop="$emit('click-actions', $event)"
-    >
-      <slot name="actions" />
-    </div>
-  </div>
-</template>
-
 <script>
 import { UiIcon } from '../UiIcon'
 
@@ -59,12 +24,6 @@ export default {
       default: null,
     },
 
-    iconColor: {
-      type: String,
-      required: false,
-      default: 'inherit',
-    },
-
     badge: {
       type: [String, Number],
       required: false,
@@ -81,63 +40,79 @@ export default {
 }
 </script>
 
+<template>
+  <div class="UiItem" @click="$emit('click', $event)">
+    <div v-if="hasSlot('icon')" class="UiItem__icon" @click="$emit('click-icon', $event)">
+      <slot name="icon" />
+    </div>
+    <UiIcon v-else-if="icon" class="UiItem__icon" :src="icon" @click="$emit('click-icon', $event)" />
+
+    <div v-if="hasSlot('default')" class="UiItem__body" @click="$emit('click-body', $event)">
+      <slot name="default" />
+    </div>
+    <div
+      v-else-if="text || subtext"
+      class="UiItem__body UiItem__body--default"
+      @click="$emit('click-body', $event)"
+    >
+      <h3 class="UiItem__text" v-text="text" />
+      <p v-if="subtext" class="UiItem__subtext" v-text="subtext" />
+    </div>
+    <div
+      v-if="hasSlot('actions')"
+      class="UiItem__actions"
+      @click.stop="$emit('click-actions', $event)"
+    >
+      <slot name="actions" />
+    </div>
+
+    <div v-if="badge" class="UiItem__badge" v-text="badge" />
+  </div>
+</template>
+
 <style lang="scss">
 .UiItem {
-  position: relative; // para posicionar el badge
+  --ui-item-padding: inherit;
+  --ui-item-badge-color: #ea5455;
+
+  position: relative;
   display: flex;
   align-items: stretch;
 
+  &__icon,
+  &__body,
   &__badge {
-    background-color: var(--ui-color-danger);
-    color: #fff;
-
-    position: absolute;
-    top: 12px;
-    left: -4px;
-    width: 16px;
-    height: 16px;
-    line-height: 16px;
-
-    border-radius: 50%;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 8px;
-    font-weight: bold;
+    box-sizing: border-box;
   }
 
   &__icon {
-    padding: var(--ui-padding);
-    &:last-child {
-      padding-right: 0;
-    }
-  }
-
-  &__actions {
-    display: flex;
-    align-items: stretch;
+    font-size: 1.2em;
+    min-width: 1.8em;
+    max-height: 2.5em;
+    padding: var(--ui-item-padding);
   }
 
   &__body {
     flex: 1;
     min-width: 0; // Allows correct cropping of overflown texts (see https://css-tricks.com/flexbox-truncated-text/)
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: var(--ui-padding);
+    padding: var(--ui-item-padding);
 
-    padding-left: 0;
-    &:first-child {
-      padding-left: var(--ui-padding-horizontal);
+    &:nth-child(2) {
+      padding-left: 0;
+    }
+
+    &--default {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
   }
 
   &__text {
     margin: 0;
-    font-family: var(--ui-font-secondary);
     font-size: 1em;
     font-weight: inherit;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -148,22 +123,29 @@ export default {
     font-size: 0.82em;
   }
 
-  &--inline {
-    display: inline-flex;
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ui-item-padding);
   }
 
-  &--nowrap {
-    .UiItem {
-      &__text,
-      &__subtext {
-        white-space: nowrap;
-      }
+  &__badge {
+    background-color: var(--ui-item-badge-color);
+    color: #fff;
+    font-size: min(0.7em, 26px);
+    width: 1.5em;
+    height: 1.5em;
 
-      &__subtext {
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
+    position: absolute;
+    top: 0.35em;
+    left: -0.4em;
+
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>

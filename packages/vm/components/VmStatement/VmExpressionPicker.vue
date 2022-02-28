@@ -154,10 +154,6 @@ export default {
 
 <style lang="scss">
 .VmExpressionPicker {
-  .launcher-trigger {
-    padding: var(--ui-padding);
-  }
-
   .launcher-popover-contents {
     width: 480px;
     max-height: 500px;

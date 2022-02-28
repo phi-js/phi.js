@@ -11,7 +11,7 @@ const isFormOpen = ref(false)
   <div class="GraphNodeCreator">
     <UiItem
       v-show="!isFormOpen"
-      class="GraphNodeCreator__item ui--noselect --nowrap"
+      class="GraphNodeCreator__item"
       icon="mdi:plus"
       @click="isFormOpen = true"
       title="Create new page"
@@ -29,7 +29,6 @@ const isFormOpen = ref(false)
 .GraphNodeCreator {
   &__item {
     cursor: pointer;
-    border-radius: var(--ui-radius);
     font-size: 14px;
     font-weight: bold;
     background-color: #f4f4f4;

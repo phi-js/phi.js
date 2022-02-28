@@ -199,7 +199,6 @@ function escapeListener(event) {
   &__item-from,
   &__item-to {
     cursor: pointer;
-    border-radius: var(--ui-radius);
     font-size: 14px;
     font-weight: bold;
     background-color: #f4f4f4;

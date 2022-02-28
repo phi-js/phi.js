@@ -9,7 +9,7 @@
       :src="node.attrs.src"
     />
 
-    <div class="img__controls ui-toolbar">
+    <div class="img__controls UiGroup">
       <UiIcon
         class="ui--clickable"
         :class="{'--active': style.float == 'left'}"

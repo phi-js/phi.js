@@ -53,6 +53,7 @@ export default {
         'CmsLauncher.Tab.ecommerce': 'eCommerce',
         'CmsLauncher.Tab.cms': 'CMS',
         'CmsLauncher.Tab.navigation': 'Navegación',
+        'CmsLauncher.Tab.video': 'Video',
       },
 
       en: {
@@ -63,6 +64,7 @@ export default {
         'CmsLauncher.Tab.ecommerce': 'eCommerce',
         'CmsLauncher.Tab.cms': 'CMS',
         'CmsLauncher.Tab.navigation': 'Navigation',
+        'CmsLauncher.Tab.video': 'Video',
       },
     })
 
@@ -111,7 +113,7 @@ export default {
     currentTabBlocks() {
       let retval = this.availableBlocks.filter((c) =>
         (!c.tags && this.currentTab == this.emptyTagsTab) ||
-          (c.tags && c.tags.includes(this.currentTab)))
+        (c.tags && c.tags.includes(this.currentTab)))
 
       if (this.text.trim()) {
         let searchString = this.normalize(this.text)
@@ -210,7 +212,7 @@ export default {
       blocks.forEach((block) => this.$emit('input', block))
     },
 
-    onLauncherComponentCancel() {},
+    onLauncherComponentCancel() { },
 
     countBlocks(definitionId) {
       let retval = 0;
@@ -251,22 +253,19 @@ export default {
         type="text"
         :placeholder="placeholder"
         @keydown.enter.prevent.stop="autoCreate()"
-      >
+      />
     </div>
 
     <UiTabs v-model="currentTab">
       <UiTab
-        v-for="(tabName,i) in availableTabs"
+        v-for="(tabName, i) in availableTabs"
         :key="i"
         :value="tabName"
         :text="i18n.t(`CmsLauncher.Tab.${tabName}`)"
       />
     </UiTabs>
     <div class="content-under-tabs">
-      <div
-        v-if="launcherComponent"
-        class="launcher-component"
-      >
+      <div v-if="launcherComponent" class="launcher-component">
         <component
           :is="launcherComponent.component"
           v-bind="launcherComponent.props"
@@ -275,7 +274,7 @@ export default {
         />
       </div>
 
-      <div class="launcher-picker ui--noselect">
+      <div class="launcher-picker">
         <div class="launcher-picker-items">
           <div
             v-for="component in currentTabBlocks"
@@ -283,10 +282,7 @@ export default {
             class="launcher-picker-item"
             @click="launchDefinition(component)"
           >
-            <UiIcon
-              class="picker-item-icon"
-              :src="component.icon"
-            />
+            <UiIcon class="picker-item-icon" :src="component.icon" />
             <h3>{{ component.title }}</h3>
           </div>
         </div>
@@ -316,7 +312,6 @@ export default {
       font-size: 1em;
       border: 0;
       background: transparent;
-      padding: var(--ui-padding);
       resize: vertical;
       color: inherit;
       outline: none;
@@ -334,7 +329,6 @@ export default {
       cursor: pointer;
       margin: 6px;
       padding: 8px;
-      border-radius: var(--ui-radius);
       text-align: center;
 
       &:hover {
@@ -353,7 +347,6 @@ export default {
       }
 
       h3 {
-        font-family: var(--ui-font-secondary);
         font-size: 12px;
       }
     }

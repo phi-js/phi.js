@@ -1,0 +1,139 @@
+// Base styles
+.UiInput {
+  &__element {
+    padding: 6px 8px;
+    background: white;
+    font-family: inherit;
+    font-size: inherit;
+    border-radius: 4px;
+
+    .UiInput__element::placeholder {
+      color: #999;
+    }
+  }
+}
+
+// Label animation
+.UiInput {
+  position: relative;
+  padding-top: 1.4em;
+
+  &__label {
+    pointer-events: none;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+
+    font-size: 0.9em;
+    transition: all var(--ui-duration-snap);
+  }
+
+  &--empty {
+    .UiInput__label {
+      left: 0.2em;
+      top: 1.4em;
+      font-size: 1em;
+      opacity: 1;
+    }
+
+    .UiInput__element::placeholder {
+      color: transparent;
+    }
+
+    .UiInput__label + .UiInput__body {
+      opacity: 0;
+    }
+  }
+
+  &--focused {
+    .UiInput__label {
+      left: 0;
+      top: 0;
+      font-size: 0.9em;
+    }
+
+    .UiInput__element::placeholder {
+      color: #999;
+    }
+  }
+}
+
+// Animated bottom border
+.UiInput {
+  &__element {
+    display: block;
+    outline: none;
+    border: 0;
+    margin: 0;
+    width: 100%;
+  }
+
+  &__body {
+    position: relative;
+    border-bottom: 1px solid #ccc;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--ui-color-primary);
+      transition: all var(--ui-duration-snap);
+    }
+  }
+
+  &--focused {
+    .UiInput__body {
+      &::after {
+        width: 100%;
+      }
+    }
+  }
+}
+
+
+// Special cases
+.UiInput {
+  // static label
+  &--type-upload,
+  &--type-url,
+  &--type-code,
+  &--type-button,
+  &--type-submit,
+  &--type-select,
+  &--type-select-native,
+  &--type-select-buttons,
+  &--type-select-list,
+  &.UiSelectNative {
+    padding-top: 0;
+
+    .UiInput {
+      &__body {
+        border-bottom: initial;
+      }
+
+      &__label {
+        left: 0;
+        top: 0;
+      }
+    }
+  }
+
+  // no underline
+  &--type-checkbox,
+  &--type-button,
+  &--type-submit {
+    .UiInput {
+      &__body {
+        border: 0;
+        &::after {
+          content: unset;
+        }
+      }
+    }
+  }
+}

@@ -55,12 +55,6 @@ const emit = defineEmits(['update:modelValue'])
     font-family: inherit;
     background-color: transparent;
     color: inherit;
-
-    padding: 0 var(--ui-padding-horizontal);
-
-    &::placeholder {
-      color: var(--ui-color-fg);
-    }
   }
 
   .UiUpload__files {

@@ -155,16 +155,11 @@ const dashboardProps = computed(() => ({
         class="CmsPageLayoutEditor__draggable"
         group="ui-upload-draggable"
         item-key="id"
-        ccchandle=".ui-item__icon"
         @update:modelValue="emitUpdate"
       >
-        <template #item="{element: file}">
+        <template #item="{ element: file }">
           <div>
-            <a
-              class="ui--clickable ui--noselect"
-              target="_blank"
-              :href="file.url"
-            >
+            <a class="ui--clickable" target="_blank" :href="file.url">
               <UiItem
                 class="ui--clickable"
                 :text="file.name"
@@ -172,11 +167,7 @@ const dashboardProps = computed(() => ({
                 :icon="file.thumbnail"
               >
                 <template #actions>
-                  <UiIcon
-                    src="mdi:close"
-                    class="ui--clickable"
-                    @click.prevent="deleteFile(file)"
-                  />
+                  <UiIcon src="mdi:close" class="ui--clickable" @click.prevent="deleteFile(file)" />
                 </template>
               </UiItem>
             </a>
@@ -188,18 +179,16 @@ const dashboardProps = computed(() => ({
     <template v-if="!props.inline">
       <UiItem
         v-if="placeholder?.text"
-        class="UiUpload__trigger ui--clickable ui--noselect"
+        class="UiUpload__trigger ui--clickable"
         v-bind="placeholder"
         @click="isOpen = !isOpen"
       />
       <button
         v-else
         type="button"
-        class="UiUpload__trigger ui__button"
+        class="UiUpload__trigger UiButton"
         @click="isOpen = !isOpen"
-      >
-        {{ props.placeholder }}
-      </button>
+      >{{ props.placeholder }}</button>
     </template>
 
     <component

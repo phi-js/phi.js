@@ -30,7 +30,7 @@ let activeChapters = ref([])
       style="min-height: 420px"
     />
 
-    <div class="ui__group">
+    <div class="UiGroup">
       <button
         type="button"
         @click="$refs.myvideo.play()"

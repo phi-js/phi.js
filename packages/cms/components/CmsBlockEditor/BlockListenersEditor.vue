@@ -1,7 +1,8 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { VmStatement } from '../../../vm/components'
-import { UiInput } from '../../../ui/components'
+import { UiInput, UiItem } from '../../../ui/components'
+import { getBlockDefinition } from '../../functions';
 
 const props = defineProps({
   /**
@@ -14,8 +15,14 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue'])
-
 const events = ref([])
+
+const availableEvents = ref([])
+getBlockDefinition(props.modelValue).then((blockDefinition) => {
+  if (blockDefinition?.emits?.length) {
+    availableEvents.value = blockDefinition.emits
+  }
+})
 
 watch(
   () => props.modelValue,
@@ -49,21 +56,14 @@ function addEvent() {
 
 <template>
   <div class="BlockListenersEditor">
-    <div
-      v-for="(event, i) in events"
-      :key="i"
-    >
-      <label class="ui-label">{{ event.name }}</label>
-      <VmStatement
-        v-model="events[i].stmt"
-        @update:modelValue="emitUpdate"
-      />
+    <div class="BlockListenersEditor__available">
+      <UiItem v-for="event in availableEvents" :key="event.event" :text="event.text" />
     </div>
-    <UiInput
-      v-model="newEventName"
-      type="text"
-      placeholder="Evento"
-      @keypress.enter="addEvent()"
-    />
+
+    <div v-for="(event, i) in events" :key="i">
+      <label>{{ event.name }}</label>
+      <VmStatement v-model="events[i].stmt" @update:modelValue="emitUpdate" />
+    </div>
+    <UiInput v-model="newEventName" type="text" placeholder="Evento" @keypress.enter="addEvent()" />
   </div>
 </template>

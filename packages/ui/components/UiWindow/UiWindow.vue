@@ -162,7 +162,6 @@ const isHovered = ref(false)
       v-show="isOpen"
       v-bind="attrs"
       :class="[
-        'ui-theme-dark',
         'UiWindow UiWindow__scrim',
         {
           'UiWindow--moving': isMoving,
@@ -203,13 +202,11 @@ const isHovered = ref(false)
         class="UiWindow__box ui__box ui--z"
         @update:coords="storeCoords"
         @move-end="dockTo(dropTarget)"
-
         @mouseenter="isHovered = true"
         @mouseleave="isHovered = false"
         @step="resizeBody"
       >
         <div class="UiWindow__header">
-
           <div
             style="flex:1; align-self: stretch; cursor: move;"
             @mousedown="startMove"
@@ -222,10 +219,10 @@ const isHovered = ref(false)
             <template #trigger>
               <UiIcon
                 :src="dock
-                  ? (dock == 'popup' ? 'mdi:window-restore' : `mdi:dock-${dock}`)
-                  : 'mdi:card-outline'"
+                ? (dock == 'popup' ? 'mdi:window-restore' : `mdi:dock-${dock}`)
+                : 'mdi:card-outline'"
                 class="ui--clickable"
-                :class="{'--active': !dock}"
+                :class="{ '--active': !dock }"
               />
             </template>
             <template #contents="popover">
@@ -233,66 +230,56 @@ const isHovered = ref(false)
                 <UiIcon
                   src="mdi:card-outline"
                   class="ui--clickable"
-                  :class="{'--active': !dock}"
+                  :class="{ '--active': !dock }"
                   @click="dockTo(null)"
                 />
 
                 <UiIcon
                   src="mdi:dock-bottom"
                   class="ui--clickable"
-                  :class="{'--active': dock == 'bottom'}"
+                  :class="{ '--active': dock == 'bottom' }"
                   @click="dockTo('bottom')"
                 />
 
                 <UiIcon
                   src="mdi:dock-top"
                   class="ui--clickable"
-                  :class="{'--active': dock == 'top'}"
+                  :class="{ '--active': dock == 'top' }"
                   @click="dockTo('top')"
                 />
 
                 <UiIcon
                   src="mdi:dock-left"
                   class="ui--clickable"
-                  :class="{'--active': dock == 'left'}"
+                  :class="{ '--active': dock == 'left' }"
                   @click="dockTo('left')"
                 />
 
                 <UiIcon
                   src="mdi:dock-right"
                   class="ui--clickable"
-                  :class="{'--active': dock == 'right'}"
+                  :class="{ '--active': dock == 'right' }"
                   @click="dockTo('right')"
                 />
 
-              <!-- <UiIcon
+                <!-- <UiIcon
                 src="mdi:window-restore"
                 class="ui--clickable"
                 :class="{'--active': dock == 'popup'}"
                 @click="dockTo('popup')"
-              /> -->
+                />-->
               </div>
             </template>
           </UiPopover>
 
-          <UiIcon
-            src="mdi:close"
-            class="ui--clickable window-close"
-            @click="close"
-          />
+          <UiIcon src="mdi:close" class="ui--clickable window-close" @click="close" />
         </div>
 
         <div class="UiWindow__body">
-          <slot
-            name="default"
-            :close="close"
-          />
+          <slot name="default" :close="close" />
         </div>
-        <footer class="UiWindow__footer ui-footer">
-          <slot
-            name="footer"
-            :close="close"
-          />
+        <footer class="UiWindow__footer">
+          <slot name="footer" :close="close" />
         </footer>
       </UiResizable>
     </div>
@@ -379,7 +366,8 @@ const isHovered = ref(false)
 
     display: flex;
     flex-direction: column;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+      rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   }
 
   &__header {
@@ -414,7 +402,8 @@ const isHovered = ref(false)
     transition: all var(--ui-duration-snap);
     background-color: var(--ui-color-primary);
     opacity: 0;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+      rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 
     &:hover {
       opacity: 0.33;

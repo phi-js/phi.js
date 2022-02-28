@@ -1,5 +1,5 @@
 <script setup>
-import { ref, toRef, unref, computed, watch } from 'vue'
+import { ref, toRef, unref, reactive, computed, watch, useSlots } from 'vue'
 
 import { UiItem } from '../UiItem'
 import { UiIcon } from '../UiIcon'
@@ -61,12 +61,58 @@ const props = defineProps({
     default: null,
   },
 
+  /**
+   * A JSON PATH (or Array of JSON paths)
+   * Listing the property values to be indexed for searching
+   *
+   * @default '$.text'
+   */
   optionSearch: {
     type: [String, Array],
     required: false,
     default: null,
   },
 })
+
+
+
+/*
+A canonical tree of all available options
+{
+  value,
+  text,
+  children: [
+    { value, text, children? },
+    ...
+  ]
+}
+*/
+const optionTree = reactive({})
+
+
+/* Load <option> children */
+const slots = useSlots()
+
+const nestedOptions = slots?.default?.()
+if (nestedOptions) {
+  nestedOptions.forEach(optionEl => {
+    if (optionEl.type == 'option') {
+      console.log('option', optionEl, optionEl.type, optionEl.props?.value)
+    }
+
+    if (optionEl.type == 'optgroup') {
+      console.log('optgroup', optionEl, optionEl.props?.label)
+
+      const groupOptions = optionEl.children || []
+      console.log('optgroup', optionEl, optionEl.props?.label, groupOptions)
+      groupOptions.forEach(subOption => {
+        console.log('subOption', subOption, subOption.type, subOption.props?.value)
+      })
+
+    }
+  })
+}
+
 
 // Option list manager: Converts arbitrary array to Option array,
 // and provides a reactive searchQuery
@@ -84,12 +130,16 @@ const { selection, isSelected, select, toggle } = useSelectionManager(
   toRef(props, 'modelValue'),
   toRef(props, 'multiple'),
   (newValue) => {
+
+    console.log('selection changed', newValue)
+
     emit('update:modelValue', newValue)
     if (!props.multiple) {
       close()
     }
   },
 )
+
 
 const selectedOptions = computed(() =>
   options.value.filter((option) => isSelected(option.value)))
@@ -228,23 +278,16 @@ const placeholderOption = computed(() => {
   >
     <UiPopover
       v-model:open="isOpen"
-      :tippy="{theme: 'light-border'}"
+      :tippy="{ theme: 'light-border' }"
       placement="bottom-start"
-      trigger=""
+      trigger
       @close="close()"
     >
       <template #trigger>
-        <div class="UiSelect__face ui--noselect ui__inset">
-          <template
-            v-for="option in visibleChips"
-            :key="option.value"
-          >
+        <div class="UiSelect__face">
+          <template v-for="option in visibleChips" :key="option.value">
             <slot name="chip">
-              <UiItem
-                v-bind="option"
-                class="UiChip ui--clickable"
-                @click="clickChip(option)"
-              >
+              <UiItem v-bind="option" class="UiChip ui--clickable" @click="clickChip(option)">
                 <template #actions>
                   <div
                     class="UiChip__btn-close ui--clickable"
@@ -259,9 +302,7 @@ const placeholderOption = computed(() => {
                         .closest('.UiChip')
                         .classList.remove('UiChip--threatened')
                     "
-                  >
-                    &times;
-                  </div>
+                  >&times;</div>
                 </template>
               </UiItem>
             </slot>
@@ -276,20 +317,11 @@ const placeholderOption = computed(() => {
               v-if="hiddenChips.length"
               name="aggregator"
               :options="hiddenChips"
-            >
-              ... {{ hiddenChips.length }} more
-            </slot>
-            <slot
-              v-else
-              name="placeholder"
-            >
-              <UiItem
-                style="flex: 1"
-                v-bind="placeholderOption"
-              />
+            >... {{ hiddenChips.length }} more</slot>
+            <slot v-else name="placeholder">
+              <UiItem style="flex: 1" v-bind="placeholderOption" />
             </slot>
             <UiIcon
-              style="padding: var(--ui-padding)"
               :src="isOpen ? 'mdi:chevron-up' : 'mdi:chevron-down'"
             />
           </div>
@@ -297,25 +329,27 @@ const placeholderOption = computed(() => {
       </template>
 
       <template #contents>
-        <div
-          ref="elPopoverContents"
-          class="UiSelect__popover"
-        >
+        <div ref="elPopoverContents" class="UiSelect__popover">
           <input
             ref="searchElem"
             v-model="searchQuery"
             type="search"
             class="UiSelect__search-input"
             :placeholder="focusedItem?.text"
-            @keydown.arrow-up.prevent="focusPrevious()"
-            @keydown.arrow-down.prevent="focusNext()"
+            xxxkeydown.arrow-up.prevent="focusPrevious()"
+            xxxkeydown.arrow-down.prevent="focusNext()"
             @keydown.enter.stop="clickOption(focusedItem)"
-          >
+          />
 
-          <div
-            ref="elOptionsContainer"
-            class="UiSelect__options"
-          >
+          <div ref="elOptionsContainer" class="UiSelect__options">
+            <!-- <select class="UiSelect__element" multiple v-model="selection">
+              <option
+                v-for="option in parsedOptions"
+                :key="option.value"
+                :value="option.value"
+              >{{ option.text }}</option>
+            </select>-->
+
             <div
               v-for="option in parsedOptions"
               :key="option.value"
@@ -325,12 +359,9 @@ const placeholderOption = computed(() => {
                 'UiOption--selected': option.isSelected
               }"
             >
-              <slot
-                name="option"
-                v-bind="option"
-              >
+              <slot name="option" v-bind="option">
                 <UiItem
-                  class="UiOption ui--clickable ui--noselect"
+                  class="UiOption ui--clickable"
                   v-bind="option"
                   @click="clickOption(option)"
                 />
@@ -344,27 +375,6 @@ const placeholderOption = computed(() => {
 </template>
 
 <style lang="scss">
-//// TESTING
-select.ui__input {
-  option {
-    padding: 6px 8px !important;
-  }
-
-  /*firefox only*/
-  scrollbar-width: thin;
-
-  /*webkit based browsers only*/
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-radius: 3px;
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-
-}
-
 .UiSelect {
   display: inline-block;
 
@@ -399,7 +409,6 @@ select.ui__input {
     border: 0;
     margin: 0;
     background: transparent;
-    padding: var(--ui-padding);
   }
 
   .UiOption {

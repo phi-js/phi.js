@@ -85,11 +85,9 @@ function onSelectChange($evt) {
 .VmOperatorPicker {
   border: 0;
   background: transparent;
-  font-family: var(--ui-font-secondary);
   font-size: 13px;
   max-width: 100%;
 
   cursor: pointer;
-  padding: var(--ui-padding);
 }
 </style>

@@ -1,6 +1,4 @@
 <script setup>
-import '../../style/blocks/UiButton.scss'
-
 import { computed, useAttrs, useSlots } from 'vue'
 import { UiItem } from '../UiItem'
 import { UiIcon } from '../UiIcon'
@@ -67,7 +65,7 @@ const currentText = computed(() => {
 <template>
   <button
     type="button"
-    class="UiButton"
+    class="UiButton UiButton--component"
     :class="{
       'UiButton--loading': props.isLoading,
       'UiButton--error': errors.length,

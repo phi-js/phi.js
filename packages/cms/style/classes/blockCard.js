@@ -5,9 +5,6 @@ export default {
   css: `
     .blockCard {
       background-color: #fff;
-      padding: var(--ui-padding-vertical) var(--ui-padding-horizontal);
-      border-radius: var(--ui-radius);
-      margin: var(--ui-breathe) 0;
     }
   `,
 

@@ -41,7 +41,6 @@ const isSelect = computed(() => props.modelValue?.type && props.modelValue.type.
         v-else
         text="Add options"
         icon="mdi:form-dropdown"
-        class="UiItem--inline ui-inset"
       />
     </template>
     <UiInput

@@ -49,7 +49,7 @@ const newName = ref('')
 <template>
   <fieldset>
     <legend>Controles externos</legend>
-    <div class="ui__group --block">
+    <fieldset class="UiGroup">
       <UiInput
         v-model="active"
         type="select-list"
@@ -78,7 +78,7 @@ const newName = ref('')
         :label="`storyEl.push(${newName}, dialog)`"
         @click="storyEl.push(newName, 'dialog')"
       />
-    </div>
+    </fieldset>
 
     <UiInput
       v-model="myStory.title"
@@ -112,7 +112,7 @@ const newName = ref('')
         @click="back()"
       />
 
-      <div class="ui-card">
+      <div>
         <h1>{{ node.title }}</h1>
         <p>{{ node.text }}</p>
         <pre>foo: {{ node.foo }}</pre>
@@ -120,7 +120,7 @@ const newName = ref('')
     </template>
 
     <template #footer="{ node, push }">
-      <div class="ui__group">
+      <div class="UiGroup">
         <UiInput
           v-for="(hijo, i) in myStory.hijos"
           :key="i"

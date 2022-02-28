@@ -1,5 +1,5 @@
 <template>
-  <div class="ui-calendar ui-card ui-rounded">
+  <div class="UiCalendar">
     <controls
       v-model:date="innerDate"
       v-model:view="currentView"
@@ -128,12 +128,10 @@ export default {
 </script>
 
 <style lang="scss">
-.ui-calendar {
+.UiCalendar {
   .ui-calendar-header {
     display: flex;
     align-items: center;
-    padding: var(--ui-breathe);
-    border-radius: var(--ui-radius);
     background-color: #fff;
   }
 }

@@ -126,7 +126,6 @@ export default {
 
 <style lang="scss">
 .StmtAndOr {
-  border-radius: var(--ui-radius);
   border: 1px inset #666;
   padding: 0 20px 0 0px;
 
@@ -137,7 +136,6 @@ export default {
   .StmtAndOr__select {
     border: 0;
     background: transparent;
-    font-family: var(--ui-font-secondary);
     // margin-bottom: 6px;
     padding: 3px 6px;
   }
@@ -178,7 +176,6 @@ export default {
   // borde redondeado a la izquierda
   .StmtAndOr__item,
   .stmt-boo-adder {
-    border-radius: var(--ui-radius);
     padding-left: 8px;
     border-left: 2px solid var(--ui-color-primary);
   }

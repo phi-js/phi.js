@@ -63,7 +63,6 @@ export default {
                 icon: 'mdi:badge-account',
                 text: '{{$item.name}}',
                 subtext: '{{$item.email}}',
-                class: 'ui--noselect',
               },
             },
             {

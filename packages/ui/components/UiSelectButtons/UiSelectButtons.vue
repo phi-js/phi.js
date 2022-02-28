@@ -82,13 +82,13 @@ const { options } = useOptionsManager(toRef(props, 'options'), {
 </script>
 
 <template>
-  <div class="UiSelectButtons ui__group">
+  <div class="UiSelectButtons UiGroup">
     <button
       v-for="option in options"
       :key="option.value"
       :value="option.value"
       type="button"
-      class="UiSelectButtons__button ui__group-item"
+      class="UiSelectButtons__button"
       :class="{
         'UiSelectButtons__button--selected': innerValue.includes(option.value)
       }"

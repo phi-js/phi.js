@@ -59,7 +59,6 @@ watch(
       <UiItem
         icon="mdi:pound"
         :text="innerBlock?.info?.text || 'Page settings'"
-        class="ui--noselect"
       />
     </template>
 
@@ -77,14 +76,12 @@ watch(
           <BlockCssEditor
             v-model="innerBlock"
             @update:modelValue="emit('update:block', innerBlock)"
-            style="margin: 0 var(--ui-breathe)"
           />
         </UiTab>
 
         <UiTab text="Source" icon="mdi:code-json" value="source">
           <VmStatement
             v-model="innerBlock"
-            style="height:100%"
             @update:modelValue="emit('update:block', innerBlock)"
           />
         </UiTab>
@@ -92,8 +89,8 @@ watch(
     </template>
 
     <template #footer="{ close }">
-      <button type="button" class="ui-button --main" @click="accept() && close()">Aceptar</button>
-      <button type="button" class="ui-button --cancel" @click="cancel() && close()">Cancelar</button>
+      <button type="button" class="UiButton UiButton--main" @click="accept() && close()">Aceptar</button>
+      <button type="button" class="UiButton UiButton--cancel" @click="cancel() && close()">Cancelar</button>
     </template>
   </UiWindow>
 </template>

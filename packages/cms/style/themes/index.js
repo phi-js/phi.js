@@ -37,7 +37,6 @@ export const theme1 = {
   thumbnail: 'https://static1.squarespace.com/static/images/5dd2c5c0ce90f5420a82e1f2?format=500w',
   css: `
     .LayoutPage {
-      border-radius: var(--ui-radius);
       border: 3px solid purple;
       --ui-content-width: 1024px;
       --ui-color-primary: blue;
@@ -120,7 +119,6 @@ export const theme1 = {
       css: `
         .BlockCard {
           padding: 12px;
-          border-radius: var(--ui-radius);
           background-color: #fff;
           margin-bottom: 12px;
         }

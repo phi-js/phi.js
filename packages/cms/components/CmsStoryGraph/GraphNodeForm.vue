@@ -71,7 +71,7 @@ function toValidHash(string) {
   <div class="GraphNodeForm">
     <input
       type="text"
-      class="ui__input"
+      class="UiInput"
       placeholder="Page name"
       v-model="innerNode.info.text"
       ref="inputEl"
@@ -82,11 +82,11 @@ function toValidHash(string) {
     <button
       :disabled="!innerNode.info.text.trim()"
       type="button"
-      class="ui__button"
+      class="UiButton"
       @click="emitUpdate"
     >{{ props.label }}</button>
 
-    <button type="button" class="ui__button ui__button--cancel" @click="emit('cancel')">Cancel</button>
+    <button type="button" class="UiButton UiButton--cancel" @click="emit('cancel')">Cancel</button>
   </div>
 </template>
 
@@ -100,12 +100,6 @@ function toValidHash(string) {
   top: -6px;
 
   font-size: 14px;
-  border-radius: var(--ui-radius);
-  padding: var(--ui-padding);
   background-color: #f4f4f4;
-
-  .ui__input {
-    margin-right: 16px;
-  }
 }
 </style>

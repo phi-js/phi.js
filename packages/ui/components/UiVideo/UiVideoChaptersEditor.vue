@@ -15,20 +15,20 @@
       <div
         v-for="(chapter, i) in sanitizedChapters"
         :key="i"
-        class="UiVideoChaptersEditor__chapter ui__group"
-        :class="{'ui-highlighted': chapter.isActive}"
+        class="UiVideoChaptersEditor__chapter UiGroup"
+        :class="{'UiVideoChaptersEditor__chapter--active': chapter.isActive}"
       >
         <input
           v-model="innerModel[i].name"
           type="text"
-          class="ui__input"
+          class="UiInput"
           placeholder="Nombre del capítulo"
           @input="emitInput"
         >
         <input
           v-model="innerModel[i].start"
           type="number"
-          class="ui__input"
+          class="UiInput"
           placeholder="inicio (ms.)"
           style="width: 6em"
           @input="emitInput"
@@ -36,7 +36,7 @@
         <input
           v-model="innerModel[i].end"
           type="number"
-          class="ui__input"
+          class="UiInput"
           placeholder="fin (ms.)"
           style="width: 6em"
           @input="emitInput"
@@ -49,24 +49,24 @@
         />
       </div>
 
-      <div class="UiVideoChaptersEditor__chapter UiVideoChaptersEditor__chapter--adder ui__group">
+      <div class="UiVideoChaptersEditor__chapter UiVideoChaptersEditor__chapter--adder UiGroup">
         <input
           v-model="newChapter.name"
           type="text"
-          class="ui__input"
+          class="UiInput"
           placeholder="Nombre del capítulo"
         >
         <input
           v-model="newChapter.start"
           type="number"
-          class="ui__input"
+          class="UiInput"
           placeholder="inicio (ms.)"
           style="width: 6em"
         >
         <input
           v-model="newChapter.end"
           type="number"
-          class="ui__input"
+          class="UiInput"
           placeholder="fin (ms.)"
           style="width: 6em"
         >
@@ -175,10 +175,6 @@ export default {
 
   &__chapters {
     flex: 1;
-  }
-
-  &__video {
-    margin-right: var(--ui-padding-horizontal);
   }
 
   &__chapter {

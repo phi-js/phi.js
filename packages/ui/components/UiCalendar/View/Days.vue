@@ -492,7 +492,6 @@ export default {
     max-width: 60px;
     text-align: center;
 
-    font-family: var(--ui-font-secondary);
     font-size: 11px;
     font-weight: bold;
     color: rgba(0, 0, 0, 0.5);

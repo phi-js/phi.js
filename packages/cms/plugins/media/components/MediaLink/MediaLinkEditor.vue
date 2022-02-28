@@ -13,25 +13,25 @@
       <input
         v-model="innerValue.href"
         type="text"
-        class="ui__input"
+        class="UiInput"
         placeholder="http://..."
       >
       <input
         v-model="innerValue.text"
         type="text"
-        class="ui__input"
+        class="UiInput"
         placeholder="Titulo"
       >
       <input
         v-model="innerValue.secondary"
         type="text"
-        class="ui__input"
+        class="UiInput"
         placeholder="Descripcion"
       >
 
       <select
         v-model="innerValue.target"
-        class="ui__input"
+        class="UiInput"
       >
         <option>Destino</option>
         <option value="_system">
@@ -45,14 +45,14 @@
       <div class="link-editor-form-footer">
         <button
           type="button"
-          class="ui-button --main"
+          class="UiButton UiButton__main"
           @click="accept"
         >
           OK
         </button>
         <button
           type="button"
-          class="ui-button --cancel"
+          class="UiButton UiButton__cancel"
           @click="cancel"
         >
           Cancel
@@ -167,7 +167,6 @@ export default {
 
     .link-editor-form-footer {
       text-align: right;
-      margin-top: var(--ui-breathe);
     }
   }
 }

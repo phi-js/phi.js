@@ -87,7 +87,6 @@ export default {
 
   &__text {
     margin: 0;
-    font-family: var(--ui-font-secondary);
     font-size: 1em;
     font-weight: inherit;
     overflow: hidden;

@@ -18,6 +18,21 @@ export default {
     },
   },
 
+  emits: [
+    {
+      event: 'click',
+      text: 'Click on the select box'
+    },
+    {
+      event: 'change',
+      text: 'The picker value changed'
+    },
+    {
+      event: 'foo',
+      text: 'Foo happens'
+    }
+  ],
+
   editor: {
     face: {
       'component': InputFace,

@@ -7,11 +7,8 @@ import { computed, useAttrs, ref } from 'vue'
 import types from './types.js'
 
 const attrs = useAttrs()
-
-// eslint-disable-next-line no-undef
 const emit = defineEmits(['update:modelValue', 'focus', 'blur'])
 
-// eslint-disable-next-line no-undef
 const props = defineProps({
   type: {
     type: String,
@@ -94,7 +91,7 @@ const customComponent = computed(() => {
 })
 
 const showLabel = computed(() => {
-  return props.type != 'button' && props.type != 'submit'
+  return props.label && props.type != 'button' && props.type != 'submit'
 })
 
 const elementProps = computed(() => {
@@ -130,16 +127,8 @@ defineExpose({ element })
 </script>
 
 <template>
-  <div
-    class="UiInput"
-    :class="classNames"
-    :style="attrs.style"
-  >
-    <label
-      v-if="showLabel"
-      class="UiInput__label"
-      v-text="props.label"
-    />
+  <div class="UiInput" :class="classNames" :style="attrs.style">
+    <label v-if="showLabel" class="UiInput__label" v-text="props.label" />
 
     <div class="UiInput__body">
       <slot name="default">
@@ -147,76 +136,38 @@ defineExpose({ element })
           :is="customComponent"
           v-if="customComponent"
           ref="element"
-          class="UiInput__elem"
+          class="UiInput__element"
           v-bind="elementProps"
         />
         <textarea
           v-else-if="props.type == 'textarea'"
           ref="element"
-          class="UiInput__elem ui__input"
+          class="UiInput__element"
           v-bind="nativeElementProps"
         />
         <button
-          v-else-if="props.type == 'button'"
+          v-else-if="props.type == 'button' || props.type == 'submit'"
           ref="element"
-          type="button"
-          class="UiInput__elem ui__button"
-          v-bind="nativeElementProps"
-          v-text="props.label"
-        />
-        <button
-          v-else-if="props.type == 'submit'"
-          ref="element"
-          type="submit"
-          class="UiInput__elem ui__button"
-          v-bind="nativeElementProps"
-          v-text="props.label"
-        />
-        <label
-          v-else-if="props.type == 'checkbox'"
-          class="UiInput__elem ui--noselect"
           :type="props.type"
-        >
-          <input
-            v-bind="nativeCheckboxProps"
-            ref="element"
-            type="checkbox"
-          ><span>{{
-            props.placeholder
-          }}</span></label>
+          class="UiInput__element"
+          v-bind="nativeElementProps"
+          v-text="props.label"
+        />
+        <label v-else-if="props.type == 'checkbox'" class="UiInput__element" :type="props.type">
+          <input v-bind="nativeCheckboxProps" ref="element" type="checkbox" />
+          <span>{{ props.placeholder }}</span>
+        </label>
         <input
           v-else
           v-bind="nativeElementProps"
           ref="element"
-          class="UiInput__elem ui__input"
+          class="UiInput__element"
           :type="props.type"
-        >
+        />
       </slot>
     </div>
     <div class="UiInput__subtext">
-      <slot name="subtext">
-        {{ props.subtext }}
-      </slot>
+      <slot name="subtext">{{ props.subtext }}</slot>
     </div>
   </div>
 </template>
-
-<style lang="scss">
-.UiInput {
-  // margin: var(--ui-breathe);
-
-  &__label {
-    font-family: var(--ui-font-secondary);
-    font-weight: bold;
-    // opacity: 0.7; // opacity changes the stacking order
-    color: rgba(0, 0, 0, 0.7);
-  }
-
-  &__subtext {
-    font-family: var(--ui-font-secondary);
-    font-size: 12px;
-    // opacity: 0.8;
-    color: rgba(0, 0, 0, 0.8);
-  }
-}
-</style>

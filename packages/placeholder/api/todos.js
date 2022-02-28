@@ -1,26 +1,31 @@
-export default (client) => ({
+import { Client } from '@/packages/api'
+
+export default class {
+  constructor() {
+    this.http = new Client('https://jsonplaceholder.typicode.com')
+  }
+
   getTodos(queryParams = null) {
-    return client.get('/todos', queryParams)
-  },
+    return this.http.get('/todos', queryParams)
+  }
 
   getTodo(todoId) {
-    return client.get(`/todos/${todoId}`)
-  },
+    return this.http.get(`/todos/${todoId}`)
+  }
 
   createTodo(body) {
-    return client.post('/todos', body)
-  },
+    return this.http.post('/todos', body)
+  }
 
   updateTodo(todoId, body) {
-    return client.post(`/todos/${todoId}`, body)
-  },
+    return this.http.post(`/todos/${todoId}`, body)
+  }
 
   patchTodo(todoId, body) {
-    return client.patch(`/todos/${todoId}`, body)
-  },
+    return this.http.patch(`/todos/${todoId}`, body)
+  }
 
   deleteTodo(todoId) {
-    return client.delete(`/todos/${todoId}`)
-  },
-
-})
+    return this.http.delete(`/todos/${todoId}`)
+  }
+}

@@ -28,9 +28,9 @@ export function useI18n(dictionary = null) {
 
     let translated = (
       messages?.[targetLocale]?.[word] ||
-        messages?.[baseLocale]?.[word] ||
-        messages?.[injected.fallbackLocale]?.[word] ||
-        word + '(?)'
+      messages?.[baseLocale]?.[word] ||
+      messages?.[injected.fallbackLocale]?.[word] ||
+      word + '(?)'
     )
 
     if (params && typeof params === 'object') {
@@ -50,6 +50,12 @@ export function useI18n(dictionary = null) {
     set locale(newValue) {
       injected.locale = newValue
     },
+
+    availableLocales: [
+      { value: 'en', text: 'English' },
+      { value: 'es', text: 'Español' },
+      { value: 'de', text: 'Deutsch' },
+    ],
 
     t,
 
@@ -79,9 +85,9 @@ export function useI18n(dictionary = null) {
         || diff < 7200 && t('i18n.oneHourAgo')
         || diff < 86400 && t('i18n.nHoursAgo', { n: Math.floor(diff / 3600) })
       )
-      || day_diff == 1 && t('i18n.yesterday')
-      || day_diff < 7 && t('i18n.nDaysAgo', { n: day_diff })
-      || day_diff < 31 && t('i18n.nWeeksAgo', { n: Math.ceil(day_diff / 7) })
+        || day_diff == 1 && t('i18n.yesterday')
+        || day_diff < 7 && t('i18n.nDaysAgo', { n: day_diff })
+        || day_diff < 31 && t('i18n.nWeeksAgo', { n: Math.ceil(day_diff / 7) })
     },
 
     // Format currency

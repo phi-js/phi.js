@@ -2,7 +2,7 @@
   <div class="DatePicker">
     <div
       v-if="range"
-      class="ui-row"
+      class="UiGroup"
     >
       <UiInput
         v-model="rangeValue[0]"

@@ -1,0 +1,48 @@
+.UiWindow {
+  // background: rgba(0,0,0, 0.1); //scrim background
+
+  &__box {
+    border-radius: 5px;
+    color: #ccc;
+    background: #2f2f2f;
+  }
+
+  &__footer {
+    padding: 20px;
+    text-align: right;
+  }
+
+  input.UiInput,
+  textarea.UiInput,
+  select.UiInput,
+  .UiInput__element {
+    background: rgba(255,255,255, 0.3);
+    color: #f3f3f3;
+
+    option {
+      color: #333;
+    }
+
+    &::placeholder {
+      color: #aaa;
+    }
+  }
+
+  .UiInput {
+    margin-bottom: 12px;
+  }
+
+  fieldset {
+    border: 1px inset #555;
+    border-radius: 5px;
+    margin: 12px 0 24px 0;
+    padding: 10px;
+
+    legend {
+      font-family: var(--ui-font-secondary);
+      font-size: 12px;
+      padding: 0 12px;
+      opacity: 0.7;
+    }
+  }
+}

@@ -30,11 +30,15 @@ const curIcon = ref('mdi:vuejs')
     />
     <UiIcon
       :src="curIcon"
-      style="font-size: 4em"
+      style="font-size: 4em; color: green"
     />
     <UiIcon
       :src="curIcon"
-      style="font-size: 6em; color: green"
+      style="font-size: 5em; color: blue"
+    />
+    <UiIcon
+      :src="curIcon"
+      style="font-size: 6em; color: purple"
     />
   </div>
 

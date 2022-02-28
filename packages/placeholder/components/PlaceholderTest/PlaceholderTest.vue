@@ -16,9 +16,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="PlaceholderTest ui-row --nowrap --top">
+  <div class="PlaceholderTest UiGroup">
     <div>
-      <label class="ui-label">Users</label>
+      <label>Users</label>
       <UiInput
         type="select"
         :options="arrUsers"
@@ -34,7 +34,7 @@ onMounted(() => {
     </div>
 
     <div>
-      <label class="ui-label">Posts</label>
+      <label>Posts</label>
 
       <UiInput
         type="select"

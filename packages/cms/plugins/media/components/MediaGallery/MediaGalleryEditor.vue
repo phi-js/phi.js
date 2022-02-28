@@ -46,7 +46,7 @@
         <div class="image-title-wrapper">
           <input
             v-model="innerValue.files[i].title"
-            class="ui__input"
+            class="UiInput"
             type="text"
             @input="emitInput"
           >
@@ -154,14 +154,11 @@ export default {
 <style lang="scss">
 .media-gallery-editor {
   .gallery-editor-uploader {
-    margin-top: var(--ui-breathe);
-    padding: var(--ui-padding);
     min-height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
     border: 2px dashed rgba(0, 0, 0, 0.4);
-    border-radius: var(--ui-radius);
 
     &:hover {
       background-color: rgba(0, 0, 0, 0.05);

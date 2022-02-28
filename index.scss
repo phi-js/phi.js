@@ -1,0 +1,31 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f3f3f3;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.02);
+
+  font-family: Nunito, sans-serif;
+  color: #222;
+
+  /* ui theme variables */
+  --ui-color-primary: #41b883 !important;
+  --ui-color-danger: #ea5455 !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: 600;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

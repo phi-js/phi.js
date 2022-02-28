@@ -1,51 +1,58 @@
 <script>
-import { h, ref, watch, defineAsyncComponent, Transition, inject } from 'vue'
+export default defineComponent({
+  render() {
+    return h('div', { class: 'CmsBlock' }, this.parsedBlocks)
+  }
+})
+</script>
+
+<script setup>
+import { h, ref, watch, defineAsyncComponent, Transition, inject, defineComponent } from 'vue'
 
 import { blocks } from '../../singleton'
 import { VM } from '@/packages/vm'
 import { getProperty, setProperty, getCssObjectAttributes } from '../../functions'
 
-export default {
-  props: {
-    block: {
-      type: [Object, Array],
-      required: false,
-      default: null,
-    },
-
-    modelValue: {
-      validator: () => true,
-      required: false,
-      default: null,
-    },
+const props = defineProps({
+  block: {
+    type: [Object, Array],
+    required: false,
+    default: null,
   },
 
-  setup(props) {
-    const blockVM = new VM()
-    const parsedBlocks = ref([])
-
-    // provided story methods
-    const injectedStory = inject('$_cms_story', null)
-    if (injectedStory) {
-      blockVM.defineFunctions({
-        'Story.goTo': injectedStory.goTo,
-        'Story.goBack': injectedStory.goBack,
-      })
-    }
-
-    watch(
-      props,
-      async () => parsedBlocks.value = await getBlockVNode(props.block, props.modelValue, blockVM),
-      { immediate: true },
-    )
-
-    // Render function
-    return () => h('div', { class: 'CmsBlock' }, parsedBlocks.value)
+  modelValue: {
+    validator: () => true,
+    required: false,
+    default: null,
   },
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+const blockVM = new VM()
+const parsedBlocks = ref([])
+
+// provided story methods
+const injectedStory = inject('$_cms_story', null)
+if (injectedStory) {
+  blockVM.defineFunctions({
+    'Story.goTo': injectedStory.goTo,
+    'Story.goBack': injectedStory.goBack,
+  })
 }
 
-async function getBlockVNode(block, modelValue, vm) {
+watch(
+  props,
+  async () => parsedBlocks.value = await getBlockVNode(props.block, props.modelValue, blockVM),
+  { immediate: true },
+)
 
+
+defineExpose({
+  parsedBlocks
+})
+
+async function getBlockVNode(block, modelValue, vm) {
   // Block v-for
   if (typeof block['v-for'] !== 'undefined') {
     const iterable = getProperty(modelValue, block['v-for'])
@@ -77,6 +84,7 @@ async function getBlockVNode(block, modelValue, vm) {
     onMounted: block.setup ? () => vm.eval(block.setup, modelValue) : undefined,
   }
 
+  // Block v-if
   if (typeof block['v-if'] !== 'undefined' && block['v-if'] !== null) {
     const isVisible = await vm.eval(block['v-if'], modelValue)
 
@@ -137,6 +145,7 @@ async function getBlockPropsAndSlots(block, modelValue, vm) {
     blockProps.modelValue = getProperty(modelValue, block['v-model'])
     blockProps['onUpdate:modelValue'] = (newValue) => {
       setProperty(modelValue, block['v-model'], newValue)
+      emit('update:modelValue', modelValue)
     }
   }
 
@@ -148,6 +157,7 @@ async function getBlockPropsAndSlots(block, modelValue, vm) {
       blockProps[modelName] = getProperty(modelValue, targetName)
       blockProps['onUpdate:' + modelName] = (newValue) => {
         setProperty(modelValue, targetName, newValue)
+        emit('update:modelValue', modelValue)
       }
     }
   }
@@ -166,7 +176,10 @@ async function getBlockPropsAndSlots(block, modelValue, vm) {
         }
 
         const initial = vm.onModelSet
-        vm.onModelSet = (varname, newValue) => setProperty(modelValue, varname, newValue)
+        vm.onModelSet = (varname, newValue) => {
+          setProperty(modelValue, varname, newValue)
+          emit('update:modelValue', modelValue)
+        }
         vm.eval(listeners[eventName], { ...modelValue, $event }).then(() => vm.onModelSet = initial)
       }
     }

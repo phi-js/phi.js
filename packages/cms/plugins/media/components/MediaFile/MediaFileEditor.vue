@@ -19,27 +19,27 @@
       <input
         v-model="innerValue.text"
         type="text"
-        class="ui__input"
+        class="UiInput"
         placeholder="Titulo"
       >
       <input
         v-model="innerValue.secondary"
         type="text"
-        class="ui__input"
+        class="UiInput"
         placeholder="Descripción"
       >
 
       <div class="file-editor-form-footer">
         <button
           type="button"
-          class="ui-button --main"
+          class="UiButton UiButton--main"
           @click="accept"
         >
           OK
         </button>
         <button
           type="button"
-          class="ui-button --cancel"
+          class="UiButton UiButton--cancel"
           @click="cancel"
         >
           Cancelar
@@ -142,7 +142,6 @@ export default {
 
     .file-editor-form-footer {
       text-align: right;
-      margin-top: var(--ui-breathe);
     }
   }
 }

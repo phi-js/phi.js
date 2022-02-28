@@ -1,0 +1,10 @@
+.UiTab {
+  --ui-item-padding: 12px 16px;
+
+  .UiItem {
+    &__text {
+      font-weight: 600;
+      font-size: 0.9em;
+    }
+  }
+}

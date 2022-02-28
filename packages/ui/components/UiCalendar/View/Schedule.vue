@@ -205,7 +205,6 @@ export default {
 
     .day-contents {
       flex: 1;
-      padding: var(--ui-padding);
     }
 
     &.--previous {
@@ -230,9 +229,6 @@ export default {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-
-    padding: var(--ui-padding);
-    border-radius: var(--ui-radius);
     transition: 0.2s all ease;
 
     .time {

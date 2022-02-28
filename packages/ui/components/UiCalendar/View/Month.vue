@@ -6,7 +6,6 @@
           v-for="(day, dk) in weeks[0].days"
           :key="dk"
           valign="top"
-          class="ui-noselect"
         >{{ i18n.d(day.date, { weekday: 'short' }) }}</td>
       </tr>
     </thead>

@@ -34,35 +34,24 @@ function emitUpdate() {
 </script>
 
 <template>
-  <div
-    class="SelectEditor"
-    :class="`SelectEditor--type-${modelValue.type}`"
-  >
+  <div class="SelectEditor" :class="`SelectEditor--type-${modelValue.type}`">
     <UiInput
       class="SelectEditor__preview"
       v-bind="{ ...modelValue, style: undefined }"
       :options="innerOptions"
-      label=""
+      label
     />
   </div>
 </template>
 
 <style lang="scss">
 .SelectEditor {
-  &__option-item {
-    .ui-item__icon {
-      cursor: move;
-    }
-  }
-
   &--type-select,
   &--type-select-native,
   // &--type-select-list,
   &--type-select-buttons {
     .SelectEditor__body {
-      border-radius: var(--ui-radius);
-      background-color: rgba(0,0,0, .035);
-      margin: var(--ui-breathe) 0;
+      background-color: rgba(0, 0, 0, 0.035);
     }
   }
 

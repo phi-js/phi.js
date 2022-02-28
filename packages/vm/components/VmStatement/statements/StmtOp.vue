@@ -98,50 +98,28 @@ function onChangeOp() {
 
 <template>
   <div class="StmtOp">
-    <div class="ui-row --top">
-      <div style="flex:3">
-        <UiItem
-          v-if="fieldSchema?.info"
-          v-bind="fieldSchema.info"
-        />
+    <div class="StmtOp__container">
+      <div class="StmtOp__field">
+        <UiItem v-if="fieldSchema?.info" v-bind="fieldSchema.info" />
         <input
           v-else
           v-model="innerModel.field"
           type="text"
-          class="ui__input op-field-input"
+          class="UiInput"
           @input="emitInput"
-        >
+        />
       </div>
 
-      <div
-        class="op-picker"
-        style="flex:3"
-      >
-        <select
-          v-model="innerModel.op"
-          class="op-picker-select"
-          @change="onChangeOp()"
-        >
+      <div class="StmtOp__op">
+        <select v-model="innerModel.op" @change="onChangeOp()">
           <option
             v-for="(opDef, i) in availableOperators"
             :key="i"
             :value="opDef.operator"
-          >
-            {{ opDef.text }}
-          </option>
+          >{{ opDef.text }}</option>
 
-          <option
-            v-if="!isKnownOperator"
-            :value="innerModel.op"
-          >
-            Otro:
-          </option>
-          <option
-            v-else
-            :value="null"
-          >
-            -- Custom --
-          </option>
+          <option v-if="!isKnownOperator" :value="innerModel.op">Otro:</option>
+          <option v-else :value="null">-- Custom --</option>
         </select>
 
         <input
@@ -149,15 +127,12 @@ function onChangeOp() {
           ref="optionOther"
           v-model="innerModel.op"
           type="text"
-          class="ui__input op-option-other"
+          class="UiInput"
           @input="emitInput"
-        >
+        />
       </div>
 
-      <div
-        class="op-args"
-        style="flex:4"
-      >
+      <div class="StmtOp__arguments">
         <component
           :is="customArgsComponent.component"
           v-if="customArgsComponent?.component"
@@ -175,20 +150,3 @@ function onChangeOp() {
     </div>
   </div>
 </template>
-
-<style lang="scss">
-.StmtOp {
-  .op-picker {
-    text-align: center;
-    margin: var(--ui-breathe);
-  }
-
-  .op-picker-select {
-    padding: var(--ui-padding);
-    border: 0;
-    background: transparent;
-    font-family: var(--ui-font-secondary);
-    font-weight: bold;
-  }
-}
-</style>

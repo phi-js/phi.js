@@ -87,7 +87,7 @@ function removeClass(className) {
     <div
       v-for="objClass in allClases"
       :key="objClass.name"
-      class="BlockClass ui--clickable ui--noselect"
+      class="BlockClass ui--clickable"
     >
       <UiItem
         :text="objClass.text"
@@ -102,7 +102,7 @@ function removeClass(className) {
         class="BlockClass__options"
       >
         <select
-          class="ui__input"
+          class="UiInput"
           :value="objClass.selectedVariation"
           @change="setVariation(objClass, $event.target.value)"
         >

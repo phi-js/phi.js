@@ -1,10 +1,10 @@
 <template>
   <div class="FetchEditor">
-    <div class="ui__group --block">
+    <div>
       <UiInput label="Method">
         <select
           v-model="innerValue.args.options.method"
-          class="ui__input"
+          class="UiInput"
           @change="emitInput"
         >
           <option value="get">
@@ -31,7 +31,7 @@
       >
         <input
           v-model="innerValue.args.url"
-          class="ui__input fetch-url"
+          class="UiInput"
           type="text"
           placeholder="https:// ... "
           style="width:100%"

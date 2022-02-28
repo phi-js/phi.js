@@ -1,24 +1,3 @@
-<template>
-  <span
-    class="UiIcon ui-icon"
-    :style="styles"
-    @click="$emit('click', $event)"
-  >
-    <component
-      :is="provider.component"
-      v-if="provider"
-      :value="provider.value"
-      :full-value="sanitizedSrc"
-      :color="color"
-    />
-    <span
-      v-else
-      :title="sanitizedSrc"
-    >�</span>
-    <slot />
-  </span>
-</template>
-
 <script>
 import aliases from './aliases.js'
 import providers from './providers.js'
@@ -31,12 +10,6 @@ export default {
       required: false,
       default: '�',
     },
-
-    color: {
-      type: String,
-      required: false,
-      default: null,
-    },
   },
 
   emits: ['click'],
@@ -44,10 +17,6 @@ export default {
   computed: {
     sanitizedSrc() {
       return aliases?.[this.src] || this.src
-    },
-
-    styles() {
-      return { color: this.color || undefined }
     },
 
     provider() {
@@ -81,9 +50,27 @@ export default {
 }
 </script>
 
+<template>
+  <span
+    class="UiIcon"
+    @click="$emit('click', $event)"
+  >
+    <component
+      :is="provider.component"
+      v-if="provider"
+      :value="provider.value"
+      :full-value="sanitizedSrc"
+    />
+    <span
+      v-else
+      :title="sanitizedSrc"
+    >�</span>
+    <slot />
+  </span>
+</template>
+
 <style lang="scss">
-.ui-icon {
-  font-size: inherit;
+.UiIcon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
