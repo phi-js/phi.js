@@ -1,0 +1,70 @@
+.UiForm {
+  padding: 8px 16px;
+
+  .UiInput {
+    // margin-bottom: 12px;
+    // &:last-child {
+    //   margin-bottom: 0;
+    // }
+
+    &__label {
+      font-weight: bold;
+      font-size: 14px;
+      padding: 4px 0;
+      display: block;
+    }
+
+    &__subtext {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+  }
+
+  fieldset {
+    border: 1px inset #555;
+    border-radius: 5px;
+    padding: 8px;
+    margin: 10px 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    legend {
+      font-size: 14px;
+      font-weight: bold;
+      padding: 0 12px;
+      opacity: 0.7;
+    }
+
+    & > .UiInput {
+      margin-bottom: 12px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.UiForm--wide {
+  --ui-form-label-width: 250px;
+
+  .UiInput {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    // align-items: flex-start;
+
+    &__label {
+      min-width: var(--ui-form-label-width);
+    }
+
+    &__body {
+      flex: 1;
+    }
+
+    &__subtext {
+      width: 100%;
+    }
+  }
+}

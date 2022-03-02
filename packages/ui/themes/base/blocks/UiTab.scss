@@ -1,10 +1,37 @@
 .UiTab {
   --ui-item-padding: 12px 16px;
+  max-width: 200px;
+  user-select: none;
 
   .UiItem {
+    // text-align: center;
+    justify-content: center;
+
+    &__body {
+      flex: none;
+    }
+
     &__text {
       font-weight: 600;
       font-size: 0.9em;
+    }
+
+    &:hover {
+      background-color: rgba(255,255,255, 0.1);
+    }
+  }
+
+  &::after {
+    transform-origin: center;
+    width: 42px;
+    margin: auto;
+
+    bottom: 6px;
+  }
+
+  &--selected {
+    .UiItem {
+      background-color: rgba(255,255,255, 0.06);
     }
   }
 }
