@@ -76,7 +76,6 @@ const drawers = computed(() => {
         <UiItem
           class="UiDrawerStack__item ui--clickable"
           v-bind="drawer.props"
-          xxxclick.stop="emit('update:modelValue', drawer.value === props.modelValue ? null : drawer.value)"
           @click.stop="emit('update:modelValue', drawer.value)"
         />
       </template>

@@ -98,15 +98,11 @@ export default {
   <div class="VmExpressionPicker">
     <UiPopover placement="bottom-start">
       <template #trigger>
-        <UiItem
-          class="ui--clickable"
-          icon="mdi:plus-circle"
-          subtext="Agregar ..."
-        />
+        <UiItem class="ui--clickable" icon="mdi:plus-circle" subtext="Agregar ..." />
       </template>
 
-      <template #contents="{close}">
-        <div class="launcher-popover-contents">
+      <template #contents="{ close }">
+        <div class="VmExpressionPicker__popover-contents">
           <div class="launcher-statements">
             <UiItem
               class="ui--clickable"
@@ -154,10 +150,22 @@ export default {
 
 <style lang="scss">
 .VmExpressionPicker {
-  .launcher-popover-contents {
-    width: 480px;
+  user-select: none;
+
+  &__popover-contents {
+    --ui-item-padding: 8px 12px;
+    user-select: none;
+
+    border-radius: 5px;
+    width: 220px;
     max-height: 500px;
     overflow: auto;
+
+    .ui--clickable {
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
   }
 }
 </style>
