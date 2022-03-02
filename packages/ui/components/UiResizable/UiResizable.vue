@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch, onMounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue'
 
 const props = defineProps({
   /**
@@ -43,6 +43,7 @@ const emit = defineEmits([
   'moveEnd',
   'update:isMoving',
   'update:isResizing',
+  'end',
 ])
 
 const rootEl = ref()
@@ -56,15 +57,56 @@ const bounds = reactive({
 
 const newBounds = reactive({ ...bounds })
 
-onMounted(() => {
-  obtainElementBounds()
-})
-
 watch(
   () => props.coords,
-  () => obtainElementBounds(),
-  { immediate: false },
+  () => {
+    parseProps()
+  },
+  // no puede ser immediate, porque durante la primera ejecucion no existe getboundingClientRect
 )
+onMounted(() => {
+  parseProps()
+})
+
+async function parseProps() {
+  if (props?.coords) {
+    let hasRawCss = false
+    props.coords && Object.values(props.coords).forEach((coordValue) => {
+      if (typeof coordValue !== 'string' || coordValue.substr(-2) != 'px') {
+        hasRawCss = true
+      }
+    })
+
+    if (hasRawCss) {
+      // set element styles directly first ...
+      rootEl.value.top = props.coords.top
+      rootEl.value.left = props.coords.left
+      rootEl.value.width = props.coords.width
+      rootEl.value.height = props.coords.height
+      rootEl.value.bottom = props.coords.bottom
+      rootEl.value.right = props.coords.right
+
+      // and then get the element size in pixels after next tick
+      await nextTick()
+      obtainElementBounds()
+
+      emit('update:coords', {
+        top: newBounds.top + 'px',
+        left: newBounds.left + 'px',
+        width: newBounds.width + 'px',
+        height: newBounds.height + 'px',
+      })
+      return
+    }
+
+    newBounds.top = parseInt(props.coords.top)
+    newBounds.left = parseInt(props.coords.left)
+    newBounds.width = parseInt(props.coords.width)
+    newBounds.height = parseInt(props.coords.height)
+  } else {
+    obtainElementBounds()
+  }
+}
 
 function obtainElementBounds() {
   const elBounds = rootEl.value.getBoundingClientRect()
@@ -135,55 +177,55 @@ function onResizerMove(evt) {
   }
 
   switch (zone.value) {
-  case 'move':
-    newBounds.top = bounds.top + diff.y
-    newBounds.left = bounds.left + diff.x
-    break
+    case 'move':
+      newBounds.top = bounds.top + diff.y
+      newBounds.left = bounds.left + diff.x
+      break
 
-  case 'n':
-    newBounds.top = bounds.top + diff.y
-    newBounds.height = bounds.height - diff.y
-    break
+    case 'n':
+      newBounds.top = bounds.top + diff.y
+      newBounds.height = bounds.height - diff.y
+      break
 
-  case 'ne':
-    newBounds.top = bounds.top + diff.y
-    newBounds.height = bounds.height - diff.y
+    case 'ne':
+      newBounds.top = bounds.top + diff.y
+      newBounds.height = bounds.height - diff.y
 
-    newBounds.width = bounds.width + diff.x
-    break
+      newBounds.width = bounds.width + diff.x
+      break
 
-  case 'e':
-    newBounds.width = bounds.width + diff.x
-    break
+    case 'e':
+      newBounds.width = bounds.width + diff.x
+      break
 
-  case 'se':
-    newBounds.width = bounds.width + diff.x
-    newBounds.height = bounds.height + diff.y
-    break
+    case 'se':
+      newBounds.width = bounds.width + diff.x
+      newBounds.height = bounds.height + diff.y
+      break
 
-  case 's':
-    newBounds.height = bounds.height + diff.y
-    break
+    case 's':
+      newBounds.height = bounds.height + diff.y
+      break
 
-  case 'sw':
-    newBounds.height = bounds.height + diff.y
+    case 'sw':
+      newBounds.height = bounds.height + diff.y
 
-    newBounds.left = bounds.left + diff.x
-    newBounds.width = bounds.width - diff.x
-    break
+      newBounds.left = bounds.left + diff.x
+      newBounds.width = bounds.width - diff.x
+      break
 
-  case 'w':
-    newBounds.left = bounds.left + diff.x
-    newBounds.width = bounds.width - diff.x
-    break
+    case 'w':
+      newBounds.left = bounds.left + diff.x
+      newBounds.width = bounds.width - diff.x
+      break
 
-  case 'nw':
-    newBounds.top = bounds.top + diff.y
-    newBounds.height = bounds.height - diff.y
+    case 'nw':
+      newBounds.top = bounds.top + diff.y
+      newBounds.height = bounds.height - diff.y
 
-    newBounds.left = bounds.left + diff.x
-    newBounds.width = bounds.width - diff.x
-    break
+      newBounds.left = bounds.left + diff.x
+      newBounds.width = bounds.width - diff.x
+      break
   }
 
   // Restrictions
@@ -201,6 +243,13 @@ function onResizerMove(evt) {
     width: newBounds.width + 'px',
     height: newBounds.height + 'px',
   })
+
+  emit('update:coords', {
+    top: newBounds.top + 'px',
+    left: newBounds.left + 'px',
+    width: newBounds.width + 'px',
+    height: newBounds.height + 'px',
+  })
 }
 
 function onResizerEnd() {
@@ -208,13 +257,6 @@ function onResizerEnd() {
   window.removeEventListener('touchmove', onResizerMove)
   window.removeEventListener('mouseup', onResizerEnd)
   window.removeEventListener('touchend', onResizerEnd)
-
-  isDragging.value = false
-  emit('update:isDragging', isDragging.value)
-  if (zone.value == 'move') {
-    emit('update:isMoving', false)
-    emit('moveEnd')
-  }
 
   bounds.top = newBounds.top
   bounds.left = newBounds.left
@@ -227,6 +269,15 @@ function onResizerEnd() {
     width: bounds.width + 'px',
     height: bounds.height + 'px',
   })
+
+  isDragging.value = false
+  emit('update:isDragging', isDragging.value)
+  if (zone.value == 'move') {
+    emit('update:isMoving', false)
+    emit('moveEnd') // emitir DESPUES de update:coords
+  }
+
+  emit('end')
 }
 
 function startMove(evt) {
@@ -235,11 +286,7 @@ function startMove(evt) {
 </script>
 
 <template>
-  <div
-    ref="rootEl"
-    class="UiResizable"
-    :style="elementStyle"
-  >
+  <div ref="rootEl" class="UiResizable" :style="elementStyle">
     <slot
       :startMove="startMove"
       :styles="elementStyle"
