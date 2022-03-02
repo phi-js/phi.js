@@ -8,11 +8,11 @@ export function provideI18n(options) {
   return provided
 }
 
-export function useI18n(dictionary = null) {
+export function useI18n(componentDictionary = null) {
   const injected = inject('$_phi_i18n') || {}
 
-  let messages = deepMerge(baseDictionary, injected?.messages)
-  messages = deepMerge(messages, dictionary)
+  let dictionary = deepMerge(baseDictionary, injected?.dictionary)
+  dictionary = deepMerge(dictionary, componentDictionary)
 
   const attrs = useAttrs()
 
@@ -27,9 +27,9 @@ export function useI18n(dictionary = null) {
     const baseLocale = targetLocale.substr(0, 2)
 
     let translated = (
-      messages?.[targetLocale]?.[word] ||
-      messages?.[baseLocale]?.[word] ||
-      messages?.[injected.fallbackLocale]?.[word] ||
+      dictionary?.[targetLocale]?.[word] ||
+      dictionary?.[baseLocale]?.[word] ||
+      dictionary?.[injected.fallbackLocale]?.[word] ||
       word + '(?)'
     )
 
