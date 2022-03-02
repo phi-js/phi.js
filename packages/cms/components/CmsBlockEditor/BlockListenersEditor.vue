@@ -55,7 +55,7 @@ function addEvent() {
 </script>
 
 <template>
-  <div class="BlockListenersEditor">
+  <div class="BlockListenersEditor UiForm">
     <div class="BlockListenersEditor__available">
       <UiItem v-for="event in availableEvents" :key="event.event" :text="event.text" />
     </div>

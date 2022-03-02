@@ -48,7 +48,7 @@ function emitUpdate() {
 </script>
 
 <template>
-  <div class="BlockModelsEditor">
+  <div class="BlockModelsEditor UiForm">
     <UiInput
       v-for="(model, i) in models"
       :key="i"

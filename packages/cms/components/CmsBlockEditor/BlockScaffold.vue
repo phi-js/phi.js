@@ -13,6 +13,8 @@ import {
   UiTab,
 } from '@/packages/ui/components'
 
+import UiDrawerStack from '../../../ui/components/UiDrawerStack/UiDrawerStack.vue'
+
 const props = defineProps({
   block: {
     type: Object,
@@ -82,6 +84,10 @@ const isFocused = ref(false)
 
 function onInnerBlockChange() {
   emit('update:draft', innerBlock.value)
+}
+
+function getWidth(coords) {
+  return parseInt(coords?.width)
 }
 </script>
 
@@ -185,27 +191,33 @@ function onInnerBlockChange() {
       :open="!!availableActions[currentActionIndex]"
       @update:open="currentActionIndex = null"
     >
-      <div class="WindowContents">
-        <UiTabs v-model="currentActionIndex" class="WindowContents__tabs">
-          <UiTab
-            v-for="(action, i) in availableActions"
-            :key="i"
-            :value="i"
-            :text="action.title"
-            :icon="action.icon || 'mdi:star'"
+      <template #default="{ coords }">
+        <div class="WindowContents UiForm--wide">
+          <Component
+            :is="getWidth(coords) < 650 ? UiDrawerStack : UiTabs"
+            v-model="currentActionIndex"
+            class="WindowContents__tabs"
           >
-            <div
-              :class="['WindowContents__body', `WindowContents--id-${availableActions[currentActionIndex].id}`]"
+            <UiTab
+              v-for="(action, i) in availableActions"
+              :key="i"
+              :value="i"
+              :text="action.title"
+              :icon="action.icon || 'mdi:star'"
             >
-              <EditorAction
-                v-model:block="innerBlock"
-                :action="action"
-                @update:block="onInnerBlockChange()"
-              />
-            </div>
-          </UiTab>
-        </UiTabs>
-      </div>
+              <div
+                :class="['WindowContents__body', `WindowContents--id-${availableActions[currentActionIndex].id}`]"
+              >
+                <EditorAction
+                  v-model:block="innerBlock"
+                  :action="action"
+                  @update:block="onInnerBlockChange()"
+                />
+              </div>
+            </UiTab>
+          </Component>
+        </div>
+      </template>
 
       <template #footer="{ close }">
         <button
@@ -240,8 +252,6 @@ function onInnerBlockChange() {
 
   &__body {
     flex: 1;
-    overflow: auto;
-    padding: 16px;
   }
 
   &--id-source {
@@ -277,8 +287,7 @@ function onInnerBlockChange() {
   &--default &__toolbar-container {
     position: absolute;
     bottom: calc(100% - 4px);
-    // left: 4px;
-    right: 4px;
+    right: 2rem;
 
     transition: opacity var(--ui-duration-snap);
     opacity: 0;

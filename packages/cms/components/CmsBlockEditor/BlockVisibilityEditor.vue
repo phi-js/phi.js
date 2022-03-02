@@ -32,12 +32,8 @@ function emitUpdate() {
 </script>
 
 <template>
-  <div class="BlockVisibilityEditor">
-    <VmStatement
-      v-model="block['v-if']"
-      :default="{ and: [] }"
-      @update:model-value="emitUpdate"
-    />
+  <div class="BlockVisibilityEditor UiForm">
+    <VmStatement v-model="block['v-if']" :default="{ and: [] }" @update:model-value="emitUpdate" />
 
     <UiInput
       v-model="block.transition"

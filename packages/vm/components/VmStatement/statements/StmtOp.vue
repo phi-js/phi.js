@@ -101,17 +101,11 @@ function onChangeOp() {
     <div class="StmtOp__container">
       <div class="StmtOp__field">
         <UiItem v-if="fieldSchema?.info" v-bind="fieldSchema.info" />
-        <input
-          v-else
-          v-model="innerModel.field"
-          type="text"
-          class="UiInput"
-          @input="emitInput"
-        />
+        <input v-else v-model="innerModel.field" type="text" class="UiInput" @input="emitInput" />
       </div>
 
       <div class="StmtOp__op">
-        <select v-model="innerModel.op" @change="onChangeOp()">
+        <select v-model="innerModel.op" @change="onChangeOp()" class="UiInput">
           <option
             v-for="(opDef, i) in availableOperators"
             :key="i"
@@ -150,3 +144,23 @@ function onChangeOp() {
     </div>
   </div>
 </template>
+
+<style lang="scss">
+.StmtOp {
+  &__container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding: 8px 12px;
+  }
+
+  &__field {
+    // --ui-item-padding: 8px;
+    min-width: 33%;
+  }
+
+  &__arguments {
+    flex: 1;
+  }
+}
+</style>

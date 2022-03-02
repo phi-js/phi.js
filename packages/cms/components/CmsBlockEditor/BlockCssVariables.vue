@@ -82,11 +82,11 @@ function parseUnits(incoming, defaultValue = null, defaultUnits = null) {
 </script>
 
 <template>
-  <div class="BlockCssVariables">
+  <div class="BlockCssVariables UiForm">
     <fieldset>
       <legend>Spacing</legend>
 
-      <UiInput label="Content width" class="UiInput--flex">
+      <UiInput label="Content width">
         <div class="UiGroup">
           <UiInput
             v-model="raw.contentWidth.value"
@@ -101,37 +101,12 @@ function parseUnits(incoming, defaultValue = null, defaultUnits = null) {
         </div>
       </UiInput>
 
-      <UiInput
-        v-model="raw.margin.value"
-        class="UiInput--flex"
-        label="Margin"
-        type="number-slide"
-        min="0"
-        max="100"
-      />
+      <UiInput v-model="raw.margin.value" label="Margin" type="number-slide" min="0" max="100" />
     </fieldset>
 
     <fieldset>
       <legend>Color</legend>
-      <UiInput v-model="raw.colorPrimary.hex" class="UiInput--flex" label="Primary" type="color" />
+      <UiInput v-model="raw.colorPrimary.hex" label="Primary" type="color" />
     </fieldset>
   </div>
 </template>
-
-<style lang="scss">
-.UiInput--flex {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-
-  .UiInput {
-    &__label {
-      width: 128px;
-    }
-
-    &__body {
-      flex: 1;
-    }
-  }
-}
-</style>

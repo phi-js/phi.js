@@ -83,12 +83,8 @@ function removeClass(className) {
 </script>
 
 <template>
-  <div class="BlockCssClasses">
-    <div
-      v-for="objClass in allClases"
-      :key="objClass.name"
-      class="BlockClass ui--clickable"
-    >
+  <div class="BlockCssClasses UiForm">
+    <div v-for="objClass in allClases" :key="objClass.name" class="BlockClass ui--clickable">
       <UiItem
         :text="objClass.text"
         :subtext="objClass.subtext"
@@ -97,10 +93,7 @@ function removeClass(className) {
         @click="selectClass(objClass)"
       />
 
-      <div
-        v-if="objClass.variations?.length && objClass.isSelected"
-        class="BlockClass__options"
-      >
+      <div v-if="objClass.variations?.length && objClass.isSelected" class="BlockClass__options">
         <select
           class="UiInput"
           :value="objClass.selectedVariation"

@@ -246,7 +246,7 @@ export default {
 
 <template>
   <div class="PickerContents">
-    <div class="launcher-input">
+    <div class="PickerContents__search">
       <input
         ref="inputSearch"
         v-model="text"
@@ -301,10 +301,9 @@ export default {
     overflow-y: auto;
   }
 
-  .launcher-input {
-    flex: 1;
+  .PickerContents__search {
     display: flex;
-    border-bottom: 1px solid #cccccc77;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 
     textarea,
     input {
@@ -315,6 +314,8 @@ export default {
       resize: vertical;
       color: inherit;
       outline: none;
+
+      padding: 12px 16px;
     }
   }
 

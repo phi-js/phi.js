@@ -20,7 +20,7 @@ watch(
 
 const isSelect = computed(() => block.value?.props?.type && block.value.props.type.substring(0, 6) == 'select')
 
-const input = function() {
+const input = function () {
   emit('update:modelValue', block.value)
 }
 
@@ -95,7 +95,7 @@ const multipleOptions = [
 </script>
 
 <template>
-  <div class="InputSettings">
+  <div class="InputSettings UiForm">
     <div class="UiGroup">
       <UiInput
         v-model="block.props.type"
@@ -117,12 +117,7 @@ const multipleOptions = [
     <fieldset>
       <legend>Display</legend>
 
-      <UiInput
-        v-model="block.props.label"
-        type="text"
-        label="Etiqueta"
-        @update:modelValue="input"
-      />
+      <UiInput v-model="block.props.label" type="text" label="Etiqueta" @update:modelValue="input" />
 
       <UiInput
         v-model="block.props.placeholder"
@@ -142,30 +137,17 @@ const multipleOptions = [
     <fieldset v-if="isSelect">
       <legend>Options</legend>
 
-      <OptionsEditor
-        v-model="block.props.options"
-        @update:modelValue="input"
-      />
+      <OptionsEditor v-model="block.props.options" @update:modelValue="input" />
     </fieldset>
 
     <UiInput
       v-if="block.props.type == 'date' || block.props.type == 'timestamp'"
       label="Selector de hora"
     >
-      <select
-        v-model="block.props.time"
-        class="UiButton"
-        @change="input"
-      >
-        <option :value="undefined">
-          Desactivado
-        </option>
-        <option value="12">
-          AM/PM
-        </option>
-        <option value="24">
-          24 horas
-        </option>
+      <select v-model="block.props.time" class="UiButton" @change="input">
+        <option :value="undefined">Desactivado</option>
+        <option value="12">AM/PM</option>
+        <option value="24">24 horas</option>
       </select>
     </UiInput>
   </div>

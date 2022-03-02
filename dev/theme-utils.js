@@ -16,8 +16,6 @@ export const availableThemes = [
 export const activeThemes = ref([])
 
 export function setTheme(fullThemeClass) {
-  console.log('Set Theme', fullThemeClass)
-
   document.body.classList.forEach(className => {
     if (className.startsWith('ui-theme')) {
       document.body.classList.remove(className)

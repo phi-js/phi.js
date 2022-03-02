@@ -50,20 +50,14 @@ async function onPopoverOpen() {
       @open="onPopoverOpen"
     >
       <template #trigger="slotData">
-        <slot
-          name="trigger"
-          v-bind="slotData"
-        >
+        <slot name="trigger" v-bind="slotData">
           <div class="CmsBlockPicker__trigger ui--clickable">
-            <UiItem
-              icon="mdi:plus"
-              text="Agregar contenido"
-            />
+            <UiItem icon="mdi:plus" text="Agregar contenido" />
           </div>
         </slot>
       </template>
 
-      <template #contents="{close}">
+      <template #contents="{ close }">
         <PickerContents
           ref="refPickerContents"
           class="CmsBlockPicker__tooltip"
@@ -84,7 +78,6 @@ async function onPopoverOpen() {
 
   &__tooltip {
     width: 490px;
-    min-height: 300px;
   }
 
   &__trigger {
