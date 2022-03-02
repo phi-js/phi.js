@@ -6,5 +6,7 @@ const code = ref('return "hola"')
 
 <template>
   <UiInputCode v-model="code" />
+  <UiInputCode v-model="code" lang="css" />
+  <UiInputCode v-model="code" lang="json" />
   <pre>code: {{ code }}</pre>
 </template>

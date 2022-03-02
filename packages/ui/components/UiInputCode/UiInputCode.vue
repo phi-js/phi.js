@@ -62,8 +62,13 @@ watch(
 </script>
 
 <template>
-  <div
-    ref="codeEl"
-    class="UiInputCode"
-  />
+  <div ref="codeEl" class="UiInputCode" />
 </template>
+
+<style lang="scss">
+/* forzed style in code items */
+.UiInputCode {
+  background: #fff !important;
+  color: initial !important;
+}
+</style>

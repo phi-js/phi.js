@@ -187,8 +187,7 @@ async function getBlockPropsAndSlots(block, modelValue, vm) {
 
   // block "css" propery
   if (block?.css && typeof block.css === 'object') {
-    const evaldCss = await vm.eval(block.css, modelValue)
-    const cssProps = getCssObjectAttributes(evaldCss)
+    const cssProps = getCssObjectAttributes(block.css)
 
     if (cssProps.class) {
       blockProps.class = blockProps?.class ? [blockProps.class, ...cssProps.class] : cssProps.class
