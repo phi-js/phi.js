@@ -37,30 +37,8 @@ const isSelect = computed(() => props.modelValue?.type && props.modelValue.type.
         v-bind="modelValue"
         style="pointer-events: none;"
       />
-      <UiItem
-        v-else
-        text="Add options"
-        icon="mdi:form-dropdown"
-      />
+      <UiItem v-else text="Add options" icon="mdi:form-dropdown" />
     </template>
-    <UiInput
-      v-else
-      v-bind="modelValue"
-      style="pointer-events: none;"
-    />
+    <UiInput v-else v-bind="modelValue" style="pointer-events: none;" />
   </div>
 </template>
-
-<style lang="scss">
-.InputFace {
-  cursor: pointer;
-
-  &:hover {
-    background-color: rgba(0,0,0, 0.05);
-  }
-
-  .UiInput {
-    margin: 0;
-  }
-}
-</style>
