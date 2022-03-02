@@ -96,9 +96,16 @@ const hideOnEsc = {
     }
 
     function onClickOutside(event) {
-      if (!elRoot.value.contains(event.target)) {
-        hide()
+      if (elRoot.value.contains(event.target)) {
+        return
       }
+
+      // ojo, el contenido se pudo haber <Teleport> a body, asi que el click outside tiene que ....
+      if (elTooltip.value.contains(event.target)) {
+        return
+      }
+
+      hide()
     }
 
     return {
