@@ -17,7 +17,7 @@ const i18n = provideI18n({
   locale: 'es', // set locale
   fallbackLocale: 'en', // set fallback locale,
   currency: 'cop', //default currency
-  messages: {
+  dictionary: {
     de: { globalWord: 'globales Wort' },
     en: { globalWord: 'Global Word' },
     es: { globalWord: 'Palabra Global' },
