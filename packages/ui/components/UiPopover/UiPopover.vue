@@ -152,9 +152,7 @@ function toggle() {
 </template>
 
 <style lang="scss">
-.UiPopover {
-  .tippy-content {
-    padding: 0;
-  }
+.tippy-content {
+  padding: 0;
 }
 </style>

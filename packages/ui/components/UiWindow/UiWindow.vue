@@ -33,6 +33,22 @@ const props = defineProps({
     default: false,
   },
 
+
+  /*
+  Arreglo reactivo de coordenadas (valores css)
+  {
+    "top": "0px",
+    "left": "0px",
+    "width": "0px",
+    "height": "0px"
+  }
+  */
+  coords: {
+    type: Object,
+    required: false,
+    default: null
+  },
+
   /** Nombre para guardar las coordenadas de la ventana en localStorage.  (null = no recordar) */
   name: {
     type: String,
@@ -40,6 +56,7 @@ const props = defineProps({
     default: null,
   },
 
+  /* <Teleport> target */
   container: {
     type: String,
     required: false,
@@ -47,39 +64,39 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:open', 'update:dock'])
+const emit = defineEmits(['update:open', 'update:dock', 'update:coords'])
 
+
+/*
+Arreglo interno CANONICO de las coords de la ventana
+*/
 const coords = ref({
   top: '64px',
   left: '256px',
   width: '1024px',
   height: '768px',
 })
-
-const dock = ref(false)
-
-onMounted(() => {
-  if (props.name) {
-    const storedCoords = JSON.parse(localStorage.getItem(`UiWindow-${props.name}`))
-    if (storedCoords) {
-      coords.value = storedCoords
-      dock.value = storedCoords.dock
+watch(
+  () => props.coords,
+  (newValue) => {
+    if (!newValue) {
+      return
     }
-  }
-})
+    coords.value = newValue
+  },
+  { immediate: true },
+)
 
-function storeCoords() {
-  if (!props.name) {
-    return
-  }
 
-  const targetValue = {
-    ...coords.value,
-    dock: dock.value,
-  }
-
-  localStorage.setItem(`UiWindow-${props.name}`, JSON.stringify(targetValue))
-}
+/*
+Valor interno CANONICO del dock actual
+*/
+const dock = ref(false)
+watch(
+  () => props.dock,
+  (newValue) => dock.value = newValue,
+  { immediate: true },
+)
 
 
 const isOpen = ref(false)
@@ -87,71 +104,135 @@ watch(
   () => props.open,
   (newValue) => {
     isOpen.value = newValue
-    if (isOpen.value) {
-      resizeBody(coords.value)
-    }
   },
   { immediate: true },
 )
 
-watch(
-  () => props.dock,
-  (newValue) => dock.value = newValue,
-  { immediate: true },
-)
 
-// const popupContents = ref()
 const isMoving = ref(false)
-const dropTarget = ref(null)
+const targetDock = ref(null)
 
 function close() {
   isOpen.value = false
   emit('update:open', isOpen.value)
-  resizeBody()
+  resetBody()
 }
 
-function resizeBody(coords = null) {
-  if (coords === null || (dock.value !== 'left' && dock.value !== 'right')) {
-    document.body.style.marginLeft = 'initial'
-    document.body.style.marginRight = 'initial'
+/* Every dock holds a memory of its last used coords */
+const dockCoords = ref({
+  default: { top: '64px', left: '256px', width: '1024px', height: '768px' },
+
+  top: { left: 0, right: 0, top: 0, height: '33vh' },
+  bottom: { left: 0, right: 0, bottom: 0, height: '33vh' },
+  left: { top: 0, bottom: 0, left: 0, width: '33vw' },
+  right: { top: 0, bottom: 0, right: 0, width: '33vw' },
+})
+
+
+/* locally stored window position */
+onMounted(() => {
+  if (props.name) {
+    const storedValue = JSON.parse(localStorage.getItem(`ui-window:${props.name}`))
+    if (storedValue) {
+      coords.value = storedValue?.coords
+      dock.value = storedValue?.dock
+      dockCoords.value = storedValue?.dockCoords
+    }
+  }
+
+  if (props.open) {
+    repositionBody()
+  }
+})
+
+function persistData() {
+  if (!props.name) {
     return
   }
 
-  // const offsetLeft = 240 // test
-  const offsetLeft = 0
-
-  switch (dock.value) {
-  case 'left':
-    document.body.style.marginLeft = Math.max(parseInt(coords.width) - offsetLeft, 0) + 'px'
-    break
-  case 'right':
-    document.body.style.marginRight = Math.max(parseInt(coords.width), 0) + 'px'
-    break
-  }
+  localStorage.setItem(`ui-window:${props.name}`, JSON.stringify({
+    coords: coords.value,
+    dock: dock.value,
+    dockCoords: dockCoords.value,
+  }))
 }
 
-function dockTo(newPosition) {
-  if (dock.value === newPosition) {
+function dockTo(newDockPosition) {
+  if (dock.value === newDockPosition) {
     return
   }
 
-  dock.value = newPosition
+  dock.value = newDockPosition
+
+  const dockName = newDockPosition || 'default'
+  coords.value = dockCoords.value[dockName]
+  repositionBody()
+
   emit('update:dock', dock.value)
-
-  // if (dock.value == 'popup') {
-  //   openWindow(popupContents.value, () => close())
-  // }
-
-  if (newPosition === null) {
-    coords.value.top = '25vh'
-    coords.value.left = '25vw'
-    coords.value.width = '50vw'
-    coords.value.height = '50vh'
-  }
-
-  resizeBody(coords.value)
-  storeCoords()
+  persistData()
 }
+
+function onResizableMoveEnd() {
+  dockTo(targetDock.value)
+}
+
+function onResizableEnd() {
+  const dockName = dock.value || 'default'
+  dockCoords.value[dockName] = coords.value
+  persistData()
+}
+
+function onResizableUpdateCoords(event) {
+  if (dock.value) { // reposition body while dragging docked window
+    repositionBody()
+  }
+  emit('update:coords', coords.value)
+}
+
+
+function repositionBody() {
+  switch (dock.value) {
+    case 'top':
+      document.body.style.marginTop = Math.max(parseInt(coords.value.height), 0) + 'px'
+      document.body.style.marginBottom = 'initial'
+      document.body.style.marginLeft = 'initial'
+      document.body.style.marginRight = 'initial'
+      break
+    case 'bottom':
+      document.body.style.marginTop = 'initial'
+      document.body.style.marginBottom = Math.max(parseInt(coords.value.height), 0) + 'px'
+      document.body.style.marginLeft = 'initial'
+      document.body.style.marginRight = 'initial'
+
+      break
+    case 'left':
+      document.body.style.marginTop = 'initial'
+      document.body.style.marginBottom = 'initial'
+      document.body.style.marginLeft = Math.max(parseInt(coords.value.width), 0) + 'px'
+      document.body.style.marginRight = 'initial'
+      break
+    case 'right':
+      document.body.style.marginTop = 'initial'
+      document.body.style.marginBottom = 'initial'
+      document.body.style.marginLeft = 'initial'
+      document.body.style.marginRight = Math.max(parseInt(coords.value.width), 0) + 'px'
+      break
+    default:
+      document.body.style.marginTop = 'initial'
+      document.body.style.marginBottom = 'initial'
+      document.body.style.marginLeft = 'initial'
+      document.body.style.marginRight = 'initial'
+      break
+  }
+}
+
+function resetBody() {
+  document.body.style.marginTop = 'initial'
+  document.body.style.marginBottom = 'initial'
+  document.body.style.marginLeft = 'initial'
+  document.body.style.marginRight = 'initial'
+}
+
 
 const isHovered = ref(false)
 </script>
@@ -176,42 +257,38 @@ const isHovered = ref(false)
     >
       <div
         class="UiWindow__dockzone UiWindow__dockzone--top"
-        @mouseenter="dropTarget = 'top'"
-        @mouseleave="dropTarget = null"
+        @mouseenter="targetDock = 'top'"
+        @mouseleave="targetDock = null"
       />
       <div
         class="UiWindow__dockzone UiWindow__dockzone--bottom"
-        @mouseenter="dropTarget = 'bottom'"
-        @mouseleave="dropTarget = null"
+        @mouseenter="targetDock = 'bottom'"
+        @mouseleave="targetDock = null"
       />
       <div
         class="UiWindow__dockzone UiWindow__dockzone--left"
-        @mouseenter="dropTarget = 'left'"
-        @mouseleave="dropTarget = null"
+        @mouseenter="targetDock = 'left'"
+        @mouseleave="targetDock = null"
       />
       <div
         class="UiWindow__dockzone UiWindow__dockzone--right"
-        @mouseenter="dropTarget = 'right'"
-        @mouseleave="dropTarget = null"
+        @mouseenter="targetDock = 'right'"
+        @mouseleave="targetDock = null"
       />
 
       <UiResizable
         v-slot="{ startMove }"
         v-model:coords="coords"
         v-model:isMoving="isMoving"
-        class="UiWindow__box ui__box ui--z"
-        @update:coords="storeCoords"
-        @move-end="dockTo(dropTarget)"
+        class="UiWindow__box"
+        @update:coords="onResizableUpdateCoords"
+        @move-end="onResizableMoveEnd"
+        @end="onResizableEnd"
         @mouseenter="isHovered = true"
         @mouseleave="isHovered = false"
-        @step="resizeBody"
       >
         <div class="UiWindow__header">
-          <div
-            style="flex:1; align-self: stretch; cursor: move;"
-            @mousedown="startMove"
-            @touchstart="startMove"
-          >
+          <div class="UiWindow__dragger" @mousedown="startMove" @touchstart="startMove">
             <slot name="header" />
           </div>
 
@@ -226,7 +303,7 @@ const isHovered = ref(false)
               />
             </template>
             <template #contents="popover">
-              <div @click="popover.close()">
+              <div class="UiWindow__dockPicker" @click="popover.close()">
                 <UiIcon
                   src="mdi:card-outline"
                   class="ui--clickable"
@@ -276,10 +353,10 @@ const isHovered = ref(false)
         </div>
 
         <div class="UiWindow__body">
-          <slot name="default" :close="close" />
+          <slot name="default" :close="close" :coords="coords" />
         </div>
         <footer class="UiWindow__footer">
-          <slot name="footer" :close="close" />
+          <slot name="footer" :close="close" :coords="coords" />
         </footer>
       </UiResizable>
     </div>
@@ -302,42 +379,75 @@ const isHovered = ref(false)
   }
 }
 
-/* Dock positions and decorations */
+/* Hide dragger and resizers when docked */
 .UiWindow {
   &--docked &__box {
-    border-radius: 0;
+    .UiWindow__dragger {
+      pointer-events: none;
+    }
+
+    .UiResizable__hotzone {
+      display: none;
+    }
   }
 
   &--docked-top &__box {
-    width: auto !important;
-    top: 0 !important;
-    right: 0 !important;
-    bottom: initial;
-    left: 0 !important;
+    .UiResizable__hotzone.--s {
+      display: block;
+    }
   }
 
   &--docked-bottom &__box {
-    width: auto !important;
-    top: auto !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    left: 0 !important;
+    .UiResizable__hotzone.--n {
+      display: block;
+    }
   }
 
   &--docked-left &__box {
-    height: auto !important;
-    top: 0 !important;
-    right: initial;
-    bottom: 0 !important;
-    left: 0 !important;
+    .UiResizable__hotzone.--e {
+      display: block;
+    }
   }
 
   &--docked-right &__box {
-    height: auto !important;
+    .UiResizable__hotzone.--w {
+      display: block;
+    }
+  }
+}
+
+/* CSS enforced dock positions */
+.UiWindow {
+  &--docked-top &__box {
     top: 0 !important;
+    bottom: auto !important;
+    left: 0 !important;
     right: 0 !important;
+    width: auto !important;
+  }
+
+  &--docked-bottom &__box {
+    top: auto !important;
     bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: auto !important;
+  }
+
+  &--docked-left &__box {
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: auto !important;
+    height: auto !important;
+  }
+
+  &--docked-right &__box {
+    top: 0 !important;
+    bottom: 0 !important;
+    right: 0 !important;
     left: auto !important;
+    height: auto !important;
   }
 }
 
@@ -380,9 +490,15 @@ const isHovered = ref(false)
     }
   }
 
+  &__dragger {
+    flex: 1;
+    align-self: stretch;
+    cursor: move;
+  }
+
   &__body {
     flex: 1;
-    overflow: auto;
+    overflow: auto; // popovers inside the window will be cropped, unless moved to the <body>
 
     &::-webkit-scrollbar {
       width: 10px;
@@ -435,19 +551,6 @@ const isHovered = ref(false)
       top: 0;
       bottom: 0;
       width: var(--ui-window-dockzone-size);
-    }
-  }
-}
-
-/// !!! Tabs inside Window
-.UiWindow {
-  .UiTabs {
-    display: flex;
-    flex-direction: column;
-
-    &__contents {
-      flex: 1;
-      overflow: auto;
     }
   }
 }
