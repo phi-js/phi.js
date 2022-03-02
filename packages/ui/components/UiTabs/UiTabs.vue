@@ -92,42 +92,32 @@ const currentContent = computed(() => tabs.value?.[selectedIndex.value]?.slotCon
 </script>
 
 <template>
-  <div
-    ref="root"
-    class="UiTabs"
-    :class="`UiTabs--direction-${direction}`"
-  >
+  <div ref="root" class="UiTabs" :class="`UiTabs--direction-${direction}`">
     <div class="UiTabs__header">
-      <div
-        v-for="(tab, i) in markedTabs"
-        :key="i"
-        class="UiTab"
-        :class="{
-          'UiTab--selected': tab.isSelected,
-          'UiTab--incoming': tab.isIncoming,
-          'UiTab--outgoing': tab.isOutgoing
-        }"
-      >
-        <component
-          :is="tab.slotTab"
-          v-if="tab.slotTab"
-          :select="() => selectTab(tab)"
-        />
-        <UiItem
-          v-else
-          v-bind="tab.props"
-          class="ui--clickable"
-          style="white-space: nowrap"
-          @click="selectTab(tab)"
-        />
+      <div class="UiTabs__tabList">
+        <div
+          v-for="(tab, i) in markedTabs"
+          :key="i"
+          class="UiTab"
+          :class="{
+            'UiTab--selected': tab.isSelected,
+            'UiTab--incoming': tab.isIncoming,
+            'UiTab--outgoing': tab.isOutgoing
+          }"
+        >
+          <component :is="tab.slotTab" v-if="tab.slotTab" :select="() => selectTab(tab)" />
+          <UiItem
+            v-else
+            v-bind="tab.props"
+            class="ui--clickable"
+            style="white-space: nowrap"
+            @click="selectTab(tab)"
+          />
+        </div>
       </div>
     </div>
-
     <div class="UiTabs__contents">
-      <component
-        :is="currentContent"
-        v-if="currentContent"
-      />
+      <component :is="currentContent" v-if="currentContent" />
     </div>
   </div>
 </template>
@@ -139,11 +129,6 @@ const currentContent = computed(() => tabs.value?.[selectedIndex.value]?.slotCon
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
-
-    .UiTab {
-      flex: 1;
-      max-width: 256px;
-    }
 
     /*firefox only*/
     scrollbar-width: thin;
@@ -158,6 +143,14 @@ const currentContent = computed(() => tabs.value?.[selectedIndex.value]?.slotCon
       background-color: rgba(0, 0, 0, 0.2);
     }
   }
+
+  &__tabList {
+    flex: 1;
+
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
 }
 
 // Tab bottom border + animations
@@ -166,7 +159,7 @@ const currentContent = computed(() => tabs.value?.[selectedIndex.value]?.slotCon
     position: relative;
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       bottom: 0;
       left: 0;
