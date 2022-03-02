@@ -287,7 +287,7 @@ function getWidth(coords) {
   &--default &__toolbar-container {
     position: absolute;
     bottom: calc(100% - 4px);
-    right: 2rem;
+    right: 3rem;
 
     transition: opacity var(--ui-duration-snap);
     opacity: 0;
@@ -349,24 +349,27 @@ function getWidth(coords) {
   }
 }
 
-/* __outline.   Visible unicamente para --default.  */
+/* "outline".   Visible unicamente para --default.  */
 .BlockScaffold {
   &--default {
     &::before {
       content: "";
       display: block;
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: -3px;
+      bottom: -3px;
+      left: -8px;
+      right: -8px;
 
       border-radius: 4px;
-      border: 1px solid rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(0, 0, 0, 0.3);
 
       transition: all var(--ui-duration-snap);
       opacity: 0;
       pointer-events: none;
+
+      background-color: rgba(0, 0, 0, 0.08);
+      cursor: pointer;
     }
   }
 

@@ -1,8 +1,9 @@
 <script setup>
 import { ref, watch, nextTick } from 'vue'
-import CmsBlockEditor from '../CmsBlockEditor/CmsBlockEditor.vue'
-import { CmsBlockPicker } from '../CmsBlockPicker'
 import draggable from 'vuedraggable/src/vuedraggable'
+
+import CmsBlockEditor from '../CmsBlockEditor/CmsBlockEditor.vue'
+import CmsBlockPicker from '../CmsBlockPicker/CmsBlockPicker.vue'
 
 const props = defineProps({
   slot: {
@@ -79,14 +80,10 @@ function launchBlock(index, block, position) {
 }
 
 const focusedIndexes = ref({})
-
 </script>
 
 <template>
-  <div
-    class="CmsSlotEditor"
-    :class="{'CmsSlotEditor--dragging': isDragging}"
-  >
+  <div class="CmsSlotEditor" :class="{ 'CmsSlotEditor--dragging': isDragging }">
     <draggable
       v-model="innerSlot"
       :group="groupName"
@@ -97,38 +94,26 @@ const focusedIndexes = ref({})
       :swap-threshold="0.5"
       :inverted-swap-threshold="1"
       direction="vertical"
-
       @update:modelValue="onDraggableUpdate"
       @start="onDraggableStart()"
       @end="onDraggableEnd()"
     >
-      <template #item="{element, index}">
-        <div
-          class="SlotBlock"
-          :class="{'SlotBlock--focused': focusedIndexes[index]}"
-        >
+      <template #item="{ element, index }">
+        <div class="SlotBlock" :class="{ 'SlotBlock--focused': focusedIndexes[index] }">
           <template v-if="showLauncher">
             <CmsBlockPicker
               v-for="position in ['bottom', 'top']"
               :key="position"
-
-              :class="`SlotBlock__launcher SlotBlock__launcher--${position}`"
-              :placement="position == 'bottom' ? 'bottom' : 'top'"
+              class="SlotBlock__adder"
+              text="Agregar contenido"
+              :placement="position"
               @input="launchBlock(index, $event, position)"
               @update:open="focusedIndexes[index] = $event"
-            >
-              <template #trigger>
-                <div class="LauncherFace">
-                  <div class="LauncherFace__icon">
-                    +
-                  </div>
-                </div>
-              </template>
-            </CmsBlockPicker>
+            />
           </template>
 
           <CmsBlockEditor
-            class="CmsSlotEditor__item"
+            class="SlotBlock__editor"
             :block="element"
             @update:block="onEditorUpdate(index, $event)"
             @delete="deleteBlock(index)"
@@ -139,168 +124,17 @@ const focusedIndexes = ref({})
 
     <CmsBlockPicker
       v-if="showLauncher"
-      class="LoneBlockPicker"
+      class="CmsSlotEditor__adder"
+      text="Agregar contenido"
       @input="appendBlock"
     />
   </div>
 </template>
 
 <style lang="scss">
-.SlotBlock {
-  position: relative;
-
-  &:hover {
-    z-index: 2;
-  }
-
-  // Show/hide __launcher on hover
-  & > &__launcher {
-    transition: all var(--ui-duration-snap);
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  &:hover > &__launcher,
-  &--focused > &__launcher {
-    opacity: 1;
-    pointer-events: initial;
-  }
-
-
-  &__launcher {
-    cursor: pointer;
-
-    position: absolute;
-    left: 0;
-    right: 0;
-
-    &--top {
-      bottom: 100%;
-
-      .LauncherFace::after {
-        bottom: 0;
-      }
-    }
-
-    &--bottom {
-      top: 100%;
-      z-index: 2;
-
-      .LauncherFace::after {
-        top: 0;
-      }
-
-    }
-  }
-
-
-  // Launcher face opacity on hover
-  &__launcher {
-    .LauncherFace {
-      opacity: 0.33;
-    }
-
-    &:hover {
-      .LauncherFace {
-        opacity: 1;
-      }
-    }
-  }
-
-
-
-  .LauncherFace {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    height: 28px;
-
-    &__icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-size: 16px;
-      font-weight: 500;
-
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background-color: #313131;
-      color: #fff;
-    }
-
-    &:hover {
-      &::after {
-        content: '';
-        display: block;
-        position: absolute;
-        left: 0;
-        right: 0;
-
-        border-top: 2px solid var(--ui-color-primary);
-        border-bottom: 2px solid var(--ui-color-primary);
-        z-index: 2;
-      }
-    }
-
-    &:hover .LauncherFace__icon {
-      background-color: var(--ui-color-primary);
-    }
-  }
-}
-
-
-// Launcher arrow
-.SlotBlock__launcher {
-  --triangle-color: #313131;
-  &:hover {
-    --triangle-color: var(--ui-color-primary);
-  }
-
-  .LauncherFace::before {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 50%;
-    margin-left: -6px;
-  }
-
-  &--top {
-    .LauncherFace::before {
-      // Triangle
-      bottom: 0;
-
-      width: 0;
-      height: 0;
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-top: 8px solid var(--triangle-color);
-
-      // margin-left: -7px;
-    }
-  }
-
-  &--bottom {
-    .LauncherFace::before {
-      // Triangle
-      top: 0;
-
-      width: 0;
-      height: 0;
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-bottom: 8px solid var(--triangle-color);
-
-      // margin-left: -5px;
-    }
-  }
-}
-
-
 .CmsSlotEditor {
-  & > div:first-child { // draggable container
+  & > div:first-child {
+    // draggable container
     min-width: 100%;
     min-height: 24px;
   }
@@ -311,9 +145,51 @@ const focusedIndexes = ref({})
       pointer-events: none;
     }
   }
+
+  &__adder {
+    padding: 8px;
+    min-height: 58px;
+  }
 }
 
-.LoneBlockPicker {
-  margin: 12px;
+.SlotBlock {
+  position: relative;
+  &:hover {
+    z-index: 1;
+  }
+
+  &__adder {
+    z-index: 1;
+
+    position: absolute;
+    right: 0;
+    min-width: 60px;
+    text-align: right;
+
+    &.CmsBlockPicker--top {
+      bottom: 100%;
+    }
+
+    &.CmsBlockPicker--bottom {
+      top: 100%;
+    }
+
+    &.CmsBlockPicker--hovered {
+      left: 0;
+    }
+  }
+
+  // Show/hide adders on hover
+  & > &__adder {
+    transition: all var(--ui-duration-quick);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  // &--focused > &__adder,
+  &:hover > &__adder {
+    opacity: 1;
+    pointer-events: initial;
+  }
 }
 </style>

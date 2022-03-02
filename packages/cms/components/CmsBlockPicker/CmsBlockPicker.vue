@@ -8,16 +8,33 @@ import PickerContents from './PickerContents.vue'
 import { UiItem, UiPopover } from '@/packages/ui/components'
 
 const props = defineProps({
+  text: {
+    type: String,
+    required: false,
+    default: ''
+  },
+  subtext: {
+    type: String,
+    required: false,
+    default: ''
+  },
+  icon: {
+    type: String,
+    required: false,
+    default: 'mdi:plus'
+  },
+
   placement: {
     type: String,
     required: false,
-    default: 'bottom-start',
+    default: 'bottom', // top | bottom
   },
 })
 
 const emit = defineEmits(['input', 'update:open'])
 
 const isOpen = ref(false)
+const isHovered = ref(false)
 
 const refPickerContents = ref()
 async function onPopoverOpen() {
@@ -25,7 +42,6 @@ async function onPopoverOpen() {
   if (!refPickerContents.value) {
     return
   }
-
   refPickerContents.value.focus()
 }
 </script>
@@ -34,8 +50,9 @@ async function onPopoverOpen() {
   <div
     :class="[
       'CmsBlockPicker',
-      `CmsBlockPicker--placement-${props.placement}`,
+      `CmsBlockPicker--${props.placement}`,
       {
+        'CmsBlockPicker--hovered': isHovered,
         'CmsBlockPicker--open': isOpen,
         'CmsBlockPicker--closed': !isOpen
       },
@@ -45,22 +62,24 @@ async function onPopoverOpen() {
     <UiPopover
       v-model:open="isOpen"
       class="CmsBlockPicker__popover"
-      :placement="props.placement"
+      placement="bottom-start"
       @update:open="emit('update:open', isOpen)"
       @open="onPopoverOpen"
     >
-      <template #trigger="slotData">
-        <slot name="trigger" v-bind="slotData">
-          <div class="CmsBlockPicker__trigger ui--clickable">
-            <UiItem icon="mdi:plus" text="Agregar contenido" />
-          </div>
-        </slot>
+      <template #trigger>
+        <UiItem
+          class="CmsBlockPicker__item"
+          :icon="props.icon"
+          :text="props.text"
+          @mouseenter="isHovered = true"
+          @mouseleave="isHovered = false"
+        />
       </template>
 
       <template #contents="{ close }">
         <PickerContents
           ref="refPickerContents"
-          class="CmsBlockPicker__tooltip"
+          class="CmsBlockPicker__contents"
           @input="emit('input', $event); close()"
         />
       </template>
@@ -70,19 +89,91 @@ async function onPopoverOpen() {
 
 <style lang="scss">
 .CmsBlockPicker {
-  &--placement-bottom-start &__popover {
-    .tippy-arrow {
-      transform: translate(14px, 0) !important;
+  &__item {
+    --ui-item-padding: 1px;
+    background-color: #818181;
+    color: #ddd;
+    font-size: 14px;
+    font-weight: bold;
+
+    border-radius: 40px;
+    transition: all var(--ui-duration-snap);
+    cursor: pointer;
+
+    display: inline-flex;
+
+    .UiItem__body {
+      padding-left: 0;
+      padding-right: 0;
+      transition: all var(--ui-duration-snap);
+    }
+
+    .UiItem__text {
+      overflow: hidden;
+      text-overflow: clip;
+
+      max-width: 0;
+      padding-left: 0;
+      padding-right: 0;
+
+      transition: all var(--ui-duration-snap);
+    }
+
+    &:hover {
+      --ui-item-padding: 8px 12px;
+      border-radius: 4px;
+      background-color: #313131;
+
+      .UiItem__body {
+        padding: var(--ui-item-padding);
+        padding-left: 0;
+      }
+
+      .UiItem__text {
+        max-width: 156px;
+        padding-left: initial;
+        padding-right: initial;
+      }
+    }
+  }
+}
+
+// ruler on hover
+.CmsBlockPicker {
+  position: relative;
+
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 2px;
+    border-bottom: 4px solid var(--ui-color-primary);
+
+    left: 0;
+    right: 0;
+    pointer-events: none;
+
+    opacity: 0;
+    transition: opacity var(--ui-duration-snap);
+  }
+
+  &--hovered {
+    &::before {
+      opacity: 1;
     }
   }
 
-  &__tooltip {
-    width: 490px;
+  // ruler position
+  &--bottom {
+    &::before {
+      top: 0;
+    }
   }
 
-  &__trigger {
-    background-color: rgba(0, 0, 0, 0.03);
-    color: rgba(0, 0, 0, 0.7);
+  &--top {
+    &::before {
+      bottom: 0;
+    }
   }
 }
 </style>
