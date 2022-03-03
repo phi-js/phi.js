@@ -43,6 +43,8 @@
     --ui-item-padding: 8px 12px;
 
     &__item {
+      user-select: none;
+
       &:hover {
         background-color: rgba(255,255,255, 0.16);
       }

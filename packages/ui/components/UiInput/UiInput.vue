@@ -136,7 +136,6 @@ defineExpose({ element })
           :is="customComponent"
           v-if="customComponent"
           ref="element"
-          class="UiInput__element"
           v-bind="elementProps"
         />
         <textarea

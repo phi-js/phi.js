@@ -1,0 +1,25 @@
+// .UiToolbar item declared globally so popop items under <body> work
+.UiToolbar {
+  button {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+  }
+
+  color: #999;
+  .--active {
+    color: #fff;
+  }
+
+  .ui--clickable {
+    min-width: 32px;
+    min-height: 32px;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}

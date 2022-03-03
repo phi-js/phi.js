@@ -26,7 +26,7 @@ const props = defineProps({
   stepWidth: {
     type: [String, Number],
     required: false,
-    default: 4,
+    default: 8,
   },
 })
 const emit = defineEmits(['update:modelValue'])
@@ -34,7 +34,10 @@ const emit = defineEmits(['update:modelValue'])
 const innerValue = ref()
 watch(
   () => props.modelValue,
-  (newValue) => innerValue.value = newValue,
+  (newValue) => {
+    const floatValue = parseFloat(newValue)
+    innerValue.value = isNaN(floatValue) ? null : floatValue
+  },
   { immediate: true },
 )
 
@@ -44,7 +47,7 @@ let stepValue = parseFloat(props.step)
 
 function onDragStart(evt) {
   initialX = evt.type == 'touchstart' ? evt.touches[0].clientX : evt.clientX
-  initialValue = parseFloat(innerValue.value || 0)
+  initialValue = parseFloat(innerValue.value) || 0
 
   window.addEventListener('mousemove', onDragMove)
   window.addEventListener('touchmove', onDragMove)
@@ -73,12 +76,12 @@ function onDragEnd() {
   <input
     v-model="innerValue"
     v-bind="attrs"
-    class="UiInputNumberSlide"
+    class="UiInputNumberSlide UiInput__element"
     type="number"
     :step="step"
     style="cursor: col-resize"
     @input="emit('update:modelValue', innerValue)"
     @mousedown="onDragStart($event)"
     @touchstart="onDragStart($event)"
-  >
+  />
 </template>
