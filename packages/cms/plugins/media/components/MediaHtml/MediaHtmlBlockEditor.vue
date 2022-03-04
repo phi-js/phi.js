@@ -177,23 +177,16 @@ const alignment = computed(() => {
     <template #toolbar>
       <UiPopover>
         <template #trigger>
-          <button
-            type="button"
-            class="ui--clickable expansible"
-            v-text="heading.current.text"
-          />
+          <button type="button" class="ui--clickable expansible" v-text="heading.current.text" />
         </template>
         <template #contents="{ close }">
-          <div
-            class="UiGroup"
-            @click="close"
-          >
+          <div class="UiGroup UiToolbar" @click="close">
             <button
               v-for="(cmd, i) in heading.available"
               :key="i"
               type="button"
               class="ui--clickable"
-              :class="{'--active': cmd.isActive}"
+              :class="{ '--active': cmd.isActive }"
               @click="cmd.callback"
               v-text="cmd.text"
             />
@@ -203,22 +196,16 @@ const alignment = computed(() => {
 
       <UiPopover>
         <template #trigger>
-          <UiIcon
-            :src="alignment.current.icon"
-            class="ui--clickable expansible"
-          />
+          <UiIcon :src="alignment.current.icon" class="ui--clickable expansible" />
         </template>
         <template #contents="{ close }">
-          <div
-            class="UiGroup"
-            @click="close"
-          >
+          <div class="UiGroup UiToolbar" @click="close">
             <UiIcon
               v-for="(cmd, i) in alignment.available"
               :key="i"
               :src="cmd.icon"
               class="ui--clickable"
-              :class="{'--active': cmd.isActive}"
+              :class="{ '--active': cmd.isActive }"
               @click="cmd.callback"
             />
           </div>
@@ -230,7 +217,7 @@ const alignment = computed(() => {
         :key="i"
         type="button"
         class="ui--clickable text-format-button"
-        :class="{'--active': option.isActive}"
+        :class="{ '--active': option.isActive }"
         @click="option.callback"
         v-text="option.text"
       />
@@ -238,10 +225,7 @@ const alignment = computed(() => {
 
     <template #default="{ blockCssAttributes }">
       <div v-bind="blockCssAttributes">
-        <EditorContent
-          class="tiptap-editor-contents story-html"
-          :editor="editor"
-        />
+        <EditorContent class="tiptap-editor-contents story-html" :editor="editor" />
       </div>
     </template>
   </BlockScaffold>
@@ -270,7 +254,7 @@ const alignment = computed(() => {
 
   .expansible {
     &::after {
-      content: '▾'
+      content: "▾";
     }
   }
 }

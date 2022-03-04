@@ -185,9 +185,11 @@ async function getBlockPropsAndSlots(block, modelValue, vm) {
     }
   }
 
-  // block "css" propery
+  // block "css" propery.
+  // Eval only css.style. classes and css are eval'd on applyStoryCss
   if (block?.css && typeof block.css === 'object') {
-    const cssProps = getCssObjectAttributes(block.css)
+    const evaldStyle = block.css.style ? await vm.eval(block.css.style, modelValue) : null
+    const cssProps = getCssObjectAttributes({ ...block.css, style: evaldStyle })
 
     if (cssProps.class) {
       blockProps.class = blockProps?.class ? [blockProps.class, ...cssProps.class] : cssProps.class

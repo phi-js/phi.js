@@ -1,7 +1,7 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { VmStatement } from '../../../vm/components'
-import { UiInput, UiItem } from '../../../ui/components'
+import { UiInput } from '../../../ui/components'
 import { getBlockDefinition } from '../../functions';
 
 const props = defineProps({
@@ -24,6 +24,11 @@ getBlockDefinition(props.modelValue).then((blockDefinition) => {
   }
 })
 
+const fixedEvents = [
+  { event: 'click', text: 'Click on the item' },
+  { event: 'custom', text: 'Custom event' },
+]
+
 watch(
   () => props.modelValue,
   (newValue) => {
@@ -43,27 +48,89 @@ function emitUpdate() {
   emit('update:modelValue', { ...props.modelValue, 'v-on': vOn })
 }
 
-const newEventName = ref('')
-function addEvent() {
+function addEvent(eventName) {
+  if (!eventName) {
+    return
+  }
+
+  if (eventName == 'custom') {
+    eventName = window.prompt('Enter an event name')
+    if (!eventName) {
+      return
+    }
+  }
+
   events.value.push({
-    name: newEventName.value,
+    name: eventName,
     stmt: { chain: [] },
   })
   emitUpdate()
-  newEventName.value = ''
 }
+
+function removeEvent(eventIndex) {
+  if (!confirm('Remove this event listener?')) {
+    return
+  }
+
+  events.value.splice(eventIndex, 1)
+  emitUpdate()
+}
+
+
+// List of all not-used events
+const eventPickerOptions = computed(() => {
+  return availableEvents.value
+    .concat(fixedEvents)
+    .filter(e => !events.value.find(usedEvent => usedEvent.name === e.event))
+    .map(e => ({
+      value: e.event,
+      text: e.text
+    }))
+})
 </script>
 
 <template>
   <div class="BlockListenersEditor UiForm">
-    <div class="BlockListenersEditor__available">
-      <UiItem v-for="event in availableEvents" :key="event.event" :text="event.text" />
-    </div>
-
-    <div v-for="(event, i) in events" :key="i">
-      <label>{{ event.name }}</label>
+    <fieldset v-for="(event, i) in events" :key="i">
+      <div class="BlockListenersEditor__delete" @click="removeEvent(i)">&times;</div>
+      <legend>{{ event.name }}</legend>
       <VmStatement v-model="events[i].stmt" @update:modelValue="emitUpdate" />
-    </div>
-    <UiInput v-model="newEventName" type="text" placeholder="Evento" @keypress.enter="addEvent()" />
+    </fieldset>
+    <UiInput
+      v-if="eventPickerOptions.length"
+      type="select-native"
+      :options="eventPickerOptions"
+      placeholder="Cuando ..."
+      @update:modelValue="addEvent($event)"
+    />
   </div>
 </template>
+
+<style lang="scss">
+.BlockListenersEditor {
+  & > fieldset {
+    position: relative;
+  }
+
+  &__delete {
+    position: absolute;
+    top: -14px;
+    right: -6px;
+
+    cursor: pointer;
+    display: block;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    &:hover {
+      background-color: rgb(255, 255, 255, 0.1);
+      color: var(--ui-color-danger);
+    }
+  }
+}
+</style>

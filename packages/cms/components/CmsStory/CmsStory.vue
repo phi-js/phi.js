@@ -2,10 +2,9 @@
 // Base story styles
 import '../../style/base.scss'
 
-import { ref, computed, watch, watchEffect, provide } from 'vue'
+import { ref, watch, watchEffect, provide } from 'vue'
 import CmsBlock from '../CmsBlock/CmsBlock.vue'
-import { VM } from '@/packages/vm'
-import { sanitizeStory, applyTheme } from '../../functions'
+import { sanitizeStory, applyStoryCss } from '../../functions'
 
 const props = defineProps({
   story: {
@@ -47,8 +46,8 @@ watchEffect(() => {
   currentPage.value = foundPage || sanitizedStory.value.pages?.[0]
 })
 
-// Handle <link> containing story's CSS
-watchEffect(() => applyTheme(sanitizedStory.value.theme, sanitizedStory.value.id))
+// Create the story CSS with its block "css" definitions
+watchEffect(() => applyStoryCss(sanitizedStory.value, props.modelValue))
 
 
 // Story navigation

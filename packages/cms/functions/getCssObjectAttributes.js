@@ -1,16 +1,18 @@
 /*
 Given a block "css" object:
-{
-  "classes": ["className1", "className2", "..."],                 // Array
-  "variables": {                                                  // Object
-    "--ui-content-width": "",
-    "--ui-color-primary": ""
-  },
-  "style": "color: red; border: 2px solid red; padding: 20px"     // String
+
+block: {
+  ...
+  css: {
+    class: '' STRING.  A main class name to assign to this object
+    classes: [] ARRAY.  An ARRAY of STRINGS of class names to assign to this object
+    style: {} OBJECT. An object describing css attributes, passed to final component as :style="..."
+    css: STRING.  A string with custom css classes, to be added as a stylestheet via applyStoryCss
+  }
 }
 
 return an object with parsed "class" and "style" properties,
-ready to be used via v-bind
+ready to be used via v-bind to a component
 
 {
   "class": ["className1", "className2", "..."],
@@ -20,41 +22,27 @@ ready to be used via v-bind
 */
 export default function getCssObjectAttributes(blockCss) {
   const retval = {
-    class: null,
+    class: [],
     style: null,
+  }
+
+  // css.class  Single main class
+  if (blockCss?.class) {
+    retval.class.push(blockCss.class)
   }
 
   // css.classes
   if (blockCss?.classes?.length) {
-    retval.class = retval.class ? [retval.class, ...blockCss.classes] : blockCss.classes
-  }
-
-  let strStyle = ''
-
-  // css.variables
-  if (blockCss?.variables && typeof blockCss.variables === 'object' && Object.keys(blockCss.variables).length) {
-    strStyle = toStyleString(blockCss.variables)
+    retval.class = [...retval.class, ...blockCss.classes]
   }
 
   // css.style
   if (blockCss?.style) {
-    strStyle = strStyle + blockCss.style
-  }
-
-  if (strStyle) {
-    retval.style = retval.style ? strStyle + retval.style : strStyle
+    retval.style = blockCss.style
   }
 
   return {
     class: retval.class?.length ? retval.class : undefined,
     style: retval.style ? retval.style : undefined,
   }
-}
-
-function toStyleString(obj) {
-  let retval = ''
-  for (const [key, value] of Object.entries(obj)) {
-    retval += `${key}:${value};`
-  }
-  return retval
 }

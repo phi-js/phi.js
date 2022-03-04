@@ -20,6 +20,12 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+
+  focused: {
+    type: [Boolean, String, Number],
+    required: false,
+    default: null
+  }
 })
 const emit = defineEmits(['update:block', 'delete', 'update:draft'])
 
@@ -81,6 +87,11 @@ function openActionId(actionId) {
 }
 
 const isFocused = ref(false)
+watch(
+  () => props.focused,
+  (newValue) => isFocused.value = newValue
+)
+
 
 function onInnerBlockChange() {
   emit('update:draft', innerBlock.value)
@@ -286,19 +297,17 @@ function getWidth(coords) {
   // Estilos "default":  toolbar posicionado absolutamente encima del bloque
   &--default &__toolbar-container {
     position: absolute;
-    bottom: calc(100% - 4px);
+    bottom: 100%;
     right: 3rem;
 
     transition: opacity var(--ui-duration-snap);
     opacity: 0;
-    // pointer-events: none;
   }
 
   // Toolbar visible on hover or focused
   &--focused > &__toolbar-container,
   &--default:hover > &__toolbar-container {
     opacity: 1;
-    // pointer-events: initial;
   }
 
   &--default &__toolbar {
@@ -350,25 +359,32 @@ function getWidth(coords) {
 }
 
 /* "outline".   Visible unicamente para --default.  */
+
 .BlockScaffold {
   &--default {
     &::before {
       content: "";
       display: block;
       position: absolute;
-      top: -3px;
-      bottom: -3px;
-      left: -8px;
-      right: -8px;
 
-      border-radius: 4px;
-      border: 1px solid rgba(0, 0, 0, 0.3);
+      // top: -3px;  // Hacerlo mas ancho que el bloque puede causar overflows que no queremos
+      // bottom: -3px;
+      // left: -8px;
+      // right: -8px;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+
+      // border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
 
       transition: all var(--ui-duration-snap);
       opacity: 0;
       pointer-events: none;
 
-      background-color: rgba(0, 0, 0, 0.08);
+      background-color: rgba(0, 0, 0, 0.05);
+      // background-color: #ffff8811;
       cursor: pointer;
     }
   }
@@ -382,6 +398,12 @@ function getWidth(coords) {
 
 .BlockPopover {
   user-select: none;
+  display: flex;
+  align-items: stretch;
+
+  .BlockScaffold__toolbar-icon {
+    min-height: 100% !important;
+  }
 
   .tippy-content {
     padding: 0;

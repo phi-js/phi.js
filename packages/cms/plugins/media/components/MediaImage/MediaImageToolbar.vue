@@ -49,23 +49,17 @@ const alignment = computed(() => {
   <div class="MediaImageToolbar">
     <UiPopover>
       <template #trigger>
-        <UiIcon
-          :src="alignment.current.icon"
-          class="ui--clickable expansible"
-        />
+        <UiIcon :src="alignment.current.icon" class="ui--clickable expansible" />
       </template>
       <template #contents="{ close }">
-        <div
-          class="UiGroup"
-          @click="close()"
-        >
+        <div class="UiGroup UiToolbar" @click="close()">
           <UiIcon
             v-for="(align, i) in alignment.available"
             :key="i"
             :title="align.title"
             :src="align.icon"
             class="MediaImageToolbar__icon ui--clickable"
-            :class="{'--active': align.value == alignment.current.value}"
+            :class="{ '--active': align.value == alignment.current.value }"
             @click="emit('update:modelValue', { ...props.modelValue, align: align.value })"
           />
         </div>
@@ -78,7 +72,7 @@ const alignment = computed(() => {
       class="MediaImageToolbar__icon ui--clickable"
       :class="{'--active': isFullWidth}"
       @click="isFullWidth = !isFullWidth"
-    /> -->
+    />-->
   </div>
 </template>
 
@@ -86,7 +80,7 @@ const alignment = computed(() => {
 .MediaImageToolbar {
   .expansible {
     &::after {
-      content: '▾'
+      content: "▾";
     }
   }
 }

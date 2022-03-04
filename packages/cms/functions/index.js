@@ -1,4 +1,4 @@
-export { default as applyTheme } from './applyTheme.js'
+export { default as applyStoryCss } from './applyStoryCss.js'
 export { default as getBlockDefinition } from './getBlockDefinition.js'
 export { default as getBlockEditors } from './getBlockEditors.js'
 export { default as getBlockSchema } from './getBlockSchema.js'

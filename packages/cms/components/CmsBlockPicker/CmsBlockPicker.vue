@@ -52,7 +52,7 @@ async function onPopoverOpen() {
       'CmsBlockPicker',
       `CmsBlockPicker--${props.placement}`,
       {
-        'CmsBlockPicker--hovered': isHovered,
+        'CmsBlockPicker--hovered': isHovered || isOpen,
         'CmsBlockPicker--open': isOpen,
         'CmsBlockPicker--closed': !isOpen
       },
@@ -62,17 +62,19 @@ async function onPopoverOpen() {
     <UiPopover
       v-model:open="isOpen"
       class="CmsBlockPicker__popover"
-      placement="bottom-start"
+      placement="bottom-end"
       @update:open="emit('update:open', isOpen)"
       @open="onPopoverOpen"
+      trigger="manual"
     >
-      <template #trigger>
+      <template #trigger="{ toggle }">
         <UiItem
           class="CmsBlockPicker__item"
           :icon="props.icon"
           :text="props.text"
           @mouseenter="isHovered = true"
           @mouseleave="isHovered = false"
+          @click="toggle()"
         />
       </template>
 
@@ -89,14 +91,27 @@ async function onPopoverOpen() {
 
 <style lang="scss">
 .CmsBlockPicker {
+  &__popover {
+    .UiPopover__trigger {
+      display: inline-block; // fix popover positioning around trigger
+    }
+  }
+
+  &__contents {
+    width: 488px;
+    min-height: 400px;
+  }
+
   &__item {
-    --ui-item-padding: 1px;
+    user-select: none;
+
+    --ui-item-padding: 8px 12px;
     background-color: #818181;
     color: #ddd;
     font-size: 14px;
     font-weight: bold;
 
-    border-radius: 40px;
+    border-radius: 5px;
     transition: all var(--ui-duration-snap);
     cursor: pointer;
 
@@ -119,8 +134,9 @@ async function onPopoverOpen() {
       transition: all var(--ui-duration-snap);
     }
 
+    .CmsBlockPicker--open &,
     &:hover {
-      --ui-item-padding: 8px 12px;
+      // --ui-item-padding: 8px 12px;
       border-radius: 4px;
       background-color: #313131;
 
@@ -138,7 +154,7 @@ async function onPopoverOpen() {
   }
 }
 
-// ruler on hover
+// Dashed "Ruler" on hover
 .CmsBlockPicker {
   position: relative;
 
@@ -146,8 +162,7 @@ async function onPopoverOpen() {
     content: "";
     display: block;
     position: absolute;
-    height: 2px;
-    border-bottom: 4px solid var(--ui-color-primary);
+    border-bottom: 5px dashed var(--ui-color-primary);
 
     left: 0;
     right: 0;
@@ -157,6 +172,7 @@ async function onPopoverOpen() {
     transition: opacity var(--ui-duration-snap);
   }
 
+  &--open,
   &--hovered {
     &::before {
       opacity: 1;

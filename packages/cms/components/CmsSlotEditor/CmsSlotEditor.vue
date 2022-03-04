@@ -159,11 +159,9 @@ const focusedIndexes = ref({})
   }
 
   &__adder {
-    z-index: 1;
-
     position: absolute;
     right: 0;
-    min-width: 60px;
+    min-width: 128px;
     text-align: right;
 
     &.CmsBlockPicker--top {
@@ -175,6 +173,7 @@ const focusedIndexes = ref({})
     }
 
     &.CmsBlockPicker--hovered {
+      z-index: 1;
       left: 0;
     }
   }

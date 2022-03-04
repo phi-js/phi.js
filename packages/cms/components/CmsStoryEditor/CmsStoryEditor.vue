@@ -6,7 +6,7 @@ import '../../style/base.scss'
 import './style.scss'
 
 import { ref, watch, watchEffect, provide } from 'vue'
-import { sanitizeStory, applyTheme } from '../../functions'
+import { sanitizeStory, applyStoryCss } from '../../functions'
 import { CmsBlockEditor } from '../CmsBlockEditor'
 import LayoutPageWindow from '../../plugins/layout/components/LayoutPage/LayoutPageWindow.vue'
 
@@ -82,7 +82,7 @@ const transitionDirection = ref('fw') // fw, bw
 
 
 // Handle <link> containing story's CSS
-watchEffect(() => applyTheme(sanitizedStory.value.theme, sanitizedStory.value.id))
+watchEffect(() => applyStoryCss(sanitizedStory.value))
 </script>
 
 <template>
