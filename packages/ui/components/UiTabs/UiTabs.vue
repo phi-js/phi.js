@@ -6,8 +6,17 @@ const props = defineProps({
   modelValue: {
     validator: () => true,
     required: false,
-    default: 0,
   },
+
+  /*
+  name to be used as a key for localStorage
+  to remember tab positions
+  */
+  name: {
+    type: String,
+    required: false,
+    default: null
+  }
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -54,9 +63,35 @@ const markedTabs = computed(() => {
 
 // Handle selected value
 const innerValue = ref()
+
+const root = ref(null)
+const direction = ref('left')
+const incomingTabIndex = ref(-1)
+const outgoingTabIndex = ref(-1)
+const selectedIndex = computed(() => tabs.value.findIndex((t) => t.value === innerValue.value))
+const currentContent = computed(() => tabs.value?.[selectedIndex.value]?.slotContent)
+
+// Wake up (must be declared before immediate prop watcher)
+// Handle innerValue persistense in localStorage
+if (props.name) {
+  innerValue.value = JSON.parse(localStorage.getItem(`UiTabs:${props.name}`))
+  watch(
+    innerValue,
+    () => localStorage.setItem(`UiTabs:${props.name}`, JSON.stringify(innerValue.value))
+  )
+}
+
 watch(
   () => props.modelValue,
-  (newValue) => innerValue.value = newValue,
+  (newValue) => {
+    if (newValue !== undefined) {
+      innerValue.value = newValue
+    }
+
+    if (!innerValue.value) { // select the first tab by default
+      innerValue.value = tabs.value?.[0]?.value
+    }
+  },
   { immediate: true },
 )
 
@@ -83,12 +118,6 @@ function selectTab(incomingTab, scrollIntoView = true) {
   }
 }
 
-const root = ref(null)
-const direction = ref('left')
-const incomingTabIndex = ref(-1)
-const outgoingTabIndex = ref(-1)
-const selectedIndex = computed(() => tabs.value.findIndex((t) => t.value === innerValue.value))
-const currentContent = computed(() => tabs.value?.[selectedIndex.value]?.slotContent)
 </script>
 
 <template>
