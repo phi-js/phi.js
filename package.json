@@ -48,7 +48,7 @@
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^7.18.0",
     "rollup-plugin-visualizer": "^5.5.2",
-    "sass": "^1.44.0",
+    "sass": "^1.49.9",
     "vite": "^2.7.1"
   }
 }
