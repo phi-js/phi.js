@@ -47,16 +47,16 @@ export default {
     </div>
     <UiIcon v-else-if="icon" class="UiItem__icon" :src="icon" @click="$emit('click-icon', $event)" />
 
-    <div v-if="hasSlot('default')" class="UiItem__body" @click="$emit('click-body', $event)">
-      <slot name="default" />
-    </div>
     <div
-      v-else-if="text || subtext"
-      class="UiItem__body UiItem__body--default"
+      v-if="hasSlot('default') || text || subtext"
+      class="UiItem__body"
       @click="$emit('click-body', $event)"
     >
-      <h3 class="UiItem__text" v-text="text" />
+      <h3 v-if="text" class="UiItem__text" v-text="text" />
       <p v-if="subtext" class="UiItem__subtext" v-text="subtext" />
+      <div v-if="hasSlot('default')" class="UiItem__slot">
+        <slot name="default" />
+      </div>
     </div>
     <div
       v-if="hasSlot('actions')"
@@ -94,17 +94,14 @@ export default {
 
   &__body {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     min-width: 0; // Allows correct cropping of overflown texts (see https://css-tricks.com/flexbox-truncated-text/)
     padding: var(--ui-item-padding);
 
     &:nth-child(2) {
       padding-left: 0;
-    }
-
-    &--default {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
     }
   }
 
