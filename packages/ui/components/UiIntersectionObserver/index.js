@@ -1,0 +1,1 @@
+export { default as UiIntersectionObserver } from './UiIntersectionObserver.vue'
