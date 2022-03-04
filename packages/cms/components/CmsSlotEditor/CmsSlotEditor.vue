@@ -161,7 +161,7 @@ const focusedIndexes = ref({})
   &__adder {
     position: absolute;
     right: 0;
-    min-width: 128px;
+    min-width: 80px;
     text-align: right;
 
     &.CmsBlockPicker--top {

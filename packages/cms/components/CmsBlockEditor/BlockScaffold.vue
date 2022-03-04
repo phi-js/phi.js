@@ -358,8 +358,20 @@ function getWidth(coords) {
   }
 }
 
-/* "outline".   Visible unicamente para --default.  */
+/* Prevent toolbar from being "hoverable" white outside the element */
+.BlockScaffold {
+  & > &__toolbar-container {
+    pointer-events: none;
+  }
 
+  &:hover {
+    & > .BlockScaffold__toolbar-container {
+      pointer-events: initial;
+    }
+  }
+}
+
+/* "outline".   Visible unicamente para --default.  */
 .BlockScaffold {
   &--default {
     &::before {
