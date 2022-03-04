@@ -71,7 +71,6 @@ function onDraft(foo) {
 <template>
   <UiTabs v-model="currentTab">
     <UiTab text="Editor" value="editor">
-      <br><br><br>
       <CmsStoryEditor
         v-model:story="story"
         :settings="settings"
@@ -84,7 +83,6 @@ function onDraft(foo) {
     </UiTab>
 
     <UiTab text="Preview" value="preview">
-      <br><br><br>
       <CmsStory v-model="modelValue" :story="story" :settings="settings" />
     </UiTab>
   </UiTabs>
