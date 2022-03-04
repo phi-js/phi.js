@@ -19,17 +19,14 @@ const emit = defineEmits(['update:modelValue'])
 </script>
 
 <template>
-  <div
-    class="UiInputUrl ui__inset"
-    tabindex="0"
-  >
+  <div class="UiInputUrl UiGroup" tabindex="0">
     <input
-      class="UiInputUrl__input"
+      class="UiInputUrl__input UiInput__element"
       type="text"
       :value="props.modelValue"
       :placeholder="$attrs.placeholder"
       @input="emit('update:modelValue', $event.target.value)"
-    >
+    />
     <UiUpload
       v-if="endpoint"
       class="UiInputUrl__uploader"
@@ -40,25 +37,3 @@ const emit = defineEmits(['update:modelValue'])
     />
   </div>
 </template>
-
-<style lang="scss">
-.UiInputUrl {
-  display: flex;
-  overflow: hidden;
-  flex-wrap: nowrap;
-
-  &__input {
-    flex: 1;
-    border: 0;
-    outline: none;
-    font-size: 1em;
-    font-family: inherit;
-    background-color: transparent;
-    color: inherit;
-  }
-
-  .UiUpload__files {
-    display: none;
-  }
-}
-</style>
