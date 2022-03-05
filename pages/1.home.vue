@@ -62,21 +62,12 @@ function reset() {
 
 const modelValue = ref({})
 const currentTab = ref('editor')
-
-function onDraft(foo) {
-  console.log('draft!', foo)
-}
 </script>
 
 <template>
   <UiTabs v-model="currentTab">
     <UiTab text="Editor" value="editor">
-      <CmsStoryEditor
-        v-model:story="story"
-        :settings="settings"
-        @update:story="saveStory()"
-        @update:draft="onDraft"
-      />
+      <CmsStoryEditor v-model:story="story" :settings="settings" @update:story="saveStory()" />
       <footer style="text-align: right">
         <button type="button" @click="reset()">Reset</button>
       </footer>

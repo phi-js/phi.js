@@ -64,7 +64,6 @@
       &--open {
         .UiDrawerStack__item {
           background-color: rgba(255,255,255, 0.03);
-
           // .UiItem__icon {
           //   color: var(--ui-color-primary);
           // }
@@ -73,11 +72,12 @@
     }
 
     &__component {
-      margin-bottom: 40px;
+      padding-bottom: 40px;
+      // border-left: 4px solid var(--ui-color-primary);
     }
 
 
-    /* Item underline animation */
+    /* Item left line animation */
     &__item {
       position: relative;
 
@@ -89,8 +89,6 @@
         top: 0;
         left: 0;
         bottom: 0;
-
-        // width: 42px;
         width: 4px;
 
         border-radius: 2px;
