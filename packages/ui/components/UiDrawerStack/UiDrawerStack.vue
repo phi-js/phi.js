@@ -79,9 +79,9 @@ const drawers = computed(() => {
           @click.stop="emit('update:modelValue', drawer.value)"
         />
       </template>
-      <template #default>
+      <template #default="{ isOpen }">
         <div class="UiDrawerStack__component" v-if="drawer.slot">
-          <Component :is="drawer.slot" />
+          <Component :is="drawer.slot" v-if="isOpen" />
         </div>
       </template>
     </UiDrawer>
