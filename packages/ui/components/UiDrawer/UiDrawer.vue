@@ -51,7 +51,7 @@ onMounted(() => {
 
 const contentsEl = ref()
 
-async function setOpen(newValue = false) {
+async function setOpen(newValue = false, _haltEmits = false) {
   if (isOpen.value == newValue || !contentsEl.value) {
     return
   }
@@ -105,6 +105,7 @@ async function setOpen(newValue = false) {
       emit('update:open', isOpen.value)
     }
 
+
     if (!contentsEl.value) {
       return
     }
@@ -115,10 +116,10 @@ async function setOpen(newValue = false) {
 
 
   /* Close all other drawers in the group (if group is present) */
-  if (props.drawerGroup && isOpen.value) {
+  if (props.drawerGroup && isOpen.value && !_haltEmits) {
     UiDrawerGroups[props.drawerGroup].forEach((otherDrawerInstance) => {
       if (otherDrawerInstance !== drawerInstance) {
-        otherDrawerInstance.setOpen(false)
+        otherDrawerInstance.setOpen(false, true)
       }
     })
   }
