@@ -359,8 +359,8 @@ function onInnerBlockChange() {
 }
 
 /* Prevent toolbar from being "hoverable" white outside the element */
-.BlockScaffold {
-  & > &__toolbar-container {
+.BlockScaffold--default {
+  & > .BlockScaffold__toolbar-container {
     pointer-events: none;
   }
 

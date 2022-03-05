@@ -1,7 +1,7 @@
 <script setup>
 import { ref, defineAsyncComponent, watch } from 'vue'
-const UiTree = defineAsyncComponent(() => import('./UiTree.vue'))
 import { UiDrawer } from '../UiDrawer'
+const UiTree = defineAsyncComponent(() => import('./UiTree.vue'))
 
 const props = defineProps({
   /*
@@ -89,13 +89,10 @@ function collapse() {
 </script>
 
 <template>
-  <div
-    class="UiTree"
-    :class="{'UiTree--open': isOpen, 'UiTree--closed': !isOpen}"
-  >
+  <div class="UiTree" :class="{ 'UiTree--open': isOpen, 'UiTree--closed': !isOpen }">
     <div
       class="UiTree__face"
-      :class="{'UiTree__face--open': isOpen, 'UiTree__face--closed': !isOpen}"
+      :class="{ 'UiTree__face--open': isOpen, 'UiTree__face--closed': !isOpen }"
     >
       <slot
         name="default"
@@ -115,16 +112,13 @@ function collapse() {
     >
       <UiTree
         class="UiTree__children"
-        :class="{'UiTree__children--open': isOpen, 'UiTree__children--closed': !isOpen}"
+        :class="{ 'UiTree__children--open': isOpen, 'UiTree__children--closed': !isOpen }"
         v-bind="props"
         :value="children"
         :depth="props.depth + 1"
       >
         <template #default="slotProps">
-          <slot
-            name="default"
-            v-bind="slotProps"
-          />
+          <slot name="default" v-bind="slotProps" />
         </template>
       </UiTree>
     </UiDrawer>
