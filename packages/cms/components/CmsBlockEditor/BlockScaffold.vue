@@ -27,7 +27,7 @@ const props = defineProps({
     default: null
   }
 })
-const emit = defineEmits(['update:block', 'delete', 'update:draft'])
+const emit = defineEmits(['update:block', 'delete'])
 
 // Internal value manager (innerBlock)
 const innerBlock = ref()
@@ -92,13 +92,13 @@ watch(
   (newValue) => isFocused.value = newValue
 )
 
-
-function onInnerBlockChange() {
-  emit('update:draft', innerBlock.value)
-}
-
 function getWidth(coords) {
   return parseInt(coords?.width)
+}
+
+const emitDraft = inject('$_cms_emitDraft', () => null)
+function onInnerBlockChange() {
+  emitDraft(innerBlock.value)
 }
 </script>
 

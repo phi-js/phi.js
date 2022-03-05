@@ -36,7 +36,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:story', 'update:currentPageId', 'update:currentSettingsTab', 'update:draft'])
+const emit = defineEmits(['update:story', 'update:currentPageId', 'update:currentSettingsTab'])
 
 // Sanitize incoming story
 const sanitizedStory = ref(null)
@@ -49,23 +49,14 @@ watch(
 const currentPage = ref()
 watchEffect(() => {
   const foundPage = sanitizedStory.value.pages.find((p) => p.id == props.currentPageId)
-  currentPage.value = foundPage
-    ? JSON.parse(JSON.stringify(foundPage))
-    : JSON.parse(JSON.stringify(sanitizedStory.value.pages?.[0]))
+  // currentPage.value = JSON.parse(JSON.stringify(foundPage || sanitizedStory.value.pages?.[0]))
+  currentPage.value = foundPage || sanitizedStory.value.pages?.[0]
 })
-
 
 function emitUpdate() {
   emit('update:story', {
     ...sanitizedStory.value,
     pages: sanitizedStory.value.pages.map((page) => page.id == currentPage.value.id ? { ...currentPage.value } : page),
-  })
-}
-
-function emitDraft(pageDraft) {
-  emit('update:draft', {
-    ...sanitizedStory.value,
-    pages: sanitizedStory.value.pages.map((page) => page.id == currentPage.value.id ? pageDraft : page),
   })
 }
 
@@ -83,6 +74,10 @@ const transitionDirection = ref('fw') // fw, bw
 
 // Handle <link> containing story's CSS
 watchEffect(() => applyStoryCss(sanitizedStory.value))
+
+provide('$_cms_emitDraft', (block) => {
+  applyStoryCss(sanitizedStory.value, null, block)
+})
 </script>
 
 <template>
@@ -96,7 +91,6 @@ watchEffect(() => applyStoryCss(sanitizedStory.value))
           class="CmsStoryEditor__page CmsStory__page"
           :settings="settings"
           @update:block="emitUpdate"
-          @update:draft="emitDraft"
         />
       </KeepAlive>
     </Transition>

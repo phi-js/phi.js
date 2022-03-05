@@ -1,9 +1,9 @@
 import { VM } from '@/packages/vm'
 const vm = new VM()
 
-export default async function applyStoryCss(story, modelValue) {
+export default async function applyStoryCss(story, modelValue = null, blockOverride = null) {
   let css = ''
-  story.pages.forEach(page => css = css + getBlockCss(page))
+  story.pages.forEach(page => css = css + getBlockCss(page, blockOverride))
   if (modelValue) {
     css = await vm.eval(css, modelValue)
   }
@@ -19,20 +19,22 @@ export default async function applyStoryCss(story, modelValue) {
   sheetEl.innerHTML = css
 }
 
-function getBlockCss(block) {
+function getBlockCss(block, blockOverride = null) {
+  const sourceBlock = blockOverride?.uid == block?.uid ? blockOverride : block
+
   let retval = ''
-  if (block?.css?.css) {
-    retval = block.css.css
+  if (sourceBlock?.css?.css) {
+    retval = sourceBlock.css.css
   }
 
-  if (block?.slot?.length) {
-    block.slot.forEach(child => retval = retval + getBlockCss(child))
+  if (sourceBlock?.slot?.length) {
+    sourceBlock.slot.forEach(child => retval = retval + getBlockCss(child, blockOverride))
   }
 
-  if (block?.slots) {
+  if (sourceBlock?.slots) {
     for (const [slotName, slotChildren] of Object.entries(object1)) {
       if (slotChildren?.length) {
-        slotChildren.forEach(child => retval = retval + getBlockCss(child))
+        slotChildren.forEach(child => retval = retval + getBlockCss(child, blockOverride))
       }
     }
   }

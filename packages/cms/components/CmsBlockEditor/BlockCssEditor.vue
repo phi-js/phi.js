@@ -50,7 +50,7 @@ function emitUpdate() {
 </script>
 
 <template>
-  <UiTabs class="BlockCssEditor">
+  <UiTabs class="BlockCssEditor" name="BlockCssEditor">
     <UiTab text="Classes">
       <BlockCssClasses v-model="css.classes" @update:model-value="emitUpdate" />
     </UiTab>
@@ -61,7 +61,7 @@ function emitUpdate() {
 
     <UiTab text="CSS">
       <div class="UiForm">
-        <UiInput v-model="css.class" label="Class" @update:model-value="emitUpdate" />
+        <UiInput v-model="css.class" placeholder="Class" @update:model-value="emitUpdate" />
         <UiInput
           v-model="css.css"
           type="code"

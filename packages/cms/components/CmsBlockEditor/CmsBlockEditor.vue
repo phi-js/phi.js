@@ -46,7 +46,6 @@ const CmsBlockEditor = {
           'class': 'BlockScaffold--default',
           'block': props.block,
           'onUpdate:block': (newValue) => emit('update:block', newValue),
-          'onUpdate:draft': (newValue) => emit('update:draft', newValue),
           'onDelete': () => emit('delete'),
         })
       }
@@ -58,21 +57,21 @@ const CmsBlockEditor = {
 
       // Si tiene slots, reemplazar cada hijo del slot por un CmsBlockEditor
       const defaultSlots = typeof props.block.slot !== 'undefined'
-        ? () => props.block.slot.map((slotItem, slotIndex) => h(CmsBlockEditor, {
-          'block': slotItem,
-          'settings': props.settings,
-          'onUpdate:block': (newValue) => {
-            const slotCopy = props.block.slot
-            slotCopy[slotIndex] = newValue
-            emit('update:block', { ...props.block, slot: slotCopy })
-          },
-          'onDelete': () => {
-            const slotCopy = props.block.slot
-            slotCopy.splice(slotIndex, 1)
-            emit('update:block', { ...props.block, slot: slotCopy })
-          },
-          'onUpdate:draft': (newValue) => emit('update:draft', newValue),
-        }))
+        ? () => props.block.slot
+          .map((slotItem, slotIndex) => h(CmsBlockEditor, {
+            'block': slotItem,
+            'settings': props.settings,
+            'onUpdate:block': (newValue) => {
+              const slotCopy = props.block.slot
+              slotCopy[slotIndex] = newValue
+              emit('update:block', { ...props.block, slot: slotCopy })
+            },
+            'onDelete': () => {
+              const slotCopy = props.block.slot
+              slotCopy.splice(slotIndex, 1)
+              emit('update:block', { ...props.block, slot: slotCopy })
+            },
+          }))
         : undefined
 
       return h(defaultFace, { ...props.block.props }, defaultSlots)

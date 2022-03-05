@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { getProperty, setProperty } from '../../functions'
 import { parse } from '../../../vm/lib/utils'
 
@@ -16,27 +16,27 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:block'])
 
-const internalModel = computed({
-  get() {
-    if (props.action['v-model']) {
-      return getProperty({ block: props.block }, props.action['v-model'])
-    }
-    return props.block
-  },
-
-  set(newValue) {
-    if (props.action['v-model']) {
-      const updated = setProperty({ block: props.block }, props.action['v-model'], newValue)
-      newValue = updated.block
-    }
-    emit('update:block', newValue)
-  },
+const internalModel = ref()
+watchEffect(() => {
+  if (props.action['v-model']) {
+    internalModel.value = getProperty({ block: props.block }, props.action['v-model'])
+  } else {
+    internalModel.value = props.block // careful! This is a REFERENCE to props
+  }
 })
+
+function emitUpdate() {
+  if (props.action['v-model']) {
+    const updated = setProperty({ block: props.block }, props.action['v-model'], internalModel.value)
+    emit('update:block', updated.block)
+  } else {
+    emit('update:block', internalModel.value)
+  }
+}
 
 const actionProps = computed(() => {
   return parse(props.action.props, { block: props.block }, true)
 })
-
 </script>
 
 <template>
@@ -44,6 +44,7 @@ const actionProps = computed(() => {
     :is="action.component"
     v-if="action.component"
     v-model="internalModel"
-    v-bind="{ ...$attrs, ...actionProps}"
+    v-bind="{ ...$attrs, ...actionProps }"
+    @update:modelValue="emitUpdate"
   />
 </template>

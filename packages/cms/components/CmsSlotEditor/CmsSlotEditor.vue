@@ -33,13 +33,13 @@ watch(
   () => props.slot,
   (newValue) => {
     const incoming = Array.isArray(newValue) ? JSON.parse(JSON.stringify(newValue)) : []
-    innerSlot.value = incoming.map((item, i) => ({ ...item, id: i }))
+    innerSlot.value = incoming.map((item, i) => ({ ...item, _key: i }))
   },
   { immediate: true, deep: true },
 )
 
 function emitUpdate() {
-  emit('update:slot', innerSlot.value)
+  emit('update:slot', innerSlot.value.map((item) => ({ ...item, _key: undefined })))
 }
 
 function appendBlock(newBlock) {
@@ -87,7 +87,7 @@ const focusedIndexes = ref({})
     <draggable
       v-model="innerSlot"
       :group="groupName"
-      item-key="id"
+      item-key="_key"
       handle=".Block__drag-handle"
       :animation="111"
       :empty-insert-threshold="0"

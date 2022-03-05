@@ -32,13 +32,24 @@ export default function sanitizeStory(story) {
     story.paths = []
   }
 
-
-  // Every page has an ID
   story.pages.forEach((page, index) => {
+    // Every page has an ID    
     if (!page.id) {
       page.id = `page-${index}`
     }
+
+    // Every bl0ock has a UID (>= 1)
+    assignUid(page)
   })
 
   return story
+}
+
+let uid = 1
+
+function assignUid(block) {
+  block.uid = uid++
+  if (block?.slot?.length) {
+    block.slot.forEach(child => assignUid(child))
+  }
 }
