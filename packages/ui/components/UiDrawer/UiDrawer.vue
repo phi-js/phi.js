@@ -3,7 +3,7 @@ const UiDrawerGroups = {}
 </script>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, nextTick } from 'vue'
 
 const props = defineProps({
   open: {
@@ -51,22 +51,39 @@ onMounted(() => {
 
 const contentsEl = ref()
 
-function setOpen(newValue = false) {
+async function setOpen(newValue = false) {
   if (isOpen.value == newValue || !contentsEl.value) {
     return
   }
 
-  contentsEl.value.style.maxHeight = 'none'
-  const contentsHeight = contentsEl.value.getBoundingClientRect().height + 'px'
+  /*
+  when opening, emit update:open BEFORE the animation starts and await the next tick
+  in case the slot component is reacting to isOpen
+  e.g.
+  <UiDrawer v-slot="{isOpen}">
+    <Component v-if="isOpen" />  <!-- I want to load the component only when the drawer is open -->
+  </UiDrawer>
 
+  that way the component will be mounted and its height determined BEFORE the animation starts
+  */
+  if (newValue) {
+    isOpen.value = newValue
+    emit('update:open', isOpen.value)
+    await nextTick()
+  }
+
+  contentsEl.value.style.maxHeight = 'none'
+
+  // Get full internal height
+  let contentsHeight = contentsEl.value.getBoundingClientRect().height
   let sourceHeight = 0
   let targetHeight = 0
 
   if (newValue) {
     sourceHeight = 0
-    targetHeight = contentsHeight
+    targetHeight = contentsHeight + 'px'
   } else {
-    sourceHeight = contentsHeight
+    sourceHeight = contentsHeight + 'px'
     targetHeight = 0
   }
 
@@ -78,22 +95,24 @@ function setOpen(newValue = false) {
     if (!contentsEl.value) {
       return
     }
-
     contentsEl.value.style.maxHeight = targetHeight
   }, 0)
 
   setTimeout(() => {
+    /* Update local value and emit events only when animation is done */
+    if (!newValue) {
+      isOpen.value = false
+      emit('update:open', isOpen.value)
+    }
+
     if (!contentsEl.value) {
       return
     }
-
     contentsEl.value.style.transition = null
     contentsEl.value.style.maxHeight = null
     contentsEl.value.style.overflow = null
   }, props.duration)
 
-  isOpen.value = newValue
-  emit('update:open', isOpen.value)
 
   /* Close all other drawers in the group (if group is present) */
   if (props.drawerGroup && isOpen.value) {
@@ -111,33 +130,14 @@ function onTriggerClick() {
 </script>
 
 <template>
-  <div
-    class="UiDrawer"
-    :class="{'UiDrawer--open': isOpen, 'UiDrawer--closed': !isOpen}"
-  >
-    <div
-      v-if="$slots.trigger"
-      class="UiDrawer__trigger"
-      @click="onTriggerClick"
-    >
-      <slot
-        name="trigger"
-        :is-open="isOpen"
-      />
+  <div class="UiDrawer" :class="{ 'UiDrawer--open': isOpen, 'UiDrawer--closed': !isOpen }">
+    <div v-if="$slots.trigger" class="UiDrawer__trigger" @click="onTriggerClick">
+      <slot name="trigger" :is-open="isOpen" />
     </div>
 
-    <div
-      ref="contentsEl"
-      class="UiDrawer__contents"
-    >
-      <slot
-        name="contents"
-        :close="() => setOpen(false)"
-      >
-        <slot
-          name="default"
-          :close="() => setOpen(false)"
-        />
+    <div ref="contentsEl" class="UiDrawer__contents">
+      <slot name="contents" :close="() => setOpen(false)" :isOpen="isOpen">
+        <slot name="default" :close="() => setOpen(false)" :isOpen="isOpen" />
       </slot>
     </div>
   </div>
@@ -146,6 +146,10 @@ function onTriggerClick() {
 <style lang="scss">
 .UiDrawer {
   position: relative;
+
+  & > &__contents {
+    overflow: auto; // This is to prevent margin collapse, so the child slot can have margins
+  }
 
   &--closed > &__contents {
     overflow: hidden;
