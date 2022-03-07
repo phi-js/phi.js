@@ -8,12 +8,7 @@
       :url="url"
       @timeupdate="onTimeupdate"
     />
-    <div
-      v-else
-      class="UiVideo--empty"
-    >
-      {{ url ? 'URL inválida' : 'No hay URL' }}
-    </div>
+    <div v-else class="UiVideo--empty">{{ url ? 'URL inválida' : 'No hay URL' }}</div>
   </div>
 </template>
 
@@ -207,9 +202,9 @@ export default {
 
 <style lang="scss">
 .UiVideo {
-  width: 100%;
-  height: 100%;
-  min-height: 100px;
+  width: auto;
+  height: auto;
+  min-height: 280px;
 
   &--empty {
     display: flex;
