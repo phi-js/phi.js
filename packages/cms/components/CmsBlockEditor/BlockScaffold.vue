@@ -191,6 +191,7 @@ function onInnerBlockChange() {
           tabindex="0"
           :open-action="openActionId"
           @update:block="accept()"
+          @delete="emitDelete()"
         />
         <UiInput v-else v-model="innerBlock" type="json" @update:modelValue="accept()" />
       </slot>
