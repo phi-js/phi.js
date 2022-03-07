@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="MediaHtml story-html"
-    v-html="value"
-  />
+  <div class="MediaHtml story-html" v-html="value" />
 </template>
 
 <script>
@@ -17,3 +14,9 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.MediaHtml {
+  word-break: break-word;
+}
+</style>

@@ -1,37 +1,22 @@
 <template>
   <div class="media-document-picker">
     <div class="document-picker-header UiGroup">
-      <UiFileUploader
-        :path="path"
-        max-files="1"
-        @success="onUploadSuccess"
-        @error="onUploadError"
-      >
-        <UiField
-          label="Archivo"
-          style="text-align:left"
-        >
+      <UiFileUploader :path="path" max-files="1" @success="onUploadSuccess" @error="onUploadError">
+        <UiInput label="Archivo" style="text-align:left">
           <UiItem
             style="text-align: left"
             icon="mdi:file-word"
             :text="blockProps.label || 'Subir archivo'"
           ></UiItem>
-        </UiField>
+        </UiInput>
       </UiFileUploader>
 
-      <UiField
-        style="flex:0"
-        label="Visualizador"
-        v-if="!!blockProps.value"
-      >
-        <select
-          v-model="blockProps.provider"
-          @change="emitInput"
-        >
+      <UiInput style="flex:0" label="Visualizador" v-if="!!blockProps.value">
+        <select v-model="blockProps.provider" @change="emitInput">
           <option value="google">Google</option>
           <option value="microsoft">Microsoft</option>
         </select>
-      </UiField>
+      </UiInput>
     </div>
 
     <MediaDocument
@@ -44,7 +29,7 @@
 
 <script>
 import MediaDocument from './MediaDocument.vue';
-import { UiItem, UiField, UiFileUploader } from '../../../../../ui';
+import { UiItem, UiInput, UiFileUploader } from '../../../../../ui';
 
 export default {
   name: 'MediaDocumentPicker',
@@ -53,7 +38,7 @@ export default {
     MediaDocument,
     UiFileUploader,
     UiItem,
-    UiField,
+    UiInput,
   },
 
   props: {

@@ -1,33 +1,16 @@
 <template>
   <div class="media-gallery-editor">
-    <UiField label="Vista">
-      <select
-        v-model="innerValue.view"
-        @change="emitInput"
-      >
-        <option value="list">
-          Lista
-        </option>
-        <option value="grid">
-          Cuadrícula
-        </option>
-        <option value="gallery">
-          Galería
-        </option>
+    <UiInput label="Vista">
+      <select v-model="innerValue.view" @change="emitInput">
+        <option value="list">Lista</option>
+        <option value="grid">Cuadrícula</option>
+        <option value="gallery">Galería</option>
       </select>
-    </UiField>
+    </UiInput>
 
-    <UiField
-      v-show="innerValue.view == 'gallery'"
-      label="Max. a mostrar en vista previa"
-    >
-      <input
-        v-model="innerValue.previewLimit"
-        type="number"
-        min="1"
-        @input="emitInput"
-      >
-    </UiField>
+    <UiInput v-show="innerValue.view == 'gallery'" label="Max. a mostrar en vista previa">
+      <input v-model="innerValue.previewLimit" type="number" min="1" @input="emitInput" />
+    </UiInput>
 
     <draggable
       v-model="innerValue.files"
@@ -35,21 +18,12 @@
       handle=".image-preview"
       @input="emitInput"
     >
-      <div
-        v-for="(image,i) in innerValue.files"
-        :key="i"
-        class="editor-list-item"
-      >
+      <div v-for="(image, i) in innerValue.files" :key="i" class="editor-list-item">
         <div class="image-preview">
-          <img :src="image.preview">
+          <img :src="image.preview" />
         </div>
         <div class="image-title-wrapper">
-          <input
-            v-model="innerValue.files[i].title"
-            class="UiInput"
-            type="text"
-            @input="emitInput"
-          >
+          <input v-model="innerValue.files[i].title" class="UiInput" type="text" @input="emitInput" />
         </div>
         <UiIcon
           class="image-delete-icon"
@@ -66,29 +40,28 @@
       @success="onUploadSuccess"
       @error="onUploadError"
     >
-      <div class="gallery-editor-uploader">
-        Subir imágenes
-      </div>
+      <div class="gallery-editor-uploader">Subir imágenes</div>
     </UiFileUploader>
   </div>
 </template>
 
 <script>
-import { UiFileUploader, UiField, UiIcon } from '../../../../../ui'
+import { UiFileUploader, UiInput, UiIcon } from '../../../../../ui'
 import draggable from 'vuedraggable/src/vuedraggable'
 
 export default {
   name: 'MediaGalleryEditor',
 
   components: {
-    UiField,
+    UiInput,
     UiIcon,
     UiFileUploader,
     draggable,
   },
 
   props: {
-    value: { type: Object, //block.props (files and vue)
+    value: {
+      type: Object, //block.props (files and vue)
     },
 
     path: {

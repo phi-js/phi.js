@@ -30,7 +30,7 @@ export default {
     view: {
       type: String,
       required: false,
-      default: 'grid',
+      default: 'list',
       validator: (item) => ['list', 'grid', 'gallery'].indexOf(item) !== -1,
     },
   },
