@@ -5,6 +5,7 @@ export default { inheritAttrs: false }
 <script setup>
 import { computed, useAttrs, ref } from 'vue'
 import types from './types.js'
+import UiButton from '../UiButton/UiButton.vue'
 
 const attrs = useAttrs()
 const emit = defineEmits(['update:modelValue', 'focus', 'blur'])
@@ -127,7 +128,13 @@ defineExpose({ element })
 </script>
 
 <template>
-  <div class="UiInput" :class="classNames" :style="attrs.style">
+  <UiButton
+    v-if="props.type == 'button' || props.type == 'submit'"
+    :type="type"
+    :label="props.label"
+    v-bind="attrs"
+  />
+  <div v-else class="UiInput" :class="classNames" :style="attrs.style">
     <label v-if="showLabel" class="UiInput__label" v-text="props.label" />
 
     <div class="UiInput__body">
@@ -143,14 +150,6 @@ defineExpose({ element })
           ref="element"
           class="UiInput__element"
           v-bind="nativeElementProps"
-        />
-        <button
-          v-else-if="props.type == 'button' || props.type == 'submit'"
-          ref="element"
-          :type="props.type"
-          class="UiInput__element"
-          v-bind="nativeElementProps"
-          v-text="props.label"
         />
         <label v-else-if="props.type == 'checkbox'" class="UiInput__element" :type="props.type">
           <input v-bind="nativeCheckboxProps" ref="element" type="checkbox" />
