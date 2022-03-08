@@ -24,7 +24,7 @@ const props = defineProps({
     default: 240,
   },
 })
-const emit = defineEmits(['update:open'])
+const emit = defineEmits(['update:open', 'open', 'close'])
 
 const isOpen = ref(false)
 watch(
@@ -105,6 +105,7 @@ async function setOpen(newValue = false, _haltEmits = false) {
       emit('update:open', isOpen.value)
     }
 
+    isOpen.value ? emit('open') : emit('close')
 
     if (!contentsEl.value) {
       return
