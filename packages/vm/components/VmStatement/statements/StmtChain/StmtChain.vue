@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
-import draggable from 'vuedraggable/src/vuedraggable'
+// import draggable from 'vuedraggable/src/vuedraggable'
+import draggable from 'vuedraggable'
 
 import StmtChainItem from './StmtChainItem.vue'
 import VmExpressionPicker from '../../VmExpressionPicker.vue'

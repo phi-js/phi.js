@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch, nextTick } from 'vue'
-import draggable from 'vuedraggable/src/vuedraggable'
+// import draggable from 'vuedraggable/src/vuedraggable'
+import draggable from 'vuedraggable'
 import { UiItem, UiIcon } from '@/packages/ui/components'
 import { normalize } from '@/packages/ui/helpers'
 
@@ -58,10 +59,7 @@ function setOptionText(option, newValue) {
 </script>
 
 <template>
-  <div
-    ref="refRoot"
-    class="OptionsEditor"
-  >
+  <div ref="refRoot" class="OptionsEditor">
     <draggable
       v-model="innerOptions"
       group="select-block"
@@ -73,8 +71,8 @@ function setOptionText(option, newValue) {
         <UiItem
           class="OptionsEditor__option-item"
           :icon="modelValue.type == 'select-list'
-            ? (modelValue.multiple ? 'mdi:checkbox-blank-outline' : 'mdi:radiobox-blank')
-            : 'mdi:drag-vertical'"
+          ? (modelValue.multiple ? 'mdi:checkbox-blank-outline' : 'mdi:radiobox-blank')
+          : 'mdi:drag-vertical'"
         >
           <div class="OptionEditor">
             <input
@@ -86,7 +84,7 @@ function setOptionText(option, newValue) {
               @keypress.enter="pushOption"
               @keydown.backspace="!innerOptions[index].text && deleteOption(index)"
               @keydown.delete="!innerOptions[index].text && deleteOption(index)"
-            >
+            />
             <input
               v-model="innerOptions[index].value"
               type="text"
@@ -94,14 +92,10 @@ function setOptionText(option, newValue) {
               placeholder="Valor"
               @input="emitUpdate"
               @keypress.enter="pushOption"
-            >
+            />
           </div>
           <template #actions>
-            <UiIcon
-              src="mdi:close"
-              class="ui--clickable"
-              @click="deleteOption(index)"
-            />
+            <UiIcon src="mdi:close" class="ui--clickable" @click="deleteOption(index)" />
           </template>
         </UiItem>
       </template>
@@ -148,5 +142,4 @@ function setOptionText(option, newValue) {
     color: inherit;
   }
 }
-
 </style>

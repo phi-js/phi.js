@@ -47,7 +47,8 @@
 
 <script>
 import { UiFileUploader, UiInput, UiIcon } from '../../../../../ui'
-import draggable from 'vuedraggable/src/vuedraggable'
+// import draggable from 'vuedraggable/src/vuedraggable'
+import draggable from 'vuedraggable'
 
 export default {
   name: 'MediaGalleryEditor',

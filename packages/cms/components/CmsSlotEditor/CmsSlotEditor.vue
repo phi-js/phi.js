@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch, nextTick } from 'vue'
-import draggable from 'vuedraggable/src/vuedraggable'
+// import draggable from 'vuedraggable/src/vuedraggable'
+import draggable from 'vuedraggable'
 
 import CmsBlockEditor from '../CmsBlockEditor/CmsBlockEditor.vue'
 import CmsBlockPicker from '../CmsBlockPicker/CmsBlockPicker.vue'

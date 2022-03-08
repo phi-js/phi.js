@@ -2,8 +2,8 @@
 // Base sample in https://codesandbox.io/s/uppy-vue-example-buz4w?file=/src/components/HelloWorld.vue
 import { ref, watch, computed, onBeforeUnmount } from 'vue'
 
-// import draggable from 'vuedraggable' //fails when using phi.js as a bundled library
-import draggable from 'vuedraggable/src/vuedraggable'
+import draggable from 'vuedraggable' //fails when using phi.js as a bundled library
+// import draggable from 'vuedraggable/src/vuedraggable'
 
 import Uppy from '@uppy/core'
 import Webcam from '@uppy/webcam'
@@ -19,8 +19,8 @@ import '@uppy/dashboard/dist/style.css'
 import '@uppy/webcam/dist/style.css'
 import '@uppy/image-editor/dist/style.css'
 
-// import { Dashboard, DashboardModal } from '@uppy/vue' //fails when using phi.js as a bundled library
-import { Dashboard, DashboardModal } from '@uppy/vue/src'
+import { Dashboard, DashboardModal } from '@uppy/vue' //fails when using phi.js as a bundled library
+// import { Dashboard, DashboardModal } from '@uppy/vue/src'
 import { UiItem } from '../UiItem'
 import { UiIcon } from '../UiIcon'
 import bytes from '../../filters/bytes.js'
