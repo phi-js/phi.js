@@ -6,7 +6,7 @@ import { UiIcon } from '../UiIcon'
 const $attrs = useAttrs()
 
 const props = defineProps({
-  text: {
+  label: {
     type: String,
     required: false,
     default: ''
@@ -24,7 +24,7 @@ const props = defineProps({
     default: false
   },
 
-  loadingText: {
+  loadingLabel: {
     type: String,
     required: false,
     default: ''
@@ -50,15 +50,15 @@ const errors = computed(() => {
   return Array.isArray(props.error) ? props.error : [props.error]
 })
 
-// Displayer button text
+// Displayer button label
 const currentText = computed(() => {
   if (errors.value.length) {
     return errors.value[0]
   }
 
   return props.isLoading
-    ? props.loadingText || props.text || $attrs.value || slotText
-    : props.text || $attrs.value || slotText
+    ? props.loadingLabel || props.label || $attrs.value || slotText
+    : props.label || $attrs.value || slotText
 })
 </script>
 

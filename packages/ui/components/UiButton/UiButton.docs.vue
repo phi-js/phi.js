@@ -11,7 +11,7 @@ function doLoad() {
 
 <template>
   <div class="UiButtonDocs">
-    <UiButton text="Trigger load" @click="doLoad()" />
+    <UiButton label="Trigger load" @click="doLoad()" />
 
     <fieldset>
       <legend>Button nativo</legend>
@@ -27,35 +27,35 @@ function doLoad() {
       <br />
       <UiButton :isLoading="isLoading" @click="doLoad()" icon="mdi:upload" />
       <!-- <br><UiButton :isLoading="isLoading" @click="doLoad()" value="Este es un valor" />
-      <br><UiButton :isLoading="isLoading" @click="doLoad()" text="Este es un text" />
+      <br><UiButton :isLoading="isLoading" @click="doLoad()" label="Este es un text" />
       <br><UiButton :isLoading="isLoading" @click="doLoad()">Este es un slot</UiButton>-->
 
       <br />
       <UiButton
         :isLoading="isLoading"
         @click="doLoad()"
-        text="Cargar (err)"
+        label="Cargar (err)"
         error="Código no encontrado"
       />
-      <UiButton :isLoading="isLoading" @click="doLoad()" text="Cargar" loading-text="Cargando" />
+      <UiButton :isLoading="isLoading" @click="doLoad()" label="Cargar" loading-label="Cargando" />
       <br />
       <UiButton
         :isLoading="isLoading"
         @click="doLoad()"
         icon="mdi:upload"
-        loading-text="Cargando"
+        loading-label="Cargando"
         value="Este es un valor"
       />
       <br />
       <UiButton
         :isLoading="isLoading"
         @click="doLoad()"
-        loading-text="Cargando"
-        text="Wachu wachu"
+        loading-label="Cargando"
+        label="Wachu wachu"
         subtext="Hola mundo"
       />
       <br />
-      <UiButton :isLoading="isLoading" @click="doLoad()" loading-text="Cargando">Este es un slot</UiButton>
+      <UiButton :isLoading="isLoading" @click="doLoad()" loading-label="Cargando">Este es un slot</UiButton>
     </fieldset>
   </div>
 </template>
