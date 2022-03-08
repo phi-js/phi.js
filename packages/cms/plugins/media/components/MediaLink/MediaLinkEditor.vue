@@ -73,8 +73,8 @@ function cancel() {
           ]"
         />
         <footer>
-          <UiButton class="UiButton--main" @click="accept" text="OK" />
-          <UiButton class="UiButton--cancel" @click="cancel" text="Cancel" />
+          <UiButton class="UiButton--main" @click="accept" label="OK" />
+          <UiButton class="UiButton--cancel" @click="cancel" label="Cancel" />
         </footer>
       </div>
     </UiDrawer>
