@@ -1,25 +1,6 @@
 .UiForm {
   padding: 8px 16px;
 
-  .UiInput {
-    // margin-bottom: 12px;
-    // &:last-child {
-    //   margin-bottom: 0;
-    // }
-
-    &__label {
-      font-weight: bold;
-      font-size: 14px;
-      padding: 4px 0;
-      display: block;
-    }
-
-    &__subtext {
-      font-size: 14px;
-      opacity: 0.8;
-    }
-  }
-
   fieldset {
     border: 1px inset #555;
     border-radius: 5px;

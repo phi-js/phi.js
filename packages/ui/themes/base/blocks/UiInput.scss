@@ -24,6 +24,18 @@
 }
 
 .UiInput {
+  &__label {
+    font-weight: bold;
+    font-size: 14px;
+    padding: 4px 0;
+    display: block;
+  }
+
+  &__subtext {
+    font-size: 14px;
+    opacity: 0.8;
+  }
+
   &__element {
     @extend .UiInputNativeElement;
   }
