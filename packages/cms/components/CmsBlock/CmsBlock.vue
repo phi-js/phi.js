@@ -25,7 +25,7 @@ export default {
     const blockVM = new VM()
     const parsedBlocks = ref([])
 
-    // Provice Story functions to VM
+    // Provide Story functions to VM
     const injectedStory = inject('$_cms_story', null)
     if (injectedStory) {
       blockVM.defineFunctions({
@@ -62,9 +62,7 @@ export default {
         }
 
         return (await Promise.all(promises))
-          .map((someObj) => {
-            return h(getBlockComponent(block.component), someObj.blockProps, someObj.blockSlots)
-          })
+          .map((someObj) => h(getBlockComponent(block.component), someObj.blockProps, someObj.blockSlots))
       }
 
       const BandP = await getBlockPropsAndSlots(block, modelValue, vm)
@@ -189,17 +187,19 @@ export default {
         }
       }
 
+      // Send the current vm as a prop
+      blockProps.vm = vm
+
       return {
         blockProps,
         blockSlots: slots,
       }
     }
 
-    // Setup return the render function
+    // Setup returns the render function
     return () => h('div', { class: 'CmsBlock' }, parsedBlocks.value)
   }
 }
-
 </script>
 
 <style lang="scss">

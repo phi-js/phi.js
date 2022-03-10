@@ -45,21 +45,19 @@ export default async function getBlockEditors(block, $settings = {}) {
   }
 
   // Determine "face"
-  const face = definition?.editor?.face?.component ? {
-    'component': definition.editor.face.component,
-    'props': definition.editor.face?.props,
-    'v-model': definition.editor.face?.['v-model'],
-  } : {
-    component: definition.block.component,
-    props: definition.block?.props,
-  }
+  if (definition?.editor?.face?.component) {
+    retval.face = {
+      'component': definition.editor.face.component,
+      'props': definition.editor.face?.props,
+      'v-model': definition.editor.face?.['v-model'],
+    }
 
-  if (typeof face.component === 'function') {
-    face.component = defineAsyncComponent(face.component)
+    if (typeof retval.face.component === 'function') {
+      retval.face.component = defineAsyncComponent(face.component)
+    }
+
+    retval.face.props = parse(retval.face.props, { $settings }, true)
   }
-  retval.face = face
-  // parse $settings in definitions
-  retval.face.props = parse(retval.face.props, { $settings }, true)
 
   // Determine "toolbar"
   if (definition?.editor?.toolbar?.component) {

@@ -3,7 +3,6 @@ import { ref, shallowRef, watch, inject, computed } from 'vue'
 import { getBlockEditors, getBlockDefinition, getCssObjectAttributes } from '../../functions'
 import EditorAction from './EditorAction.vue'
 import {
-  UiInput,
   UiItem,
   UiInputWedge,
   UiIcon,
@@ -59,7 +58,8 @@ const blockCssAttributes = computed(() => getCssObjectAttributes(innerBlock.valu
 // Available block editors
 const $settings = inject('$_cms_settings', {})
 const editors = shallowRef({})
-const definition = ref({})
+const definition = shallowRef({})
+
 watch(
   () => props.block?.component,
   () => {
@@ -193,7 +193,12 @@ function onInnerBlockChange() {
           @update:block="accept()"
           @delete="emitDelete()"
         />
-        <UiInput v-else v-model="innerBlock" type="json" @update:modelValue="accept()" />
+        <div v-else-if="definition?.block?.component" @click="openAction(0)">
+          <Component
+            :is="definition.block.component"
+            v-bind="{ ...innerBlock?.props, ...blockCssAttributes }"
+          />
+        </div>
       </slot>
     </div>
 
