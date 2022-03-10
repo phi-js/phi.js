@@ -1,11 +1,11 @@
-import Foo from './Foo.vue'
+import PagePicker from './PagePicker.vue'
 
 export default {
   'Story.goTo': {
     icon: 'mdi:arrow-right-thick',
     text: 'Go to page',
     editor: {
-      component: Foo,
+      component: PagePicker,
       props: null,
     },
   },

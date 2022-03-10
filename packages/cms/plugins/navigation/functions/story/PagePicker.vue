@@ -30,16 +30,12 @@ function emitPageId(pageId) {
 </script>
 
 <template>
-  <div class="Foo">
-    <UiInput
-      type="select-list"
-      :options="availablePages"
-      :modelValue="props.modelValue?.args"
-      @update:modelValue="emitPageId($event)"
-      option-text="$.info.text"
-      option-value="$.id"
-    />
-    <!-- <pre>modelValue: {{ modelValue }}</pre>
-    <pre>availablePages: {{ availablePages }}</pre>-->
-  </div>
+  <UiInput
+    type="select-list"
+    :options="availablePages"
+    :modelValue="props.modelValue?.args"
+    @update:modelValue="emitPageId($event)"
+    option-text="$.info.text"
+    option-value="$.id"
+  />
 </template>
