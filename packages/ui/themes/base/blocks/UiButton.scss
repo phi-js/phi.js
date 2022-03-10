@@ -32,6 +32,9 @@
     background-color: rgba(0,0,0, 0.2);
     pointer-events: none;
     opacity: 0;
+    border-radius: 5px;
+
+    transition: opacity 0.2s;
   }
 
   &:hover {
