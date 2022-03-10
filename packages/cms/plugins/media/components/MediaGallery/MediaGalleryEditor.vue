@@ -115,7 +115,7 @@ export default {
 
     onUploadError(err) {
       alert('Error subiendo archivos')
-      console.log('GalleryEditor.vue: Error subiendo archivos', err)
+      console.error('GalleryEditor.vue: Error subiendo archivos', err)
     },
 
     emitInput() {

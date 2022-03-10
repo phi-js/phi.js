@@ -30,11 +30,12 @@ const isFormOpen = ref(false)
   &__item {
     cursor: pointer;
     font-size: 14px;
-    font-weight: bold;
     background-color: #f4f4f4;
 
     white-space: nowrap;
     width: 38px;
+    --ui-item-padding: 4px 16px;
+    border-radius: 5px;
 
     &:hover {
       background-color: #ffffaa;

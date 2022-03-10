@@ -45,7 +45,6 @@ function deleteNode() {
       v-show="!isFormOpen"
       class="GraphNodeItem__item"
       :text="node.info.text"
-      xxx-subtext="`#/${node.hash}`"
       @click="emit('click')"
     >
       <template #actions>
@@ -92,6 +91,8 @@ function deleteNode() {
 
 <style lang="scss">
 .GraphNodeItem {
+  user-select: none;
+
   &__item {
     cursor: pointer;
     font-size: 14px;
@@ -100,6 +101,9 @@ function deleteNode() {
 
     white-space: nowrap;
     max-width: 200px;
+
+    border-radius: 5px;
+    --ui-item-padding: 8px 12px;
 
     &:hover {
       background-color: #ffffaa;
@@ -130,8 +134,8 @@ function deleteNode() {
 
   &__menu {
     .UiItem {
-      font-weight: normal;
-      white-space: nowrap;
+      --ui-item-padding: 8px 12px;
+
       &:hover {
         background-color: rgba(255, 255, 255, 0.1);
       }

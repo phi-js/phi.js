@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { UiInput } from '@/packages/ui'
 import SpacingEditor from './props/SpacingEditor.vue'
 
@@ -41,6 +41,18 @@ function toggleProperty(propName, defaultValue = null) {
 
 <template>
   <div class="BlockCssStyle UiForm">
+    <fieldset>
+      <legend>
+        Content width
+        <input
+          type="checkbox"
+          :checked="!!innerValue['--ui-content-width']"
+          @change="toggleProperty('--ui-content-width', 'auto')"
+        />
+      </legend>
+      <UiInput v-model="innerValue['--ui-content-width']" @update:modelValue="emitUpdate()" />
+    </fieldset>
+
     <fieldset>
       <legend>
         Margin
