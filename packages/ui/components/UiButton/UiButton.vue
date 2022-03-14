@@ -9,32 +9,32 @@ const props = defineProps({
   label: {
     type: String,
     required: false,
-    default: ''
+    default: '',
   },
 
   icon: {
     type: String,
     required: false,
-    default: null
+    default: null,
   },
 
   isLoading: {
     type: Boolean,
     required: false,
-    default: false
+    default: false,
   },
 
   loadingLabel: {
     type: String,
     required: false,
-    default: ''
+    default: '',
   },
 
   error: {
     type: [String, Array],
     required: false,
-    default: null
-  }
+    default: null,
+  },
 })
 
 // Get text from slot

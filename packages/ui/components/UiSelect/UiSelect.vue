@@ -1,5 +1,5 @@
 <script setup>
-import { ref, toRef, unref, reactive, computed, watch, useSlots } from 'vue'
+import { ref, toRef, unref, computed, watch, useSlots } from 'vue'
 
 import { UiItem } from '../UiItem'
 import { UiIcon } from '../UiIcon'
@@ -7,6 +7,8 @@ import { UiPopover } from '../UiPopover'
 
 import useOptionsManager from './composables/useOptionsManager.js'
 import useSelectionManager from './composables/useSelectionManager.js'
+
+import useFocusItem from './composables/useFocusItem.js'
 
 const emit = defineEmits(['update:modelValue', 'focus', 'blur'])
 const props = defineProps({
@@ -75,27 +77,12 @@ const props = defineProps({
 })
 
 
-
-/*
-A canonical tree of all available options
-{
-  value,
-  text,
-  children: [
-    { value, text, children? },
-    ...
-  ]
-}
-*/
-const optionTree = reactive({})
-
-
 /* Load <option> children */
 const slots = useSlots()
 
 const nestedOptions = slots?.default?.()
 if (nestedOptions) {
-  nestedOptions.forEach(optionEl => {
+  nestedOptions.forEach((optionEl) => {
     if (optionEl.type == 'option') {
       console.log('option', optionEl, optionEl.type, optionEl.props?.value)
     }
@@ -105,7 +92,7 @@ if (nestedOptions) {
 
       const groupOptions = optionEl.children || []
       console.log('optgroup', optionEl, optionEl.props?.label, groupOptions)
-      groupOptions.forEach(subOption => {
+      groupOptions.forEach((subOption) => {
         console.log('subOption', subOption, subOption.type, subOption.props?.value)
       })
 
@@ -162,7 +149,6 @@ function clickOption(objOption) {
 const listedOptions = filteredOptions
 
 // Manage focused option
-import useFocusItem from './composables/useFocusItem.js'
 const elOptionsContainer = ref(null)
 
 const { setFocus, focusNext, focusPrevious, focusedItem } = useFocusItem(
@@ -285,9 +271,16 @@ const placeholderOption = computed(() => {
     >
       <template #trigger>
         <div class="UiSelect__face">
-          <template v-for="option in visibleChips" :key="option.value">
+          <template
+            v-for="option in visibleChips"
+            :key="option.value"
+          >
             <slot name="chip">
-              <UiItem v-bind="option" class="UiChip ui--clickable" @click="clickChip(option)">
+              <UiItem
+                v-bind="option"
+                class="UiChip ui--clickable"
+                @click="clickChip(option)"
+              >
                 <template #actions>
                   <div
                     class="UiChip__btn-close ui--clickable"
@@ -302,7 +295,9 @@ const placeholderOption = computed(() => {
                         .closest('.UiChip')
                         .classList.remove('UiChip--threatened')
                     "
-                  >&times;</div>
+                  >
+                    &times;
+                  </div>
                 </template>
               </UiItem>
             </slot>
@@ -317,9 +312,17 @@ const placeholderOption = computed(() => {
               v-if="hiddenChips.length"
               name="aggregator"
               :options="hiddenChips"
-            >... {{ hiddenChips.length }} more</slot>
-            <slot v-else name="placeholder">
-              <UiItem style="flex: 1" v-bind="placeholderOption" />
+            >
+              ... {{ hiddenChips.length }} more
+            </slot>
+            <slot
+              v-else
+              name="placeholder"
+            >
+              <UiItem
+                style="flex: 1"
+                v-bind="placeholderOption"
+              />
             </slot>
             <UiIcon
               :src="isOpen ? 'mdi:chevron-up' : 'mdi:chevron-down'"
@@ -329,19 +332,25 @@ const placeholderOption = computed(() => {
       </template>
 
       <template #contents>
-        <div ref="elPopoverContents" class="UiSelect__popover">
+        <div
+          ref="elPopoverContents"
+          class="UiSelect__popover"
+        >
           <input
             ref="searchElem"
             v-model="searchQuery"
             type="search"
             class="UiSelect__search-input"
             :placeholder="focusedItem?.text"
-            xxxkeydown.arrow-up.prevent="focusPrevious()"
-            xxxkeydown.arrow-down.prevent="focusNext()"
+            @keydown.arrow-up.prevent="focusPrevious()"
+            @keydown.arrow-down.prevent="focusNext()"
             @keydown.enter.stop="clickOption(focusedItem)"
-          />
+          >
 
-          <div ref="elOptionsContainer" class="UiSelect__options">
+          <div
+            ref="elOptionsContainer"
+            class="UiSelect__options"
+          >
             <!-- <select class="UiSelect__element" multiple v-model="selection">
               <option
                 v-for="option in parsedOptions"
@@ -359,7 +368,10 @@ const placeholderOption = computed(() => {
                 'UiOption--selected': option.isSelected
               }"
             >
-              <slot name="option" v-bind="option">
+              <slot
+                name="option"
+                v-bind="option"
+              >
                 <UiItem
                   class="UiOption ui--clickable"
                   v-bind="option"
