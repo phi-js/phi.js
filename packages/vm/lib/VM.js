@@ -24,11 +24,11 @@ export default class VM {
     }
 
     if (Array.isArray(expr)) {
-      let retval = []
+      const promises = []
       for (let i = 0; i < expr.length; i++) {
-        retval[i] = await this.eval(expr[i], localScope)
+        promises.push(this.eval(expr[i], localScope))
       }
-      return retval
+      return await Promise.all(promises)
     }
 
     // Declaracion de un Closure. No se evalúa
@@ -99,15 +99,19 @@ export default class VM {
      *     }
      *   }
      * }
+     *
+     * Evaluate all subproperties concurrently (Promise.all)
+     * This makes VM.eval inside watchEffect() trigger correctly on any accesed property change
      */
-    let retval = {}
+    const retval = {}
+    const promises = []
     for (let propertyName in expr) {
       if (!Object.prototype.hasOwnProperty.call(expr, propertyName)) {
         continue
       }
-      retval[propertyName] = await this.eval(expr[propertyName], localScope)
+      promises.push(this.eval(expr[propertyName], localScope).then((result) => retval[propertyName] = result))
     }
-
+    await Promise.all(promises)
     return retval
   }
 
