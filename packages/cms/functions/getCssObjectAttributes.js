@@ -7,7 +7,7 @@ block: {
     class: '' STRING.  A main class name to assign to this object
     classes: [] ARRAY.  An ARRAY of STRINGS of class names to assign to this object
     style: {} OBJECT. An object describing css attributes, passed to final component as :style="..."
-    css: STRING.  A string with custom css classes, to be added as a stylestheet via applyStoryCss
+    css: STRING.  A string with custom css classes, to be added as a <style> by CmsBlock.vue
   }
 }
 

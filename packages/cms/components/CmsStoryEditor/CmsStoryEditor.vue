@@ -6,7 +6,7 @@ import '../../style/base.scss'
 import './style.scss'
 
 import { ref, watch, watchEffect, provide } from 'vue'
-import { sanitizeStory, applyStoryCss } from '../../functions'
+import { sanitizeStory } from '../../functions'
 import { CmsBlockEditor } from '../CmsBlockEditor'
 import LayoutPageWindow from '../../plugins/layout/components/LayoutPage/LayoutPageWindow.vue'
 
@@ -71,34 +71,30 @@ function windowOnCancel() {
 const transitionName = ref('slideX')
 const transitionDirection = ref('fw') // fw, bw
 
-
-// Handle <link> containing story's CSS
-watchEffect(() => applyStoryCss(sanitizedStory.value))
-
-provide('$_cms_emitDraft', (block) => {
-  applyStoryCss(sanitizedStory.value, null, block)
-})
 </script>
 
 <template>
   <div class="CmsStoryEditor CmsStory">
     <Transition :name="`${transitionName}--${transitionDirection}`">
-      <KeepAlive>
-        <CmsBlockEditor
-          v-if="currentPage"
-          :key="currentPage.id"
-          v-model:block="currentPage"
-          class="CmsStoryEditor__page CmsStory__page"
-          :settings="settings"
-          @update:block="emitUpdate"
-        />
-      </KeepAlive>
+      <div
+        v-if="currentPage"
+        :key="currentPage.id"
+      >
+        <KeepAlive>
+          <CmsBlockEditor
+            v-model:block="currentPage"
+            class="CmsStoryEditor__page CmsStory__page"
+            :settings="settings"
+            @update:block="emitUpdate"
+          />
+        </KeepAlive>
+      </div>
     </Transition>
 
     <LayoutPageWindow
       v-if="currentPage"
       v-model:block="currentPage"
-      :currentTab="currentSettingsTab"
+      :current-tab="currentSettingsTab"
       @update:currentTab="emit('update:currentSettingsTab', $event)"
       @accept="emitUpdate"
       @cancel="windowOnCancel"

@@ -48,9 +48,12 @@ function toggleProperty(propName, defaultValue = null) {
           type="checkbox"
           :checked="!!innerValue['--ui-content-width']"
           @change="toggleProperty('--ui-content-width', 'auto')"
-        />
+        >
       </legend>
-      <UiInput v-model="innerValue['--ui-content-width']" @update:modelValue="emitUpdate()" />
+      <UiInput
+        v-model="innerValue['--ui-content-width']"
+        @update:modelValue="emitUpdate()"
+      />
     </fieldset>
 
     <fieldset>
@@ -60,9 +63,12 @@ function toggleProperty(propName, defaultValue = null) {
           type="checkbox"
           :checked="!!innerValue.margin"
           @change="toggleProperty('margin', 'auto auto auto auto')"
-        />
+        >
       </legend>
-      <SpacingEditor v-model="innerValue.margin" @update:modelValue="emitUpdate()" />
+      <SpacingEditor
+        v-model="innerValue.margin"
+        @update:modelValue="emitUpdate()"
+      />
     </fieldset>
 
     <fieldset>
@@ -72,9 +78,12 @@ function toggleProperty(propName, defaultValue = null) {
           type="checkbox"
           :checked="!!innerValue.padding"
           @change="toggleProperty('padding', '0 0 0 0')"
-        />
+        >
       </legend>
-      <SpacingEditor v-model="innerValue.padding" @update:modelValue="emitUpdate()" />
+      <SpacingEditor
+        v-model="innerValue.padding"
+        @update:modelValue="emitUpdate()"
+      />
     </fieldset>
 
     <fieldset>

@@ -2,9 +2,9 @@
 // Base story styles
 import '../../style/base.scss'
 
-import { ref, watch, watchEffect, provide } from 'vue'
+import { ref, watch, watchEffect, provide, reactive } from 'vue'
 import CmsBlock from '../CmsBlock/CmsBlock.vue'
-import { sanitizeStory, applyStoryCss } from '../../functions'
+import { sanitizeStory } from '../../functions'
 
 const props = defineProps({
   story: {
@@ -37,7 +37,7 @@ watch(
 )
 
 // Determine current page
-const currentPage = ref(null)
+const currentPage = ref()
 const transitionName = ref('slideX')
 const transitionDirection = ref('fw') // fw, bw
 
@@ -45,10 +45,6 @@ watchEffect(() => {
   const foundPage = sanitizedStory.value.pages.find((page) => page.id == props.currentPageId)
   currentPage.value = foundPage || sanitizedStory.value.pages?.[0]
 })
-
-// Create the story CSS with its block "css" definitions
-watchEffect(() => applyStoryCss(sanitizedStory.value, props.modelValue))
-
 
 // Story navigation
 const navigationHistory = ref([]) // array of page IDs
@@ -83,10 +79,14 @@ function goBack() {
   goTo(lastPageId)
 }
 
+
+const globals = reactive({ $errors: [] })
+
 // Provide global story methods (used by CmsBlock)
 provide('$_cms_story', {
   goTo,
-  goBack
+  goBack,
+  globals,
 })
 
 /*
@@ -223,16 +223,18 @@ function onUpdateModelValue(event) {
   <div class="CmsStory">
     <div class="CmsStory__container">
       <Transition :name="`${transitionName}--${transitionDirection}`">
-        <KeepAlive>
-          <CmsBlock
-            v-if="currentPage"
-            :key="currentPage.id"
-            class="CmsStory__page"
-            :block="currentPage"
-            :model-value="props.modelValue"
-            @update:modelValue="onUpdateModelValue"
-          />
-        </KeepAlive>
+        <div :key="currentPage.id">
+          <KeepAlive>
+            <CmsBlock
+              v-if="currentPage"
+              v-model:errors="globals.$errors"
+              class="CmsStory__page"
+              :block="currentPage"
+              :model-value="props.modelValue"
+              @update:modelValue="onUpdateModelValue"
+            />
+          </KeepAlive>
+        </div>
       </Transition>
     </div>
   </div>

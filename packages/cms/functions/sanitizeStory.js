@@ -33,7 +33,7 @@ export default function sanitizeStory(story) {
   }
 
   story.pages.forEach((page, index) => {
-    // Every page has an ID    
+    // Every page has an ID
     if (!page.id) {
       page.id = `page-${index}`
     }
@@ -48,8 +48,9 @@ export default function sanitizeStory(story) {
 let uid = 1
 
 function assignUid(block) {
+  // block.uid = block.uid || uid++
   block.uid = uid++
   if (block?.slot?.length) {
-    block.slot.forEach(child => assignUid(child))
+    block.slot.forEach((child) => assignUid(child))
   }
 }

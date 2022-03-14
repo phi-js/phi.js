@@ -23,8 +23,8 @@ const props = defineProps({
   focused: {
     type: [Boolean, String, Number],
     required: false,
-    default: null
-  }
+    default: null,
+  },
 })
 const emit = defineEmits(['update:block', 'delete'])
 
@@ -89,7 +89,7 @@ function openActionId(actionId) {
 const isFocused = ref(false)
 watch(
   () => props.focused,
-  (newValue) => isFocused.value = newValue
+  (newValue) => isFocused.value = newValue,
 )
 
 function getWidth(coords) {
@@ -103,7 +103,10 @@ function onInnerBlockChange() {
 </script>
 
 <template>
-  <div class="BlockScaffold" :class="{ 'BlockScaffold--focused': isFocused }">
+  <div
+    class="BlockScaffold"
+    :class="{ 'BlockScaffold--focused': isFocused }"
+  >
     <div class="BlockScaffold__toolbar-container">
       <div class="BlockScaffold__toolbar">
         <UiItem
@@ -156,9 +159,16 @@ function onInnerBlockChange() {
         />
 
         <!-- dropdown options -->
-        <UiPopover class="BlockPopover" placement="bottom" @update:open="isFocused = $event">
+        <UiPopover
+          class="BlockPopover"
+          placement="bottom"
+          @update:open="isFocused = $event"
+        >
           <template #trigger>
-            <UiIcon class="ui--clickable BlockScaffold__toolbar-icon" src="mdi:dots-vertical" />
+            <UiIcon
+              class="ui--clickable BlockScaffold__toolbar-icon"
+              src="mdi:dots-vertical"
+            />
           </template>
           <template #contents="{ close }">
             <UiItem
@@ -182,7 +192,11 @@ function onInnerBlockChange() {
     </div>
 
     <div class="BlockScaffold__face">
-      <slot name="default" :innerBlock="innerBlock" :blockCssAttributes="blockCssAttributes">
+      <slot
+        name="default"
+        :innerBlock="innerBlock"
+        :blockCssAttributes="blockCssAttributes"
+      >
         <EditorAction
           v-if="editors.face"
           v-model:block="innerBlock"
@@ -193,7 +207,10 @@ function onInnerBlockChange() {
           @update:block="accept()"
           @delete="emitDelete()"
         />
-        <div v-else-if="definition?.block?.component" @click="openAction(0)">
+        <div
+          v-else-if="definition?.block?.component"
+          @click="openAction(0)"
+        >
           <Component
             :is="definition.block.component"
             v-bind="{ ...innerBlock?.props, ...blockCssAttributes }"

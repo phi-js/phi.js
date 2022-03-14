@@ -7,7 +7,7 @@ block
     class: '' STRING.  A main class name to assign to this object
     classes: [] ARRAY.  An ARRAY of STRINGS of class names to assign to this object
     style: {} OBJECT. An object describing css attributes, passed to final component as :style="..."
-    css: STRING.  A string with custom css classes, to be added as a stylestheet via applyStoryCss
+    css: STRING.  A string with custom css classes, to be added as a <style> by CmsBlock.vue
   }
 */
 import { reactive, watch } from 'vue'
@@ -30,7 +30,7 @@ const css = reactive({
   class: '',
   classes: [],
   style: {},
-  css: ''
+  css: '',
 })
 
 watch(
@@ -50,24 +50,37 @@ function emitUpdate() {
 </script>
 
 <template>
-  <UiTabs class="BlockCssEditor" name="BlockCssEditor">
+  <UiTabs
+    class="BlockCssEditor"
+    name="BlockCssEditor"
+  >
     <UiTab text="Classes">
-      <BlockCssClasses v-model="css.classes" @update:model-value="emitUpdate" />
+      <BlockCssClasses
+        v-model="css.classes"
+        @update:model-value="emitUpdate"
+      />
     </UiTab>
 
     <UiTab text="Properties">
-      <BlockCssStyle v-model="css.style" @update:model-value="emitUpdate" />
+      <BlockCssStyle
+        v-model="css.style"
+        @update:model-value="emitUpdate"
+      />
     </UiTab>
 
     <UiTab text="CSS">
       <div class="UiForm">
-        <UiInput v-model="css.class" placeholder="Class" @update:model-value="emitUpdate" />
+        <UiInput
+          v-model="css.class"
+          placeholder="Class"
+          @update:model-value="emitUpdate"
+        />
         <UiInput
           v-model="css.css"
           type="code"
           lang="css"
-          @update:model-value="emitUpdate"
           style="padding: 0"
+          @update:model-value="emitUpdate"
         />
       </div>
     </UiTab>
