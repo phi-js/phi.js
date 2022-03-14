@@ -134,8 +134,17 @@ defineExpose({ element })
     :label="props.label"
     v-bind="attrs"
   />
-  <div v-else class="UiInput" :class="classNames" :style="attrs.style">
-    <label v-if="showLabel" class="UiInput__label" v-text="props.label" />
+  <div
+    v-else
+    class="UiInput"
+    :class="classNames"
+    :style="attrs.style"
+  >
+    <label
+      v-if="showLabel"
+      class="UiInput__label"
+      v-text="props.label"
+    />
 
     <div class="UiInput__body">
       <slot name="default">
@@ -151,8 +160,16 @@ defineExpose({ element })
           class="UiInput__element"
           v-bind="nativeElementProps"
         />
-        <label v-else-if="props.type == 'checkbox'" class="UiInput__element" :type="props.type">
-          <input v-bind="nativeCheckboxProps" ref="element" type="checkbox" />
+        <label
+          v-else-if="props.type == 'checkbox'"
+          class="UiInput__element"
+          :type="props.type"
+        >
+          <input
+            v-bind="nativeCheckboxProps"
+            ref="element"
+            type="checkbox"
+          >
           <span>{{ props.placeholder }}</span>
         </label>
         <input
@@ -161,11 +178,25 @@ defineExpose({ element })
           ref="element"
           class="UiInput__element"
           :type="props.type"
-        />
+        >
       </slot>
     </div>
     <div class="UiInput__subtext">
-      <slot name="subtext">{{ props.subtext }}</slot>
+      <slot name="subtext">
+        {{ props.subtext }}
+      </slot>
     </div>
+
+    <ul
+      v-if="props.errors.length"
+      class="UiInput__errors"
+    >
+      <li
+        v-for="(err, k) in props.errors"
+        :key="k"
+      >
+        {{ err.message }}
+      </li>
+    </ul>
   </div>
 </template>
