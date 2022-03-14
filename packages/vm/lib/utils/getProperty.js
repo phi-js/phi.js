@@ -12,12 +12,14 @@ export default function getProperty(sourceObject, propertyName) {
   s = s.replace(/^\./, '') // strip a leading dot
   var a = s.split('.')
   for (var i = 0, n = a.length; i < n; ++i) {
-    if (o === null) {
+
+    // Ocurre cuando  source:"{{ nombre.foo }}"   variables: {nombre: "yo no tengo subropiedades!"}
+    if (typeof o != 'object' || o === null) {
       return
     }
 
     var k = a[i]
-    if (typeof o[k] != 'undefined') {
+    if (k in o) {
       o = o[k]
     } else {
       return
