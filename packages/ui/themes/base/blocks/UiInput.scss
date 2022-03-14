@@ -39,6 +39,32 @@
   &__element {
     @extend .UiInputNativeElement;
   }
+
+  &__errors {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin: 0.5rem 0 1rem 0;
+
+    font-weight: bold;
+    font-size: 14px;
+    color: #e03535;
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  &--invalid {
+    .UiInput {
+      &__element {
+        background-color: #ea545511;
+        border: 1px solid #ea5455;
+        outline-color: #ea5455;
+      }
+    }
+  }
 }
 
 input,
