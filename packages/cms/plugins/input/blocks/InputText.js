@@ -33,7 +33,7 @@ export default {
       {
         'id': 'validation',
         'title': 'Validation',
-        'icon': 'mdi:alert',
+        'icon': 'mdi:message-alert',
         'component': BlockValidationEditor,
         'v-model': 'block',
       },

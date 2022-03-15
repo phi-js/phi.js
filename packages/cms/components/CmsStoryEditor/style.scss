@@ -94,11 +94,25 @@
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
 
-      background-color: var(--ui-color-primary);
+      // background-color: var(--ui-color-primary);
+      background-color: #313131;
       color: #fff;
+
+      opacity: 0.1;
 
       .BlockScaffold__toolbar-spacer {
         display: none;
+      }
+
+      .ui--clickable {
+        min-width: 40px;
+        min-height: 40px;
+
+        color: #ccc;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.2);
+        }
       }
     }
   }
@@ -112,8 +126,7 @@
     & > .BlockScaffold__toolbar {
       transition: all var(--ui-duration-snap);
       position: relative;
-      left: 27px;
-      background-color: rgba(0, 0, 0, 0.05);
+      left: 40px;
     }
 
     .Block__drag-handle .UiIcon,
@@ -124,8 +137,8 @@
 
   &:hover > .BlockScaffold__toolbar-container {
     & > .BlockScaffold__toolbar {
-      background-color: var(--ui-color-primary);
-      opacity: 0.3;
+      opacity: 0.2;
+      left: 32px;
     }
   }
 
@@ -137,7 +150,7 @@
   & > .BlockScaffold__toolbar-container:hover {
     & > .BlockScaffold__toolbar {
       left: 0;
-      background-color: var(--ui-color-primary);
+      background-color: #313131;
       opacity: 1;
     }
   }

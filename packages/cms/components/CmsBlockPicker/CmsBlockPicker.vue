@@ -11,17 +11,17 @@ const props = defineProps({
   text: {
     type: String,
     required: false,
-    default: ''
+    default: '',
   },
   subtext: {
     type: String,
     required: false,
-    default: ''
+    default: '',
   },
   icon: {
     type: String,
     required: false,
-    default: 'mdi:plus'
+    default: 'mdi:plus',
   },
 
   placement: {
@@ -62,10 +62,10 @@ async function onPopoverOpen() {
     <UiPopover
       v-model:open="isOpen"
       class="CmsBlockPicker__popover"
-      placement="bottom-end"
+      placement="bottom"
+      trigger="manual"
       @update:open="emit('update:open', isOpen)"
       @open="onPopoverOpen"
-      trigger="manual"
     >
       <template #trigger="{ toggle }">
         <UiItem
@@ -105,9 +105,10 @@ async function onPopoverOpen() {
   &__item {
     user-select: none;
 
-    --ui-item-padding: 8px 12px;
+    --ui-item-padding: 4px 12px;
     background-color: #818181;
     color: #ddd;
+
     font-size: 14px;
     font-weight: bold;
 
@@ -116,6 +117,8 @@ async function onPopoverOpen() {
     cursor: pointer;
 
     display: inline-flex;
+
+    margin: 4px;
 
     .UiItem__body {
       padding-left: 0;

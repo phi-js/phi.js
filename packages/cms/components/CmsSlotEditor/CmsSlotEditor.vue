@@ -84,7 +84,10 @@ const focusedIndexes = ref({})
 </script>
 
 <template>
-  <div class="CmsSlotEditor" :class="{ 'CmsSlotEditor--dragging': isDragging }">
+  <div
+    class="CmsSlotEditor"
+    :class="{ 'CmsSlotEditor--dragging': isDragging }"
+  >
     <draggable
       v-model="innerSlot"
       :group="groupName"
@@ -100,7 +103,10 @@ const focusedIndexes = ref({})
       @end="onDraggableEnd()"
     >
       <template #item="{ element, index }">
-        <div class="SlotBlock" :class="{ 'SlotBlock--focused': focusedIndexes[index] }">
+        <div
+          class="SlotBlock"
+          :class="{ 'SlotBlock--focused': focusedIndexes[index] }"
+        >
           <template v-if="showLauncher">
             <CmsBlockPicker
               v-for="position in ['bottom', 'top']"
@@ -160,10 +166,18 @@ const focusedIndexes = ref({})
   }
 
   &__adder {
-    position: absolute;
-    right: 0;
     min-width: 80px;
-    text-align: right;
+    text-align: center;
+
+    position: absolute;
+    left: 50%;
+    margin-left: -40px;
+
+    &:hover {
+      left: 0;
+      right: 0;
+      margin-left: 0;
+    }
 
     &.CmsBlockPicker--top {
       bottom: 100%;
@@ -175,13 +189,12 @@ const focusedIndexes = ref({})
 
     &.CmsBlockPicker--hovered {
       z-index: 1;
-      left: 0;
     }
   }
 
   // Show/hide adders on hover
   & > &__adder {
-    transition: all var(--ui-duration-quick);
+    transition: opacity var(--ui-duration-quick);
     opacity: 0;
     pointer-events: none;
   }

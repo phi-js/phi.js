@@ -135,14 +135,6 @@ function onInnerBlockChange() {
         />
 
         <UiIcon
-          v-if="innerBlock?.css"
-          title="Block styles"
-          class="BlockScaffold__toolbar-icon ui--clickable"
-          src="mdi:palette-advanced"
-          @click="openActionId('css')"
-        />
-
-        <UiIcon
           v-if="innerBlock['v-if']"
           title="This block has conditional visibility"
           class="BlockScaffold__toolbar-icon ui--clickable"
@@ -156,6 +148,22 @@ function onInnerBlockChange() {
           class="BlockScaffold__toolbar-icon ui--clickable"
           src="mdi:repeat-variant"
           @click="openActionId('v-for')"
+        />
+
+        <UiIcon
+          v-if="innerBlock?.rules?.length"
+          title="This block has validation rules"
+          class="BlockScaffold__toolbar-icon ui--clickable"
+          src="mdi:message-alert"
+          @click="openActionId('validation')"
+        />
+
+        <UiIcon
+          v-if="innerBlock?.css?.css"
+          title="This block has CSS styles"
+          class="BlockScaffold__toolbar-icon ui--clickable"
+          src="mdi:palette-advanced"
+          @click="openActionId('css')"
         />
 
         <!-- dropdown options -->
@@ -321,7 +329,7 @@ function onInnerBlockChange() {
   &--default &__toolbar-container {
     position: absolute;
     bottom: 100%;
-    right: 3rem;
+    left: 1.5rem;
 
     transition: opacity var(--ui-duration-snap);
     opacity: 0;
@@ -435,10 +443,6 @@ function onInnerBlockChange() {
   user-select: none;
   display: flex;
   align-items: stretch;
-
-  .BlockScaffold__toolbar-icon {
-    min-height: 100% !important;
-  }
 
   .tippy-content {
     padding: 0;

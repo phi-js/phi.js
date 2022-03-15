@@ -17,6 +17,10 @@ const props = defineProps({
     default: false,
   },
 
+  /*
+  Tippy placement attribute
+  https://atomiks.github.io/tippyjs/#placements
+  */
   placement: {
     type: String,
     required: false,
@@ -146,13 +150,34 @@ function toggle() {
 </script>
 
 <template>
-  <div ref="elRoot" class="UiPopover">
-    <div ref="elTrigger" class="UiPopover__trigger" @click="onTriggerClick">
-      <slot name="trigger" :open="open" :close="close" :toggle="toggle" />
+  <div
+    ref="elRoot"
+    class="UiPopover"
+  >
+    <div
+      ref="elTrigger"
+      class="UiPopover__trigger"
+      @click="onTriggerClick"
+    >
+      <slot
+        name="trigger"
+        :open="open"
+        :close="close"
+        :toggle="toggle"
+      />
     </div>
-    <div ref="elTooltip" class="UiPopover__tooltip">
-      <slot name="contents" :close="close">
-        <slot name="default" :close="close" />
+    <div
+      ref="elTooltip"
+      class="UiPopover__tooltip"
+    >
+      <slot
+        name="contents"
+        :close="close"
+      >
+        <slot
+          name="default"
+          :close="close"
+        />
       </slot>
     </div>
   </div>
