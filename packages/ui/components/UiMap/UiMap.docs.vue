@@ -91,11 +91,8 @@ const settings = ref({
             @click="markers.push({
               id: `m${markers.length+1}`,
               text: `Marker ${markers.length+1}`,
-              icon: 'mdi:car',
-              position: {
-                lat: 40.4152056,
-                lng: -3.7080868,
-              },
+              icon: null,
+              position: center,
               draggable: true,
             })"
           />
