@@ -1,0 +1,1 @@
+export { default as UiMap } from './UiMap.vue'
