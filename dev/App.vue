@@ -6,11 +6,14 @@ import {
   onMounted,
   onBeforeUnmount,
   computed,
-  watchEffect,
-  provide
 } from 'vue'
 
 import { UiIcon, UiInput, UiItem, UiTree } from '@/packages/ui/components'
+
+// Lista de paginas
+// (por ahora VITE no da una forma de listar archivos locales)
+import { normalize } from '@/packages/ui/helpers'
+import { default as pages, docsTree } from './pages.js'
 
 import { provideI18n } from '@/packages/i18n'
 const i18n = provideI18n({
@@ -24,11 +27,6 @@ const i18n = provideI18n({
     fr: { globalWord: 'mot global' },
   },
 })
-
-// Lista de paginas
-// (por ahora VITE no da una forma de listar archivos locales)
-import { normalize } from '@/packages/ui/helpers'
-import { default as pages, docsTree } from './pages.js'
 
 function filterTree(arrTree, strFilter) {
   let retval = []
@@ -114,14 +112,26 @@ function loadPageComponent(href) {
 <template>
   <div class="App">
     <div class="App__top-bar">
-      <UiItem class="App__logo" text="Phi.js" icon="/phi.svg" />
+      <UiItem
+        class="App__logo"
+        text="Phi.js"
+        icon="/phi.svg"
+      />
 
       <UiItem icon="mdi:web">
         <select v-model="i18n.locale">
-          <option value="en">en</option>
-          <option value="es">es</option>
-          <option value="de">de</option>
-          <option value="fr">fr</option>
+          <option value="en">
+            en
+          </option>
+          <option value="es">
+            es
+          </option>
+          <option value="de">
+            de
+          </option>
+          <option value="fr">
+            fr
+          </option>
         </select>
       </UiItem>
     </div>
@@ -137,8 +147,8 @@ function loadPageComponent(href) {
         />
 
         <UiTree
-          class="NavTree"
           v-slot="{ item, children, isOpen, toggle }"
+          class="NavTree"
           :value="filteredTree"
           :initial-open="(item) => item.isActive"
         >
@@ -146,9 +156,12 @@ function loadPageComponent(href) {
             v-if="item?.payload?.href"
             class="NavTree__link"
             :class="{ 'NavTree__link--active': currentPage == item.payload.href }"
-            :href="`/#/${item.payload.href}`"
+            :href="`#/${item.payload.href}`"
           >
-            <UiItem :text="item.text" :subtext="item.payload.isLocal ? '.local' : ''" />
+            <UiItem
+              :text="item.text"
+              :subtext="item.payload.isLocal ? '.local' : ''"
+            />
           </a>
           <div v-else>
             <UiItem
@@ -158,7 +171,10 @@ function loadPageComponent(href) {
               class="NavTree__toggler"
               @click="toggle()"
             >
-              <template v-if="children?.length" #actions>
+              <template
+                v-if="children?.length"
+                #actions
+              >
                 <UiIcon :src="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'" />
               </template>
             </UiItem>
@@ -168,7 +184,10 @@ function loadPageComponent(href) {
 
       <div class="App__body">
         <Transition name="fade">
-          <div v-if="component" :key="currentPage">
+          <div
+            v-if="component"
+            :key="currentPage"
+          >
             <component :is="component" />
           </div>
         </Transition>
