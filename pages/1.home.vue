@@ -8,6 +8,7 @@ const defaultStory = {
 
   pages: [
     {
+      id: 'p1',
       component: 'LayoutPage',
       slot: [
         {
@@ -66,15 +67,34 @@ const currentTab = ref('editor')
 
 <template>
   <UiTabs v-model="currentTab">
-    <UiTab text="Editor" value="editor">
-      <CmsStoryEditor v-model:story="story" :settings="settings" @update:story="saveStory()" />
+    <UiTab
+      text="Editor"
+      value="editor"
+    >
+      <CmsStoryEditor
+        v-model:story="story"
+        :settings="settings"
+        @update:story="saveStory()"
+      />
       <footer style="text-align: right">
-        <button type="button" @click="reset()">Reset</button>
+        <button
+          type="button"
+          @click="reset()"
+        >
+          Reset
+        </button>
       </footer>
     </UiTab>
 
-    <UiTab text="Preview" value="preview">
-      <CmsStory v-model="modelValue" :story="story" :settings="settings" />
+    <UiTab
+      text="Preview"
+      value="preview"
+    >
+      <CmsStory
+        v-model="modelValue"
+        :story="story"
+        :settings="settings"
+      />
     </UiTab>
   </UiTabs>
 </template>
