@@ -1,0 +1,60 @@
+# User: 52907305
+# Password: testpassword_uZcXTt5o8KLOnvX3thXCoWIo7SEf0kOLpAyF22ckCAB7J
+# Header  Basic base64_encode('user:password')
+# NTI5MDczMDU6dGVzdHBhc3N3b3JkX3VaY1hUdDVvOEtMT252WDN0aFhDb1dJbzdTRWYwa09McEF5RjIyY2tDQUI3Sg==
+
+# Endpoint generico para probar autenticacion y receppcion de datos
+POST https://api.systempay.fr/api-payment/V4/Charge/SDKTest
+Authorization: Basic NTI5MDczMDU6dGVzdHBhc3N3b3JkX3VaY1hUdDVvOEtMT252WDN0aFhDb1dJbzdTRWYwa09McEF5RjIyY2tDQUI3Sg==
+Content-Type: application/json
+
+{
+  "value": "This MUST be a string"
+}
+
+
+
+# 1. Initialize the form
+# When a Buyer finalizes their purchase on your website, you must validate their transaction on your merchant server, making sure to check the amount, currency, cart contents, etc.
+# Once these verification has been completed, your merchant server must call the Charge/CreatePayment Web Service in order to initialize the transaction.
+# In response, your merchant server retrieves a formToken, an encrypted object allowing to initialize the embedded form with the transaction details and the details corresponding to your shop configuration.
+###
+POST https://api.systempay.fr/api-payment/V4/Charge/CreatePayment
+Authorization: Basic NTI5MDczMDU6dGVzdHBhc3N3b3JkX3VaY1hUdDVvOEtMT252WDN0aFhDb1dJbzdTRWYwa09McEF5RjIyY2tDQUI3Sg==
+Content-Type: application/json
+
+{
+  "amount": 2000,
+  "currency": "EUR",
+  "orderId": "phidiasTest-3",
+  "customer": {
+    "email": "santiago.cortes@phidias.com.co"
+  }
+}
+
+###
+
+
+# createPayment invocado desde Phidias
+POST http://v4.local/1/ecommerce/systempay/createPayment
+Content-Type: application/json
+
+{
+  "amount": 2000,
+  "currency": "EUR",
+  "orderId": "phidiasTest-3",
+  "customer": {
+    "email": "santiago.cortes@phidias.com.co"
+  }
+}
+
+###
+
+# Cancelacion / devolucion
+POST https://api.systempay.fr/api-payment/V4/Transaction/CancelOrRefund
+Authorization: Basic NTI5MDczMDU6dGVzdHBhc3N3b3JkX3VaY1hUdDVvOEtMT252WDN0aFhDb1dJbzdTRWYwa09McEF5RjIyY2tDQUI3Sg==
+Content-Type: application/json
+
+{
+  "uuid": "a6e824cd47734c48a102199f007861f6"
+}
