@@ -171,12 +171,12 @@ const focusedIndexes = ref({})
 
     position: absolute;
     left: 50%;
-    margin-left: -40px;
+    transform: translateX(-50%);
 
     &:hover {
       left: 0;
       right: 0;
-      margin-left: 0;
+      transform: translateX(0);
     }
 
     &.CmsBlockPicker--top {
