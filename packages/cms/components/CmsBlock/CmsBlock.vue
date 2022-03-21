@@ -183,7 +183,15 @@ const CmsBlock = {
       blockProps.class = ['CmsBlock', blockProps.class]
       blockProps.errors = errors.value
 
-      blockNode.value = h(blockComponent, { ...attrs, ...blockProps }, blockSlots)
+      blockNode.value = h(
+        blockComponent,
+        {
+          ...attrs,
+          ...blockProps,
+          vm: blockVM, // pass "vm" as a prop to the block (e.g. see NavigationLink.vue)
+        },
+        blockSlots,
+      )
     })
 
 

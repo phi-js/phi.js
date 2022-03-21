@@ -5,31 +5,32 @@ const props = defineProps({
   pageId: {
     type: String,
     required: false,
-    default: null
+    default: null,
   },
 
   icon: {
     type: String,
     required: false,
-    default: null
+    default: null,
   },
 
   text: {
     type: String,
     required: false,
-    default: null
+    default: null,
   },
 
   subtext: {
     type: String,
     required: false,
-    default: null
+    default: null,
   },
 
   vm: {
     type: Object,
-    required: false
-  }
+    required: false,
+    default: null,
+  },
 })
 
 function onClick() {
@@ -40,7 +41,7 @@ function onClick() {
 
   props.vm.eval({
     call: 'Story.goTo',
-    args: props.pageId
+    args: props.pageId,
   })
 }
 </script>
