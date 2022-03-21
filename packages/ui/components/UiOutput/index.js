@@ -1,0 +1,1 @@
+export { default as UiOutput } from './UiOutput.vue'
