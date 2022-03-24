@@ -1,4 +1,4 @@
-import getProperty from './getProperty.js'
+// import getProperty from './getProperty.js'
 
 function parse(string, sourceData, preserveUndefined = false) {
 
@@ -36,32 +36,8 @@ function parse(string, sourceData, preserveUndefined = false) {
       if (m && !(m[0] in newValues)) {
         let propertyName = m[1].trim()
 
-        // Expresiones ternarias
-        // some.property.here ? 'this' : some.other.propery
-        let parts = propertyName.split('?', 2)
-        if (parts.length == 2) {
-          let boolValue = getProperty(sourceData, parts[0].trim())
-          if (boolValue == '0') {
-            boolValue = false
-          }
-
-          let targetIndex = boolValue ? 0 : 1
-
-          let possibleValues = parts[1].split(':', 2)
-          let finalValue = possibleValues[targetIndex].trim()
-
-          // valor esta entre comillas
-          if (finalValue[0] == '\'') {
-            finalValue = finalValue.substr(1, finalValue.length - 2)
-          } else {
-            finalValue = getProperty(sourceData, finalValue)
-          }
-
-          newValues[m[0]] = finalValue
-          continue
-        }
-
-        let targetValue = getProperty(sourceData, propertyName)
+        // Evaluate expression
+        let targetValue = evalExpression(propertyName, sourceData)
 
         if (targetValue === undefined) {
           if (preserveUndefined) {
@@ -106,6 +82,22 @@ function parse(string, sourceData, preserveUndefined = false) {
   }
 
   return string
+}
+
+
+/*
+evalExpression(" nombre + ' ' + apellido ", {nombre: 'a', apellido: 'b', genero: false })
+*/
+function evalExpression(expr, model) {
+  try {
+    const fn = new Function(
+      Object.keys(model),
+      '"use strict"; var window = null; var document = null; var alert = null; var console = null; return ' + expr,
+    )
+    return fn(...Object.values(model))
+  } catch (err) {
+    return ''
+  }
 }
 
 export default parse

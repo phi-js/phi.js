@@ -247,7 +247,7 @@ export default class VM {
 
       res = await this.eval(link.do, scope)
       if (link.assign) {
-        setProperty(scope, link.assign, res)
+        scope && setProperty(scope, link.assign, res)
         this.onModelSet && this.onModelSet(link.assign, res, scope)
       }
     }
