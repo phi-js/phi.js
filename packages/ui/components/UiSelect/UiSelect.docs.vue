@@ -1,4 +1,4 @@
-2<script setup>
+<script setup>
 import { ref } from 'vue'
 import { default as xrecords } from './records.js'
 
@@ -11,7 +11,13 @@ const testValue = ref()
 
 function onNativeSelectScroll(event) {
   var hiddenHeight = event.target.scrollHeight - event.target.offsetHeight + event.target.scrollTop
-  console.log('onNativeSelectScroll', event.target.scrollTop, event.target.offsetHeight, event.target.scrollHeight, hiddenHeight)
+  console.log(
+    'onNativeSelectScroll',
+    event.target.scrollTop,
+    event.target.offsetHeight,
+    event.target.scrollHeight,
+    hiddenHeight,
+  )
 }
 
 </script>
@@ -26,108 +32,237 @@ function onNativeSelectScroll(event) {
     @scroll="onNativeSelectScroll"
   >
     <option>No value prop</option>
-    <option :value="undefined">:value="undefined"</option>
-    <option value="0">value="0"</option>
-    <option :value="0">:value="0"</option>
-    <option value="false">value="false"</option>
-    <option :value="false">:value="false"</option>
-    <option value="null">value="null"</option>
-    <option :value="null">:value="null"</option>
+    <option :value="undefined">
+      :value="undefined"
+    </option>
+    <option value="0">
+      value="0"
+    </option>
+    <option :value="0">
+      :value="0"
+    </option>
+    <option value="false">
+      value="false"
+    </option>
+    <option :value="false">
+      :value="false"
+    </option>
+    <option value="null">
+      value="null"
+    </option>
+    <option :value="null">
+      :value="null"
+    </option>
 
-    <option value="1" class="Option Option--selected">Sincere@april.biz</option>
-    <option value="2" class="Option Option--selected">Shanna@melissa.tv</option>
-    <option value="3">Nathan@yesenia.net</option>
-    <option value="4" class="Option Option--selected">Julianne.OConner@kory.org</option>
+    <option
+      value="1"
+      class="Option Option--selected"
+    >
+      Sincere@april.biz
+    </option>
+    <option
+      value="2"
+      class="Option Option--selected"
+    >
+      Shanna@melissa.tv
+    </option>
+    <option value="3">
+      Nathan@yesenia.net
+    </option>
+    <option
+      value="4"
+      class="Option Option--selected"
+    >
+      Julianne.OConner@kory.org
+    </option>
 
     <optgroup label="Group 1">
-      <option value="5" class="Option Option--selected">Sincere@april.biz</option>
-      <option value="6">Shanna@melissa.tv</option>
-      <option value="7">Nathan@yesenia.net</option>
-      <option value="8">Julianne.OConner@kory.org</option>
+      <option
+        value="5"
+        class="Option Option--selected"
+      >
+        Sincere@april.biz
+      </option>
+      <option value="6">
+        Shanna@melissa.tv
+      </option>
+      <option value="7">
+        Nathan@yesenia.net
+      </option>
+      <option value="8">
+        Julianne.OConner@kory.org
+      </option>
     </optgroup>
 
     <!-- repeated values -->
-    <option value="3">Nathan@yesenia.net</option>
-    <option value="4">Julianne.OConner@kory.org</option>
+    <option value="3">
+      Nathan@yesenia.net
+    </option>
+    <option value="4">
+      Julianne.OConner@kory.org
+    </option>
 
     <!-- repeated group label-->
     <optgroup label="Group 1">
-      <option value="9">Sincere@april.biz</option>
-      <option value="10">Shanna@melissa.tv</option>
-      <option value="11">Nathan@yesenia.net</option>
-      <option value="12">Julianne.OConner@kory.org</option>
+      <option value="9">
+        Sincere@april.biz
+      </option>
+      <option value="10">
+        Shanna@melissa.tv
+      </option>
+      <option value="11">
+        Nathan@yesenia.net
+      </option>
+      <option value="12">
+        Julianne.OConner@kory.org
+      </option>
     </optgroup>
 
     <!-- Opgroup sin label-->
     <optgroup>
-      <option value="9">Sincere@april.biz</option>
-      <option value="10">Shanna@melissa.tv</option>
-      <option value="11">Nathan@yesenia.net</option>
-      <option value="12">Julianne.OConner@kory.org</option>
+      <option value="9">
+        Sincere@april.biz
+      </option>
+      <option value="10">
+        Shanna@melissa.tv
+      </option>
+      <option value="11">
+        Nathan@yesenia.net
+      </option>
+      <option value="12">
+        Julianne.OConner@kory.org
+      </option>
     </optgroup>
 
     <optgroup label="Group 2">
-      <option value="13">Sincere@april.biz</option>
-      <option value="14">Shanna@melissa.tv</option>
-      <option value="15">Nathan@yesenia.net</option>
-      <option value="16">Julianne.OConner@kory.org</option>
+      <option value="13">
+        Sincere@april.biz
+      </option>
+      <option value="14">
+        Shanna@melissa.tv
+      </option>
+      <option value="15">
+        Nathan@yesenia.net
+      </option>
+      <option value="16">
+        Julianne.OConner@kory.org
+      </option>
     </optgroup>
 
-    <optgroup label="Empty"></optgroup>
+    <optgroup label="Empty" />
   </select>
 
-  <UiSelect v-model="singlePerson" placeholder="Child options!">
+  <UiSelect
+    v-model="singlePerson"
+    placeholder="Child options!"
+  >
     <option>No value prop</option>
-    <option value="0">value="0"</option>
-    <option :value="0">:value="0"</option>
-    <option value="false">value="false"</option>
-    <option :value="false">:value="false"</option>
-    <option value="null">value="null"</option>
-    <option :value="null">:value="null"</option>
+    <option value="0">
+      value="0"
+    </option>
+    <option :value="0">
+      :value="0"
+    </option>
+    <option value="false">
+      value="false"
+    </option>
+    <option :value="false">
+      :value="false"
+    </option>
+    <option value="null">
+      value="null"
+    </option>
+    <option :value="null">
+      :value="null"
+    </option>
 
-    <option value="1">Sincere@april.biz</option>
-    <option value="2">Shanna@melissa.tv</option>
-    <option value="3">Nathan@yesenia.net</option>
-    <option value="4">Julianne.OConner@kory.org</option>
+    <option value="1">
+      Sincere@april.biz
+    </option>
+    <option value="2">
+      Shanna@melissa.tv
+    </option>
+    <option value="3">
+      Nathan@yesenia.net
+    </option>
+    <option value="4">
+      Julianne.OConner@kory.org
+    </option>
 
     <optgroup label="Group 1">
-      <option value="5">Sincere@april.biz</option>
-      <option value="6">Shanna@melissa.tv</option>
-      <option value="7">Nathan@yesenia.net</option>
-      <option value="8">Julianne.OConner@kory.org</option>
+      <option value="5">
+        Sincere@april.biz
+      </option>
+      <option value="6">
+        Shanna@melissa.tv
+      </option>
+      <option value="7">
+        Nathan@yesenia.net
+      </option>
+      <option value="8">
+        Julianne.OConner@kory.org
+      </option>
     </optgroup>
 
     <!-- repeated values -->
-    <option value="3">Nathan@yesenia.net</option>
-    <option value="4">Julianne.OConner@kory.org</option>
+    <option value="3">
+      Nathan@yesenia.net
+    </option>
+    <option value="4">
+      Julianne.OConner@kory.org
+    </option>
 
     <!-- repeated group label-->
     <optgroup label="Group 1">
-      <option value="9">Sincere@april.biz</option>
-      <option value="10">Shanna@melissa.tv</option>
-      <option value="11">Nathan@yesenia.net</option>
-      <option value="12">Julianne.OConner@kory.org</option>
+      <option value="9">
+        Sincere@april.biz
+      </option>
+      <option value="10">
+        Shanna@melissa.tv
+      </option>
+      <option value="11">
+        Nathan@yesenia.net
+      </option>
+      <option value="12">
+        Julianne.OConner@kory.org
+      </option>
     </optgroup>
 
     <!-- Opgroup sin label-->
     <optgroup>
-      <option value="9">Sincere@april.biz</option>
-      <option value="10">Shanna@melissa.tv</option>
-      <option value="11">Nathan@yesenia.net</option>
-      <option value="12">Julianne.OConner@kory.org</option>
+      <option value="9">
+        Sincere@april.biz
+      </option>
+      <option value="10">
+        Shanna@melissa.tv
+      </option>
+      <option value="11">
+        Nathan@yesenia.net
+      </option>
+      <option value="12">
+        Julianne.OConner@kory.org
+      </option>
     </optgroup>
 
     <optgroup label="Group 2">
-      <option value="13">Sincere@april.biz</option>
-      <option value="14">Shanna@melissa.tv</option>
-      <option value="15">Nathan@yesenia.net</option>
-      <option value="16">Julianne.OConner@kory.org</option>
+      <option value="13">
+        Sincere@april.biz
+      </option>
+      <option value="14">
+        Shanna@melissa.tv
+      </option>
+      <option value="15">
+        Nathan@yesenia.net
+      </option>
+      <option value="16">
+        Julianne.OConner@kory.org
+      </option>
     </optgroup>
 
-    <optgroup label="Empty"></optgroup>
+    <optgroup label="Empty" />
   </UiSelect>
 
-  <hr />
+  <hr>
 
   <!-- <pre class="Code--html"><code>
 &lt;UiSelect
@@ -148,7 +283,7 @@ function onNativeSelectScroll(event) {
   />
   <pre>testValue: {{ testValue }}</pre>
 
-  <hr />
+  <hr>
 
   <p>Multiple:</p>
   <pre class="docs-code"><code>
@@ -181,7 +316,9 @@ function onNativeSelectScroll(event) {
       option-value="$.id"
       option-text="$.email"
     >
-      <template #aggregator="{ options }">y otras {{ options.length }} personas</template>
+      <template #aggregator="{ options }">
+        y otras {{ options.length }} personas
+      </template>
     </UiSelect>
   </section>
 

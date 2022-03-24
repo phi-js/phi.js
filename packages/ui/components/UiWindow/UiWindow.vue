@@ -46,7 +46,7 @@ const props = defineProps({
   coords: {
     type: Object,
     required: false,
-    default: null
+    default: null,
   },
 
   /** Nombre para guardar las coordenadas de la ventana en localStorage.  (null = no recordar) */
@@ -182,7 +182,7 @@ function onResizableEnd() {
   persistData()
 }
 
-function onResizableUpdateCoords(event) {
+function onResizableUpdateCoords() {
   if (dock.value) { // reposition body while dragging docked window
     repositionBody()
   }
@@ -192,37 +192,37 @@ function onResizableUpdateCoords(event) {
 
 function repositionBody() {
   switch (dock.value) {
-    case 'top':
-      document.body.style.marginTop = Math.max(parseInt(coords.value.height), 0) + 'px'
-      document.body.style.marginBottom = 'initial'
-      document.body.style.marginLeft = 'initial'
-      document.body.style.marginRight = 'initial'
-      break
-    case 'bottom':
-      document.body.style.marginTop = 'initial'
-      document.body.style.marginBottom = Math.max(parseInt(coords.value.height), 0) + 'px'
-      document.body.style.marginLeft = 'initial'
-      document.body.style.marginRight = 'initial'
+  case 'top':
+    document.body.style.marginTop = Math.max(parseInt(coords.value.height), 0) + 'px'
+    document.body.style.marginBottom = 'initial'
+    document.body.style.marginLeft = 'initial'
+    document.body.style.marginRight = 'initial'
+    break
+  case 'bottom':
+    document.body.style.marginTop = 'initial'
+    document.body.style.marginBottom = Math.max(parseInt(coords.value.height), 0) + 'px'
+    document.body.style.marginLeft = 'initial'
+    document.body.style.marginRight = 'initial'
 
-      break
-    case 'left':
-      document.body.style.marginTop = 'initial'
-      document.body.style.marginBottom = 'initial'
-      document.body.style.marginLeft = Math.max(parseInt(coords.value.width), 0) + 'px'
-      document.body.style.marginRight = 'initial'
-      break
-    case 'right':
-      document.body.style.marginTop = 'initial'
-      document.body.style.marginBottom = 'initial'
-      document.body.style.marginLeft = 'initial'
-      document.body.style.marginRight = Math.max(parseInt(coords.value.width), 0) + 'px'
-      break
-    default:
-      document.body.style.marginTop = 'initial'
-      document.body.style.marginBottom = 'initial'
-      document.body.style.marginLeft = 'initial'
-      document.body.style.marginRight = 'initial'
-      break
+    break
+  case 'left':
+    document.body.style.marginTop = 'initial'
+    document.body.style.marginBottom = 'initial'
+    document.body.style.marginLeft = Math.max(parseInt(coords.value.width), 0) + 'px'
+    document.body.style.marginRight = 'initial'
+    break
+  case 'right':
+    document.body.style.marginTop = 'initial'
+    document.body.style.marginBottom = 'initial'
+    document.body.style.marginLeft = 'initial'
+    document.body.style.marginRight = Math.max(parseInt(coords.value.width), 0) + 'px'
+    break
+  default:
+    document.body.style.marginTop = 'initial'
+    document.body.style.marginBottom = 'initial'
+    document.body.style.marginLeft = 'initial'
+    document.body.style.marginRight = 'initial'
+    break
   }
 }
 
@@ -288,7 +288,11 @@ const isHovered = ref(false)
         @mouseleave="isHovered = false"
       >
         <div class="UiWindow__header">
-          <div class="UiWindow__dragger" @mousedown="startMove" @touchstart="startMove">
+          <div
+            class="UiWindow__dragger"
+            @mousedown="startMove"
+            @touchstart="startMove"
+          >
             <slot name="header" />
           </div>
 
@@ -296,14 +300,17 @@ const isHovered = ref(false)
             <template #trigger>
               <UiIcon
                 :src="dock
-                ? (dock == 'popup' ? 'mdi:window-restore' : `mdi:dock-${dock}`)
-                : 'mdi:card-outline'"
+                  ? (dock == 'popup' ? 'mdi:window-restore' : `mdi:dock-${dock}`)
+                  : 'mdi:card-outline'"
                 class="ui--clickable"
                 :class="{ '--active': !dock }"
               />
             </template>
             <template #contents="popover">
-              <div class="UiWindow__dockPicker" @click="popover.close()">
+              <div
+                class="UiWindow__dockPicker"
+                @click="popover.close()"
+              >
                 <UiIcon
                   src="mdi:card-outline"
                   class="ui--clickable"
@@ -349,14 +356,26 @@ const isHovered = ref(false)
             </template>
           </UiPopover>
 
-          <UiIcon src="mdi:close" class="ui--clickable window-close" @click="close" />
+          <UiIcon
+            src="mdi:close"
+            class="ui--clickable window-close"
+            @click="close"
+          />
         </div>
 
         <div class="UiWindow__body">
-          <slot name="default" :close="close" :coords="coords" />
+          <slot
+            name="default"
+            :close="close"
+            :coords="coords"
+          />
         </div>
         <footer class="UiWindow__footer">
-          <slot name="footer" :close="close" :coords="coords" />
+          <slot
+            name="footer"
+            :close="close"
+            :coords="coords"
+          />
         </footer>
       </UiResizable>
     </div>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, toRef, unref, computed, watch, useSlots } from 'vue'
+import { ref, toRef, unref, computed, watch } from 'vue'
 
 import { UiItem } from '../UiItem'
 import { UiIcon } from '../UiIcon'
@@ -76,31 +76,6 @@ const props = defineProps({
   },
 })
 
-
-/* Load <option> children */
-const slots = useSlots()
-
-const nestedOptions = slots?.default?.()
-if (nestedOptions) {
-  nestedOptions.forEach((optionEl) => {
-    if (optionEl.type == 'option') {
-      console.log('option', optionEl, optionEl.type, optionEl.props?.value)
-    }
-
-    if (optionEl.type == 'optgroup') {
-      console.log('optgroup', optionEl, optionEl.props?.label)
-
-      const groupOptions = optionEl.children || []
-      console.log('optgroup', optionEl, optionEl.props?.label, groupOptions)
-      groupOptions.forEach((subOption) => {
-        console.log('subOption', subOption, subOption.type, subOption.props?.value)
-      })
-
-    }
-  })
-}
-
-
 // Option list manager: Converts arbitrary array to Option array,
 // and provides a reactive searchQuery
 const { options, searchQuery, filteredOptions } = useOptionsManager(
@@ -117,16 +92,12 @@ const { selection, isSelected, select, toggle } = useSelectionManager(
   toRef(props, 'modelValue'),
   toRef(props, 'multiple'),
   (newValue) => {
-
-    console.log('selection changed', newValue)
-
     emit('update:modelValue', newValue)
     if (!props.multiple) {
       close()
     }
   },
 )
-
 
 const selectedOptions = computed(() =>
   options.value.filter((option) => isSelected(option.value)))
@@ -351,14 +322,6 @@ const placeholderOption = computed(() => {
             ref="elOptionsContainer"
             class="UiSelect__options"
           >
-            <!-- <select class="UiSelect__element" multiple v-model="selection">
-              <option
-                v-for="option in parsedOptions"
-                :key="option.value"
-                :value="option.value"
-              >{{ option.text }}</option>
-            </select>-->
-
             <div
               v-for="option in parsedOptions"
               :key="option.value"
