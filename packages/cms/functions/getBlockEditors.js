@@ -29,6 +29,7 @@ import BlockListenersEditor from '../components/CmsBlockEditor/BlockListenersEdi
 import BlockModelsEditor from '../components/CmsBlockEditor/BlockModelsEditor.vue'
 import BlockVisibilityEditor from '../components/CmsBlockEditor/BlockVisibilityEditor.vue'
 import BlockCssEditor from '../components/CmsBlockEditor/BlockCssEditor.vue'
+import BlockDictionaryEditor from '../components/CmsBlockEditor/BlockDictionaryEditor.vue'
 import { parse } from '../../vm/lib/utils'
 
 export default async function getBlockEditors(block, $settings = {}) {
@@ -53,7 +54,7 @@ export default async function getBlockEditors(block, $settings = {}) {
     }
 
     if (typeof retval.face.component === 'function') {
-      retval.face.component = defineAsyncComponent(face.component)
+      retval.face.component = defineAsyncComponent(retval.face.component)
     }
 
     retval.face.props = parse(retval.face.props, { $settings }, true)
@@ -163,6 +164,14 @@ export default async function getBlockEditors(block, $settings = {}) {
       ],
     },
     'v-model': 'block',
+  })
+
+  // Dictionary (block.i18n)
+  retval.actions.push({
+    id: 'i18n',
+    title: 'Dictionary',
+    icon: 'mdi:translate',
+    component: BlockDictionaryEditor,
   })
 
   // Raw block source editor

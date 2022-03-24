@@ -18,15 +18,12 @@ export default {
   emits: [
     {
       event: 'click',
-      text: 'The button is clicked'
-    }
+      text: 'The button is clicked',
+    },
   ],
 
   editor: {
-    face: {
-      'component': InputFace,
-      'v-model': 'block.props',
-    },
+    face: { component: InputFace },
 
     actions: [
       {

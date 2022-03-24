@@ -21,23 +21,16 @@ export default {
   emits: [
     {
       event: 'click',
-      text: 'Click on the select box'
+      text: 'Click on the select box',
     },
     {
-      event: 'change',
-      text: 'The picker value changed'
+      event: 'update:modelValue',
+      text: 'Value changes',
     },
-    {
-      event: 'foo',
-      text: 'Foo happens'
-    }
   ],
 
   editor: {
-    face: {
-      'component': InputFace,
-      'v-model': 'block.props',
-    },
+    face: { component: InputFace },
 
     actions: [
       {

@@ -1,7 +1,6 @@
 <script setup>
 import { watch, ref, computed } from 'vue'
 import { UiItem } from '@/packages/ui'
-import availableClasses from '../../style/classes/index.js'
 
 const props = defineProps({
   /*
@@ -12,13 +11,32 @@ const props = defineProps({
     required: false,
     default: null,
   },
+
+  /*
+  Array of available classes
+  [
+    {
+      text,
+      subtext,
+      name,
+      css,
+
+      variations: [] (???)
+    }
+  ]
+  */
+  availableClasses: {
+    type: Array,
+    required: false,
+    default: () => [],
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
 
 const selectedClasses = ref([])
 
-const allClases = computed(() => availableClasses.map((objClass) => {
+const allClases = computed(() => props.availableClasses.map((objClass) => {
   let selectedVariation = ''
   if (objClass.variations?.length) {
     const foundVariation = objClass.variations.find((variation) => selectedClasses.value.includes(variation.name))
@@ -84,7 +102,11 @@ function removeClass(className) {
 
 <template>
   <div class="BlockCssClasses UiForm">
-    <div v-for="objClass in allClases" :key="objClass.name" class="BlockClass ui--clickable">
+    <div
+      v-for="objClass in allClases"
+      :key="objClass.name"
+      class="BlockClass ui--clickable"
+    >
       <UiItem
         :text="objClass.text"
         :subtext="objClass.subtext"
@@ -93,7 +115,10 @@ function removeClass(className) {
         @click="selectClass(objClass)"
       />
 
-      <div v-if="objClass.variations?.length && objClass.isSelected" class="BlockClass__options">
+      <div
+        v-if="objClass.variations?.length && objClass.isSelected"
+        class="BlockClass__options"
+      >
         <select
           class="UiInput"
           :value="objClass.selectedVariation"

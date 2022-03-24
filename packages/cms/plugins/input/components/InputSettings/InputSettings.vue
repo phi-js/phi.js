@@ -2,6 +2,7 @@
 import { ref, watch, computed } from 'vue'
 import { UiInput } from '@/packages/ui/components'
 import OptionsEditor from '@/packages/ui/components/UiInputEditor/editors/OptionsEditor.vue'
+import StoryPropInput from '../../../../components/CmsStoryEditor/StoryPropInput.vue'
 
 const props = defineProps({
   modelValue: {
@@ -117,37 +118,61 @@ const multipleOptions = [
     <fieldset>
       <legend>Display</legend>
 
-      <UiInput v-model="block.props.label" type="text" label="Etiqueta" @update:modelValue="input" />
+      <StoryPropInput
+        v-model="block.props.label"
+        v-model:block="block"
+        type="text"
+        label="Etiqueta"
+        @update:modelValue="input"
+        @update:block="input"
+      />
 
-      <UiInput
+      <StoryPropInput
         v-model="block.props.placeholder"
+        v-model:block="block"
         type="text"
         label="Placeholder"
         @update:modelValue="input"
+        @update:block="input"
       />
 
-      <UiInput
+      <StoryPropInput
         v-model="block.props.subtext"
+        v-model:block="block"
         type="text"
         label="Subtexto"
         @update:modelValue="input"
+        @update:block="input"
       />
     </fieldset>
 
     <fieldset v-if="isSelect">
       <legend>Options</legend>
 
-      <OptionsEditor v-model="block.props.options" @update:modelValue="input" />
+      <OptionsEditor
+        v-model="block.props.options"
+        @update:modelValue="input"
+      />
     </fieldset>
 
     <UiInput
       v-if="block.props.type == 'date' || block.props.type == 'timestamp'"
       label="Selector de hora"
     >
-      <select v-model="block.props.time" class="UiButton" @change="input">
-        <option :value="undefined">Desactivado</option>
-        <option value="12">AM/PM</option>
-        <option value="24">24 horas</option>
+      <select
+        v-model="block.props.time"
+        class="UiButton"
+        @change="input"
+      >
+        <option :value="undefined">
+          Desactivado
+        </option>
+        <option value="12">
+          AM/PM
+        </option>
+        <option value="24">
+          24 horas
+        </option>
       </select>
     </UiInput>
   </div>

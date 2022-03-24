@@ -10,7 +10,7 @@ block
     css: STRING.  A string with custom css classes, to be added as a <style> by CmsBlock.vue
   }
 */
-import { reactive, watch } from 'vue'
+import { inject, reactive, watch } from 'vue'
 import { UiInput, UiTabs, UiTab } from '../../../ui/components'
 import BlockCssClasses from './BlockCssClasses.vue'
 import BlockCssStyle from './BlockCssStyle.vue'
@@ -47,6 +47,9 @@ watch(
 function emitUpdate() {
   emit('update:modelValue', { ...props.modelValue, css })
 }
+
+const injectedStoryData = inject('$_cms_story_editor', null)
+const availableClasses = injectedStoryData.story.value.css.classes
 </script>
 
 <template>
@@ -57,6 +60,7 @@ function emitUpdate() {
     <UiTab text="Classes">
       <BlockCssClasses
         v-model="css.classes"
+        :available-classes="availableClasses"
         @update:model-value="emitUpdate"
       />
     </UiTab>

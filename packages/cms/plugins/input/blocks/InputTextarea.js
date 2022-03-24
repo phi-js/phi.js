@@ -16,10 +16,7 @@ export default {
   },
 
   editor: {
-    face: {
-      'component': InputFace,
-      'v-model': 'block.props',
-    },
+    face: { component: InputFace },
 
     actions: [
       {
