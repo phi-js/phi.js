@@ -1,5 +1,5 @@
 <script setup>
-import { ref, shallowRef, watch, inject, computed } from 'vue'
+import { ref, shallowRef, watch, inject, computed, provide } from 'vue'
 import { getBlockEditors, getBlockDefinition, getCssObjectAttributes } from '../../functions'
 import EditorAction from './EditorAction.vue'
 import {
@@ -37,14 +37,32 @@ watch(
   { immediate: true },
 )
 
+/* Global scaffold accept catcher */
+const acceptListeners = []
+function registerAcceptListener(callback) {
+  acceptListeners.push(callback)
+  return () => acceptListeners.splice(acceptListeners.indexOf(callback), 1) // return unmount function
+}
+provide('$_cms_scaffold_accept', registerAcceptListener)
+
 function accept() {
-  emit('update:block', JSON.parse(JSON.stringify(innerBlock.value)))
+  const blockClone = JSON.parse(JSON.stringify(innerBlock.value))
+  emit('update:block', blockClone)
+  acceptListeners.forEach((callback) => callback(blockClone))
   return true
 }
 
+/* Global scaffold cancel catcher */
+const cancelListeners = []
+function registerCancelListener(callback) {
+  cancelListeners.push(callback)
+  return () => cancelListeners.splice(cancelListeners.indexOf(callback), 1) // return unmount function
+}
+provide('$_cms_scaffold_cancel', registerCancelListener)
+
 function cancel() {
   innerBlock.value = JSON.parse(JSON.stringify(props.block))
-  onInnerBlockChange()
+  cancelListeners.forEach((callback) => callback(innerBlock.value))
   return true
 }
 
@@ -94,11 +112,6 @@ watch(
 
 function getWidth(coords) {
   return parseInt(coords?.width)
-}
-
-const emitDraft = inject('$_cms_emitDraft', () => null)
-function onInnerBlockChange() {
-  emitDraft(innerBlock.value)
 }
 </script>
 
@@ -253,7 +266,6 @@ function onInnerBlockChange() {
                 <EditorAction
                   v-model:block="innerBlock"
                   :action="action"
-                  @update:block="onInnerBlockChange()"
                 />
               </div>
             </UiTab>

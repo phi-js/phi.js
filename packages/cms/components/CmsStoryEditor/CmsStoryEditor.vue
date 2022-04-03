@@ -8,8 +8,7 @@ import './style.scss'
 import { ref, watch, watchEffect, provide, computed, defineComponent, h, Teleport } from 'vue'
 import { sanitizeStory } from '../../functions'
 import { CmsBlockEditor } from '../CmsBlockEditor'
-import LayoutPageWindow from '../../plugins/layout/components/LayoutPage/LayoutPageWindow.vue'
-import CmsStoryWindow from './CmsStoryWindow.vue'
+import StoryEditorWindow from './StoryEditorWindow.vue'
 
 const props = defineProps({
   story: {
@@ -30,14 +29,14 @@ const props = defineProps({
     default: null,
   },
 
-  currentSettingsTab: {
+  settingsTab: {
     type: [Boolean, String],
     required: false,
     default: false,
   },
 })
 
-const emit = defineEmits(['update:story', 'update:currentPageId', 'update:currentSettingsTab'])
+const emit = defineEmits(['update:story', 'update:currentPageId', 'update:settingsTab'])
 
 // Sanitize incoming story
 const sanitizedStory = ref(null)
@@ -55,7 +54,8 @@ function accept() {
 }
 
 function cancel() {
-  sanitizedStory.value = sanitizeStory(props.story)
+  // sanitizedStory.value = sanitizeStory(props.story)
+  sanitizedStory.value = JSON.parse(JSON.stringify(sanitizeStory(props.story)))
   return true
 }
 
@@ -73,18 +73,14 @@ function onUpdateCurrentPage() {
   })
 }
 
-provide('$_cms_story_editor', { story: sanitizedStory })
-
-function onCurrentPageCancel() {
-  const pages = Array.isArray(props.story?.pages) ? props.story.pages : []
-  const foundPage = pages.find((p) => p.id == currentPage.value.id)
-  currentPage.value = foundPage ? JSON.parse(JSON.stringify(foundPage)) : null
-}
+provide('$_cms_story_editor', {
+  story: sanitizedStory,
+  accept,
+  cancel,
+})
 
 const transitionName = ref('slideX')
 const transitionDirection = ref('fw') // fw, bw
-
-const isWindowOpen = ref(false)
 
 const storyCSS = computed(() => sanitizedStory.value.css.classes.map((c) => c.css).join('\n'))
 const StyleTag = defineComponent({
@@ -123,18 +119,11 @@ const StyleTag = defineComponent({
       </div>
     </Transition>
 
-    <LayoutPageWindow
-      v-if="currentPage"
-      v-model:block="currentPage"
-      :current-tab="currentSettingsTab"
-      @update:currentTab="emit('update:currentSettingsTab', $event)"
-      @accept="onUpdateCurrentPage"
-      @cancel="onCurrentPageCancel"
-    />
-
-    <CmsStoryWindow
-      v-model:open="isWindowOpen"
+    <StoryEditorWindow
       v-model:story="sanitizedStory"
+      :current-tab="props.settingsTab"
+      :current-page-id="props.currentPageId"
+      @update:current-tab="emit('update:settingsTab', $event)"
       @accept="accept"
       @cancel="cancel"
     />

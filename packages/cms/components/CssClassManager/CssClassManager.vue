@@ -10,7 +10,6 @@ Manages (CRUD) an ARRAY of CSSCLASS objects:
       }
     `,
 
-    icon,
     text,
     subtext,
     description,
@@ -29,7 +28,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'class-added'])
 
 
 const arrClasses = ref([])
@@ -46,9 +45,11 @@ function onDeleteClass(index) {
 
 const newClass = ref(null)
 function onCreatorAccept() {
-  arrClasses.value.push({ ...newClass.value })
+  const newVal = { ...newClass.value }
+  arrClasses.value.push(newVal)
   newClass.value = null
   emitUpdate()
+  emit('class-added', newVal)
   return true
 }
 
@@ -65,38 +66,29 @@ function onCreatorCancel() {
       :key="i"
     >
       <template #trigger>
-        <UiItem
-          icon="mdi:language-css3"
-          :text="cssClass.text || cssClass.name"
-          :subtext="cssClass.text ? '.' + cssClass.name : ''"
-          class="ui--clickable"
-        >
-          <template #actions>
-            <button @click="onDeleteClass(i)">
-              &times;
-            </button>
-          </template>
-        </UiItem>
+        <div class="CssClassManager__trigger">
+          <slot
+            name="trigger"
+            :objClass="cssClass"
+          />
+          <UiItem
+            :text="cssClass.text || cssClass.name"
+            :subtext="cssClass.text ? '.' + cssClass.name : ''"
+            class="ui--clickable"
+          >
+            <template #actions>
+              <button @click="onDeleteClass(i)">
+                &times;
+              </button>
+            </template>
+          </UiItem>
+        </div>
       </template>
       <template #contents>
         <CssClassEditor
           v-model="arrClasses[i]"
-          @update:modelValue="emitUpdate()"
+          @update:model-value="emitUpdate()"
         />
-        <!-- <footer>
-          <button
-            type="button"
-            class="UiButton UiButton--main"
-            @click="close()"
-            v-text="'Aceptar'"
-          />
-          <button
-            type="button"
-            class="UiButton UiButton--cancel"
-            @click="close()"
-            v-text="'Cancelar'"
-          />
-        </footer> -->
       </template>
     </UiDrawer>
 
@@ -128,3 +120,16 @@ function onCreatorCancel() {
     </UiDrawer>
   </div>
 </template>
+
+<style lang="scss">
+.CssClassManager {
+  &__trigger {
+    display: flex;
+    align-items: center;
+
+    .UiItem {
+      flex: 1;
+    }
+  }
+}
+</style>

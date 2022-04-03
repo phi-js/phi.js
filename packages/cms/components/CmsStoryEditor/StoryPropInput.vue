@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue'
-import { UiInput, UiDrawer, UiItem } from '../../../ui'
+import { UiInput, UiDrawer, UiIcon } from '../../../ui'
 import { useI18n } from '../../../i18n'
 
 const props = defineProps({
@@ -48,7 +48,7 @@ watchEffect(() => {
 
   const translations = {}
   Object.keys(dictionary.value).forEach((langCode) => {
-    translations[langCode] = dictionary.value[langCode]?.[text] || '????'
+    translations[langCode] = dictionary.value[langCode]?.[text] || text
   })
 
   langValue.value = {
@@ -56,6 +56,19 @@ watchEffect(() => {
     translations,
   }
 })
+
+function langify() {
+  emit('update:modelValue', `lang(${props.modelValue})`)
+}
+
+function delangify() {
+  const text = props.modelValue.match(/lang\(([^"]+?)\)/)?.[1]
+  if (!text) {
+    return
+  }
+
+  emit('update:modelValue', text)
+}
 </script>
 
 <template>
@@ -63,35 +76,72 @@ watchEffect(() => {
     <UiDrawer v-if="langValue">
       <template #trigger>
         <UiInput v-bind="$attrs">
-          <UiItem
-            class="ui--clickable"
-            icon="mdi:translate"
-            :text="langValue.translations[i18n.locale]"
-            :subtext="props.modelValue"
-          />
+          <div class="StoryPropInput__row">
+            <!-- <UiIcon src="mdi:translate" /> -->
+            <input
+              type="text"
+              class="UiInput"
+              :value="langValue.translations[i18n.locale]"
+              disabled="disabled"
+            >
+            <UiIcon
+              class="ui--clickable"
+              src="mdi:translate-off"
+              title="De-langify"
+              @click="delangify()"
+            />
+          </div>
         </UiInput>
       </template>
       <template #contents>
         <div style="padding: 12px 0 50px 12px">
-          <!-- <UiInput
-            v-model="langValue.text"
-            label="Base text"
-          /> -->
           <UiInput
             v-for="(word, langCode) in langValue.translations"
             :key="langCode"
             v-model="langValue.translations[langCode]"
             :label="langCode"
-            @update:modelValue="onUpdateDictionary"
+            @update:model-value="onUpdateDictionary"
           />
         </div>
       </template>
     </UiDrawer>
-    <UiInput
-      v-else
-      v-bind="$attrs"
-      :model-value="props.modelValue"
-      @update:modelValue="emit('update:modelValue', $event)"
-    />
+    <div v-else>
+      <UiInput
+        class="StoryPropInput__input"
+        v-bind="$attrs"
+      >
+        <div class="StoryPropInput__row">
+          <input
+            type="text"
+            class="UiInput"
+            :value="props.modelValue"
+            @input="emit('update:modelValue', $event.target.value)"
+          >
+          <UiIcon
+            class="ui--clickable"
+            src="mdi:translate"
+            title="Internationalize"
+            @click="langify()"
+          />
+        </div>
+      </UiInput>
+    </div>
   </div>
 </template>
+
+<style lang="scss">
+.StoryPropInput {
+  &__row {
+    display: flex;
+    flex-wrap: nowrap;
+
+    & > .UiInput {
+      flex: 1;
+    }
+
+    .UiIcon {
+      width: 32px;
+    }
+  }
+}
+</style>

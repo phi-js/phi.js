@@ -20,7 +20,7 @@ const CmsBlockEditor = {
     },
   },
 
-  emits: ['update:block', 'delete', 'update:draft'],
+  emits: ['update:block', 'delete'],
 
   setup(props, { emit, attrs }) {
     var settings = {}
@@ -32,9 +32,6 @@ const CmsBlockEditor = {
     }
 
     const blockCSS = ref(props.block?.css?.css)
-    provide('$_cms_emitDraft', (block) => {
-      blockCSS.value = block?.css?.css
-    })
 
     return (instance) => {
       const definition = blocks[props.block.component]

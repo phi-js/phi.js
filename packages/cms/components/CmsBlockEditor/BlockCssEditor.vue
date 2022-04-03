@@ -10,8 +10,8 @@ block
     css: STRING.  A string with custom css classes, to be added as a <style> by CmsBlock.vue
   }
 */
-import { inject, reactive, watch } from 'vue'
-import { UiInput, UiTabs, UiTab } from '../../../ui/components'
+import { reactive, watch } from 'vue'
+import { UiTabs, UiTab } from '../../../ui/components'
 import BlockCssClasses from './BlockCssClasses.vue'
 import BlockCssStyle from './BlockCssStyle.vue'
 
@@ -48,8 +48,6 @@ function emitUpdate() {
   emit('update:modelValue', { ...props.modelValue, css })
 }
 
-const injectedStoryData = inject('$_cms_story_editor', null)
-const availableClasses = injectedStoryData.story.value.css.classes
 </script>
 
 <template>
@@ -60,7 +58,6 @@ const availableClasses = injectedStoryData.story.value.css.classes
     <UiTab text="Classes">
       <BlockCssClasses
         v-model="css.classes"
-        :available-classes="availableClasses"
         @update:model-value="emitUpdate"
       />
     </UiTab>
@@ -70,23 +67,6 @@ const availableClasses = injectedStoryData.story.value.css.classes
         v-model="css.style"
         @update:model-value="emitUpdate"
       />
-    </UiTab>
-
-    <UiTab text="CSS">
-      <div class="UiForm">
-        <UiInput
-          v-model="css.class"
-          placeholder="Class"
-          @update:model-value="emitUpdate"
-        />
-        <UiInput
-          v-model="css.css"
-          type="code"
-          lang="css"
-          style="padding: 0"
-          @update:model-value="emitUpdate"
-        />
-      </div>
     </UiTab>
   </UiTabs>
 </template>
