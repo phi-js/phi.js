@@ -103,7 +103,7 @@ const multipleOptions = [
         label="Tipo"
         type="select-native"
         :options="types"
-        @update:modelValue="input"
+        @update:model-value="input"
       />
 
       <UiInput
@@ -111,7 +111,7 @@ const multipleOptions = [
         v-model="block.props.multiple"
         type="select-native"
         :options="multipleOptions"
-        @update:modelValue="input"
+        @update:model-value="input"
       />
     </div>
 
@@ -123,7 +123,7 @@ const multipleOptions = [
         v-model:block="block"
         type="text"
         label="Etiqueta"
-        @update:modelValue="input"
+        @update:model-value="input"
         @update:block="input"
       />
 
@@ -132,7 +132,7 @@ const multipleOptions = [
         v-model:block="block"
         type="text"
         label="Placeholder"
-        @update:modelValue="input"
+        @update:model-value="input"
         @update:block="input"
       />
 
@@ -141,7 +141,7 @@ const multipleOptions = [
         v-model:block="block"
         type="text"
         label="Subtexto"
-        @update:modelValue="input"
+        @update:model-value="input"
         @update:block="input"
       />
     </fieldset>
@@ -151,7 +151,7 @@ const multipleOptions = [
 
       <OptionsEditor
         v-model="block.props.options"
-        @update:modelValue="input"
+        @update:model-value="input"
       />
     </fieldset>
 

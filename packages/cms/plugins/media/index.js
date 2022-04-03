@@ -7,6 +7,7 @@ import MediaImage from './components/MediaImage/MediaImage.block.js'
 import MediaItem from './components/MediaItem/MediaItem.block.js'
 import MediaLink from './components/MediaLink/MediaLink.block.js'
 import MediaLoremIpsum from './components/MediaLoremIpsum/MediaLoremIpsum.block.js'
+import MediaMap from './components/MediaMap/MediaMap.block.js'
 import MediaMath from './components/MediaMath/MediaMath.block.js'
 import MediaVideo from './components/MediaVideo/MediaVideo.block.js'
 
@@ -22,6 +23,7 @@ export default {
     MediaDocument,
     MediaItem,
     MediaLoremIpsum,
+    MediaMap,
     MediaMath,
   },
 

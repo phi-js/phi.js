@@ -6,6 +6,7 @@ const props = defineProps({
   modelValue: {
     validator: () => true,
     required: false,
+    default: null,
   },
 
   /*
@@ -15,8 +16,8 @@ const props = defineProps({
   name: {
     type: String,
     required: false,
-    default: null
-  }
+    default: null,
+  },
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -77,7 +78,7 @@ if (props.name) {
   innerValue.value = JSON.parse(localStorage.getItem(`UiTabs:${props.name}`))
   watch(
     innerValue,
-    () => localStorage.setItem(`UiTabs:${props.name}`, JSON.stringify(innerValue.value))
+    () => localStorage.setItem(`UiTabs:${props.name}`, JSON.stringify(innerValue.value)),
   )
 }
 
@@ -121,7 +122,11 @@ function selectTab(incomingTab, scrollIntoView = true) {
 </script>
 
 <template>
-  <div ref="root" class="UiTabs" :class="`UiTabs--direction-${direction}`">
+  <div
+    ref="root"
+    class="UiTabs"
+    :class="`UiTabs--direction-${direction}`"
+  >
     <div class="UiTabs__header">
       <div class="UiTabs__tabList">
         <div
@@ -134,7 +139,11 @@ function selectTab(incomingTab, scrollIntoView = true) {
             'UiTab--outgoing': tab.isOutgoing
           }"
         >
-          <component :is="tab.slotTab" v-if="tab.slotTab" :select="() => selectTab(tab)" />
+          <component
+            :is="tab.slotTab"
+            v-if="tab.slotTab"
+            :select="() => selectTab(tab)"
+          />
           <UiItem
             v-else
             v-bind="tab.props"
@@ -144,9 +153,13 @@ function selectTab(incomingTab, scrollIntoView = true) {
           />
         </div>
       </div>
+      <slot name="header" />
     </div>
     <div class="UiTabs__contents">
-      <component :is="currentContent" v-if="currentContent" />
+      <component
+        :is="currentContent"
+        v-if="currentContent"
+      />
     </div>
   </div>
 </template>
