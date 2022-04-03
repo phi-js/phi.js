@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { CmsStoryEditor, CmsStory } from '@/packages/cms'
-import { UiTabs, UiTab } from '@/packages/ui'
+import { UiTabs, UiTab, UiItem } from '@/packages/ui'
 
 const defaultStory = {
   id: 'story-test-1',
@@ -63,6 +63,7 @@ function reset() {
 
 const modelValue = ref({})
 const currentTab = ref('editor')
+const settingsTab = ref()
 </script>
 
 <template>
@@ -73,6 +74,7 @@ const currentTab = ref('editor')
     >
       <CmsStoryEditor
         v-model:story="story"
+        v-model:settingsTab="settingsTab"
         :settings="settings"
         @update:story="saveStory()"
       />
@@ -96,5 +98,16 @@ const currentTab = ref('editor')
         :settings="settings"
       />
     </UiTab>
+
+    <template #header>
+      <div class="UiTab">
+        <UiItem
+          class="ui--clickable"
+          icon="mdi:cog"
+          text="Settings"
+          @click="settingsTab = 'style'"
+        />
+      </div>
+    </template>
   </UiTabs>
 </template>
