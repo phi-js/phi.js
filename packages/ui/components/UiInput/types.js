@@ -1,4 +1,5 @@
 import { UiInputCode } from '../UiInputCode'
+import { UiInputHtml } from '../UiInputHtml'
 import { UiInputJson } from '../UiInputJson'
 import { UiInputNumberSlide } from '../UiInputNumberSlide'
 import { UiInputUrl } from '../UiInputUrl'
@@ -10,6 +11,7 @@ import { UiUpload } from '../UiUpload'
 
 export default {
   'code': UiInputCode,
+  'html': UiInputHtml,
   'json': UiInputJson,
   'number-slide': UiInputNumberSlide,
   'select-buttons': UiSelectButtons,
