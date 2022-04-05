@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { UiInput } from '../../../../../ui'
+import { UiInput } from '../../../ui'
 
 const props = defineProps({
   modelValue: {

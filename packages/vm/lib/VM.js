@@ -1,11 +1,17 @@
 import { getProperty, setProperty, parse } from './utils'
 
-import vmFunctions from './functions/index.js'
 import vmOperators from './operators/index.js'
+import { plugins } from '../plugins/registerPlugin'
 
 export default class VM {
   constructor() {
-    this.functions = Object.assign({}, vmFunctions)
+    this.functions = {}
+    plugins.forEach((plugin) => {
+      for (let fnName in plugin.functions) {
+        this.functions[fnName] = plugin.functions[fnName].callback
+      }
+    })
+
     this.operators = Object.assign({}, vmOperators)
     this.onModelSet = null
   }

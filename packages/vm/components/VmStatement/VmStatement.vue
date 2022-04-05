@@ -8,6 +8,8 @@ import StmtCall from './statements/StmtCall.vue'
 import StmtChain from './statements/StmtChain/StmtChain.vue'
 import StmtEval from './statements/StmtEval.vue'
 
+import useModelSchema from './useModelSchema'
+
 // const StmtAndOr = defineAsyncComponent(() => import('./statements/StmtAndOr.vue'))
 // const StmtOp = defineAsyncComponent(() => import('./statements/StmtOp.vue'))
 // const StmtCall = defineAsyncComponent(() => import('./statements/StmtCall.vue'))
@@ -36,7 +38,6 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 // Provides "modelSchema" to be used by descendant components
-import useModelSchema from './useModelSchema'
 useModelSchema()
 
 

@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { UiInput } from '../../../../../ui'
+import { UiInput } from '../../../ui'
 
 export default {
   name: 'FetchEditor',

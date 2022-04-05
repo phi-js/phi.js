@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch, computed, defineAsyncComponent } from 'vue'
-import functionDefinitions from '../functions'
+import { plugins } from '../../../plugins/registerPlugin.js'
+
 import VmStatement from '../VmStatement.vue'
 
 const props = defineProps({
@@ -33,7 +34,14 @@ watch(
 )
 
 const editor = computed(() => {
-  const candidate = functionDefinitions?.[props.modelValue?.call]?.editor
+  const allFunctions = {}
+  plugins.forEach((plugin) => {
+    for (let fnName in plugin.functions) {
+      allFunctions[fnName] = plugin.functions[fnName]
+    }
+  })
+
+  const candidate = allFunctions?.[props.modelValue?.call]?.editor
   if (!candidate) {
     return null
   }
@@ -58,12 +66,12 @@ const editor = computed(() => {
       v-if="editor"
       v-model="innerModel"
       v-bind="editor.props"
-      @update:modelValue="emitUpdate"
+      @update:model-value="emitUpdate"
     />
     <VmStatement
       v-else
       v-model="innerModel.args"
-      @update:modelValue="emitUpdate"
+      @update:model-value="emitUpdate"
     />
   </div>
 </template>

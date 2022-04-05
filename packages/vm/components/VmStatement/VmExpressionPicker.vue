@@ -1,5 +1,5 @@
 <script>
-import functionDefinitions from './functions/index.js'
+import { plugins } from '../../plugins/registerPlugin.js'
 import { UiItem, UiPopover } from '../../../ui'
 
 export default {
@@ -14,11 +14,13 @@ export default {
 
   computed: {
     functions() {
-      let retval = []
-      for (let fxName in functionDefinitions) {
-        retval.push(Object.assign({ name: fxName }, functionDefinitions[fxName]))
-      }
-      return retval
+      const allFunctions = {}
+      plugins.forEach((plugin) => {
+        for (let fnName in plugin.functions) {
+          allFunctions[fnName] = plugin.functions[fnName]
+        }
+      })
+      return allFunctions
     },
   },
 
@@ -98,11 +100,25 @@ export default {
   <div class="VmExpressionPicker">
     <UiPopover placement="bottom-start">
       <template #trigger>
-        <UiItem class="ui--clickable" icon="mdi:plus-circle" subtext="Agregar ..." />
+        <UiItem
+          class="ui--clickable"
+          icon="mdi:plus-circle"
+          subtext="Agregar ..."
+        />
       </template>
 
       <template #contents="{ close }">
         <div class="VmExpressionPicker__popover-contents">
+          <div class="launcher-functions">
+            <UiItem
+              v-for="fn in functions"
+              :key="fn.name"
+              v-bind="fn"
+              class="ui--clickable"
+              @click="close(); launchFunction(fn)"
+            />
+          </div>
+
           <div class="launcher-statements">
             <UiItem
               class="ui--clickable"
@@ -116,16 +132,6 @@ export default {
               icon="mdi:electric-switch"
               text="Switch"
               @click="close(); launchSwitch()"
-            />
-          </div>
-
-          <div class="launcher-functions">
-            <UiItem
-              v-for="fn in functions"
-              :key="fn.name"
-              v-bind="fn"
-              class="ui--clickable"
-              @click="close(); launchFunction(fn)"
             />
           </div>
 
