@@ -162,7 +162,7 @@ export default class VM {
     }
 
     let args = functionArgs ? await this.eval(functionArgs, localScope) : null
-    let result = await this.functions[functionName].bind(this)(args, localScope)
+    let result = await this.functions[functionName].bind(this)(args, localScope, this)
 
     if (functionThen) {
       return await this.eval(functionThen, { ...localScope, $foo: result })
