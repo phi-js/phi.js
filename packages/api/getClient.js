@@ -1,5 +1,5 @@
-import { inject, useAttrs } from 'vue'
-import { registeredFinders } from './provideClient.js'
+import { useAttrs } from 'vue'
+import { registeredFinders, registeredClients } from './provideClient.js'
 
 export default function getClient(clientType) {
   /*
@@ -15,10 +15,15 @@ export default function getClient(clientType) {
     }
   }
 
-  const injected = inject(`$_phi_api_${clientType}`, null)
-  if (injected) {
-    return injected
+  if (registeredClients?.[clientType]?.length) {
+    return registeredClients[clientType][0]
   }
+
+  // provideClient.js no longer uses provide()
+  // const injected = inject(`$_phi_api_${clientType}`, null)
+  // if (injected) {
+  //   return injected
+  // }
 
   // Buscar en attrs
   const attrs = useAttrs()

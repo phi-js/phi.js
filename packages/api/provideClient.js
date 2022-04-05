@@ -1,7 +1,8 @@
 import Client from './Client.js'
-import { provide } from 'vue'
+// import { provide } from 'vue'
 
 export const registeredFinders = []
+export const registeredClients = {}
 
 export default function provideClient(clientType, clientData = null) {
   if (typeof clientType === 'function') {
@@ -10,5 +11,10 @@ export default function provideClient(clientType, clientData = null) {
   }
 
   const client = new Client(clientData)
-  provide(`$_phi_api_${clientType}`, client)
+
+  if (!registeredClients[clientType]) {
+    registeredClients[clientType] = []
+  }
+  registeredClients[clientType].push(client)
+  // provide(`$_phi_api_${clientType}`, client)
 }
