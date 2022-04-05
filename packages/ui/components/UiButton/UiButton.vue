@@ -56,9 +56,11 @@ const currentText = computed(() => {
     return errors.value[0]
   }
 
-  return props.isLoading
+  const retval = props.isLoading
     ? props.loadingLabel || props.label || $attrs.value || slotText
     : props.label || $attrs.value || slotText
+
+  return retval || ' '
 })
 </script>
 
