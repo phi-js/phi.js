@@ -14,46 +14,76 @@
   // box-shadow: -9px 0 9px -10px rgba(0, 0, 0, 0.4);
 
   .RowLauncher {
-    position: relative;
-    left: -30px;
-    padding-right: 2px;
-
     cursor: pointer;
     display: inline-flex;
+    position: relative;
+    left: -38px;
 
-    .UiItem__icon {
-      transition: all var(--ui-duration-snap);
+    .UiItem {
+      &__icon {
+        transition: all var(--ui-duration-snap);
 
-      width: 28px;
-      height: 30px;
+        width: 28px;
+        height: 30px;
 
-      background-color: rgba(0, 0, 0, 0.05);
-      border-radius: 4px;
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
+        background-color: rgba(0, 0, 0, 0.05);
+        border-radius: 4px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
 
-      color: #777 !important;
+        color: #777 !important;
+      }
 
-      margin: 0;
-    }
+      &__body {
+        transition: all var(--ui-duration-snap);
 
-    .UiItem__text {
-      transition: all var(--ui-duration-snap);
-      display: none;
-      opacity: 0;
+        position: relative;
+        margin: 0;
+        padding: 4px 0;
+
+        // opacity: 0;
+        overflow: hidden;
+        max-width: 0;
+        max-height: 30px;
+
+        &::before {
+          content: '';
+          display: block;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 0;
+
+          background: var(--ui-color-primary);
+          opacity: 0.3;
+          pointer-events: none;
+        }
+      }
+
+      &__text {
+        // transition: all var(--ui-duration-snap);
+        font-weight: bold;
+      }
     }
 
     &:hover {
-      .UiItem__icon {
-        background-color: var(--ui-color-primary);
-        color: #fff !important;
-        margin-right: 12px;
-      }
+      display: flex;
 
-      .UiItem__text {
-        display: block;
-        opacity: 0.7;
-      }
+      .UiItem {
+        &__icon {
+          background-color: var(--ui-color-primary);
+          color: #fff !important;
+        }
+  
+        &__body {
+          max-width: 100%;
+          max-height: 100px;
+          opacity: 1;
+          padding: 12px 18px;
+        }
+      }      
     }
   }
 }

@@ -130,7 +130,7 @@ const focusedIndexes = ref({})
     </draggable>
 
     <CmsBlockPicker
-      v-if="showLauncher && !innerSlot.length"
+      v-if="showLauncher"
       class="CmsSlotEditor__adder"
       text="Agregar contenido"
       @input="appendBlock"

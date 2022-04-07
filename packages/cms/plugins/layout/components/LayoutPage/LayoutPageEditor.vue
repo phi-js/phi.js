@@ -61,8 +61,8 @@ const cssAttributes = computed(() => getCssObjectAttributes(props.block?.css))
 
     <UiItem
       class="RowLauncher"
-      text="Add row"
-      icon="mdi:plus"
+      text="Add section"
+      icon="mdi:flip-vertical"
       @click="launchRow"
     />
   </div>
