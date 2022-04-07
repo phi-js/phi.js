@@ -37,7 +37,6 @@ vm.onModelSet = (varName, value, scope) => {
 const result = ref()
 async function exec() {
   result.value = await vm.eval(innerStmt.value, props.modelValue)
-  // console.log('%cphi >', 'background: blue; color: #bada55', result.value)
 }
 </script>
 

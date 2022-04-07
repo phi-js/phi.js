@@ -73,7 +73,6 @@ function emitUpdate() {
     }),
   }
 
-  console.log('StoryEditorWindow updates story')
   emit('update:story', updatedStory)
 }
 

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, watch } from 'vue'
 const props = defineProps({
   open: {
     type: Boolean,
@@ -59,43 +59,70 @@ watch(
   },
   { immediate: true },
 )
-
-const widgetEl = ref()
-// onMounted(() => {
-//   document.body.appendChild(widgetEl.value)
-// })
-// onUnmounted(() => {
-//   try {
-//     document.body.removeChild(widgetEl.value)
-//   } catch (e) {
-//     // El elemento ya estaba desmontado (?)  pasa en casos cuando se usa <ui-dialog v-if="XXX">
-//   }
-// })
 </script>
 
 <template>
-  <div class="UiDialog" :class="{ 'UiDialog--open': isOpen }">
-    <div v-if="$slots.trigger" class="UiDialog__trigger" @click="open()">
-      <slot name="trigger" :is-open="isOpen" :open="open" :close="close" />
+  <div
+    class="UiDialog"
+    :class="{ 'UiDialog--open': isOpen }"
+  >
+    <div
+      v-if="$slots.trigger"
+      class="UiDialog__trigger"
+      @click="open()"
+    >
+      <slot
+        name="trigger"
+        :is-open="isOpen"
+        :open="open"
+        :close="close"
+      />
     </div>
 
     <Teleport to="body">
       <transition name="UiDialog__transition">
-        <div v-show="isOpen" ref="widgetEl" class="UiDialog__widget">
-          <div class="UiDialog__scrim" @click="cancel()" />
+        <div
+          v-show="isOpen"
+          class="UiDialog__widget"
+        >
+          <div
+            class="UiDialog__scrim"
+            @click="cancel()"
+          />
 
           <div class="UiDialog__container">
-            <div v-if="$slots.header" class="UiDialog__header">
-              <slot name="header" :close="close" />
+            <div
+              v-if="$slots.header"
+              class="UiDialog__header"
+            >
+              <slot
+                name="header"
+                :close="close"
+              />
             </div>
 
-            <div v-if="$slots.contents" class="UiDialog__contents">
-              <slot name="contents" :close="close" />
-              <slot name="default" :close="close" />
+            <div
+              v-if="$slots.contents"
+              class="UiDialog__contents"
+            >
+              <slot
+                name="contents"
+                :close="close"
+              />
+              <slot
+                name="default"
+                :close="close"
+              />
             </div>
 
-            <div v-if="$slots.footer" class="UiDialog__footer">
-              <slot name="footer" :close="close" />
+            <div
+              v-if="$slots.footer"
+              class="UiDialog__footer"
+            >
+              <slot
+                name="footer"
+                :close="close"
+              />
             </div>
           </div>
         </div>
