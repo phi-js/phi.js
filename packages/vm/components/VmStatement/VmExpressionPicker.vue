@@ -18,6 +18,7 @@ export default {
       plugins.forEach((plugin) => {
         for (let fnName in plugin.functions) {
           allFunctions[fnName] = plugin.functions[fnName]
+          allFunctions[fnName].name = fnName
         }
       })
       return allFunctions
