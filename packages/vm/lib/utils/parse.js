@@ -25,6 +25,7 @@ function parse(string, sourceData, preserveUndefined = false) {
     return retval
   }
 
+  // Find expressions between {{ }}
   if (typeof string === 'string') {
     // https://stackoverflow.com/questions/6323417/how-do-i-retrieve-all-matches-for-a-regular-expression-in-javascript
     let re = /{{(.+?)}}/g
@@ -34,10 +35,13 @@ function parse(string, sourceData, preserveUndefined = false) {
     do {
       m = re.exec(string)
       if (m && !(m[0] in newValues)) {
-        let propertyName = m[1].trim()
+        let strExpression = m[1].trim()
+
+        // decode HTML entities < >
+        strExpression = strExpression.replace('&gt;', '>').replace('&lt;', '<')
 
         // Evaluate expression
-        let targetValue = evalExpression(propertyName, sourceData)
+        let targetValue = evalExpression(strExpression, sourceData)
 
         if (targetValue === undefined) {
           if (preserveUndefined) {
