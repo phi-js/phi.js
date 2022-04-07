@@ -18,6 +18,15 @@ const props = defineProps({
     required: false,
     default: null,
   },
+
+  /*
+  Select first tab on null modelValue
+  */
+  autoSelect: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -89,7 +98,7 @@ watch(
       innerValue.value = newValue
     }
 
-    if (!innerValue.value) { // select the first tab by default
+    if (props.autoSelect && !innerValue.value) {
       innerValue.value = tabs.value?.[0]?.value
     }
   },
@@ -128,6 +137,7 @@ function selectTab(incomingTab, scrollIntoView = true) {
     :class="`UiTabs--direction-${direction}`"
   >
     <div class="UiTabs__header">
+      <slot name="left" />
       <div class="UiTabs__tabList">
         <div
           v-for="(tab, i) in markedTabs"
@@ -153,7 +163,7 @@ function selectTab(incomingTab, scrollIntoView = true) {
           />
         </div>
       </div>
-      <slot name="header" />
+      <slot name="right" />
     </div>
     <div class="UiTabs__contents">
       <component
@@ -170,6 +180,7 @@ function selectTab(incomingTab, scrollIntoView = true) {
   &__header {
     display: flex;
     flex-wrap: nowrap;
+    align-items: center;
     overflow-x: auto;
 
     /*firefox only*/
