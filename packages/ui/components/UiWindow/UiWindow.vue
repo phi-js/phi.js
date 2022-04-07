@@ -104,6 +104,9 @@ watch(
   () => props.open,
   (newValue) => {
     isOpen.value = newValue
+    if (isOpen.value) {
+      repositionBody()
+    }
   },
   { immediate: true },
 )
