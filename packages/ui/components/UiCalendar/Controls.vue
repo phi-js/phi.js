@@ -3,10 +3,20 @@
     <!-- <input type="text" :value="date" @input="$emit('update:date', $event.target.value)" />
     <input type="text" :value="view" @input="$emit('update:view', $event.target.value)" />-->
 
-    <button type="button" class="UiButton" @click="setToday()">{{ i18n.t('UiCalendar.Today') }}</button>
+    <button
+      type="button"
+      class="UiButton"
+      @click="setToday()"
+    >
+      {{ i18n.t('UiCalendar.Today') }}
+    </button>
 
     <span class="view-selector">
-      <select class="UiInput" :value="currentView" @change="setCurrentView($event.target.value)">
+      <select
+        class="UiInput"
+        :value="currentView"
+        @change="setCurrentView($event.target.value)"
+      >
         <option value="month">{{ i18n.t('UiCalendar.Month') }}</option>
         <option value="week">{{ i18n.t('UiCalendar.Week') }}</option>
         <option value="schedule">{{ i18n.t('UiCalendar.Schedule') }}</option>
@@ -14,13 +24,16 @@
       </select>
     </span>
 
-    <span class="counter-days" v-if="currentView == 'days'">
+    <span
+      v-if="currentView == 'days'"
+      class="counter-days"
+    >
       <span @click="setCurrentDay(0)">
-        <ui-icon src="mdi:minus"></ui-icon>
+        <ui-icon src="mdi:minus" />
       </span>
       {{ currentDay }}
       <span @click="setCurrentDay(1)">
-        <ui-icon src="mdi:plus"></ui-icon>
+        <ui-icon src="mdi:plus" />
       </span>
     </span>
 
@@ -30,18 +43,29 @@
         :value="innerDate.getMonth()"
         @change="setMonth($event.target.value)"
       >
-        <option v-for="(monthName, i) in allMonths" :key="i" :value="i" v-text="monthName"></option>
+        <option
+          v-for="(monthName, i) in allMonths"
+          :key="i"
+          :value="i"
+          v-text="monthName"
+        />
       </select>
       <span class="current-year">{{ innerDate.getFullYear() }}</span>
     </span>
 
     <span class="month-controls">
-      <span class="month-prev" @click="goPrev()">
-        <ui-icon src="mdi:chevron-left"></ui-icon>
+      <span
+        class="month-prev"
+        @click="goPrev()"
+      >
+        <ui-icon src="mdi:chevron-left" />
       </span>
 
-      <span class="month-next" @click="goNext()">
-        <ui-icon src="mdi:chevron-right"></ui-icon>
+      <span
+        class="month-next"
+        @click="goNext()"
+      >
+        <ui-icon src="mdi:chevron-right" />
       </span>
     </span>
   </div>
@@ -60,10 +84,32 @@
 // (Estas dos cosas las pueden copiar de src\modules\ui\components\Calendar\Calendar.vue)
 
 import { useI18n } from '../../../i18n'
-import { UiIcon } from '../UiIcon';
+import { UiIcon } from '../UiIcon'
 
 export default {
-  name: 'ui-calendar-controls',
+  name: 'UiCalendarControls',
+
+  components: { UiIcon },
+
+  props: {
+    date: {
+      type: Date,
+      required: false,
+      default: () => new Date(),
+    },
+
+    view: {
+      type: String,
+      required: false,
+      default: 'month',
+    },
+
+    day: {
+      type: Number,
+      required: false,
+      default: 7,
+    },
+  },
 
   setup() {
     const i18n = useI18n({
@@ -95,132 +141,104 @@ export default {
     return { i18n }
   },
 
-  components: {
-    UiIcon,
-  },
-
-  props: {
-    date: {
-      type: Date,
-      required: false,
-      default: () => new Date(),
-    },
-
-    view: {
-      type: String,
-      required: false,
-      default: 'month',
-    },
-
-    day: {
-      type: Number,
-      required: false,
-      default: 7,
-    },
-  },
-
   data() {
     return {
       innerDate: null,
       currentView: this.view,
       currentDay: this.day,
-    };
+    }
+  },
+
+  computed: {
+    allMonths() {
+      let retval = []
+      for (let m = 0; m <= 11; m++) {
+        let objDate = new Date()
+        objDate.setDate(1)
+        objDate.setMonth(m)
+        retval.push(objDate.toLocaleString(/*this.$i18n.language*/'en', { month: 'long' }))
+      }
+      return retval
+    },
   },
 
   watch: {
     date: {
       immediate: true,
       handler(newVal) {
-        this.innerDate = newVal;
+        this.innerDate = newVal
       },
-    },
-  },
-
-  computed: {
-    allMonths() {
-      let retval = [];
-      for (let m = 0; m <= 11; m++) {
-        let objDate = new Date();
-        objDate.setDate(1);
-        objDate.setMonth(m);
-        retval.push(
-          objDate.toLocaleString(/*this.$i18n.language*/'en', {
-            month: 'long',
-          })
-        );
-      }
-      return retval;
     },
   },
 
   methods: {
     setToday() {
-      this.innerDate = new Date();
-      this.$emit('update:date', this.innerDate);
+      this.innerDate = new Date()
+      this.$emit('update:date', this.innerDate)
     },
 
     setCurrentView(view) {
-      this.currentView = view;
-      this.$emit('update:view', this.currentView);
+      this.currentView = view
+      this.$emit('update:view', this.currentView)
     },
 
     setCurrentDay(type) {
       if (type) {
         if (this.currentDay < 30) {
-          this.currentDay++;
+          this.currentDay++
         }
       } else {
         if (this.currentDay > 1) {
-          this.currentDay--;
+          this.currentDay--
         }
       }
 
-      this.$emit('update:day', this.currentDay);
+      this.$emit('update:day', this.currentDay)
     },
 
     setMonth(monthNum) {
       // see https://github.com/vuejs/vue/issues/3613
       // and https://stackoverflow.com/questions/55653149/vuejs-reactive-date-object
-      this.innerDate.setMonth(monthNum, 1);
-      this.innerDate = new Date(this.innerDate);
-      this.$emit('update:date', this.innerDate);
+      this.innerDate.setMonth(monthNum, 1)
+      this.innerDate = new Date(this.innerDate)
+      this.$emit('update:date', this.innerDate)
     },
 
     goNext() {
-      let counter = 7;
+      let counter = 7
 
       if (this.currentView == 'days') {
-        counter = this.currentDay;
+        counter = this.currentDay
       }
 
       if (this.currentView == 'week' || this.currentView == 'days') {
-        this.innerDate.setDate(this.innerDate.getDate() + counter);
-        this.innerDate = new Date(this.innerDate);
-        this.$emit('update:date', this.innerDate);
-        return;
+        this.innerDate.setDate(this.innerDate.getDate() + counter)
+        this.innerDate = new Date(this.innerDate)
+        this.$emit('update:date', this.innerDate)
+        return
       }
 
-      this.setMonth(this.innerDate.getMonth() + 1);
+      this.setMonth(this.innerDate.getMonth() + 1)
     },
 
     goPrev() {
-      let counter = 7;
+      let counter = 7
 
       if (this.currentView == 'days') {
-        counter = this.currentDay;
+        counter = this.currentDay
       }
 
       if (this.currentView == 'week' || this.currentView == 'days') {
-        this.innerDate.setDate(this.innerDate.getDate() - counter);
-        this.innerDate = new Date(this.innerDate);
-        this.$emit('update:date', this.innerDate);
-        return;
+        this.innerDate.setDate(this.innerDate.getDate() - counter)
+        this.innerDate = new Date(this.innerDate)
+        this.$emit('update:date', this.innerDate)
+        return
       }
 
-      this.setMonth(this.innerDate.getMonth() - 1);
+      this.setMonth(this.innerDate.getMonth() - 1)
     },
-  }
-};
+  },
+}
 </script>
 
 <style lang="scss">
@@ -228,7 +246,6 @@ export default {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  background-color: #fff;
 
   .view-selector {
     margin: 0 12px;

@@ -1,16 +1,25 @@
 <template>
-  <table class="ui-calendar-month" cellspacing="0" cellpadding="0">
+  <table
+    class="ui-calendar-month"
+    cellspacing="0"
+    cellpadding="0"
+  >
     <thead>
       <tr>
         <td
           v-for="(day, dk) in weeks[0].days"
           :key="dk"
           valign="top"
-        >{{ i18n.d(day.date, { weekday: 'short' }) }}</td>
+        >
+          {{ i18n.d(day.date, { weekday: 'short' }) }}
+        </td>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(week, k) in weeks" :key="k">
+      <tr
+        v-for="(week, k) in weeks"
+        :key="k"
+      >
         <td
           v-for="(day, dk) in week.days"
           :key="dk"
@@ -26,16 +35,22 @@
 
           <div class="ui-calendar-day-contents">
             <slot :name="day.key">
-              <slot name="day" :events="dayEvents[day.key]">
-                <ul v-if="dayEvents[day.key]" class="ui-calendar-event-list">
+              <slot
+                name="day"
+                :events="dayEvents[day.key]"
+              >
+                <ul
+                  v-if="dayEvents[day.key]"
+                  class="ui-calendar-event-list"
+                >
                   <li
                     v-for="(event, i) in dayEvents[day.key]"
                     :key="i"
-                    :class="['ui-calendar-event', event.className]"
+                    :class="['UiCalendarEvent', 'ui-calendar-event', event.className]"
                     :style="[{ backgroundColor: event.color }, event.style]"
                     @click.stop="clickEvent(event)"
                   >
-                    <span class="event-title">{{ event.title }}</span>
+                    <span class="UiCalendarEvent__title event-title">{{ event.title }}</span>
                   </li>
                 </ul>
               </slot>
@@ -51,12 +66,7 @@
 import { useI18n } from '../../../../i18n'
 
 export default {
-  name: 'ui-calendar-month',
-
-  setup() {
-    const i18n = useI18n()
-    return { i18n }
-  },
+  name: 'UiCalendarMonth',
 
   props: {
     date: {
@@ -84,28 +94,55 @@ export default {
     },
   },
 
+  emits: ['click-day', 'click-event', 'update:visibleDateRange'],
+
+  setup() {
+    const i18n = useI18n()
+    return { i18n }
+  },
+
   computed: {
-    weeks() {
-      let retval = [];
-      let nWeeks = 6;
+    visibleDateRange() {
+      let nWeeks = 6
 
       // obtener el startDay mas cercano a this.date
       let startDate = new Date(
         this.date.getFullYear(),
         this.date.getMonth(),
-        1
-      );
-      let offset = startDate.getDay() - this.startDay;
+        1,
+      )
+      let offset = startDate.getDay() - this.startDay
       if (offset < 0) {
-        offset = 7 + offset;
+        offset = 7 + offset
       }
-      startDate.setDate(startDate.getDate() - offset);
+      startDate.setDate(startDate.getDate() - offset)
 
-      let curDate = startDate;
+      // obtener el ultimo dia visible en la vista
+      let endDate = new Date(startDate)
+      endDate.setDate(startDate.getDate() + nWeeks * 7)
+
+      return [startDate, endDate]
+    },
+
+    weeks() {
+      let retval = []
+      let nWeeks = 6
+
+      // obtener el startDay mas cercano a this.date
+      let startDate = new Date(
+        this.date.getFullYear(),
+        this.date.getMonth(),
+        1,
+      )
+      let offset = startDate.getDay() - this.startDay
+      if (offset < 0) {
+        offset = 7 + offset
+      }
+      startDate.setDate(startDate.getDate() - offset)
+
+      let curDate = startDate
       for (let week = 1; week <= nWeeks; week++) {
-        let objWeek = {
-          days: [],
-        };
+        let objWeek = { days: [] }
 
         for (let dayN = 0; dayN <= 6; dayN++) {
           let day = {
@@ -114,99 +151,104 @@ export default {
             key: this.getKey(curDate),
             classnames: [
               {
-                today: this.isToday(curDate),
+                'today': this.isToday(curDate),
                 'other-month': curDate.getMonth() != this.date.getMonth(),
                 'first-of-month': curDate.getDate() == 1,
                 'first-row': week == 1,
                 'first-of-table': week == 1 && dayN == 0,
               },
             ],
-          };
+          }
 
           if (this.onDayRender) {
-            let rendered = this.onDayRender(day);
+            let rendered = this.onDayRender(day)
             // day = Object.assign(day, rendered, {classnames: day.classnames.concat(rendered.classnames)});
-            day = Object.assign(day, rendered);
+            day = Object.assign(day, rendered)
           }
 
           if (typeof this.dayEvents[day.key] != 'undefined') {
-            day.classnames.push(
-              this.dayEvents[day.key].map((e) => e.dayClassName)
-            );
+            day.classnames.push(this.dayEvents[day.key].map((e) => e.dayClassName))
           }
 
-          objWeek.days.push(day);
-          curDate.setDate(curDate.getDate() + 1);
+          objWeek.days.push(day)
+          curDate.setDate(curDate.getDate() + 1)
         }
 
-        retval.push(objWeek);
+        retval.push(objWeek)
       }
 
-      return retval;
+      return retval
     },
 
     dayEvents() {
-      let retval = {};
+      let retval = {}
 
-      let defaultEventProperties = {
-        // color: 'var(--phi-color-main)'
-      };
+      let defaultEventProperties = {}
 
       this.events.forEach((event) => {
-        let date = event.dateStart;
-        let key = this.getKey(date);
-        let targetEvent = Object.assign({}, defaultEventProperties, event);
+        let date = event.dateStart
+        let key = this.getKey(date)
+        let targetEvent = Object.assign({}, defaultEventProperties, event)
 
         if (typeof retval[key] == 'undefined') {
-          retval[key] = [];
+          retval[key] = []
         }
-        retval[key].push(targetEvent);
-      });
+        retval[key].push(targetEvent)
+      })
 
       // Ordenar por fecha
       for (let key in retval) {
         retval[key].sort((a, b) => {
           //a is less than b by some ordering criterion
           if (a.dateStart < b.dateStart) {
-            return -1;
+            return -1
           }
           // a is greater than b by the ordering criterion
           if (a.dateStart > b.dateStart) {
-            return 1;
+            return 1
           }
           // a must be equal to b
-          return 0;
-        });
+          return 0
+        })
       }
 
-      return retval;
+      return retval
+    },
+  },
+
+  watch: {
+    date: {
+      immediate: true,
+      handler() {
+        this.$emit('update:visibleDateRange', this.visibleDateRange)
+      },
     },
   },
 
   methods: {
     clickDay(day) {
-      this.$emit('click-day', day.date);
+      this.$emit('click-day', day.date)
     },
 
     clickEvent(event) {
-      this.$emit('click-event', event);
+      this.$emit('click-event', event)
     },
 
     getKey(date) {
-      return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+      return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`
     },
 
     isToday(date) {
-      let today = new Date();
+      let today = new Date()
 
       return (
         date.getFullYear() === today.getFullYear() &&
         date.getMonth() === today.getMonth() &&
         date.getDate() === today.getDate()
-      );
+      )
     },
   },
-};
+}
 </script>
 
 <style lang="scss">
