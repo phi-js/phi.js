@@ -47,8 +47,6 @@ const i18n = useI18n({
     'CmsStoryBuilder.Source': 'Source',
     'CmsStoryBuilder.Preview': 'Preview',
     'CmsStoryBuilder.DataExplorer': 'DataExplorer',
-    'CmsStoryBuilder.Publish': 'Publish',
-    'CmsStoryBuilder.lastPublished': 'lastPublished',
   },
   es: {
     'CmsStoryBuilder.Editor': 'Editor',
@@ -58,8 +56,6 @@ const i18n = useI18n({
     'CmsStoryBuilder.Source': 'Fuente',
     'CmsStoryBuilder.Preview': 'Vista previa',
     'CmsStoryBuilder.DataExplorer': 'Explorar datos',
-    'CmsStoryBuilder.Publish': 'Publicar',
-    'CmsStoryBuilder.lastPublished': 'lastPublished',
   },
 })
 
@@ -187,6 +183,8 @@ const isModelExplorerOpen = ref(false)
             :class="{'--active': settingsTab == 'source'}"
             @click="settingsTab = 'source'"
           />
+
+          <slot name="corner" />
         </div>
       </UiTab>
 
@@ -214,15 +212,8 @@ const isModelExplorerOpen = ref(false)
             icon="mdi:code-json"
             @click="isModelExplorerOpen = true"
           />
-          <UiItem
-            class="ui--clickable"
-            :text="i18n.t('CmsStoryBuilder.Publish')"
-            icon="mdi:earth"
-          />
 
-          <div class="CmsStoryBuilder__notice">
-            {{ i18n.t('CmsStoryBuilder.lastPublished') }}
-          </div>
+          <slot name="corner" />
         </div>
       </UiTab>
     </UiTabs>
