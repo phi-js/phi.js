@@ -30,6 +30,8 @@ import BlockModelsEditor from '../components/CmsBlockEditor/BlockModelsEditor.vu
 import BlockVisibilityEditor from '../components/CmsBlockEditor/BlockVisibilityEditor.vue'
 import BlockCssEditor from '../components/CmsBlockEditor/BlockCssEditor.vue'
 import BlockDictionaryEditor from '../components/CmsBlockEditor/BlockDictionaryEditor.vue'
+import BlockValidationEditor from '../components/CmsBlockEditor/BlockValidationEditor.vue'
+
 import { parse } from '../../vm/lib/utils'
 
 export default async function getBlockEditors(block, $settings = {}) {
@@ -136,6 +138,14 @@ export default async function getBlockEditors(block, $settings = {}) {
       'component': BlockModelsEditor,
       'v-model': 'block',
     })
+
+    retval.actions.push({
+      'id': 'validation',
+      'title': 'Validation',
+      'icon': 'mdi:message-alert',
+      'component': BlockValidationEditor,
+      'v-model': 'block',
+    })
   }
 
   // v-on
@@ -175,12 +185,15 @@ export default async function getBlockEditors(block, $settings = {}) {
   })
 
   // Raw block source editor
-  retval.actions.push({
-    id: 'source',
-    title: 'Source',
-    icon: 'mdi:code-json',
-    component: UiInputJson,
-  })
+  if ($settings?.allowSource) {
+    retval.actions.push({
+      id: 'source',
+      title: 'Source',
+      icon: 'mdi:code-json',
+      component: UiInputJson,
+    })
+  }
+
 
   return retval
 }

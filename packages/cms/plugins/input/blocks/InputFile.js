@@ -17,7 +17,7 @@ export default {
 
   block: {
     'component': UiInput,
-    'v-model': 'files',
+    'v-model': '',
     'props': {
       type: 'file',
       path: '{{$settings.uploadUrl}}',

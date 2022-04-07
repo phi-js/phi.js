@@ -61,16 +61,16 @@ function onClassAdded(objClass) {
   toggleClass(objClass.name, true)
 }
 
-const injectedStoryEditor = inject('$_cms_story_editor', {})
+const injectedStoryEditor = inject('$_cms_story_builder', {})
 const injectedStory = shallowRef(injectedStoryEditor.story)
-const storyClasses = ref(injectedStory.value.css.classes)
+const storyClasses = ref(injectedStory.value?.css?.classes || [])
 
 function onUpdateStoryClasses() {
   injectedStory.value.css.classes = storyClasses.value
 }
 
 
-let initialStoryClasses = JSON.parse(JSON.stringify(injectedStory.value?.css?.classes))
+let initialStoryClasses = JSON.parse(JSON.stringify(storyClasses.value))
 
 /* Listen for scaffold accepts */
 const registerAccept = inject('$_cms_scaffold_accept', () => null)

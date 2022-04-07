@@ -15,14 +15,14 @@ const props = defineProps({
   node: {
     type: Object,
     required: false,
-    default: () => ({})
+    default: () => ({}),
   },
 
   label: {
     type: String,
     required: false,
-    default: 'Create'
-  }
+    default: 'Create',
+  },
 })
 
 const emit = defineEmits(['update:node', 'cancel'])
@@ -34,12 +34,10 @@ watch(
     innerNode.value = {
       id: props.node?.id || '',
       hash: props.node?.hash || '',
-      info: {
-        text: props.node?.info?.text || ''
-      }
+      info: { text: props.node?.info?.text || '' },
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 const inputEl = ref()
@@ -48,7 +46,7 @@ onMounted(() => inputEl.value.select())
 function emitUpdate() {
   emit('update:node', {
     ...JSON.parse(JSON.stringify(innerNode.value)),
-    hash: toValidHash(innerNode.value.info.text)
+    hash: toValidHash(innerNode.value.info.text),
   })
 }
 
@@ -70,23 +68,31 @@ function toValidHash(string) {
 <template>
   <div class="GraphNodeForm">
     <input
+      ref="inputEl"
+      v-model="innerNode.info.text"
       type="text"
       class="UiInput"
       placeholder="Page name"
-      v-model="innerNode.info.text"
-      ref="inputEl"
       @keydown.esc="emit('cancel')"
       @keydown.enter="emitUpdate"
-    />
+    >
 
     <button
       :disabled="!innerNode.info.text.trim()"
       type="button"
       class="UiButton"
       @click="emitUpdate"
-    >{{ props.label }}</button>
+    >
+      {{ props.label }}
+    </button>
 
-    <button type="button" class="UiButton UiButton--cancel" @click="emit('cancel')">Cancel</button>
+    <button
+      type="button"
+      class="UiButton UiButton--cancel"
+      @click="emit('cancel')"
+    >
+      Cancel
+    </button>
   </div>
 </template>
 
@@ -100,6 +106,6 @@ function toValidHash(string) {
   top: -6px;
 
   font-size: 14px;
-  background-color: #f4f4f4;
+  // background-color: #f4f4f4;
 }
 </style>

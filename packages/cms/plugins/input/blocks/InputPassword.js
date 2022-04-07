@@ -11,7 +11,7 @@ export default {
 
   block: {
     'component': UiInput,
-    'v-model': 'password',
+    'v-model': '',
     'props': { type: 'password' },
   },
 

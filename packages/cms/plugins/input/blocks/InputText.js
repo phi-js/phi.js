@@ -1,7 +1,7 @@
 import { UiInput } from '@/packages/ui/components'
 import InputSettings from '../components/InputSettings/InputSettings.vue'
 import InputFace from '../components/InputFace.vue'
-import BlockValidationEditor from '../../../components/CmsBlockEditor/BlockValidationEditor.vue'
+
 
 export default {
   tags: ['input'],
@@ -12,7 +12,7 @@ export default {
 
   block: {
     'component': UiInput,
-    'v-model': 'text',
+    'v-model': '',
     'props': { type: 'text' },
   },
 
@@ -24,14 +24,6 @@ export default {
         'id': 'InputSettings',
         'title': 'Field options',
         'component': InputSettings,
-        'v-model': 'block',
-      },
-
-      {
-        'id': 'validation',
-        'title': 'Validation',
-        'icon': 'mdi:message-alert',
-        'component': BlockValidationEditor,
         'v-model': 'block',
       },
     ],

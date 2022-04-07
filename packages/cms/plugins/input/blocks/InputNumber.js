@@ -11,7 +11,7 @@ export default {
 
   block: {
     'component': UiInput,
-    'v-model': 'number',
+    'v-model': '',
     'props': { type: 'number' },
   },
 

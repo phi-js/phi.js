@@ -11,7 +11,7 @@ export default {
 
   block: {
     'component': UiInput,
-    'v-model': 'textarea',
+    'v-model': '',
     'props': { type: 'textarea' },
   },
 

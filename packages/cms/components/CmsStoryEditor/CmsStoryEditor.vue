@@ -5,10 +5,9 @@ import '../../style/base.scss'
 // Editor and subcomponents styles
 import './style.scss'
 
-import { ref, watch, watchEffect, provide, computed, defineComponent, h, Teleport } from 'vue'
+import { ref, watch, watchEffect, computed, defineComponent, h, Teleport } from 'vue'
 import { sanitizeStory } from '../../functions'
 import { CmsBlockEditor } from '../CmsBlockEditor'
-import StoryEditorWindow from './StoryEditorWindow.vue'
 
 const props = defineProps({
   story: {
@@ -42,23 +41,15 @@ const emit = defineEmits(['update:story', 'update:currentPageId', 'update:settin
 const sanitizedStory = ref(null)
 watch(
   () => props.story,
-  // (incomingStory) => sanitizedStory.value = sanitizeStory(incomingStory),
-  (incomingStory) => sanitizedStory.value = JSON.parse(JSON.stringify(sanitizeStory(incomingStory))),
-  { immediate: true },
+  (incomingStory) => {
+    // sanitizedStory.value = JSON.parse(JSON.stringify(sanitizeStory(incomingStory)))
+    sanitizedStory.value = sanitizeStory(incomingStory)
+  },
+  {
+    immediate: true,
+    // deep: true, // causes loop (!)
+  },
 )
-
-// Accept / Cancel
-function accept() {
-  emit('update:story', { ...sanitizedStory.value })
-  return true
-}
-
-function cancel() {
-  // sanitizedStory.value = sanitizeStory(props.story)
-  sanitizedStory.value = JSON.parse(JSON.stringify(sanitizeStory(props.story)))
-  return true
-}
-
 
 const currentPage = ref()
 watchEffect(() => {
@@ -72,12 +63,6 @@ function onUpdateCurrentPage() {
     pages: sanitizedStory.value.pages.map((page) => page.id == currentPage.value.id ? { ...currentPage.value } : page),
   })
 }
-
-provide('$_cms_story_editor', {
-  story: sanitizedStory,
-  accept,
-  cancel,
-})
 
 const transitionName = ref('slideX')
 const transitionDirection = ref('fw') // fw, bw
@@ -118,14 +103,5 @@ const StyleTag = defineComponent({
         </KeepAlive>
       </div>
     </Transition>
-
-    <StoryEditorWindow
-      v-model:story="sanitizedStory"
-      :current-tab="props.settingsTab"
-      :current-page-id="props.currentPageId"
-      @update:current-tab="emit('update:settingsTab', $event)"
-      @accept="accept"
-      @cancel="cancel"
-    />
   </div>
 </template>

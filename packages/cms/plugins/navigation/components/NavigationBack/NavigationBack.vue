@@ -3,12 +3,6 @@ import { inject } from 'vue'
 import { UiButton } from '../../../../../ui/components'
 
 const props = defineProps({
-  pageId: {
-    type: String,
-    required: false,
-    default: null,
-  },
-
   icon: {
     type: String,
     required: false,
@@ -36,14 +30,15 @@ function onClick() {
     return
   }
 
-  injectedStory.goTo(props.pageId)
+  injectedStory.goBack()
 }
 </script>
 
 <template>
   <UiButton
-    class="NavigationLink"
-    :label="props.text || props.pageId"
+    class="NavigationBack"
+    :icon="props.icon || 'mdi:arrow-left-thick'"
+    :label="props.text || 'Back'"
     :subtext="props.subtext"
     @click="onClick()"
   />

@@ -46,14 +46,19 @@ export default function sanitizeStory(story) {
     story.css.classes = []
   }
 
-  // Every page has an ID
+  // Required attributes for PAGES
   story.pages.forEach((page, index) => {
     if (!page.id) {
       page.id = `page-${index}`
     }
 
-    // // Every bl0ock has a UID (>= 1)
-    // assignUid(page)
+    if (!page.info) {
+      page.info = { text: page.id }
+    }
+
+    if (!page.hash) {
+      page.hash = page.id
+    }
   })
 
   return story

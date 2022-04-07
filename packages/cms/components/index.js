@@ -1,5 +1,6 @@
 export * from './CmsBlock'
 export * from './CmsBlockEditor'
 export * from './CmsStory'
+export * from './CmsStoryBuilder'
 export * from './CmsStoryEditor'
 export * from './CmsStoryGraph'

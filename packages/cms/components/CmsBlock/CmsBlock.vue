@@ -38,16 +38,11 @@ const CmsBlock = {
       emit('update:modelValue', val)
     }
 
-    // Provide Story functions to VM
+    // Provide Story in custom VM data (e.g. used in plugins\navigation\functions\story\index.js)
     const injectedStory = inject('$_cms_story', null)
     if (injectedStory) {
-      blockVM.defineFunctions({
-        'Story.goTo': injectedStory.goTo,
-        'Story.goBack': injectedStory.goBack,
-        'Story.validate': injectedStory.validate,
-      })
+      blockVM.custom = { story: injectedStory }
     }
-
 
     watchEffect(async () => blockDefinition.value = await CMS.getDefinition(props.block))
 
@@ -153,6 +148,9 @@ const CmsBlock = {
         blockSlots[slotName] = () => arrChildren.map((child, index) => h(CmsBlock, {
           'block': child,
           'modelValue': props.modelValue,
+          'onUpdate:modelValue': ($event) => {
+            emitUpdate($event)
+          },
           'onUpdate:errors': ($event) => {
             childErrors[slotName + '_' + index] = $event
 
@@ -188,7 +186,6 @@ const CmsBlock = {
         {
           ...attrs,
           ...blockProps,
-          vm: blockVM, // pass "vm" as a prop to the block (e.g. see NavigationLink.vue)
         },
         blockSlots,
       )

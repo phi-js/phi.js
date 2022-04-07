@@ -16,7 +16,15 @@ const props = defineProps({
     default: null,
   },
 })
-const emit = defineEmits(['update:currentPageId', 'createPage', 'createPath', 'updatePage', 'deletePage'])
+
+const emit = defineEmits([
+  'update:story',
+  'update:currentPageId',
+  'createPage',
+  'createPath',
+  'updatePage',
+  'deletePage',
+])
 
 const graph = ref({
   nodes: [],
@@ -35,59 +43,55 @@ Graph nodes are page objects, with only the properties:
   }
 }
 */
-watchEffect(
-  () => {
-    graph.value.nodes = props.story?.pages?.length
-      ? props.story.pages.map((p, index) => ({
-        id: p.id || index,
-        hash: p.hash || p.id || index,
-        info: {
-          text: p.info?.text || p.hash || p.id || `Page ${index}`
-        }
-      }))
-      : []
-    graph.value.paths = props.story?.paths?.length ? [...props.story.paths] : []
-
-    // Create a "root" node, with paths to all root level nodes
-    const rootNodes = graph.value.nodes.filter(node => !graph.value.paths.find(path => path.to == node.id))
-    graph.value.nodes.push({ "id": "--root--" })
-    rootNodes.forEach(node => graph.value.paths.push({
-      from: '--root--',
-      to: node.id
+watchEffect(() => {
+  graph.value.nodes = props.story?.pages?.length
+    ? props.story.pages.map((p, index) => ({
+      id: p.id || index,
+      hash: p.hash || p.id || index,
+      info: { text: p.info?.text || p.hash || p.id || `Page ${index}` },
     }))
+    : []
+  graph.value.paths = props.story?.paths?.length ? [...props.story.paths] : []
 
-    if (targetPickerParent.value) {
-      return
-    }
+  // // Create a "root" node, with paths to all root level nodes
+  // const rootNodes = graph.value.nodes.filter((node) => !graph.value.paths.find((path) => path.to == node.id))
+  // graph.value.nodes.push({ id: '--root--' })
+  // rootNodes.forEach((node) => graph.value.paths.push({
+  //   from: '--root--',
+  //   to: node.id,
+  // }))
 
-    // Add a "Create new page" after every end node
-    const endNodes = graph.value.nodes.filter(node => !graph.value.paths.find(path => path.from == node.id))
-    endNodes.forEach(node => {
-      graph.value.nodes.push({
-        id: `--creator--${node.id}`,
-        isCreator: true,
-        parentId: node.id
-      })
+  if (targetPickerParent.value) {
+    return
+  }
 
-      graph.value.paths.push({
-        from: node.id,
-        to: `--creator--${node.id}`
-      })
-    })
-
-    // Add a "Create new page" after root node
+  // Add a "Create new page" after every end node
+  const endNodes = graph.value.nodes.filter((node) => !graph.value.paths.find((path) => path.from == node.id))
+  endNodes.forEach((node) => {
     graph.value.nodes.push({
-      id: '--creator--root',
+      id: `--creator--${node.id}`,
       isCreator: true,
-      parentId: null
+      parentId: node.id,
     })
 
     graph.value.paths.push({
-      from: '--root--',
-      to: '--creator--root'
+      from: node.id,
+      to: `--creator--${node.id}`,
     })
-  }
-)
+  })
+
+  // // Add a "Create new page" after root node
+  // graph.value.nodes.push({
+  //   id: '--creator--root',
+  //   isCreator: true,
+  //   parentId: null,
+  // })
+
+  // graph.value.paths.push({
+  //   from: '--root--',
+  //   to: '--creator--root',
+  // })
+})
 
 function onClickNode(nodeId) {
   emit('update:currentPageId', nodeId)
@@ -95,14 +99,56 @@ function onClickNode(nodeId) {
 
 function onCreateNode(nodeData) {
   emit('createPage', nodeData)
+
+  const newPage = {
+    id: nodeData.hash,
+    hash: nodeData.hash,
+    info: { text: nodeData.info.text },
+
+    // default page contents
+    component: 'LayoutPage',
+    slot: [
+      {
+        component: 'LayoutRow',
+        slot: [
+          { component: 'LayoutColumn' },
+        ],
+      },
+    ],
+  }
+
+  const story = { ...props.story }
+  story.pages.push(newPage)
+  if (nodeData.parentId) {
+    story.paths.push({ from: nodeData.parentId, to: newPage.id })
+  }
+
+  emit('update:story', story)
 }
 
 function onUpdateNode(nodeData) {
   emit('updatePage', nodeData)
+
+  const foundPage = props.story.pages.find((p) => p.id === nodeData.id)
+  if (!foundPage) {
+    return
+  }
+
+  foundPage.hash = nodeData.hash // This is modifying prop "story" (!)
+  foundPage.info.text = nodeData.info.text
+  emit('update:story', props.story)
 }
 
 function onDeleteNode(nodeId) {
   emit('deletePage', nodeId)
+
+  const storyClone = { ...props.story }
+  const foundPageIndex = storyClone.pages.findIndex((p) => p.id === nodeId)
+  if (foundPageIndex !== -1) {
+    storyClone.pages.splice(foundPageIndex, 1)
+    storyClone.paths = storyClone.paths.filter((p) => p.from != nodeId && p.to != nodeId)
+    emit('update:story', storyClone)
+  }
 }
 
 
@@ -119,6 +165,11 @@ function clickPathTarget(targetId) {
   const newPath = { from: targetPickerParent.value, to: targetId }
   cancelTargetPicker()
   emit('createPath', newPath)
+
+  emit('update:story', {
+    ...props.story,
+    paths: props.story.paths.concat([newPath]),
+  })
 }
 
 function cancelTargetPicker() {
@@ -134,16 +185,22 @@ function escapeListener(event) {
 </script>
 
 <template>
-  <UiGraphGrid class="CmsStoryGraph" :graph="graph">
+  <UiGraphGrid
+    class="CmsStoryGraph"
+    :graph="graph"
+  >
     <template #node="{ node }">
-      <div v-if="node.id == '--root--'" class="CmsStoryGraph__dot"></div>
+      <div
+        v-if="node.id == '--root--'"
+        class="CmsStoryGraph__dot"
+      />
       <template v-else-if="!!targetPickerParent">
         <UiItem
           v-if="targetPickerParent == node.id"
           icon="mdi:close"
           :text="`From ${node.info.text} ...`"
-          @click="cancelTargetPicker"
           class="CmsStoryGraph__item-from"
+          @click="cancelTargetPicker"
         >
           <template #actions>
             <UiIcon src="mdi:arrow-right-thick" />
@@ -153,8 +210,8 @@ function escapeListener(event) {
           v-else
           :text="`to ${node.info.text}`"
           icon="mdi:arrow-right-thick"
-          @click="clickPathTarget(node.id)"
           class="CmsStoryGraph__item-to"
+          @click="clickPathTarget(node.id)"
         />
       </template>
       <template v-else>

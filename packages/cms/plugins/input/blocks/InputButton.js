@@ -10,9 +10,8 @@ export default {
   icon: 'mdi:card',
 
   block: {
-    'component': UiInput,
-    'v-model': 'button',
-    'props': { type: 'button' },
+    component: UiInput,
+    props: { type: 'button' },
   },
 
   emits: [

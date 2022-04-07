@@ -11,7 +11,7 @@ export default {
 
   block: {
     'component': UiInput,
-    'v-model': 'select',
+    'v-model': '',
     'props': {
       type: 'select',
       multiple: false,

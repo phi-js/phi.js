@@ -1,17 +1,16 @@
-import NavigationLink from './NavigationLink.vue'
-import NavigationLinkEditor from './NavigationLinkEditor.vue'
+import NavigationBack from './NavigationBack.vue'
+import NavigationLinkEditor from '../NavigationLink/NavigationLinkEditor.vue'
 
 export default {
   tags: ['navigation'],
 
-  name: 'NavigationLink',
-  title: 'Link to page',
-  icon: 'mdi:arrow-right-thick',
+  name: 'NavigationBack',
+  title: 'Link Back',
+  icon: 'mdi:arrow-left-thick',
 
   block: {
-    component: NavigationLink,
+    component: NavigationBack,
     props: {
-      pageId: null,
       icon: null,
       text: '',
       subtext: '',

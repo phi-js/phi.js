@@ -11,7 +11,7 @@ export default {
 
   block: {
     'component': UiInput,
-    'v-model': 'check',
+    'v-model': '',
     'props': { type: 'checkbox' },
   },
 

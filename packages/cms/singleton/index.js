@@ -1,8 +1,16 @@
+import registerPlugin from '../../vm/plugins/registerPlugin.js'
+
 const blocks = {}
 
 const Cms = {
   plugin(pluginObject) {
     Object.assign(blocks, pluginObject.blocks)
+
+    // If the CMS plugin object has a "functions" property,
+    // register a VM PLUGIN with the same functions
+    if (pluginObject.functions) {
+      registerPlugin(pluginObject)
+    }
   },
 
   async getDefinition(block) {

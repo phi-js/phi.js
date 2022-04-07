@@ -3,7 +3,7 @@
 Takes the same props as CmsStoryEditor
 Presents a window with options for the current page and the story (style, dictionary, etc)
 */
-import { computed, ref, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useI18n } from '../../../i18n'
 import { UiWindow, UiTabs, UiTab, UiInput } from '../../../ui'
 import { VmStatement } from '@/packages/vm/components'
@@ -32,6 +32,12 @@ const props = defineProps({
 
   currentTab: {
     type: [Boolean, String],
+    required: false,
+    default: false,
+  },
+
+  allowSource: {
+    type: Boolean,
     required: false,
     default: false,
   },
@@ -67,6 +73,7 @@ function emitUpdate() {
     }),
   }
 
+  console.log('StoryEditorWindow updates story')
   emit('update:story', updatedStory)
 }
 
@@ -77,6 +84,7 @@ const i18n = useI18n({
     'StoryEditorWindow.i18n': 'Dictionary',
     'StoryEditorWindow.source': 'Source',
     'StoryEditorWindow.style': 'Style',
+    'StoryEditorWindow.sitemap': 'Pages',
     'StoryEditorWindow.thisPage': 'This Page',
   },
   es: {
@@ -85,6 +93,7 @@ const i18n = useI18n({
     'StoryEditorWindow.i18n': 'Diccionario',
     'StoryEditorWindow.source': 'Fuente',
     'StoryEditorWindow.style': 'Estilos',
+    'StoryEditorWindow.sitemap': 'Páginas',
     'StoryEditorWindow.thisPage': 'Esta Página',
   },
 })
@@ -92,6 +101,7 @@ const i18n = useI18n({
 
 <template>
   <UiWindow
+    name="phi"
     class="StoryEditorWindow"
     :open="!!props.currentTab"
     @update:open="emit('update:currentTab', null)"
@@ -150,6 +160,7 @@ const i18n = useI18n({
         </UiTab>
 
         <UiTab
+          v-if="props.allowSource"
           value="source"
           icon="mdi:code-json"
           :text="i18n.t('StoryEditorWindow.source')"

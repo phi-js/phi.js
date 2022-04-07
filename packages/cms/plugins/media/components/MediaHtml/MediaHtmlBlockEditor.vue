@@ -177,10 +177,17 @@ const alignment = computed(() => {
     <template #toolbar>
       <UiPopover>
         <template #trigger>
-          <button type="button" class="ui--clickable expansible" v-text="heading.current.text" />
+          <button
+            type="button"
+            class="ui--clickable expansible"
+            v-text="heading.current.text"
+          />
         </template>
         <template #contents="{ close }">
-          <div class="UiGroup UiToolbar" @click="close">
+          <div
+            class="UiGroup UiToolbar"
+            @click="close"
+          >
             <button
               v-for="(cmd, i) in heading.available"
               :key="i"
@@ -196,10 +203,16 @@ const alignment = computed(() => {
 
       <UiPopover>
         <template #trigger>
-          <UiIcon :src="alignment.current.icon" class="ui--clickable expansible" />
+          <UiIcon
+            :src="alignment.current.icon"
+            class="ui--clickable expansible"
+          />
         </template>
         <template #contents="{ close }">
-          <div class="UiGroup UiToolbar" @click="close">
+          <div
+            class="UiGroup UiToolbar"
+            @click="close"
+          >
             <UiIcon
               v-for="(cmd, i) in alignment.available"
               :key="i"
@@ -225,7 +238,10 @@ const alignment = computed(() => {
 
     <template #default="{ blockCssAttributes }">
       <div v-bind="blockCssAttributes">
-        <EditorContent class="tiptap-editor-contents story-html" :editor="editor" />
+        <EditorContent
+          class="tiptap-editor-contents story-html"
+          :editor="editor"
+        />
       </div>
     </template>
   </BlockScaffold>

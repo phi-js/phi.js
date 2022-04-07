@@ -12,7 +12,6 @@ import {
   Transition,
   KeepAlive,
   Teleport,
-  computed,
   onMounted,
 } from 'vue'
 
@@ -61,25 +60,33 @@ export default {
         if (block.rules) {
           block.rules = parseTranslations(block.rules, block.i18n, i18n.locale)
         }
+        if (block['v-on']) {
+          block['v-on'] = parseTranslations(block['v-on'], block.i18n, i18n.locale)
+        }
       })
 
       sanitizedStory.value = sanitized
     })
 
+    // StoryVM
+    const storyVM = new VM
+    storyVM.onModelSet = (propName, propValue) => {
+      const modelValue = { ...props.modelValue }
+      setProperty(modelValue, propName, propValue)
+      onUpdateModelValue(modelValue)
+    }
+
     // Evaluate story.setup
+    const isMounted = ref(false)
     onMounted(async () => {
       if (!sanitizedStory.value.setup) {
+        isMounted.value = true
         return
       }
 
-      const storyVM = new VM
-      storyVM.onModelSet = (propName, propValue) => {
-        const modelValue = { ...props.modelValue }
-        setProperty(modelValue, propName, propValue)
-        onUpdateModelValue(modelValue)
-      }
-
-      await storyVM.eval(sanitizedStory.value.setup)
+      isMounted.value = false
+      await storyVM.eval(sanitizedStory.value.setup, props.modelValue)
+      isMounted.value = true
     })
 
     // Determine current page
@@ -137,13 +144,31 @@ export default {
 
     function onUpdateModelValue(event) {
       emit('update:modelValue', event)
+
+      // evaluate story[v-on][update:modelValue]
+      if (sanitizedStory.value?.['v-on']?.['update:modelValue']) {
+        const initialSetter = storyVM.onModelSet
+        storyVM.onModelSet = null
+        storyVM.eval(sanitizedStory.value['v-on']['update:modelValue'], props.modelValue)
+          .then(() => storyVM.onModelSet = initialSetter)
+      }
+    }
+
+    function onUpdateErrors(evt) {
+      globals.$errors = evt
     }
 
     // Global CSS
-    const storyCSS = computed(() => sanitizedStory.value.css.classes.map((c) => c.css).join('\n'))
+    const storyCSS = ref()
+    watchEffect(async () => {
+      const strCSS = sanitizedStory.value.css.classes.map((c) => c.css).join('\n')
+      storyCSS.value = await storyVM.eval(strCSS, props.modelValue)
+    })
 
     // Render function
     return () => h('div', { class: 'CmsStory' }, [
+
+      // Story <style> element in <head>
       h(
         Teleport,
         { to: 'head' },
@@ -162,9 +187,10 @@ export default {
             h(
               KeepAlive,
               null,
-              currentPage.value
+              currentPage.value && isMounted.value
                 ? h(CmsBlock, {
-                  'v-model:errors': globals.$errors,
+                  'onUpdate:errors': onUpdateErrors,
+                  'errors': globals.$errors,
                   'class': 'CmsStory__page',
                   'block': currentPage.value,
                   'modelValue': props.modelValue,
