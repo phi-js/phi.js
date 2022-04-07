@@ -1,11 +1,9 @@
 <script setup>
 import { ref } from 'vue'
-import { CmsStoryEditor, CmsStory } from '@/packages/cms'
-import { UiTabs, UiTab, UiItem } from '@/packages/ui'
+import { CmsStoryBuilder } from '@/packages/cms'
 
 const defaultStory = {
   id: 'story-test-1',
-
   pages: [
     {
       id: 'p1',
@@ -62,52 +60,21 @@ function reset() {
 }
 
 const modelValue = ref({})
-const currentTab = ref('editor')
-const settingsTab = ref()
 </script>
 
 <template>
-  <UiTabs v-model="currentTab">
-    <UiTab
-      text="Editor"
-      value="editor"
-    >
-      <CmsStoryEditor
-        v-model:story="story"
-        v-model:settingsTab="settingsTab"
-        :settings="settings"
-        @update:story="saveStory()"
-      />
-      <footer style="text-align: right">
-        <button
-          type="button"
-          @click="reset()"
-        >
-          Reset
-        </button>
-      </footer>
-    </UiTab>
+  <CmsStoryBuilder
+    v-model:story="story"
+    v-model="modelValue"
+    :settings="settings"
+    @update:story="saveStory()"
+  />
 
-    <UiTab
-      text="Preview"
-      value="preview"
-    >
-      <CmsStory
-        v-model="modelValue"
-        :story="story"
-        :settings="settings"
-      />
-    </UiTab>
-
-    <template #header>
-      <div class="UiTab">
-        <UiItem
-          class="ui--clickable"
-          icon="mdi:cog"
-          text="Settings"
-          @click="settingsTab = 'style'"
-        />
-      </div>
-    </template>
-  </UiTabs>
+  <button
+    type="button"
+    style="display: block; margin-left: auto"
+    @click="reset()"
+  >
+    Reset
+  </button>
 </template>
