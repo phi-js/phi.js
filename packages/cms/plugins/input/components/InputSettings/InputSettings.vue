@@ -21,7 +21,7 @@ watch(
 
 const isSelect = computed(() => block.value?.props?.type && block.value.props.type.substring(0, 6) == 'select')
 
-const input = function () {
+const emitUpdate = function () {
   emit('update:modelValue', block.value)
 }
 
@@ -103,7 +103,7 @@ const multipleOptions = [
         label="Tipo"
         type="select-native"
         :options="types"
-        @update:model-value="input"
+        @update:model-value="emitUpdate"
       />
 
       <UiInput
@@ -111,7 +111,7 @@ const multipleOptions = [
         v-model="block.props.multiple"
         type="select-native"
         :options="multipleOptions"
-        @update:model-value="input"
+        @update:model-value="emitUpdate"
       />
     </div>
 
@@ -123,8 +123,8 @@ const multipleOptions = [
         v-model:block="block"
         type="text"
         label="Etiqueta"
-        @update:model-value="input"
-        @update:block="input"
+        @update:model-value="emitUpdate"
+        @update:block="emitUpdate"
       />
 
       <StoryPropInput
@@ -132,8 +132,8 @@ const multipleOptions = [
         v-model:block="block"
         type="text"
         label="Placeholder"
-        @update:model-value="input"
-        @update:block="input"
+        @update:model-value="emitUpdate"
+        @update:block="emitUpdate"
       />
 
       <StoryPropInput
@@ -141,8 +141,8 @@ const multipleOptions = [
         v-model:block="block"
         type="text"
         label="Subtexto"
-        @update:model-value="input"
-        @update:block="input"
+        @update:model-value="emitUpdate"
+        @update:block="emitUpdate"
       />
     </fieldset>
 
@@ -151,18 +151,29 @@ const multipleOptions = [
 
       <OptionsEditor
         v-model="block.props.options"
-        @update:model-value="input"
+        @update:model-value="emitUpdate"
       />
     </fieldset>
 
-    <UiInput
+    <fieldset>
+      <legend>Variable</legend>
+
+      <UiInput
+        v-model="block['v-model']"
+        label="Variable"
+        type="text"
+        @update:model-value="emitUpdate"
+      />
+    </fieldset>
+
+    <!-- <UiInput
       v-if="block.props.type == 'date' || block.props.type == 'timestamp'"
       label="Selector de hora"
     >
       <select
         v-model="block.props.time"
         class="UiButton"
-        @change="input"
+        @change="emitUpdate"
       >
         <option :value="undefined">
           Desactivado
@@ -174,6 +185,6 @@ const multipleOptions = [
           24 horas
         </option>
       </select>
-    </UiInput>
+    </UiInput> -->
   </div>
 </template>

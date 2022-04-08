@@ -24,9 +24,8 @@ Retorna todos los editores (listos para usar en <component>) relacionados al blo
 */
 import { defineAsyncComponent } from 'vue'
 import getBlockDefinition from './getBlockDefinition.js'
-import { UiForm, UiInputJson } from '@/packages/ui/components'
+import { UiInputJson } from '@/packages/ui/components'
 import BlockListenersEditor from '../components/CmsBlockEditor/BlockListenersEditor.vue'
-import BlockModelsEditor from '../components/CmsBlockEditor/BlockModelsEditor.vue'
 import BlockVisibilityEditor from '../components/CmsBlockEditor/BlockVisibilityEditor.vue'
 import BlockCssEditor from '../components/CmsBlockEditor/BlockCssEditor.vue'
 import BlockDictionaryEditor from '../components/CmsBlockEditor/BlockDictionaryEditor.vue'
@@ -104,6 +103,17 @@ export default async function getBlockEditors(block, $settings = {}) {
   // BUILT IN ACTIONS:
   // Shown in the block options dropdown in the order declared here
 
+  // Validation editor (only if v-model property exists in definition)
+  if (definition.block['v-model'] != undefined) {
+    retval.actions.push({
+      'id': 'validation',
+      'title': 'Validation',
+      'icon': 'mdi:message-alert',
+      'component': BlockValidationEditor,
+      'v-model': 'block',
+    })
+  }
+
   // Block CSS property
   retval.actions.push({
     'id': 'css',
@@ -122,32 +132,6 @@ export default async function getBlockEditors(block, $settings = {}) {
     'v-model': 'block',
   })
 
-  // v-model:* editor
-  let hasModels = false
-  for (const propName in definition.block) {
-    if (propName.substring(0, 7) === 'v-model') {
-      hasModels = true
-      break
-    }
-  }
-  if (hasModels) {
-    retval.actions.push({
-      'id': 'variables',
-      'title': 'Variables',
-      'icon': 'mdi:variable',
-      'component': BlockModelsEditor,
-      'v-model': 'block',
-    })
-
-    retval.actions.push({
-      'id': 'validation',
-      'title': 'Validation',
-      'icon': 'mdi:message-alert',
-      'component': BlockValidationEditor,
-      'v-model': 'block',
-    })
-  }
-
   // v-on
   retval.actions.push({
     'id': 'events',
@@ -157,32 +141,34 @@ export default async function getBlockEditors(block, $settings = {}) {
     'v-model': 'block',
   })
 
-  // v-for
-  retval.actions.push({
-    'id': 'v-for',
-    'title': 'Repeat',
-    'icon': 'mdi:repeat-variant',
-    'component': UiForm,
-    'props': {
-      fields: [
-        {
-          type: 'text',
-          model: 'v-for',
-          label: 'Repeat for every item in',
-          subtext: 'The iterated value is available as $item',
-        },
-      ],
-    },
-    'v-model': 'block',
-  })
+  // DEPRECATED:  Build into BlockVisibilityEditor
+  // // v-for
+  // retval.actions.push({
+  //   'id': 'v-for',
+  //   'title': 'Repeat',
+  //   'icon': 'mdi:repeat-variant',
+  //   'component': UiForm,
+  //   'props': {
+  //     fields: [
+  //       {
+  //         type: 'text',
+  //         model: 'v-for',
+  //         label: 'Repeat for every item in',
+  //         subtext: 'The iterated value is available as $item',
+  //       },
+  //     ],
+  //   },
+  //   'v-model': 'block',
+  // })
 
-  // Dictionary (block.i18n)
-  retval.actions.push({
-    id: 'i18n',
-    title: 'Dictionary',
-    icon: 'mdi:translate',
-    component: BlockDictionaryEditor,
-  })
+  // Too cluttered.  Let users use the global Dictionary option (in the story builder)
+  // // Dictionary (block.i18n)
+  // retval.actions.push({
+  //   id: 'i18n',
+  //   title: 'Dictionary',
+  //   icon: 'mdi:translate',
+  //   component: BlockDictionaryEditor,
+  // })
 
   // Raw block source editor
   if ($settings?.allowSource) {

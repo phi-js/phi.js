@@ -1,16 +1,17 @@
 <template>
   <fieldset class="StmtAndOr">
     <legend>
+      {{ label }}
       <select
         v-model="innerModel.operator"
         class="StmtAndOr__select"
         @change="emitInput"
       >
         <option value="and">
-          Todas las siguientes
+          todas las siguientes
         </option>
         <option value="or">
-          Cualquiera de las siguientes
+          cualquiera de las siguientes
         </option>
       </select>
     </legend>
@@ -61,6 +62,12 @@ export default {
   props: {
     modelValue: {
       type: Object,
+      required: false,
+      default: null,
+    },
+
+    label: {
+      type: String,
       required: false,
       default: null,
     },

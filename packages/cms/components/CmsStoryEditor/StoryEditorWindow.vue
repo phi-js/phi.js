@@ -128,7 +128,7 @@ const i18n = useI18n({
         >
           <div class="UiForm">
             <fieldset>
-              <legend>story.setup()</legend>
+              <legend>Inicialización</legend>
               <VmStatement
                 v-model="innerStory.setup"
                 :default="{chain:[]}"
@@ -136,14 +136,14 @@ const i18n = useI18n({
               />
             </fieldset>
 
-            <fieldset>
+            <!-- <fieldset>
               <legend>currentPage.setup()</legend>
               <VmStatement
                 v-model="currentPage.setup"
                 :default="{ chain: [] }"
                 @update:model-value="emitUpdate"
               />
-            </fieldset>
+            </fieldset> -->
           </div>
         </UiTab>
 

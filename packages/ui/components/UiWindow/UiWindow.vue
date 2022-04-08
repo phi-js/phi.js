@@ -474,7 +474,7 @@ const isHovered = ref(false)
 }
 
 .UiWindow {
-  --ui-window-dockzone-size: 64px;
+  --ui-window-dockzone-size: 7vh;
   text-align: left;
 
   &--external {
