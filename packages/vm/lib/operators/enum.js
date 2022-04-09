@@ -14,7 +14,7 @@ export default {
   },
 
   'enum.any'(value, args) {
-    if (value === undefined || !Array.isArray(args)) {
+    if (!value?.includes || !Array.isArray(args)) {
       return false
     }
 
@@ -27,7 +27,7 @@ export default {
   },
 
   'enum.all'(value, args) {
-    if (value === undefined || !Array.isArray(args)) {
+    if (!value?.includes || !Array.isArray(args)) {
       return false
     }
 
