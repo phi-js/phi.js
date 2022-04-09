@@ -9,7 +9,7 @@ export default function setProperty(sourceObject, propertyName, value) {
   let len = parts.length
 
   for (let i = 0; i < len - 1; i++) {
-    if (typeof curvar[parts[i]] == 'undefined') {
+    if (typeof curvar[parts[i]] == 'undefined' || curvar[parts[i]] === null) {
       curvar[parts[i]] = {}
     }
     curvar = curvar[parts[i]]
