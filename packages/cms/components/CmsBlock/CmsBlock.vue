@@ -32,7 +32,21 @@ const CmsBlock = {
     const styleNode = shallowRef()
 
     const isVisible = ref(true)
+
+    /* Validation */
     const errors = ref([])
+    const childErrors = {} // childErrors[slot:index]  e.g.  childErrors[default:0] = [....]
+
+    function setErrors(arrErrors) {
+      errors.value = Array.isArray(arrErrors) ? arrErrors : []
+      emitErrors()
+    }
+
+    function emitErrors() {
+      const allChildErrors = []
+      Object.values(childErrors).forEach((errs) => allChildErrors.push(...errs))
+      emit('update:errors', [...errors.value, ...allChildErrors])
+    }
 
     function emitUpdate(val) {
       emit('update:modelValue', val)
@@ -122,10 +136,11 @@ const CmsBlock = {
           })
         })
 
+        // Bind validation to component events
         for (const [listenerName, targetRules] of Object.entries(eventRules)) {
           const eventCallback = async () => {
-            errors.value = await runValidators(targetRules)
-            emit('update:errors', errors.value)
+            const errs = await runValidators(targetRules)
+            setErrors(errs)
           }
 
           blockProps[listenerName] = blockProps[listenerName]
@@ -141,8 +156,6 @@ const CmsBlock = {
       }
       const blockSlots = {}
 
-      const childErrors = {} // childErrors[slot_index]  e.g.  childErrors[default_0] = [....]
-
       for (const slotName in slots) {
         const arrChildren = Array.isArray(slots[slotName]) ? slots[slotName] : [slots[slotName]]
         blockSlots[slotName] = () => arrChildren.map((child, index) => h(CmsBlock, {
@@ -152,11 +165,8 @@ const CmsBlock = {
             emitUpdate($event)
           },
           'onUpdate:errors': ($event) => {
-            childErrors[slotName + '_' + index] = $event
-
-            const allChildErrors = []
-            Object.values(childErrors).forEach((errs) => allChildErrors.push(...errs))
-            emit('update:errors', [...errors.value, ...allChildErrors])
+            childErrors[slotName + ':' + index] = $event
+            emitErrors()
           },
         }))
       }
@@ -192,14 +202,16 @@ const CmsBlock = {
     })
 
 
-    // Run ALL validators when modelValue changes
+    // Run ALL validators when modelValue changes  (maybe too computational intensive)
     watchEffect(() => {
+      if (!isVisible.value) {
+        setErrors([])
+        return
+      }
+
       const blockRules = getBlockRules(props.block, props.modelValue, blockVM)
       runValidators(blockRules)
-        .then((errs) => {
-          errors.value = errs
-          emit('update:errors', errors.value)
-        })
+        .then((errs) => setErrors(errs))
     })
 
     return { isVisible, blockNode, styleNode, attrs, props }
