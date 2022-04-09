@@ -102,7 +102,7 @@ watch(
             </div>
 
             <div
-              v-if="$slots.contents"
+              v-if="$slots.contents || $slots.default"
               class="UiDialog__contents"
             >
               <slot
