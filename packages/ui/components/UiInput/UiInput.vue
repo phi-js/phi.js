@@ -132,6 +132,7 @@ defineExpose({ element })
     v-if="props.type == 'button' || props.type == 'submit'"
     :type="type"
     :label="props.label"
+    :disabled="props.disabled"
     v-bind="attrs"
   />
   <div
