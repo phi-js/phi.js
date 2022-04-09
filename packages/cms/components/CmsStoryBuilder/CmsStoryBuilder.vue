@@ -6,7 +6,7 @@ import { CmsStoryGraph } from '../CmsStoryGraph'
 import StoryEditorWindow from '../CmsStoryEditor/StoryEditorWindow.vue'
 
 import { useI18n } from '../../../i18n'
-import { UiTabs, UiTab, UiItem, UiDrawer, UiIcon, UiWindow, UiInput } from '@/packages/ui'
+import { UiTabs, UiTab, UiItem, UiDialog, UiIcon, UiWindow, UiInput } from '@/packages/ui'
 import { useUndo } from '@/packages/ui/helpers'
 
 const props = defineProps({
@@ -117,6 +117,20 @@ const isModelExplorerOpen = ref(false)
       v-model="currentTab"
       class="CmsStoryBuilder__header"
     >
+      <template #left>
+        <UiItem
+          class="CmsStoryBuilder__pagePicker ui--clickable UiTab"
+          icon="mdi:pound"
+          :text="currentPage.info?.text"
+          @click="isSitemapOpen = !isSitemapOpen"
+          @click-actions="isSitemapOpen = !isSitemapOpen"
+        >
+          <template #actions>
+            <UiIcon :src="isSitemapOpen ? 'mdi:menu-down' : 'mdi:menu-right'" />
+          </template>
+        </UiItem>
+      </template>
+
       <template #right>
         <div class="CmsStoryBuilder__controls">
           <UiIcon
@@ -142,18 +156,6 @@ const isModelExplorerOpen = ref(false)
       >
         <!-- EDITOR SUBTABS-->
         <div class="UiRow">
-          <UiItem
-            class="ui--clickable"
-            icon="mdi:pound"
-            :text="currentPage.info?.text"
-            @click="isSitemapOpen = !isSitemapOpen"
-            @click-actions="isSitemapOpen = !isSitemapOpen"
-          >
-            <template #actions>
-              <UiIcon :src="isSitemapOpen ? 'mdi:menu-down' : 'mdi:menu-right'" />
-            </template>
-          </UiItem>
-
           <UiItem
             :text="i18n.t('CmsStoryBuilder.Styles')"
             icon="mdi:palette-advanced"
@@ -196,18 +198,6 @@ const isModelExplorerOpen = ref(false)
         <div class="UiRow">
           <UiItem
             class="ui--clickable"
-            icon="mdi:pound"
-            :text="currentPage.info?.text"
-            @click="isSitemapOpen = !isSitemapOpen"
-            @click-actions="isSitemapOpen = !isSitemapOpen"
-          >
-            <template #actions>
-              <UiIcon :src="isSitemapOpen ? 'mdi:menu-down' : 'mdi:menu-right'" />
-            </template>
-          </UiItem>
-
-          <UiItem
-            class="ui--clickable"
             :text="i18n.t('CmsStoryBuilder.DataExplorer')"
             icon="mdi:code-json"
             @click="isModelExplorerOpen = true"
@@ -219,10 +209,9 @@ const isModelExplorerOpen = ref(false)
     </UiTabs>
 
     <div class="CmsStoryBuilder__body">
-      <UiDrawer
+      <UiDialog
         v-slot="{ close }"
         v-model:open="isSitemapOpen"
-        class="CmsStoryBuilder__drawer"
       >
         <div class="CmsStoryBuilder__sitemap">
           <CmsStoryGraph
@@ -232,7 +221,7 @@ const isModelExplorerOpen = ref(false)
             @update:story="onUpdateStory()"
           />
         </div>
-      </UiDrawer>
+      </UiDialog>
 
       <StoryEditorWindow
         v-model:story="innerStory"
@@ -247,7 +236,7 @@ const isModelExplorerOpen = ref(false)
         v-show="currentTab == 'editor'"
         v-model:current-page-id="currentPageId"
         v-model:story="innerStory"
-        :settings="props.settings"
+        :settings="{ ...props.settings, allowSource: props.allowSource }"
         @update:story="onUpdateStory()"
       />
 
@@ -290,26 +279,11 @@ const isModelExplorerOpen = ref(false)
     position: relative;
   }
 
-  &__drawer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
-
-    .UiDrawer__contents {
-      position: relative;
-      top: -24px;
-    }
-  }
-
-  &__sitemap {
-    background: #fff;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-    margin: 12px;
-    margin-top: 0;
-    border-radius: 5px;
-  }
+  // &__sitemap {
+  //   background: #fff;
+  //   // box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  //   padding: 12px;
+  // }
 
   &__controls {
     .UiIcon {
@@ -354,12 +328,7 @@ const isModelExplorerOpen = ref(false)
     margin-bottom: 20px;
 
     .UiRow {
-      // height: 51px;
       background-color: rgba(255, 255, 255, 0.04);
-
-      & > :first-child {
-        border-right: 1px solid #444;
-      }
     }
 
     .ui--clickable {
@@ -369,6 +338,12 @@ const isModelExplorerOpen = ref(false)
         background-color: rgba(255, 255, 255, 0.08) !important;
       }
     }
+  }
+
+  &__pagePicker {
+    border-right: 1px solid #444;
+    --ui-item-padding: 0 12px !important;
+    align-self: stretch;
   }
 }
 </style>

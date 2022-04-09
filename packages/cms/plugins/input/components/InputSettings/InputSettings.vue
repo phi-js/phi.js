@@ -160,7 +160,6 @@ const multipleOptions = [
 
       <UiInput
         v-model="block['v-model']"
-        label="Variable"
         type="text"
         @update:model-value="emitUpdate"
       />

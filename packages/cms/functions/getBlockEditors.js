@@ -28,7 +28,7 @@ import { UiInputJson } from '@/packages/ui/components'
 import BlockListenersEditor from '../components/CmsBlockEditor/BlockListenersEditor.vue'
 import BlockVisibilityEditor from '../components/CmsBlockEditor/BlockVisibilityEditor.vue'
 import BlockCssEditor from '../components/CmsBlockEditor/BlockCssEditor.vue'
-import BlockDictionaryEditor from '../components/CmsBlockEditor/BlockDictionaryEditor.vue'
+// import BlockDictionaryEditor from '../components/CmsBlockEditor/BlockDictionaryEditor.vue'
 import BlockValidationEditor from '../components/CmsBlockEditor/BlockValidationEditor.vue'
 
 import { parse } from '../../vm/lib/utils'
