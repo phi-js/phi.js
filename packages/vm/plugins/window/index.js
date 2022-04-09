@@ -6,6 +6,7 @@ export default {
 
   functions: {
     'console.log': {
+      tabs: ['browser'],
       icon: 'mdi:window-maximize',
       text: 'console.log',
       editor: { component: WindowDialogEditor },
@@ -20,6 +21,7 @@ export default {
     },
 
     'window.alert': {
+      tabs: ['browser'],
       icon: 'mdi:window-maximize',
       text: 'Alert',
       editor: { component: WindowDialogEditor },
@@ -33,6 +35,7 @@ export default {
     },
 
     'window.confirm': {
+      tabs: ['browser'],
       icon: 'mdi:window-maximize',
       text: 'Confirm',
       editor: { component: WindowDialogEditor },
@@ -46,6 +49,7 @@ export default {
     },
 
     'window.prompt': {
+      tabs: ['browser'],
       icon: 'mdi:window-maximize',
       text: 'Prompt',
       editor: { component: WindowDialogEditor },

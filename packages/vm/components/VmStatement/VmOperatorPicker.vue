@@ -48,7 +48,7 @@ function onSelectChange($evt) {
     <!-- Schema properties -->
     <optgroup
       v-if="modelSchema"
-      label="Propiedades"
+      label="Variables"
     >
       <option
         v-for="(propDef, propName) in modelSchema.properties"

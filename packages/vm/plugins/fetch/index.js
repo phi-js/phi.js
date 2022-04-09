@@ -5,6 +5,7 @@ export default {
 
   functions: {
     fetch: {
+      tabs: ['http'],
       icon: 'mdi:api',
       text: 'Fetch',
       subtext: 'Ejecutar request HTTP',
