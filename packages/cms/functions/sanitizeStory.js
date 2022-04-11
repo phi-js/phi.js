@@ -39,10 +39,10 @@ export default function sanitizeStory(story) {
     classes: []
   }
   */
-  if (!story.css) {
+  if (!story.css || typeof story.css != 'object') {
     story.css = { classes: [] }
   }
-  if (!story.css.classes?.length) {
+  if (!Array.isArray(story.css.classes)) {
     story.css.classes = []
   }
 
