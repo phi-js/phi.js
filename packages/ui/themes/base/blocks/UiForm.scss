@@ -7,6 +7,8 @@
     padding: 8px;
     margin: 10px 0;
 
+    min-inline-size: auto;  // OMG.  El CSS nativo de fieldset es "min-inline-size: min-content;" y eso previene hacer overflow en contenedores angostos
+
     &:first-child {
       margin-top: 0;
     }
@@ -25,6 +27,15 @@
       }
     }
   }
+
+  /* UiInputCode inside UiForm */
+  .UiInputCode {
+    // height: 100%;
+    // max-height: inherit;
+
+    .cm-editor { height: 100%; max-height: 400px; }
+    .cm-scroller { overflow: auto }
+  }  
 }
 
 .UiForm--wide {

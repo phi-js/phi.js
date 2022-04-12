@@ -62,7 +62,10 @@ watch(
 </script>
 
 <template>
-  <div ref="codeEl" class="UiInputCode" />
+  <div
+    ref="codeEl"
+    class="UiInputCode"
+  />
 </template>
 
 <style lang="scss">

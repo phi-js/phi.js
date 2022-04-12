@@ -107,6 +107,7 @@ const { options } = useOptionsManager(toRef(props, 'options'), {
     color: #444;
     cursor: pointer;
     background-color: rgba(0,0,0, 0.05);
+    white-space: nowrap;
 
     &:hover {
       background-color: rgba(0,0,0, 0.025);
