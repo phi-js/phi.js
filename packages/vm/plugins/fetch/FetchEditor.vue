@@ -45,7 +45,7 @@
       v-model="innerValue.args.options.body"
       label="Body"
       type="json"
-      @input="emitInput"
+      @update:modelValue="emitInput"
     />
   </div>
 </template>

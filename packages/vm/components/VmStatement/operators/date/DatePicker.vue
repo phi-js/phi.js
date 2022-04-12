@@ -8,13 +8,13 @@
         v-model="rangeValue[0]"
         type="date"
         :format="fieldFormat"
-        @input="$emit('input', rangeValue)"
+        @update:modelValue="$emit('input', rangeValue)"
       />
       <UiInput
         v-model="rangeValue[1]"
         type="date"
         :format="fieldFormat"
-        @input="$emit('input', rangeValue)"
+        @update:modelValue="$emit('input', rangeValue)"
       />
     </div>
     <UiInput
