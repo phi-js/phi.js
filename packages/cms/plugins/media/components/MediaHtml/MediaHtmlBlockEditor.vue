@@ -3,11 +3,12 @@ import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { UiIcon, UiPopover } from '@/packages/ui/components'
 import BlockScaffold from '../../../../components/CmsBlockEditor/BlockScaffold.vue'
 
-import { Editor, EditorContent } from '@tiptap/vue-3'
+import { Editor } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import Underline from '@tiptap/extension-underline'
 import TextAlign from '@tiptap/extension-text-align'
+import EditorContentWrapper from './EditorContentWrapper.vue'
 
 const props = defineProps({
   block: {
@@ -236,13 +237,12 @@ const alignment = computed(() => {
       />
     </template>
 
-    <template #default="{ blockCssAttributes }">
-      <div v-bind="blockCssAttributes">
-        <EditorContent
-          class="tiptap-editor-contents story-html"
-          :editor="editor"
-        />
-      </div>
+    <template #default="{ blockCssAttributes, innerBlock }">
+      <EditorContentWrapper
+        v-bind="blockCssAttributes"
+        :value="innerBlock?.props?.value"
+        :editor="editor"
+      />
     </template>
   </BlockScaffold>
 </template>
