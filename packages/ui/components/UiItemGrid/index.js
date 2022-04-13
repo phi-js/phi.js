@@ -1,0 +1,1 @@
+export { default as UiItemGrid } from './UiItemGrid.vue'
