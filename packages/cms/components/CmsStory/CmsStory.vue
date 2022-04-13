@@ -132,8 +132,8 @@ export default {
       goTo(lastPageId)
     }
 
-
     const globals = reactive({ $errors: [] })
+    const innerModel = reactive(props.modelValue)
 
     // Provide global story methods (used by CmsBlock)
     provide('$_cms_story', {
@@ -193,7 +193,7 @@ export default {
                   'errors': globals.$errors,
                   'class': 'CmsStory__page',
                   'block': currentPage.value,
-                  'modelValue': props.modelValue,
+                  'modelValue': innerModel,
                   'onUpdate:modelValue': onUpdateModelValue,
                 })
                 : null,

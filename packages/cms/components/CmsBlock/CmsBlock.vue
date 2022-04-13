@@ -1,5 +1,5 @@
 <script>
-import { h, ref, shallowRef, watchEffect, Transition, Teleport, inject } from 'vue'
+import { h, ref, shallowRef, watchEffect, Transition, inject } from 'vue'
 import { VM } from '@/packages/vm'
 import { parse } from '@/packages/vm/lib/utils'
 
@@ -25,15 +25,72 @@ const CmsBlock = {
   emits: ['update:modelValue', 'update:errors'],
 
   setup(props, { emit, attrs }) {
-    const blockDefinition = shallowRef()
+    /* Internal Block VM object */
     const blockVM = new VM()
+    blockVM.onModelSet = (varname, newValue) => {
+      setProperty(props.modelValue, varname, newValue)
+      emitUpdate()
+    }
 
-    const blockNode = shallowRef()
-    const styleNode = shallowRef()
+    const injectedStory = inject('$_cms_story', null)
+    if (injectedStory) {
+      blockVM.custom = { story: injectedStory }
+    }
 
+    /* Handle modelValue updates */
+    function emitUpdate() {
+      emit('update:modelValue', props.modelValue)
+    }
+
+    /* Block definition */
+    const blockComponent = shallowRef()
+    CMS.getDefinition(props.block).then((def) => blockComponent.value = def?.block?.component)
+
+    /* Block visibility (v-if) */
     const isVisible = ref(true)
+    watchEffect(async () => {
+      if (props.block?.['v-if'] !== undefined) {
+        isVisible.value = await blockVM.eval(props.block['v-if'], { ...props.modelValue, ...injectedStory?.globals })
+      }
+    })
 
-    /* Validation */
+    /* Eval'd block props */
+    const blockProps = ref()
+    watchEffect(() => {
+      // Parsed block props
+      blockProps.value = typeof props.block.props === 'object'
+        ? parse(props.block.props, { ...props.modelValue, ...injectedStory?.globals })
+        : {}
+
+      // props from v-models
+      for (const p in props.block) {
+        if (p.substring(0, 7) === 'v-model' && props.block[p]) {
+          const variableName = props.block[p]
+          const propName = p.substring(8) || 'modelValue'
+          blockProps.value[propName] = getProperty(props.modelValue, variableName)
+        }
+      }
+    })
+
+    /* style and class properties */
+    watchEffect(() => {
+      if (typeof props.block?.css !== 'object') {
+        return
+      }
+
+      const evaldCSS = parse(props.block.css, { ...props.modelValue, ...injectedStory?.globals })
+      const cssProps = getCssObjectAttributes(evaldCSS)
+
+      if (cssProps.class) {
+        blockProps.value.class = blockProps.value?.class ? [blockProps.value.class, ...cssProps.class] : cssProps.class
+      }
+      if (cssProps.style) {
+        blockProps.value.style = blockProps.value?.style ? cssProps.style + blockProps.value.style : cssProps.style
+      }
+    })
+
+
+    /* Validation management */
     const errors = ref([])
     const childErrors = {} // childErrors[slot:index]  e.g.  childErrors[default:0] = [....]
 
@@ -48,217 +105,164 @@ const CmsBlock = {
       emit('update:errors', [...errors.value, ...allChildErrors])
     }
 
-    function emitUpdate(val) {
-      emit('update:modelValue', val)
-    }
 
-    // Provide Story in custom VM data (e.g. used in plugins\navigation\functions\story\index.js)
-    const injectedStory = inject('$_cms_story', null)
-    if (injectedStory) {
-      blockVM.custom = { story: injectedStory }
-    }
+    /* Block event listeners */
+    const blockListeners = ref({})
 
-    watchEffect(async () => blockDefinition.value = await CMS.getDefinition(props.block))
+    // v-models listeners
+    for (const p in props.block) {
+      if (p.substring(0, 7) === 'v-model' && props.block[p]) {
+        const variableName = props.block[p]
+        const propName = p.substring(8) || 'modelValue'
+        const eventName = 'onUpdate:' + propName
 
-    watchEffect(async () => {
-      const blockComponent = blockDefinition?.value?.block?.component
-      if (!blockComponent) {
-        return
+        const callback = (newValue) => {
+          setProperty(props.modelValue, variableName, newValue) // MUTATING PROP modelValue (!!!)
+          emitUpdate()
+        }
+
+        blockListeners.value[eventName] = blockListeners.value[eventName]
+          ? [blockListeners.value[eventName], callback]
+          : callback
       }
+    }
 
-      // Check visibility (v-if)
-      if (props.block?.['v-if'] !== undefined) {
-        isVisible.value = await blockVM.eval(props.block['v-if'], { ...props.modelValue, ...injectedStory?.globals })
-        if (!isVisible.value) {
+    // v-on listeners
+    if (props.block?.['v-on']) {
+      const listeners = props.block['v-on']
+      for (let eventName in listeners) {
+        const eventCallback = ($event) => blockVM.eval(
+          listeners[eventName],
+          { ...props.modelValue, ...injectedStory?.globals, $event },
+        )
+
+        const propName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
+        blockListeners.value[propName] = blockListeners.value[propName]
+          ? [blockListeners.value[propName], eventCallback]
+          : eventCallback
+      }
+    }
+
+    // Validation listeners
+    if (props.block?.rules?.length) {
+      const blockRules = getBlockRules(props.block, props.modelValue, blockVM)
+      const eventRules = {} // e.g. eventRules[onBlur] = [ array of rules to validate on blur ]
+      blockRules.forEach((rule) => {
+        if (!rule.trigger?.length) {
           return
         }
-      }
-
-      // Parse block props
-      const blockProps = typeof props.block.props === 'object'
-        ? parse(props.block.props, { ...props.modelValue, ...injectedStory?.globals })
-        // ? await blockVM.eval(props.block.props, props.modelValue)  // this breaks updates when modelvalue changes outside
-        : {}
-
-      // v-models
-      for (const p in props.block) {
-        if (p.substring(0, 7) === 'v-model' && props.block[p]) {
-          const variableName = props.block[p]
-          const propName = p.substring(8) || 'modelValue'
-          const eventName = 'onUpdate:' + propName
-
-          blockProps[propName] = getProperty(props.modelValue, variableName)
-          const callback = (newValue) => {
-            setProperty(props.modelValue, variableName, newValue)
-            emitUpdate(props.modelValue)
+        rule.trigger.forEach((eventName) => {
+          let listenerName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
+          if (!eventRules[listenerName]) {
+            eventRules[listenerName] = []
           }
-
-          blockProps[eventName] = blockProps[eventName] ? [blockProps[eventName], callback] : callback
-        }
-      }
-
-      // v-on
-      if (props.block?.['v-on']) {
-        const listeners = props.block['v-on']
-        for (let eventName in listeners) {
-          const eventCallback = ($event) => {
-            const initial = blockVM.onModelSet
-            blockVM.onModelSet = (varname, newValue) => {
-              setProperty(props.modelValue, varname, newValue)
-              emitUpdate(props.modelValue)
-            }
-
-            blockVM.eval(listeners[eventName], { ...props.modelValue, ...injectedStory?.globals, $event })
-              .then(() => blockVM.onModelSet = initial)
-          }
-
-          const propName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
-          blockProps[propName] = blockProps[propName]
-            ? [blockProps[propName], eventCallback]
-            : eventCallback
-        }
-      }
-
-      // Validation rule events
-      if (props.block?.rules?.length) {
-        const blockRules = getBlockRules(props.block, props.modelValue, blockVM)
-        const eventRules = {} // e.g. eventRules[onBlur] = [ array of rules to validate on blur ]
-        blockRules.forEach((rule) => {
-          if (!rule.trigger?.length) {
-            return
-          }
-          rule.trigger.forEach((eventName) => {
-            let listenerName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
-            if (!eventRules[listenerName]) {
-              eventRules[listenerName] = []
-            }
-            eventRules[listenerName].push(rule)
-          })
+          eventRules[listenerName].push(rule)
         })
+      })
 
-        // Bind validation to component events
-        for (const [listenerName, targetRules] of Object.entries(eventRules)) {
-          const eventCallback = async () => {
-            const errs = await runValidators(targetRules)
-            setErrors(errs)
-          }
-
-          blockProps[listenerName] = blockProps[listenerName]
-            ? [blockProps[listenerName], eventCallback]
-            : eventCallback
+      // Bind validation to component events
+      for (const [listenerName, targetRules] of Object.entries(eventRules)) {
+        const eventCallback = async () => {
+          const errs = await runValidators(targetRules)
+          setErrors(errs)
         }
-      }
 
-      // Parse slots
-      const slots = { ...props.block.slots }
-      if (props.block.slot) {
-        slots.default = props.block.slot
+        blockListeners.value[listenerName] = blockListeners.value[listenerName]
+          ? [blockListeners.value[listenerName], eventCallback]
+          : eventCallback
       }
-      const blockSlots = {}
+    }
 
-      for (const slotName in slots) {
-        const arrChildren = Array.isArray(slots[slotName]) ? slots[slotName] : [slots[slotName]]
-        blockSlots[slotName] = () => arrChildren.map((child, index) => h(CmsBlock, {
+
+    /* Determine slot nodes */
+    const blockSlots = ref({})
+
+    const slots = { ...props.block.slots }
+    if (props.block.slot) {
+      slots.default = props.block.slot
+    }
+
+    for (const slotName in slots) {
+      const arrChildren = Array.isArray(slots[slotName]) ? slots[slotName] : [slots[slotName]]
+      blockSlots.value[slotName] = () => arrChildren.map((child, index) => h(
+        CmsBlock,
+        {
           'block': child,
           'modelValue': props.modelValue,
-          'onUpdate:modelValue': ($event) => {
-            emitUpdate($event)
-          },
+          'onUpdate:modelValue': () => emitUpdate(),
           'onUpdate:errors': ($event) => {
             childErrors[slotName + ':' + index] = $event
             emitErrors()
           },
-        }))
-      }
-
-      // Parse block CSS property
-      if (typeof props.block?.css === 'object') {
-        // const evaldCSS = await blockVM.eval(props.block.css, props.modelValue)
-        const evaldCSS = parse(props.block.css, props.modelValue)
-        if (evaldCSS.css) {
-          styleNode.value = h('style', { type: 'text/css', class: 'CmsBlock__style' }, evaldCSS.css)
-        }
-
-        const cssProps = getCssObjectAttributes(evaldCSS)
-        if (cssProps.class) {
-          blockProps.class = blockProps?.class ? [blockProps.class, ...cssProps.class] : cssProps.class
-        }
-        if (cssProps.style) {
-          blockProps.style = blockProps?.style ? cssProps.style + blockProps.style : cssProps.style
-        }
-      }
-
-      blockProps.class = ['CmsBlock', blockProps.class]
-      blockProps.errors = errors.value
-
-      blockNode.value = h(
-        blockComponent,
-        {
-          ...attrs,
-          ...blockProps,
         },
-        blockSlots,
-      )
-    })
+      ))
+    }
 
-
-    // Run ALL validators when modelValue changes  (maybe too computational intensive)
-    watchEffect(() => {
-      if (!isVisible.value) {
-        setErrors([])
-        return
-      }
-
-      const blockRules = getBlockRules(props.block, props.modelValue, blockVM)
-      runValidators(blockRules)
-        .then((errs) => setErrors(errs))
-    })
-
-    return { isVisible, blockNode, styleNode, attrs, props }
+    return {
+      attrs,
+      errors,
+      isVisible,
+      blockComponent,
+      blockProps,
+      blockListeners,
+      blockSlots,
+      emitUpdate,
+    }
   },
 
   render() {
-    if (!this.blockNode) {
+    if (!this.blockComponent) {
       return
     }
 
     // Get iterations (v-for)
     const iterable = this.block?.['v-for'] ? getProperty(this.modelValue, this.block['v-for']) : null
-    if (iterable?.length) {
-      return iterable.map(($item, $key) => h(CmsBlock, {
-        block: {
-          ...this.block,
-          'v-for': undefined,
+    if (Array.isArray(iterable)) {
+      return iterable.map(($item, $index) => h(
+        CmsBlock,
+        {
+          'key': $index,
+          'block': {
+            ...this.block,
+            'v-for': undefined,
+          },
+          'modelValue': {
+            ...this.modelValue,
+            $item,
+            $index,
+          },
+          'onUpdate:modelValue': () => this.emitUpdate(),
+          'class': 'CmsBlock--iteration CmsBlock--iteration-' + $index,
         },
-        modelValue: {
-          ...this.modelValue,
-          $item,
-          $key,
-        },
-        class: 'CmsBlock--iteration CmsBlock--iteration-' + $key,
-      }))
+      ))
     }
 
-    const styleNode = this.styleNode ? h(Teleport, { to: 'head' }, this.styleNode) : null
+    const blockNode = h(
+      this.blockComponent,
+      {
+        ...this.attrs,
+        ...this.blockProps,
+        ...this.blockListeners,
+
+        errors: this.errors,
+      },
+      this.blockSlots,
+    )
 
     // v-if transition
     if (this.block?.['v-if']) {
-
       if (this.block.transition) {
-        const transitionNode = h(
+        return h(
           Transition,
           { name: 'transition-fade', ...this.block.transition },
-          () => this.isVisible ? this.blockNode : null,
+          () => this.isVisible ? blockNode : null,
         )
-        return [transitionNode, styleNode]
       } else {
-        return this.isVisible ? [this.blockNode, styleNode] : null
+        return this.isVisible ? blockNode : null
       }
     }
 
-    return styleNode
-      ? [this.blockNode, styleNode]
-      : this.blockNode
+    return blockNode
   },
 }
 export default CmsBlock
