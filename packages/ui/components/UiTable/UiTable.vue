@@ -67,83 +67,79 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="UiTable">
-    <table>
-      <thead>
-        <tr>
-          <th
-            v-for="(col, i) in computedColumns"
-            :key="i"
-          >
-            <component
-              :is="col.slotHeader"
-              v-if="col.slotHeader"
-            />
-            <div v-else>
-              {{ col.props.header || 'Sin titulo' }}
-            </div>
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr
-          v-for="(item, i) in data"
+  <table class="UiTable">
+    <thead>
+      <tr>
+        <th
+          v-for="(col, i) in computedColumns"
           :key="i"
         >
-          <td
-            v-for="(col, ci) in computedColumns"
-            :key="ci"
-            class="column"
-          >
-            <component
-              :is="col.slotContent"
-              v-if="col.slotContent"
-              :item="item"
-              :value="columnValues[i][ci]"
-            />
-            <UiOutput
-              v-else-if="col.props.type"
-              v-bind="col.props"
-              :value="columnValues[i][ci]"
-            />
-            <div v-else-if="columnValues[i][ci]">
-              {{ columnValues[i][ci] }}
-            </div>
-          </td>
-        </tr>
-      </tbody>
+          <component
+            :is="col.slotHeader"
+            v-if="col.slotHeader"
+          />
+          <div v-else>
+            {{ col.props.header || 'Sin titulo' }}
+          </div>
+        </th>
+      </tr>
+    </thead>
 
-      <tfoot>
-        <tr>
-          <th
-            v-for="(col, i) in computedColumns"
-            :key="i"
-          >
-            <component
-              :is="col.slotFooter"
-              v-if="col.slotFooter"
-            />
-          </th>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
+    <tbody>
+      <tr
+        v-for="(item, i) in data"
+        :key="i"
+      >
+        <td
+          v-for="(col, ci) in computedColumns"
+          :key="ci"
+          class="column"
+        >
+          <component
+            :is="col.slotContent"
+            v-if="col.slotContent"
+            :item="item"
+            :value="columnValues[i][ci]"
+          />
+          <UiOutput
+            v-else-if="col.props.type"
+            v-bind="col.props"
+            :value="columnValues[i][ci]"
+          />
+          <div v-else-if="columnValues[i][ci]">
+            {{ columnValues[i][ci] }}
+          </div>
+        </td>
+      </tr>
+    </tbody>
+
+    <tfoot>
+      <tr>
+        <td
+          v-for="(col, i) in computedColumns"
+          :key="i"
+        >
+          <component
+            :is="col.slotFooter"
+            v-if="col.slotFooter"
+          />
+        </td>
+      </tr>
+    </tfoot>
+  </table>
 </template>
 
 
 <style lang="scss">
 .UiTable {
-  & > table {
-    width: 100%;
-    td {
-      vertical-align: top;
-    }
+  width: 100%;
+  td {
+    vertical-align: top;
+  }
 
-    th,
-    td {
-      text-align: left;
-    }
+  th,
+  td {
+    text-align: left;
   }
 }
 </style>
