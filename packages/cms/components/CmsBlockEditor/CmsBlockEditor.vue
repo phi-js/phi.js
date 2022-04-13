@@ -1,5 +1,5 @@
 <script>
-import { ref, h, provide, inject, defineAsyncComponent, Teleport } from 'vue'
+import { h, provide, inject, defineAsyncComponent } from 'vue'
 import { blocks } from '../../singleton/index.js'
 import BlockScaffold from './BlockScaffold.vue'
 
@@ -31,20 +31,8 @@ const CmsBlockEditor = {
       settings = inject('$_cms_settings', {})
     }
 
-    const blockCSS = ref(props.block?.css?.css)
-
     return (instance) => {
       const definition = blocks[props.block.component]
-
-      const styleNode = h(
-        Teleport,
-        { to: 'head' },
-        h(
-          'style',
-          { type: 'text/css', class: 'CmsBlockEditor__style' },
-          blockCSS.value,
-        ),
-      )
 
       if (definition?.editor?.component) {
         const customEditor = h(definition.editor.component, {
@@ -53,7 +41,7 @@ const CmsBlockEditor = {
           'onUpdate:block': (newValue) => emit('update:block', newValue),
           'onDelete': () => emit('delete'),
         }, instance.$slots)
-        return [customEditor, styleNode]
+        return customEditor
       }
 
       // No hay editor Y no hay slots.  Usar BlockScaffold
@@ -65,7 +53,7 @@ const CmsBlockEditor = {
           'onUpdate:block': (newValue) => emit('update:block', newValue),
           'onDelete': () => emit('delete'),
         })
-        return [scaffoldNode, styleNode]
+        return scaffoldNode
       }
 
       // No hay editor.  Usar el componente del bloque
@@ -93,7 +81,7 @@ const CmsBlockEditor = {
         : undefined
 
       const faceNode = h(defaultFace, { ...attrs, ...props.block.props }, defaultSlots)
-      return [faceNode, styleNode]
+      return faceNode
     }
   },
 }

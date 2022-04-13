@@ -160,7 +160,7 @@ function getWidth(coords) {
           title="This block repeats"
           class="BlockScaffold__toolbar-icon ui--clickable"
           src="mdi:repeat-variant"
-          @click="openActionId('v-for')"
+          @click="openActionId('visibility')"
         />
 
         <UiIcon
@@ -172,7 +172,7 @@ function getWidth(coords) {
         />
 
         <UiIcon
-          v-if="innerBlock?.css?.css"
+          v-if="innerBlock?.css?.classes?.length || innerBlock?.css?.style"
           title="This block has CSS styles"
           class="BlockScaffold__toolbar-icon ui--clickable"
           src="mdi:palette-advanced"
