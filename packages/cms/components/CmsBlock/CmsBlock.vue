@@ -73,20 +73,17 @@ const CmsBlock = {
     })
 
     /* style and class properties */
+    const cssProps = ref({
+      style: null,
+      class: null,
+    })
+
     watchEffect(() => {
       if (typeof props.block?.css !== 'object') {
         return
       }
-
       const evaldCSS = parse(props.block.css, { ...props.modelValue, ...injectedStory?.globals })
-      const cssProps = getCssObjectAttributes(evaldCSS)
-
-      if (cssProps.class) {
-        blockProps.value.class = blockProps.value?.class ? [blockProps.value.class, ...cssProps.class] : cssProps.class
-      }
-      if (cssProps.style) {
-        blockProps.value.style = blockProps.value?.style ? cssProps.style + blockProps.value.style : cssProps.style
-      }
+      cssProps.value = getCssObjectAttributes(evaldCSS)
     })
 
 
@@ -206,6 +203,7 @@ const CmsBlock = {
       blockProps,
       blockListeners,
       blockSlots,
+      cssProps,
       emitUpdate,
     }
   },
@@ -243,7 +241,8 @@ const CmsBlock = {
         ...this.attrs,
         ...this.blockProps,
         ...this.blockListeners,
-
+        style: [this.blockProps.style, this.cssProps.style],
+        class: [this.blockProps.class, this.cssProps.class],
         errors: this.errors,
       },
       this.blockSlots,
