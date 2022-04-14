@@ -1,10 +1,14 @@
 <script>
+import { inject } from 'vue'
+
 import Quicklaunch from './Quicklaunch/index.js'
 
 import { blocks as cmsBlocks } from '../../singleton'
 import { getBlockDefinition } from '../../functions'
 import { UiIcon, UiTabs, UiTab } from '@/packages/ui/components'
 import { useI18n } from '../../../i18n'
+
+import { parse } from '../../../vm/lib/utils'
 
 export default {
   name: 'PickerContents',
@@ -32,12 +36,6 @@ export default {
       type: Array,
       required: false,
       default: () => [],
-    },
-
-    settings: {
-      type: Object,
-      required: false,
-      default: () => ({}),
     },
   },
 
@@ -68,7 +66,9 @@ export default {
       },
     })
 
-    return { i18n }
+    const settings = inject('$_cms_settings', null)
+
+    return { i18n, settings }
   },
 
   data() {
@@ -176,12 +176,13 @@ export default {
         block.props,
       )
 
-      // //
-      // targetBlock.props = interpolate(
-      //   targetBlock.props,
-      //   { page: this.page },
-      //   true,
-      // )
+      if (this.settings) {
+        targetBlock.props = parse(
+          targetBlock.props,
+          { $settings: this.settings },
+          true,
+        )
+      }
 
       if (targetBlock['v-model']) {
         let count = this.countBlocks(definition.id)
@@ -253,7 +254,7 @@ export default {
         type="text"
         :placeholder="placeholder"
         @keydown.enter.prevent.stop="autoCreate()"
-      />
+      >
     </div>
 
     <UiTabs v-model="currentTab">
@@ -265,7 +266,10 @@ export default {
       />
     </UiTabs>
     <div class="content-under-tabs">
-      <div v-if="launcherComponent" class="launcher-component">
+      <div
+        v-if="launcherComponent"
+        class="launcher-component"
+      >
         <component
           :is="launcherComponent.component"
           v-bind="launcherComponent.props"
@@ -282,7 +286,10 @@ export default {
             class="launcher-picker-item"
             @click="launchDefinition(component)"
           >
-            <UiIcon class="picker-item-icon" :src="component.icon" />
+            <UiIcon
+              class="picker-item-icon"
+              :src="component.icon"
+            />
             <h3>{{ component.title }}</h3>
           </div>
         </div>
