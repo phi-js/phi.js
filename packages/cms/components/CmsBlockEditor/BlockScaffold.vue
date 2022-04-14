@@ -228,12 +228,15 @@ function getWidth(coords) {
           @update:block="accept()"
           @delete="emitDelete()"
         />
+
+        <!-- block component as face. Clicking will open settings window -->
         <div
           v-else-if="definition?.block?.component"
           @click="openAction(0)"
         >
           <Component
             :is="definition.block.component"
+            style="pointer-events: none"
             v-bind="{ ...innerBlock?.props, ...blockCssAttributes }"
           />
         </div>
