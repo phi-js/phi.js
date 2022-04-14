@@ -4,12 +4,23 @@ export default function getBlockRules(block, modelValue, vm) {
   const retval = []
   if (block?.rules?.length) {
     block.rules.forEach((rule) => {
+
+      /* Validate REQUIRED */
       if (rule.required) {
         const callback = () => {
           const currentValue = getProperty(modelValue, block['v-model'])
-          return typeof currentValue === 'string'
-            ? !!currentValue.trim()
-            : (currentValue !== null && currentValue !== undefined)
+
+          if (typeof currentValue === 'string') {
+            return !!currentValue.trim()
+          }
+
+          if (Array.isArray(currentValue)) {
+            return currentValue.length > 0
+          }
+
+          // Cualquier falor FALSY se considera vacío
+          // i.e. un checkbox no marcado se consideraría vacío
+          return !!currentValue
         }
 
         retval.push({
@@ -21,6 +32,7 @@ export default function getBlockRules(block, modelValue, vm) {
         })
       }
 
+      /* Validate REGEX */
       if (rule.regex) {
         const callback = () => {
           const currentValue = getProperty(modelValue, block['v-model'])
@@ -36,12 +48,13 @@ export default function getBlockRules(block, modelValue, vm) {
         })
       }
 
+      /* Validate custom expression */
       if (rule.eval) {
         retval.push({
           callback: () => vm.eval(rule.eval, modelValue),
           message: rule.message || 'Invalid value',
           breaking: false,
-          trigger: ['blur'],
+          trigger: ['update:modelValue', 'blur'],
           block,
         })
       }
