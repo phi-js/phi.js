@@ -1,6 +1,11 @@
 <script setup>
-import { shallowRef, watchEffect, useAttrs } from 'vue'
-import { useI18n } from '../../../i18n'
+import { shallowRef, watchEffect, computed, defineAsyncComponent } from 'vue'
+
+const availableTypes = {
+  date: defineAsyncComponent(() => import('./types/date.vue')),
+  image: defineAsyncComponent(() => import('./types/image.vue')),
+  upload: defineAsyncComponent(() => import('./types/upload.vue')),
+}
 
 const props = defineProps({
   value: {
@@ -9,46 +14,60 @@ const props = defineProps({
     default: null,
   },
 
-  type: {
-    type: String,
+  schema: {
+    type: Object,
     required: false,
-    default: 'text',
+    default: null,
   },
 })
 
-const attrs = useAttrs()
+const innerValue = shallowRef()
+const innerSchema = shallowRef()
 
-const arrValue = shallowRef([])
-watchEffect(() => arrValue.value = Array.isArray(props.value) ? props.value : [props.value])
+watchEffect(() => {
+  innerSchema.value = props.schema && typeof props.schema == 'object'
+    ? props.schema
+    : { type: 'string' }
 
-const i18n = useI18n()
+  if (innerSchema.value.type == 'array') {
+    innerValue.value = Array.isArray(props.value) ? props.value : props.value !== null ? [props.value] : []
+  } else {
+    innerValue.value = props.value
+  }
+})
+
+const customComponent = computed(() => availableTypes[innerSchema.value.type])
 </script>
 
 <template>
   <div
     class="UiOutput"
-    :class="`UiOutput--type-${props.type}`"
+    :class="`UiOutput--type-${innerSchema.type}`"
   >
-    <template v-if="props.type == 'image'">
-      <img
-        v-for="(img,i) in arrValue"
-        :key="i"
-        :src="img"
-      >
+    <template v-if="innerValue === null">
+      <!-- NULL -->
     </template>
-    <template v-else-if="props.type == 'date'">
-      <span
-        v-for="(val ,i) in arrValue"
+    <ul v-else-if="innerSchema.type == 'array'">
+      <li
+        v-for="(item, i) in innerValue"
         :key="i"
-        v-text="i18n.d(val)"
-      />
+      >
+        <UiOutput
+          :value="item"
+          :schema="innerSchema.items"
+        />
+      </li>
+    </ul>
+    <Component
+      :is="customComponent"
+      v-else-if="customComponent"
+      :value="innerValue"
+    />
+    <template v-else-if="innerSchema.type == 'boolean'">
+      <em>{{ innerValue ? 'true' : 'false' }}</em>
     </template>
     <template v-else>
-      <span
-        v-for="(val ,i) in arrValue"
-        :key="i"
-        v-text="val"
-      />
+      <span v-text="innerValue" />
     </template>
   </div>
 </template>

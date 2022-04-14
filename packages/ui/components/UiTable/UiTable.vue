@@ -78,9 +78,12 @@ watchEffect(() => {
             :is="col.slotHeader"
             v-if="col.slotHeader"
           />
-          <div v-else>
+          <span
+            v-else
+            :title="col.props.header"
+          >
             {{ col.props.header || 'Sin titulo' }}
-          </div>
+          </span>
         </th>
       </tr>
     </thead>
@@ -103,8 +106,8 @@ watchEffect(() => {
           />
           <UiOutput
             v-else-if="col.props.type"
-            v-bind="col.props"
             :value="columnValues[i][ci]"
+            :schema="col.props"
           />
           <div v-else-if="columnValues[i][ci]">
             {{ columnValues[i][ci] }}
