@@ -1,4 +1,8 @@
-const UiInput = () => import('../../../../ui/components/UiInput/UiInput.vue')
+import { defineAsyncComponent } from 'vue'
+const UiInput = defineAsyncComponent(() =>
+  import('../../../../ui/components/UiInput/UiInput.vue')
+    .then((mod) => mod.default))
+
 import InputSettings from '../components/InputSettings/InputSettings.vue'
 
 export default {
@@ -19,8 +23,10 @@ export default {
     'component': UiInput,
     'v-model': '',
     'props': {
-      type: 'file',
-      path: '{{$settings.uploadUrl}}',
+      type: 'upload',
+      endpoint: '{{$settings.uploads.endpoint}}',
+      inline: false,
+      multiple: false,
     },
   },
 
