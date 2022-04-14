@@ -245,7 +245,6 @@ const isModelExplorerOpen = ref(false)
         v-model:current-page-id="currentPageId"
         :model-value="props.modelValue"
         :story="props.story"
-        :settings="props.settings"
         @update:model-value="emit('update:modelValue', $event)"
       />
 
