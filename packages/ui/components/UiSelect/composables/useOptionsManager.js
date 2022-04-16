@@ -2,17 +2,30 @@ import { ref, unref, computed } from 'vue'
 import { getProperty, normalize } from '../../../helpers'
 
 export default function useOptionsManager(arr, settings = null) {
+
   const options = computed(() => {
     const arrData = unref(arr)
     if (!Array.isArray(arrData) || !arrData.length) {
       return []
     }
 
-    return arrData.map((item) => ({
-      text: getProperty(item, settings?.optionText || '$.text'),
-      value: getProperty(item, settings?.optionValue || '$.value'),
-      keywords: getKeywords(item, settings?.optionSearch).join(' '),
-    }))
+    return arrData
+      .filter((item) => item !== null)
+      .map((item) => {
+        if (item && typeof item === 'object') {
+          return {
+            text: getProperty(item, settings?.optionText || '$.text'),
+            value: getProperty(item, settings?.optionValue || '$.value'),
+            keywords: getKeywords(item, settings?.optionSearch).join(' '),
+          }
+        }
+
+        return {
+          text: item,
+          value: item,
+          keywords: item,
+        }
+      })
   })
 
   const searchQuery = ref('')
