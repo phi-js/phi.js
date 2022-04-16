@@ -126,9 +126,9 @@ const i18n = useI18n({
           icon="mdi:gesture-tap"
           :text="i18n.t('StoryEditorWindow.events')"
         >
-          <div class="UiForm">
+          <div class="StoryEditorWindow__events UiForm">
             <fieldset>
-              <legend>Inicialización</legend>
+              <legend>story.setup()</legend>
               <VmStatement
                 v-model="innerStory.setup"
                 :default="{chain:[]}"
@@ -136,14 +136,32 @@ const i18n = useI18n({
               />
             </fieldset>
 
-            <!-- <fieldset>
+            <fieldset>
               <legend>currentPage.setup()</legend>
               <VmStatement
                 v-model="currentPage.setup"
                 :default="{ chain: [] }"
                 @update:model-value="emitUpdate"
               />
-            </fieldset> -->
+            </fieldset>
+
+            <fieldset>
+              <legend>currentPage.onEnter()</legend>
+              <VmStatement
+                v-model="currentPage.onEnter"
+                :default="{ chain: [] }"
+                @update:model-value="emitUpdate"
+              />
+            </fieldset>
+
+            <fieldset>
+              <legend>currentPage.onLeave()</legend>
+              <VmStatement
+                v-model="currentPage.onLeave"
+                :default="{ chain: [] }"
+                @update:model-value="emitUpdate"
+              />
+            </fieldset>
           </div>
         </UiTab>
 
