@@ -100,12 +100,35 @@ export default {
     })
 
     // Story navigation
+    // Watch current page changes
     const navigationHistory = ref([]) // array of page IDs
+    const loadedPages = {} // loadedPages[page-id] = true | false
 
     watch(
       () => props.currentPageId,
-      (newPageId) => {
+      (newPageId, oldPageId) => {
         navigationHistory.value.push(newPageId)
+
+        const pageTo = sanitizedStory.value.pages.find((page) => page.id == newPageId)
+
+        // Evaluate page setup() (once)
+        if (pageTo?.setup && !loadedPages[pageTo.id]) {
+          storyVM.eval(pageTo.setup, props.modelValue)
+          loadedPages[pageTo.id] = true
+        }
+
+        // Evaluate page onEnter()
+        if (pageTo?.onEnter) {
+          storyVM.eval(pageTo.onEnter, props.modelValue)
+        }
+
+        // Evaluate page onLeave()
+        if (oldPageId) {
+          const pageFrom = sanitizedStory.value.pages.find((page) => page.id == oldPageId)
+          if (pageFrom?.onLeave) {
+            storyVM.eval(pageFrom.onLeave, props.modelValue)
+          }
+        }
       },
       { immediate: true },
     )
