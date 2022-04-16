@@ -56,7 +56,24 @@ const props = defineProps({
     required: false,
     default: () => [],
   },
+
+  debounce: {
+    type: [String, Number],
+    required: false,
+    default: 0,
+  },
 })
+
+let timeout = null
+
+function emitUpdate(newValue) {
+  clearTimeout(timeout)
+  if (props.debounce > 0) {
+    timeout = setTimeout(() => emit('update:modelValue', newValue), props.debounce)
+  } else {
+    emit('update:modelValue', newValue)
+  }
+}
 
 // focus management
 const isFocused = ref(false)
@@ -103,7 +120,7 @@ const elementProps = computed(() => {
     'style': undefined,
     'onFocus': (evt) => setFocused(true, evt),
     'onBlur': (evt) => setFocused(false, evt),
-    'onUpdate:modelValue': (newValue) => emit('update:modelValue', newValue),
+    'onUpdate:modelValue': (newValue) => emitUpdate(newValue),
   }
 })
 
@@ -111,7 +128,7 @@ const nativeElementProps = computed(() => {
   return {
     ...elementProps.value,
     value: elementProps.value?.modelValue,
-    onInput: (event) => emit('update:modelValue', event.target.value),
+    onInput: (event) => emitUpdate(event.target.value),
   }
 })
 
@@ -119,7 +136,7 @@ const nativeCheckboxProps = computed(() => {
   return {
     ...elementProps.value,
     checked: elementProps.value?.modelValue,
-    onInput: (event) => emit('update:modelValue', event.target.checked),
+    onInput: (event) => emitUpdate(event.target.checked),
   }
 })
 
@@ -182,7 +199,10 @@ defineExpose({ element })
         >
       </slot>
     </div>
-    <div class="UiInput__subtext">
+    <div
+      v-if="$slots.subtext || props.subtext"
+      class="UiInput__subtext"
+    >
       <slot name="subtext">
         {{ props.subtext }}
       </slot>
