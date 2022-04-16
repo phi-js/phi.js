@@ -1,7 +1,8 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, inject } from 'vue'
 import { UiInput } from '@/packages/ui'
 import SpacingEditor from './props/SpacingEditor.vue'
+import PropBackground from './props/PropBackground.vue'
 
 const props = defineProps({
   /*
@@ -18,6 +19,10 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['update:modelValue'])
+
+
+const injectedStoryEditor = inject('$_cms_story_builder', {})
+const uploadsEndpoint = injectedStoryEditor.settings?.uploads?.endpoint
 
 const innerValue = ref({})
 
@@ -41,91 +46,85 @@ function toggleProperty(propName, defaultValue = null) {
 
 <template>
   <div class="BlockCssStyle UiForm">
-    <fieldset>
-      <legend>
+    <details>
+      <summary>
         Content width
         <input
           type="checkbox"
           :checked="!!innerValue['--ui-content-width']"
           @change="toggleProperty('--ui-content-width', 'auto')"
         >
-      </legend>
+      </summary>
       <UiInput
         v-model="innerValue['--ui-content-width']"
         @update:modelValue="emitUpdate()"
       />
-    </fieldset>
+    </details>
 
-    <fieldset>
-      <legend>
+    <details>
+      <summary>Background</summary>
+      <PropBackground
+        v-model="innerValue"
+        class="UiForm UiForm--wide"
+        :endpoint="uploadsEndpoint"
+        @update:modelValue="emitUpdate()"
+      />
+    </details>
+
+    <details>
+      <summary>
         Margin
         <input
           type="checkbox"
           :checked="!!innerValue.margin"
           @change="toggleProperty('margin', 'auto auto auto auto')"
         >
-      </legend>
+      </summary>
       <SpacingEditor
         v-model="innerValue.margin"
+        class="UiForm UiForm--wide"
         @update:modelValue="emitUpdate()"
       />
-    </fieldset>
+    </details>
 
-    <fieldset>
-      <legend>
+    <details>
+      <summary>
         Padding
         <input
           type="checkbox"
           :checked="!!innerValue.padding"
           @change="toggleProperty('padding', '0 0 0 0')"
         >
-      </legend>
+      </summary>
       <SpacingEditor
         v-model="innerValue.padding"
+        class="UiForm UiForm--wide"
         @update:modelValue="emitUpdate()"
       />
-    </fieldset>
+    </details>
 
-    <fieldset>
-      <legend>Color</legend>
-      <UiInput
-        v-model="innerValue['--ui-color-primary']"
-        label="Primary"
-        type="color"
-        @update:modelValue="emitUpdate()"
-      />
-      <UiInput
-        v-model="innerValue['--ui-color-danger']"
-        label="Danger"
-        type="color"
-        @update:modelValue="emitUpdate()"
-      />
-    </fieldset>
-
-    <!-- <fieldset>
-      <legend>Spacing</legend>
-
-      <UiInput label="Content width">
-        <div class="UiGroup">
-          <UiInput
-            v-model="raw.contentWidth.value"
-            type="number-slide"
-            :min="raw.contentWidth.units == 'px' ? 100 : 5"
-            :max="raw.contentWidth.units == 'px' ? 2048 : 100"
-          />
-          <select v-model="raw.contentWidth.units" class="UiInput">
-            <option value="%">%</option>
-            <option value="px">px</option>
-          </select>
-        </div>
-      </UiInput>
-
-      <UiInput v-model="raw.margin.value" label="Margin" type="number-slide" min="0" max="100" />
-    </fieldset>
-
-    <fieldset>
-      <legend>Color</legend>
-      <UiInput v-model="raw.colorPrimary.hex" label="Primary" type="color" />
-    </fieldset>-->
+    <details>
+      <summary>Color</summary>
+      <div class="UiForm UiForm--wide">
+        <UiInput
+          v-model="innerValue.color"
+          label="Font color"
+          type="color"
+          @update:modelValue="emitUpdate()"
+        />
+        <UiInput
+          v-model="innerValue['--ui-color-primary']"
+          label="Primary"
+          type="color"
+          @update:modelValue="emitUpdate()"
+        />
+        <UiInput
+          v-model="innerValue['--ui-color-danger']"
+          label="Danger"
+          type="color"
+          @update:modelValue="emitUpdate()"
+        />
+      </div>
+    </details>
   </div>
 </template>

@@ -10,7 +10,7 @@ const props = defineProps({
   modelValue: {
     type: String,
     required: false,
-    default: ''
+    default: '',
   },
 })
 
@@ -93,7 +93,7 @@ function emitUpdate() {
     dimensions.value.bottom,
     dimensions.value.left,
   ]
-    .map(objUnits => objUnits.value == 'auto' ? 'auto' : `${objUnits.value || '0'}${(objUnits.units || 'px')}`)
+    .map((objUnits) => objUnits.value == 'auto' ? 'auto' : `${objUnits.value || '0'}${(objUnits.units || 'px')}`)
     .join(' ')
 
   emit('update:modelValue', strDimensions)
@@ -113,21 +113,24 @@ function setAuto(objDimension, doSet) {
 
 <template>
   <div class="SpacingEditor">
-    <template v-for="position in ['top', 'right', 'bottom', 'left']" :key="position">
+    <template
+      v-for="position in ['top', 'right', 'bottom', 'left']"
+      :key="position"
+    >
       <UiInput :label="position">
         <div class="UiGroup">
           <UiInput
             v-model="dimensions[position].value"
-            @update:modelValue="emitUpdate()"
             type="number-slide"
             min="0"
             max="100"
             placeholder="auto"
+            @update:modelValue="emitUpdate()"
           />
           <UiInput
             type="checkbox"
             title="auto"
-            :modelValue="dimensions[position].value != 'auto'"
+            :model-value="dimensions[position].value != 'auto'"
             @update:modelValue="setAuto(dimensions[position], !$event)"
           />
         </div>

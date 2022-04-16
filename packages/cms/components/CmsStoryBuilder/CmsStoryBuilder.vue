@@ -97,6 +97,7 @@ function onWindowCancel() {
 // e.g. BlockCssClasses, NavigationPagePicker
 provide('$_cms_story_builder', {
   story: innerStory,
+  settings: props.settings,
   accept: onWindowAccept,
   cancel: onWindowCancel,
 })
