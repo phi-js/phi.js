@@ -1,5 +1,5 @@
 <script>
-import { h, ref, shallowRef, watchEffect, Transition, inject } from 'vue'
+import { h, ref, shallowRef, watchEffect, Transition, inject, computed, watch } from 'vue'
 import { VM } from '@/packages/vm'
 import { parse } from '@/packages/vm/lib/utils'
 
@@ -27,19 +27,48 @@ const CmsBlock = {
   setup(props, { emit, attrs }) {
     /* Internal Block VM object */
     const blockVM = new VM()
-    blockVM.onModelSet = (varname, newValue) => {
-      setProperty(props.modelValue, varname, newValue)
-      emitUpdate()
-    }
+    blockVM.onModelSet = (varname, newValue) => setModelProperty(varname, newValue)
 
     const injectedStory = inject('$_cms_story', null)
     if (injectedStory) {
       blockVM.custom = { story: injectedStory }
     }
 
-    /* Handle modelValue updates */
-    function emitUpdate() {
-      emit('update:modelValue', props.modelValue)
+    /* modelValue source of truth functions */
+    const innerModel = { ...props.modelValue }
+    const evaluableModel = computed(() => ({ ...props.modelValue, ...injectedStory?.globals }))
+
+    let _haltEmit = false
+
+    watch(
+      () => props.modelValue,
+      (newValue) => {
+        if (_haltEmit) {
+          _haltEmit = false
+          return
+        }
+        Object.assign(innerModel, newValue)
+      },
+    )
+
+    function getModelProperty(propName) {
+      if (!propName) {
+        return
+      }
+      return getProperty(innerModel, propName)
+    }
+
+    function setModelProperty(propName, newValue) {
+      if (!propName) {
+        return
+      }
+      setProperty(innerModel, propName, newValue)
+      emitUpdate({ ...innerModel })
+    }
+
+    function emitUpdate(newModelValue) {
+      _haltEmit = true
+      emit('update:modelValue', newModelValue)
     }
 
     /* Block definition */
@@ -47,19 +76,19 @@ const CmsBlock = {
     CMS.getDefinition(props.block).then((def) => blockComponent.value = def?.block?.component)
 
     /* Block visibility (v-if) */
-    const isVisible = ref(true)
-    watchEffect(async () => {
-      if (props.block?.['v-if'] !== undefined) {
-        isVisible.value = await blockVM.eval(props.block['v-if'], { ...props.modelValue, ...injectedStory?.globals })
-      }
-    })
+    const isVisible = ref(false)
+    if (props.block['v-if']) {
+      watchEffect(async () => isVisible.value = await blockVM.eval(props.block['v-if'], evaluableModel.value))
+    } else {
+      isVisible.value = true
+    }
 
     /* Eval'd block props */
     const blockProps = ref()
     watchEffect(() => {
       // Parsed block props
       blockProps.value = typeof props.block.props === 'object'
-        ? parse(props.block.props, { ...props.modelValue, ...injectedStory?.globals })
+        ? parse(props.block.props, evaluableModel.value)
         : {}
 
       // props from v-models
@@ -67,7 +96,7 @@ const CmsBlock = {
         if (p.substring(0, 7) === 'v-model' && props.block[p]) {
           const variableName = props.block[p]
           const propName = p.substring(8) || 'modelValue'
-          blockProps.value[propName] = getProperty(props.modelValue, variableName)
+          blockProps.value[propName] = getModelProperty(variableName)
         }
       }
     })
@@ -82,7 +111,7 @@ const CmsBlock = {
       if (typeof props.block?.css !== 'object') {
         return
       }
-      const evaldCSS = parse(props.block.css, { ...props.modelValue, ...injectedStory?.globals })
+      const evaldCSS = parse(props.block.css, evaluableModel.value)
       cssProps.value = getCssObjectAttributes(evaldCSS)
     })
 
@@ -113,10 +142,7 @@ const CmsBlock = {
         const propName = p.substring(8) || 'modelValue'
         const eventName = 'onUpdate:' + propName
 
-        const callback = (newValue) => {
-          setProperty(props.modelValue, variableName, newValue) // MUTATING PROP modelValue (!!!)
-          emitUpdate()
-        }
+        const callback = (newValue) => setModelProperty(variableName, newValue)
 
         blockListeners.value[eventName] = blockListeners.value[eventName]
           ? [blockListeners.value[eventName], callback]
@@ -128,10 +154,7 @@ const CmsBlock = {
     if (props.block?.['v-on']) {
       const listeners = props.block['v-on']
       for (let eventName in listeners) {
-        const eventCallback = ($event) => blockVM.eval(
-          listeners[eventName],
-          { ...props.modelValue, ...injectedStory?.globals, $event },
-        )
+        const eventCallback = ($event) => blockVM.eval(listeners[eventName], { ...evaluableModel.value, $event })
 
         const propName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
         blockListeners.value[propName] = blockListeners.value[propName]
@@ -142,7 +165,12 @@ const CmsBlock = {
 
     // Validation listeners
     if (props.block?.rules?.length) {
-      const blockRules = getBlockRules(props.block, props.modelValue, blockVM)
+      const blockRules = getBlockRules(
+        props.block,
+        getModelProperty,
+        (expr) => blockVM.eval(expr, innerModel),
+      )
+
       const eventRules = {} // e.g. eventRules[onBlur] = [ array of rules to validate on blur ]
       blockRules.forEach((rule) => {
         if (!rule.trigger?.length) {
@@ -174,26 +202,59 @@ const CmsBlock = {
     /* Determine slot nodes */
     const blockSlots = ref({})
 
-    const slots = { ...props.block.slots }
-    if (props.block.slot) {
-      slots.default = props.block.slot
+    watchEffect(() => {
+      const slots = { ...props.block.slots }
+      if (props.block.slot) {
+        slots.default = props.block.slot
+      }
+
+      for (const slotName in slots) {
+        const arrChildren = Array.isArray(slots[slotName]) ? slots[slotName] : [slots[slotName]]
+        blockSlots.value[slotName] = () => arrChildren.map((child, index) => h(
+          CmsBlock,
+          {
+            'block': child,
+            'modelValue': props.modelValue,
+            'onUpdate:modelValue': ($event) => emitUpdate($event),
+            'onUpdate:errors': ($event) => {
+              childErrors[slotName + ':' + index] = $event
+              emitErrors()
+            },
+          },
+        ))
+      }
+    })
+
+
+    /* V-FOR iterations */
+    const iterable = ref(null)
+    const iterations = ref([])
+    if (props.block['v-for']) {
+      watchEffect(() => {
+        iterable.value = getModelProperty(props.block['v-for'])
+      })
+
+      watchEffect(() => {
+        if (Array.isArray(iterable.value)) {
+          iterations.value = iterable.value.map(($item, $index) => {
+            return h(
+              CmsBlock,
+              {
+                'key': $index,
+                'block': {
+                  ...props.block,
+                  'v-for': undefined,
+                },
+                'modelValue': Object.assign({}, innerModel, { $item, $index }),
+                'onUpdate:modelValue': ($event) => emitUpdate($event),
+                'class': 'CmsBlock--iteration CmsBlock--iteration-' + $index,
+              },
+            )
+          })
+        }
+      })
     }
 
-    for (const slotName in slots) {
-      const arrChildren = Array.isArray(slots[slotName]) ? slots[slotName] : [slots[slotName]]
-      blockSlots.value[slotName] = () => arrChildren.map((child, index) => h(
-        CmsBlock,
-        {
-          'block': child,
-          'modelValue': props.modelValue,
-          'onUpdate:modelValue': () => emitUpdate(),
-          'onUpdate:errors': ($event) => {
-            childErrors[slotName + ':' + index] = $event
-            emitErrors()
-          },
-        },
-      ))
-    }
 
     return {
       attrs,
@@ -205,6 +266,10 @@ const CmsBlock = {
       blockSlots,
       cssProps,
       emitUpdate,
+      iterable,
+      iterations,
+
+      getModelProperty,
     }
   },
 
@@ -214,25 +279,8 @@ const CmsBlock = {
     }
 
     // Get iterations (v-for)
-    const iterable = this.block?.['v-for'] ? getProperty(this.modelValue, this.block['v-for']) : null
-    if (Array.isArray(iterable)) {
-      return iterable.map(($item, $index) => h(
-        CmsBlock,
-        {
-          'key': $index,
-          'block': {
-            ...this.block,
-            'v-for': undefined,
-          },
-          'modelValue': {
-            ...this.modelValue,
-            $item,
-            $index,
-          },
-          'onUpdate:modelValue': () => this.emitUpdate(),
-          'class': 'CmsBlock--iteration CmsBlock--iteration-' + $index,
-        },
-      ))
+    if (Array.isArray(this.iterable)) {
+      return this.iterations
     }
 
     const blockNode = h(
@@ -249,19 +297,15 @@ const CmsBlock = {
     )
 
     // v-if transition
-    if (this.block?.['v-if']) {
-      if (this.block.transition) {
-        return h(
-          Transition,
-          { name: 'transition-fade', ...this.block.transition },
-          () => this.isVisible ? blockNode : null,
-        )
-      } else {
-        return this.isVisible ? blockNode : null
-      }
+    if (this.block.transition) {
+      return h(
+        Transition,
+        { name: 'transition-fade', ...this.block.transition },
+        () => this.isVisible ? blockNode : null,
+      )
     }
 
-    return blockNode
+    return this.isVisible ? blockNode : null
   },
 }
 export default CmsBlock

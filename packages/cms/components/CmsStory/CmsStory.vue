@@ -181,6 +181,12 @@ export default {
     }
 
     function onUpdateErrors(evt) {
+      // globals.$errors is reactive and will trigger an update on ALL blocks when it changes
+      // so make sure not to update the value unnecessarylylylyl
+      if (!evt.length && !globals.$errors.length) {
+        return
+      }
+
       globals.$errors = evt
     }
 
