@@ -28,6 +28,7 @@ const emit = defineEmits(['update:modelValue'])
 
 const codeEl = ref()
 var cmView = null
+var _haltEmit = false
 
 onMounted(() => {
   const langExtension = availableLanguages?.[props.lang] || javascript
@@ -40,6 +41,10 @@ onMounted(() => {
         langExtension(),
         EditorView.updateListener.of((v) => {
           if (v.docChanged) {
+            if (_haltEmit) {
+              _haltEmit = false
+              return
+            }
             emit('update:modelValue', v.state.doc.toString())
           }
         }),
@@ -55,6 +60,7 @@ watch(
     if (newValue == cmView.state.doc.toString()) {
       return
     }
+    _haltEmit = true
     const transaction = cmView.state.update({ changes: { from: 0, to: cmView.state.doc.length, insert: newValue } })
     cmView.update([transaction])
   },
