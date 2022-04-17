@@ -35,8 +35,8 @@ const CmsBlock = {
     }
 
     /* modelValue source of truth functions */
-    const innerModel = { ...props.modelValue }
-    const evaluableModel = computed(() => ({ ...props.modelValue, ...injectedStory?.globals }))
+    const innerModel = props.modelValue
+    const evaluableModel = computed(() => ({ ...innerModel, ...injectedStory?.globals }))
 
     let _haltEmit = false
 
@@ -52,16 +52,10 @@ const CmsBlock = {
     )
 
     function getModelProperty(propName) {
-      if (!propName) {
-        return
-      }
       return getProperty(innerModel, propName)
     }
 
     function setModelProperty(propName, newValue) {
-      if (!propName) {
-        return
-      }
       setProperty(innerModel, propName, newValue)
       emitUpdate({ ...innerModel })
     }
@@ -142,7 +136,9 @@ const CmsBlock = {
         const propName = p.substring(8) || 'modelValue'
         const eventName = 'onUpdate:' + propName
 
-        const callback = (newValue) => setModelProperty(variableName, newValue)
+        const callback = (newValue) => {
+          setModelProperty(variableName, newValue)
+        }
 
         blockListeners.value[eventName] = blockListeners.value[eventName]
           ? [blockListeners.value[eventName], callback]
@@ -154,7 +150,9 @@ const CmsBlock = {
     if (props.block?.['v-on']) {
       const listeners = props.block['v-on']
       for (let eventName in listeners) {
-        const eventCallback = ($event) => blockVM.eval(listeners[eventName], { ...evaluableModel.value, $event })
+        const eventCallback = ($event) => {
+          blockVM.eval(listeners[eventName], { ...evaluableModel.value, $event })
+        }
 
         const propName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
         blockListeners.value[propName] = blockListeners.value[propName]
