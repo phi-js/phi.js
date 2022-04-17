@@ -216,7 +216,6 @@ export default {
               currentPage.value && isMounted.value
                 ? h(CmsBlock, {
                   'onUpdate:errors': onUpdateErrors,
-                  'errors': globals.$errors,
                   'class': 'CmsStory__page',
                   'block': currentPage.value,
                   'modelValue': props.modelValue,
