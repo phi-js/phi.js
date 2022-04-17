@@ -107,6 +107,10 @@ export default {
     watch(
       () => props.currentPageId,
       (newPageId, oldPageId) => {
+        if (!newPageId) {
+          newPageId = sanitizedStory.value.pages?.[0]?.id
+        }
+
         navigationHistory.value.push(newPageId)
 
         const pageTo = sanitizedStory.value.pages.find((page) => page.id == newPageId)
@@ -156,7 +160,6 @@ export default {
     }
 
     const globals = reactive({ $errors: [] })
-    const innerModel = reactive(props.modelValue)
 
     // Provide global story methods (used by CmsBlock)
     provide('$_cms_story', {
@@ -216,7 +219,7 @@ export default {
                   'errors': globals.$errors,
                   'class': 'CmsStory__page',
                   'block': currentPage.value,
-                  'modelValue': innerModel,
+                  'modelValue': props.modelValue,
                   'onUpdate:modelValue': onUpdateModelValue,
                 })
                 : null,
