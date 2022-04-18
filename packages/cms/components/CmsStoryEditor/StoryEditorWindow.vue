@@ -3,7 +3,7 @@
 Takes the same props as CmsStoryEditor
 Presents a window with options for the current page and the story (style, dictionary, etc)
 */
-import { ref, watchEffect } from 'vue'
+import { ref, watch } from 'vue'
 import { useI18n } from '../../../i18n'
 import { UiWindow, UiTabs, UiTab, UiInput } from '../../../ui'
 import { VmStatement } from '@/packages/vm/components'
@@ -48,15 +48,21 @@ const emit = defineEmits(['update:story', 'update:currentPageId', 'update:curren
 
 /* Internal values */
 const innerStory = ref()
-watchEffect(() => {
-  innerStory.value = { ...props.story }
-})
+watch(
+  () => props.story,
+  (newStory) => innerStory.value = { ...newStory },
+  { immediate: true },
+)
 
 const currentPage = ref()
-watchEffect(() => {
-  const foundPage = innerStory.value.pages.find((p) => p.id == props.currentPageId)
-  currentPage.value = foundPage || innerStory.value.pages?.[0]
-})
+watch(
+  () => props.currentPageId,
+  (newPageId) => {
+    const foundPage = innerStory.value.pages.find((p) => p.id == newPageId)
+    currentPage.value = foundPage || innerStory.value.pages?.[0]
+  },
+  { immediate: true },
+)
 
 function emitUpdate() {
   let currentPageIndex = innerStory.value.pages.findIndex((p) => p.id == props.currentPageId)
@@ -73,7 +79,7 @@ function emitUpdate() {
     }),
   }
 
-  emit('update:story', updatedStory)
+  emit('update:story', { ...updatedStory })
 }
 
 const i18n = useI18n({
