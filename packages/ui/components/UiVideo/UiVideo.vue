@@ -1,60 +1,35 @@
-<template>
-  <div class="UiVideo">
-    <component
-      :is="videoComponent"
-      v-if="videoComponent"
-      ref="video"
-      v-bind="$attrs"
-      :url="url"
-      @timeupdate="onTimeupdate"
-    />
-    <div v-else class="UiVideo--empty">{{ url ? 'URL inválida' : 'No hay URL' }}</div>
-  </div>
-</template>
+<script setup>
+import { ref, watch, computed, watchEffect } from 'vue'
 
-<script>
 import VideoNative from './Native/Native.vue'
 import VideoYoutube from './Youtube/Youtube.vue'
 import VideoVimeo from './Vimeo/Vimeo.vue'
 import VideoMicrosoft from './Microsoft/Microsoft.vue'
 
-export default {
-  name: 'UiVideo',
-
-  components: {
-    VideoNative,
-    VideoYoutube,
-    VideoVimeo,
-    VideoMicrosoft,
+const props = defineProps({
+  /**
+   * URL del video (YouTube, Vimeo, Microsoft, o URL para usar en <video src="URL" />)
+   */
+  url: {
+    type: String,
+    required: false,
+    default: null,
   },
 
-  props: {
-    /**
-     * URL del video (YouTube, Vimeo, Microsoft, o URL para usar en <video src="URL" />)
-     */
-    url: {
-      type: String,
-      required: false,
-      default: null,
-    },
+  /* v-models */
+  isPlaying: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 
-    /**
-     * Objeto con información sobre el estado actual del video
-     * @model
-     * <pre>
-     * {
-     *  "isPlaying": false,  // bool. Indica si el video se está reproduciendo
-     *  "time": 27608750538  // int. Tiempo actual del video (ms.)
-     * }
-     * </pre>
-     */
-    modelValue: {
-      type: Object,
-      required: false,
-      default: null,
-    },
+  currentTime: {
+    type: [Number, String],
+    required: false,
+    default: 0,
+  },
 
-    /**
+  /**
      * Arreglo especificando capitulos
      * <pre>
      * [
@@ -67,138 +42,119 @@ export default {
      * ]
      * </pre>
      */
-    chapters: {
-      type: Array,
-      required: false,
-      default: () => [],
-    },
+  chapters: {
+    type: Array,
+    required: false,
+    default: () => [],
   },
+})
 
-  emits: ['update:activeChapters', 'chapter-enter', 'chapter-leave', 'timeupdate'],
+const emit = defineEmits([
+  'update:isPlaying',
+  'update:currentTime',
 
-  data() {
-    return { innerChapters: [] }
+  'update:activeChapters',
+  'chapter-enter',
+  'chapter-leave',
+])
+
+const innerIsPlaying = ref(false)
+watchEffect(() => innerIsPlaying.value = props.isPlaying)
+
+const innerCurrentTime = ref(0)
+watchEffect(() => innerCurrentTime.value = props.currentTime)
+
+
+const innerChapters = ref([])
+
+const videoComponent = computed(() => {
+  if (!props.url) {
+    return null
+  }
+
+  if (/(youtube\.|youtu\.)/.test(props.url)) {
+    return VideoYoutube
+  }
+
+  if (/(vimeo\.)/.test(props.url)) {
+    return VideoVimeo
+  }
+
+  if (/(microsoftstream\.com)/.test(props.url)) {
+    return VideoMicrosoft
+  }
+
+  return VideoNative
+})
+
+watch(
+  () => props.chapters,
+  (newChapters) => {
+    let incoming = Array.isArray(newChapters) ? newChapters : []
+    innerChapters.value = incoming
+      .filter((chapter) => !!chapter && typeof chapter == 'object')
+      .map((chapter, i) => ({
+        name: chapter.name || i,
+        start: chapter.start || 0,
+        end: chapter.end || Infinity,
+        pauseOnEnter: !!chapter.pauseOnEnter,
+        isActive: !!innerChapters.value[i]?.isActive,
+      }))
   },
+  { immediate: true },
+)
 
-  computed: {
-    videoComponent() {
-      if (!this.url) {
-        return null
+function onUpdateCurrentTime(msTime) {
+  emit('update:currentTime', msTime)
+
+  let activeChapters = []
+  let hasChanged = false
+  for (let i = 0; i < innerChapters.value.length; i++) {
+    let c = innerChapters.value[i]
+    let isActive = c.start <= msTime && msTime < c.end
+    if (isActive != c.isActive) {
+      c.isActive = isActive
+      hasChanged = true
+      emit(isActive ? 'chapter-enter' : 'chapter-leave', c.name)
+
+      // "pauseOnEnter" prop in chapter
+      if (isActive && c.pauseOnEnter) {
+        innerIsPlaying.value = false
+        emit('update:isPlaying', false)
       }
+    }
 
-      if (/(youtube\.|youtu\.)/.test(this.url)) {
-        return 'VideoYoutube'
-      }
+    if (isActive) {
+      activeChapters.push(c.name)
+    }
+  }
 
-      if (/(vimeo\.)/.test(this.url)) {
-        return 'VideoVimeo'
-      }
-
-      if (/(microsoftstream\.com)/.test(this.url)) {
-        return 'VideoMicrosoft'
-      }
-
-      return 'VideoNative'
-    },
-  },
-
-  watch: {
-    chapters: {
-      immediate: true,
-      handler(newChapters) {
-        let incoming = Array.isArray(newChapters) ? newChapters : []
-        this.innerChapters = incoming
-          .filter((chapter) => !!chapter && typeof chapter == 'object')
-          .map((chapter, i) => ({
-            name: chapter.name || i,
-            start: chapter.start || 0,
-            end: chapter.end || Infinity,
-            isActive: this.innerChapters[i]?.isActive,
-          }))
-      },
-    },
-  },
-
-  methods: {
-    onTimeupdate(evt) {
-      this.$emit('timeupdate', evt)
-
-      let activeChapters = []
-      let hasChanged = false
-      for (let i = 0; i < this.innerChapters.length; i++) {
-        let c = this.innerChapters[i]
-        let isActive = c.start <= evt.time && evt.time < c.end
-        if (isActive != c.isActive) {
-          c.isActive = isActive
-          hasChanged = true
-          this.$emit(isActive ? 'chapter-enter' : 'chapter-leave', c.name)
-        }
-
-        if (isActive) {
-          activeChapters.push(c.name)
-        }
-      }
-
-      if (hasChanged) {
-        this.$emit('update:activeChapters', activeChapters)
-      }
-    },
-
-    /**
-     * Se invoca cuando el video inicia la reproducción
-     * @event play
-     */
-    /**
-     * Iniciar la reproducción
-     * @public
-     * @fires play
-     */
-    play() {
-      this.$refs.video.play()
-    },
-
-    /**
-     * Se invoca cuando se pausa el video
-     * @event pause
-     */
-    /**
-     * Pausar la reproducción
-     * @public
-     * @fires pause
-     */
-    pause() {
-      this.$refs.video.pause()
-    },
-
-    /**
-     * Se invoca cuando el video se detiene
-     * @event stop
-     */
-    /**
-     * Detener la reproducción
-     * @public
-     * @fires stop
-     */
-    stop() {
-      this.$refs.video.stop()
-    },
-
-    /**
-     * Se dispara cada 200ms mientras el video se esté reproduciendo
-     * @event timeupdate
-     * @property { Object } videoData - Objeto con los datos del video
-     */
-    /**
-     * Obtener el tiempo actual del video (milisegundos)
-     * @public
-     * @fires timeupdate
-     */
-    async getCurrentTime() {
-      return this.$refs.video ? this.$refs.video.getCurrentTime() : null
-    },
-  },
+  if (hasChanged) {
+    emit('update:activeChapters', activeChapters)
+  }
 }
 </script>
+
+<template>
+  <div class="UiVideo">
+    <component
+      :is="videoComponent"
+      v-if="videoComponent"
+      v-bind="$attrs"
+      v-model:is-playing="innerIsPlaying"
+      v-model:current-time="innerCurrentTime"
+      :url="url"
+      @update:current-time="onUpdateCurrentTime"
+      @update:is-playing="$emit('update:isPlaying', $event)"
+    />
+    <div
+      v-else
+      class="UiVideo--empty"
+    >
+      {{ url ? 'URL inválida' : 'No hay URL' }}
+    </div>
+  </div>
+</template>
 
 <style lang="scss">
 .UiVideo {

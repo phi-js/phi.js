@@ -1,25 +1,3 @@
-<template>
-  <div class="cms-media-video-youtube">
-    <iframe
-      v-if="iframeSrc"
-      :src="iframeSrc"
-      width="100%"
-      height="100%"
-      frameborder="0"
-      webkitallowfullscreen
-      mozallowfullscreen
-      allowfullscreen
-      style="min-height:inherit; background:inherit"
-    />
-    <div
-      v-else
-      class="empty-video"
-    >
-      Video no encontrado
-    </div>
-  </div>
-</template>
-
 <script>
 export default {
   name: 'CmsMediaVideo',
@@ -28,18 +6,34 @@ export default {
       type: String,
       required: true,
     },
+
+    /* v-models */
+    isPlaying: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    currentTime: {
+      type: [Number, String],
+      required: false,
+      default: 0,
+    },
   },
 
-  emits: ['update:modelValue', 'play', 'pause', 'end', 'timeupdate'],
+  emits: [
+    'update:isPlaying',
+    'update:currentTime',
+    'play',
+    'pause',
+    'end',
+  ],
 
   data() {
     return {
       player: null,
       interval: null,
-      videoData: {
-        isPlaying: false,
-        time: null,
-      },
+      ignoreChanges: false,
     }
   },
 
@@ -60,8 +54,29 @@ export default {
   },
 
   watch: {
-    playing(val) {
-      val && this.player ? this.player.playVideo() : this.player.pauseVideo()
+    isPlaying(val) {
+      if (!this.player) {
+        return
+      }
+
+      val ? this.player.playVideo() : this.player.pauseVideo()
+    },
+
+    currentTime(val) {
+      if (!this.player) {
+        return
+      }
+
+      if (this.ignoreChanges) {
+        this.ignoreChanges = false
+        return
+      }
+
+      if (val == 0) {
+        this.player.stopVideo()
+      } else if (val > 0) {
+        this.player.seekTo(Math.floor(val / 1000))
+      }
     },
 
     url() {
@@ -93,10 +108,6 @@ export default {
     },
 
     initializePlayer() {
-      if (this.player) {
-        return
-      }
-
       this.loadApi().then(() => {
         //eslint-disable-next-line
         this.player = new YT.Player(this.$el.querySelector('iframe'), {
@@ -126,63 +137,71 @@ export default {
       switch (event.data) {
       case -1:
         // console.log('No iniciado');
-        this.videoData.time = 0
-        this.videoData.isPlaying = false
-        this.$emit('update:modelValue', this.videoData)
+        this.ignoreChanges = true
+
+        this.$emit('update:isPlaying', false)
+        this.$emit('update:currentTime', 0)
         break
+
       case 0:
         // console.log('Fin');
-        this.videoData.time = Math.floor(this.player.getCurrentTime() * 1000)
-        this.videoData.isPlaying = false
-        this.$emit('end', this.videoData)
-        this.$emit('update:modelValue', this.videoData)
+        this.ignoreChanges = true
+
+        this.$emit('end')
+        this.$emit('update:isPlaying', false)
+        this.$emit('update:currentTime', Math.floor(this.player.getCurrentTime() * 1000))
         break
+
       case 1:
         // console.log('Playing');
+        this.ignoreChanges = true
 
-        this.videoData.time = Math.floor(this.player.getCurrentTime() * 1000)
-        this.videoData.isPlaying = true
-        this.$emit('play', this.videoData)
-        this.$emit('update:modelValue', this.videoData)
+        this.$emit('play')
+        this.$emit('update:isPlaying', true)
+        this.$emit('update:currentTime', Math.floor(this.player.getCurrentTime() * 1000))
 
         this.interval = setInterval(() => {
-          this.videoData.time = Math.floor(this.player.getCurrentTime() * 1000)
-          this.$emit('timeupdate', this.videoData)
-          this.$emit('update:modelValue', this.videoData)
+          this.ignoreChanges = true
+          this.$emit('update:currentTime', Math.floor(this.player.getCurrentTime() * 1000))
         }, 200)
 
         break
+
       case 2:
         // console.log('Pause');
-        this.videoData.time = Math.floor(this.player.getCurrentTime() * 1000)
-        this.videoData.isPlaying = false
-        this.$emit('pause', this.videoData)
-        this.$emit('update:modelValue', this.videoData)
+        this.ignoreChanges = true
+
+        this.$emit('pause')
+        this.$emit('update:isPlaying', false)
+        this.$emit('update:currentTime', Math.floor(this.player.getCurrentTime() * 1000))
         break
       }
-    },
-
-    play() {
-      this.player && this.player.playVideo()
-    },
-
-    pause() {
-      this.player && this.player.pauseVideo()
-    },
-
-    stop() {
-      this.player && this.player.stopVideo()
-    },
-
-    // Tiempo del video en milisegundos
-    async getCurrentTime() {
-      return this.player
-        ? Math.floor(this.player.getCurrentTime() * 1000)
-        : null
     },
   },
 }
 </script>
+
+<template>
+  <div class="cms-media-video-youtube">
+    <iframe
+      v-if="iframeSrc"
+      :src="iframeSrc"
+      width="100%"
+      height="100%"
+      frameborder="0"
+      webkitallowfullscreen
+      mozallowfullscreen
+      allowfullscreen
+      style="min-height:inherit; background:inherit"
+    />
+    <div
+      v-else
+      class="empty-video"
+    >
+      Video no encontrado
+    </div>
+  </div>
+</template>
 
 <style lang="scss">
 .cms-media-video-youtube {
