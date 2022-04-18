@@ -61,7 +61,7 @@ const CmsBlock = {
     }
 
     function emitUpdate(newModelValue) {
-      _haltEmit = true
+      // _haltEmit = true
       emit('update:modelValue', newModelValue)
     }
 
@@ -200,6 +200,13 @@ const CmsBlock = {
     /* Determine slot nodes */
     const blockSlots = ref({})
 
+    function onChildUpdateModelvalue($event) {
+      emitUpdate($event)
+      if (props.block['v-on']?.['update:modelValue']) {
+        blockVM.eval(props.block['v-on']['update:modelValue'], { ...evaluableModel.value, $event })
+      }
+    }
+
     watchEffect(() => {
       const slots = { ...props.block.slots }
       if (props.block.slot) {
@@ -213,7 +220,7 @@ const CmsBlock = {
           {
             'block': child,
             'modelValue': props.modelValue,
-            'onUpdate:modelValue': ($event) => emitUpdate($event),
+            'onUpdate:modelValue': ($event) => onChildUpdateModelvalue($event),
             'onUpdate:errors': ($event) => {
               childErrors[slotName + ':' + index] = $event
               emitErrors()
