@@ -5,8 +5,8 @@ import '../../style/base.scss'
 // Editor and subcomponents styles
 import './style.scss'
 
-import { ref, watch, watchEffect, computed, defineComponent, h, Teleport } from 'vue'
-import { sanitizeStory } from '../../functions'
+import { ref, watch, watchEffect, computed, defineComponent, h, Teleport, provide } from 'vue'
+import { sanitizeStory, getStorySchema } from '../../functions'
 import { CmsBlockEditor } from '../CmsBlockEditor'
 
 const props = defineProps({
@@ -50,6 +50,10 @@ watch(
     // deep: true, // causes loop (!)
   },
 )
+
+/* Provide VM schema */
+const storySchema = computed(() => getStorySchema(sanitizedStory.value))
+provide('$_vm_modelSchema', storySchema)
 
 const currentPage = ref()
 watchEffect(() => {

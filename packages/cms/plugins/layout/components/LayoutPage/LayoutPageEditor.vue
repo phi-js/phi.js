@@ -1,8 +1,8 @@
 <script setup>
-import { ref, watch, computed, provide } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { UiItem } from '@/packages/ui/components'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
-import { getBlockSchema, getCssObjectAttributes } from '../../../../functions'
+import { getCssObjectAttributes } from '../../../../functions'
 
 const props = defineProps({
   block: {
@@ -40,11 +40,7 @@ function onSlotUpdate() {
   emit('update:block', { ...props.block, slot: pageSlot })
 }
 
-const blockSchema = computed(() => getBlockSchema(props.block))
-provide('$_vm_modelSchema', blockSchema)
-
 const cssAttributes = computed(() => getCssObjectAttributes(props.block?.css))
-
 </script>
 
 <template>
