@@ -1,10 +1,6 @@
 export default function getBlockFields(block) {
   let retval = []
 
-  if (!block['v-model']) {
-    return []
-  }
-
   let field = {
     name: block['v-model'],
     type: null,
@@ -67,32 +63,39 @@ export default function getBlockFields(block) {
   }
 
   if (block.component == 'MediaVideo') {
-    retval.push({
-      name: block['v-model'] + '.isPlaying',
-      type: 'boolean',
-      info: {
-        icon: 'mdi:youtube',
-        text: 'Video is playing',
-      },
-    })
+    if (block['v-model:isPlaying']) {
+      retval.push({
+        name: block['v-model:isPlaying'],
+        type: 'boolean',
+        info: {
+          icon: 'mdi:youtube',
+          text: 'Video is playing',
+        },
+        important: true,
+      })
+    }
 
-    retval.push({
-      name: block['v-model'] + '.time',
-      type: 'number',
-      info: {
-        text: 'Video time',
-        subtext: '(milliseconds)',
-        icon: 'mdi:youtube',
-      },
-    })
+    if (block['v-model:currentTime']) {
+      retval.push({
+        name: block['v-model:currentTime'],
+        type: 'number',
+        info: {
+          text: 'Video time',
+          subtext: '(milliseconds)',
+          icon: 'mdi:youtube',
+        },
+        important: true,
+      })
+    }
 
-    field.info.icon = 'mdi:youtube'
-    field.type = 'object'
-    field.properties = { videoTime: { type: 'string' } }
-
-    if (Array.isArray(block?.props?.chapters)) {
-      field.properties.chapters = {
+    if (block['v-model:activeChapters']) {
+      retval.push({
+        name: block['v-model:activeChapters'],
         type: 'array',
+        info: {
+          icon: 'mdi:youtube',
+          text: block['v-model:activeChapters'],
+        },
         items: {
           type: 'string',
           enum: block.props.chapters.map((chapter) => ({
@@ -100,25 +103,12 @@ export default function getBlockFields(block) {
             text: `${chapter.name} (${chapter.start}-${chapter.end})`,
           })),
         },
-      }
-    }
-
-    if (block?.['v-model:activeChapters']) {
-      retval.push({
-        name: block['v-model:activeChapters'],
-        ...field.properties.chapters,
-        info: {
-          icon: 'mdi:youtube',
-          text: block['v-model:activeChapters'],
-        },
+        important: true,
       })
     }
 
     return retval
   }
 
-  // Block has v-model property, but no block specific field options were determined.  Default to type: string
-  field.type = 'string'
-  retval.push(field)
-  return retval
+  return []
 }

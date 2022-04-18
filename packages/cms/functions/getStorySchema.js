@@ -5,8 +5,16 @@ export default function getStorySchema(story) {
   const properties = []
   forEachBlock(story, (block) => properties.push(...getBlockFields(block)))
 
-  return {
+  const retval = {
     type: 'object',
-    properties,
+    properties: {},
   }
+
+  properties.forEach((property) => {
+    if (!retval.properties[property.name] || property.important) {
+      retval.properties[property.name] = property
+    }
+  })
+
+  return retval
 }
