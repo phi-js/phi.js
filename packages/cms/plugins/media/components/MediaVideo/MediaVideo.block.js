@@ -1,5 +1,5 @@
 import UiVideo from '../../../../../ui/components/UiVideo/UiVideo.vue'
-import UiVideoChaptersEditor from '../../../../../ui/components/UiVideo/UiVideoChaptersEditor.vue'
+import MediaVideoSettings from './MediaVideoSettings.vue'
 import MediaVideoPicker from './MediaVideoPicker.vue'
 
 export default {
@@ -25,10 +25,8 @@ export default {
 
     actions: [
       {
-        'title': 'Capítulos',
-        'component': UiVideoChaptersEditor,
-        'v-model': 'block.props.chapters',
-        'props': { url: '{{block.props.url}}' },
+        title: 'Video',
+        component: MediaVideoSettings,
       },
     ],
   },
