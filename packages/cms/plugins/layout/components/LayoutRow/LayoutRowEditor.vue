@@ -3,6 +3,7 @@ import { ref, watch, reactive } from 'vue'
 import { UiIcon } from '@/packages/ui/components'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
 import BlockScaffold from '../../../../components/CmsBlockEditor/BlockScaffold.vue'
+import { getCssObjectAttributes } from '../../../../functions'
 
 const props = defineProps({
   block: {
@@ -16,7 +17,13 @@ const emit = defineEmits(['update:block', 'delete'])
 const columns = ref([])
 watch(
   () => props.block?.slot,
-  (newValue) => columns.value = Array.isArray(newValue) ? newValue : [],
+  (newValue) => {
+    columns.value = Array.isArray(newValue) ? newValue : []
+    columns.value = columns.value.map((col) => ({
+      ...col,
+      cssAttributes: getCssObjectAttributes(col.css),
+    }))
+  },
   { immediate: true },
 )
 
@@ -211,6 +218,7 @@ function isLeftGhostVisible(colIndex) {
             <div
               class="LayoutRowEditor__column LayoutColumn"
               :style="{flex: column?.props?.flex || 1}"
+              v-bind="column.cssAttributes"
             >
               <CmsSlotEditor
                 v-model:slot="column.slot"
