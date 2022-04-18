@@ -156,11 +156,19 @@ const multipleOptions = [
     </fieldset>
 
     <fieldset>
-      <legend>Variable</legend>
+      <legend>Datos</legend>
 
       <UiInput
         v-model="block['v-model']"
+        label="Variable"
         type="text"
+        @update:model-value="emitUpdate"
+      />
+
+      <UiInput
+        v-model="block.props.debounce"
+        label="Debounce"
+        type="number"
         @update:model-value="emitUpdate"
       />
     </fieldset>
