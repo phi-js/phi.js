@@ -88,6 +88,10 @@ export default {
     this.initializePlayer()
   },
 
+  beforeUnmount() {
+    clearInterval(this.interval)
+  },
+
   methods: {
     // Se puede llamar multiples veces y se asegura de solo crear el <script> un avez
     loadApi() {

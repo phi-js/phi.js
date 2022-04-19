@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed, watchEffect } from 'vue'
+import { ref, watch, computed } from 'vue'
 
 import VideoNative from './Native/Native.vue'
 import VideoYoutube from './Youtube/Youtube.vue'
@@ -59,10 +59,18 @@ const emit = defineEmits([
 ])
 
 const innerIsPlaying = ref(false)
-watchEffect(() => innerIsPlaying.value = props.isPlaying)
+watch(
+  () => props.isPlaying,
+  (newValue) => innerIsPlaying.value = newValue,
+  { immediate: true },
+)
 
 const innerCurrentTime = ref(0)
-watchEffect(() => innerCurrentTime.value = props.currentTime)
+watch(
+  () => props.currentTime,
+  (newValue) => innerCurrentTime.value = newValue,
+  { immediate: true },
+)
 
 
 const innerChapters = ref([])
