@@ -61,7 +61,7 @@ const CmsBlock = {
     }
 
     function emitUpdate(newModelValue) {
-      // _haltEmit = true
+      _haltEmit = true
       emit('update:modelValue', newModelValue)
     }
 
