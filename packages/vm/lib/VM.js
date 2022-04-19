@@ -66,8 +66,19 @@ export default class VM {
       return !(await this.eval(expr.not, localScope))
     }
 
+
+    /*
+    and/or statememts
+    */
+
     if (Array.isArray(expr.or)) {
       let statements = expr.or
+
+      /* TOUCH all statements */
+      for (let i = 0; i < statements.length; i++) {
+        this.eval(statements[i], localScope)
+      }
+
       for (let i = 0; i < statements.length; i++) {
         if (await this.eval(statements[i], localScope)) {
           return true
@@ -78,6 +89,12 @@ export default class VM {
 
     if (Array.isArray(expr.and)) {
       let statements = expr.and
+
+      /* TOUCH all statements */
+      for (let i = 0; i < statements.length; i++) {
+        this.eval(statements[i], localScope)
+      }
+
       for (let i = 0; i < statements.length; i++) {
         if (!(await this.eval(statements[i], localScope))) {
           return false
@@ -112,9 +129,6 @@ export default class VM {
     const retval = {}
     const promises = []
     for (let propertyName in expr) {
-      if (!Object.prototype.hasOwnProperty.call(expr, propertyName)) {
-        continue
-      }
       promises.push(this.eval(expr[propertyName], localScope).then((result) => retval[propertyName] = result))
     }
     await Promise.all(promises)
