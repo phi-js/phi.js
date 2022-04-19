@@ -10,7 +10,7 @@ export default function useSelectionManager(
     incomingValue,
     (newValue) =>
       (selection.value = Array.isArray(newValue)
-        ? newValue
+        ? newValue.concat()
         : newValue !== undefined && newValue !== null
           ? [newValue]
           : []),
