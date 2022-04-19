@@ -48,38 +48,36 @@ const emit = defineEmits(['update:story', 'update:currentPageId', 'update:curren
 
 /* Internal values */
 const innerStory = ref()
+const currentPage = ref()
+
 watch(
   () => props.story,
-  (newStory) => innerStory.value = { ...newStory },
-  { immediate: true },
-)
-
-const currentPage = ref()
-watch(
-  () => props.currentPageId,
-  (newPageId) => {
-    const foundPage = innerStory.value.pages.find((p) => p.id == newPageId)
-    currentPage.value = foundPage || innerStory.value.pages?.[0]
+  (newStory) => {
+    innerStory.value = JSON.parse(JSON.stringify(newStory))
+    const foundPageIndex = innerStory.value.pages.findIndex((p) => p.id == props.currentPageId)
+    currentPage.value = foundPageIndex >= 0 ? innerStory.value.pages?.[foundPageIndex] : innerStory.value.pages?.[0]
   },
   { immediate: true },
 )
 
-function emitUpdate() {
-  let currentPageIndex = innerStory.value.pages.findIndex((p) => p.id == props.currentPageId)
-  if (currentPageIndex == -1) {
-    currentPageIndex = 0
-  }
+watch(
+  () => props.currentPageId,
+  (newPageId) => {
+    const foundPageIndex = innerStory.value.pages.findIndex((p) => p.id == newPageId)
+    currentPage.value = foundPageIndex >= 0 ? innerStory.value.pages?.[foundPageIndex] : innerStory.value.pages?.[0]
+  },
+  { immediate: true },
+)
 
-  const updatedStory = {
+function emitStoryUpdate() {
+  emit('update:story', { ...innerStory.value })
+}
+
+function emitCurrentPageUpdate() {
+  emit('update:story', {
     ...innerStory.value,
-    pages: innerStory.value.pages.map((p, ndx) => {
-      return ndx == currentPageIndex
-        ? currentPage.value
-        : p
-    }),
-  }
-
-  emit('update:story', { ...updatedStory })
+    pages: innerStory.value.pages.map((page) => page.id == currentPage.value?.id ? currentPage.value : page),
+  })
 }
 
 const i18n = useI18n({
@@ -123,7 +121,7 @@ const i18n = useI18n({
         >
           <BlockCssEditor
             v-model="currentPage"
-            @update:model-value="emitUpdate"
+            @update:model-value="emitCurrentPageUpdate"
           />
         </UiTab>
 
@@ -138,7 +136,7 @@ const i18n = useI18n({
               <VmStatement
                 v-model="innerStory.setup"
                 :default="{chain:[]}"
-                @update:model-value="emitUpdate"
+                @update:model-value="emitStoryUpdate"
               />
             </fieldset>
 
@@ -147,7 +145,7 @@ const i18n = useI18n({
               <VmStatement
                 v-model="currentPage.setup"
                 :default="{ chain: [] }"
-                @update:model-value="emitUpdate"
+                @update:model-value="emitCurrentPageUpdate"
               />
             </fieldset>
 
@@ -156,7 +154,7 @@ const i18n = useI18n({
               <VmStatement
                 v-model="currentPage.onEnter"
                 :default="{ chain: [] }"
-                @update:model-value="emitUpdate"
+                @update:model-value="emitCurrentPageUpdate"
               />
             </fieldset>
 
@@ -165,7 +163,7 @@ const i18n = useI18n({
               <VmStatement
                 v-model="currentPage.onLeave"
                 :default="{ chain: [] }"
-                @update:model-value="emitUpdate"
+                @update:model-value="emitCurrentPageUpdate"
               />
             </fieldset>
           </div>
@@ -178,7 +176,7 @@ const i18n = useI18n({
         >
           <StoryDictionaryEditor
             v-model:story="innerStory"
-            @update:model-value="emitUpdate"
+            @update:model-value="emitStoryUpdate"
           />
         </UiTab>
 
@@ -198,7 +196,7 @@ const i18n = useI18n({
                 <UiInput
                   v-model="currentPage"
                   type="json"
-                  @update:model-value="emitUpdate"
+                  @update:model-value="emitCurrentPageUpdate"
                 />
               </UiTab>
 
@@ -210,7 +208,7 @@ const i18n = useI18n({
                 <UiInput
                   v-model="innerStory"
                   type="json"
-                  @update:model-value="emitUpdate"
+                  @update:model-value="emitStoryUpdate"
                 />
               </UiTab>
             </UiTabs>
