@@ -29,6 +29,7 @@ export default function getBlockFields(block) {
       break
 
     case 'select':
+    case 'select-native':
     case 'select-list':
     case 'select-buttons':
       field.info.icon = 'mdi:form-dropdown'
