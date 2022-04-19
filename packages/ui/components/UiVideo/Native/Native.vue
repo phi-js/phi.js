@@ -21,9 +21,30 @@ export default {
       type: String,
       required: true,
     },
+
+    /* v-models */
+    isPlaying: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    currentTime: {
+      type: [Number, String],
+      required: false,
+      default: 0,
+    },
+
   },
 
-  emits: ['play', 'pause', 'timeupdate', 'update:modelValue'],
+  // emits: ['play', 'pause', 'timeupdate', 'update:modelValue'],
+  emits: [
+    'update:isPlaying',
+    'update:currentTime',
+    'play',
+    'pause',
+    'end',
+  ],
 
   data() {
     return {
@@ -34,50 +55,38 @@ export default {
     }
   },
 
+  watch: {
+    isPlaying(val) {
+      if (!this.$el) {
+        return
+      }
+
+      val ? this.$el.play() : this.$el.pause()
+    },
+  },
+
   methods: {
     onVideoPlay(evt) {
       this.videoData.time = Math.floor(evt.target.currentTime * 1000)
       this.videoData.isPlaying = true
 
-      this.$emit('play', this.videoData)
-      this.$emit('update:modelValue', this.videoData)
+      this.$emit('play')
+      this.$emit('update:isPlaying', this.videoData.isPlaying)
+      this.$emit('update:currentTime', this.videoData.time)
     },
 
     onVideoPause(evt) {
       this.videoData.time = Math.floor(evt.target.currentTime * 1000)
       this.videoData.isPlaying = false
 
-      this.$emit('pause', this.videoData)
-      this.$emit('update:modelValue', this.videoData)
+      this.$emit('pause')
+      this.$emit('update:isPlaying', this.videoData.isPlaying)
+      this.$emit('update:currentTime', this.videoData.time)
     },
 
     onVideoTimeupdate(evt) {
       this.videoData.time = Math.floor(evt.target.currentTime * 1000)
-
-      this.$emit('timeupdate', this.videoData)
-      this.$emit('update:modelValue', this.videoData)
-    },
-
-    play() {
-      this.$el && this.$el.play()
-    },
-
-    pause() {
-      this.$el && this.$el.pause()
-    },
-
-    stop() {
-      if (!this.$el) {
-        return
-      }
-
-      this.$el.pause()
-      this.$el.currentTime = 0
-    },
-
-    // Tiempo del video en milisegundos
-    async getCurrentTime() {
-      return this.$el ? Math.floor(this.$el.currentTime * 1000) : null
+      this.$emit('update:currentTime', this.videoData.time)
     },
   },
 }
