@@ -77,6 +77,11 @@ const i18n = useI18n({
     'StoryEditorWindow.style': 'Style',
     'StoryEditorWindow.sitemap': 'Pages',
     'StoryEditorWindow.thisPage': 'This Page',
+
+    'StoryEditorWindow.events.storySetup': 'on story setup',
+    'StoryEditorWindow.events.pageSetup': 'on page setup',
+    'StoryEditorWindow.events.pageEnter': 'on page enter',
+    'StoryEditorWindow.events.pageLeave': 'on page leavae',
   },
   es: {
     'StoryEditorWindow.events': 'Eventos',
@@ -86,6 +91,11 @@ const i18n = useI18n({
     'StoryEditorWindow.style': 'Estilos',
     'StoryEditorWindow.sitemap': 'Páginas',
     'StoryEditorWindow.thisPage': 'Esta Página',
+
+    'StoryEditorWindow.events.storySetup': 'Inicializar documento',
+    'StoryEditorWindow.events.pageSetup': 'Inicializar página',
+    'StoryEditorWindow.events.pageEnter': 'Al entrar a ésta página',
+    'StoryEditorWindow.events.pageLeave': 'Al salir de ésta página',
   },
 })
 </script>
@@ -119,41 +129,41 @@ const i18n = useI18n({
           :text="i18n.t('StoryEditorWindow.events')"
         >
           <div class="StoryEditorWindow__events UiForm">
-            <fieldset>
-              <legend>story.setup()</legend>
+            <details>
+              <summary>{{ i18n.t('StoryEditorWindow.events.storySetup') }}</summary>
               <VmStatement
                 v-model="innerStory.setup"
                 :default="{chain:[]}"
                 @update:model-value="emitStoryUpdate"
               />
-            </fieldset>
+            </details>
 
-            <fieldset>
-              <legend>currentPage.setup()</legend>
+            <details>
+              <summary>{{ i18n.t('StoryEditorWindow.events.pageSetup') }}</summary>
               <VmStatement
                 v-model="currentPage.setup"
                 :default="{ chain: [] }"
                 @update:model-value="emitCurrentPageUpdate"
               />
-            </fieldset>
+            </details>
 
-            <fieldset>
-              <legend>currentPage.onEnter()</legend>
+            <details>
+              <summary>{{ i18n.t('StoryEditorWindow.events.pageEnter') }}</summary>
               <VmStatement
                 v-model="currentPage.onEnter"
                 :default="{ chain: [] }"
                 @update:model-value="emitCurrentPageUpdate"
               />
-            </fieldset>
+            </details>
 
-            <fieldset>
-              <legend>currentPage.onLeave()</legend>
+            <details>
+              <summary>{{ i18n.t('StoryEditorWindow.events.pageLeave') }}</summary>
               <VmStatement
                 v-model="currentPage.onLeave"
                 :default="{ chain: [] }"
                 @update:model-value="emitCurrentPageUpdate"
               />
-            </fieldset>
+            </details>
           </div>
         </UiTab>
 

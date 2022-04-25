@@ -8,11 +8,6 @@ Modifies a CSSCLASS object:
       border: 1px solid red;
     }
   `,
-
-  icon,
-  text,
-  subtext,
-  description,
 }
 */
 import { ref, watchEffect } from 'vue'
@@ -25,7 +20,7 @@ const props = defineProps({
     default: null,
   },
 })
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'rename'])
 
 const innerValue = ref()
 watchEffect(() => innerValue.value = { ...props.modelValue })
@@ -33,19 +28,24 @@ watchEffect(() => innerValue.value = { ...props.modelValue })
 function emitUpdate() {
   emit('update:modelValue', { ...innerValue.value })
 }
+
+const oldName = ref(props.modelValue?.name)
+function onNameChanged(newName) {
+  // Update class name in css
+  innerValue.value.css = innerValue.value.css.replaceAll(`.${oldName.value} `, `.${newName} `)
+
+  emitUpdate()
+  emit('rename', { newName, oldName: oldName.value })
+  oldName.value = newName
+}
 </script>
 
 <template>
   <div class="CssClassEditor">
     <UiInput
-      v-model="innerValue.text"
-      label="Title"
-      @update:model-value="emitUpdate"
-    />
-    <UiInput
       v-model="innerValue.name"
       label="Class name"
-      @update:model-value="emitUpdate"
+      @update:model-value="onNameChanged"
     />
     <UiInput
       v-model="innerValue.css"

@@ -45,7 +45,7 @@ watch(
 )
 
 function emitUpdate() {
-  emit('update:modelValue', { ...props.modelValue, css })
+  emit('update:modelValue', JSON.parse(JSON.stringify({ ...props.modelValue, css }))) // cloning prevents recursive updates
 }
 
 </script>

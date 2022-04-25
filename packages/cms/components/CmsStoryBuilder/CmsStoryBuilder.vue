@@ -48,8 +48,9 @@ const i18n = useI18n({
 
 // inner story value
 const innerStory = ref()
-// watchEffect(() => innerStory.value = { ...props.story })
-watchEffect(() => innerStory.value = JSON.parse(JSON.stringify(props.story)))
+watchEffect(() => {
+  innerStory.value = JSON.parse(JSON.stringify(props.story))
+})
 
 const currentPageId = ref(props.story.pages[0].id)
 const currentPage = computed(() => {
