@@ -84,6 +84,7 @@ watch(
         <div
           v-show="isOpen"
           class="UiDialog__widget"
+          :class="$attrs.class"
         >
           <div
             class="UiDialog__scrim"
