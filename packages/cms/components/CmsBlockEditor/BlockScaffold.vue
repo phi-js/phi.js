@@ -1,5 +1,5 @@
 <script setup>
-import { ref, shallowRef, watch, inject, computed, provide } from 'vue'
+import { ref, shallowRef, watch, computed, provide } from 'vue'
 import { getBlockEditors, getBlockDefinition, getCssObjectAttributes } from '../../functions'
 import EditorAction from './EditorAction.vue'
 import {
@@ -74,14 +74,13 @@ function emitDelete() {
 const blockCssAttributes = computed(() => getCssObjectAttributes(innerBlock.value?.css))
 
 // Available block editors
-const $settings = inject('$_cms_settings', {})
 const editors = shallowRef({})
 const definition = shallowRef({})
 
 watch(
   () => props.block?.component,
   () => {
-    getBlockEditors(props.block, $settings).then((e) => editors.value = e)
+    getBlockEditors(props.block).then((e) => editors.value = e)
     getBlockDefinition(props.block).then((d) => definition.value = d)
   },
   { immediate: true },

@@ -3,7 +3,7 @@
 Este modulo contiene los siguientes BLOQUES:
 
 InputCheckbox
-InputFile
+InputUpload
 InputNumber
 InputPassword
 InputSelect

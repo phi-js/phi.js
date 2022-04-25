@@ -16,26 +16,14 @@ const props = defineProps({
     default: null,
   },
 
-  settings: {
-    type: Object,
-    required: false,
-    default: null,
-  },
-
   currentPageId: {
     type: [String, Number],
     required: false,
     default: null,
   },
-
-  settingsTab: {
-    type: [Boolean, String],
-    required: false,
-    default: false,
-  },
 })
 
-const emit = defineEmits(['update:story', 'update:currentPageId', 'update:settingsTab'])
+const emit = defineEmits(['update:story', 'update:currentPageId'])
 
 // Sanitize incoming story
 const sanitizedStory = ref(null)
@@ -101,7 +89,6 @@ const StyleTag = defineComponent({
           <CmsBlockEditor
             v-model:block="currentPage"
             class="CmsStoryEditor__page CmsStory__page"
-            :settings="settings"
             @update:block="onUpdateCurrentPage"
           />
         </KeepAlive>

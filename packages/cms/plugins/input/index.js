@@ -1,7 +1,7 @@
 import InputButton from './blocks/InputButton.js'
 import InputCheckbox from './blocks/InputCheckbox.js'
 import InputDate from './blocks/InputDate.js'
-import InputFile from './blocks/InputFile.js'
+import InputUpload from './blocks/InputUpload.js'
 import InputNumber from './blocks/InputNumber.js'
 import InputPassword from './blocks/InputPassword.js'
 import InputSelect from './blocks/InputSelect.js'
@@ -16,8 +16,8 @@ export default {
     InputCheckbox,
     InputDate,
     InputNumber,
-    InputFile,
+    InputUpload,
     InputPassword,
-    InputButton
-  }
+    InputButton,
+  },
 }

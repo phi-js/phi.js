@@ -18,12 +18,6 @@ const props = defineProps({
     default: null,
   },
 
-  settings: {
-    type: Object,
-    required: false,
-    default: null,
-  },
-
   currentPageId: {
     type: [String, Number],
     required: false,
@@ -32,12 +26,6 @@ const props = defineProps({
 
   currentTab: {
     type: [Boolean, String],
-    required: false,
-    default: false,
-  },
-
-  allowSource: {
-    type: Boolean,
     required: false,
     default: false,
   },
@@ -181,12 +169,11 @@ const i18n = useI18n({
         </UiTab>
 
         <UiTab
-          v-if="props.allowSource"
           value="source"
           icon="mdi:code-json"
           :text="i18n.t('StoryEditorWindow.source')"
         >
-          <div class="StoryEditorWindow__tab PageSettings">
+          <div class="StoryEditorWindow__tab">
             <UiTabs>
               <UiTab
                 :text="i18n.t('StoryEditorWindow.thisPage')"

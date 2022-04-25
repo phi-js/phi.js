@@ -21,19 +21,6 @@ const props = defineProps({
     required: false,
     default: () => ({}),
   },
-
-  settings: {
-    type: Object,
-    required: false,
-    default: null,
-  },
-
-  allowSource: {
-    type: Boolean,
-    required: false,
-    // default: false,
-    default: true,
-  },
 })
 
 const emit = defineEmits(['update:story', 'update:modelValue'])
@@ -71,7 +58,7 @@ const currentPage = computed(() => {
 })
 
 const currentTab = ref('editor')
-const settingsTab = ref()
+const windowTab = ref()
 const isSitemapOpen = ref(false)
 
 function onUpdateStory() {
@@ -97,7 +84,6 @@ function onWindowCancel() {
 // e.g. BlockCssClasses, NavigationPagePicker
 provide('$_cms_story_builder', {
   story: innerStory,
-  settings: props.settings,
   accept: onWindowAccept,
   cancel: onWindowCancel,
 })
@@ -161,30 +147,29 @@ const isModelExplorerOpen = ref(false)
             :text="i18n.t('CmsStoryBuilder.Styles')"
             icon="mdi:palette-advanced"
             class="ui--clickable"
-            :class="{'--active': settingsTab == 'style'}"
-            @click="settingsTab = 'style'"
+            :class="{'--active': windowTab == 'style'}"
+            @click="windowTab = 'style'"
           />
           <UiItem
             :text="i18n.t('CmsStoryBuilder.Events')"
             icon="mdi:gesture-tap"
             class="ui--clickable"
-            :class="{'--active': settingsTab == 'events'}"
-            @click="settingsTab = 'events'"
+            :class="{'--active': windowTab == 'events'}"
+            @click="windowTab = 'events'"
           />
           <UiItem
             :text="i18n.t('CmsStoryBuilder.Dictionary')"
             icon="mdi:translate"
             class="ui--clickable"
-            :class="{'--active': settingsTab == 'i18n'}"
-            @click="settingsTab = 'i18n'"
+            :class="{'--active': windowTab == 'i18n'}"
+            @click="windowTab = 'i18n'"
           />
           <UiItem
-            v-if="props.allowSource"
             :text="i18n.t('CmsStoryBuilder.Source')"
             icon="mdi:code-json"
             class="ui--clickable"
-            :class="{'--active': settingsTab == 'source'}"
-            @click="settingsTab = 'source'"
+            :class="{'--active': windowTab == 'source'}"
+            @click="windowTab = 'source'"
           />
 
           <slot name="corner" />
@@ -226,9 +211,8 @@ const isModelExplorerOpen = ref(false)
 
       <StoryEditorWindow
         v-model:story="innerStory"
-        v-model:current-tab="settingsTab"
+        v-model:current-tab="windowTab"
         :current-page-id="currentPageId"
-        :allow-source="allowSource"
         @accept="onWindowAccept"
         @cancel="onWindowCancel"
       />
@@ -237,7 +221,6 @@ const isModelExplorerOpen = ref(false)
         v-show="currentTab == 'editor'"
         v-model:current-page-id="currentPageId"
         v-model:story="innerStory"
-        :settings="{ ...props.settings, allowSource: props.allowSource }"
         @update:story="onUpdateStory()"
       />
 

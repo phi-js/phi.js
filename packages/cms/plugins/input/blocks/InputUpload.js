@@ -8,16 +8,9 @@ import InputSettings from '../components/InputSettings/InputSettings.vue'
 export default {
   tags: ['input'],
 
-  name: 'InputFile',
+  name: 'InputUpload',
   title: 'Archivo',
   icon: 'mdi:paperclip',
-
-  settings: {
-    uploadURL: {
-      type: String,
-      required: true,
-    },
-  },
 
   block: {
     'component': UiInput,
@@ -27,6 +20,7 @@ export default {
       endpoint: '{{$settings.uploads.endpoint}}',
       inline: false,
       multiple: false,
+      placeholder: 'Upload files',
     },
   },
 

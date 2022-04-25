@@ -12,7 +12,8 @@ export default {
   block: {
     'component': UiVideo,
     'props': { url: '' },
-    'v-model': 'video',
+    'v-model:isPlaying': '',
+    'v-model:currentTime': '',
     'v-model:activeChapters': '',
   },
 

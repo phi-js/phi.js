@@ -1,5 +1,5 @@
 <script>
-import { h, provide, inject, defineAsyncComponent } from 'vue'
+import { h, defineAsyncComponent, watch, ref } from 'vue'
 import { blocks } from '../../singleton/index.js'
 import BlockScaffold from './BlockScaffold.vue'
 
@@ -12,32 +12,30 @@ const CmsBlockEditor = {
       required: false,
       default: null,
     },
-
-    settings: {
-      type: Object,
-      required: false,
-      default: null,
-    },
   },
 
   emits: ['update:block', 'delete'],
 
   setup(props, { emit, attrs }) {
-    var settings = {}
-    if (props.settings) {
-      settings = { ...props.settings }
-      provide('$_cms_settings', settings)
-    } else {
-      settings = inject('$_cms_settings', {})
-    }
+    const definition = blocks[props.block.component]
+
+    const innerBlock = ref(props.block)
+    watch(
+      () => props.block,
+      (newBlock) => innerBlock.value = {
+        ...newBlock,
+        props: {
+          ...definition?.block?.props,
+          ...newBlock?.props,
+        },
+      },
+    )
 
     return (instance) => {
-      const definition = blocks[props.block.component]
-
       if (definition?.editor?.component) {
         const customEditor = h(definition.editor.component, {
           ...attrs,
-          'block': props.block,
+          'block': innerBlock.value,
           'onUpdate:block': (newValue) => emit('update:block', newValue),
           'onDelete': () => emit('delete'),
         }, instance.$slots)
@@ -49,7 +47,7 @@ const CmsBlockEditor = {
         const scaffoldNode = h(BlockScaffold, {
           ...attrs,
           'class': 'BlockScaffold--default',
-          'block': props.block,
+          'block': innerBlock.value,
           'onUpdate:block': (newValue) => emit('update:block', newValue),
           'onDelete': () => emit('delete'),
         })
@@ -66,7 +64,6 @@ const CmsBlockEditor = {
         ? () => props.block.slot
           .map((slotItem, slotIndex) => h(CmsBlockEditor, {
             'block': slotItem,
-            'settings': props.settings,
             'onUpdate:block': (newValue) => {
               const slotCopy = props.block.slot
               slotCopy[slotIndex] = newValue

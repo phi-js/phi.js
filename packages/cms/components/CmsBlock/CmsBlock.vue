@@ -66,8 +66,15 @@ const CmsBlock = {
     }
 
     /* Block definition */
+    const blockDefinition = ref()
+    CMS.getDefinition(props.block)
+      .then((definition) => {
+        blockDefinition.value = definition
+        blockComponent.value = definition?.block?.component
+      })
+
     const blockComponent = shallowRef()
-    CMS.getDefinition(props.block).then((def) => blockComponent.value = def?.block?.component)
+    const blockProps = ref()
 
     /* Block visibility (v-if) */
     const isVisible = ref(false)
@@ -78,12 +85,11 @@ const CmsBlock = {
     }
 
     /* Eval'd block props */
-    const blockProps = ref()
     watchEffect(() => {
+      const allProps = { ...blockDefinition.value?.block?.props, ...props.block?.props }
+
       // Parsed block props
-      blockProps.value = typeof props.block.props === 'object'
-        ? parse(props.block.props, evaluableModel.value)
-        : {}
+      blockProps.value = parse(allProps, evaluableModel.value)
 
       // props from v-models
       for (const p in props.block) {

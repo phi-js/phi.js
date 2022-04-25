@@ -1,14 +1,10 @@
 <script>
-import { inject } from 'vue'
-
 import Quicklaunch from './Quicklaunch/index.js'
 
 import { blocks as cmsBlocks } from '../../singleton'
 import { getBlockDefinition } from '../../functions'
 import { UiIcon, UiTabs, UiTab } from '@/packages/ui/components'
 import { useI18n } from '../../../i18n'
-
-import { parse } from '../../../vm/lib/utils'
 
 export default {
   name: 'PickerContents',
@@ -66,9 +62,7 @@ export default {
       },
     })
 
-    const settings = inject('$_cms_settings', null)
-
-    return { i18n, settings }
+    return { i18n }
   },
 
   data() {
@@ -77,16 +71,10 @@ export default {
       launcherComponent: null,
       emptyTagsTab: 'default',
       currentTab: 'default',
-
-      defaultSettings: { modelPrefix: '' },
     }
   },
 
   computed: {
-    allSettings() {
-      return Object.assign({}, this.defaultSettings, this.settings)
-    },
-
     availableBlocks() {
       let blocks = []
       for (let name in cmsBlocks) {
@@ -175,22 +163,6 @@ export default {
         definition.block.props,
         block.props,
       )
-
-      if (this.settings) {
-        targetBlock.props = parse(
-          targetBlock.props,
-          { $settings: this.settings },
-          true,
-        )
-      }
-
-      if (targetBlock['v-model']) {
-        let count = this.countBlocks(definition.id)
-        targetBlock['v-model'] =
-          this.allSettings.modelPrefix +
-          targetBlock['v-model'] +
-          (count > 0 ? count + 1 : '')
-      }
 
       this.$emit('input', targetBlock)
     },

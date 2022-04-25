@@ -13,7 +13,7 @@ export default {
     'component': UiInput,
     'v-model': '',
     'props': {
-      type: 'select',
+      type: 'select-list',
       multiple: false,
     },
   },
