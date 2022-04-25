@@ -132,14 +132,35 @@ function onTriggerClick() {
 </script>
 
 <template>
-  <div class="UiDrawer" :class="{ 'UiDrawer--open': isOpen, 'UiDrawer--closed': !isOpen }">
-    <div v-if="$slots.trigger" class="UiDrawer__trigger" @click="onTriggerClick">
-      <slot name="trigger" :is-open="isOpen" />
+  <div
+    class="UiDrawer"
+    :class="{ 'UiDrawer--open': isOpen, 'UiDrawer--closed': !isOpen }"
+  >
+    <div
+      v-if="$slots.trigger"
+      class="UiDrawer__trigger"
+      @click="onTriggerClick"
+    >
+      <slot
+        name="trigger"
+        :is-open="isOpen"
+      />
     </div>
 
-    <div ref="contentsEl" class="UiDrawer__contents">
-      <slot name="contents" :close="() => setOpen(false)" :isOpen="isOpen">
-        <slot name="default" :close="() => setOpen(false)" :isOpen="isOpen" />
+    <div
+      ref="contentsEl"
+      class="UiDrawer__contents"
+    >
+      <slot
+        name="contents"
+        :close="() => setOpen(false)"
+        :isOpen="isOpen"
+      >
+        <slot
+          name="default"
+          :close="() => setOpen(false)"
+          :isOpen="isOpen"
+        />
       </slot>
     </div>
   </div>
