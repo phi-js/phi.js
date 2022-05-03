@@ -141,7 +141,10 @@ const nativeCheckboxProps = computed(() => {
 })
 
 const element = ref()
-defineExpose({ element })
+defineExpose({
+  element,
+  focus: () => element?.value?.focus?.(),
+})
 </script>
 
 <template>

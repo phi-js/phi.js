@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue'
 const props = defineProps({
   open: {
-    type: Boolean,
+    type: [String, Number, Boolean],
     required: false,
     default: false,
   },
@@ -13,23 +13,25 @@ const props = defineProps({
     default: null,
   },
 })
-const emit = defineEmits(['update:open'])
+const emit = defineEmits(['update:open', 'open', 'close'])
 
 const isOpen = ref(false)
 watch(
   () => props.open,
-  (newValue) => isOpen.value = newValue,
+  (newValue) => isOpen.value = !!newValue,
   { immediate: true },
 )
 
 function open() {
   isOpen.value = true
   emit('update:open', isOpen.value)
+  emit('open')
 }
 
 function close() {
   isOpen.value = false
   emit('update:open', isOpen.value)
+  emit('close')
 }
 
 async function cancel() {

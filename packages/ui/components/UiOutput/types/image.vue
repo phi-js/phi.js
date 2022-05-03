@@ -9,5 +9,13 @@ const props = defineProps({
 </script>
 
 <template>
-  <img :src="props.value">
+  <a
+    target="_blank"
+    :href="props.value"
+  >
+    <img
+      :src="props.value"
+      style="max-width: 80px"
+    >
+  </a>
 </template>

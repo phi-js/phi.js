@@ -2,6 +2,7 @@
 import { computed, shallowRef, useSlots, watchEffect } from 'vue'
 import { UiOutput } from '../UiOutput'
 import { getProperty } from '../../helpers'
+import deduceColumns from './deduceColumns'
 
 const props = defineProps({
   data: {
@@ -17,6 +18,8 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['click-row'])
+
 const slots = useSlots()
 
 const computedColumns = computed(() => {
@@ -30,7 +33,12 @@ const computedColumns = computed(() => {
   }
 
   if (!slots?.default) {
-    return []
+    return deduceColumns(props.data).map((propColumn) => ({
+      props: propColumn,
+      slotHeader: null,
+      slotContent: null,
+      slotFooter: null,
+    }))
   }
 
   let retval = []
@@ -92,6 +100,7 @@ watchEffect(() => {
       <tr
         v-for="(item, i) in data"
         :key="i"
+        @click="emit('click-row', data[i])"
       >
         <td
           v-for="(col, ci) in computedColumns"
