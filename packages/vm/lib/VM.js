@@ -126,13 +126,20 @@ export default class VM {
      * Evaluate all subproperties concurrently (Promise.all)
      * This makes VM.eval inside watchEffect() trigger correctly on any accesed property change
      */
-    const retval = {}
-    const promises = []
-    for (let propertyName in expr) {
-      promises.push(this.eval(expr[propertyName], localScope).then((result) => retval[propertyName] = result))
-    }
-    await Promise.all(promises)
-    return retval
+    // const retval = {}
+    // const promises = []
+    // for (let propertyName in expr) {
+    //   promises.push(this.eval(expr[propertyName], localScope).then((result) => retval[propertyName] = result))
+    // }
+    // await Promise.all(promises)
+    // return retval
+
+    /*
+    Only PARSE object (parse is recursive)
+    i.e. if the generic object has subproperties that can be interpreted as statements (i.e. object.and, object.call, etc)
+    then they are NOT evaluated
+    */
+    return parse(expr, localScope, true)
   }
 
 

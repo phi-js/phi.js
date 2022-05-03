@@ -47,27 +47,27 @@ function onSelectChange($evt) {
 
     <!-- Schema properties -->
     <optgroup
-      v-if="modelSchema"
       label="Variables"
     >
-      <option
-        v-for="(propDef, propName) in modelSchema.properties"
-        :key="propName"
-        :value="'prop:' + propName"
-      >
-        {{ propDef.text || propDef.title || propName }}
-      </option>
-
+      <template v-if="modelSchema">
+        <option
+          v-for="(propDef, propName) in modelSchema.properties"
+          :key="propName"
+          :value="'prop:' + propName"
+        >
+          {{ propDef.text || propDef.title || propName }}
+        </option>
+      </template>
       <option value="prop:custom">
         Otra ...
       </option>
     </optgroup>
 
-    <optgroup label="Otras">
+    <!-- <optgroup label="Otras">
       <option value="stmt">
         Expresión
       </option>
-    </optgroup>
+    </optgroup> -->
 
     <!-- availableStatements ? -->
     <optgroup label="Condiciones">
