@@ -34,7 +34,9 @@ const props = defineProps({
   },
 })
 
-const isSelect = computed(() => props.modelValue?.type && props.modelValue.type.substring(0, 6) == 'select')
+const isSelect = computed(() =>
+  props.modelValue?.props?.type
+  && props.modelValue.props.type.substring(0, 6) == 'select')
 
 const i18n = useI18n()
 const translatedProps = ref()
@@ -55,24 +57,14 @@ watchEffect(() => {
     @click="openAction('InputSettings')"
   >
     <UiInput
-      v-if="isSelect"
       v-bind="translatedProps"
       style="pointer-events: none;"
-    >
-      <template
-        v-if="!translatedProps?.options?.length"
-        #default
-      >
-        <UiItem
-          text="Add options"
-          icon="mdi:form-dropdown"
-        />
-      </template>
-    </UiInput>
-    <UiInput
-      v-else
-      v-bind="translatedProps"
-      style="pointer-events: none;"
+    />
+    <UiItem
+      v-if="isSelect && !translatedProps?.options?.length"
+      text="Add options"
+      icon="mdi:form-dropdown"
+      class="ui--clickable"
     />
   </div>
 </template>

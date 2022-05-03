@@ -44,7 +44,7 @@ const currentLanguage = ref('es')
       v-model:currentLanguage="currentLanguage"
       class="DictionaryEditor__blockEditor"
       :model-value="block"
-      @update:modelValue="blocksWithLang[i].i18n = $event.i18n; emitUpdate();"
+      @update:model-value="blocksWithLang[i].i18n = $event.i18n; emitUpdate();"
     />
   </div>
 </template>

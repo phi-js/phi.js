@@ -10,6 +10,7 @@ import { VmStatement } from '@/packages/vm/components'
 
 import BlockCssEditor from '../CmsBlockEditor/BlockCssEditor.vue'
 import StoryDictionaryEditor from './StoryDictionaryEditor.vue'
+import StoryMethodsEditor from './StoryMethodsEditor.vue'
 
 const props = defineProps({
   story: {
@@ -73,6 +74,7 @@ const i18n = useI18n({
     'StoryEditorWindow.events': 'Events',
     'StoryEditorWindow.global': 'Global',
     'StoryEditorWindow.i18n': 'Dictionary',
+    'StoryEditorWindow.methods': 'Functions',
     'StoryEditorWindow.source': 'Source',
     'StoryEditorWindow.style': 'Style',
     'StoryEditorWindow.sitemap': 'Pages',
@@ -87,6 +89,7 @@ const i18n = useI18n({
     'StoryEditorWindow.events': 'Eventos',
     'StoryEditorWindow.global': 'Global',
     'StoryEditorWindow.i18n': 'Diccionario',
+    'StoryEditorWindow.methods': 'Funciones',
     'StoryEditorWindow.source': 'Fuente',
     'StoryEditorWindow.style': 'Estilos',
     'StoryEditorWindow.sitemap': 'Páginas',
@@ -174,7 +177,18 @@ const i18n = useI18n({
         >
           <StoryDictionaryEditor
             v-model:story="innerStory"
-            @update:model-value="emitStoryUpdate"
+            @update:story="emitStoryUpdate"
+          />
+        </UiTab>
+
+        <UiTab
+          value="methods"
+          icon="mdi:variable"
+          :text="i18n.t('StoryEditorWindow.methods')"
+        >
+          <StoryMethodsEditor
+            v-model:story="innerStory"
+            @update:story="emitStoryUpdate"
           />
         </UiTab>
 

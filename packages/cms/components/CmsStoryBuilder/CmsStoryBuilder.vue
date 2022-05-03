@@ -30,7 +30,7 @@ const i18n = useI18n({
     'CmsStoryBuilder.Editor': 'Editor',
     'CmsStoryBuilder.Styles': 'Styles',
     'CmsStoryBuilder.Events': 'Events',
-    'CmsStoryBuilder.Dictionary': 'Dictionary',
+    'CmsStoryBuilder.Languages': 'Languages',
     'CmsStoryBuilder.Source': 'Source',
     'CmsStoryBuilder.Preview': 'Preview',
     'CmsStoryBuilder.DataExplorer': 'DataExplorer',
@@ -39,7 +39,7 @@ const i18n = useI18n({
     'CmsStoryBuilder.Editor': 'Editor',
     'CmsStoryBuilder.Styles': 'Estilos',
     'CmsStoryBuilder.Events': 'Eventos',
-    'CmsStoryBuilder.Dictionary': 'Diccionario',
+    'CmsStoryBuilder.Languages': 'Idiomas',
     'CmsStoryBuilder.Source': 'Fuente',
     'CmsStoryBuilder.Preview': 'Vista previa',
     'CmsStoryBuilder.DataExplorer': 'Explorar datos',
@@ -159,7 +159,7 @@ const isModelExplorerOpen = ref(false)
             @click="windowTab = 'events'"
           />
           <UiItem
-            :text="i18n.t('CmsStoryBuilder.Dictionary')"
+            :text="i18n.t('CmsStoryBuilder.Languages')"
             icon="mdi:translate"
             class="ui--clickable"
             :class="{'--active': windowTab == 'i18n'}"

@@ -76,7 +76,7 @@ export default {
       onUpdateModelValue(modelValue)
     }
 
-    // Evaluate story.setup
+    // Evaluate story.setup()
     const isMounted = ref(false)
     onMounted(async () => {
       if (!sanitizedStory.value.setup) {
@@ -162,11 +162,15 @@ export default {
     const globals = reactive({ $errors: [] })
 
     // Provide global story methods (used by CmsBlock)
-    provide('$_cms_story', {
+    const providedData = {
       goTo,
       goBack,
       globals,
-    })
+      sanitizedStory,
+    }
+    provide('$_cms_story', providedData)
+    storyVM.custom = { story: providedData }
+
 
     function onUpdateModelValue(event) {
       emit('update:modelValue', event)

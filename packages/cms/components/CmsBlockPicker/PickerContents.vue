@@ -48,6 +48,7 @@ export default {
         'CmsLauncher.Tab.cms': 'CMS',
         'CmsLauncher.Tab.navigation': 'Navegación',
         'CmsLauncher.Tab.video': 'Video',
+        'CmsLauncher.Tab.db': 'Base de Datos',
       },
 
       en: {
@@ -58,7 +59,7 @@ export default {
         'CmsLauncher.Tab.ecommerce': 'eCommerce',
         'CmsLauncher.Tab.cms': 'CMS',
         'CmsLauncher.Tab.navigation': 'Navigation',
-        'CmsLauncher.Tab.video': 'Video',
+        'CmsLauncher.Tab.db': 'Database',
       },
     })
 

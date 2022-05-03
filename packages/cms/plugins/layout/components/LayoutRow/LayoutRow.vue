@@ -29,6 +29,7 @@ const props = defineProps({
 
     .LayoutColumn {
       flex: 1;
+      max-width: 100%;
     }
   }
 }
