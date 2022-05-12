@@ -45,86 +45,91 @@ function toggleProperty(propName, defaultValue = null) {
 </script>
 
 <template>
-  <div class="BlockCssStyle UiForm">
+  <div class="BlockCssStyle">
     <details>
       <summary>
-        Content width
         <input
           type="checkbox"
           :checked="!!innerValue['--ui-content-width']"
           @change="toggleProperty('--ui-content-width', 'auto')"
         >
+        Content width
       </summary>
-      <UiInput
-        v-model="innerValue['--ui-content-width']"
-        @update:modelValue="emitUpdate()"
-      />
+      <section>
+        <UiInput
+          v-model="innerValue['--ui-content-width']"
+          @update:model-value="emitUpdate()"
+        />
+      </section>
     </details>
 
     <details>
       <summary>Background</summary>
-      <PropBackground
-        v-model="innerValue"
-        class="UiForm UiForm--wide"
-        :endpoint="uploadsEndpoint"
-        @update:modelValue="emitUpdate()"
-      />
+      <section>
+        <PropBackground
+          v-model="innerValue"
+          :endpoint="uploadsEndpoint"
+          @update:model-value="emitUpdate()"
+        />
+      </section>
     </details>
 
     <details>
       <summary>
-        Margin
         <input
           type="checkbox"
           :checked="!!innerValue.margin"
           @change="toggleProperty('margin', 'auto auto auto auto')"
         >
+        Margin
       </summary>
-      <SpacingEditor
-        v-model="innerValue.margin"
-        class="UiForm UiForm--wide"
-        @update:modelValue="emitUpdate()"
-      />
+      <section>
+        <SpacingEditor
+          v-model="innerValue.margin"
+          @update:model-value="emitUpdate()"
+        />
+      </section>
     </details>
 
     <details>
       <summary>
-        Padding
         <input
           type="checkbox"
           :checked="!!innerValue.padding"
           @change="toggleProperty('padding', '0 0 0 0')"
         >
+        Padding
       </summary>
-      <SpacingEditor
-        v-model="innerValue.padding"
-        class="UiForm UiForm--wide"
-        @update:modelValue="emitUpdate()"
-      />
+      <section>
+        <SpacingEditor
+          v-model="innerValue.padding"
+          @update:model-value="emitUpdate()"
+        />
+      </section>
     </details>
 
     <details>
-      <summary>Color</summary>
-      <div class="UiForm UiForm--wide">
+      <summary>Palette</summary>
+      <section>
         <UiInput
           v-model="innerValue.color"
           label="Font color"
           type="color"
-          @update:modelValue="emitUpdate()"
+          @update:model-value="emitUpdate()"
         />
         <UiInput
           v-model="innerValue['--ui-color-primary']"
           label="Primary"
           type="color"
-          @update:modelValue="emitUpdate()"
+          @update:model-value="emitUpdate()"
         />
         <UiInput
           v-model="innerValue['--ui-color-danger']"
           label="Danger"
           type="color"
-          @update:modelValue="emitUpdate()"
+          @update:model-value="emitUpdate()"
         />
-      </div>
+      </section>
     </details>
   </div>
 </template>

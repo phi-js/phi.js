@@ -32,13 +32,17 @@ function emitUpdate() {
 </script>
 
 <template>
-  <div class="BlockVisibilityEditor UiForm">
-    <VmStatement
-      v-model="block['v-if']"
-      label="Visible cuando"
-      :default="{ and: [] }"
-      @update:model-value="emitUpdate"
-    />
+  <div class="BlockVisibilityEditor">
+    <details open>
+      <summary>Visible cuando</summary>
+      <section>
+        <VmStatement
+          v-model="block['v-if']"
+          :default="{ and: [] }"
+          @update:model-value="emitUpdate"
+        />
+      </section>
+    </details>
 
     <!-- <UiInput
       v-model="block.transition"
@@ -47,18 +51,19 @@ function emitUpdate() {
       @update:model-value="emitUpdate"
     /> -->
 
-    <fieldset>
-      <legend>Repeat</legend>
-
-      <UiInput
-        v-model="block['v-for']"
-        type="text"
-        model="v-for"
-        label="Repeat for every item in"
-        placeholder="Variable"
-        subtext="The iterated value is available as $item"
-        @update:model-value="emitUpdate"
-      />
-    </fieldset>
+    <details>
+      <summary>Repeat</summary>
+      <section>
+        <UiInput
+          v-model="block['v-for']"
+          type="text"
+          model="v-for"
+          label="Repeat for every item in"
+          placeholder="Variable"
+          subtext="The iterated value is available as $item"
+          @update:model-value="emitUpdate"
+        />
+      </section>
+    </details>
   </div>
 </template>

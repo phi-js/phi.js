@@ -1,1 +1,2 @@
-export { default as CmsBlock } from './CmsBlock.vue'
+export { default as CmsBlock } from './CmsBlock.recursive.vue'
+// export { default as CmsBlock } from './CmsBlock.fn.vue'

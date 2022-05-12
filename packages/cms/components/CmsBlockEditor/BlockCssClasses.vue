@@ -44,7 +44,9 @@ function emitUpdate() {
 const injectedStoryEditor = inject('$_cms_story_builder', {})
 const injectedStory = shallowRef(injectedStoryEditor.story)
 
-let initialStoryClasses = JSON.parse(JSON.stringify(injectedStory.value?.css?.classes))
+let initialStoryClasses = injectedStory.value?.css?.classes
+  ? JSON.parse(JSON.stringify(injectedStory.value.css.classes))
+  : null
 
 const storyClasses = ref(injectedStory.value?.css?.classes || [])
 
@@ -70,12 +72,11 @@ onUnmounted(() => unlistenCancel?.())
 </script>
 
 <template>
-  <div class="BlockCssClasses UiForm">
-    <CssClassManager
-      v-model="storyClasses"
-      v-model:selection="innerSelection"
-      @update:selection="emitUpdate"
-      @update:model-value="onUpdateStoryClasses"
-    />
-  </div>
+  <CssClassManager
+    v-model="storyClasses"
+    v-model:selection="innerSelection"
+    class="BlockCssClasses"
+    @update:selection="emitUpdate"
+    @update:model-value="onUpdateStoryClasses"
+  />
 </template>

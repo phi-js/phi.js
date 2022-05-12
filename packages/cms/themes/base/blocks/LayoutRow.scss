@@ -1,0 +1,10 @@
+.LayoutRow {
+  margin: auto;
+  padding: var(--cms-row-padding);
+
+  .ui__content {
+    margin: auto;
+    width: 100%;
+    max-width: var(--ui-content-width);
+  }
+}

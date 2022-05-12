@@ -1,0 +1,51 @@
+.phi-theme-test {
+  background: #f3f3f3;
+  color: #111;
+  padding: 30px;
+
+  .story-html {
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+
+    h1, p {
+      margin: 0;
+    }
+  }
+
+  .MediaLoremIpsum {
+    border: 2px dashed green;
+
+    p {
+      margin: 0 0 1rem 0;
+
+      &:last-child {
+        margin: 0;
+      }
+    }
+  }
+
+
+  // @import '@/packages/ui/themes/material/blocks/UiInput.scss';
+  // .UiInput {
+  //   margin-bottom: 1.5rem;
+  //   font-size: 1.2em;
+  // }
+
+  // --input-label-width: 250px;
+  // --input-breathe: 0.6rem;
+
+  // .UiInput {
+  //   position: relative;
+  //   padding-left: var(--input-label-width);
+
+  //   padding-bottom: var(--input-breathe);
+  //   margin-bottom: var(--input-breathe);
+  //   border-bottom: 1px dotted #ccc;
+
+  //   &__label {
+  //     position: absolute;
+  //     top: 0;
+  //     left: 0;
+  //     width: var(--input-label-width);
+  //   }
+  // }
+}

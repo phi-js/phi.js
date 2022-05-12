@@ -1,0 +1,140 @@
+<script setup>
+import { ref, watch, computed } from 'vue'
+import { VmStatement } from '@/packages/vm'
+import { UiIcon, UiInput } from '@/packages/ui'
+
+const props = defineProps({
+  /*
+  Array of listeners:
+  [
+    {
+      name: "update:modelValue",
+      stmt: { ...VmStatement }
+    }
+  ]
+  */
+  modelValue: {
+    type: Array,
+    required: false,
+    default: () => [],
+  },
+
+  /*
+  List of available (emitable) events:
+  [
+    {
+      event: 'click',
+      text: 'The button is clicked',
+    },
+    {
+      event: 'mouseenter',
+      text: 'Mouse enters',
+    },
+  ]
+  */
+  availableEvents: {
+    type: Array,
+    required: false,
+    default: () => [],
+  },
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+const events = ref([])
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    events.value = Array.isArray(newValue) ? newValue.concat() : []
+  },
+  { immediate: true },
+)
+
+function emitUpdate() {
+  emit('update:modelValue', events.value.concat())
+}
+
+
+function removeEvent(eventIndex) {
+  if (!confirm('Remove this event listener?')) {
+    return
+  }
+
+  events.value.splice(eventIndex, 1)
+  emitUpdate()
+}
+
+// List of all not-used events
+const eventPickerOptions = computed(() => {
+  return props.availableEvents
+    .filter((e) => !events.value.find((usedEvent) => usedEvent.name === e.event))
+    .concat([
+      { event: 'custom', text: 'Custom event' },
+    ])
+    .map((e) => ({
+      value: e.event,
+      text: e.text,
+    }))
+})
+
+const eventNames = computed(() => {
+  const allNames = {}
+  props.availableEvents.forEach((evt) => allNames[evt.event] = evt.text)
+  return allNames
+})
+
+function addEvent(eventName) {
+  if (eventName == 'custom') {
+    eventName = window.prompt('Enter an event name')
+  }
+
+  if (!eventName) {
+    return
+  }
+
+  events.value.push({
+    name: eventName,
+    stmt: { chain: [] },
+  })
+  emitUpdate()
+}
+
+const endangeredIndex = ref(-1)
+</script>
+
+<template>
+  <div class="ListenersEditor">
+    <details
+      v-for="(event, i) in events"
+      :key="i"
+      class="ListenersEditor__listener"
+      :class="{'ListenersEditor__listener--endangered': endangeredIndex === i}"
+    >
+      <summary class="ListenersEditor__summary">
+        <span v-text="eventNames[event.name] || event.name" />
+        <UiIcon
+          class="ListenersEditor__delete"
+          src="mdi:close"
+          @click.prevent="removeEvent(i)"
+          @mouseenter="endangeredIndex = i"
+          @mouseleave="endangeredIndex = -1"
+        />
+      </summary>
+      <section>
+        <VmStatement
+          v-model="events[i].stmt"
+          @update:model-value="emitUpdate"
+        />
+      </section>
+    </details>
+
+    <UiInput
+      v-if="eventPickerOptions.length"
+      class="ListenersEditor__adder"
+      type="select-native"
+      :options="eventPickerOptions"
+      placeholder="Cuando ..."
+      @update:model-value="addEvent($event)"
+    />
+  </div>
+</template>

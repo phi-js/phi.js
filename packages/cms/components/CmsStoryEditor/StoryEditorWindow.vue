@@ -3,12 +3,12 @@
 Takes the same props as CmsStoryEditor
 Presents a window with options for the current page and the story (style, dictionary, etc)
 */
-import { ref, watch } from 'vue'
-import { useI18n } from '../../../i18n'
-import { UiWindow, UiTabs, UiTab, UiInput } from '../../../ui'
-import { VmStatement } from '@/packages/vm/components'
+import { ref, watch, computed } from 'vue'
+import { useI18n } from '@/packages/i18n'
+import { UiWindow, UiTabs, UiTab, UiInput } from '@/packages/ui'
 
 import BlockCssEditor from '../CmsBlockEditor/BlockCssEditor.vue'
+import ListenersEditor from '../ListenersEditor/ListenersEditor.vue'
 import StoryDictionaryEditor from './StoryDictionaryEditor.vue'
 import StoryMethodsEditor from './StoryMethodsEditor.vue'
 
@@ -101,6 +101,79 @@ const i18n = useI18n({
     'StoryEditorWindow.events.pageLeave': 'Al salir de ésta página',
   },
 })
+
+// Pseudo events (?)
+const storyEvents = computed({
+  get() {
+    return [
+      {
+        name: 'story.setup',
+        stmt: innerStory.value.setup,
+      },
+      {
+        name: 'page.setup',
+        stmt: currentPage.value.setup,
+      },
+      {
+        name: 'page.onEnter',
+        stmt: currentPage.value.onEnter,
+      },
+      {
+        name: 'page.onLeave',
+        stmt: currentPage.value.onLeave,
+      },
+    ].filter((evt) => !!evt.stmt)
+  },
+
+  set(newValue) {
+    innerStory.value.setup = null
+    currentPage.value.setup = null
+    currentPage.value.onEnter = null
+    currentPage.value.onLeave = null
+
+    newValue.forEach((evt) => {
+      switch (evt.name) {
+      case 'story.setup':
+        innerStory.value.setup = evt.stmt
+        break
+
+      case 'page.setup':
+        currentPage.value.setup = evt.stmt
+        break
+
+      case 'page.onEnter':
+        currentPage.value.onEnter = evt.stmt
+        break
+
+      case 'page.onLeave':
+        currentPage.value.onLeave = evt.stmt
+        break
+      }
+    })
+
+    emitCurrentPageUpdate()
+  },
+})
+
+const availableEvents = computed(() => [
+  {
+    event: 'story.setup',
+    text: i18n.t('StoryEditorWindow.events.storySetup'),
+  },
+  {
+    event: 'page.setup',
+    text: i18n.t('StoryEditorWindow.events.pageSetup'),
+  },
+  {
+    event: 'page.onEnter',
+    text: i18n.t('StoryEditorWindow.events.pageEnter'),
+  },
+  {
+    event: 'page.onLeave',
+    text: i18n.t('StoryEditorWindow.events.pageLeave'),
+  },
+])
+
 </script>
 
 <template>
@@ -131,43 +204,11 @@ const i18n = useI18n({
           icon="mdi:gesture-tap"
           :text="i18n.t('StoryEditorWindow.events')"
         >
-          <div class="StoryEditorWindow__events UiForm">
-            <details>
-              <summary>{{ i18n.t('StoryEditorWindow.events.storySetup') }}</summary>
-              <VmStatement
-                v-model="innerStory.setup"
-                :default="{chain:[]}"
-                @update:model-value="emitStoryUpdate"
-              />
-            </details>
-
-            <details>
-              <summary>{{ i18n.t('StoryEditorWindow.events.pageSetup') }}</summary>
-              <VmStatement
-                v-model="currentPage.setup"
-                :default="{ chain: [] }"
-                @update:model-value="emitCurrentPageUpdate"
-              />
-            </details>
-
-            <details>
-              <summary>{{ i18n.t('StoryEditorWindow.events.pageEnter') }}</summary>
-              <VmStatement
-                v-model="currentPage.onEnter"
-                :default="{ chain: [] }"
-                @update:model-value="emitCurrentPageUpdate"
-              />
-            </details>
-
-            <details>
-              <summary>{{ i18n.t('StoryEditorWindow.events.pageLeave') }}</summary>
-              <VmStatement
-                v-model="currentPage.onLeave"
-                :default="{ chain: [] }"
-                @update:model-value="emitCurrentPageUpdate"
-              />
-            </details>
-          </div>
+          <ListenersEditor
+            v-model="storyEvents"
+            class="StoryEditorWindow__events"
+            :available-events="availableEvents"
+          />
         </UiTab>
 
         <UiTab

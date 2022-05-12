@@ -19,6 +19,13 @@ const Cms = {
     }
     return blocks?.[block.component]
   },
+
+  __getDefinition(block) {
+    if (!block?.component) {
+      return null
+    }
+    return blocks?.[block.component]
+  },
 }
 
 import pluginLayout from '../plugins/layout'

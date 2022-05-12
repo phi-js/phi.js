@@ -1,10 +1,4 @@
 <script setup>
-// Base story styles
-import '../../style/base.scss'
-
-// Editor and subcomponents styles
-import './style.scss'
-
 import { ref, watch, watchEffect, computed, defineComponent, h, Teleport, provide } from 'vue'
 import { sanitizeStory, getStorySchema } from '../../functions'
 import { CmsBlockEditor } from '../CmsBlockEditor'
@@ -74,10 +68,32 @@ const StyleTag = defineComponent({
     ),
   ),
 })
+
+
+// THEMES
+const storyClassNames = ref([])
+if (sanitizedStory.value?.theme) {
+
+  watch(
+    () => sanitizedStory.value.theme,
+    () => {
+      const themes = Array.isArray(sanitizedStory.value.theme)
+        ? sanitizedStory.value.theme
+        : [sanitizedStory.value.theme]
+
+      themes.forEach((themeName) => import(`../../style/themes/${themeName}/index.scss`))
+      storyClassNames.value = themes.map((themeName) => `phi-theme-${themeName}`)
+    },
+    { immediate: true },
+  )
+}
 </script>
 
 <template>
-  <div class="CmsStoryEditor CmsStory">
+  <div
+    class="CmsStoryEditor CmsStory"
+    :class="storyClassNames"
+  >
     <StyleTag />
 
     <Transition :name="`${transitionName}--${transitionDirection}`">

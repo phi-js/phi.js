@@ -55,16 +55,16 @@ function emitUpdate() {
     class="BlockCssEditor"
     name="BlockCssEditor"
   >
-    <UiTab text="Classes">
-      <BlockCssClasses
-        v-model="css.classes"
+    <UiTab text="Properties">
+      <BlockCssStyle
+        v-model="css.style"
         @update:model-value="emitUpdate"
       />
     </UiTab>
 
-    <UiTab text="Properties">
-      <BlockCssStyle
-        v-model="css.style"
+    <UiTab text="Classes">
+      <BlockCssClasses
+        v-model="css.classes"
         @update:model-value="emitUpdate"
       />
     </UiTab>

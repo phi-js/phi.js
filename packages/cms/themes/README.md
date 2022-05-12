@@ -1,5 +1,15 @@
 # Theming
 
+Un story puede definir uno (O MAS) "Themes".
+Al final los Themes son archivos CSS a importar.  
+El theme debe definir TODOS los estilos pertinentes a la historia, incluyendo el color de fondo del body
+
+
+
+
+
+# Block props
+
 Para cada bloque se pueden definir las propiedades STYLE y CLASS
 
 STYLE es straightforward.  Se proporciona un editor (JSON raw) para establecer el valor de la prop "style"

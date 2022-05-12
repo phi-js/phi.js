@@ -1,0 +1,171 @@
+.Block__drag-handle {
+  cursor: move;
+}
+
+.WindowContents {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &__body {
+    flex: 1;
+  }
+
+  &--id-source {
+    padding: 0;
+
+    .UiInputJson {
+      height: 100%;
+    }
+
+    .UiInputJson__textarea {
+      resize: none;
+      min-height: 0;
+    }
+  }
+}
+
+
+.BlockScaffold {
+  position: relative;
+
+  &__toolbar {
+    display: inline-flex;
+    align-items: stretch;
+    background-color: #313131;
+    color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+  }
+
+  &__toolbar-title {
+    --ui-item-padding: 6px 12px;
+    .UiItem__text {
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+
+  &__toolbar-spacer {
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+
+  // Estilos "default":  toolbar posicionado absolutamente encima del bloque
+  &--default .BlockScaffold__toolbar-container {
+    position: absolute;
+    bottom: 100%;
+    left: 1.5rem;
+
+    transition: opacity var(--ui-duration-snap);
+    opacity: 0;
+  }
+
+  // Toolbar visible on hover or focused
+  &--focused > .BlockScaffold__toolbar-container,
+  &--default:hover > .BlockScaffold__toolbar-container {
+    opacity: 1;
+  }
+
+  &--default .BlockScaffold__toolbar {
+    flex-wrap: nowrap;
+    width: max-content; // No soportado en IE ni EDGE !!!
+    max-width: 600px;
+  }
+
+  &__toolbar-icon {
+    @extend .ui--clickable;
+    min-width: 40px;
+    min-height: 40px;
+
+    color: rgba(255, 255, 255, 0.5);
+    flex: none;
+    padding: 0 10px;
+    border: 0;
+    background: transparent;
+
+    &--active {
+      color: #fff;
+    }
+  }
+
+  /* UiInput inside toolbar */
+  &__toolbar {
+    input.UiInput,
+    .UiInput__element {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #bbb;
+      font-size: 14px;
+    }
+  }
+}
+
+/* Prevent toolbar from being "hoverable" white outside the element */
+.BlockScaffold--default {
+  & > .BlockScaffold__toolbar-container {
+    pointer-events: none;
+  }
+
+  &:hover {
+    & > .BlockScaffold__toolbar-container {
+      pointer-events: initial;
+    }
+  }
+}
+
+/* "outline".   Visible unicamente para --default.  */
+.BlockScaffold {
+  &--default {
+    &::before {
+      content: "";
+      display: block;
+      position: absolute;
+
+      // top: -3px;  // Hacerlo mas ancho que el bloque puede causar overflows que no queremos
+      // bottom: -3px;
+      // left: -8px;
+      // right: -8px;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+
+      // border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+
+      transition: all var(--ui-duration-snap);
+      opacity: 0;
+      pointer-events: none;
+
+      background-color: rgba(0, 0, 0, 0.05);
+      // background-color: #ffff8811;
+      cursor: pointer;
+    }
+  }
+
+  &--default:hover {
+    &::before {
+      opacity: 1;
+    }
+  }
+}
+
+.BlockPopover {
+  user-select: none;
+  display: flex;
+  align-items: stretch;
+
+  .tippy-content {
+    padding: 0;
+  }
+
+  &__item {
+    cursor: pointer;
+    color: #ccc;
+    --ui-item-padding: 8px 12px;
+
+    &:hover {
+      color: #fff;
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}

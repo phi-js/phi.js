@@ -49,17 +49,23 @@ const alignment = computed(() => {
   <div class="MediaImageToolbar">
     <UiPopover>
       <template #trigger>
-        <UiIcon :src="alignment.current.icon" class="ui--clickable expansible" />
+        <UiIcon
+          :src="alignment.current.icon"
+          class="BlockScaffold__toolbar-icon expansible"
+        />
       </template>
       <template #contents="{ close }">
-        <div class="UiGroup UiToolbar" @click="close()">
+        <div
+          class="UiGroup UiToolbar"
+          @click="close()"
+        >
           <UiIcon
             v-for="(align, i) in alignment.available"
             :key="i"
             :title="align.title"
             :src="align.icon"
-            class="MediaImageToolbar__icon ui--clickable"
-            :class="{ '--active': align.value == alignment.current.value }"
+            class="BlockScaffold__toolbar-icon"
+            :class="{ 'BlockScaffold__toolbar-icon--active': align.value == alignment.current.value }"
             @click="emit('update:modelValue', { ...props.modelValue, align: align.value })"
           />
         </div>

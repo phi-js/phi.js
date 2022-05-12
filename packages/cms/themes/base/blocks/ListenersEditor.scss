@@ -1,0 +1,45 @@
+.ListenersEditor {
+  &__listener {
+    border: 1px outset #555;
+    border-left: 0;
+    border-right: 0;
+    min-inline-size: auto;  // OMG.  El CSS nativo de fieldset es "min-inline-size: min-content;" y eso previene hacer overflow en contenedores angostos
+
+    ::marker {
+      font-size: 12px;
+    }
+
+    &--endangered {
+      background-color: rgba(255, 0, 0, 0.2);
+    }
+  }
+
+  &__summary {
+    @extend .ui--clickable;
+
+    position: relative;
+    user-select: none;
+    padding: 12px 16px;
+
+    span {
+      font-size: 15px;
+      font-weight: 600;
+    }
+  }
+
+  &__delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+  }
+
+  section {
+    padding: 6px 12px 24px 12px;
+  }
+
+  &__adder {
+    margin: 12px;
+  }
+}

@@ -1,7 +1,4 @@
 <script>
-// Base story styles
-import '../../style/base.scss'
-
 import {
   ref,
   watch,
@@ -15,7 +12,7 @@ import {
   onMounted,
 } from 'vue'
 
-import CmsBlock from '../CmsBlock/CmsBlock.vue'
+import { CmsBlock } from '../CmsBlock'
 import { sanitizeStory, parseTranslations, forEachBlock, setProperty } from '../../functions'
 import { useI18n } from '../../../i18n'
 import { VM } from '../../../vm'
@@ -201,8 +198,20 @@ export default {
       storyCSS.value = await storyVM.eval(strCSS, props.modelValue)
     })
 
+    // Determine story THEME
+    const storyClassNames = ref([])
+    if (sanitizedStory.value?.theme) {
+      const themes = Array.isArray(sanitizedStory.value.theme)
+        ? sanitizedStory.value.theme
+        : [sanitizedStory.value.theme]
+
+      themes.forEach((themeName) => import(`../../style/themes/${themeName}/index.scss`))
+
+      storyClassNames.value = themes.map((themeName) => `phi-theme-${themeName}`)
+    }
+
     // Render function
-    return () => h('div', { class: 'CmsStory' }, [
+    return () => h('div', { class: ['CmsStory', ...storyClassNames.value] }, [
 
       // Story <style> element in <head>
       h(

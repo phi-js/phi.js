@@ -1,0 +1,144 @@
+// NON decorative styles (i.e. layout and dimensions only. no colors)
+.CmsStoryBuilder {
+  &__controls {
+    display: flex;
+    align-items: stretch;
+  }
+
+  &__controlItem {
+    @extend .ui--clickable;
+
+    height: 40px;
+    min-width: 40px;
+    border-radius: 4px;
+
+    &[disabled=true] {
+      cursor: default;
+      opacity: 0.5;
+    }
+  }
+
+
+  &__tabOptions {
+    display: flex;
+    align-items: stretch;
+
+    font-size: 0.85em;
+    --ui-item-padding: 8px 12px;
+  }
+
+  &__tabItem {
+    @extend .ui--clickable;
+
+    &--sitemap {
+      strong {
+        color: var(--ui-color-primary);
+      }
+    }
+  }
+
+  /* icon-less, strong, tab items */
+  &__tabItem {
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 4px;
+
+    .UiItem {
+      &__icon {
+        display: none;
+      }
+
+      &__body {
+        padding: 8px 16px !important;
+      }
+    }
+  }
+
+
+  &__toggler {
+    --ui-item-padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 5px;
+
+    text-align: right;
+
+    .UiItem {
+      @extend .ui--clickable;
+
+      display: inline-flex;
+      border-radius: 4px;
+    }
+  }
+}
+
+
+
+// Expanded / Collapsed
+.CmsStoryBuilder {
+  &__toggler {
+    display: none;
+  }
+
+  &--collapsed {
+    .CmsStoryBuilder__toggler {
+      display: block;
+    }
+
+    .CmsStoryBuilder__header {
+      display: none;
+    }
+
+    .UiContentWrapper {
+      padding: 0;
+      &__body {
+        box-shadow: none;
+      }
+    }
+  }
+
+
+
+
+  // &__corner {
+  //   position: absolute;
+  //   top: 0;
+  //   right: 0;
+  //   z-index: 3;
+  //   cursor: pointer;
+
+  //   transition: all var(--ui-duration-snap) ease;
+  //   width: 24px;
+  //   height: 24px;
+
+  //   background: linear-gradient(
+  //     -135deg,
+  //     #41b883,
+  //     #2a7754 45%,
+  //     #236346 50%,
+  //     #aaa 50%,
+  //     #bbb 56%,
+  //     #ccc 62%,
+  //     #f3f3f3 80%,
+  //     #fff 100%
+  //   );
+  //   box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+
+  //   &:hover {
+  //     width: 40px;
+  //     height: 40px;
+  //     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+  //     background: linear-gradient(
+  //       -135deg,
+  //       #41b883,
+  //       #3db17d 50%,
+  //       #aaa 50%,
+  //       #bbb 56%,
+  //       #ccc 62%,
+  //       #f3f3f3 80%,
+  //       #fff 100%
+  //     );
+  //   }
+  // }
+}

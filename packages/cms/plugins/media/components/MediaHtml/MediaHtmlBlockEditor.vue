@@ -180,21 +180,21 @@ const alignment = computed(() => {
         <template #trigger>
           <button
             type="button"
-            class="ui--clickable expansible"
+            class="BlockScaffold__toolbar-icon expansible"
             v-text="heading.current.text"
           />
         </template>
         <template #contents="{ close }">
           <div
-            class="UiGroup UiToolbar"
+            class="UiGroup"
             @click="close"
           >
             <button
               v-for="(cmd, i) in heading.available"
               :key="i"
               type="button"
-              class="ui--clickable"
-              :class="{ '--active': cmd.isActive }"
+              class="BlockScaffold__toolbar-icon"
+              :class="{ 'BlockScaffold__toolbar-icon--active': cmd.isActive }"
               @click="cmd.callback"
               v-text="cmd.text"
             />
@@ -206,20 +206,20 @@ const alignment = computed(() => {
         <template #trigger>
           <UiIcon
             :src="alignment.current.icon"
-            class="ui--clickable expansible"
+            class="BlockScaffold__toolbar-icon expansible"
           />
         </template>
         <template #contents="{ close }">
           <div
-            class="UiGroup UiToolbar"
+            class="UiGroup"
             @click="close"
           >
             <UiIcon
               v-for="(cmd, i) in alignment.available"
               :key="i"
               :src="cmd.icon"
-              class="ui--clickable"
-              :class="{ '--active': cmd.isActive }"
+              class="BlockScaffold__toolbar-icon"
+              :class="{ 'BlockScaffold__toolbar-icon--active': cmd.isActive }"
               @click="cmd.callback"
             />
           </div>
@@ -230,8 +230,8 @@ const alignment = computed(() => {
         v-for="(option, i) in formatButtons"
         :key="i"
         type="button"
-        class="ui--clickable text-format-button"
-        :class="{ '--active': option.isActive }"
+        class="BlockScaffold__toolbar-icon"
+        :class="{ 'BlockScaffold__toolbar-icon--active': option.isActive }"
         @click="option.callback"
         v-text="option.text"
       />
@@ -264,10 +264,6 @@ const alignment = computed(() => {
 }
 
 .MediaHtmlBlockEditor {
-  .text-format-button {
-    min-width: 34px !important;
-  }
-
   .expansible {
     &::after {
       content: "▾";

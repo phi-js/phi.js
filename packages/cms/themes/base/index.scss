@@ -1,0 +1,37 @@
+/* This stylesheet declares the base CSS for all block / block editor components */
+.cms-theme-base {
+  --cms-page-padding: 0 0;
+  --cms-row-padding: 0 0;
+  --ui-content-width: auto;
+
+  @import '@/packages/ui/themes/base/modifiers/clickable.scss';
+
+  @import './blocks/BlockCssStyle.scss';
+  @import './blocks/BlockScaffold.scss';
+  @import './blocks/BlockVisibilityEditor.scss';
+  @import './blocks/CmsStoryBuilder.scss';
+  @import './blocks/CmsStoryEditor.scss';
+  @import './blocks/LayoutPage.scss';
+  @import './blocks/LayoutRow.scss';
+  @import './blocks/LayoutRowEditor.scss';
+  @import './blocks/ListenersEditor.scss';
+
+  @import './blocks/StmtAndOr.scss';
+  @import './blocks/StmtOp.scss';
+
+
+  //// !!! TESTING!!!  HIDE ICONS INSIDE .UiWindow tabs
+  .UiWindow .UiTab {
+    .UiItem {
+      height: 46px;
+
+      &__icon {
+        display: none;
+      }
+
+      &__body {
+        padding: 8px 16px !important;
+      }
+    }
+  }
+}

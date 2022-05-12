@@ -20,6 +20,13 @@ const CmsBlock = {
       required: false,
       default: () => ({}),
     },
+
+
+    slotBindings: {
+      type: Object,
+      required: false,
+      default: null,
+    },
   },
 
   emits: ['update:modelValue', 'update:errors'],
@@ -36,7 +43,7 @@ const CmsBlock = {
 
     /* modelValue source of truth functions */
     const innerModel = props.modelValue
-    const evaluableModel = computed(() => ({ ...innerModel, ...injectedStory?.globals }))
+    const evaluableModel = computed(() => ({ ...innerModel, ...injectedStory?.globals, $slot: props.slotBindings }))
 
     let _haltEmit = false
 
@@ -80,6 +87,7 @@ const CmsBlock = {
     const isVisible = ref(false)
     if (props.block['v-if']) {
       watchEffect(async () => isVisible.value = await blockVM.eval(props.block['v-if'], evaluableModel.value))
+      // watchEffect(() => isVisible.value = blockVM.eval(props.block['v-if'], evaluableModel.value))
     } else {
       isVisible.value = true
     }
@@ -167,7 +175,7 @@ const CmsBlock = {
       }
     }
 
-    // Validation listeners
+    /* Validation listeners */
     if (props.block?.rules?.length) {
       const blockRules = getBlockRules(
         props.block,
@@ -175,33 +183,17 @@ const CmsBlock = {
         (expr) => blockVM.eval(expr, innerModel),
       )
 
-      const eventRules = {} // e.g. eventRules[onBlur] = [ array of rules to validate on blur ]
-      blockRules.forEach((rule) => {
-        if (!rule.trigger?.length) {
-          return
-        }
-        rule.trigger.forEach((eventName) => {
-          let listenerName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
-          if (!eventRules[listenerName]) {
-            eventRules[listenerName] = []
+      if (blockRules.length) {
+        watchEffect(() => {
+          if (!isVisible.value) {
+            setErrors(null)
+            return
           }
-          eventRules[listenerName].push(rule)
+
+          runValidators(blockRules).then(setErrors)
         })
-      })
-
-      // Bind validation to component events
-      for (const [listenerName, targetRules] of Object.entries(eventRules)) {
-        const eventCallback = async () => {
-          const errs = await runValidators(targetRules)
-          setErrors(errs)
-        }
-
-        blockListeners.value[listenerName] = blockListeners.value[listenerName]
-          ? [blockListeners.value[listenerName], eventCallback]
-          : eventCallback
       }
     }
-
 
     /* Determine slot nodes */
     const blockSlots = ref({})
@@ -221,18 +213,21 @@ const CmsBlock = {
 
       for (const slotName in slots) {
         const arrChildren = Array.isArray(slots[slotName]) ? slots[slotName] : [slots[slotName]]
-        blockSlots.value[slotName] = () => arrChildren.map((child, index) => h(
-          CmsBlock,
-          {
-            'block': child,
-            'modelValue': props.modelValue,
-            'onUpdate:modelValue': ($event) => onChildUpdateModelvalue($event),
-            'onUpdate:errors': ($event) => {
-              childErrors[slotName + ':' + index] = $event
-              emitErrors()
+        blockSlots.value[slotName] = (slotBindings) => {
+          return arrChildren.map((child, index) => h(
+            CmsBlock,
+            {
+              'block': child,
+              'modelValue': props.modelValue,
+              'slotBindings': slotBindings,
+              'onUpdate:modelValue': ($event) => onChildUpdateModelvalue($event),
+              'onUpdate:errors': ($event) => {
+                childErrors[slotName + ':' + index] = $event
+                emitErrors()
+              },
             },
-          },
-        ))
+          ))
+        }
       }
     })
 

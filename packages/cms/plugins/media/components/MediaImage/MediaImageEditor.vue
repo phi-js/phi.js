@@ -59,7 +59,7 @@ async function toggleHeightAuto(setAuto = true, refresh) {
           :model-value="modelValue.src"
           placeholder="Image URL"
           class="MediaImageEditor__url"
-          @update:modelValue="emit('update:modelValue', { ...modelValue, src: $event })"
+          @update:model-value="emit('update:modelValue', { ...modelValue, src: $event })"
         />
 
         <div
@@ -71,14 +71,14 @@ async function toggleHeightAuto(setAuto = true, refresh) {
             type="text"
             placeholder="Height"
             :model-value="newBounds.height + 'px'"
-            @update:modelValue="emit('update:modelValue', { ...modelValue, height: $event })"
+            @update:model-value="emit('update:modelValue', { ...modelValue, height: $event })"
           />
           <label>
             <input
               type="checkbox"
               :checked="modelValue.height == 'auto'"
               @change="toggleHeightAuto($event.target.checked, refresh)"
-            />
+            >
             auto
           </label>
         </div>

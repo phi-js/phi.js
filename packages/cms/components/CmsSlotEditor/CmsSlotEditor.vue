@@ -1,6 +1,5 @@
 <script setup>
 import { ref, watch, nextTick } from 'vue'
-// import draggable from 'vuedraggable/src/vuedraggable'
 import draggable from 'vuedraggable'
 
 import CmsBlockEditor from '../CmsBlockEditor/CmsBlockEditor.vue'
@@ -97,7 +96,7 @@ const focusedIndexes = ref({})
       :swap-threshold="0.5"
       :inverted-swap-threshold="1"
       direction="vertical"
-      @update:modelValue="onDraggableUpdate"
+      @update:model-value="onDraggableUpdate"
       @start="onDraggableStart()"
       @end="onDraggableEnd()"
     >
