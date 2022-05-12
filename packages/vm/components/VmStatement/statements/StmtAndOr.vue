@@ -1,59 +1,10 @@
-<template>
-  <fieldset class="StmtAndOr">
-    <legend>
-      {{ label }}
-      <select
-        v-model="innerModel.operator"
-        class="StmtAndOr__select"
-        @change="emitInput"
-      >
-        <option value="and">
-          todas las siguientes
-        </option>
-        <option value="or">
-          cualquiera de las siguientes
-        </option>
-      </select>
-    </legend>
-
-    <div class="StmtAndOr__body">
-      <div class="StmtAndOr__list">
-        <div
-          v-for="(_, i) in innerModel.list"
-          :key="i"
-          class="StmtAndOr__item"
-          :class="{'--endangered': endangeredIndex == i}"
-        >
-          <VmStatement
-            v-model="innerModel.list[i]"
-            @update:modelValue="emitInput"
-          />
-
-          <div style="flex:none">
-            <UiIcon
-              src="mdi:close"
-              class="ui--clickable StmtAndOr__deleter"
-              @mouseover="onDeleterMouseover(i)"
-              @mouseout="onDeleterMouseout"
-              @click="removeCondition(i)"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="stmt-boo-adder">
-        <VmOperatorPicker @input="pushOperator" />
-      </div>
-    </div>
-  </fieldset>
-</template>
-
 <script>
 import { defineAsyncComponent } from 'vue'
 const VmStatement = defineAsyncComponent(() => import('../VmStatement.vue'))
 
 import VmOperatorPicker from '../VmOperatorPicker.vue'
 import { UiIcon } from '@/packages/ui/components'
+import { useI18n } from '@/packages/i18n'
 
 export default {
   name: 'StmtAndOr',
@@ -65,15 +16,24 @@ export default {
       required: false,
       default: null,
     },
-
-    label: {
-      type: String,
-      required: false,
-      default: null,
-    },
   },
 
   emits: ['update:modelValue'],
+
+  setup() {
+    const i18n = useI18n({
+      en: {
+        'StmtAndOr.allOf': 'All of the following',
+        'StmtAndOr.anyOf': 'Any of the following',
+      },
+      es: {
+        'StmtAndOr.allOf': 'Todas las siguientes',
+        'StmtAndOr.anyOf': 'Cualquiera de las siguientes',
+      },
+    })
+
+    return { i18n }
+  },
 
   data() {
     return {
@@ -120,71 +80,57 @@ export default {
       this.$emit('update:modelValue', JSON.parse(JSON.stringify(res)))
     },
 
-    onDeleterMouseover(index) {
-      this.endangeredIndex = index
-    },
-
-    onDeleterMouseout() {
-      this.endangeredIndex = -1
+    redact(condition) {
+      return 'duhh' + JSON.stringify(condition)
     },
   },
 }
 </script>
 
-<style lang="scss">
-.StmtAndOr {
-  border: 1px inset #666;
-  padding: 0 20px 0 0px;
+<template>
+  <fieldset class="StmtAndOr">
+    <legend>
+      <select
+        v-model="innerModel.operator"
+        class="StmtAndOr__select"
+        @change="emitInput"
+      >
+        <option
+          value="and"
+          v-text="i18n.t('StmtAndOr.allOf')"
+        />
+        <option
+          value="or"
+          v-text="i18n.t('StmtAndOr.anyOf')"
+        />
+      </select>
+    </legend>
 
-  & > legend {
-    margin-left: 8px;
-  }
+    <div class="StmtAndOr__body">
+      <div
+        v-for="(_, i) in innerModel.list"
+        :key="i"
+        class="StmtAndOr__item"
+        :class="{'StmtAndOr__item--endangered': endangeredIndex == i}"
+      >
+        <VmStatement
+          v-model="innerModel.list[i]"
+          @update:model-value="emitInput"
+        />
 
-  .StmtAndOr__select {
-    border: 0;
-    background: transparent;
-    // margin-bottom: 6px;
-    padding: 3px 6px;
-  }
+        <UiIcon
+          src="mdi:close"
+          class="StmtAndOr__deleter"
+          @mouseover="endangeredIndex = i"
+          @mouseout="endangeredIndex = -1"
+          @click="removeCondition(i)"
+        />
+      </div>
 
-  .stmt-boo-adder {
-    margin-bottom: 28px;
-  }
-
-  .StmtAndOr__body {
-    padding-left: 8px;
-  }
-
-  .StmtAndOr__item {
-    padding: 3px;
-    margin-bottom: 12px;
-    position: relative;
-
-    .StmtAndOr__deleter {
-      position: absolute;
-      top: 0;
-      right: -16px;
-      z-index: 2;
-
-      &:hover {
-        // color: #fff;
-        color: var(--ui-color-danger);
-        opacity: 0.7;
-      }
-    }
-
-    &.--endangered {
-      // background-color: var(--ui-color-danger);
-      // opacity: 0.3;
-      background-color: #ea545512;
-    }
-  }
-
-  // borde redondeado a la izquierda
-  .StmtAndOr__item,
-  .stmt-boo-adder {
-    padding-left: 8px;
-    border-left: 2px solid var(--ui-color-primary);
-  }
-}
-</style>
+      <VmOperatorPicker
+        class="StmtAndOr__adder"
+        @input="pushOperator"
+      />
+    </div>
+  </fieldset>
+</template>

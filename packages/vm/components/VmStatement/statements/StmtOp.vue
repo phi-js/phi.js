@@ -94,26 +94,61 @@ function onChangeOp() {
     }
   }
 }
+
+const currentOperator = computed(() => availableOperators.value.find((opDef) => opDef.operator == innerModel?.op))
+
+const operationRedaction = computed(() => {
+  const fieldName = fieldSchema.value?.info?.text || innerModel.field
+  const opName = currentOperator.value?.text || innerModel.op
+  return `${fieldName} ${opName} ...`
+})
 </script>
 
 <template>
-  <div class="StmtOp">
-    <div class="StmtOp__container">
+  <details class="StmtOp">
+    <summary v-text="operationRedaction" />
+
+    <section>
       <div class="StmtOp__field">
-        <UiItem v-if="fieldSchema?.info" v-bind="fieldSchema.info" />
-        <input v-else v-model="innerModel.field" type="text" class="UiInput" @input="emitInput" />
+        <UiItem
+          v-if="fieldSchema?.info"
+          v-bind="fieldSchema.info"
+        />
+        <input
+          v-else
+          v-model="innerModel.field"
+          type="text"
+          class="UiInput"
+          @input="emitInput"
+        >
       </div>
 
       <div class="StmtOp__op">
-        <select v-model="innerModel.op" @change="onChangeOp()" class="UiInput">
+        <select
+          v-model="innerModel.op"
+          class="UiInput"
+          @change="onChangeOp()"
+        >
           <option
             v-for="(opDef, i) in availableOperators"
             :key="i"
             :value="opDef.operator"
-          >{{ opDef.text }}</option>
+          >
+            {{ opDef.text }}
+          </option>
 
-          <option v-if="!isKnownOperator" :value="innerModel.op">Otro:</option>
-          <option v-else :value="null">-- Custom --</option>
+          <option
+            v-if="!isKnownOperator"
+            :value="innerModel.op"
+          >
+            Otro:
+          </option>
+          <option
+            v-else
+            :value="null"
+          >
+            -- Custom --
+          </option>
         </select>
 
         <input
@@ -123,7 +158,7 @@ function onChangeOp() {
           type="text"
           class="UiInput"
           @input="emitInput"
-        />
+        >
       </div>
 
       <div class="StmtOp__arguments">
@@ -133,34 +168,14 @@ function onChangeOp() {
           v-model="innerModel.args"
           v-bind="customArgsComponent.props"
           :field-schema="fieldSchema"
-          @update:modelValue="emitInput"
+          @update:model-value="emitInput"
         />
         <VmStatement
           v-else-if="customArgsComponent !== false"
           v-model="innerModel.args"
-          @update:modelValue="emitInput"
+          @update:model-value="emitInput"
         />
       </div>
-    </div>
-  </div>
+    </section>
+  </details>
 </template>
-
-<style lang="scss">
-.StmtOp {
-  &__container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    padding: 8px 12px;
-  }
-
-  &__field {
-    // --ui-item-padding: 8px;
-    min-width: 33%;
-  }
-
-  &__arguments {
-    flex: 1;
-  }
-}
-</style>
