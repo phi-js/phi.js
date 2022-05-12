@@ -219,7 +219,7 @@ defineExpose({
         v-for="(err, k) in props.errors"
         :key="k"
       >
-        {{ err.message }}
+        {{ err?.message || err }}
       </li>
     </ul>
   </div>

@@ -305,8 +305,6 @@ const isHovered = ref(false)
                 :src="dock
                   ? (dock == 'popup' ? 'mdi:window-restore' : `mdi:dock-${dock}`)
                   : 'mdi:card-outline'"
-                class="ui--clickable"
-                :class="{ '--active': !dock }"
               />
             </template>
             <template #contents="popover">
@@ -316,43 +314,43 @@ const isHovered = ref(false)
               >
                 <UiIcon
                   src="mdi:card-outline"
-                  class="ui--clickable"
-                  :class="{ '--active': !dock }"
+                  class="UiWindow__dockIcon"
+                  :class="{ 'UiWindow__dockIcon--active': !dock }"
                   @click="dockTo(null)"
                 />
 
                 <UiIcon
                   src="mdi:dock-bottom"
-                  class="ui--clickable"
-                  :class="{ '--active': dock == 'bottom' }"
+                  class="UiWindow__dockIcon"
+                  :class="{ 'UiWindow__dockIcon--active': dock == 'bottom' }"
                   @click="dockTo('bottom')"
                 />
 
                 <UiIcon
                   src="mdi:dock-top"
-                  class="ui--clickable"
-                  :class="{ '--active': dock == 'top' }"
+                  class="UiWindow__dockIcon"
+                  :class="{ 'UiWindow__dockIcon--active': dock == 'top' }"
                   @click="dockTo('top')"
                 />
 
                 <UiIcon
                   src="mdi:dock-left"
-                  class="ui--clickable"
-                  :class="{ '--active': dock == 'left' }"
+                  class="UiWindow__dockIcon"
+                  :class="{ 'UiWindow__dockIcon--active': dock == 'left' }"
                   @click="dockTo('left')"
                 />
 
                 <UiIcon
                   src="mdi:dock-right"
-                  class="ui--clickable"
-                  :class="{ '--active': dock == 'right' }"
+                  class="UiWindow__dockIcon"
+                  :class="{ 'UiWindow__dockIcon--active': dock == 'right' }"
                   @click="dockTo('right')"
                 />
 
                 <!-- <UiIcon
                 src="mdi:window-restore"
-                class="ui--clickable"
-                :class="{'--active': dock == 'popup'}"
+                class="UiWindow__dockIcon"
+                :class="{'--acUiWindow__dockIcontive': dock == 'popup'}"
                 @click="dockTo('popup')"
                 />-->
               </div>
@@ -361,7 +359,6 @@ const isHovered = ref(false)
 
           <UiIcon
             src="mdi:close"
-            class="ui--clickable window-close"
             @click="close"
           />
         </div>
@@ -384,196 +381,3 @@ const isHovered = ref(false)
     </div>
   </Teleport>
 </template>
-
-<style lang="scss">
-/* Activar pointer-events (i.e. hovers de los dockzones) solo cuando la ventana se esta MOVIENDO */
-.UiWindow {
-  &__scrim {
-    pointer-events: none;
-  }
-
-  &__box {
-    pointer-events: initial;
-  }
-
-  &--moving.UiWindow__scrim {
-    pointer-events: initial !important;
-  }
-}
-
-/* Hide dragger and resizers when docked */
-.UiWindow {
-  &--docked &__box {
-    .UiWindow__dragger {
-      pointer-events: none;
-    }
-
-    .UiResizable__hotzone {
-      display: none;
-    }
-  }
-
-  &--docked-top &__box {
-    .UiResizable__hotzone.--s {
-      display: block;
-    }
-  }
-
-  &--docked-bottom &__box {
-    .UiResizable__hotzone.--n {
-      display: block;
-    }
-  }
-
-  &--docked-left &__box {
-    .UiResizable__hotzone.--e {
-      display: block;
-    }
-  }
-
-  &--docked-right &__box {
-    .UiResizable__hotzone.--w {
-      display: block;
-    }
-  }
-}
-
-/* CSS enforced dock positions */
-.UiWindow {
-  &--docked-top &__box {
-    top: 0 !important;
-    bottom: auto !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: auto !important;
-  }
-
-  &--docked-bottom &__box {
-    top: auto !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: auto !important;
-  }
-
-  &--docked-left &__box {
-    top: 0 !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: auto !important;
-    height: auto !important;
-  }
-
-  &--docked-right &__box {
-    top: 0 !important;
-    bottom: 0 !important;
-    right: 0 !important;
-    left: auto !important;
-    height: auto !important;
-  }
-}
-
-.UiWindow {
-  --ui-window-dockzone-size: 7vh;
-  text-align: left;
-
-  &--external {
-    // display: none;
-    // pointer-events: none;
-    opacity: 0.4;
-  }
-
-  &__scrim {
-    background-color: rgba(0, 0, 0, 0.02); // SCRIM
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 10;
-  }
-
-  &__box {
-    position: absolute;
-
-    display: flex;
-    flex-direction: column;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
-      rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-  }
-
-  &__header {
-    display: flex;
-    align-items: center;
-
-    .ui--clickable {
-      min-width: 32px;
-      min-height: 32px;
-    }
-  }
-
-  &__dragger {
-    flex: 1;
-    align-self: stretch;
-    cursor: move;
-  }
-
-  &__body {
-    flex: 1;
-    overflow: auto; // popovers inside the window will be cropped, unless moved to the <body>
-
-    &::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: rgba(255, 255, 255, 0.4);
-      border-radius: 6px;
-      border: 2px solid #333;
-    }
-  }
-
-  &__dockzone {
-    position: absolute;
-    z-index: 3;
-
-    transition: all var(--ui-duration-snap);
-    background-color: var(--ui-color-primary);
-    opacity: 0;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
-      rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-
-    &:hover {
-      opacity: 0.33;
-    }
-
-    &--top {
-      top: 0;
-      left: 0;
-      right: 0;
-      height: var(--ui-window-dockzone-size);
-    }
-
-    &--bottom {
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: var(--ui-window-dockzone-size);
-    }
-
-    &--right {
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: var(--ui-window-dockzone-size);
-    }
-
-    &--left {
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: var(--ui-window-dockzone-size);
-    }
-  }
-}
-</style>

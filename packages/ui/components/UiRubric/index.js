@@ -1,0 +1,1 @@
+export { default as UiRubric } from './UiRubric.vue'

@@ -66,6 +66,13 @@ const customComponent = computed(() => availableTypes[innerSchema.value.type])
     <template v-else-if="innerSchema.type == 'boolean'">
       <em>{{ innerValue ? 'true' : 'false' }}</em>
     </template>
+    <template v-else-if="innerSchema.type == 'link'">
+      <a
+        :href="innerValue"
+        target="_blank"
+        v-text="innerValue"
+      />
+    </template>
     <template v-else>
       <span v-text="innerValue" />
     </template>

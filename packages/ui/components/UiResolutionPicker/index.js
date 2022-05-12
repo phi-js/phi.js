@@ -1,0 +1,1 @@
+export { default as UiResolutionPicker } from './UiResolutionPicker.vue'

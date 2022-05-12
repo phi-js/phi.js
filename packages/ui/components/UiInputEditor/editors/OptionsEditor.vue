@@ -2,7 +2,7 @@
 import { ref, watch, nextTick } from 'vue'
 // import draggable from 'vuedraggable/src/vuedraggable'
 import draggable from 'vuedraggable'
-import { UiItem, UiIcon } from '@/packages/ui/components'
+import { UiItem, UiIcon, UiDrawer, UiInput, UiButton } from '@/packages/ui/components'
 import { normalize } from '@/packages/ui/helpers'
 
 const props = defineProps({
@@ -48,7 +48,6 @@ function deleteOption(index) {
   emitUpdate()
 }
 
-
 function setOptionText(option, newValue) {
   if (option.value === normalize(option.text)) {
     option.value = normalize(newValue)
@@ -56,23 +55,48 @@ function setOptionText(option, newValue) {
   option.text = newValue
   emitUpdate()
 }
+
+const strOptions = ref('')
+
+function pushStrOptions() {
+  if (!strOptions.value.trim()) {
+    return false
+  }
+
+  innerOptions.value.push(...strToOptions(strOptions.value))
+  emitUpdate()
+  return true
+}
+
+function strToOptions(str) {
+  return str.split('\n')
+    .filter((strOption) => !!strOption.trim())
+    .map((strOption) => ({
+      text: strOption,
+      value: strOption,
+    }))
+}
+
 </script>
 
 <template>
-  <div ref="refRoot" class="OptionsEditor">
+  <div
+    ref="refRoot"
+    class="OptionsEditor"
+  >
     <draggable
       v-model="innerOptions"
       group="select-block"
       :item-key="(foo) => innerOptions.indexOf(foo)"
       handle=".UiItem__icon"
-      @update:modelValue="emitUpdate"
+      @update:model-value="emitUpdate"
     >
       <template #item="{ index }">
         <UiItem
           class="OptionsEditor__option-item"
           :icon="modelValue.type == 'select-list'
-          ? (modelValue.multiple ? 'mdi:checkbox-blank-outline' : 'mdi:radiobox-blank')
-          : 'mdi:drag-vertical'"
+            ? (modelValue.multiple ? 'mdi:checkbox-blank-outline' : 'mdi:radiobox-blank')
+            : 'mdi:drag-vertical'"
         >
           <div class="OptionEditor">
             <input
@@ -84,7 +108,7 @@ function setOptionText(option, newValue) {
               @keypress.enter="pushOption"
               @keydown.backspace="!innerOptions[index].text && deleteOption(index)"
               @keydown.delete="!innerOptions[index].text && deleteOption(index)"
-            />
+            >
             <input
               v-model="innerOptions[index].value"
               type="text"
@@ -92,10 +116,14 @@ function setOptionText(option, newValue) {
               placeholder="Valor"
               @input="emitUpdate"
               @keypress.enter="pushOption"
-            />
+            >
           </div>
           <template #actions>
-            <UiIcon src="mdi:close" class="ui--clickable" @click="deleteOption(index)" />
+            <UiIcon
+              src="mdi:close"
+              class="ui--clickable"
+              @click="deleteOption(index)"
+            />
           </template>
         </UiItem>
       </template>
@@ -109,6 +137,33 @@ function setOptionText(option, newValue) {
       @click="pushOption"
       @keypress.enter="pushOption"
     />
+
+    <UiDrawer>
+      <template #trigger>
+        <UiItem
+          tabindex="0"
+          text="Importar texto"
+          icon="mdi:plus"
+          class="ui--clickable"
+        />
+      </template>
+      <template #contents="{ close }">
+        <UiInput
+          v-model="strOptions"
+          type="textarea"
+          label="Una opcion por linea"
+        />
+        <UiButton
+          label="Importar"
+          @click="pushStrOptions() && close()"
+        />
+        <UiButton
+          class="UiButton--cancel"
+          label="Cancelar"
+          @click="close()"
+        />
+      </template>
+    </UiDrawer>
   </div>
 </template>
 
