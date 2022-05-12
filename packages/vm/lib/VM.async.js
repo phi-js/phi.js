@@ -16,7 +16,11 @@ export default class VM {
     this.onModelSet = null
   }
 
-  eval(expr, localScope = null) {
+  defineFunctions(vmFunctions) {
+    Object.assign(this.functions, vmFunctions)
+  }
+
+  async eval(expr, localScope = null) {
     if (!expr || (typeof expr != 'string' && typeof expr != 'object')) {
       return expr
     }
@@ -26,11 +30,16 @@ export default class VM {
     }
 
     if (Array.isArray(expr)) {
-      const retval = []
+      const promises = []
       for (let i = 0; i < expr.length; i++) {
-        retval.push(this.eval(expr[i], localScope))
+        promises.push(this.eval(expr[i], localScope))
       }
-      return retval
+      return await Promise.all(promises)
+    }
+
+    // Declaracion de un Closure. No se evalúa
+    if (typeof expr.function !== 'undefined') {
+      return expr
     }
 
     if (typeof expr.call !== 'undefined') {
@@ -54,16 +63,24 @@ export default class VM {
     }
 
     if (typeof expr.not !== 'undefined') {
-      return !this.eval(expr.not, localScope)
+      return !(await this.eval(expr.not, localScope))
     }
 
 
     /*
     and/or statememts
     */
+
     if (Array.isArray(expr.or)) {
-      for (let i = 0; i < expr.or.length; i++) {
-        if (this.eval(expr.or[i], localScope)) {
+      let statements = expr.or
+
+      /* TOUCH all statements */
+      for (let i = 0; i < statements.length; i++) {
+        this.eval(statements[i], localScope)
+      }
+
+      for (let i = 0; i < statements.length; i++) {
+        if (await this.eval(statements[i], localScope)) {
           return true
         }
       }
@@ -71,18 +88,25 @@ export default class VM {
     }
 
     if (Array.isArray(expr.and)) {
-      for (let i = 0; i < expr.and.length; i++) {
-        if (!this.eval(expr.and[i], localScope)) {
+      let statements = expr.and
+
+      /* TOUCH all statements */
+      for (let i = 0; i < statements.length; i++) {
+        this.eval(statements[i], localScope)
+      }
+
+      for (let i = 0; i < statements.length; i++) {
+        if (!(await this.eval(statements[i], localScope))) {
           return false
         }
       }
       return true
     }
 
-    // JavaScript EVAL (via new Function)
+    // JavaScript EVAL (!!!)
     if (typeof expr.eval !== 'undefined') {
       const fx = new Function(['$modelValue'], '"use strict"; var window = null; var document = null;' + expr.eval)
-      return fx(localScope)
+      return await fx(localScope)
     }
 
     /**
@@ -98,7 +122,18 @@ export default class VM {
      *     }
      *   }
      * }
+     *
+     * Evaluate all subproperties concurrently (Promise.all)
+     * This makes VM.eval inside watchEffect() trigger correctly on any accesed property change
      */
+    // const retval = {}
+    // const promises = []
+    // for (let propertyName in expr) {
+    //   promises.push(this.eval(expr[propertyName], localScope).then((result) => retval[propertyName] = result))
+    // }
+    // await Promise.all(promises)
+    // return retval
+
     /*
     Only PARSE object (parse is recursive)
     i.e. if the generic object has subproperties that can be interpreted as statements (i.e. object.and, object.call, etc)
@@ -118,15 +153,15 @@ export default class VM {
    *   "args": 3
    * }
    */
-  stmtOperator(opName, field = null, args = null, localScope = null) {
+  async stmtOperator(opName, field = null, args = null, localScope = null) {
     if (typeof this.operators[opName] == 'undefined') {
       throw `undefined operator '${opName}'`
     }
 
-    const fieldValue = getProperty(localScope, field)
-    const evaldArgs = this.eval(args, localScope)
+    let fieldValue = getProperty(localScope, field)
+    let evaldArgs = await this.eval(args, localScope)
 
-    return this.operators[opName].bind(this)(fieldValue, evaldArgs, localScope)
+    return await this.operators[opName].bind(this)(fieldValue, evaldArgs, localScope)
   }
 
   /**
@@ -147,14 +182,15 @@ export default class VM {
       throw `undefined function '${functionName}'`
     }
 
-    const args = functionArgs ? this.eval(functionArgs, localScope) : null
-    const result = await this.functions[functionName].bind(this)(args, localScope, this)
+    let args = functionArgs ? await this.eval(functionArgs, localScope) : null
+    let result = await this.functions[functionName].bind(this)(args, localScope, this)
 
     if (functionThen) {
-      return this.eval(functionThen, localScope)
+      return await this.eval(functionThen, { ...localScope, $foo: result })
     } else {
       return result
     }
+
   }
 
   /**
@@ -165,12 +201,16 @@ export default class VM {
    *   "else": "...expr..."
    * }
    */
-  async stmtIf(condition, exprThen = null, exprElse = null, localScope = null) {
-    const boo = await this.eval(condition, localScope)
+  async stmtIf(condition, exprThen, exprElse = null, localScope = null) {
+    let retval = null
+    let boo = await this.eval(condition, localScope)
     if (boo) {
-      return exprThen ? (await this.eval(exprThen, localScope)) : undefined
+      retval = await this.eval(exprThen, localScope)
+    } else if (exprElse) {
+      retval = await this.eval(exprElse, localScope)
     }
-    return exprElse ? (await this.eval(exprElse, localScope)) : undefined
+
+    return retval
   }
 
   /**
@@ -191,12 +231,12 @@ export default class VM {
 
     for (let i = 0; i < cases.length; i++) {
       if (cases[i].value == res) {
-        return this.eval(cases[i].do, localScope)
+        return await this.eval(cases[i].do, localScope)
       }
     }
 
     if (defaultCase) {
-      return this.eval(defaultCase, localScope)
+      return await this.eval(defaultCase, localScope)
     }
   }
 
@@ -224,6 +264,7 @@ export default class VM {
       return
     }
 
+    let scope = localScope
     let res
     for (let i = 0; i < arrChain.length; i++) {
       let link = arrChain[i]
@@ -231,13 +272,53 @@ export default class VM {
         continue
       }
 
-      res = await this.eval(link.do, localScope)
+      res = await this.eval(link.do, scope)
       if (link.assign) {
-        localScope && setProperty(localScope, link.assign, res)
-        this.onModelSet && this.onModelSet(link.assign, res, localScope)
+        scope && setProperty(scope, link.assign, res)
+        this.onModelSet && this.onModelSet(link.assign, res, scope)
       }
     }
 
     return res
   }
+
+  /**
+   * Recibe una expresion de tipo CLOSURE:
+   * {
+   *    arguments: ['arg1', 'arg2', ...],
+   *    function: {
+   *      call: 'doStuff'
+   *    }
+   * }
+   * equivale a (arg1, arg2) => { return doStuff() }
+   *
+   * y la ejecuta con los argumentos dados.
+   *
+   * runClosure(fn, args)  es equivalente a ....
+   *
+   * let callable = (argsname) => { fn }
+   * return callable(args);
+   */
+  runClosure(fn, arrArgs = [], localScope = null) {
+    if (!Array.isArray(arrArgs)) {
+      throw 'invalid arguments in function call'
+    }
+
+    if (!fn.function) {
+      throw 'invalid function'
+    }
+
+    let argValues = {}
+    if (Array.isArray(fn.arguments)) {
+      for (let i = 0; i < fn.arguments.length; i++) {
+        let argName = fn.arguments[i]
+        if (typeof arrArgs[i] != 'undefined') {
+          argValues[argName] = arrArgs[i]
+        }
+      }
+    }
+
+    return this.eval(fn.function, { ...localScope, ...argValues })
+  }
+
 }
