@@ -1,7 +1,65 @@
+<script setup>
+import { ref, watch } from 'vue'
+import { useI18n } from '@/packages/i18n'
+import { UiInput } from '@/packages/ui'
+
+const props = defineProps({
+  modelValue: {
+    type: Object,
+    required: true,
+  },
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+const innerValue = ref({})
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    let incoming = Object.assign(
+      { call: 'fetch' },
+      newValue ? JSON.parse(JSON.stringify(newValue)) : null,
+    )
+
+    incoming.args = Object.assign(
+      {
+        url: '',
+        options: {
+          method: 'get',
+          body: null,
+          headers: null,
+        },
+      },
+      typeof incoming.args == 'object' ? incoming.args : null,
+    )
+
+    innerValue.value = incoming
+  },
+  { immediate: true },
+)
+
+function emitInput() {
+  emit('update:modelValue', JSON.parse(JSON.stringify(innerValue.value)))
+}
+
+const i18n = useI18n({
+  en: {
+    'FetchEditor.Body': 'Body',
+    'FetchEditor.Headers': 'Headers',
+  },
+  es: {
+    'FetchEditor.Body': 'Body',
+    'FetchEditor.Headers': 'Encabezados',
+  },
+})
+
+</script>
+
 <template>
   <div class="FetchEditor">
-    <div>
-      <UiInput label="Method">
+    <div class="FetchEditor__row">
+      <UiInput class="FetchEditor__inputMethod">
         <select
           v-model="innerValue.args.options.method"
           class="UiInput"
@@ -26,79 +84,37 @@
       </UiInput>
 
       <UiInput
-        label="URL"
-        style="flex: 1"
-      >
-        <input
-          v-model="innerValue.args.url"
-          class="UiInput"
-          type="text"
-          placeholder="https:// ... "
-          style="width:100%"
-          @input="emitInput"
-        >
-      </UiInput>
+        v-model="innerValue.args.url"
+        class="FetchEditor__inputUrl"
+        type="text"
+        placeholder="https:// ... "
+        @input="emitInput"
+      />
     </div>
 
-    <UiInput
-      v-show="innerValue.args.options.method != 'get'"
-      v-model="innerValue.args.options.body"
-      label="Body"
-      type="json"
-      @update:modelValue="emitInput"
-    />
+    <details
+      v-if="innerValue.args.options.method != 'get'"
+      class="FetchEditor__body"
+    >
+      <summary>{{ i18n.t('FetchEditor.Body') }}</summary>
+      <section>
+        <UiInput
+          v-model="innerValue.args.options.body"
+          type="json"
+          @update:model-value="emitInput"
+        />
+      </section>
+    </details>
+
+    <details class="FetchEditor__headers">
+      <summary>{{ i18n.t('FetchEditor.Headers') }}</summary>
+      <section>
+        <UiInput
+          v-model="innerValue.args.options.headers"
+          type="json"
+          @update:model-value="emitInput"
+        />
+      </section>
+    </details>
   </div>
 </template>
-
-<script>
-import { UiInput } from '../../../ui'
-
-export default {
-  name: 'FetchEditor',
-  components: { UiInput },
-
-  props: {
-    modelValue: {
-      type: Object,
-      required: true,
-    },
-  },
-
-  emits: ['update:modelValue'],
-
-  data() {
-    return { innerValue: {} }
-  },
-
-  watch: {
-    modelValue: {
-      immediate: true,
-      handler(newValue) {
-        let incoming = Object.assign(
-          { call: 'fetch' },
-          newValue ? JSON.parse(JSON.stringify(newValue)) : null,
-        )
-
-        incoming.args = Object.assign(
-          {
-            url: '',
-            options: {
-              method: 'get',
-              body: null,
-            },
-          },
-          typeof incoming.args == 'object' ? incoming.args : null,
-        )
-
-        this.innerValue = incoming
-      },
-    },
-  },
-
-  methods: {
-    emitInput() {
-      this.$emit('update:modelValue', JSON.parse(JSON.stringify(this.innerValue)))
-    },
-  },
-}
-</script>

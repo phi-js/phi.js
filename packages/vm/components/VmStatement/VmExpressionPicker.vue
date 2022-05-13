@@ -1,7 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 import { plugins } from '../../plugins/registerPlugin.js'
-import { UiItem, UiDrawer, UiItemFinder } from '../../../ui'
+import { useI18n } from '@/packages/i18n'
+import { UiItem, UiDrawer, UiItemFinder } from '@/packages/ui'
 
 const emit = defineEmits(['input'])
 
@@ -70,19 +71,31 @@ const items = computed(() => {
   return [...fns, ...code]
 })
 
+const i18n = useI18n({
+  en: {
+    'VmExpressionPicker.label': 'Add action...',
+    'VmExpressionPicker.Cancel': 'Cancel',
+  },
+  es: {
+    'VmExpressionPicker.label': 'Agregar acción...',
+    'VmExpressionPicker.Cancel': 'Cancelar',
+  },
+})
+
 </script>
 
 <template>
   <UiDrawer class="VmExpressionPicker">
-    <template #trigger>
+    <template #trigger="{ isOpen }">
       <UiItem
-        class="ui--clickable"
-        icon="mdi:plus-circle"
-        subtext="Agregar ..."
+        class="VmExpressionPicker__item"
+        :icon="isOpen ? 'mdi:close': 'mdi:plus'"
+        :text="isOpen ? i18n.t('VmExpressionPicker.Cancel') : i18n.t('VmExpressionPicker.label')"
       />
     </template>
     <template #contents="{ close }">
       <UiItemFinder
+        class="VmExpressionPicker__contents"
         :items="items"
         @select-item="$event.onLaunch(); close();"
       />

@@ -17,8 +17,13 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const innerModel = reactive({})
+const detailsIsOpen = ref(false)
 
 onBeforeMount(() => {
+  if (!innerModel.field || !innerModel.op) {
+    detailsIsOpen.value = true
+  }
+
   if (innerModel.op === null) {
     innerModel.op = availableOperators.value?.[0]?.operator
   }
@@ -42,7 +47,6 @@ watch(
   },
   { immediate: true },
 )
-
 
 const fieldSchema = computed(() => {
   if (!innerModel.field) {
@@ -105,7 +109,10 @@ const operationRedaction = computed(() => {
 </script>
 
 <template>
-  <details class="StmtOp">
+  <details
+    class="StmtOp"
+    :open="detailsIsOpen"
+  >
     <summary v-text="operationRedaction" />
 
     <section>

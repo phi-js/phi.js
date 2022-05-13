@@ -1,8 +1,10 @@
 <script setup>
+import { useI18n } from '@/packages/i18n'
 import useModelSchema from './useModelSchema.js'
 const modelSchema = useModelSchema()
 
 const emit = defineEmits(['input'])
+
 function onSelectChange($evt) {
   let val = $evt.target.value
   $evt.target.value = ''
@@ -34,6 +36,26 @@ function onSelectChange($evt) {
 
   emit('input', {})
 }
+
+const i18n = useI18n({
+  en: {
+    'VmOperatorPicker.AddContition': 'Add condition',
+    'VmOperatorPicker.Other': 'Other ...',
+    'VmOperatorPicker.allOf': 'All of the following',
+    'VmOperatorPicker.anyOf': 'Any of the following',
+    'VmOperatorPicker.Variables': 'Variables',
+    'VmOperatorPicker.Conditions': 'Conditions',
+  },
+  es: {
+    'VmOperatorPicker.AddContition': 'Agregar condición',
+    'VmOperatorPicker.Other': 'Otra ...',
+    'VmOperatorPicker.allOf': 'Todas las siguientes',
+    'VmOperatorPicker.anyOf': 'Cualquiera de las siguientes',
+    'VmOperatorPicker.Variables': 'Variables',
+    'VmOperatorPicker.Conditions': 'Condiciones',
+  },
+})
+
 </script>
 
 <template>
@@ -41,13 +63,12 @@ function onSelectChange($evt) {
     class="VmOperatorPicker"
     @change="onSelectChange"
   >
-    <option value="">
-      + Agregar condición
-    </option>
-
-    <!-- Schema properties -->
+    <option
+      value=""
+      v-text="i18n.t('VmOperatorPicker.AddContition')"
+    />
     <optgroup
-      label="Variables"
+      :label="i18n.t('VmOperatorPicker.Variables')"
     >
       <template v-if="modelSchema">
         <option
@@ -58,36 +79,21 @@ function onSelectChange($evt) {
           {{ propDef.text || propDef.title || propName }}
         </option>
       </template>
-      <option value="prop:custom">
-        Otra ...
-      </option>
+      <option
+        value="prop:custom"
+        v-text="i18n.t('VmOperatorPicker.Other')"
+      />
     </optgroup>
 
-    <!-- <optgroup label="Otras">
-      <option value="stmt">
-        Expresión
-      </option>
-    </optgroup> -->
-
-    <!-- availableStatements ? -->
-    <optgroup label="Condiciones">
-      <option value="and">
-        Todas las siguientes ...
-      </option>
-      <option value="or">
-        Cualquiera de las siguientes ...
-      </option>
+    <optgroup :label="i18n.t('VmOperatorPicker.Conditions')">
+      <option
+        value="and"
+        v-text="i18n.t('VmOperatorPicker.allOf')"
+      />
+      <option
+        value="or"
+        v-text="i18n.t('VmOperatorPicker.anyOf')"
+      />
     </optgroup>
   </select>
 </template>
-
-<style lang="scss">
-.VmOperatorPicker {
-  border: 0;
-  background: transparent;
-  font-size: 13px;
-  max-width: 100%;
-
-  cursor: pointer;
-}
-</style>

@@ -79,10 +79,6 @@ export default {
       let res = { [this.innerModel.operator]: this.innerModel.list }
       this.$emit('update:modelValue', JSON.parse(JSON.stringify(res)))
     },
-
-    redact(condition) {
-      return 'duhh' + JSON.stringify(condition)
-    },
   },
 }
 </script>
