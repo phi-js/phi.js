@@ -89,6 +89,7 @@ const arrOptions = computed(() =>
 
     return {
       ...option,
+      text: option.text || option.value,
       icon,
     }
   }))

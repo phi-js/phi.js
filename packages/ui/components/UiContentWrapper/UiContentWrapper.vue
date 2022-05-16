@@ -25,9 +25,9 @@ const props = defineProps({
 })
 
 const bodyStyle = computed(() => {
-  const scale = Math.min(Math.max(parseInt(props.scale), 25), 150)
+  // const scale = Math.min(Math.max(parseInt(props.scale), 25), 150)
   return {
-    transform: `scale(${scale}%)`,
+    // transform: `scale(${scale}%)`, // fucks up children with position:fixed
     width: props.width ? `${props.width}px` : '100%',
     height: props.height ? `${props.height}px` : '100%',
   }
