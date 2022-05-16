@@ -8,13 +8,13 @@
         v-model="rangeValue[0]"
         type="date"
         :format="fieldFormat"
-        @update:modelValue="$emit('input', rangeValue)"
+        @update:model-value="$emit('update:modelValue', rangeValue)"
       />
       <UiInput
         v-model="rangeValue[1]"
         type="date"
         :format="fieldFormat"
-        @update:modelValue="$emit('input', rangeValue)"
+        @update:model-value="$emit('update:modelValue', rangeValue)"
       />
     </div>
     <UiInput
@@ -35,12 +35,14 @@ export default {
 
   props: {
     // El atributo ARGS del statement  {"op": "hasAny", "field": "...", "args": XXXXXXXXXXX}
-    value: {
+    modelValue: {
+      type: Object,
       required: false,
       default: null,
     },
 
     fieldSchema: {
+      type: Object,
       required: false,
       default: null,
     },
@@ -52,22 +54,24 @@ export default {
     },
   },
 
+  emits: ['update:modelValue'],
+
   computed: {
     fieldFormat() {
       return this.fieldSchema?.format || 'timestamp'
     },
 
     rangeValue() {
-      return this.value?.length == 2 ? this.value : [null, null]
+      return this.modelValue?.length == 2 ? this.modelValue : [null, null]
     },
 
     singleValue: {
       get() {
-        return this.value || null
+        return this.modelValue || null
       },
 
       set(value) {
-        this.$emit('input', value)
+        this.$emit('update:modelValue', value)
       },
     },
   },

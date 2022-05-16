@@ -1,76 +1,62 @@
-import DatePicker from './DatePicker.vue';
+import DatePicker from './DatePicker.vue'
 
 export default [
   {
-    operator: 'between',
+    operator: 'date.between',
     type: 'date',
     icon: 'mdi:less-than-or-equal',
     text: 'Rango de fechas',
     editor: {
       component: DatePicker,
-      props: {
-        range: true
-      }
-    }
+      props: { range: true },
+    },
   },
 
   {
-    operator: 'eq',
+    operator: 'date.eq',
     type: 'date',
     icon: 'mdi:equal',
     text: 'es igual a',
-    editor: {
-      component: DatePicker
-    }
+    editor: { component: DatePicker },
   },
 
   {
-    operator: 'neq',
+    operator: 'date.neq',
     type: 'date',
     icon: 'mdi:not-equal',
     text: 'no es igual a',
-    editor: {
-      component: DatePicker
-    }
+    editor: { component: DatePicker },
   },
 
   {
-    operator: 'gt',
+    operator: 'date.gt',
     type: 'date',
     icon: 'mdi:greater-than',
     text: 'es mayor que',
-    editor: {
-      component: DatePicker
-    }
+    editor: { component: DatePicker },
   },
 
   {
-    operator: 'gte',
+    operator: 'date.gte',
     type: 'date',
     icon: 'mdi:greater-than-or-equal',
     text: 'es mayor o igual que',
-    editor: {
-      component: DatePicker
-    }
+    editor: { component: DatePicker },
   },
 
   {
-    operator: 'lt',
+    operator: 'date.lt',
     type: 'date',
     icon: 'mdi:less-than',
     text: 'es menor que',
-    editor: {
-      component: DatePicker
-    }
+    editor: { component: DatePicker },
   },
 
   {
-    operator: 'lte',
+    operator: 'date.lte',
     type: 'date',
     icon: 'mdi:less-than-or-equal',
     text: 'es menor o igual que',
-    editor: {
-      component: DatePicker
-    }
-  }
+    editor: { component: DatePicker },
+  },
 ]
