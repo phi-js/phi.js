@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, provide, inject } from 'vue'
 import { UiInputJson } from '@/packages/ui/components'
 
 import StmtAndOr from './statements/StmtAndOr.vue'
@@ -7,8 +7,6 @@ import StmtOp from './statements/StmtOp.vue'
 import StmtCall from './statements/StmtCall.vue'
 import StmtChain from './statements/StmtChain/StmtChain.vue'
 import StmtEval from './statements/StmtEval.vue'
-
-import useModelSchema from './useModelSchema'
 
 // const StmtAndOr = defineAsyncComponent(() => import('./statements/StmtAndOr.vue'))
 // const StmtOp = defineAsyncComponent(() => import('./statements/StmtOp.vue'))
@@ -38,8 +36,10 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 // Provides "modelSchema" to be used by descendant components
-useModelSchema()
-
+const injectedSchema = inject('$_vm_modelSchema', null)
+if (!injectedSchema) {
+  provide('$_vm_modelSchema', computed(() => props.modelSchema))
+}
 
 //
 const _modelValue = computed({

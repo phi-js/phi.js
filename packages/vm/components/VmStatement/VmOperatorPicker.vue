@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import useModelSchema from './useModelSchema.js'
 const modelSchema = useModelSchema()
@@ -56,6 +57,29 @@ const i18n = useI18n({
   },
 })
 
+function getPropertiesArray(schema, retval = [], prefix = '') {
+  if (!schema?.type) {
+    return []
+  }
+
+  if (schema.type == 'object') {
+    for (const [propertyName, propertySchema] of Object.entries(schema.properties)) {
+      getPropertiesArray(propertySchema, retval, (prefix ? prefix + '.' : '') + propertyName)
+    }
+    return retval
+  }
+
+  retval.push({
+    ...schema,
+    name: prefix,
+  })
+
+  return retval
+}
+
+const schemaPropertiesList = computed(() => {
+  return getPropertiesArray(modelSchema.value)
+})
 </script>
 
 <template>
@@ -72,11 +96,11 @@ const i18n = useI18n({
     >
       <template v-if="modelSchema">
         <option
-          v-for="(propDef, propName) in modelSchema.properties"
-          :key="propName"
-          :value="'prop:' + propName"
+          v-for="prop in schemaPropertiesList"
+          :key="prop.name"
+          :value="'prop:' + prop.name"
         >
-          {{ propDef.text || propDef.title || propName }}
+          {{ prop?.info?.text || prop.title || prop.text || prop.name }}
         </option>
       </template>
       <option

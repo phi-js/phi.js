@@ -1,5 +1,5 @@
 <script setup>
-import { ref, unref, computed, reactive, watch, nextTick, onBeforeMount } from 'vue'
+import { ref, computed, reactive, watch, nextTick, onBeforeMount } from 'vue'
 import { UiItem } from '@/packages/ui/components'
 import VmStatement from '../VmStatement.vue'
 import allOperators from '../operators'
@@ -52,7 +52,18 @@ const fieldSchema = computed(() => {
   if (!innerModel.field) {
     return null
   }
-  return unref(modelSchema)?.properties?.[innerModel.field]
+
+  let targetSchema = modelSchema.value
+
+  const parts = innerModel.field.split('.')
+  const lastPart = parts[parts.length - 1]
+
+  for (let i = 0; i < parts.length - 1; i++) {
+    const part = parts[i]
+    targetSchema = targetSchema?.properties?.[part]
+  }
+
+  return targetSchema?.properties?.[lastPart]
 })
 
 const availableOperators = computed(() => {
