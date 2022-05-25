@@ -33,6 +33,13 @@ watchEffect(() => {
     innerValue.value = Array.isArray(props.value) ? props.value : props.value !== null ? [props.value] : []
   } else {
     innerValue.value = props.value
+
+    if (innerSchema.value?.enum?.length) {
+      const foundEnumItem = innerSchema.value.enum.find((item) => item?.value == props.value)
+      if (foundEnumItem) {
+        innerValue.value = foundEnumItem.text
+      }
+    }
   }
 })
 
