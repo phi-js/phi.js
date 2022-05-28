@@ -1,10 +1,10 @@
 import { ref, computed } from 'vue'
 
-// Manejo de THEMES
-import '../packages/ui/themes/base/index.scss'
-import '../packages/ui/themes/columns/index.scss'
-import '../packages/ui/themes/material/index.scss'
-import '../packages/ui/themes/terminal/index.scss'
+// // Manejo de THEMES
+// import '../packages/ui/themes/base/index.scss'
+// import '../packages/ui/themes/columns/index.scss'
+// import '../packages/ui/themes/material/index.scss'
+// import '../packages/ui/themes/terminal/index.scss'
 
 export const availableThemes = [
   { value: 'ui-theme-base', text: 'Base' },
@@ -16,7 +16,7 @@ export const availableThemes = [
 export const activeThemes = ref([])
 
 export function setTheme(fullThemeClass) {
-  document.body.classList.forEach(className => {
+  document.body.classList.forEach((className) => {
     if (className.startsWith('ui-theme')) {
       document.body.classList.remove(className)
     }
