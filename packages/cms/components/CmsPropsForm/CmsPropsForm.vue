@@ -42,3 +42,11 @@ const parsedFields = computed(() => {
     />
   </div>
 </template>
+
+<style lang="scss">
+.CmsPropsForm {
+  .CmsPropInput {
+    margin: 8px 6px;
+  }
+}
+</style>

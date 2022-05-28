@@ -36,7 +36,8 @@ innerValue = {
 */
 
 import { useAttrs, computed, ref, watch } from 'vue'
-import { UiInput, UiPopover, UiIcon, UiItem } from '../../../ui'
+import { useI18n } from '@/packages/i18n'
+import { UiInput } from '../../../ui'
 
 import useModelSchema from '@/packages/vm/components/VmStatement/useModelSchema.js'
 import getSchemaVariables from '@/packages/vm/helpers/getSchemaVariables.js'
@@ -67,7 +68,8 @@ watch(
 
 function parseValue(incoming) {
   const retval = {
-    type: innerValue.value?.type || attrs?.type || 'text',
+    // type: innerValue.value?.type || attrs?.type || 'text',
+    type: 'text',
     value: incoming,
   }
 
@@ -75,16 +77,16 @@ function parseValue(incoming) {
     return retval
   }
 
-  if (typeof incoming == 'number') {
-    retval.type = 'number'
-    return retval
-  }
+  // if (typeof incoming == 'number') {
+  //   retval.type = 'number'
+  //   return retval
+  // }
 
-  // Expression strings "{{someExpression}}"
-  const expr = incoming.match(/{{(.*?)}}/)?.[1]
-  if (typeof expr == 'string') {
-    retval.type = 'expression'
-    retval.value = expr
+  // Variable strings "{{someVarName}}"
+  const varName = incoming.match(/{{(.*?)}}/)?.[1]
+  if (typeof varName == 'string') {
+    retval.type = 'variable'
+    retval.value = varName
     return retval
   }
 
@@ -99,45 +101,71 @@ function parseValue(incoming) {
   return retval
 }
 
-const availableTypes = [
-  {
-    text: 'Number',
-    value: 'number',
-    icon: 'mdi:numeric',
-  },
-  {
-    text: 'Text',
-    value: 'text',
-    icon: 'mdi:format-text',
-  },
-  {
-    text: 'Translation',
-    value: 'lang',
-    icon: 'mdi:translate',
-  },
-  {
-    text: 'Variable',
-    value: 'expression',
-    icon: 'mdi:code-braces',
-  },
-]
+const i18n = useI18n({
+  en: {
+    // 'CmsPropInput.Number': 'Number',
+    'CmsPropInput.Text': 'Value',
+    'CmsPropInput.Translation': 'Translation',
+    'CmsPropInput.Variable': 'Variable',
 
-const currentType = computed(() => availableTypes.find((t) => t.value == innerValue.value.type))
+    'CmsPropInput.SelectVariable': 'Select variable ...',
+    'CmsPropInput.DocumentVariables': 'Document variables',
+    'CmsPropInput.Other': 'Other',
+    'CmsPropInput.CustomVariableName': 'Type variable name ...',
+    'CmsPropInput.TypeAName': 'Type a variable name',
+  },
+  es: {
+    // 'CmsPropInput.Number': 'Número',
+    'CmsPropInput.Text': 'Valor',
+    'CmsPropInput.Translation': 'Traducción',
+    'CmsPropInput.Variable': 'Variable',
 
-function setType(objType) {
-  if (innerValue.value.type == objType.value) {
+    'CmsPropInput.SelectVariable': 'Escoger ...',
+    'CmsPropInput.DocumentVariables': 'Variables del documento',
+    'CmsPropInput.Other': 'Otras',
+    'CmsPropInput.CustomVariableName': 'Escribir nombre de variable ...',
+    'CmsPropInput.TypeAName': 'Esribe un nombre de variable',
+  },
+})
+
+function setType(typeName) {
+  if (innerValue.value.type == typeName) {
     return false
   }
 
-  innerValue.value.type = objType.value
-  return true
+  // When transforming a value into an variable,
+  // only keep the current string value if it matches an existing variable
+  if (typeName == 'variable' && innerValue.value.value) {
+    const foundVariable = schemaVariables.value.find((schemaVar) => schemaVar.name == innerValue.value.value)
+    if (!foundVariable) {
+      innerValue.value.value = ''
+    }
+  }
+
+  innerValue.value.type = typeName
+  emitUpdate()
+}
+
+function emitUpdate() {
+  switch (innerValue.value.type) {
+  case 'variable':
+    emit('update:modelValue', '{{' + innerValue.value.value + '}}')
+    break
+
+  case 'lang':
+    emit('update:modelValue', 'lang(' + innerValue.value.value + ')')
+    break
+
+  default:
+    emit('update:modelValue', innerValue.value.value)
+    break
+  }
 }
 
 const modelSchema = useModelSchema()
 const schemaVariables = computed(() => getSchemaVariables(modelSchema.value))
 
 const variableSelectorOptions = computed(() => {
-
   const retval = schemaVariables.value.map((schemaVar) => ({
     value: schemaVar.name,
     text: schemaVar.name,
@@ -148,119 +176,102 @@ const variableSelectorOptions = computed(() => {
     if (!found) {
       retval.push({
         value: innerValue.value.value,
-        // text: `custom: ${innerValue.value.value}`,
         text: innerValue.value.value,
       })
     }
   }
-
-
-  retval.push({
-    value: 'custom',
-    text: 'Type variable name...',
-  })
 
   return retval
 })
 
 function onVariablePickerChange($event) {
   if ($event == 'custom') {
-    const varName = prompt('Type a variable name', innerValue.value.value)
+    const varName = prompt(i18n.t('CmsPropInput.TypeAName'), innerValue.value.value)
     if (!varName) {
       innerValue.value.value = ''
       return false
     }
     innerValue.value.value = varName
   } else {
-    innerValue.value.value = $event
+    innerValue.value.value = $event || ''
   }
 
-  emit('update:modelValue', '{{' + innerValue.value.value + '}}')
+  emitUpdate()
 }
-
 </script>
 
 <template>
-  <div
+  <UiInput
+    v-bind="attrs"
     class="CmsPropInput"
     :class="`CmsPropInput--${innerValue.type}}`"
   >
-    <div class="CmsPropInput__body">
-      <template v-if="innerValue.type == 'expression'">
-        <UiInput
-          v-bind="attrs"
-          :model-value="innerValue.value || null"
-          type="select-native"
-          placeholder="Select variable ..."
-          :options="variableSelectorOptions"
-          @update:model-value="onVariablePickerChange($event)"
+    <div class="CmsPropInput__body UiGroup">
+      <select
+        class="CmsPropInput__picker UiInput"
+        :value="innerValue.type"
+        @change="setType($event.target.value)"
+      >
+        <!-- <option
+          value="number"
+          v-text="i18n.t('CmsPropInput.Number')"
+        /> -->
+        <option
+          value="text"
+          v-text="i18n.t('CmsPropInput.Text')"
         />
+        <option
+          value="translation"
+          v-text="i18n.t('CmsPropInput.Translation')"
+        />
+        <option
+          value="variable"
+          v-text="i18n.t('CmsPropInput.Variable')"
+        />
+      </select>
+
+      <template v-if="innerValue.type == 'variable'">
+        <select
+          class="UiInput"
+          :value="innerValue.value || ''"
+          @change="onVariablePickerChange($event.target.value)"
+        >
+          <option
+            :value="''"
+            v-text="i18n.t('CmsPropInput.SelectVariable')"
+          />
+
+          <optgroup :label="i18n.t('CmsPropInput.DocumentVariables')">
+            <option
+              v-for="opt in variableSelectorOptions"
+              :key="opt.value"
+              :value="opt.value"
+              v-text="opt.text"
+            />
+          </optgroup>
+          <optgroup :label="i18n.t('CmsPropInput.Other')">
+            <option
+              value="custom"
+              v-text="i18n.t('CmsPropInput.CustomVariableName')"
+            />
+          </optgroup>
+        </select>
       </template>
       <template v-else-if="innerValue.type == 'lang'">
         <UiInput
-          v-bind="attrs"
           v-model="innerValue.value"
           type="text"
-          @update:model-value="emit('update:modelValue', `lang(${innerValue.value})`)"
+          @update:model-value="emitUpdate()"
         />
       </template>
       <template v-else>
         <UiInput
-          v-bind="attrs"
-          :type="innerValue.type"
-          :model-value="props.modelValue"
-          @update:model-value="emit('update:modelValue', $event)"
+          v-model="innerValue.value"
+          xxxx-type="innerValue.type"
+          type="text"
+          @update:model-value="emitUpdate()"
         />
       </template>
     </div>
-
-    <div>
-      <UiPopover>
-        <template #trigger>
-          <UiIcon
-            class="CmsPropInput__picker"
-            :src="currentType?.icon || 'mdi:dots-vertical'"
-          />
-        </template>
-        <template #contents="{ close }">
-          <div class="CmsPropInput__typeList">
-            <UiItem
-              v-for="avType in availableTypes"
-              :key="avType.value"
-              v-bind="avType"
-              class="CmsPropInput__typeItem"
-              :class="{'CmsPropInput__typeItem--active': avType.value == innerValue.type}"
-              @click="setType(avType) && close()"
-            />
-          </div>
-        </template>
-      </UiPopover>
-    </div>
-  </div>
+  </UiInput>
 </template>
-
-<style lang="scss">
-@import '@/packages/ui/themes/base/modifiers/clickable.scss';
-
-.CmsPropInput {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-
-  &__picker {
-    width: 40px;
-    height: 40px;
-    @extend .ui--clickable;
-  }
-
-  &__typeItem {
-    --ui-item-padding: 8px 12px;
-    @extend .ui--clickable;
-
-    &--active {
-      background-color: rgba(255,255,255, 0.1);
-      font-weight: bold;
-    }
-  }
-}
-</style>

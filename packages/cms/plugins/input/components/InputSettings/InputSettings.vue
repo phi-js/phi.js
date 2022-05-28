@@ -69,6 +69,19 @@ const multipleOptions = [
 
 <template>
   <div class="InputSettings UiForm">
+    <details
+      v-if="isSelect"
+      open
+    >
+      <summary v-text="i18n.t('InputSettings.Options')" />
+      <section>
+        <OptionsEditor
+          v-model="block.props.options"
+          @update:model-value="emitUpdate"
+        />
+      </section>
+    </details>
+
     <details open>
       <summary v-text="i18n.t('InputSettings.Labels')" />
       <section>
@@ -97,19 +110,6 @@ const multipleOptions = [
           :label="i18n.t('InputSettings.Subtext')"
           @update:model-value="emitUpdate"
           @update:block="emitUpdate"
-        />
-      </section>
-    </details>
-
-    <details
-      v-if="isSelect"
-      open
-    >
-      <summary v-text="i18n.t('InputSettings.Options')" />
-      <section>
-        <OptionsEditor
-          v-model="block.props.options"
-          @update:model-value="emitUpdate"
         />
       </section>
     </details>

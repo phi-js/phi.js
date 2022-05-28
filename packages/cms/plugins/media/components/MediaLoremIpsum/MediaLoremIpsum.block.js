@@ -38,7 +38,7 @@ export default {
 
     actions: [
       {
-        'title': 'Lorem options',
+        'title': 'Paragraphs',
         'component': CmsPropsForm,
         'v-model': 'block',
         'props': {
