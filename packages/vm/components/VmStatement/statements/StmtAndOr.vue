@@ -30,6 +30,10 @@ export default {
         'StmtAndOr.allOf': 'Todas las siguientes',
         'StmtAndOr.anyOf': 'Cualquiera de las siguientes',
       },
+      de: {
+        'StmtAndOr.allOf': 'Alles',
+        'StmtAndOr.anyOf': 'Irgendein',
+      },
     })
 
     return { i18n }

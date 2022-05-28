@@ -55,6 +55,14 @@ const i18n = useI18n({
     'VmOperatorPicker.Variables': 'Variables',
     'VmOperatorPicker.Conditions': 'Condiciones',
   },
+  de: {
+    'VmOperatorPicker.AddContition': 'Bedingung hinzufügen',
+    'VmOperatorPicker.Other': 'Bedingung hinzufügen ...',
+    'VmOperatorPicker.allOf': 'Alles',
+    'VmOperatorPicker.anyOf': 'Irgendein',
+    'VmOperatorPicker.Variables': 'Variablen',
+    'VmOperatorPicker.Conditions': 'Bedingungen',
+  },
 })
 
 function getPropertiesArray(schema, retval = [], prefix = '') {
@@ -89,7 +97,7 @@ const schemaPropertiesList = computed(() => {
   >
     <option
       value=""
-      v-text="i18n.t('VmOperatorPicker.AddContition')"
+      v-text="' + ' + i18n.t('VmOperatorPicker.AddContition')"
     />
     <optgroup
       :label="i18n.t('VmOperatorPicker.Variables')"
