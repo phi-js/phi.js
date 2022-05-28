@@ -55,7 +55,11 @@ export default function useI18n(componentDictionary = null) {
 
     // Format date
     d(date, options = undefined) {
-      const targetLocale = attrs?.['i18n-language'] || injected.locale
+      let targetLocale = attrs?.['i18n-language'] || injected.locale
+
+      // Sanitize locale
+      targetLocale = targetLocale.replace('_', '-')
+
       let objDate = toDate(date)
       if (!objDate) {
         return date + '(?)'
