@@ -64,7 +64,6 @@ watchEffect(() => {
       v-if="isSelect && !translatedProps?.options?.length"
       text="Add options"
       icon="mdi:form-dropdown"
-      class="ui--clickable"
     />
   </div>
 </template>

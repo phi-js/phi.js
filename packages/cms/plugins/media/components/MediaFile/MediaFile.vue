@@ -5,7 +5,6 @@
     target="_system"
   >
     <UiItem
-      class="ui--clickable"
       :text="text"
       :secondary="secondary"
       :icon="icon"
@@ -14,7 +13,7 @@
 </template>
 
 <script>
-import { UiItem } from '../../../../../ui';
+import { UiItem } from '../../../../../ui'
 
 export default {
   name: 'MediaFile',
@@ -41,7 +40,7 @@ export default {
       default: 'mdi:file',
     },
   },
-};
+}
 </script>
 
 <style lang="scss">

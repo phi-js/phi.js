@@ -28,7 +28,6 @@ const isVisible = ref(true)
     <template #toolbar>
       <UiIcon
         style="width: 40px"
-        class="ui--clickable"
         :src="!isVisible ? 'mdi:unfold-more-horizontal' : 'mdi:unfold-less-horizontal'"
         @click="isVisible = !isVisible"
       />

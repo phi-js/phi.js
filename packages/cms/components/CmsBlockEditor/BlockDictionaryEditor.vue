@@ -124,7 +124,6 @@ async function translateAll(sourceLanguage, targetLanguage) {
                 <td>
                   <UiItem
                     v-if="lang != 'en'"
-                    class="ui--clickable"
                     icon="mdi:google-translate"
                     text="Google Translate"
                     :subtext="`From 'en' to '${lang}'`"
@@ -193,23 +192,3 @@ async function translateAll(sourceLanguage, targetLanguage) {
     </table> -->
   </div>
 </template>
-
-<style lang="scss">
-.BlockDictionaryEditor {
-  .UiInput {
-    width: 100%;
-  }
-
-  th {
-    text-align: left;
-  }
-
-  td:first-child {
-    width: 200px;
-  }
-
-  tfoot td {
-    text-align: right;
-  }
-}
-</style>

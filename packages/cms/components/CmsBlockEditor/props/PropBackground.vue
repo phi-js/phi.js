@@ -37,6 +37,7 @@ function emitUpdate() {
 }
 
 const css = ref({
+  '--ui-color-background': null,
   'background-image': null,
   'background-repeat': null,
   'background-size': null,
@@ -45,6 +46,7 @@ const css = ref({
 
 watchEffect(() => {
   Object.assign(css.value, {
+    '--ui-color-background': props.modelValue?.['--ui-color-background'],
     'background-image': props.modelValue?.['background-image'],
     'background-repeat': props.modelValue?.['background-repeat'],
     'background-size': props.modelValue?.['background-size'],
@@ -69,6 +71,13 @@ const backgroundImageUrl = computed({
 
 <template>
   <div class="PropBackground">
+    <UiInput
+      v-model="css['--ui-color-background']"
+      label="Color"
+      type="color-css"
+      @update:model-value="emitUpdate()"
+    />
+
     <UiInput
       v-model="backgroundImageUrl"
       label="image"

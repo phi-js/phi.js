@@ -133,12 +133,18 @@ const contentSize = ref({
 
 // expanded/collapsed
 const isCollapsed = ref(true)
+const isEditorLoaded = ref(false)
+
 function toggleCollapsed() {
   isCollapsed.value = !isCollapsed.value
   if (!isCollapsed.value) {
     currentTab.value = 'editor'
   } else {
     currentTab.value = 'preview'
+  }
+
+  if (currentTab.value == 'editor') {
+    isEditorLoaded.value = true
   }
 }
 </script>
@@ -163,6 +169,14 @@ function toggleCollapsed() {
       class="CmsStoryBuilder__header"
     >
       <template #left>
+        <UiIcon
+          class="CmsStoryBuilder__controlItem"
+          src="mdi:arrow-collapse"
+          :title="i18n.t('CmsStoryBuilder.hideToolbar')"
+          style="width: 40px"
+          @click="toggleCollapsed()"
+        />
+
         <slot name="header" />
       </template>
 
@@ -188,13 +202,13 @@ function toggleCollapsed() {
             class="CmsStoryBuilder__controlItem"
           />
 
-          <UiIcon
+          <!-- <UiIcon
             class="CmsStoryBuilder__controlItem"
             src="mdi:arrow-collapse"
             :title="i18n.t('CmsStoryBuilder.hideToolbar')"
             style="width: 40px"
             @click="toggleCollapsed()"
-          />
+          /> -->
         </div>
       </template>
 
@@ -284,6 +298,7 @@ function toggleCollapsed() {
     <div class="CmsStoryBuilder__body">
       <UiContentWrapper v-bind="contentSize">
         <CmsStoryEditor
+          v-if="isEditorLoaded"
           v-show="currentTab == 'editor'"
           v-model:current-page-id="currentPageId"
           v-model:story="innerStory"

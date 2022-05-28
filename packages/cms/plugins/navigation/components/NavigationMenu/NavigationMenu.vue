@@ -26,7 +26,7 @@ const props = defineProps({
     <a
       v-for="(item) in props.items"
       :key="item.href"
-      class="NavigationMenu__item ui--clickable"
+      class="NavigationMenu__item"
       v-bind="item"
       v-text="item.text"
     />

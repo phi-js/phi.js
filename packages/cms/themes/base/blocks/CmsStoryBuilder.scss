@@ -1,5 +1,20 @@
 // NON decorative styles (i.e. layout and dimensions only. no colors)
 .CmsStoryBuilder {
+  &__header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+
+    // background-color: rgba(0,0,0, 0.33); // No deberia ser semitransparente si es sticky, porque el contenido sobrepuesto se ve ... raro
+    background-color: #333;
+    color: #eee;
+    border-radius: var(--ui-radius);
+
+    overflow: hidden; // prevent non-rounded items from protuding
+  }
+
   &__controls {
     display: flex;
     align-items: stretch;
@@ -8,9 +23,9 @@
   &__controlItem {
     @extend .ui--clickable;
 
-    height: 40px;
+    min-height: 40px;
+    align-self: stretch;
     min-width: 40px;
-    border-radius: 4px;
 
     &[disabled=true] {
       cursor: default;
@@ -59,9 +74,7 @@
     --ui-item-padding: 8px 12px;
     font-size: 13px;
     font-weight: 600;
-    padding: 5px;
-
-    text-align: right;
+    // padding: 5px;
 
     .UiItem {
       @extend .ui--clickable;

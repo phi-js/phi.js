@@ -44,12 +44,10 @@ function onNameChanged(newName) {
   <div class="CssClassEditor">
     <UiInput
       v-model="innerValue.name"
-      label="Class name"
       @update:model-value="onNameChanged"
     />
     <UiInput
       v-model="innerValue.css"
-      label="CSS"
       type="code"
       lang="css"
       @update:model-value="emitUpdate"

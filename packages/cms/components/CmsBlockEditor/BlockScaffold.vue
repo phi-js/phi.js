@@ -71,7 +71,7 @@ function emitDelete() {
   return true
 }
 
-const blockCssAttributes = computed(() => getCssObjectAttributes(innerBlock.value?.css))
+const blockCssAttributes = computed(() => getCssObjectAttributes(innerBlock.value?.css, innerBlock.value))
 
 // Available block editors
 const editors = shallowRef({})
@@ -106,6 +106,10 @@ function openActionId(actionId) {
     console.warn('Could not find block action:', actionId)
   }
 }
+
+const hasEvents = computed(() => {
+  return innerBlock.value['v-on'] && Object.keys(innerBlock.value['v-on']).length
+})
 
 const isFocused = ref(false)
 watch(
@@ -152,6 +156,22 @@ function getWidth(coords) {
         />
 
         <UiIcon
+          v-if="innerBlock?.rules?.length"
+          title="This block has validation rules"
+          class="BlockScaffold__toolbar-icon"
+          src="mdi:message-alert"
+          @click="openActionId('validation')"
+        />
+
+        <UiIcon
+          v-if="innerBlock?.css?.classes?.length || innerBlock?.css?.style"
+          title="This block has CSS styles"
+          class="BlockScaffold__toolbar-icon"
+          src="mdi:palette-advanced"
+          @click="openActionId('css')"
+        />
+
+        <UiIcon
           v-if="innerBlock['v-if']"
           title="This block has conditional visibility"
           class="BlockScaffold__toolbar-icon"
@@ -168,20 +188,13 @@ function getWidth(coords) {
         />
 
         <UiIcon
-          v-if="innerBlock?.rules?.length"
-          title="This block has validation rules"
+          v-if="hasEvents"
+          title="Has events"
           class="BlockScaffold__toolbar-icon"
-          src="mdi:message-alert"
-          @click="openActionId('validation')"
+          src="mdi:gesture-tap"
+          @click="openActionId('events')"
         />
 
-        <UiIcon
-          v-if="innerBlock?.css?.classes?.length || innerBlock?.css?.style"
-          title="This block has CSS styles"
-          class="BlockScaffold__toolbar-icon"
-          src="mdi:palette-advanced"
-          @click="openActionId('css')"
-        />
 
         <!-- dropdown options -->
         <UiPopover

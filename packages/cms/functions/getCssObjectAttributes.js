@@ -20,25 +20,32 @@ ready to be used via v-bind to a component
 }
 
 */
-export default function getCssObjectAttributes(blockCss) {
+export default function getCssObjectAttributes(evaldCSS, block = null) {
   const retval = {
     class: [],
     style: null,
   }
 
   // css.class  Single main class
-  if (blockCss?.class) {
-    retval.class.push(blockCss.class)
+  if (evaldCSS?.class) {
+    retval.class.push(evaldCSS.class)
   }
 
   // css.classes
-  if (blockCss?.classes?.length) {
-    retval.class = [...retval.class, ...blockCss.classes]
+  if (evaldCSS?.classes?.length) {
+    retval.class = [...retval.class, ...evaldCSS.classes]
   }
 
   // css.style
-  if (blockCss?.style) {
-    retval.style = blockCss.style
+  if (evaldCSS?.style) {
+    retval.style = evaldCSS.style
+  }
+
+  if (block !== null) {
+    retval.class.push('CmsBlock')
+    if (block.name) {
+      retval.class.push(block.name)
+    }
   }
 
   return {

@@ -1,5 +1,5 @@
 import MediaLoremIpsum from './MediaLoremIpsum.vue'
-import { UiForm } from '@/packages/ui/components'
+import CmsPropsForm from '../../../../components/CmsPropsForm/CmsPropsForm.vue'
 
 export default {
   name: 'MediaLoremIpsum',
@@ -16,40 +16,40 @@ export default {
   },
 
   editor: {
-    toolbar: {
-      'v-model': 'block',
-      'component': UiForm,
-      'props': {
-        class: 'UiGroup',
-        fields: [
-          {
-            type: 'text',
-            model: 'props.nParagraphs',
-            size: 2,
-          },
-          {
-            type: 'text',
-            model: 'props.nWords',
-            size: 2,
-          },
-        ],
-      },
-    },
+    // toolbar: {
+    //   'v-model': 'block',
+    //   'component': UiForm,
+    //   'props': {
+    //     class: 'UiGroup',
+    //     fields: [
+    //       {
+    //         type: 'text',
+    //         model: 'props.nParagraphs',
+    //         size: 2,
+    //       },
+    //       {
+    //         type: 'text',
+    //         model: 'props.nWords',
+    //         size: 2,
+    //       },
+    //     ],
+    //   },
+    // },
 
     actions: [
       {
-        'title': 'Editor de Lipsum',
-        'component': UiForm,
+        'title': 'Lorem options',
+        'component': CmsPropsForm,
         'v-model': 'block',
         'props': {
           fields: [
             {
-              type: 'text',
+              type: 'number',
               label: 'Cantidad de parrafos',
               model: 'props.nParagraphs',
             },
             {
-              type: 'text',
+              type: 'number',
               label: 'Cantidad de palabras',
               model: 'props.nWords',
             },

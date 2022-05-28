@@ -92,37 +92,3 @@
     }
   }
 }
-
-// Custom items override
-.StmtChainItem {
-  margin: 8px;
-  border: 1px outset #555;
-  background-color: rgba(255, 255, 255, 0.1);
-
-  &__trigger {
-    padding-right: 8px;
-  }
-
-  &__contents {
-    padding-bottom: 36px;
-
-    & > .UiInput {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-
-      .UiInput__label {
-        font-size: 13px;
-        margin-right: 1em;
-      }
-    }
-  }
-
-  &__face .UiItem__subtext {
-    color: #fff;
-    background-color: var(--ui-color-primary);
-    padding: 1px 8px;
-    align-self: baseline;
-  }
-}

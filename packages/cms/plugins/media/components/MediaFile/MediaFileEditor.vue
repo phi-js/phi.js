@@ -7,7 +7,6 @@
       />
       <UiIcon
         value="mdi:pencil media-file-icon"
-        class="ui--clickable"
         @click="isEditing = true"
       />
     </div>
@@ -62,6 +61,8 @@ export default {
       required: true,
     },
   },
+
+  emits: ['input', 'delete'],
 
   data() {
     return {

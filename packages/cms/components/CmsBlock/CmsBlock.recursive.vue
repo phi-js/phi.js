@@ -59,7 +59,11 @@ const CmsBlock = {
     )
 
     function getModelProperty(propName) {
-      return getProperty(innerModel, propName)
+      // return getProperty(innerModel, propName)
+
+      // Use props.modelValue instead of innerModel, as innerModel is NOT reactive
+      // and any call to getModelProperty will not be tracked by watchEffect
+      return getProperty(props.modelValue, propName)
     }
 
     function setModelProperty(propName, newValue) {
@@ -120,7 +124,7 @@ const CmsBlock = {
         return
       }
       const evaldCSS = parse(props.block.css, evaluableModel.value)
-      cssProps.value = getCssObjectAttributes(evaldCSS)
+      cssProps.value = getCssObjectAttributes(evaldCSS, props.block)
     })
 
 
@@ -144,6 +148,8 @@ const CmsBlock = {
     const blockListeners = ref({})
 
     // v-models listeners
+    const tmpInnerModel = {}
+
     for (const p in props.block) {
       if (p.substring(0, 7) === 'v-model' && props.block[p]) {
         const variableName = props.block[p]
@@ -152,6 +158,7 @@ const CmsBlock = {
 
         const callback = (newValue) => {
           setModelProperty(variableName, newValue)
+          setProperty(tmpInnerModel, variableName, newValue)
         }
 
         blockListeners.value[eventName] = blockListeners.value[eventName]
@@ -161,11 +168,16 @@ const CmsBlock = {
     }
 
     // v-on listeners
+    /*
+    Edge case:   block['v-on']['update:modelValue']
+    Se espera que en el modelo a evaluar venga el valor actualizado del v-model.
+    Para esto se usa tmpInnerModel, cuyo valor se establece cuando ha ocurrido el onUpdate:modelValue creado por la propiedad v-model (linea 161 arriba)
+    */
     if (props.block?.['v-on']) {
       const listeners = props.block['v-on']
       for (let eventName in listeners) {
         const eventCallback = ($event) => {
-          blockVM.eval(listeners[eventName], { ...evaluableModel.value, $event })
+          blockVM.eval(listeners[eventName], { ...evaluableModel.value, ...tmpInnerModel, $event })
         }
 
         const propName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
@@ -266,6 +278,7 @@ const CmsBlock = {
       attrs,
       errors,
       isVisible,
+      blockDefinition,
       blockComponent,
       blockProps,
       blockListeners,
@@ -296,7 +309,7 @@ const CmsBlock = {
         ...this.blockProps,
         ...this.blockListeners,
         style: [this.blockProps.style, this.cssProps.style],
-        class: [this.blockProps.class, this.cssProps.class],
+        class: [this.attrs?.class, 'CmsBlock', this.blockDefinition.name, this.blockProps.class, this.cssProps.class],
         errors: this.errors,
       },
       this.blockSlots,

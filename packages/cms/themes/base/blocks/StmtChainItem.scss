@@ -1,0 +1,186 @@
+.FetchEditor {
+  &__row {
+    display: flex;
+    & > :nth-child(2) {
+      flex: 1;
+      input {
+        width: 100%;
+      }
+    }
+  }
+
+  & > details {
+    @extend .coolDetails;
+  }
+}
+
+.StmtChain {
+  position: relative;
+
+  // &__items {
+  //   border: 1px solid blue;
+  // }
+
+  &__adder {
+    .VmExpressionPicker__item {
+      --ui-item-padding: 6px 12px;
+      @extend .ui--clickable;
+    }
+  }
+}
+
+
+.StmtChainItem {
+  &__actionIcon {
+    @extend .ui--clickable;
+    width: 32px;
+    height: 32px;
+  }
+
+  &__face {
+    @extend .ui--clickable;
+    --ui-item-padding: 6px 12px;
+
+    // Make the face item inline, highlighting the "subtext" value
+    .UiItem {
+      // &__body {
+      //   display: flex;
+      //   flex-direction: row;
+      //   justify-content: initial;
+      //   align-items: center;
+      // }
+
+      &__subtext {
+        // display: block;
+        // margin-left: 0.5rem;
+        
+        color: var(--ui-color-primary);
+        // color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+
+        &::before {
+          content: ' → ';
+          color: #fff;
+        }
+      }
+    }
+
+  }
+
+  &__contents {
+    margin: 6px;
+    // margin-left: 28px;
+    padding-bottom: 24px;
+  }
+
+  &__paths {
+    padding-left: 8px;
+  }
+
+  &__path {
+    & > label {
+      font-size: 14px;
+      font-weight: 600;
+      display: block;
+      margin: 6px 0;
+    }
+  }
+
+  &__pathBody {
+    padding: 8px;
+    padding-left: 12px;
+  }
+
+  &--endangered {
+    background-color: rgba(255, 0, 0, 0.2);
+  }
+
+  &__assign {
+    @extend .coolDetails;
+
+    em {
+      color: var(--ui-color-primary);
+      font-style: normal;
+      font-weight: 600;
+      margin-left: 0.3rem;
+    }
+  }
+}
+
+/*
+.StmtChainItem {
+  &__trigger {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  &__paths {
+    padding-left: 42px;
+  }
+
+  &__face {
+    display: inline-flex;
+  }
+
+  &__footer,
+  &__contents {
+    padding-left: 36px;
+  }
+
+  &__footer {
+    margin-bottom: 22px;
+  }
+
+  &__actions {
+    margin-left: auto;
+
+    .UiIcon {
+      width: 32px;
+      height: 32px;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+}
+*/
+
+
+// Custom items override
+/*
+.StmtChainItem {
+  margin: 8px;
+  border: 1px outset #555;
+  background-color: rgba(255, 255, 255, 0.1);
+
+  &__trigger {
+    padding-right: 8px;
+  }
+
+  &__contents {
+    padding-bottom: 36px;
+
+    & > .UiInput {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+
+      .UiInput__label {
+        font-size: 13px;
+        margin-right: 1em;
+      }
+    }
+  }
+
+  &__face .UiItem__subtext {
+    color: #fff;
+    background-color: var(--ui-color-primary);
+    padding: 1px 8px;
+    align-self: baseline;
+  }
+}
+*/

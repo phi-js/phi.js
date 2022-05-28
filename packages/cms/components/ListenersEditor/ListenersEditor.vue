@@ -1,7 +1,7 @@
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, nextTick } from 'vue'
 import { VmStatement } from '@/packages/vm'
-import { UiIcon, UiInput } from '@/packages/ui'
+import { UiItem, UiIcon, UiInput } from '@/packages/ui'
 
 const props = defineProps({
   /*
@@ -56,6 +56,8 @@ function emitUpdate() {
 
 
 function removeEvent(eventIndex) {
+  endangeredIndex.value = -1
+
   if (!confirm('Remove this event listener?')) {
     return
   }
@@ -96,14 +98,24 @@ function addEvent(eventName) {
     name: eventName,
     stmt: { chain: [] },
   })
+
   emitUpdate()
+
+  // Open the newly created <details> element
+  nextTick(() => {
+    el.value.querySelectorAll('details')[events.value.length - 1].setAttribute('open', true)
+  })
 }
 
+const el = ref()
 const endangeredIndex = ref(-1)
 </script>
 
 <template>
-  <div class="ListenersEditor">
+  <div
+    ref="el"
+    class="ListenersEditor"
+  >
     <details
       v-for="(event, i) in events"
       :key="i"
@@ -111,14 +123,18 @@ const endangeredIndex = ref(-1)
       :class="{'ListenersEditor__listener--endangered': endangeredIndex === i}"
     >
       <summary class="ListenersEditor__summary">
-        <span v-text="eventNames[event.name] || event.name" />
-        <UiIcon
-          class="ListenersEditor__delete"
-          src="mdi:close"
-          @click.prevent="removeEvent(i)"
-          @mouseenter="endangeredIndex = i"
-          @mouseleave="endangeredIndex = -1"
-        />
+        <UiItem
+          :text="eventNames[event.name] || event.name"
+        >
+          <template #actions>
+            <UiIcon
+              src="mdi:close"
+              @click.prevent="removeEvent(i)"
+              @mouseenter="endangeredIndex = i"
+              @mouseleave="endangeredIndex = -1"
+            />
+          </template>
+        </UiItem>
       </summary>
       <section>
         <VmStatement

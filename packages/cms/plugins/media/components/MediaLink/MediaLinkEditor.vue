@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue'
 import { UiItem, UiInput, UiButton, UiDrawer } from '../../../../../ui'
 
 const props = defineProps({
@@ -38,7 +38,7 @@ watch(
     innerValue.value = { target: '_blank', ...newValue }
     isEditing.value = isEmpty.value
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 function accept() {
@@ -57,24 +57,48 @@ function cancel() {
 
 <template>
   <div class="MediaLinkEditor">
-    <UiItem v-bind="sanitizedValue" class="ui--clickable" @click="isEditing = true" />
+    <UiItem
+      v-bind="sanitizedValue"
+      @click="isEditing = true"
+    />
     <UiDrawer :open="isEditing">
       <div class="UiForm UiForm--wide">
-        <UiInput type="url" v-model="innerValue.href" label="URL" placeholder="http://..." />
-        <UiInput type="text" v-model="innerValue.text" label="Titulo" />
-        <UiInput type="text" v-model="innerValue.subtext" label="Descripcion" />
         <UiInput
+          v-model="innerValue.href"
+          type="url"
+          label="URL"
+          placeholder="http://..."
+        />
+        <UiInput
+          v-model="innerValue.text"
+          type="text"
+          label="Titulo"
+        />
+        <UiInput
+          v-model="innerValue.subtext"
+          type="text"
+          label="Descripcion"
+        />
+        <UiInput
+          v-model="innerValue.target"
           type="select-list"
           label="Abrir en"
-          v-model="innerValue.target"
           :options="[
             { value: '_blank', text: 'Nueva pestaña' },
             { value: '_self', text: 'Pestaña actual' },
           ]"
         />
         <footer>
-          <UiButton class="UiButton--main" @click="accept" label="OK" />
-          <UiButton class="UiButton--cancel" @click="cancel" label="Cancel" />
+          <UiButton
+            class="UiButton--main"
+            label="OK"
+            @click="accept"
+          />
+          <UiButton
+            class="UiButton--cancel"
+            label="Cancel"
+            @click="cancel"
+          />
         </footer>
       </div>
     </UiDrawer>

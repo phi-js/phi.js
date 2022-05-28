@@ -21,13 +21,13 @@ export default {
     nParagraphs: {
       type: [String, Number],
       required: false,
-      default: 3,
+      default: 1,
     },
 
     nWords: {
       type: [String, Number],
       required: false,
-      default: 150,
+      default: 120,
     },
   },
 
@@ -37,7 +37,7 @@ export default {
     },
 
     paragraphs() {
-      const nParagraphs = this.validateInt(this.nParagraphs, 1, 50, 2)
+      const nParagraphs = this.validateInt(this.nParagraphs, 1, 50, 1)
       const nWords = this.validateInt(this.nWords, 10, 800, 120)
 
       const retval = []

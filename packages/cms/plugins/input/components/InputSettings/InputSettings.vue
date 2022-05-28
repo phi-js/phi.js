@@ -1,8 +1,9 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
+import { useI18n } from '@/packages/i18n'
 import { UiInput } from '@/packages/ui/components'
 import OptionsEditor from '@/packages/ui/components/UiInputEditor/editors/OptionsEditor.vue'
-import StoryPropInput from '../../../../components/CmsStoryEditor/StoryPropInput.vue'
+import CmsPropInput from '../../../../components/CmsPropInput/CmsPropInput.vue'
 
 const props = defineProps({
   modelValue: {
@@ -25,71 +26,42 @@ const emitUpdate = function () {
   emit('update:modelValue', block.value)
 }
 
-const types = [
-  {
-    icon: 'mdi:form-textbox',
-    text: 'Text',
-    value: 'text',
+const i18n = useI18n({
+  en: {
+    'InputSettings.Labels': 'Labels',
+    'InputSettings.Options': 'Options',
+    'InputSettings.Data': 'Data',
+    'InputSettings.Single': 'Single',
+    'InputSettings.Multiple': 'Multiple',
+    'InputSettings.Label': 'Label',
+    'InputSettings.Placeholder': 'Placeholder',
+    'InputSettings.Subtext': 'Subtext',
+    'InputSettings.VariableName': 'Variable name',
+    'InputSettings.Debounce': 'Input delay',
+    'InputSettings.ValueType': 'Value type',
   },
-  {
-    icon: 'mdi:form-textarea',
-    text: 'Textarea',
-    value: 'textarea',
+  es: {
+    'InputSettings.Labels': 'Etiquetas',
+    'InputSettings.Options': 'Opciones',
+    'InputSettings.Data': 'Datos',
+    'InputSettings.Single': 'Único',
+    'InputSettings.Multiple': 'Múltiple',
+    'InputSettings.Label': 'Etiqueta',
+    'InputSettings.Placeholder': 'Placeholder',
+    'InputSettings.Subtext': 'Subtexto',
+    'InputSettings.VariableName': 'Nombre de variable',
+    'InputSettings.Debounce': 'Demorar input',
+    'InputSettings.ValueType': 'Tipo de dato',
   },
-  {
-    icon: 'mdi:form-dropdown',
-    text: 'Select (dropdown)',
-    value: 'select',
-  },
-  {
-    icon: 'mdi:format-list-bulleted',
-    text: 'Select (list)',
-    value: 'select-list',
-  },
-  {
-    icon: 'mdi:form-dropdown',
-    text: 'Select (buttons)',
-    value: 'select-buttons',
-  },
-  {
-    icon: 'mdi:checkbox-blank-outline',
-    text: 'Checkbox',
-    value: 'checkbox',
-  },
-  {
-    icon: 'mdi:calendar',
-    text: 'Fecha',
-    value: 'date',
-  },
-  {
-    icon: 'mdi:numeric',
-    text: 'Número',
-    value: 'number',
-  },
-  {
-    icon: 'mdi:form-textbox-password',
-    text: 'Contraseña',
-    value: 'password',
-  },
-  {
-    icon: 'mdi:paperclip',
-    text: 'Archivo',
-    value: 'file',
-  },
-  {
-    icon: 'mdi:paperclip',
-    text: 'Botón',
-    value: 'button',
-  },
-]
+})
 
 const multipleOptions = [
   {
-    text: 'Único',
+    text: i18n.t('InputSettings.Single'),
     value: false,
   },
   {
-    text: 'Múltiple',
+    text: i18n.t('InputSettings.Multiple'),
     value: true,
   },
 ]
@@ -97,101 +69,79 @@ const multipleOptions = [
 
 <template>
   <div class="InputSettings UiForm">
-    <div class="UiGroup">
-      <UiInput
-        v-model="block.props.type"
-        label="Tipo"
-        type="select-native"
-        :options="types"
-        @update:model-value="emitUpdate"
-      />
+    <details open>
+      <summary v-text="i18n.t('InputSettings.Labels')" />
+      <section>
+        <CmsPropInput
+          v-model="block.props.label"
+          v-model:block="block"
+          type="text"
+          :label="i18n.t('InputSettings.Label')"
+          @update:model-value="emitUpdate"
+          @update:block="emitUpdate"
+        />
 
-      <UiInput
-        v-if="isSelect"
-        v-model="block.props.multiple"
-        type="select-native"
-        :options="multipleOptions"
-        @update:model-value="emitUpdate"
-      />
-    </div>
+        <CmsPropInput
+          v-model="block.props.placeholder"
+          v-model:block="block"
+          type="text"
+          :label="i18n.t('InputSettings.Placeholder')"
+          @update:model-value="emitUpdate"
+          @update:block="emitUpdate"
+        />
 
-    <fieldset>
-      <legend>Display</legend>
+        <CmsPropInput
+          v-model="block.props.subtext"
+          v-model:block="block"
+          type="text"
+          :label="i18n.t('InputSettings.Subtext')"
+          @update:model-value="emitUpdate"
+          @update:block="emitUpdate"
+        />
+      </section>
+    </details>
 
-      <StoryPropInput
-        v-model="block.props.label"
-        v-model:block="block"
-        type="text"
-        label="Etiqueta"
-        @update:model-value="emitUpdate"
-        @update:block="emitUpdate"
-      />
-
-      <StoryPropInput
-        v-model="block.props.placeholder"
-        v-model:block="block"
-        type="text"
-        label="Placeholder"
-        @update:model-value="emitUpdate"
-        @update:block="emitUpdate"
-      />
-
-      <StoryPropInput
-        v-model="block.props.subtext"
-        v-model:block="block"
-        type="text"
-        label="Subtexto"
-        @update:model-value="emitUpdate"
-        @update:block="emitUpdate"
-      />
-    </fieldset>
-
-    <fieldset v-if="isSelect">
-      <legend>Options</legend>
-
-      <OptionsEditor
-        v-model="block.props.options"
-        @update:model-value="emitUpdate"
-      />
-    </fieldset>
-
-    <fieldset>
-      <legend>Datos</legend>
-
-      <UiInput
-        v-model="block['v-model']"
-        label="Variable"
-        type="text"
-        @update:model-value="emitUpdate"
-      />
-
-      <UiInput
-        v-model="block.props.debounce"
-        label="Debounce"
-        type="number"
-        @update:model-value="emitUpdate"
-      />
-    </fieldset>
-
-    <!-- <UiInput
-      v-if="block.props.type == 'date' || block.props.type == 'timestamp'"
-      label="Selector de hora"
+    <details
+      v-if="isSelect"
+      open
     >
-      <select
-        v-model="block.props.time"
-        class="UiButton"
-        @change="emitUpdate"
-      >
-        <option :value="undefined">
-          Desactivado
-        </option>
-        <option value="12">
-          AM/PM
-        </option>
-        <option value="24">
-          24 horas
-        </option>
-      </select>
-    </UiInput> -->
+      <summary v-text="i18n.t('InputSettings.Options')" />
+      <section>
+        <OptionsEditor
+          v-model="block.props.options"
+          @update:model-value="emitUpdate"
+        />
+      </section>
+    </details>
+
+    <details open>
+      <summary v-text="i18n.t('InputSettings.Data')" />
+
+      <section>
+        <UiInput
+          v-if="isSelect"
+          v-model="block.props.multiple"
+          :label="i18n.t('InputSettings.ValueType')"
+          type="select-buttons"
+          :options="multipleOptions"
+          @update:model-value="emitUpdate"
+        />
+
+        <UiInput
+          v-model="block['v-model']"
+          :label="i18n.t('InputSettings.VariableName')"
+          type="text"
+          @update:model-value="emitUpdate"
+        />
+
+        <UiInput
+          v-model="block.props.debounce"
+          :label="i18n.t('InputSettings.Debounce')"
+          type="number"
+          placeholder="ms."
+          @update:model-value="emitUpdate"
+        />
+      </section>
+    </details>
   </div>
 </template>

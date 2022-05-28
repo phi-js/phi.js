@@ -1,7 +1,8 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { VmStatement } from '../../../vm/components'
-import { UiInput } from '../../../ui/components'
+import { useI18n } from '@/packages/i18n'
+import { VmStatement } from '@/packages/vm'
+import { UiInput } from '@/packages/ui'
 
 const props = defineProps({
   /**
@@ -29,38 +30,56 @@ function emitUpdate() {
   emit('update:modelValue', { ...block.value })
 }
 
+
+const i18n = useI18n({
+  en: {
+    'BlockVisibilityEditor.visibleWhen': 'Show block if ...',
+    'BlockVisibilityEditor.Repeat': 'Repeat',
+    'BlockVisibilityEditor.RepeatForEveryItemIn': 'Repeat block for every $item in',
+    'BlockVisibilityEditor.VariableName': 'Variable name',
+    'BlockVisibilityEditor.subtext': 'The variable must contain an array',
+  },
+  es: {
+    'BlockVisibilityEditor.visibleWhen': 'Mostrar bloque si ...',
+    'BlockVisibilityEditor.Repeat': 'Repetir',
+    'BlockVisibilityEditor.RepeatForEveryItemIn': 'Repetir bloque por cada $item en',
+    'BlockVisibilityEditor.VariableName': 'Nombre de variable',
+    'BlockVisibilityEditor.subtext': 'La variable debe contener un arreglo',
+  },
+})
 </script>
 
 <template>
   <div class="BlockVisibilityEditor">
     <details open>
-      <summary>Visible cuando</summary>
+      <summary v-text="i18n.t('BlockVisibilityEditor.visibleWhen')" />
       <section>
         <VmStatement
           v-model="block['v-if']"
           :default="{ and: [] }"
           @update:model-value="emitUpdate"
         />
+        <!-- <UiInput
+          v-model="block.transition"
+          type="checkbox"
+          label="Usar animación"
+          @update:model-value="emitUpdate"
+        /> -->
       </section>
     </details>
 
-    <!-- <UiInput
-      v-model="block.transition"
-      type="checkbox"
-      label="Usar animación"
-      @update:model-value="emitUpdate"
-    /> -->
+
 
     <details>
-      <summary>Repeat</summary>
+      <summary v-text="i18n.t('BlockVisibilityEditor.Repeat')" />
       <section>
         <UiInput
           v-model="block['v-for']"
           type="text"
           model="v-for"
-          label="Repeat for every item in"
-          placeholder="Variable"
-          subtext="The iterated value is available as $item"
+          :label="i18n.t('BlockVisibilityEditor.RepeatForEveryItemIn')"
+          :placeholder="i18n.t('BlockVisibilityEditor.VariableName')"
+          :subtext="i18n.t('BlockVisibilityEditor.subtext')"
           @update:model-value="emitUpdate"
         />
       </section>

@@ -4,15 +4,12 @@
   min-height: 120px;
 
   &__body {
-    // border-bottom: 1px dashed rgba(0, 0, 0, 0.4);
     .ui__content {
       flex: 1;
       display: flex;
       flex-wrap: nowrap;
     }
   }
-
-
 
   &__ghost {
     transition: all var(--ui-duration-snap);
@@ -69,7 +66,6 @@
 
 /* BlockScaffold toolbar to the right */
 .LayoutRowEditor {
-  // box-shadow: -9px 0 9px -10px rgba(0, 0, 0, 0.4);
 
   & > .BlockScaffold__toolbar-container {
     z-index: 2;
@@ -96,13 +92,14 @@
       bottom: 0;
       right: 0;
 
-      width: 5px;
+      width: 6px;
 
       border-radius: 5px;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
-    }
 
+      opacity: 0.2;
+    }
 
     & > .BlockScaffold__toolbar {
       transition: all var(--ui-duration-snap);
@@ -117,22 +114,17 @@
       background-color: transparent;
       color: #777;
       opacity: 0.3;
-
-      // .BlockScaffold__toolbar-spacer {
-      //   display: none;
-      // }
     }
 
     &:hover {
-      background-color: #313131;
-
       &::before {
-        display: none;
+        border-left: 2px solid var(--ui-color-primary) !important;
+        opacity: 1;
       }
 
       > .BlockScaffold__toolbar {
         opacity: 1 !important;
-        color: #ccc;
+        color: var(--ui-color-primary) !important;
       }
     }
   }
@@ -140,23 +132,11 @@
   // Toolbar reaction to hovering the entire row editor
   &:hover > .BlockScaffold__toolbar-container {
     &::before {
-      background-color: rgba(0,0,0, 0.1);
+      border-left: 1px dashed var(--ui-color-foreground);
     }
 
     & > .BlockScaffold__toolbar {
       opacity: 0.5;
     }
   }
-
-  // &.BlockScaffold--focused > .BlockScaffold__toolbar-container {
-  //   overflow: initial;
-  // }
-  // &.BlockScaffold--focused > .BlockScaffold__toolbar-container,
-  // & > .BlockScaffold__toolbar-container:hover {
-  //   & > .BlockScaffold__toolbar {
-  //     left: 0;
-  //     background-color: #313131;
-  //     opacity: 1;
-  //   }
-  // }
 }

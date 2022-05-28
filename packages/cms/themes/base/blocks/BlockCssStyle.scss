@@ -1,3 +1,5 @@
+@import '@/packages/ui/themes/base/blocks/UiForm--wide.scss';
+
 .BlockCssStyle {
   details {
     border: 1px outset #555;
@@ -19,6 +21,7 @@
     }
 
     section {
+      @extend .UiForm--wide;
       padding: 6px 12px 24px 12px;
     }
 

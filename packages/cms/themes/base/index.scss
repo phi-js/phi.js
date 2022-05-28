@@ -2,36 +2,33 @@
 .cms-theme-base {
   --cms-page-padding: 0 0;
   --cms-row-padding: 0 0;
+
   --ui-content-width: auto;
+  --ui-radius: 5px;
+  // --ui-color-background: transparent;
+  --ui-color-background: transparent;
+  --ui-color-foreground: #333;
 
   @import '@/packages/ui/themes/base/modifiers/clickable.scss';
+
+  @import './classes/coolAdder.scss';
+  @import './classes/coolDetails.scss';
 
   @import './blocks/BlockCssStyle.scss';
   @import './blocks/BlockScaffold.scss';
   @import './blocks/BlockVisibilityEditor.scss';
+  @import './blocks/CmsBlock.scss';
+  @import './blocks/CmsStory.scss';
   @import './blocks/CmsStoryBuilder.scss';
   @import './blocks/CmsStoryEditor.scss';
+  @import './blocks/CssClassManager.scss';
   @import './blocks/LayoutPage.scss';
   @import './blocks/LayoutRow.scss';
   @import './blocks/LayoutRowEditor.scss';
   @import './blocks/ListenersEditor.scss';
-
   @import './blocks/StmtAndOr.scss';
+  @import './blocks/StmtChainItem.scss';
   @import './blocks/StmtOp.scss';
-
-
-  //// !!! TESTING!!!  HIDE ICONS INSIDE .UiWindow tabs
-  .UiWindow .UiTab {
-    .UiItem {
-      height: 46px;
-
-      &__icon {
-        display: none;
-      }
-
-      &__body {
-        padding: 8px 16px !important;
-      }
-    }
-  }
+  @import './blocks/StoryMethodsEditor.scss';
+  @import './blocks/UiWindow.scss';
 }

@@ -7,28 +7,26 @@
     <img
       class="img__embed"
       :src="node.attrs.src"
-    />
+    >
 
     <div class="img__controls UiGroup">
       <UiIcon
-        class="ui--clickable"
         :class="{'--active': style.float == 'left'}"
-        @click="toggleFloat('left')"
         value="mdi:format-float-left"
+        @click="toggleFloat('left')"
       />
 
       <UiIcon
-        class="ui--clickable"
         :class="{'--active': style.float == 'right'}"
-        @click="toggleFloat('right')"
         value="mdi:format-float-right"
+        @click="toggleFloat('right')"
       />
     </div>
   </span>
 </template>
 
 <script>
-import { UiIcon } from '../../../../../../ui';
+import { UiIcon } from '../../../../../../ui'
 
 export default {
   components: { UiIcon },
@@ -41,7 +39,7 @@ export default {
         height: null,
         float: null,
       },
-    };
+    }
   },
 
   watch: {
@@ -49,67 +47,65 @@ export default {
       immediate: true,
       handler(newValue) {
         if (!newValue || !newValue.attrs) {
-          return;
+          return
         }
 
         this.style = Object.assign(
           {},
           this.style,
-          this.parseStyleSting(newValue.attrs.style)
-        );
+          this.parseStyleSting(newValue.attrs.style),
+        )
       },
     },
   },
 
+  mounted() {
+    new ResizeObserver(this.onResize).observe(this.$el)
+  },
+
   methods: {
     parseStyleSting(string) {
-      let retval = {};
+      let retval = {}
 
       if (!string) {
-        return retval;
+        return retval
       }
 
-      let parts = string.split(';');
+      let parts = string.split(';')
       parts.forEach((part) => {
-        part = part.trim();
-        let o = part.split(':');
-        retval[o[0]] = o[1];
-      });
+        part = part.trim()
+        let o = part.split(':')
+        retval[o[0]] = o[1]
+      })
 
-      return retval;
+      return retval
     },
 
     toggleFloat(newValue) {
-      this.style.float = this.style.float == newValue ? 'none' : newValue;
-      this.emitChanges();
+      this.style.float = this.style.float == newValue ? 'none' : newValue
+      this.emitChanges()
     },
 
     onResize(entries) {
       for (let entry of entries) {
-        let width = entry.contentRect.width;
-        let height = entry.contentRect.height;
+        let width = entry.contentRect.width
+        let height = entry.contentRect.height
 
         if (!width || !height) {
-          return;
+          return
         }
 
-        this.style.width = width + 'px';
-        this.style.height = height + 'px';
-        this.emitChanges();
+        this.style.width = width + 'px'
+        this.style.height = height + 'px'
+        this.emitChanges()
       }
     },
 
     emitChanges() {
-      this.updateAttrs({
-        style: `width:${this.style.width}; height:${this.style.height}; float:${this.style.float}`,
-      });
+      this.updateAttrs({ style: `width:${this.style.width}; height:${this.style.height}; float:${this.style.float}` })
     },
   },
-
-  mounted() {
-    new ResizeObserver(this.onResize).observe(this.$el);
-  },
-};
+}
 </script>
 
 <style lang="scss">

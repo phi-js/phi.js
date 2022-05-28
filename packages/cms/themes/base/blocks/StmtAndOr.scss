@@ -2,12 +2,52 @@
   border: 0;
   margin: 0;
   padding: 0;
-  padding-left: 8px;
+
+  position: relative;
+
+  margin-top: 12px;
+  padding-top: 28px; // make room for the <legend>
 
   border-left: 2px solid var(--ui-color-primary);
-  border-radius: 5px;
+  border-bottom-left-radius: 4px;
 
-  legend > select {
+  &::before {
+    content: '';
+    display: block;
+    width: 12px;
+    height: 12px;
+    background: var(--ui-color-primary);
+    border-radius: 50%;
+
+    position: absolute;
+    top: 0;
+    left: -7px; //width/2  - 1
+  }
+
+  &__body {
+    // border: 1px solid red;
+    // border-left: 2px solid var(--ui-color-primary);
+    // border-bottom-left-radius: 4px;
+    margin-left: 6px;
+
+    // Nested statements
+    .StmtAndOr {
+      margin-left: 22px;
+      margin-bottom: 22px;
+    }
+  }
+
+  & > legend {
+    margin: 0;
+    padding: 0;
+
+    position: absolute;
+    top: -12px;
+    left: 6px;
+    height: 40px;
+  }
+
+  & > legend > select {
     background: transparent;
     border-radius: 5px;
 
@@ -50,13 +90,6 @@
     &:hover {
       background: rgba(255,255,255, 0.1);
       opacity: 1;
-    }
-  }
-
-  &__body {
-    .StmtAndOr {
-      margin: 18px;
-      margin-top: 24px;
     }
   }
 }

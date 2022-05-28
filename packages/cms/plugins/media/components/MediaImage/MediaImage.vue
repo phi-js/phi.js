@@ -75,7 +75,7 @@ function onImageError() {
         v-if="href"
         :href="href"
         target="_system"
-        class="MediaImage__link ui--clickable"
+        class="MediaImage__link"
       >
         <img
           class="MediaImage__img"

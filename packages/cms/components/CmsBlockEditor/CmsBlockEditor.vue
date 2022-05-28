@@ -77,7 +77,15 @@ const CmsBlockEditor = {
           }))
         : undefined
 
-      const faceNode = h(defaultFace, { ...attrs, ...props.block.props }, defaultSlots)
+      const faceNode = h(
+        defaultFace,
+        {
+          ...attrs,
+          ...props.block.props,
+          class: ['CmsBlock', props.block.props?.class],
+        },
+        defaultSlots,
+      )
       return faceNode
     }
   },

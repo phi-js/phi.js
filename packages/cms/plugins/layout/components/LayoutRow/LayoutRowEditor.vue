@@ -21,7 +21,7 @@ watch(
     columns.value = Array.isArray(newValue) ? newValue : []
     columns.value = columns.value.map((col) => ({
       ...col,
-      cssAttributes: getCssObjectAttributes(col.css),
+      cssAttributes: getCssObjectAttributes(col.css, col),
     }))
   },
   { immediate: true },

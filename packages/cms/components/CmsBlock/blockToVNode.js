@@ -128,7 +128,7 @@ export default function blockToVNode(block, modelValue, blockVM, masterValue = n
   /* Block "css" property */
   if (block.css && typeof block.css === 'object') {
     const evaldCSS = parse(block.css, modelValue)
-    const cssProps = getCssObjectAttributes(evaldCSS)
+    const cssProps = getCssObjectAttributes(evaldCSS, block)
 
     if (cssProps.class) {
       parsedProps.class = parsedProps.class ? [parsedProps.class, cssProps.class] : cssProps.class

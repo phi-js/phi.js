@@ -75,7 +75,7 @@ const alignment = computed(() => {
     <!-- <UiIcon
       title="Full width"
       src="mdi:overscan"
-      class="MediaImageToolbar__icon ui--clickable"
+      class="MediaImageToolbar__icon"
       :class="{'--active': isFullWidth}"
       @click="isFullWidth = !isFullWidth"
     />-->

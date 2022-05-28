@@ -1,7 +1,8 @@
 <script setup>
-import { ref, watchEffect } from 'vue'
-import { UiInput } from '../../../ui'
-import { VmStatement } from '../../../vm/components'
+import { ref, watchEffect, computed } from 'vue'
+import { useI18n } from '@/packages/i18n'
+import { UiInput } from '@/packages/ui'
+import { VmStatement } from '@/packages/vm'
 
 const props = defineProps({
   /* BLOCK object */
@@ -14,26 +15,10 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const rules = ref()
-const requiredRule = ref({
-  isEnabled: false,
-  message: '',
-})
-const otherRules = ref([])
 
 watchEffect(() => {
-  rules.value = props.modelValue.rules?.length ? props.modelValue.rules : []
-
-  const foundRequiredRule = rules.value.find((r) => r.required)
-  requiredRule.value.isEnabled = !!foundRequiredRule
-  requiredRule.value.message = foundRequiredRule?.message || requiredRule.value.message
-
-  otherRules.value = rules.value.filter((r) => !r.required)
+  rules.value = props.modelValue.rules?.length ? props.modelValue.rules.concat() : []
 })
-
-function toggleRequired() {
-  requiredRule.value.isEnabled = !requiredRule.value.isEnabled
-  emitUpdate()
-}
 
 function appendRule(ruleType) {
   if (!ruleType) {
@@ -41,15 +26,22 @@ function appendRule(ruleType) {
   }
 
   switch (ruleType) {
+  case 'required':
+    rules.value.push({
+      required: true,
+      message: '',
+    })
+    break
+
   case 'regex':
-    otherRules.value.push({
+    rules.value.push({
       regex: '',
       message: '',
     })
     break
 
   case 'vm':
-    otherRules.value.push({
+    rules.value.push({
       eval: { chain: [] },
       message: '',
     })
@@ -58,125 +50,144 @@ function appendRule(ruleType) {
 }
 
 function removeRule(rule) {
-  otherRules.value = otherRules.value.filter((r) => r !== rule)
+  rules.value = rules.value.filter((r) => r !== rule)
   emitUpdate()
 }
 
-
 function emitUpdate() {
-  let blockRules = []
-  if (requiredRule.value.isEnabled) {
-    blockRules.push({
-      required: true,
-      message: requiredRule.value.message,
-    })
-  }
-
   emit('update:modelValue', {
     ...props.modelValue,
-    rules: blockRules.concat(otherRules.value),
+    rules: rules.value.concat(),
   })
 }
+
+
+const i18n = useI18n({
+  en: {
+    'BlockValidationEditor.Required': 'Required',
+    'BlockValidationEditor.RegEx': 'RegEx',
+    'BlockValidationEditor.RegularExpression': 'Regular expression',
+    'BlockValidationEditor.ErrorMessage': 'Error message',
+    'BlockValidationEditor.Expression': 'Expression',
+    'BlockValidationEditor.AddRule': 'Add rule',
+  },
+  es: {
+    'BlockValidationEditor.Required': 'Requerido',
+    'BlockValidationEditor.RegEx': 'RegEx',
+    'BlockValidationEditor.RegularExpression': 'Expresión regular',
+    'BlockValidationEditor.ErrorMessage': 'Mensaje de error',
+    'BlockValidationEditor.Expression': 'Expresión',
+    'BlockValidationEditor.AddRule': 'Agregar regla',
+  },
+})
+
+const hasRequiredRule = computed(() => rules.value.find((r) => !!r.required))
 </script>
 
 <template>
   <div class="BlockValidationEditor UiForm">
-    <fieldset>
-      <legend>
-        <label>
-          Required
-          <input
-            type="checkbox"
-            :checked="requiredRule.isEnabled"
-            @change="toggleRequired()"
-          >
-        </label>
-      </legend>
-      <UiInput
-        v-model="requiredRule.message"
-        type="text"
-        label="Mensaje de error"
-        :disabled="!requiredRule.isEnabled"
-        @update:modelValue="emitUpdate()"
-      />
-    </fieldset>
-
-    <fieldset
-      v-for="(rule, k) in otherRules"
+    <details
+      v-for="(rule, k) in rules"
       :key="k"
       class="ValidationRule"
     >
-      <template v-if="rule.regex !== undefined">
-        <legend>RegEx</legend>
+      <summary>
+        <span v-if="rule.regex !== undefined">{{ i18n.t('BlockValidationEditor.RegEx') }}</span>
+        <span v-else-if="rule.eval !== undefined">{{ i18n.t('BlockValidationEditor.Expression') }}</span>
+        <span v-else-if="rule.required">{{ i18n.t('BlockValidationEditor.Required') }}</span>
+        <div
+          class="ValidationRule__delete"
+          @click="removeRule(rule)"
+        >
+          &times;
+        </div>
+      </summary>
+
+      <section v-if="rule.required">
+        <UiInput
+          v-model="rule.message"
+          type="text"
+          :label="i18n.t('BlockValidationEditor.ErrorMessage')"
+          @update:model-value="emitUpdate()"
+        />
+      </section>
+
+      <section v-else-if="rule.regex !== undefined">
         <UiInput
           v-model="rule.regex"
           type="text"
-          label="Expresion regular"
-          @update:modelValue="emitUpdate()"
+          :label="i18n.t('BlockValidationEditor.RegularExpression')"
+          @update:model-value="emitUpdate()"
         />
         <UiInput
           v-model="rule.message"
           type="text"
-          label="Mensaje de error"
-          @update:modelValue="emitUpdate()"
+          :label="i18n.t('BlockValidationEditor.ErrorMessage')"
+          @update:model-value="emitUpdate()"
         />
-      </template>
-      <template v-else-if="rule.eval !== undefined">
-        <legend>VM</legend>
+      </section>
+
+      <section v-else-if="rule.eval !== undefined">
         <VmStatement
           v-model="rule.eval"
-          @update:modelValue="emitUpdate()"
+          @update:model-value="emitUpdate()"
         />
         <UiInput
           v-model="rule.message"
-          label="Mensaje de error"
-          @update:modelValue="emitUpdate()"
+          :label="i18n.t('BlockValidationEditor.ErrorMessage')"
+          @update:model-value="emitUpdate()"
         />
-      </template>
-
-      <div
-        class="ValidationRule__delete"
-        @click="removeRule(rule)"
-      >
-        &times;
-      </div>
-    </fieldset>
+      </section>
+    </details>
 
     <select
-      class="UiInput"
+      class="BlockValidationEditor__adder UiInput"
       @change="appendRule($event.target.value); $event.target.value = ''"
     >
-      <option value="">
-        Agregar regla ...
-      </option>
-
-      <option value="regex">
-        RegEx
-      </option>
-      <option value="vm">
-        Expresión
-      </option>
+      <option
+        value=""
+        v-text="i18n.t('BlockValidationEditor.AddRule')"
+      />
+      <option
+        v-if="!hasRequiredRule"
+        value="required"
+        v-text="i18n.t('BlockValidationEditor.Required')"
+      />
+      <option
+        value="regex"
+        v-text="i18n.t('BlockValidationEditor.RegEx')"
+      />
+      <option
+        value="vm"
+        v-text="i18n.t('BlockValidationEditor.Expression')"
+      />
     </select>
   </div>
 </template>
 
 <style lang="scss">
+@import '@/packages/ui/themes/base/modifiers/clickable.scss';
+
 .ValidationRule {
   position: relative;
 
+  summary {
+    position: relative;
+  }
+
   &__delete {
-    cursor: pointer;
+    @extend .ui--clickable;
 
     position: absolute;
-    top: -12px;
+    top: 0;
     right: 0;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
   }
 }
 </style>

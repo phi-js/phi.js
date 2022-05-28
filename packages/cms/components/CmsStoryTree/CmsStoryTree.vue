@@ -22,7 +22,6 @@ const props = defineProps({
       <UiItem
         icon="mdi:package-variant"
         :text="item.component"
-        class="ui--clickable"
         @click="toggle"
       >
         <template

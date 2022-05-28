@@ -40,7 +40,7 @@ function onSlotUpdate() {
   emit('update:block', { ...props.block, slot: pageSlot })
 }
 
-const cssAttributes = computed(() => getCssObjectAttributes(props.block?.css))
+const cssAttributes = computed(() => getCssObjectAttributes(props.block?.css, props.block))
 </script>
 
 <template>

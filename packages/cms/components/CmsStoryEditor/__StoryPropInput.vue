@@ -85,7 +85,6 @@ function delangify() {
               disabled="disabled"
             >
             <UiIcon
-              class="ui--clickable"
               src="mdi:translate-off"
               title="De-langify"
               @click="delangify()"
@@ -118,7 +117,6 @@ function delangify() {
             @input="emit('update:modelValue', $event.target.value)"
           >
           <UiIcon
-            class="ui--clickable"
             src="mdi:translate"
             title="Internationalize"
             @click="langify()"

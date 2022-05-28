@@ -237,7 +237,11 @@ export default {
                   'onUpdate:errors': onUpdateErrors,
                   'class': 'CmsStory__page',
                   'block': currentPage.value,
-                  'modelValue': props.modelValue,
+                  // 'modelValue': props.modelValue,
+                  'modelValue': {
+                    ...props.modelValue,
+                    $i18n: i18n,
+                  },
                   'onUpdate:modelValue': onUpdateModelValue,
                 })
                 : null,

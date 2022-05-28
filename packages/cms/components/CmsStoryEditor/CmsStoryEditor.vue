@@ -34,7 +34,42 @@ watch(
 )
 
 /* Provide VM schema */
-const storySchema = computed(() => getStorySchema(sanitizedStory.value))
+const storySchema = computed(() => {
+  const storySchema = getStorySchema(sanitizedStory.value)
+
+  if (!storySchema.properties?.$i18n) {
+    storySchema.properties.$i18n = {
+      type: 'object',
+      properties: {
+        locale: {
+          type: 'string',
+          info: { text: 'Language' },
+          enum: [
+            { value: 'en' },
+            { value: 'es' },
+            { value: 'fr' },
+            { value: 'de' },
+          ],
+        },
+      },
+    }
+  }
+
+  if (!storySchema.properties?.$errors) {
+    storySchema.properties.$errors = {
+      type: 'object',
+      properties: {
+        length: {
+          type: 'number',
+          info: { text: 'No. of errors' },
+        },
+      },
+    }
+  }
+
+  return storySchema
+})
+
 provide('$_vm_modelSchema', storySchema)
 
 const currentPage = ref()

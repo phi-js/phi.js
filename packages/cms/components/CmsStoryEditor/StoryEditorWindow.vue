@@ -73,7 +73,7 @@ const i18n = useI18n({
   en: {
     'StoryEditorWindow.events': 'Events',
     'StoryEditorWindow.global': 'Global',
-    'StoryEditorWindow.i18n': 'Dictionary',
+    'StoryEditorWindow.i18n': 'Languages',
     'StoryEditorWindow.methods': 'Functions',
     'StoryEditorWindow.source': 'Source',
     'StoryEditorWindow.style': 'Style',
@@ -88,7 +88,7 @@ const i18n = useI18n({
   es: {
     'StoryEditorWindow.events': 'Eventos',
     'StoryEditorWindow.global': 'Global',
-    'StoryEditorWindow.i18n': 'Diccionario',
+    'StoryEditorWindow.i18n': 'Idiomas',
     'StoryEditorWindow.methods': 'Funciones',
     'StoryEditorWindow.source': 'Fuente',
     'StoryEditorWindow.style': 'Estilos',

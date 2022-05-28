@@ -116,97 +116,57 @@ Class names present in selection but not present in arrClasses (modelValue)
 */
 const orphanedClasses = computed(() => innerSelection.value.filter((className) =>
   !arrClasses.value.find((objClass) => objClass.name == className)))
+
+const endangeredIndex = ref(-1)
+
 </script>
 
 <template>
-  <div class="CssClassManager UiForm UiForm--wide">
+  <div class="CssClassManager">
     <template
       v-for="(cssClass, i) in arrClasses"
       :key="i"
     >
-      <UiDrawer v-model:open="isDrawerOpen[i]">
-        <template #trigger>
-          <div
-            class="CssClassManager__trigger CssClassItem"
-            :class="{'CssClassItem--selected': isSelected[cssClass.name]}"
+      <details
+        :open="isDrawerOpen[i]"
+        class="CssClassManager__classItem"
+        :class="{
+          'CssClassManager__classItem--selected': isSelected[cssClass.name],
+          'CssClassManager__classItem--endangered': endangeredIndex === i
+        }"
+      >
+        <summary>
+          <UiItem
+            :icon="isSelected[cssClass.name] ? 'mdi:checkbox-marked' : 'mdi:checkbox-blank-outline'"
+            :text="cssClass.text || cssClass.name"
+            :subtext="cssClass.text ? '.' + cssClass.name : ''"
+            @click-icon.stop.prevent="toggleClassName(cssClass.name)"
           >
-            <UiIcon
-              :src="isSelected[cssClass.name] ? 'mdi:checkbox-marked' : 'mdi:checkbox-blank-outline'"
-              class="CssClassItem__checkbox ui--clickable"
-              @click.stop="toggleClassName(cssClass.name)"
-            />
-            <UiItem
-              :icon="isDrawerOpen[i] ? 'mdi:menu-down' : 'mdi:menu-right'"
-              :text="cssClass.text || cssClass.name"
-              :subtext="cssClass.text ? '.' + cssClass.name : ''"
-              class="ui--clickable"
-            >
-              <template #actions>
-                <UiIcon
-                  src="mdi:close"
-                  class="CssClassItem__delete ui--clickable"
-                  @click="onDeleteClass(i)"
-                />
-              </template>
-            </UiItem>
-          </div>
-        </template>
-        <template #contents>
+            <template #actions>
+              <UiIcon
+                src="mdi:close"
+                @click="onDeleteClass(i)"
+                @mouseenter="endangeredIndex = i"
+                @mouseleave="endangeredIndex = -1"
+              />
+            </template>
+          </UiItem>
+        </summary>
+        <section>
           <CssClassEditor
             v-model="arrClasses[i]"
             @update:model-value="emitUpdate()"
             @rename="onClassRename"
           />
-        </template>
-      </UiDrawer>
+        </section>
+      </details>
     </template>
 
     <UiItem
       icon="mdi:plus"
       text="Add class"
-      class="CssClassAdder ui--clickable"
+      class="CssClassManager__adder"
       @click="createNewClass"
     />
   </div>
 </template>
-
-<style lang="scss">
-.CssClassManager {
-  &__trigger {
-    display: flex;
-    align-items: center;
-
-    .UiItem {
-      flex: 1;
-    }
-  }
-}
-
-.CssClassAdder,
-.CssClassItem {
-  --ui-item-padding: 8px 12px;
-}
-
-.CssClassItem {
-  display: flex;
-  align-items: stretch;
-
-  &--selected {
-    background-color: rgba(255,255,255, 0.1);
-  }
-
-  .ui--clickable {
-    &:hover {
-      background-color: rgba(255,255,255, 0.1) !important;
-    }
-  }
-
-  &__checkbox {
-    width: 40px;
-  }
-}
-
-.CssClassAdder {
-  margin-top: 1rem;
-}
-</style>

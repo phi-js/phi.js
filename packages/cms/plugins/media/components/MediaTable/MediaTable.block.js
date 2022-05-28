@@ -41,7 +41,6 @@ export default {
             icon: 'mdi:table',
             text: 'Tabla',
             subtext: 'Click para editar opciones',
-            class: 'ui--clickable',
             onClick: () => this.openAction(),
           })
         },

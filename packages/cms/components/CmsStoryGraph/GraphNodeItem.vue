@@ -16,14 +16,14 @@ const props = defineProps({
   */
   node: {
     type: Object,
-    required: true
+    required: true,
   },
 
   active: {
     type: Boolean,
     required: false,
-    default: false
-  }
+    default: false,
+  },
 })
 
 const emit = defineEmits(['update:node', 'click', 'startPath', 'delete'])
@@ -40,7 +40,10 @@ function deleteNode() {
 </script>
 
 <template>
-  <div class="GraphNodeItem" :class="{ 'GraphNodeItem--active': props.active }">
+  <div
+    class="GraphNodeItem"
+    :class="{ 'GraphNodeItem--active': props.active }"
+  >
     <UiItem
       v-show="!isFormOpen"
       class="GraphNodeItem__item"
@@ -50,24 +53,24 @@ function deleteNode() {
       <template #actions>
         <UiPopover>
           <template #trigger>
-            <UiIcon src="mdi:dots-vertical" class="GraphNodeItem__trigger" />
+            <UiIcon
+              src="mdi:dots-vertical"
+              class="GraphNodeItem__trigger"
+            />
           </template>
           <template #contents="{ close }">
             <div class="GraphNodeItem__menu">
               <UiItem
-                class="ui--clickable"
                 text="Rename"
                 icon="mdi:pencil"
                 @click="close(); isFormOpen = true;"
               />
               <UiItem
-                class="ui--clickable"
                 text="Add path to ..."
                 icon="mdi:arrow-right-thick"
                 @click="close(); emit('startPath');"
               />
               <UiItem
-                class="ui--clickable"
                 text="Delete"
                 icon="mdi:delete"
                 @click="close(); deleteNode();"

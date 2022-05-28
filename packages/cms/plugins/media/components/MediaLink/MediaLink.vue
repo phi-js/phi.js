@@ -1,5 +1,5 @@
 <script setup>
-import { UiItem } from '../../../../../ui';
+import { UiItem } from '../../../../../ui'
 
 defineProps({
   href: {
@@ -35,8 +35,16 @@ defineProps({
 </script>
 
 <template>
-  <a class="MediaLink" :href="href" :target="target">
-    <UiItem class="ui--clickable" :text="text" :subtext="subtext" :icon="icon"></UiItem>
+  <a
+    class="MediaLink"
+    :href="href"
+    :target="target"
+  >
+    <UiItem
+      :text="text"
+      :subtext="subtext"
+      :icon="icon"
+    />
   </a>
 </template>
 
