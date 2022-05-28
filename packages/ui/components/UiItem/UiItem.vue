@@ -41,20 +41,43 @@ export default {
 </script>
 
 <template>
-  <div class="UiItem" @click="$emit('click', $event)">
-    <div v-if="hasSlot('icon')" class="UiItem__icon" @click="$emit('click-icon', $event)">
+  <div
+    class="UiItem"
+    @click="$emit('click', $event)"
+  >
+    <div
+      v-if="hasSlot('icon')"
+      class="UiItem__icon"
+      @click="$emit('click-icon', $event)"
+    >
       <slot name="icon" />
     </div>
-    <UiIcon v-else-if="icon" class="UiItem__icon" :src="icon" @click="$emit('click-icon', $event)" />
+    <UiIcon
+      v-else-if="icon"
+      class="UiItem__icon"
+      :src="icon"
+      @click="$emit('click-icon', $event)"
+    />
 
     <div
       v-if="hasSlot('default') || text || subtext"
       class="UiItem__body"
       @click="$emit('click-body', $event)"
     >
-      <h3 v-if="text" class="UiItem__text" v-text="text" />
-      <p v-if="subtext" class="UiItem__subtext" v-text="subtext" />
-      <div v-if="hasSlot('default')" class="UiItem__slot">
+      <h3
+        v-if="text"
+        class="UiItem__text"
+        v-text="text"
+      />
+      <p
+        v-if="subtext"
+        class="UiItem__subtext"
+        v-text="subtext"
+      />
+      <div
+        v-if="hasSlot('default')"
+        class="UiItem__slot"
+      >
         <slot name="default" />
       </div>
     </div>
@@ -66,7 +89,11 @@ export default {
       <slot name="actions" />
     </div>
 
-    <div v-if="badge" class="UiItem__badge" v-text="badge" />
+    <div
+      v-if="badge"
+      class="UiItem__badge"
+      v-text="badge"
+    />
   </div>
 </template>
 

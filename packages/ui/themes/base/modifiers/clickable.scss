@@ -1,13 +1,13 @@
 .ui--clickable {
-  --ui-color-darken: rgba(0,0,0, 0.05);
-  --ui-color-lighten: rgba(255,255,255, 0.1);
+  // --ui-color-darken: rgba(0,0,0, 0.05);
+  // --ui-color-lighten: rgba(255,255,255, 0.1);
 
   cursor: pointer;
   &:hover {
-    // background-color: rgba(0,0,0, 0.02);
+    background-color: rgba(255,255,255, 0.08);
 
-    background-image:
-      linear-gradient(var(--ui-color-darken), var(--ui-color-darken)), /* Darkener color on top */
-      linear-gradient(var(--ui-color-lighten),var(--ui-color-lighten)); /* Lightener color underneath */
+    // background-image:
+    //   linear-gradient(var(--ui-color-darken), var(--ui-color-darken)), /* Darkener color on top */
+    //   linear-gradient(var(--ui-color-lighten),var(--ui-color-lighten)); /* Lightener color underneath */
   }
 }

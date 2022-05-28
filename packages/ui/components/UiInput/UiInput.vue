@@ -1,4 +1,5 @@
 <script>
+var _UiInput_counter = 0
 export default { inheritAttrs: false }
 </script>
 
@@ -145,6 +146,9 @@ defineExpose({
   element,
   focus: () => element?.value?.focus?.(),
 })
+
+
+const uid = ref('UiInput' + (++_UiInput_counter))
 </script>
 
 <template>
@@ -164,6 +168,7 @@ defineExpose({
     <label
       v-if="showLabel"
       class="UiInput__label"
+      :for="uid"
       v-text="props.label"
     />
 
@@ -183,13 +188,14 @@ defineExpose({
         />
         <label
           v-else-if="props.type == 'checkbox'"
-          class="UiInput__element"
           :type="props.type"
         >
           <input
             v-bind="nativeCheckboxProps"
+            :id="uid"
             ref="element"
             type="checkbox"
+            class="UiInput__element"
           >
           <span>{{ props.placeholder }}</span>
         </label>

@@ -1,9 +1,19 @@
+<script>
+let lastUsedView = 'text'
+</script>
+
 <script setup>
-import { ref, watch, nextTick } from 'vue'
-// import draggable from 'vuedraggable/src/vuedraggable'
+import { ref, watch, nextTick, computed } from 'vue'
 import draggable from 'vuedraggable'
-import { UiItem, UiIcon, UiDrawer, UiInput, UiButton } from '@/packages/ui/components'
-import { normalize } from '@/packages/ui/helpers'
+import { UiItem, UiIcon, UiInput } from '@/packages/ui/components'
+
+// import { normalize } from '@/packages/ui/helpers'
+
+// Store default option values AS IS.
+function normalize(str) {
+  return str
+}
+
 
 const props = defineProps({
   /* Arreglo de OPTIONS
@@ -33,6 +43,31 @@ function emitUpdate() {
   emit('update:modelValue', [...innerOptions.value])
 }
 
+/*
+A \n delimited string with all innerOption TEXTs
+*/
+const stringValue = computed({
+  get() {
+    return innerOptions.value
+      .map((opt) => opt.text)
+      .join('\n')
+  },
+
+  set(newValue) {
+    const newOptions = []
+    const lines = newValue.trim().split('\n')
+    lines.forEach((strLine) => {
+      newOptions.push({
+        text: strLine,
+        value: strLine,
+      })
+    })
+
+    innerOptions.value = newOptions
+    emitUpdate()
+  },
+})
+
 const refRoot = ref()
 async function pushOption() {
   innerOptions.value.push({ text: '', value: '' })
@@ -56,27 +91,11 @@ function setOptionText(option, newValue) {
   emitUpdate()
 }
 
-const strOptions = ref('')
+const currentView = ref(lastUsedView) // list | text
 
-function pushStrOptions() {
-  if (!strOptions.value.trim()) {
-    return false
-  }
-
-  innerOptions.value.push(...strToOptions(strOptions.value))
-  emitUpdate()
-  return true
+function onViewChange() {
+  lastUsedView = currentView.value
 }
-
-function strToOptions(str) {
-  return str.split('\n')
-    .filter((strOption) => !!strOption.trim())
-    .map((strOption) => ({
-      text: strOption,
-      value: strOption,
-    }))
-}
-
 </script>
 
 <template>
@@ -84,92 +103,139 @@ function strToOptions(str) {
     ref="refRoot"
     class="OptionsEditor"
   >
-    <draggable
-      v-model="innerOptions"
-      group="select-block"
-      :item-key="(foo) => innerOptions.indexOf(foo)"
-      handle=".UiItem__icon"
-      @update:model-value="emitUpdate"
-    >
-      <template #item="{ index }">
-        <UiItem
-          class="OptionsEditor__option-item"
-          :icon="modelValue.type == 'select-list'
-            ? (modelValue.multiple ? 'mdi:checkbox-blank-outline' : 'mdi:radiobox-blank')
-            : 'mdi:drag-vertical'"
+    <div class="OptionsEditor__body">
+      <div
+        v-if="currentView == 'list'"
+        class="OptionsEditor__list"
+      >
+        <draggable
+          v-model="innerOptions"
+          group="select-block"
+          :item-key="(foo) => innerOptions.indexOf(foo)"
+          handle=".UiItem__icon"
+          @update:model-value="emitUpdate"
         >
-          <div class="OptionEditor">
-            <input
-              :value="innerOptions[index].text"
-              type="text"
-              class="OptionEditor__text"
-              placeholder="Texto"
-              @input="setOptionText(innerOptions[index], $event.target.value)"
-              @keypress.enter="pushOption"
-              @keydown.backspace="!innerOptions[index].text && deleteOption(index)"
-              @keydown.delete="!innerOptions[index].text && deleteOption(index)"
+          <template #item="{ index }">
+            <UiItem
+              class="OptionsEditor__option-item"
+              :icon="modelValue.type == 'select-list'
+                ? (modelValue.multiple ? 'mdi:checkbox-blank-outline' : 'mdi:radiobox-blank')
+                : 'mdi:drag-vertical'"
             >
-            <input
-              v-model="innerOptions[index].value"
-              type="text"
-              class="OptionEditor__value"
-              placeholder="Valor"
-              @input="emitUpdate"
-              @keypress.enter="pushOption"
-            >
-          </div>
-          <template #actions>
-            <UiIcon
-              src="mdi:close"
-              class="ui--clickable"
-              @click="deleteOption(index)"
-            />
+              <div class="OptionEditor">
+                <input
+                  :value="innerOptions[index].text"
+                  type="text"
+                  class="OptionEditor__text"
+                  placeholder="Texto"
+                  @input="setOptionText(innerOptions[index], $event.target.value)"
+                  @keypress.enter="pushOption"
+                  @keydown.backspace="!innerOptions[index].text && deleteOption(index)"
+                  @keydown.delete="!innerOptions[index].text && deleteOption(index)"
+                >
+                <input
+                  v-model="innerOptions[index].value"
+                  type="text"
+                  class="OptionEditor__value"
+                  placeholder="Valor"
+                  @input="emitUpdate"
+                  @keypress.enter="pushOption"
+                >
+              </div>
+              <template #actions>
+                <UiIcon
+                  src="mdi:close"
+                  @click="deleteOption(index)"
+                />
+              </template>
+            </UiItem>
           </template>
-        </UiItem>
-      </template>
-    </draggable>
+        </draggable>
 
-    <UiItem
-      tabindex="0"
-      text="Agregar opción"
-      icon="mdi:plus"
-      class="ui--clickable"
-      @click="pushOption"
-      @keypress.enter="pushOption"
-    />
-
-    <UiDrawer>
-      <template #trigger>
         <UiItem
           tabindex="0"
-          text="Importar texto"
+          text="Agregar opción"
           icon="mdi:plus"
-          class="ui--clickable"
+          @click="pushOption"
+          @keypress.enter="pushOption"
         />
-      </template>
-      <template #contents="{ close }">
+      </div>
+
+      <div
+        v-if="currentView == 'text'"
+        class="OptionsEditor__text"
+      >
         <UiInput
-          v-model="strOptions"
+          v-model="stringValue"
           type="textarea"
-          label="Una opcion por linea"
+          placeholder="Escribe una opción por línea"
         />
-        <UiButton
-          label="Importar"
-          @click="pushStrOptions() && close()"
-        />
-        <UiButton
-          class="UiButton--cancel"
-          label="Cancelar"
-          @click="close()"
-        />
-      </template>
-    </UiDrawer>
+      </div>
+    </div>
+
+    <div class="OptionsEditor__viewPicker">
+      <label>
+        <input
+          v-model="currentView"
+          type="radio"
+          value="text"
+          @change="onViewChange()"
+        >Texto
+      </label>
+      <label>
+        <input
+          v-model="currentView"
+          type="radio"
+          value="list"
+          @change="onViewChange()"
+        >Lista
+      </label>
+    </div>
   </div>
 </template>
 
 <style lang="scss">
+@import '@/packages/ui/themes/base/modifiers/clickable.scss';
+
 .OptionsEditor {
+  position: relative;
+
+  &__viewPicker {
+    text-align: right;
+
+    label {
+      font-size: 12px;
+      font-weight: bold;
+      user-select: none;
+
+      display: inline-flex;
+      align-items: center;
+      margin-left: 2px;
+
+      padding: 4px 6px;
+      border-radius: 4px;
+
+      @extend .ui--clickable;
+    }
+
+    input {
+      padding: 0;
+      margin: 0 2px 0 0;
+      cursor: pointer;
+    }
+  }
+
+  &__text {
+    textarea {
+      width: 100%;
+      min-width: 300px;
+      min-height: 100px !important;
+    }
+  }
+
   &__option-item {
+    --ui-item-padding: 4px 0;
+
     .UiItem__icon {
       cursor: move;
     }
@@ -178,23 +244,25 @@ function strToOptions(str) {
 
 .OptionEditor {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: center;
 
-  &__text {
-    border: 0;
-    background: transparent;
+  &__text,
+  &__value {
     font-size: inherit;
     color: inherit;
-  }
-
-  &__value {
-    flex: 1;
     border: 0;
     border-radius: 3px;
     padding: 4px 12px;
-    background-color: rgba(0, 0, 0, 0.06);
-    color: inherit;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &__text {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &__value {
+    background-color: rgba(255, 255, 255, 0.05);
   }
 }
 </style>

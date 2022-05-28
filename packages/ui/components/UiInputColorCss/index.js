@@ -1,0 +1,1 @@
+export { default as UiInputColorCss } from './UiInputColorCss.vue'

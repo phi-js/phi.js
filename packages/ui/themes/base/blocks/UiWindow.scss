@@ -86,7 +86,7 @@
 }
 
 .UiWindow {
-  --ui-window-dockzone-size: 7vh;
+  --ui-window-dockzone-size: 24px;
   text-align: left;
 
   &--external {
@@ -232,11 +232,34 @@
     }
   }
 
+  .UiInput {
+    &__label {
+      user-select: none;
+    }
+    
+    &--type-checkbox {
+      .UiInput__body label {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        @extend .ui--clickable;
+
+        min-width: 40px;
+        min-height: 40px;
+      }
+
+      .UiInput__element {
+        cursor: pointer;
+      }
+    }
+  }
+
 
   .UiDrawerStack {
-    --ui-item-padding: 8px 12px;
 
     &__item {
+      --ui-item-padding: 8px 12px;
       user-select: none;
 
       &:hover {

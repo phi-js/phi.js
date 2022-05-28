@@ -101,16 +101,30 @@ const { options } = useOptionsManager(toRef(props, 'options'), {
 <style lang="scss">
 .UiSelectButtons {
   &__button {
-    border: 1px solid #ccc;
-    font-size: 1em;
-    padding: 8px 16px;
-    color: #444;
     cursor: pointer;
-    background-color: rgba(0,0,0, 0.05);
     white-space: nowrap;
 
+    font-size: inherit;
+    padding: 8px 16px;
+
+    background-color: rgba(255,255,255, 0.05);
+    color: #ccc;
+
+    border: 0;
+    border-radius: 0;
+
+    &:first-child {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+
+    &:last-child {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+
     &:hover {
-      background-color: rgba(0,0,0, 0.025);
+      background-color: rgba(255,255,255, 0.1);
     }
 
     &--selected,

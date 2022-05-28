@@ -29,7 +29,7 @@ const bodyStyle = computed(() => {
   return {
     // transform: `scale(${scale}%)`, // fucks up children with position:fixed
     width: props.width ? `${props.width}px` : '100%',
-    height: props.height ? `${props.height}px` : '100%',
+    // height: props.height ? `${props.height}px` : '100%',
   }
 })
 </script>
@@ -67,29 +67,31 @@ const bodyStyle = computed(() => {
   //     var(--ui-color-lighten),
   //     var(--ui-color-lighten)
   //   );
+  background-color: rgba(0,0,0, 0.16);
 
   &__body {
     // transition: all var(--ui-duration-snap) ease;
     transition: width var(--ui-duration-snap) ease, height var(--ui-duration-snap) ease;
-
     transform-origin: top center;
-
-    overflow-y: auto;
-    overflow-x: visible;
     margin: auto;
-    // box-shadow: rgb(38, 57, 77) 0px 20px 30px -22px;
 
-    // background-color: var(--ui-color-z-0);
-    // background-color: #fff;
-    // color: initial;
+    background-color: var(--ui-color-background);
+    color: var(--ui-color-foreground);
+
+    // overflow-y: auto;
+    // overflow-x: visible;
+
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -22px;
   }
 
   &--desktop {
     padding: 0;
     margin-top: 32px;
+    background-color: transparent;
 
     .UiContentWrapper__body {
       overflow: visible;
+      box-shadow: none;
     }
   }
 

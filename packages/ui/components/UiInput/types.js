@@ -8,6 +8,7 @@ import { UiSelectButtons } from '../UiSelectButtons'
 import { UiSelectList } from '../UiSelectList'
 import { UiSelectNative } from '../UiSelectNative'
 import { UiUpload } from '../UiUpload'
+import { UiInputColorCss } from '../UiInputColorCss'
 
 export default {
   'code': UiInputCode,
@@ -20,4 +21,5 @@ export default {
   'select': UiSelect,
   'upload': UiUpload,
   'url': UiInputUrl,
+  'color-css': UiInputColorCss,
 }

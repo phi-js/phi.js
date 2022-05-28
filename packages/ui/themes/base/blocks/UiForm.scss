@@ -1,5 +1,7 @@
+@import '@/packages/cms/themes/base/classes/coolDetails.scss';
+
 .UiForm {
-  padding: 8px 16px;
+  // padding: 8px 16px;
 
   fieldset {
     border: 1px inset #555;
@@ -29,24 +31,28 @@
   }
 
   details {
-    border: 1px inset #555;
-    border-radius: 5px;
-    padding: 8px;
-    margin: 10px 0;
-
-    min-inline-size: auto;  // OMG.  El CSS nativo de fieldset es "min-inline-size: min-content;" y eso previene hacer overflow en contenedores angostos
-
-    summary {
-      user-select: none;
-      cursor: pointer;
-      padding: 8px;
-      border-radius: 5px;
-
-      &:hover {
-        background-color: rgba(255,255,255, 0.1);
-      }
-    }
+    @extend .coolDetails;
   }
+
+  // details {
+  //   border: 1px inset #555;
+  //   border-radius: 5px;
+  //   padding: 8px;
+  //   margin: 10px 0;
+
+  //   min-inline-size: auto;  // OMG.  El CSS nativo de fieldset es "min-inline-size: min-content;" y eso previene hacer overflow en contenedores angostos
+
+  //   summary {
+  //     user-select: none;
+  //     cursor: pointer;
+  //     padding: 8px;
+  //     border-radius: 5px;
+
+  //     &:hover {
+  //       background-color: rgba(255,255,255, 0.1);
+  //     }
+  //   }
+  // }
 
   /* UiInputCode inside UiForm */
   .UiInputCode {
@@ -55,36 +61,5 @@
 
     .cm-editor { height: 100%; max-height: 400px; }
     .cm-scroller { overflow: auto }
-  }
-}
-
-.UiForm--wide {
-  --ui-form-label-width: 250px;
-
-  .UiInput {
-    display: flex;
-    flex-wrap: wrap;
-    // align-items: center;
-    align-items: flex-start;
-
-    &__label {
-      min-width: var(--ui-form-label-width);
-      padding: 8px;
-    }
-
-    &__body {
-      flex: 1;
-    }
-
-    &__subtext,
-    &__errors {
-      width: 100%;
-      margin: 0;
-      margin-left: var(--ui-form-label-width);
-    }
-
-    &--invalid .UiInput__subtext {
-      display: none;
-    }
   }
 }

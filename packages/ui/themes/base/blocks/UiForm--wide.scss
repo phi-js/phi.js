@@ -1,0 +1,30 @@
+.UiForm--wide {
+  --ui-form-label-width: 250px;
+
+  .UiInput {
+    display: flex;
+    flex-wrap: wrap;
+    // align-items: center;
+    align-items: flex-start;
+
+    &__label {
+      min-width: var(--ui-form-label-width);
+      padding: 8px;
+    }
+
+    &__body {
+      flex: 1;
+    }
+
+    &__subtext,
+    &__errors {
+      width: 100%;
+      margin: 0;
+      margin-left: var(--ui-form-label-width);
+    }
+
+    &--invalid .UiInput__subtext {
+      display: none;
+    }
+  }
+}
