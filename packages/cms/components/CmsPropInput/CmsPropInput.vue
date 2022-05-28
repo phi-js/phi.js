@@ -147,6 +147,10 @@ function setType(typeName) {
 }
 
 function emitUpdate() {
+  if (!innerValue.value.value) {
+    innerValue.value.value = ''
+  }
+
   switch (innerValue.value.type) {
   case 'variable':
     emit('update:modelValue', '{{' + innerValue.value.value + '}}')
@@ -221,7 +225,7 @@ function onVariablePickerChange($event) {
           v-text="i18n.t('CmsPropInput.Text')"
         />
         <option
-          value="translation"
+          value="lang"
           v-text="i18n.t('CmsPropInput.Translation')"
         />
         <option
