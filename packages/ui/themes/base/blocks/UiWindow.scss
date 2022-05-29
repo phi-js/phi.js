@@ -236,7 +236,7 @@
     &__label {
       user-select: none;
     }
-    
+
     &--type-checkbox {
       .UiInput__body label {
         display: inline-flex;
@@ -326,14 +326,21 @@
     }
   }
 
-  // &__dockPicker {
-  //   .ui--clickable {
-  //     min-width: 32px;
-  //     min-height: 32px;
 
-  //     &:hover {
-  //       background-color: rgba(255,255,255, 0.1);
-  //     }
-  //   }
-  // }
+  &__header {
+    & > .UiIcon,
+    .UiPopover__trigger .UiIcon {
+      @extend .ui--clickable;
+      min-width: 32px;
+      min-height: 32px;
+    }
+  }
+
+  &__dockPicker {
+    .UiIcon {
+      @extend .ui--clickable;
+      min-width: 32px;
+      min-height: 32px;
+    }
+  }
 }

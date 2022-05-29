@@ -54,16 +54,15 @@ const stringValue = computed({
   },
 
   set(newValue) {
-    const newOptions = []
-    const lines = newValue.trim().split('\n')
-    lines.forEach((strLine) => {
-      newOptions.push({
+    innerOptions.value = newValue
+      .trim()
+      .split('\n')
+      .filter((strLine) => !!strLine)
+      .map((strLine) => ({
         text: strLine,
         value: strLine,
-      })
-    })
+      }))
 
-    innerOptions.value = newOptions
     emitUpdate()
   },
 })

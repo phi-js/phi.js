@@ -14,13 +14,13 @@ const props = defineProps({
   currentTime: {
     type: [String, Number],
     required: false,
-    default: 0
-  }
+    default: 0,
+  },
 })
 
 const emit = defineEmits(['wordEnter'])
 
-const allLines = props.lyrics.lines.filter(line => line?.words?.length > 0)
+const allLines = props.lyrics.lines.filter((line) => line?.words?.length > 0)
 
 const allWords = []
 allLines.forEach((line, l) => {
@@ -34,7 +34,7 @@ allLines.forEach((line, l) => {
     let activeStyle = {}
     if (word.class) {
       const parts = word.class.split(' ')
-      parts.forEach(part => Object.assign(activeStyle, props.lyrics?.classes?.[part]))
+      parts.forEach((part) => Object.assign(activeStyle, props.lyrics?.classes?.[part]))
     }
 
     allWords.push({
@@ -44,7 +44,7 @@ allLines.forEach((line, l) => {
       lineIndex: l,
       wordIndex: w,
       original: word,
-      activeStyle
+      activeStyle,
     })
   })
 })
@@ -64,7 +64,7 @@ watch(
       currentTime.value += burst
       timer = setTimeout(() => currentTime.value += burst, burst)
     }, burst)
-  }
+  },
 )
 
 const currentWord = computed(() => allWords.find((word, i) => {
@@ -88,9 +88,9 @@ watch(currentWord, () => currentWord.value && emit('wordEnter', currentWord.valu
       }"
     >
       <span
-        class="LyricsPlayer__word"
         v-for="(word, k) in line.words"
         :key="k"
+        class="LyricsPlayer__word"
         :class="currentWord?.lineIndex == l && currentWord?.wordIndex == k ? ['LyricsPlayer__word--active', word.class] : null"
         :style="currentWord?.lineIndex == l && currentWord?.wordIndex == k ? currentWord.activeStyle : null"
         v-text="word.value"
@@ -146,8 +146,6 @@ watch(currentWord, () => currentWord.value && emit('wordEnter', currentWord.valu
 
   &__word {
     white-space: pre;
-    color: rgba(0, 0, 0, 0.6);
-
     transition: all 0.1s ease;
     transform: scale(1) rotate(0);
 
