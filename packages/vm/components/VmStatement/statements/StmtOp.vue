@@ -112,10 +112,24 @@ function onChangeOp() {
 const currentOperator = computed(() => availableOperators.value.find((opDef) => opDef.operator == innerModel?.op))
 
 const operationRedaction = computed(() => {
-  const fieldName = fieldSchema.value?.info?.text || innerModel.field
+  // const fieldName = fieldSchema.value?.info?.text || innerModel.field
+  const fieldName = innerModel.field
   const opName = currentOperator.value?.text || innerModel.op
-  return `${fieldName} ${opName} ...`
+  const stringArgs = argsToString(innerModel.args)
+  return `${fieldName} ${opName} ${stringArgs}`
 })
+
+function argsToString(strArgs) {
+  if (Array.isArray(strArgs)) {
+    return strArgs.map((subArg) => argsToString(subArg)).join(', ')
+  }
+
+  if (!strArgs || typeof strArgs == 'object') {
+    return ''
+  }
+
+  return strArgs
+}
 </script>
 
 <template>
@@ -129,7 +143,9 @@ const operationRedaction = computed(() => {
       <div class="StmtOp__field">
         <UiItem
           v-if="fieldSchema?.info"
-          v-bind="fieldSchema.info"
+          :text="innerModel.field"
+          :subtext="fieldSchema?.info?.text"
+          :icon="fieldSchema?.info?.icon"
         />
         <input
           v-else
