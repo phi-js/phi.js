@@ -2,27 +2,32 @@
   cursor: move;
 }
 
-.WindowContents {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+// .WindowContents {
+//   height: 100%;
+//   display: flex;
+//   flex-direction: column;
 
-  &__body {
-    flex: 1;
-  }
+//   &__body {
+//     flex: 1;
+//   }
 
-  &--id-source {
-    padding: 0;
+//   &--id-source {
+//     padding: 0;
 
-    .UiInputJson {
-      height: 100%;
-    }
+//     .UiInputJson {
+//       height: 100%;
+//     }
 
-    .UiInputJson__textarea {
-      resize: none;
-      min-height: 0;
-    }
-  }
+//     .UiInputJson__textarea {
+//       resize: none;
+//       min-height: 0;
+//     }
+//   }
+// }
+
+
+.BlockScaffold__window-header {
+  --ui-item-padding: 8px 12px;
 }
 
 
@@ -115,29 +120,30 @@
 }
 
 /* "outline".   Visible unicamente para --default.  */
-.BlockScaffold {
-  &--default {
-    &::before {
-      content: "";
-      display: block;
-      position: absolute;
+.BlockScaffold--default {
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
 
-      // Ojo: Hacerlo mas ancho que el bloque puede causar overflows que no queremos
-      top: -8px;
-      bottom: -8px;
-      left: -4px;
-      right: -4px;
+    // Ojo: Hacerlo mas ancho que el bloque puede causar overflows que no queremos
+    top: -4px;
+    bottom: -4px;
+    left: -4px;
+    right: -4px;
 
-      border-radius: 6px;
-      border: 2px solid var(--ui-color-primary);
+    border-radius: 6px;
+    border: 2px solid var(--ui-color-primary);
 
-      transition: all var(--ui-duration-snap);
-      opacity: 0;
-      pointer-events: none;
-    }
+    transition: all var(--ui-duration-snap);
+    opacity: 0;
+    pointer-events: none;
   }
 
-  &--default:hover {
+  // outline visible on hover, focused or when window is open
+  &.BlockScaffold--focused,
+  &.BlockScaffold--window-open,
+  &:hover {
     &::before {
       opacity: 1;
     }

@@ -39,6 +39,8 @@ const editor = new Editor({
 
 onBeforeUnmount(() => editor.destroy())
 
+defineExpose({ focus: () => editor.commands.focus() })
+
 watch(
   () => props.block?.props?.value,
   (incomingValue) => {

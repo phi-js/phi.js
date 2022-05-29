@@ -1,7 +1,9 @@
 <script setup>
 import { ref, watchEffect, computed } from 'vue'
 import { UiInput } from '@/packages/ui'
+
 import NavigationPagePicker from '../NavigationPagePicker/NavigationPagePicker.vue'
+import CmsPropInput from '../../../../components/CmsPropInput/CmsPropInput.vue'
 
 const props = defineProps({
   /*
@@ -54,14 +56,14 @@ const propDisabledValue = computed({
 
 <template>
   <div class="NavigationLinkEditor">
-    <UiInput
+    <CmsPropInput
       v-model="blockProps.text"
       type="text"
       label="Label"
       @update:model-value="emitUpdate()"
     />
 
-    <UiInput
+    <CmsPropInput
       v-model="blockProps.subtext"
       type="text"
       label="Subtext"

@@ -41,11 +41,6 @@ function emitUpdate() {
   emit('update:slot', innerSlot.value.concat())
 }
 
-function appendBlock(newBlock) {
-  innerSlot.value.push(newBlock)
-  emitUpdate()
-}
-
 async function onDraggableUpdate() {
   await nextTick()
   emitUpdate()
@@ -73,12 +68,36 @@ function onDraggableEnd() {
   emit('update:dragging', isDragging.value)
 }
 
+const focusedIndexes = ref({})
+
+/* Perform actions after a new block is created */
+let listenForMountedEvents = false
+
 function launchBlock(index, block, position) {
-  innerSlot.value.splice(position == 'top' ? index : index + 1, 0, block)
+  listenForMountedEvents = true
+  const targetIndex = position == 'top' ? index : index + 1
+  innerSlot.value.splice(targetIndex, 0, block)
   emitUpdate()
 }
 
-const focusedIndexes = ref({})
+function appendBlock(newBlock) {
+  listenForMountedEvents = true
+  innerSlot.value.push(newBlock)
+  emitUpdate()
+}
+
+function onBlockEditorMounted(vNode) {
+  if (!listenForMountedEvents) {
+    return
+  }
+
+  if (vNode?.component?.exposed?.onBlockCreated) {
+    vNode.component.exposed.onBlockCreated()
+  }
+
+  listenForMountedEvents = false
+}
+
 </script>
 
 <template>
@@ -120,6 +139,7 @@ const focusedIndexes = ref({})
           <CmsBlockEditor
             class="SlotBlock__editor"
             :block="element"
+            @vnode-mounted="onBlockEditorMounted"
             @update:block="onEditorUpdate(index, $event)"
             @delete="deleteBlock(index)"
           />

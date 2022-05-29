@@ -11,4 +11,11 @@ export default {
   },
 
   editor: { component: MediaHtmlBlockEditor },
+
+  // Focus editor when a new block is created
+  onCreated(editorRef) {
+    if (editorRef?.focus) {
+      editorRef.focus()
+    }
+  },
 }

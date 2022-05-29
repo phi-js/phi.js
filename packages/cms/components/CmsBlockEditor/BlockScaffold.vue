@@ -111,22 +111,36 @@ const hasEvents = computed(() => {
   return innerBlock.value['v-on'] && Object.keys(innerBlock.value['v-on']).length
 })
 
-const isFocused = ref(false)
-watch(
-  () => props.focused,
-  (newValue) => isFocused.value = newValue,
-)
+
+
+const popupIsOpen = ref(false)
+
+const windowIsOpen = computed(() => !!availableActions.value[currentActionIndex.value])
+
+const isFocused = computed(() => {
+  return props.focused
+    || popupIsOpen.value
+})
+
 
 function getWidth(coords) {
   return parseInt(coords?.width)
 }
+
+defineExpose({
+  openAction,
+  openActionId,
+})
 </script>
 
 <template>
   <div
     v-if="isDefinitionLoaded"
     class="BlockScaffold"
-    :class="{ 'BlockScaffold--focused': isFocused }"
+    :class="{
+      'BlockScaffold--focused': isFocused,
+      'BlockScaffold--window-open': windowIsOpen,
+    }"
   >
     <div class="BlockScaffold__toolbar-container">
       <div class="BlockScaffold__toolbar">
@@ -198,9 +212,9 @@ function getWidth(coords) {
 
         <!-- dropdown options -->
         <UiPopover
+          v-model:open="popupIsOpen"
           class="BlockPopover"
           placement="bottom"
-          @update:open="isFocused = $event"
         >
           <template #trigger>
             <UiIcon
@@ -261,11 +275,20 @@ function getWidth(coords) {
     </div>
 
     <UiWindow
-      v-if="!!availableActions[currentActionIndex]"
+      v-if="windowIsOpen"
       name="phi"
-      :open="!!availableActions[currentActionIndex]"
+      :open="windowIsOpen"
+      class="BlockScaffold__window"
       @update:open="currentActionIndex = null"
     >
+      <template #header>
+        <UiItem
+          class="BlockScaffold__window-header"
+          :icon="definition.icon"
+          :text="definition.title"
+        />
+      </template>
+
       <template #default="{ coords }">
         <div class="WindowContents UiForm--wide">
           <Component

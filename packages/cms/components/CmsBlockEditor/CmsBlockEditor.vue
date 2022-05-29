@@ -16,7 +16,7 @@ const CmsBlockEditor = {
 
   emits: ['update:block', 'delete'],
 
-  setup(props, { emit, attrs }) {
+  setup(props, { emit, attrs, expose }) {
     const definition = blocks[props.block.component]
 
     const innerBlock = ref(props.block)
@@ -31,9 +31,23 @@ const CmsBlockEditor = {
       },
     )
 
+    const innerRef = ref()
+    function onBlockCreated() {
+      if (definition?.onCreated) {
+        definition.onCreated(innerRef.value)
+        return
+      }
+
+      if (innerRef.value?.openAction) {
+        innerRef.value.openAction(0)
+      }
+    }
+    expose({ onBlockCreated })
+
     return (instance) => {
       if (definition?.editor?.component) {
         const customEditor = h(definition.editor.component, {
+          'ref': innerRef,
           ...attrs,
           'block': innerBlock.value,
           'onUpdate:block': (newValue) => emit('update:block', newValue),
@@ -45,6 +59,7 @@ const CmsBlockEditor = {
       // No hay editor Y no hay slots.  Usar BlockScaffold
       if (typeof props.block.slot === 'undefined') {
         const scaffoldNode = h(BlockScaffold, {
+          'ref': innerRef,
           ...attrs,
           'class': 'BlockScaffold--default',
           'block': innerBlock.value,
@@ -80,6 +95,7 @@ const CmsBlockEditor = {
       const faceNode = h(
         defaultFace,
         {
+          ref: innerRef,
           ...attrs,
           ...props.block.props,
           class: ['CmsBlock', props.block.props?.class],
