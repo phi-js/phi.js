@@ -17,11 +17,10 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const availableEvents = ref([])
-getBlockDefinition(props.modelValue).then((blockDefinition) => {
-  if (blockDefinition?.emits?.length) {
-    availableEvents.value = blockDefinition.emits
-  }
-})
+const blockDefinition = getBlockDefinition(props.modelValue)
+if (blockDefinition?.emits?.length) {
+  availableEvents.value = blockDefinition.emits
+}
 
 const blockEvents = computed({
   get() {

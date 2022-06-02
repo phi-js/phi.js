@@ -149,7 +149,7 @@ export default {
     },
 
     async launchBlock(block) {
-      let definition = await getBlockDefinition(block)
+      let definition = getBlockDefinition(block)
       if (!definition) {
         return
       }

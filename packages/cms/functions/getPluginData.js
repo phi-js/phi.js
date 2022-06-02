@@ -35,15 +35,24 @@ export default function getPluginData() {
   Returns a component to be used as <Component :is="getSlotComponent('somePluginSlotName')"
   This component simply renders a list of all declared components
   */
+  const cachedSlots = {}
+
   function getSlotComponent(slotName) {
     if (!allSlots[slotName]) {
       return null
     }
-    return {
+
+    if (cachedSlots[slotName]) {
+      return cachedSlots[slotName]
+    }
+
+    cachedSlots[slotName] = {
       render(curInstance) {
         return allSlots[slotName].map((slotComponent) => h(slotComponent, curInstance.$attrs))
       },
     }
+
+    return cachedSlots[slotName]
   }
 
 

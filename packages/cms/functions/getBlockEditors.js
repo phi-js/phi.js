@@ -31,7 +31,7 @@ import BlockCssEditor from '../components/CmsBlockEditor/BlockCssEditor.vue'
 import BlockValidationEditor from '../components/CmsBlockEditor/BlockValidationEditor.vue'
 
 export default async function getBlockEditors(block) {
-  const definition = await getBlockDefinition(block)
+  const definition = getBlockDefinition(block)
 
   const retval = {
     face: null,
