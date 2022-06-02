@@ -45,10 +45,18 @@ export default {
   },
 
   'array.includes'(value, args) {
+    if (!Array.isArray(value)) {
+      return false
+    }
+
     return value.includes(args)
   },
 
   'array.hasAny'(value, args) {
+    if (!Array.isArray(value)) {
+      return false
+    }
+
     for (let i = 0; i < args.length; i++) {
       if (value.includes(args[i])) {
         return true
@@ -58,6 +66,10 @@ export default {
   },
 
   'array.hasAll'(value, args) {
+    if (!Array.isArray(value)) {
+      return false
+    }
+
     for (let i = 0; i < args.length; i++) {
       if (!value.includes(args[i])) {
         return false
@@ -67,10 +79,18 @@ export default {
   },
 
   'array.empty'(value) {
+    if (!Array.isArray(value)) {
+      return true
+    }
+
     return value.length == 0
   },
 
   'array.nempty'(value) {
+    if (!Array.isArray(value)) {
+      return false
+    }
+
     return value.length > 0
   },
 }
