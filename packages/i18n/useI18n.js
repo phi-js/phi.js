@@ -16,7 +16,7 @@ export default function useI18n(componentDictionary = null) {
   Using params:
   t('There are %number% people', { number: 4 })
   */
-  function t(word, params = null) {
+  function t(word, params = null, defaultValue = null) {
     const targetLocale = attrs?.['i18n-language'] || injected.locale
     const baseLocale = targetLocale.substr(0, 2)
 
@@ -24,7 +24,8 @@ export default function useI18n(componentDictionary = null) {
       dictionary?.[targetLocale]?.[word] ||
       dictionary?.[baseLocale]?.[word] ||
       dictionary?.[injected.fallbackLocale]?.[word] ||
-      word + '(?)'
+      defaultValue ||
+      word
     )
 
     if (params && typeof params === 'object') {
