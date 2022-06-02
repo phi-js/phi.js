@@ -155,11 +155,15 @@ const dashboardProps = computed(() => ({
         class="CmsPageLayoutEditor__draggable"
         group="ui-upload-draggable"
         item-key="id"
-        @update:modelValue="emitUpdate"
+        @update:model-value="emitUpdate"
       >
         <template #item="{ element: file }">
           <div>
-            <a class="ui--clickable" target="_blank" :href="file.url">
+            <a
+              class="ui--clickable"
+              target="_blank"
+              :href="file.url"
+            >
               <UiItem
                 class="ui--clickable"
                 :text="file.name"
@@ -167,7 +171,11 @@ const dashboardProps = computed(() => ({
                 :icon="file.thumbnail"
               >
                 <template #actions>
-                  <UiIcon src="mdi:close" class="ui--clickable" @click.prevent="deleteFile(file)" />
+                  <UiIcon
+                    src="mdi:close"
+                    class="ui--clickable"
+                    @click.prevent="deleteFile(file)"
+                  />
                 </template>
               </UiItem>
             </a>
@@ -188,7 +196,9 @@ const dashboardProps = computed(() => ({
         type="button"
         class="UiUpload__trigger UiButton"
         @click="isOpen = !isOpen"
-      >{{ props.placeholder }}</button>
+      >
+        {{ props.placeholder }}
+      </button>
     </template>
 
     <component

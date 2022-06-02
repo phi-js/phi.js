@@ -11,6 +11,25 @@
   &--moving.UiWindow__scrim {
     pointer-events: initial !important;
   }
+
+
+  &__eyeIcon {
+    width: 32px;
+  }
+
+  &--transparent {
+    .UiWindow {
+      &__box {
+        border: 2px dashed rgba(255,255,255, 0.2);
+        background: transparent;
+
+        & > * {
+          opacity: 0;
+          // filter: blur(0.3em);
+        }
+      }
+    }
+  }
 }
 
 /* Hide dragger and resizers when docked */
@@ -86,7 +105,7 @@
 }
 
 .UiWindow {
-  --ui-window-dockzone-size: 24px;
+  --ui-window-dockzone-size: 30px;
   text-align: left;
 
   &--external {
@@ -123,6 +142,8 @@
     flex: 1;
     align-self: stretch;
     cursor: move;
+
+    display: flex;
   }
 
   &__body {
@@ -251,6 +272,7 @@
 
       .UiInput__element {
         cursor: pointer;
+        outline: none;
       }
     }
   }

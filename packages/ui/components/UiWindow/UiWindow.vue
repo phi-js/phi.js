@@ -237,7 +237,7 @@ function resetBody() {
 }
 
 
-const isHovered = ref(false)
+const isTransparent = ref(false)
 </script>
 
 <template>
@@ -253,7 +253,7 @@ const isHovered = ref(false)
           'UiWindow--closed': !isOpen,
           'UiWindow--docked': !!dock,
           'UiWindow--external': dock == 'popup',
-          'UiWindow--seethru': isOpen && !isHovered
+          'UiWindow--transparent': isOpen && isTransparent
         },
         `UiWindow--docked-${dock}`
       ]"
@@ -287,8 +287,6 @@ const isHovered = ref(false)
         @update:coords="onResizableUpdateCoords"
         @move-end="onResizableMoveEnd"
         @end="onResizableEnd"
-        @mouseenter="isHovered = true"
-        @mouseleave="isHovered = false"
       >
         <div class="UiWindow__header">
           <div
@@ -298,6 +296,14 @@ const isHovered = ref(false)
           >
             <slot name="header" />
           </div>
+
+          <UiIcon
+            v-show="!dock"
+            class="UiWindow__eyeIcon"
+            src="mdi:eye-outline"
+            @mouseenter="isTransparent = true"
+            @mouseleave="isTransparent = false"
+          />
 
           <UiPopover>
             <template #trigger>

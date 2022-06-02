@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, toRef } from 'vue'
+import { UiItem } from '../UiItem'
 import useOptionsManager from '../UiSelect/composables/useOptionsManager.js'
 
 const props = defineProps({
@@ -83,17 +84,16 @@ const { options } = useOptionsManager(toRef(props, 'options'), {
 
 <template>
   <div class="UiSelectButtons UiGroup">
-    <button
+    <UiItem
       v-for="option in options"
       :key="option.value"
+      v-bind="option"
       :value="option.value"
-      type="button"
       class="UiSelectButtons__button"
       :class="{
         'UiSelectButtons__button--selected': innerValue.includes(option.value)
       }"
       @click="toggleValue(option.value)"
-      v-text="option.text"
     />
   </div>
 </template>
@@ -105,7 +105,7 @@ const { options } = useOptionsManager(toRef(props, 'options'), {
     white-space: nowrap;
 
     font-size: inherit;
-    padding: 8px 16px;
+    --ui-item-padding: 8px 16px;
 
     background-color: rgba(255,255,255, 0.05);
     color: #ccc;

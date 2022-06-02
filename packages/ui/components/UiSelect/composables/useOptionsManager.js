@@ -14,6 +14,7 @@ export default function useOptionsManager(arr, settings = null) {
       .map((item) => {
         if (item && typeof item === 'object') {
           return {
+            ...item,
             text: getProperty(item, settings?.optionText || '$.text'),
             value: getProperty(item, settings?.optionValue || '$.value'),
             keywords: getKeywords(item, settings?.optionSearch).join(' '),
