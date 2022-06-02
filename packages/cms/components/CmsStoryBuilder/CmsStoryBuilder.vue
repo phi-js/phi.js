@@ -40,7 +40,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:story', 'update:modelValue'])
+const emit = defineEmits(['update:story', 'update:modelValue', 'story-emit'])
 
 const i18n = useI18n({
   en: {
@@ -311,6 +311,7 @@ function toggleCollapsed() {
           :model-value="props.modelValue"
           :story="innerStory"
           @update:model-value="emit('update:modelValue', $event)"
+          @story-emit="emit('story-emit', $event)"
         />
       </UiContentWrapper>
 

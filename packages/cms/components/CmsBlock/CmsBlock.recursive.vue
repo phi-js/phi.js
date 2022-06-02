@@ -2,9 +2,17 @@
 import { h, ref, shallowRef, watchEffect, Transition, inject, computed, watch } from 'vue'
 import { VM } from '@/packages/vm'
 import { parse } from '@/packages/vm/lib/utils'
+import { getBlockDefinition } from '../../functions'
 
-import { getProperty, setProperty, getBlockRules, runValidators, getCssObjectAttributes } from '../../functions'
-import CMS from '../../singleton/'
+import {
+  getPluginData,
+  useStorySettings,
+  getProperty,
+  setProperty,
+  getBlockRules,
+  runValidators,
+  getCssObjectAttributes,
+} from '../../functions'
 
 const CmsBlock = {
   inheritAttrs: false,
@@ -77,14 +85,8 @@ const CmsBlock = {
     }
 
     /* Block definition */
-    const blockDefinition = ref()
-    CMS.getDefinition(props.block)
-      .then((definition) => {
-        blockDefinition.value = definition
-        blockComponent.value = definition?.block?.component
-      })
-
-    const blockComponent = shallowRef()
+    const blockDefinition = getBlockDefinition(props.block)
+    const blockComponent = shallowRef(blockDefinition?.block?.component)
     const blockProps = ref()
 
     /* Block visibility (v-if) */
@@ -97,11 +99,22 @@ const CmsBlock = {
     }
 
     /* Eval'd block props */
+    const storySettings = useStorySettings()
+
     watchEffect(() => {
-      const allProps = { ...blockDefinition.value?.block?.props, ...props.block?.props }
+      const allProps = {
+        ...blockDefinition?.block?.props,
+        ...props.block?.props,
+      }
 
       // Parsed block props
-      blockProps.value = parse(allProps, evaluableModel.value)
+      blockProps.value = parse(
+        allProps,
+        {
+          ...evaluableModel.value,
+          $settings: storySettings,
+        },
+      )
 
       // props from v-models
       for (const p in props.block) {
@@ -147,6 +160,20 @@ const CmsBlock = {
     /* Block event listeners */
     const blockListeners = ref({})
 
+    function pushListener(eventName, callback) {
+      if (!blockListeners.value[eventName]) {
+        blockListeners.value[eventName] = callback
+        return
+      }
+      if (Array.isArray(blockListeners.value[eventName])) {
+        blockListeners.value[eventName].push(callback)
+        return
+      }
+
+      blockListeners.value[eventName] = [blockListeners.value[eventName], callback]
+    }
+
+
     // v-models listeners
     const tmpInnerModel = {}
 
@@ -161,9 +188,7 @@ const CmsBlock = {
           setProperty(tmpInnerModel, variableName, newValue)
         }
 
-        blockListeners.value[eventName] = blockListeners.value[eventName]
-          ? [blockListeners.value[eventName], callback]
-          : callback
+        pushListener(eventName, callback)
       }
     }
 
@@ -171,20 +196,66 @@ const CmsBlock = {
     /*
     Edge case:   block['v-on']['update:modelValue']
     Se espera que en el modelo a evaluar venga el valor actualizado del v-model.
-    Para esto se usa tmpInnerModel, cuyo valor se establece cuando ha ocurrido el onUpdate:modelValue creado por la propiedad v-model (linea 161 arriba)
+    Para esto se usa tmpInnerModel, cuyo valor se establece cuando ha ocurrido el onUpdate:modelValue creado por la propiedad v-model
     */
     if (props.block?.['v-on']) {
       const listeners = props.block['v-on']
       for (let eventName in listeners) {
         const eventCallback = ($event) => {
-          blockVM.eval(listeners[eventName], { ...evaluableModel.value, ...tmpInnerModel, $event })
+          blockVM.eval(
+            listeners[eventName],
+            {
+              ...evaluableModel.value,
+              ...tmpInnerModel,
+              $event,
+              $block: props.block,
+            },
+          )
         }
 
         const propName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
-        blockListeners.value[propName] = blockListeners.value[propName]
-          ? [blockListeners.value[propName], eventCallback]
-          : eventCallback
+        pushListener(propName, eventCallback)
       }
+    }
+
+
+    /*
+    "bubble" property in block indicates which block events should be bubbled
+    i.e. the CmsStory object will EMIT them in a 'story-emit' event: <CmsStory @story-emit="..." />
+
+    i.e.
+    block {
+      component: 'InputText',
+      props: { ... },
+      bubble: ['update:modelValue']
+    }
+
+    is equivalent to:
+
+    block {
+      component: 'InputText',
+      props: { ... },
+      'v-on': {
+        'update:modelValue': {
+          call: 'Story.emit',
+          args: {
+            name: 'update:ModelValue',
+            data: '{{$event}}'
+          }
+        }
+      }
+    }
+    */
+    if (Array.isArray(props.block.bubble)) {
+      props.block.bubble.forEach((eventName) => {
+        const propName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
+        pushListener(propName, ($event) => injectedStory?.emitStoryEvent?.({
+          name: eventName,
+          data: $event,
+          block: props.block,
+          bubbled: true,
+        }))
+      })
     }
 
     /* Validation listeners */
@@ -205,6 +276,22 @@ const CmsBlock = {
           runValidators(blockRules).then(setErrors)
         })
       }
+    }
+
+    /*
+    Block listeners defined via plugins
+    */
+    const pluginData = getPluginData()
+    if (Array.isArray(pluginData?.blockListeners)) {
+      pluginData.blockListeners.forEach((listener) => {
+        const propName = 'on' + listener.event.charAt(0).toUpperCase() + listener.event.slice(1)
+        pushListener(
+          propName,
+          ($event) => {
+            return listener.callback($event, props.block)
+          },
+        )
+      })
     }
 
     /* Determine slot nodes */

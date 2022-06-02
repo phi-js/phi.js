@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue'
-import { getProperty, setProperty } from '../../functions'
-import { parse } from '../../../vm/lib/utils'
+import { useStorySettings, getProperty, setProperty } from '../../functions'
+import { parse } from '@/packages/vm/lib/utils'
 
 const props = defineProps({
   block: {
@@ -34,8 +34,17 @@ function emitUpdate() {
   }
 }
 
+const storySettings = useStorySettings()
+
 const actionProps = computed(() => {
-  return parse(props.action.props, { block: props.block }, true)
+  return parse(
+    props.action.props,
+    {
+      block: props.block,
+      $settings: storySettings,
+    },
+    true,
+  )
 })
 </script>
 
@@ -45,6 +54,6 @@ const actionProps = computed(() => {
     v-if="action.component"
     v-model="internalModel"
     v-bind="{ ...$attrs, ...actionProps }"
-    @update:modelValue="emitUpdate"
+    @update:model-value="emitUpdate"
   />
 </template>

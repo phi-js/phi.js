@@ -1,8 +1,7 @@
 <script>
 import Quicklaunch from './Quicklaunch/index.js'
 
-import { blocks as cmsBlocks } from '../../singleton'
-import { getBlockDefinition } from '../../functions'
+import { getBlockDefinition, getPluginData } from '../../functions'
 import { UiIcon, UiTabs, UiTab } from '@/packages/ui/components'
 import { useI18n } from '../../../i18n'
 
@@ -38,19 +37,9 @@ export default {
   emits: ['input'],
 
   setup() {
-    const i18n = useI18n({
-      es: {
-        'CmsLauncher.Tab.default': 'Contenido',
-        'CmsLauncher.Tab.communication': 'Comunicación',
-        'CmsLauncher.Tab.input': 'Formulario',
-        'CmsLauncher.Tab.academia': 'Academia',
-        'CmsLauncher.Tab.ecommerce': 'eCommerce',
-        'CmsLauncher.Tab.cms': 'CMS',
-        'CmsLauncher.Tab.navigation': 'Navegación',
-        'CmsLauncher.Tab.video': 'Video',
-        'CmsLauncher.Tab.db': 'Base de Datos',
-      },
+    const pluginData = getPluginData()
 
+    const i18n = useI18n({
       en: {
         'CmsLauncher.Tab.default': 'Content',
         'CmsLauncher.Tab.communication': 'Communication',
@@ -61,14 +50,33 @@ export default {
         'CmsLauncher.Tab.navigation': 'Navigation',
         'CmsLauncher.Tab.video': 'Video',
         'CmsLauncher.Tab.db': 'Database',
+        'CmsLauncher.Tab.embed': 'Embed',
+      },
+
+      es: {
+        'CmsLauncher.Tab.default': 'Contenido',
+        'CmsLauncher.Tab.communication': 'Comunicación',
+        'CmsLauncher.Tab.input': 'Formulario',
+        'CmsLauncher.Tab.academia': 'Academia',
+        'CmsLauncher.Tab.ecommerce': 'eCommerce',
+        'CmsLauncher.Tab.cms': 'CMS',
+        'CmsLauncher.Tab.navigation': 'Navegación',
+        'CmsLauncher.Tab.video': 'Video',
+        'CmsLauncher.Tab.db': 'Base de Datos',
+        'CmsLauncher.Tab.embed': 'Embebir',
       },
     })
 
-    return { i18n }
+    return {
+      pluginData,
+      i18n,
+    }
   },
 
   data() {
     return {
+      allBlocks: this.pluginData?.blocks || {},
+
       text: '',
       launcherComponent: null,
       emptyTagsTab: 'default',
@@ -79,8 +87,8 @@ export default {
   computed: {
     availableBlocks() {
       let blocks = []
-      for (let name in cmsBlocks) {
-        let block = cmsBlocks[name]
+      for (let name in this.allBlocks) {
+        let block = this.allBlocks[name]
         block.name = name
         blocks.push(block)
       }

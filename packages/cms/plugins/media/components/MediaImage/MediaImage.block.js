@@ -2,7 +2,7 @@ import { UiForm } from '@/packages/ui/components'
 
 import MediaImage from './MediaImage.vue'
 import MediaImageToolbar from './MediaImageToolbar.vue'
-import MediaImageEditor from './MediaImageEditor.vue'
+import MediaImageFace from './MediaImageFace.vue'
 
 export default {
   name: 'MediaImage',
@@ -21,14 +21,13 @@ export default {
     },
 
     face: {
-      'component': MediaImageEditor,
+      'component': MediaImageFace,
       'v-model': 'block.props',
-      'props': { endpoint: '{{ $settings.uploads.endpoint }}' },
     },
 
     actions: [
       {
-        'title': 'URL',
+        'title': 'Image options',
         'component': UiForm,
         'v-model': 'block.props',
         'props': {
@@ -37,7 +36,7 @@ export default {
               model: 'src',
               type: 'url',
               label: 'URL de la imágen',
-              endpoint: '{{ $settings.uploads.endpoint }}',
+              endpoint: '{{ $settings.uploads.assets }}',
             },
             { model: 'href', type: 'text', label: 'Vínculo', props: { placeholder: 'http://' } },
           ],

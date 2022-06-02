@@ -5,6 +5,9 @@ import { UiInput } from '@/packages/ui/components'
 import OptionsEditor from '@/packages/ui/components/UiInputEditor/editors/OptionsEditor.vue'
 import CmsPropInput from '../../../../components/CmsPropInput/CmsPropInput.vue'
 
+import { getPluginData } from '../../../../functions'
+const pluginData = getPluginData()
+
 const props = defineProps({
   modelValue: {
     type: Object, // block object
@@ -39,6 +42,7 @@ const i18n = useI18n({
     'InputSettings.VariableName': 'Variable name',
     'InputSettings.Debounce': 'Input delay',
     'InputSettings.ValueType': 'Value type',
+    'InputSettings.Advanced': 'Advanced options',
   },
   es: {
     'InputSettings.Labels': 'Etiquetas',
@@ -52,6 +56,7 @@ const i18n = useI18n({
     'InputSettings.VariableName': 'Nombre de variable',
     'InputSettings.Debounce': 'Demorar input',
     'InputSettings.ValueType': 'Tipo de dato',
+    'InputSettings.Advanced': 'Opciones avanzadas',
   },
 })
 
@@ -69,12 +74,31 @@ const multipleOptions = [
 
 <template>
   <div class="InputSettings UiForm">
+    <details open>
+      <summary v-text="i18n.t('InputSettings.Data')" />
+      <section>
+        <UiInput
+          v-model="block['v-model']"
+          :label="i18n.t('InputSettings.VariableName')"
+          type="text"
+          @update:model-value="emitUpdate"
+        />
+      </section>
+    </details>
+
     <details
       v-if="isSelect"
       open
     >
       <summary v-text="i18n.t('InputSettings.Options')" />
       <section>
+        <UiInput
+          v-model="block.props.multiple"
+          :label="i18n.t('InputSettings.ValueType')"
+          type="select-buttons"
+          :options="multipleOptions"
+          @update:model-value="emitUpdate"
+        />
         <OptionsEditor
           v-model="block.props.options"
           @update:model-value="emitUpdate"
@@ -95,15 +119,6 @@ const multipleOptions = [
         />
 
         <CmsPropInput
-          v-model="block.props.placeholder"
-          v-model:block="block"
-          type="text"
-          :label="i18n.t('InputSettings.Placeholder')"
-          @update:model-value="emitUpdate"
-          @update:block="emitUpdate"
-        />
-
-        <CmsPropInput
           v-model="block.props.subtext"
           v-model:block="block"
           type="text"
@@ -111,34 +126,32 @@ const multipleOptions = [
           @update:model-value="emitUpdate"
           @update:block="emitUpdate"
         />
+
+        <CmsPropInput
+          v-model="block.props.placeholder"
+          v-model:block="block"
+          type="text"
+          :label="i18n.t('InputSettings.Placeholder')"
+          @update:model-value="emitUpdate"
+          @update:block="emitUpdate"
+        />
       </section>
     </details>
 
-    <details open>
-      <summary v-text="i18n.t('InputSettings.Data')" />
-
+    <details>
+      <summary v-text="i18n.t('InputSettings.Advanced')" />
       <section>
-        <UiInput
-          v-if="isSelect"
-          v-model="block.props.multiple"
-          :label="i18n.t('InputSettings.ValueType')"
-          type="select-buttons"
-          :options="multipleOptions"
-          @update:model-value="emitUpdate"
-        />
-
-        <UiInput
-          v-model="block['v-model']"
-          :label="i18n.t('InputSettings.VariableName')"
-          type="text"
-          @update:model-value="emitUpdate"
-        />
-
         <UiInput
           v-model="block.props.debounce"
           :label="i18n.t('InputSettings.Debounce')"
           type="number"
           placeholder="ms."
+          @update:model-value="emitUpdate"
+        />
+
+        <Component
+          :is="pluginData.getSlotComponent('InputSettings')"
+          v-model="block"
           @update:model-value="emitUpdate"
         />
       </section>

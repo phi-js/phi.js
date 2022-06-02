@@ -57,11 +57,6 @@ function emitUpdate() {
 
 function removeEvent(eventIndex) {
   endangeredIndex.value = -1
-
-  if (!confirm('Remove this event listener?')) {
-    return
-  }
-
   events.value.splice(eventIndex, 1)
   emitUpdate()
 }

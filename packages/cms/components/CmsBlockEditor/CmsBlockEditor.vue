@@ -1,7 +1,7 @@
 <script>
 import { h, defineAsyncComponent, watch, ref } from 'vue'
-import { blocks } from '../../singleton/index.js'
 import BlockScaffold from './BlockScaffold.vue'
+import { getBlockDefinition } from '../../functions'
 
 const CmsBlockEditor = {
   inheritAttrs: false,
@@ -17,7 +17,7 @@ const CmsBlockEditor = {
   emits: ['update:block', 'delete'],
 
   setup(props, { emit, attrs, expose }) {
-    const definition = blocks[props.block.component]
+    const definition = getBlockDefinition(props.block)
 
     const innerBlock = ref(props.block)
     watch(
@@ -57,7 +57,7 @@ const CmsBlockEditor = {
       }
 
       // No hay editor Y no hay slots.  Usar BlockScaffold
-      if (typeof props.block.slot === 'undefined') {
+      if (definition?.editor?.face || typeof props.block.slot === 'undefined') {
         const scaffoldNode = h(BlockScaffold, {
           'ref': innerRef,
           ...attrs,

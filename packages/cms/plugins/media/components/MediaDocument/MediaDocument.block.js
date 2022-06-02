@@ -2,8 +2,10 @@ import MediaDocument from './MediaDocument.vue'
 import MediaDocumentPicker from './MediaDocumentPicker.vue'
 
 export default {
+  tags: ['embed'],
+
   name: 'MediaDocument',
-  title: 'Documento embebido',
+  title: 'Documento',
   icon: 'mdi:file-word',
 
   block: {

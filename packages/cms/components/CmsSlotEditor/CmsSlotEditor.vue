@@ -1,7 +1,9 @@
 <script setup>
 import { ref, watch, nextTick } from 'vue'
 import draggable from 'vuedraggable'
+import { useI18n } from '@/packages/i18n'
 
+import { getPluginData } from '../../functions'
 import CmsBlockEditor from '../CmsBlockEditor/CmsBlockEditor.vue'
 import CmsBlockPicker from '../CmsBlockPicker/CmsBlockPicker.vue'
 
@@ -26,6 +28,11 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:slot', 'update:dragging'])
+
+const i18n = useI18n({
+  en: { 'CmsSlotEditor.AddContent': 'Add content' },
+  es: { 'CmsSlotEditor.AddContent': 'Agregar contenido' },
+})
 
 const innerSlot = ref([])
 
@@ -70,17 +77,54 @@ function onDraggableEnd() {
 
 const focusedIndexes = ref({})
 
-/* Perform actions after a new block is created */
+
+/* Perform actions before and after a new block is created */
+const pluginData = getPluginData()
+
+function onBeforeCreateBlock(block) {
+  if (typeof pluginData?.onBeforeCreateBlock == 'function') {
+    try {
+      const result = pluginData.onBeforeCreateBlock(block)
+      if (result === false) {
+        return false
+      }
+      if (result && typeof result == 'object') {
+        return result
+      }
+
+      return block
+
+    } catch (e) {
+      return false
+    }
+  }
+
+  return block
+}
+
+
 let listenForMountedEvents = false
 
 function launchBlock(index, block, position) {
+  const newBlock = onBeforeCreateBlock(block)
+  if (!newBlock) {
+    console.warn('Block creation halted by onBeforeCreateBlock')
+    return
+  }
+
   listenForMountedEvents = true
   const targetIndex = position == 'top' ? index : index + 1
-  innerSlot.value.splice(targetIndex, 0, block)
+  innerSlot.value.splice(targetIndex, 0, newBlock)
   emitUpdate()
 }
 
-function appendBlock(newBlock) {
+function appendBlock(block) {
+  const newBlock = onBeforeCreateBlock(block)
+  if (!newBlock) {
+    console.warn('Block creation halted by onBeforeCreateBlock')
+    return
+  }
+
   listenForMountedEvents = true
   innerSlot.value.push(newBlock)
   emitUpdate()
@@ -97,7 +141,6 @@ function onBlockEditorMounted(vNode) {
 
   listenForMountedEvents = false
 }
-
 </script>
 
 <template>
@@ -129,7 +172,7 @@ function onBlockEditorMounted(vNode) {
               v-for="position in ['bottom', 'top']"
               :key="position"
               class="SlotBlock__adder"
-              text="Agregar contenido"
+              :text="i18n.t('CmsSlotEditor.AddContent')"
               :placement="position"
               @input="launchBlock(index, $event, position)"
               @update:open="focusedIndexes[index] = $event"
@@ -150,7 +193,7 @@ function onBlockEditorMounted(vNode) {
     <CmsBlockPicker
       v-if="showLauncher"
       class="CmsSlotEditor__adder"
-      text="Agregar contenido"
+      :text="i18n.t('CmsSlotEditor.AddContent')"
       @input="appendBlock"
     />
   </div>

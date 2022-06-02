@@ -1,5 +1,8 @@
 <script setup>
 import { ref, shallowRef, watch, computed, provide } from 'vue'
+import { useI18n } from '@/packages/i18n'
+import dictionary from './BlockScaffold.i18n.js'
+
 import { getBlockEditors, getBlockDefinition, getCssObjectAttributes } from '../../functions'
 import EditorAction from './EditorAction.vue'
 import {
@@ -26,7 +29,10 @@ const props = defineProps({
     default: null,
   },
 })
+
 const emit = defineEmits(['update:block', 'delete'])
+
+const i18n = useI18n(dictionary)
 
 // Internal value manager (innerBlock)
 const innerBlock = ref()
@@ -81,11 +87,12 @@ const isDefinitionLoaded = ref(false)
 watch(
   () => props.block?.component,
   () => {
-    Promise.all([
-      getBlockEditors(props.block).then((e) => editors.value = e),
-      getBlockDefinition(props.block).then((d) => definition.value = d),
-    ])
-      .then(() => isDefinitionLoaded.value = true)
+    definition.value = getBlockDefinition(props.block)
+    getBlockEditors(props.block)
+      .then((e) => {
+        editors.value = e
+        isDefinitionLoaded.value = true
+      })
   },
   { immediate: true },
 )
@@ -226,14 +233,14 @@ defineExpose({
             <UiItem
               v-for="(action, i) in availableActions"
               :key="i"
-              :text="action.title"
+              :text="i18n.t(`BlockScaffold.action.${action.id}`, null, action.title)"
               :icon="action.icon"
               class="BlockPopover__item BlockPopover__item--action"
               @click="openAction(i) && close()"
             />
 
             <UiItem
-              text="Delete"
+              :text="i18n.t('BlockScaffold.action.delete')"
               icon="mdi:close"
               class="BlockPopover__item BlockPopover__item--delete"
               @click="emitDelete() && close()"
@@ -263,6 +270,7 @@ defineExpose({
         <!-- block component as face. Clicking will open settings window -->
         <div
           v-else-if="definition?.block?.component"
+          class="BlockScaffold__defaultFace"
           @click="openAction(0)"
         >
           <Component
@@ -300,7 +308,7 @@ defineExpose({
               v-for="(action, i) in availableActions"
               :key="i"
               :value="i"
-              :text="action.title"
+              :text="i18n.t(`BlockScaffold.action.${action.id}`, null, action.title)"
               :icon="action.icon || 'mdi:star'"
             >
               <div

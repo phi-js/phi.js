@@ -10,8 +10,8 @@ export default {
   block: {
     component: MediaLoremIpsum,
     props: {
-      nParagraphs: '',
-      nWords: '',
+      nParagraphs: '2',
+      nWords: '42',
     },
   },
 
@@ -38,6 +38,7 @@ export default {
 
     actions: [
       {
+        'id': 'paragraphs',
         'title': 'Paragraphs',
         'component': CmsPropsForm,
         'v-model': 'block',

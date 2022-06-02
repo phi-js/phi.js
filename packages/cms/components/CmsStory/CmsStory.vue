@@ -38,7 +38,7 @@ export default {
     },
   },
 
-  emits: ['update:modelValue', 'update:currentPageId'],
+  emits: ['update:modelValue', 'update:currentPageId', 'story-emit'],
 
   setup(props, { emit }) {
     // Sanitize and translate (precompile) incoming story
@@ -158,12 +158,25 @@ export default {
 
     const globals = reactive({ $errors: [] })
 
+    /*
+    storyEvent: {
+      name: 'custom event name',
+      data: { ... custom event data }
+      block: { ... block object that triggered the event }
+      bubbled: true (if it was emitted via block.bubble)
+    }
+    */
+    function emitStoryEvent(storyEvent) {
+      emit('story-emit', storyEvent)
+    }
+
     // Provide global story methods (used by CmsBlock)
     const providedData = {
       goTo,
       goBack,
       globals,
       sanitizedStory,
+      emitStoryEvent,
     }
     provide('$_cms_story', providedData)
     storyVM.custom = { story: providedData }

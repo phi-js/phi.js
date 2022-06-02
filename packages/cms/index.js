@@ -1,2 +1,3 @@
 export * from './components'
-export { default as registerPlugin } from './functions/registerPlugin.js'
+export { default as usePlugin } from './functions/usePlugin.js'
+export { default as provideStorySettings } from './functions/provideStorySettings.js'

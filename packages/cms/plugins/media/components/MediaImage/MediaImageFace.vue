@@ -8,13 +8,7 @@ import MediaImage from './MediaImage.vue'
 import { UiInput, UiResizable } from '../../../../../ui'
 
 const props = defineProps({
-  endpoint: {
-    type: String,
-    required: true,
-  },
-
   /* objeto PROPS para MediaImage:
-
     src: 'https://s3.amazonaws.com/phidias-api-1/desarrollodev/cms/pages/test/Best-Cheesecake-Recipe-2-1-of-1-4.jpg',
     align: 'center',
     width: 'auto',
@@ -38,8 +32,8 @@ async function toggleHeightAuto(setAuto = true, refresh) {
 
 <template>
   <div
-    class="MediaImageEditor"
-    :class="{ 'MediaImageEditor--empty': isEmpty, 'MediaImageEditor--notempty': !isEmpty }"
+    class="MediaImageFace"
+    :class="{ 'MediaImageFace--empty': isEmpty, 'MediaImageFace--notempty': !isEmpty }"
   >
     <UiResizable
       v-slot="{ isDragging, newBounds, refresh }"
@@ -47,24 +41,15 @@ async function toggleHeightAuto(setAuto = true, refresh) {
       @update:coords="emit('update:modelValue', { ...modelValue, height: $event.height })"
     >
       <MediaImage
-        class="MediaImageEditor__image"
+        class="MediaImageFace__image"
         v-bind="{ ...$attrs, ...modelValue }"
         :height="isDragging ? newBounds.height + 'px' : modelValue.height"
       />
 
-      <div class="MediaImageEditor__infobox">
-        <UiInput
-          type="url"
-          :endpoint="props.endpoint"
-          :model-value="modelValue.src"
-          placeholder="Image URL"
-          class="MediaImageEditor__url"
-          @update:model-value="emit('update:modelValue', { ...modelValue, src: $event })"
-        />
-
+      <div class="MediaImageFace__infobox">
         <div
           v-if="!isEmpty"
-          class="MediaImageEditor__heightenator UiGroup"
+          class="MediaImageFace__heightenator UiGroup"
           :style="{ justifyContent: modelValue?.align || 'center' }"
         >
           <UiInput
@@ -88,7 +73,7 @@ async function toggleHeightAuto(setAuto = true, refresh) {
 </template>
 
 <style lang="scss">
-.MediaImageEditor {
+.MediaImageFace {
   position: relative;
 
   &__infobox {
@@ -109,14 +94,6 @@ async function toggleHeightAuto(setAuto = true, refresh) {
     background-color: rgba(0, 0, 0, 0.5);
   }
 
-  &__uploader {
-    min-width: 400px;
-  }
-
-  // &__url {
-  //   width: 100%;
-  // }
-
   &__heightenator {
     position: absolute;
     bottom: 8px;
@@ -126,13 +103,13 @@ async function toggleHeightAuto(setAuto = true, refresh) {
 
   &--empty,
   &:hover {
-    .MediaImageEditor__infobox {
+    .MediaImageFace__infobox {
       opacity: 1;
     }
   }
 
   &--notempty {
-    .MediaImageEditor__infobox {
+    .MediaImageFace__infobox {
       align-items: flex-start;
       // justify-content: flex-end;
     }

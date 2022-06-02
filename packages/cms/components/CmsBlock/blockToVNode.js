@@ -1,7 +1,6 @@
 import { h, reactive } from 'vue'
 import { parse } from '@/packages/vm/lib/utils'
-import { getProperty, setProperty, getCssObjectAttributes, getBlockRules, runValidators } from '../../functions'
-import Cms from '../../singleton'
+import { getProperty, setProperty, getCssObjectAttributes, getBlockDefinition } from '../../functions'
 
 /*
 block: {
@@ -77,7 +76,7 @@ export default function blockToVNode(block, modelValue, blockVM, masterValue = n
     return null
   }
 
-  const definition = Cms.__getDefinition(block)
+  const definition = getBlockDefinition(block)
   if (!definition?.block?.component) {
     return null
   }

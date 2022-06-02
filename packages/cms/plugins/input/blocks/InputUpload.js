@@ -17,7 +17,7 @@ export default {
     'v-model': '',
     'props': {
       type: 'upload',
-      endpoint: '{{$settings.uploads.endpoint}}',
+      endpoint: '{{ $settings.uploads.user }}',
       inline: false,
       multiple: false,
       placeholder: 'Upload files',
@@ -27,6 +27,7 @@ export default {
   editor: {
     actions: [
       {
+        'id': 'InputSettings',
         'title': 'Archivo',
         'component': InputSettings,
         'v-model': 'block',

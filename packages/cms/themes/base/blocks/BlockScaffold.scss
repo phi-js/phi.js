@@ -2,34 +2,9 @@
   cursor: move;
 }
 
-// .WindowContents {
-//   height: 100%;
-//   display: flex;
-//   flex-direction: column;
-
-//   &__body {
-//     flex: 1;
-//   }
-
-//   &--id-source {
-//     padding: 0;
-
-//     .UiInputJson {
-//       height: 100%;
-//     }
-
-//     .UiInputJson__textarea {
-//       resize: none;
-//       min-height: 0;
-//     }
-//   }
-// }
-
-
 .BlockScaffold__window-header {
   --ui-item-padding: 8px 12px;
 }
-
 
 .BlockScaffold {
   position: relative;
@@ -52,6 +27,10 @@
 
   &__toolbar-spacer {
     border-left: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  &__defaultFace {
+    cursor: pointer;
   }
 
 

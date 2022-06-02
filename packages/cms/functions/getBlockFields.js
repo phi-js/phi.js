@@ -15,6 +15,11 @@ export default function getBlockFields(block) {
   const props = block.props || {}
 
   if (block.component.substring(0, 5) == 'Input') {
+
+    if (!block['v-model']) {
+      return []
+    }
+
     const inputType = props?.type || 'text'
     field.type = inputType
 
@@ -90,6 +95,8 @@ export default function getBlockFields(block) {
     }
 
     if (block['v-model:activeChapters']) {
+      const arrChapters = Array.isArray(block.props?.chapters) ? block.props.chapters : []
+
       retval.push({
         name: block['v-model:activeChapters'],
         type: 'array',
@@ -99,7 +106,7 @@ export default function getBlockFields(block) {
         },
         items: {
           type: 'string',
-          enum: block.props.chapters.map((chapter) => ({
+          enum: arrChapters.map((chapter) => ({
             value: chapter.name,
             text: `${chapter.name} (${chapter.start}-${chapter.end})`,
           })),

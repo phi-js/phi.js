@@ -38,16 +38,21 @@ const isError = ref(false)
 const containerStyle = computed(() => ({
   textAlign: props.align,
   height: props.height || undefined,
-  backgroundPosition: `top ${props.align}`,
-  backgroundRepeat: 'no-repeat',
-  backgroundImage: `url(${props.src})`,
-  backgroundSize: 'contain',
+  boxSizing: 'content-box',
+  // backgroundPosition: `top ${props.align}`,
+  // backgroundRepeat: 'no-repeat',
+  // backgroundImage: `url(${props.src})`,
+  // backgroundSize: 'contain',
 }))
 
 const imgStyle = computed(() => ({
+  // opacity: 0,
   width: props.width || undefined,
-  opacity: 0,
-  // opacity: 0.5, border: '2px dashed red',
+  // height: '100%',
+  display: 'inline-block', // inline-block para reacionar a text-align del padre
+  margin: 'auto',
+  maxWidth: '100%',
+  maxHeight: '100%',
 }))
 
 watch(
@@ -97,12 +102,16 @@ function onImageError() {
 
 <style lang="scss">
 .MediaImage {
-  &__img {
-    display: inline-block; // inline-block para reacionar a text-align del padre
-    margin: auto;
-    max-width: 100%;
-    max-height: 100%;
-  }
+
+  // Los estilos de MediaImage se asignan en la propiedad <img> directamente
+  // para no depender de la declaracion CSS de un archivo externo, y poder portarlo (para exportarlo a PDF, por ejemplo)
+
+  // &__img {
+  //   display: inline-block; // inline-block para reacionar a text-align del padre
+  //   margin: auto;
+  //   max-width: 100%;
+  //   max-height: 100%;
+  // }
 
   &__placeholder {
     width: 100%;
