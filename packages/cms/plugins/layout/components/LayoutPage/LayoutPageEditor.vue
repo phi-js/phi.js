@@ -36,6 +36,14 @@ function launchRow() {
   emit('update:block', { ...props.block, slot: pageSlot })
 }
 
+// function launchGroup() {
+//   pageSlot.value.push({
+//     component: 'LayoutGroup',
+//     slot: [],
+//   })
+//   emit('update:block', { ...props.block, slot: pageSlot })
+// }
+
 function onSlotUpdate() {
   emit('update:block', { ...props.block, slot: pageSlot })
 }
@@ -51,15 +59,20 @@ const cssAttributes = computed(() => getCssObjectAttributes(props.block?.css, pr
     <CmsSlotEditor
       v-model:slot="pageSlot"
       class="LayoutPage"
-      group-name="page-slot"
+      group-name="cms-slot"
       @update:slot="onSlotUpdate"
     />
-
-    <UiItem
+    <!-- <UiItem
+      class="RowLauncher"
+      text="Add group"
+      icon="mdi:flip-vertical"
+      @click="launchGroup"
+    /> -->
+    <!-- <UiItem
       class="RowLauncher"
       text="Add section"
       icon="mdi:flip-vertical"
       @click="launchRow"
-    />
+    /> -->
   </div>
 </template>

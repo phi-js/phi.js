@@ -9,13 +9,15 @@
 </template>
 
 <script>
+import sourceText from './sourceText.js'
+
 export default {
   name: 'MediaLoremIpsum',
 
   props: {
     text: {
       type: String,
-      default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur egestas malesuada habichuela porta. Nam dapibus magna ac lacus viverra, condimentum feugiat velit consectetur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam dignissim tempus nulla, in lacinia orci aliquam sed. Praesent eu lobortis erat. Sed eros velit, laoreet in hendrerit id, commodo vel velit. Nullam at lorem at mi luctus pulvinar in quis orci. Curabitur eget sollicitudin dolor. Fusce ultricies est nunc, vitae vehicula metus dapibus eu. Donec in velit ac nibh dictum mattis. Duis mollis lectus sed varius dapibus. Suspendisse potenti. Nunc fringilla, dui id vestibulum malesuada, metus massa ultricies metus, sed lacinia ligula tellus sit amet ante. Morbi feugiat in ex vitae scelerisque. Donec accumsan ultrices ex, in faucibus dolor aliquet et.',
+      default: sourceText,
     },
 
     nParagraphs: {

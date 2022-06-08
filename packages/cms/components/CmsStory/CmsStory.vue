@@ -13,7 +13,7 @@ import {
 } from 'vue'
 
 import { CmsBlock } from '../CmsBlock'
-import { sanitizeStory, parseTranslations, forEachBlock, setProperty } from '../../functions'
+import { sanitizeStory, parseTranslations, forEachBlock, setProperty, useThemes } from '../../functions'
 import { useI18n } from '../../../i18n'
 import { VM } from '../../../vm'
 
@@ -75,14 +75,14 @@ export default {
 
     // Evaluate story.setup()
     const isMounted = ref(false)
-    onMounted(async () => {
+    onMounted(() => {
       if (!sanitizedStory.value.setup) {
         isMounted.value = true
         return
       }
 
       isMounted.value = false
-      await storyVM.eval(sanitizedStory.value.setup, props.modelValue)
+      storyVM.eval(sanitizedStory.value.setup, props.modelValue)
       isMounted.value = true
     })
 
@@ -206,21 +206,15 @@ export default {
 
     // Global CSS
     const storyCSS = ref()
-    watchEffect(async () => {
+    watchEffect(() => {
       const strCSS = sanitizedStory.value.css.classes.map((c) => c.css).join('\n')
-      storyCSS.value = await storyVM.eval(strCSS, props.modelValue)
+      storyCSS.value = storyVM.eval(strCSS, props.modelValue)
     })
 
     // Determine story THEME
     const storyClassNames = ref([])
-    if (sanitizedStory.value?.theme) {
-      const themes = Array.isArray(sanitizedStory.value.theme)
-        ? sanitizedStory.value.theme
-        : [sanitizedStory.value.theme]
-
-      themes.forEach((themeName) => import(`../../style/themes/${themeName}/index.scss`))
-
-      storyClassNames.value = themes.map((themeName) => `phi-theme-${themeName}`)
+    if (sanitizedStory.value?.themes) {
+      storyClassNames.value = useThemes(sanitizedStory.value)
     }
 
     // Render function

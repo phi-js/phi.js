@@ -98,7 +98,7 @@
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
 
-      opacity: 0.2;
+      opacity: 0.3;
     }
 
     & > .BlockScaffold__toolbar {
@@ -118,7 +118,6 @@
 
     &:hover {
       &::before {
-        border-left: 2px solid var(--ui-color-primary) !important;
         opacity: 1;
       }
 
@@ -132,7 +131,7 @@
   // Toolbar reaction to hovering the entire row editor
   &:hover > .BlockScaffold__toolbar-container {
     &::before {
-      border-left: 1px dashed var(--ui-color-foreground);
+      border-left: 2px solid var(--ui-color-primary);
     }
 
     & > .BlockScaffold__toolbar {

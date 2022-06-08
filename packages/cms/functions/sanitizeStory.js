@@ -3,17 +3,7 @@ import forEachBlock from './forEachBlock'
 export default function sanitizeStory(story) {
   const emptyPage = {
     component: 'LayoutPage',
-    slot: [
-      {
-        component: 'LayoutRow',
-        slot: [
-          {
-            component: 'LayoutColumn',
-            slot: [],
-          },
-        ],
-      },
-    ],
+    slot: [],
   }
 
   const defaultStory = {

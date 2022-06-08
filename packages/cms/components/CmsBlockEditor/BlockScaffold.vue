@@ -129,7 +129,6 @@ const isFocused = computed(() => {
     || popupIsOpen.value
 })
 
-
 function getWidth(coords) {
   return parseInt(coords?.width)
 }
@@ -143,18 +142,21 @@ defineExpose({
 <template>
   <div
     v-if="isDefinitionLoaded"
-    class="BlockScaffold"
-    :class="{
-      'BlockScaffold--focused': isFocused,
-      'BlockScaffold--window-open': windowIsOpen,
-    }"
+    :class="[
+      'BlockScaffold',
+      `BlockScaffold--${innerBlock.component}`,
+      {
+        'BlockScaffold--focused': isFocused,
+        'BlockScaffold--window-open': windowIsOpen,
+      }
+    ]"
   >
     <div class="BlockScaffold__toolbar-container">
       <div class="BlockScaffold__toolbar">
         <UiItem
           class="BlockScaffold__toolbar-title Block__drag-handle"
           icon="mdi:drag"
-          :text="definition?.title || ''"
+          :text="innerBlock?.title || definition?.title || ''"
         />
         <slot name="toolbar">
           <EditorAction
@@ -260,7 +262,8 @@ defineExpose({
           v-if="editors.face"
           v-model:block="innerBlock"
           :action="editors.face"
-          v-bind="{ ...innerBlock?.props, ...blockCssAttributes }"
+          v-bind="blockCssAttributes"
+          xxxv-bind="{ ...innerBlock?.props, ...blockCssAttributes }"
           tabindex="0"
           :open-action="openActionId"
           @update:block="accept()"
@@ -293,7 +296,7 @@ defineExpose({
         <UiItem
           class="BlockScaffold__window-header"
           :icon="definition.icon"
-          :text="definition.title"
+          :text="innerBlock?.title || definition?.title"
         />
       </template>
 

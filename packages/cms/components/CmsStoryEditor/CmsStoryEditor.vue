@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, watchEffect, computed, defineComponent, h, Teleport, provide } from 'vue'
-import { sanitizeStory, getStorySchema } from '../../functions'
+import { sanitizeStory, getStorySchema, useThemes } from '../../functions'
 import { CmsBlockEditor } from '../CmsBlockEditor'
 
 const props = defineProps({
@@ -104,21 +104,12 @@ const StyleTag = defineComponent({
   ),
 })
 
-
 // THEMES
 const storyClassNames = ref([])
-if (sanitizedStory.value?.theme) {
-
+if (sanitizedStory.value?.themes) {
   watch(
-    () => sanitizedStory.value.theme,
-    () => {
-      const themes = Array.isArray(sanitizedStory.value.theme)
-        ? sanitizedStory.value.theme
-        : [sanitizedStory.value.theme]
-
-      themes.forEach((themeName) => import(`../../style/themes/${themeName}/index.scss`))
-      storyClassNames.value = themes.map((themeName) => `phi-theme-${themeName}`)
-    },
+    () => sanitizedStory.value.themes,
+    () => storyClassNames.value = useThemes(sanitizedStory.value),
     { immediate: true },
   )
 }

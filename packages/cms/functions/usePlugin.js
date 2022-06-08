@@ -9,12 +9,13 @@ import pluginInput from '../plugins/input'
 import pluginNavigation from '../plugins/navigation'
 import pluginVideo from '../plugins/video'
 
+// This order is used in PickerContent tabs
 usePlugin([
-  pluginLayout,
   pluginMedia,
   pluginInput,
-  pluginNavigation,
   pluginVideo,
+  pluginLayout,
+  pluginNavigation,
 ])
 
 

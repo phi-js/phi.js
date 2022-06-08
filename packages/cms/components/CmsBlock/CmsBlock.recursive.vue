@@ -92,8 +92,8 @@ const CmsBlock = {
     /* Block visibility (v-if) */
     const isVisible = ref(false)
     if (props.block['v-if']) {
-      watchEffect(async () => isVisible.value = await blockVM.eval(props.block['v-if'], evaluableModel.value))
-      // watchEffect(() => isVisible.value = blockVM.eval(props.block['v-if'], evaluableModel.value))
+      // watchEffect(async () => isVisible.value = await blockVM.eval(props.block['v-if'], evaluableModel.value)) // Avoid. Async. Watch.Effect.!.!.!
+      watchEffect(() => isVisible.value = blockVM.eval(props.block['v-if'], evaluableModel.value))
     } else {
       isVisible.value = true
     }

@@ -1,5 +1,5 @@
 <script setup>
-import { provide, ref, watchEffect, computed } from 'vue'
+import { provide, ref, watchEffect, computed, watch } from 'vue'
 import { CmsStory } from '../CmsStory'
 import { CmsStoryEditor } from '../CmsStoryEditor'
 import { CmsStoryGraph } from '../CmsStoryGraph'
@@ -38,12 +38,19 @@ const props = defineProps({
     required: false,
     default: 'preview', // editor | preview
   },
+
+  expanded: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 
-const emit = defineEmits(['update:story', 'update:modelValue', 'story-emit'])
+const emit = defineEmits(['update:story', 'update:modelValue', 'update:expanded', 'story-emit'])
 
 const i18n = useI18n({
   en: {
+    'CmsStoryBuilder.Edit': 'Edit',
     'CmsStoryBuilder.Editor': 'Editor',
     'CmsStoryBuilder.Styles': 'Styles',
     'CmsStoryBuilder.Events': 'Events',
@@ -56,6 +63,7 @@ const i18n = useI18n({
     'CmsStoryBuilder.hideToolbar': 'Close editor',
   },
   es: {
+    'CmsStoryBuilder.Edit': 'Editar',
     'CmsStoryBuilder.Editor': 'Editor',
     'CmsStoryBuilder.Styles': 'Estilos',
     'CmsStoryBuilder.Events': 'Eventos',
@@ -132,17 +140,20 @@ const contentSize = ref({
 
 
 // expanded/collapsed
-const isCollapsed = ref(true)
-const isEditorLoaded = ref(false)
+const isExpanded = ref()
+const isEditorLoaded = ref()
 
-function toggleCollapsed() {
-  isCollapsed.value = !isCollapsed.value
-  if (!isCollapsed.value) {
-    currentTab.value = 'editor'
-  } else {
-    currentTab.value = 'preview'
-  }
+watch(
+  () => props.expanded,
+  (newValue) => setExpanded(newValue),
+  { immediate: true },
+)
 
+function setExpanded(newValue) {
+  isExpanded.value = newValue
+  emit('update:expanded', isExpanded.value)
+
+  currentTab.value = isExpanded.value ? 'editor' : 'preview'
   if (currentTab.value == 'editor') {
     isEditorLoaded.value = true
   }
@@ -152,211 +163,210 @@ function toggleCollapsed() {
 <template>
   <div
     class="CmsStoryBuilder"
-    :class="{ 'CmsStoryBuilder--collapsed': isCollapsed }"
+    :class="{
+      'CmsStoryBuilder--expanded': isExpanded,
+      'CmsStoryBuilder--collapsed': !isExpanded,
+    }"
   >
-    <div class="CmsStoryBuilder__toggler">
-      <slot name="header" />
+    <div class="CmsStoryBuilder__toolbar">
+      <div class="CmsStoryBuilder__toolbar-compact">
+        <slot name="header" />
+        <UiItem
+          class="CmsStoryBuilder__expander"
+          :text="i18n.t('CmsStoryBuilder.Edit')"
+          icon="mdi:pencil"
+          @click="setExpanded(true)"
+        />
+      </div>
 
-      <UiItem
-        :text="i18n.t('CmsStoryBuilder.Editor')"
-        icon="mdi:pencil"
-        @click="toggleCollapsed()"
-      />
+      <UiTabs
+        v-model="currentTab"
+        class="CmsStoryBuilder__toolbar-large"
+      >
+        <template #left>
+          <slot name="header" />
+        </template>
+
+        <template #right>
+          <div class="CmsStoryBuilder__controls">
+            <UiIcon
+              class="CmsStoryBuilder__controlItem"
+              src="mdi:arrow-u-left-top"
+              :title="i18n.t('CmsStoryBuilder.Undo')"
+              :disabled="!hasUndo"
+              @click="undo()"
+            />
+            <UiIcon
+              class="CmsStoryBuilder__controlItem"
+              src="mdi:arrow-u-right-top"
+              :title="i18n.t('CmsStoryBuilder.Redo')"
+              :disabled="!hasRedo"
+              @click="redo()"
+            />
+
+            <UiResolutionPicker
+              v-model="contentSize"
+              class="CmsStoryBuilder__controlItem"
+            />
+
+            <UiIcon
+              class="CmsStoryBuilder__controlItem"
+              src="mdi:arrow-collapse"
+              :title="i18n.t('CmsStoryBuilder.hideToolbar')"
+              @click="setExpanded(false)"
+            />
+          </div>
+        </template>
+
+        <UiTab
+          :text="i18n.t('CmsStoryBuilder.Editor')"
+          value="editor"
+        >
+          <!-- EDITOR SUBTABS-->
+          <div class="CmsStoryBuilder__tabOptions">
+            <UiItem
+              class="CmsStoryBuilder__tabItem CmsStoryBuilder__tabItem--sitemap"
+              @click="isSitemapOpen = !isSitemapOpen"
+              @click-actions="isSitemapOpen = !isSitemapOpen"
+            >
+              <template #default>
+                <strong>#</strong><span>{{ currentPage?.info?.text }}</span>
+              </template>
+              <template #actions>
+                <UiIcon src="mdi:menu-down" />
+              </template>
+            </UiItem>
+
+            <UiItem
+              class="CmsStoryBuilder__tabItem"
+              :text="i18n.t('CmsStoryBuilder.Styles')"
+              icon="mdi:palette-advanced"
+              :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'style'}"
+              @click="windowTab = 'style'"
+            />
+            <UiItem
+              :text="i18n.t('CmsStoryBuilder.Events')"
+              icon="mdi:gesture-tap"
+              class="CmsStoryBuilder__tabItem"
+              :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'events'}"
+              @click="windowTab = 'events'"
+            />
+            <UiItem
+              :text="i18n.t('CmsStoryBuilder.Languages')"
+              icon="mdi:translate"
+              class="CmsStoryBuilder__tabItem"
+              :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'i18n'}"
+              @click="windowTab = 'i18n'"
+            />
+            <UiItem
+              :text="i18n.t('CmsStoryBuilder.Source')"
+              icon="mdi:code-json"
+              class="CmsStoryBuilder__tabItem"
+              :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'source'}"
+              @click="windowTab = 'source'"
+            />
+
+            <slot name="corner" />
+          </div>
+        </UiTab>
+
+        <UiTab
+          :text="i18n.t('CmsStoryBuilder.Preview')"
+          value="preview"
+        >
+          <!-- PREVIEW SUBTABS-->
+          <div class="CmsStoryBuilder__tabOptions">
+            <UiItem
+              class="CmsStoryBuilder__tabItem CmsStoryBuilder__tabItem--sitemap"
+              @click="isSitemapOpen = !isSitemapOpen"
+              @click-actions="isSitemapOpen = !isSitemapOpen"
+            >
+              <template #default>
+                <strong>#</strong><span>{{ currentPage?.info?.text }}</span>
+              </template>
+              <template #actions>
+                <UiIcon src="mdi:menu-down" />
+              </template>
+            </UiItem>
+
+            <UiItem
+              class="CmsStoryBuilder__tabItem"
+              :text="i18n.t('CmsStoryBuilder.DataExplorer')"
+              icon="mdi:code-json"
+              @click="isModelExplorerOpen = true"
+            />
+
+            <slot name="corner" />
+          </div>
+        </UiTab>
+      </UiTabs>
     </div>
 
-    <UiTabs
-      v-model="currentTab"
-      class="CmsStoryBuilder__header"
+
+    <UiContentWrapper
+      class="CmsStoryBuilder__body"
+      :class="{'UiContentWrapper--no-border': !isExpanded}"
+      v-bind="contentSize"
     >
-      <template #left>
-        <UiIcon
-          class="CmsStoryBuilder__controlItem"
-          src="mdi:arrow-collapse"
-          :title="i18n.t('CmsStoryBuilder.hideToolbar')"
-          style="width: 40px"
-          @click="toggleCollapsed()"
-        />
+      <CmsStoryEditor
+        v-if="isEditorLoaded"
+        v-show="currentTab == 'editor'"
+        v-model:current-page-id="currentPageId"
+        v-model:story="innerStory"
+        @update:story="onUpdateStory()"
+      />
 
-        <slot name="header" />
-      </template>
+      <CmsStory
+        v-if="currentTab != 'editor'"
+        v-model:current-page-id="currentPageId"
+        :model-value="props.modelValue"
+        :story="innerStory"
+        @update:model-value="emit('update:modelValue', $event)"
+        @story-emit="emit('story-emit', $event)"
+      />
+    </UiContentWrapper>
 
-      <template #right>
-        <div class="CmsStoryBuilder__controls">
-          <UiIcon
-            class="CmsStoryBuilder__controlItem"
-            src="mdi:arrow-u-left-top"
-            :title="i18n.t('CmsStoryBuilder.Undo')"
-            :disabled="!hasUndo"
-            @click="undo()"
-          />
-          <UiIcon
-            class="CmsStoryBuilder__controlItem"
-            src="mdi:arrow-u-right-top"
-            :title="i18n.t('CmsStoryBuilder.Redo')"
-            :disabled="!hasRedo"
-            @click="redo()"
-          />
-
-          <UiResolutionPicker
-            v-model="contentSize"
-            class="CmsStoryBuilder__controlItem"
-          />
-
-          <!-- <UiIcon
-            class="CmsStoryBuilder__controlItem"
-            src="mdi:arrow-collapse"
-            :title="i18n.t('CmsStoryBuilder.hideToolbar')"
-            style="width: 40px"
-            @click="toggleCollapsed()"
-          /> -->
-        </div>
-      </template>
-
-      <UiTab
-        :text="i18n.t('CmsStoryBuilder.Editor')"
-        value="editor"
-      >
-        <!-- EDITOR SUBTABS-->
-        <div class="CmsStoryBuilder__tabOptions">
-          <UiItem
-            class="CmsStoryBuilder__tabItem CmsStoryBuilder__tabItem--sitemap"
-            @click="isSitemapOpen = !isSitemapOpen"
-            @click-actions="isSitemapOpen = !isSitemapOpen"
-          >
-            <template #default>
-              <strong>#</strong><span>{{ currentPage?.info?.text }}</span>
-            </template>
-            <template #actions>
-              <UiIcon src="mdi:menu-down" />
-            </template>
-          </UiItem>
-
-          <UiItem
-            class="CmsStoryBuilder__tabItem"
-            :text="i18n.t('CmsStoryBuilder.Styles')"
-            icon="mdi:palette-advanced"
-            :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'style'}"
-            @click="windowTab = 'style'"
-          />
-          <UiItem
-            :text="i18n.t('CmsStoryBuilder.Events')"
-            icon="mdi:gesture-tap"
-            class="CmsStoryBuilder__tabItem"
-            :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'events'}"
-            @click="windowTab = 'events'"
-          />
-          <UiItem
-            :text="i18n.t('CmsStoryBuilder.Languages')"
-            icon="mdi:translate"
-            class="CmsStoryBuilder__tabItem"
-            :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'i18n'}"
-            @click="windowTab = 'i18n'"
-          />
-          <UiItem
-            :text="i18n.t('CmsStoryBuilder.Source')"
-            icon="mdi:code-json"
-            class="CmsStoryBuilder__tabItem"
-            :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'source'}"
-            @click="windowTab = 'source'"
-          />
-
-          <slot name="corner" />
-        </div>
-      </UiTab>
-
-      <UiTab
-        :text="i18n.t('CmsStoryBuilder.Preview')"
-        value="preview"
-      >
-        <!-- PREVIEW SUBTABS-->
-        <div class="CmsStoryBuilder__tabOptions">
-          <UiItem
-            class="CmsStoryBuilder__tabItem CmsStoryBuilder__tabItem--sitemap"
-            @click="isSitemapOpen = !isSitemapOpen"
-            @click-actions="isSitemapOpen = !isSitemapOpen"
-          >
-            <template #default>
-              <strong>#</strong><span>{{ currentPage?.info?.text }}</span>
-            </template>
-            <template #actions>
-              <UiIcon src="mdi:menu-down" />
-            </template>
-          </UiItem>
-
-          <UiItem
-            class="CmsStoryBuilder__tabItem"
-            :text="i18n.t('CmsStoryBuilder.DataExplorer')"
-            icon="mdi:code-json"
-            @click="isModelExplorerOpen = true"
-          />
-
-          <slot name="corner" />
-        </div>
-      </UiTab>
-    </UiTabs>
-
-    <div class="CmsStoryBuilder__body">
-      <UiContentWrapper v-bind="contentSize">
-        <CmsStoryEditor
-          v-if="isEditorLoaded"
-          v-show="currentTab == 'editor'"
+    <UiDialog
+      v-slot="{ close }"
+      v-model:open="isSitemapOpen"
+    >
+      <div class="CmsStoryBuilder__sitemap">
+        <CmsStoryGraph
           v-model:current-page-id="currentPageId"
           v-model:story="innerStory"
+          @update:current-page-id="currentPageId = $event; close()"
           @update:story="onUpdateStory()"
         />
+      </div>
+    </UiDialog>
 
-        <CmsStory
-          v-if="currentTab != 'editor'"
-          v-model:current-page-id="currentPageId"
-          :model-value="props.modelValue"
-          :story="innerStory"
-          @update:model-value="emit('update:modelValue', $event)"
-          @story-emit="emit('story-emit', $event)"
+    <StoryEditorWindow
+      v-model:story="innerStory"
+      v-model:current-tab="windowTab"
+      :current-page-id="currentPageId"
+      @accept="onWindowAccept"
+      @cancel="onWindowCancel"
+    />
+
+    <!-- modelValue explorer -->
+    <UiWindow
+      v-model:open="isModelExplorerOpen"
+      name="phi"
+      class="CmsStoryBuilder__controls"
+    >
+      <template #header>
+        <UiItem
+          :text="i18n.t('CmsStoryBuilder.DataExplorer')"
+          icon="mdi:code-json"
         />
-      </UiContentWrapper>
-
-      <UiDialog
-        v-slot="{ close }"
-        v-model:open="isSitemapOpen"
-      >
-        <div class="CmsStoryBuilder__sitemap">
-          <CmsStoryGraph
-            v-model:current-page-id="currentPageId"
-            v-model:story="innerStory"
-            @update:current-page-id="currentPageId = $event; close()"
-            @update:story="onUpdateStory()"
-          />
-        </div>
-      </UiDialog>
-
-      <StoryEditorWindow
-        v-model:story="innerStory"
-        v-model:current-tab="windowTab"
-        :current-page-id="currentPageId"
-        @accept="onWindowAccept"
-        @cancel="onWindowCancel"
-      />
-
-      <!-- modelValue explorer -->
-      <UiWindow
-        v-model:open="isModelExplorerOpen"
-        name="phi"
-        class="CmsStoryBuilder__controls"
-      >
-        <template #header>
-          <UiItem
-            :text="i18n.t('CmsStoryBuilder.DataExplorer')"
-            icon="mdi:code-json"
-          />
-        </template>
-        <template #default>
-          <UiInput
-            type="json"
-            :model-value="props.modelValue"
-            @update:model-value="emit('update:modelValue', $event)"
-          />
-        </template>
-      </UiWindow>
-    </div>
+      </template>
+      <template #default>
+        <UiInput
+          type="json"
+          :model-value="props.modelValue"
+          @update:model-value="emit('update:modelValue', $event)"
+        />
+      </template>
+    </UiWindow>
   </div>
 </template>

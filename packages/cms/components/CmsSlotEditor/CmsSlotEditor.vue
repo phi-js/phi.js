@@ -1,3 +1,7 @@
+<script>
+export default { inheritAttrs: false }
+</script>
+
 <script setup>
 import { ref, watch, nextTick } from 'vue'
 import draggable from 'vuedraggable'
@@ -5,19 +9,13 @@ import { useI18n } from '@/packages/i18n'
 
 import { getPluginData } from '../../functions'
 import CmsBlockEditor from '../CmsBlockEditor/CmsBlockEditor.vue'
-import CmsBlockPicker from '../CmsBlockPicker/CmsBlockPicker.vue'
+import SlotBlockLauncher from './SlotBlockLauncher.vue'
 
 const props = defineProps({
   slot: {
     type: Array,
     required: false,
     default: () => [],
-  },
-
-  showLauncher: {
-    type: Boolean,
-    required: false,
-    default: false,
   },
 
   groupName: {
@@ -75,9 +73,6 @@ function onDraggableEnd() {
   emit('update:dragging', isDragging.value)
 }
 
-const focusedIndexes = ref({})
-
-
 /* Perform actions before and after a new block is created */
 const pluginData = getPluginData()
 
@@ -113,8 +108,8 @@ function launchBlock(index, block, position) {
   }
 
   listenForMountedEvents = true
-  const targetIndex = position == 'top' ? index : index + 1
-  innerSlot.value.splice(targetIndex, 0, newBlock)
+  const targetIndex = position == 'before' ? index : index + 1
+  innerSlot.value.splice(targetIndex, 0, JSON.parse(JSON.stringify(newBlock)))
   emitUpdate()
 }
 
@@ -126,7 +121,7 @@ function appendBlock(block) {
   }
 
   listenForMountedEvents = true
-  innerSlot.value.push(newBlock)
+  innerSlot.value.push(JSON.parse(JSON.stringify(newBlock)))
   emitUpdate()
 }
 
@@ -141,6 +136,8 @@ function onBlockEditorMounted(vNode) {
 
   listenForMountedEvents = false
 }
+
+const hoveredIndex = ref(-1)
 </script>
 
 <template>
@@ -150,6 +147,8 @@ function onBlockEditorMounted(vNode) {
   >
     <draggable
       v-model="innerSlot"
+      class="CmsSlotEditor__draggable"
+      :direction="$attrs?.direction == 'row' ? 'horizontal' : 'vertical'"
       :group="groupName"
       item-key="uid"
       handle=".Block__drag-handle"
@@ -157,113 +156,168 @@ function onBlockEditorMounted(vNode) {
       :empty-insert-threshold="0"
       :swap-threshold="0.5"
       :inverted-swap-threshold="1"
-      direction="vertical"
+      v-bind="$attrs"
       @update:model-value="onDraggableUpdate"
       @start="onDraggableStart()"
       @end="onDraggableEnd()"
     >
       <template #item="{ element, index }">
         <div
-          class="SlotBlock"
-          :class="{ 'SlotBlock--focused': focusedIndexes[index] }"
+          :class="[
+            'SlotItem',
+            `SlotItem--${$attrs?.direction || 'column'}`,
+            {
+              'SlotItem--before-hovered': index === hoveredIndex - 1,
+              'SlotItem--hovered': index === hoveredIndex,
+              'SlotItem--after-hovered': hoveredIndex > -1 && index === hoveredIndex + 1,
+            }
+          ]"
+          :style="{display: 'flex', flexDirection: $attrs?.direction || 'column'}"
         >
-          <template v-if="showLauncher">
-            <CmsBlockPicker
-              v-for="position in ['bottom', 'top']"
-              :key="position"
-              class="SlotBlock__adder"
-              :text="i18n.t('CmsSlotEditor.AddContent')"
-              :placement="position"
-              @input="launchBlock(index, $event, position)"
-              @update:open="focusedIndexes[index] = $event"
-            />
-          </template>
-
+          <SlotBlockLauncher
+            v-if="index === 0"
+            class="SlotItem__launcher SlotItem__launcher--before"
+            :direction="$attrs?.direction"
+            :title="`Insert before ${element.title || element.component}`"
+            @input="launchBlock(index, $event, 'before')"
+          />
           <CmsBlockEditor
-            class="SlotBlock__editor"
+            style="flex: 1"
+            class="SlotItem__editor"
             :block="element"
             @vnode-mounted="onBlockEditorMounted"
             @update:block="onEditorUpdate(index, $event)"
             @delete="deleteBlock(index)"
+            @mouseenter="hoveredIndex = index"
+            @mouseleave="hoveredIndex = -1"
+          />
+          <SlotBlockLauncher
+            class="SlotItem__launcher SlotItem__launcher--after"
+            :direction="$attrs?.direction"
+            :title="`Insert after ${element.title || element.component}`"
+            @input="launchBlock(index, $event, 'after')"
           />
         </div>
       </template>
     </draggable>
 
-    <CmsBlockPicker
-      v-if="showLauncher"
-      class="CmsSlotEditor__adder"
-      :text="i18n.t('CmsSlotEditor.AddContent')"
+    <SlotBlockLauncher
+      v-if="!innerSlot.length"
+      class="LoneLauncher"
+      :label="i18n.t('CmsSlotEditor.AddContent')"
+      open
       @input="appendBlock"
     />
   </div>
 </template>
 
 <style lang="scss">
+.SlotItem {
+  // &:hover {
+  //   z-index: 1;
+  // }
+
+  &:hover &__launcher {
+    z-index: 1;
+  }
+}
+
 .CmsSlotEditor {
-  & > div:first-child {
+  & > &__draggable {
     // draggable container
     min-width: 100%;
-    min-height: 24px;
+    // min-height: 24px;
   }
 
   &--dragging {
     // prevent dragging blocks into droppable elements (like editable texts or file uploads) present in the block
-    .BlockScaffold__face {
+    // !!! -> What about <draggable> in nested block faces (i.e. LayoutGroupEditor) ?
+    // .BlockScaffold__face {
+    //   pointer-events: none;
+    // }
+    .BlockScaffold__face > .tiptap-editor-contents {
       pointer-events: none;
     }
   }
 
-  &__adder {
-    padding: 8px;
-    min-height: 58px;
+  .LoneLauncher {
+    border: 0;
+    margin: 0;
+
+    .SlotBlockLauncher__trigger {
+      position: initial;
+
+      .UiItem {
+        --ui-item-padding: 8px 12px;
+        font-size: 1em;
+        background-color: #999;
+
+        &:hover {
+          background-color: var(--ui-color-primary);
+        }
+      }
+    }
   }
 }
 
-.SlotBlock {
-  position: relative;
-  &:hover {
-    z-index: 1;
+// Show picker when container is hovered
+.SlotItem {
+  & > &__launcher {
+    opacity: 0;
   }
 
-  &__adder {
-    min-width: 80px;
-    text-align: center;
+  &:hover > &__launcher {
+    opacity: 0.8;
+  }
 
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+  & > &__launcher:hover,
+  & > &__launcher.SlotBlockLauncher--open {
+    opacity: 1 !important;
+  }
+}
 
-    &:hover {
-      left: 0;
-      right: 0;
-      transform: translateX(0);
-    }
 
-    &.CmsBlockPicker--top {
-      bottom: 100%;
-    }
+// SlotItems surounding hovered
+.SlotItem {
+  // &--hovered {
+  //   background-color: rgba(255, 255, 136, 0.05);
+  // }
 
-    &.CmsBlockPicker--bottom {
-      top: 100%;
-    }
-
-    &.CmsBlockPicker--hovered {
+  &--before-hovered {
+    // background-color: rgba(255,0,0, 0.1);
+    & > .SlotItem__launcher--after {
+      opacity: 0.8;
       z-index: 1;
     }
   }
 
-  // Show/hide adders on hover
-  & > &__adder {
-    transition: opacity var(--ui-duration-quick);
-    opacity: 0;
-    pointer-events: none;
-  }
+  // &--after-hovered {
+  //   background-color: rgba(0,0,255, 0.1);
+  // }
+}
 
-  // &--focused > &__adder,
-  &:hover > &__adder {
-    opacity: 1;
-    pointer-events: initial;
+
+// Show the launcher of the last block in the LayoutPage !!!
+.CmsSlotEditor > .LayoutPage {
+  & > .SlotItem {
+    &:last-child {
+      & > .SlotItem__launcher--before {
+        .SlotBlockLauncher__trigger {
+          top: auto;
+          bottom: 2px;
+        }
+      }
+
+      & > .SlotItem__launcher--after {
+        position: relative;
+        top: 4px;
+        opacity: 0.7;
+
+        .SlotBlockLauncher__trigger {
+          top: 2px;
+        }
+      }
+    }
   }
 }
 </style>

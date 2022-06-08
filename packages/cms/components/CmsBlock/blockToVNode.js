@@ -164,12 +164,6 @@ export default function blockToVNode(block, modelValue, blockVM, masterValue = n
   /* Validation handlers */
   if (block.rules) {
     parsedProps.errors = reactive(['boooo'])
-    // console.log('suppose i trigger validation', masterValue?.record?.nombre)
-    // console.log('suppose i trigger validation')
-    // setTimeout(() => {
-    //   console.log('aaand SET')
-    //   parsedProps.errors.push('buenas')
-    // }, 0)
   }
 
   /* Create VNode */

@@ -107,14 +107,7 @@ function onCreateNode(nodeData) {
 
     // default page contents
     component: 'LayoutPage',
-    slot: [
-      {
-        component: 'LayoutRow',
-        slot: [
-          { component: 'LayoutColumn' },
-        ],
-      },
-    ],
+    slot: [],
   }
 
   const story = { ...props.story }

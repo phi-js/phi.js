@@ -11,9 +11,10 @@ import MediaItem from './components/MediaItem/MediaItem.block.js'
 import MediaLink from './components/MediaLink/MediaLink.block.js'
 import MediaLoremIpsum from './components/MediaLoremIpsum/MediaLoremIpsum.block.js'
 import MediaMap from './components/MediaMap/MediaMap.block.js'
-import MediaMath from './components/MediaMath/MediaMath.block.js'
+// import MediaMath from './components/MediaMath/MediaMath.block.js'
 // import MediaTable from './components/MediaTable/MediaTable.block.js'
 import MediaVideo from './components/MediaVideo/MediaVideo.block.js'
+import MediaPdf from './components/MediaPdf/MediaPdf.block.js'
 
 export default {
   // ORDER MATTERS (block picker shows blocks in this order)
@@ -30,10 +31,11 @@ export default {
     MediaDialog,
     MediaCalendar,
     MediaIframe,
-    MediaMath,
+    // MediaMath,
     MediaLoremIpsum,
     // MediaGallery,
     // MediaFile,
+    MediaPdf,
   },
 
   actions: {},

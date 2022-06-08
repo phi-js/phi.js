@@ -143,17 +143,6 @@ export default {
                   chain: [
                     {
                       info: {
-                        text: 'Log thingy',
-                        icon: 'mdi:window-maximize',
-                      },
-                      do: {
-                        call: 'console.log',
-                        args: { item: '{{$item.retroalimentacion}}' },
-                      },
-                      assign: null,
-                    },
-                    {
-                      info: {
                         text: 'Save record',
                         icon: 'mdi:window-maximize',
                       },

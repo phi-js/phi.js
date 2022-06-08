@@ -1,18 +1,34 @@
 // NON decorative styles (i.e. layout and dimensions only. no colors)
 .CmsStoryBuilder {
-  &__header {
+  &__toolbar {
     position: sticky;
     top: 0;
     left: 0;
     right: 0;
     z-index: 2;
 
-    // background-color: rgba(0,0,0, 0.33); // No deberia ser semitransparente si es sticky, porque el contenido sobrepuesto se ve ... raro
     background-color: #333;
     color: #eee;
-    border-radius: var(--ui-radius);
+  }
 
-    overflow: hidden; // prevent non-rounded items from protuding
+  &__toolbar-compact {
+    display: flex;
+  }
+
+  &__expander {
+    @extend .ui--clickable;
+    margin-left: auto;
+
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 4px;
+
+    --ui-item-padding: 8px 16px;
+  }
+
+  &__toolbar-large {
+    border-radius: var(--ui-radius);
+    overflow: hidden; // keep overflow inside border radius
   }
 
   &__controls {
@@ -68,49 +84,29 @@
       }
     }
   }
-
-
-  &__toggler {
-    --ui-item-padding: 8px 12px;
-    font-size: 13px;
-    font-weight: 600;
-    // padding: 5px;
-
-    .UiItem {
-      @extend .ui--clickable;
-
-      display: inline-flex;
-      border-radius: 4px;
-    }
-  }
 }
 
 
 
 // Expanded / Collapsed
 .CmsStoryBuilder {
-  &__toggler {
-    display: none;
-  }
-
   &--collapsed {
-    .CmsStoryBuilder__toggler {
-      display: block;
+    .CmsStoryBuilder__toolbar-compact {
+      display: flex;
     }
-
-    .CmsStoryBuilder__header {
+    .CmsStoryBuilder__toolbar-large {
       display: none;
     }
-
-    .UiContentWrapper {
-      padding: 0;
-      &__body {
-        box-shadow: none;
-      }
-    }
   }
 
-
+  &--expanded {
+    .CmsStoryBuilder__toolbar-compact {
+      display: none;
+    }
+    .CmsStoryBuilder__toolbar-large {
+      display: block;
+    }
+  }
 
 
   // &__corner {

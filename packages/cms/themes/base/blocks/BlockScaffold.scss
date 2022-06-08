@@ -25,6 +25,7 @@
     }
   }
 
+  // Border on the left of block's menu button
   &__toolbar-spacer {
     border-left: 1px solid rgba(255, 255, 255, 0.08);
   }
@@ -33,24 +34,20 @@
     cursor: pointer;
   }
 
-
-  // Estilos "default":  toolbar posicionado absolutamente encima del bloque
-  &--default .BlockScaffold__toolbar-container {
+  // Position toolbar above the block
+  &__toolbar-container {
     position: absolute;
     bottom: 100%;
-    left: 1.5rem;
+    z-index: 1;
 
-    transition: opacity var(--ui-duration-snap);
-    opacity: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
   }
 
-  // Toolbar visible on hover or focused
-  &--focused > .BlockScaffold__toolbar-container,
-  &--default:hover > .BlockScaffold__toolbar-container {
-    opacity: 1;
-  }
 
-  &--default .BlockScaffold__toolbar {
+  // Toolbar width
+  &__toolbar {
     flex-wrap: nowrap;
     width: max-content; // No soportado en IE ni EDGE !!!
     max-width: 600px;
@@ -74,19 +71,19 @@
     }
   }
 
-  /* UiInput inside toolbar */
-  &__toolbar {
-    input.UiInput,
-    .UiInput__element {
-      background-color: rgba(255, 255, 255, 0.2);
-      color: #bbb;
-      font-size: 14px;
-    }
-  }
+  // /* UiInput inside toolbar */
+  // &__toolbar {
+  //   input.UiInput,
+  //   .UiInput__element {
+  //     background-color: rgba(255, 255, 255, 0.2);
+  //     color: #bbb;
+  //     font-size: 14px;
+  //   }
+  // }
 }
 
 /* Prevent toolbar from being "hoverable" white outside the element */
-.BlockScaffold--default {
+.BlockScaffold {
   & > .BlockScaffold__toolbar-container {
     pointer-events: none;
   }
@@ -98,37 +95,79 @@
   }
 }
 
-/* "outline".   Visible unicamente para --default.  */
-.BlockScaffold--default {
-  &::before {
-    content: "";
-    display: block;
-    position: absolute;
 
-    // Ojo: Hacerlo mas ancho que el bloque puede causar overflows que no queremos
-    top: -4px;
-    bottom: -4px;
-    left: -4px;
-    right: -4px;
 
-    border-radius: 6px;
-    border: 2px solid var(--ui-color-primary);
+// BlockScaffold INSIDE a CmsSlotEditor
+.CmsSlotEditor {
 
-    transition: all var(--ui-duration-snap);
-    opacity: 0;
-    pointer-events: none;
+  /* Toolbar visible on hover or focused */
+  .BlockScaffold {
+    &__toolbar-container {
+      transition: opacity var(--ui-duration-snap);
+      opacity: 0;
+    }
+
+    &--focused > .BlockScaffold__toolbar-container,
+    &:hover > .BlockScaffold__toolbar-container {
+      opacity: 1;
+    }
   }
 
-  // outline visible on hover, focused or when window is open
-  &.BlockScaffold--focused,
-  &.BlockScaffold--window-open,
-  &:hover {
+  /* "outline" on hover */
+  .BlockScaffold {
     &::before {
-      opacity: 1;
+      content: "";
+      display: block;
+      position: absolute;
+      z-index: 1;
+
+      // Ojo: Hacerlo mas ancho que el bloque puede causar overflows que no queremos
+      top: var(--outline-offset, -2px);
+      bottom: var(--outline-offset, -2px);
+      left: var(--outline-offset, -2px);
+      right: var(--outline-offset, -2px);
+
+      border-radius: 2px;
+      border: 2px solid var(--ui-color-primary);
+
+      transition: all var(--ui-duration-snap);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    // outline visible on hover, focused or when window is open
+    &.BlockScaffold--focused,
+    &.BlockScaffold--window-open,
+    &:hover {
+      &::before {
+        opacity: 0.7;
+      }
     }
   }
 }
 
+
+
+/* Toolbar position in nested blocks */
+// .BlockScaffold .BlockScaffold__toolbar-container { left: 8px; }
+// .BlockScaffold .BlockScaffold .BlockScaffold__toolbar-container { left: 48px; }
+// .BlockScaffold .BlockScaffold .BlockScaffold .BlockScaffold__toolbar-container { left: 88px; }
+// .BlockScaffold .BlockScaffold .BlockScaffold .BlockScaffold .BlockScaffold__toolbar-container { left: 128px; }
+
+/* Toolbar position in nested blocks (displacing first group child only) */
+.BlockScaffold__toolbar-container { left: 8px; }
+.BlockScaffold .SlotItem:first-child .BlockScaffold__toolbar-container { left: 48px; }
+.BlockScaffold .BlockScaffold .SlotItem:first-child .BlockScaffold__toolbar-container { left: 88px; }
+.BlockScaffold .BlockScaffold .BlockScaffold .SlotItem:first-child .BlockScaffold__toolbar-container { left: 128px; }
+
+.BlockScaffold .BlockScaffold .BlockScaffold__toolbar {
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+
+
+
+// Block's option menu contents
 .BlockPopover {
   user-select: none;
   display: flex;

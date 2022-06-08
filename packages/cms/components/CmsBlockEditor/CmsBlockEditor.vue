@@ -33,7 +33,11 @@ const CmsBlockEditor = {
 
     const innerRef = ref()
     function onBlockCreated() {
-      if (definition?.onCreated) {
+      if (definition?.onCreated === false || definition?.onCreated === null) {
+        return
+      }
+
+      if (typeof definition?.onCreated === 'function') {
         definition.onCreated(innerRef.value)
         return
       }
@@ -46,26 +50,33 @@ const CmsBlockEditor = {
 
     return (instance) => {
       if (definition?.editor?.component) {
-        const customEditor = h(definition.editor.component, {
-          'ref': innerRef,
-          ...attrs,
-          'block': innerBlock.value,
-          'onUpdate:block': (newValue) => emit('update:block', newValue),
-          'onDelete': () => emit('delete'),
-        }, instance.$slots)
+        const customEditor = h(
+          definition.editor.component,
+          {
+            'ref': innerRef,
+            ...attrs,
+            'block': innerBlock.value,
+            'onUpdate:block': (newValue) => emit('update:block', newValue),
+            'onDelete': () => emit('delete'),
+          },
+          instance.$slots,
+        )
         return customEditor
       }
 
       // No hay editor Y no hay slots.  Usar BlockScaffold
       if (definition?.editor?.face || typeof props.block.slot === 'undefined') {
-        const scaffoldNode = h(BlockScaffold, {
-          'ref': innerRef,
-          ...attrs,
-          'class': 'BlockScaffold--default',
-          'block': innerBlock.value,
-          'onUpdate:block': (newValue) => emit('update:block', newValue),
-          'onDelete': () => emit('delete'),
-        })
+        const scaffoldNode = h(
+          BlockScaffold,
+          {
+            'ref': innerRef,
+            ...attrs,
+            'block': innerBlock.value,
+            'onUpdate:block': (newValue) => emit('update:block', newValue),
+            'onDelete': () => emit('delete'),
+          },
+          instance.$slots,
+        )
         return scaffoldNode
       }
 
