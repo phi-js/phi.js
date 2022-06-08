@@ -1,5 +1,5 @@
 <script setup>
-import { useSlots, computed } from 'vue'
+import { useSlots } from 'vue'
 
 import { UiDrawer } from '../UiDrawer'
 import { UiItem } from '../UiItem'
@@ -32,7 +32,45 @@ drawers:
 
 // Populate drawer array with data from child <UiTab>s
 const slots = useSlots()
-const drawers = computed(() => {
+
+
+/*
+BEWARE.
+Having slots from a COMPUTED value means that every change will RE-CREATE the inner components.
+The entire contents are reloading when, for instance, the class name of the parent container changes
+*/
+// const drawers = computed(() => {
+//   if (!slots?.default) {
+//     return []
+//   }
+
+//   const renderedSlot = slots.default()
+//   const tabNodes = []
+
+//   for (let i = 0; i < renderedSlot.length; i++) {
+//     let vNode = renderedSlot[i]
+//     if (vNode?.type?.name === 'UiTab') {
+//       tabNodes.push(vNode)
+//     } else if (Array.isArray(vNode?.children)) {
+//       vNode.children
+//         .filter((v) => v?.type?.name === 'UiTab')
+//         .forEach((childNode) => tabNodes.push(childNode))
+//     }
+//   }
+
+//   return tabNodes.map((vNode, vIndex) => {
+//     const tabValue = vNode?.props?.value !== undefined ? vNode.props.value : vIndex
+//     return {
+//       value: tabValue,
+//       props: vNode?.props || {},
+//       slot: vNode?.children?.default,
+//       isOpen: tabValue === props.modelValue,
+//     }
+//   })
+// })
+
+const drawers = getDrawers()
+function getDrawers() {
   if (!slots?.default) {
     return []
   }
@@ -57,20 +95,19 @@ const drawers = computed(() => {
       value: tabValue,
       props: vNode?.props || {},
       slot: vNode?.children?.default,
-      isOpen: tabValue === props.modelValue,
     }
   })
-})
+}
 </script>
 
 <template>
   <div class="UiDrawerStack">
     <UiDrawer
-      v-for="drawer in drawers"
-      :key="drawer.value"
-      :open="drawer.isOpen"
+      v-for="(drawer, i) in drawers"
+      :key="i"
+      :open="drawer.value == props.modelValue"
       class="UiDrawerStack__drawer"
-      :class="{ 'UiDrawerStack__drawer--open': drawer.isOpen }"
+      :class="{ 'UiDrawerStack__drawer--open': drawer.value == props.modelValue }"
     >
       <template #trigger="{ isOpen }">
         <div

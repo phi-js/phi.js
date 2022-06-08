@@ -34,7 +34,8 @@ const emit = defineEmits(['update:modelValue'])
 // Obtain tabs from default slot contents
 const slots = useSlots()
 
-const tabs = computed(() => {
+const tabs = ref(getTabs())
+function getTabs() {
   if (!slots?.default) {
     return []
   }
@@ -59,7 +60,7 @@ const tabs = computed(() => {
     slotTab: vNode?.children?.tab,
     slotContent: vNode?.children?.default || vNode?.children?.contents,
   }))
-})
+}
 
 const markedTabs = computed(() => {
   return tabs.value.map((t, i) => ({
