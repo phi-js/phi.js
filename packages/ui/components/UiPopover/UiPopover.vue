@@ -65,7 +65,7 @@ onMounted(() => {
       emit('close')
     },
 
-    appendTo: () => document.body,
+    // appendTo: () => document.body,
 
     ...props.tippy,
   })

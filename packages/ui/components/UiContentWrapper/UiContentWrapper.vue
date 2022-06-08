@@ -50,11 +50,11 @@ const bodyStyle = computed(() => {
 
 <style lang="scss">
 .UiContentWrapper {
-  position: relative;
-  padding: 36px 42px;
-
   --ui-color-darken: rgba(0,0,0, 0.05);
   --ui-color-lighten: rgba(255,255,255, 0.15);
+
+  position: relative;
+  padding: 36px 42px;
 
   // background-image:
   //   /* Darkener color on top */
@@ -68,7 +68,7 @@ const bodyStyle = computed(() => {
   //     var(--ui-color-lighten)
   //   );
 
-  background-color: rgba(0,0,0, 0.16);
+  background-color: #525659;
 
   &__body {
     transition: width var(--ui-duration-snap) ease, height var(--ui-duration-snap) ease;
@@ -82,16 +82,13 @@ const bodyStyle = computed(() => {
   }
 }
 
-.UiContentWrapper--no-border {
-  .UiContentWrapper--desktop {
-    padding: 0;
-    padding-top: 36px;
-    background-color: transparent;
+.UiContentWrapper--no-border.UiContentWrapper--desktop {
+  padding: 0;
+  background-color: transparent;
 
-    .UiContentWrapper__body {
-      overflow: visible;
-      box-shadow: none;
-    }
+  .UiContentWrapper__body {
+    overflow: visible;
+    box-shadow: none;
   }
 }
 </style>

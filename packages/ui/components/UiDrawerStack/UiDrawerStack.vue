@@ -1,15 +1,16 @@
 <script setup>
 import { useSlots, computed } from 'vue'
 
-import UiDrawer from '../UiDrawer/UiDrawer.vue'
-import UiItem from '../UiItem/UiItem.vue'
+import { UiDrawer } from '../UiDrawer'
+import { UiItem } from '../UiItem'
+import { UiIcon } from '../UiIcon'
 
 const props = defineProps({
   modelValue: {
     validator: () => true,
     required: false,
-    default: null
-  }
+    default: null,
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -56,7 +57,7 @@ const drawers = computed(() => {
       value: tabValue,
       props: vNode?.props || {},
       slot: vNode?.children?.default,
-      isOpen: tabValue === props.modelValue
+      isOpen: tabValue === props.modelValue,
     }
   })
 })
@@ -71,17 +72,24 @@ const drawers = computed(() => {
       class="UiDrawerStack__drawer"
       :class="{ 'UiDrawerStack__drawer--open': drawer.isOpen }"
     >
-      <template #trigger>
-        <!-- { text, subtext, icon } set from <UiTab text="" .. /> -->
-        <UiItem
-          class="UiDrawerStack__item ui--clickable"
-          v-bind="drawer.props"
+      <template #trigger="{ isOpen }">
+        <div
+          class="UiDrawerStack__trigger"
           @click.stop="emit('update:modelValue', drawer.value)"
-        />
+        >
+          <UiIcon :src="isOpen ? 'mdi:menu-down' : 'mdi:menu-right'" />
+          <UiItem v-bind="drawer.props" /> <!-- { text, subtext, icon } set from <UiTab text="" .. /> -->
+        </div>
       </template>
       <template #default="{ isOpen }">
-        <div class="UiDrawerStack__component" v-if="drawer.slot">
-          <Component :is="drawer.slot" v-if="isOpen" />
+        <div
+          v-if="drawer.slot"
+          class="UiDrawerStack__component"
+        >
+          <Component
+            :is="drawer.slot"
+            v-if="isOpen"
+          />
         </div>
       </template>
     </UiDrawer>

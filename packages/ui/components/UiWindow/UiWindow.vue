@@ -71,10 +71,10 @@ const emit = defineEmits(['update:open', 'update:dock', 'update:coords'])
 Arreglo interno CANONICO de las coords de la ventana
 */
 const coords = ref({
-  top: '64px',
-  left: '256px',
-  width: '1024px',
-  height: '768px',
+  top: '150px',
+  left: '200px',
+  width: '500px',
+  height: '700px',
 })
 watch(
   () => props.coords,

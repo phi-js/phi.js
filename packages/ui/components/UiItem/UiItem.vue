@@ -152,6 +152,7 @@ export default {
     align-items: center;
     justify-content: center;
     padding: var(--ui-item-padding);
+    padding-left: 0;
   }
 
   &__badge {

@@ -88,28 +88,16 @@ function rotate() {
 
 const availablePresets = [
   {
-    text: 'iPhone SE',
+    text: 'Mobile',
     icon: 'mdi:cellphone',
     width: 375,
-    height: 667,
+    height: 812,
   },
   {
-    text: 'iPhone XR',
-    icon: 'mdi:cellphone',
-    width: 414,
-    height: 896,
-  },
-  {
-    text: 'iPhone 12 Pro',
-    icon: 'mdi:cellphone',
-    width: 390,
-    height: 844,
-  },
-  {
-    text: 'Pixel 5',
-    icon: 'mdi:cellphone',
-    width: 393,
-    height: 851,
+    text: 'Tablet',
+    icon: 'mdi:tablet',
+    width: 768,
+    height: 1024,
   },
 ]
 
@@ -140,7 +128,14 @@ const availablePresets = [
           class="PresetItem"
           :class="{ 'PresetItem--selected': !resolution.width || !resolution.height }"
           @click="setPreset(null); close()"
-        />
+        >
+          <template
+            v-if="!resolution.width || !resolution.height"
+            #actions
+          >
+            ✔
+          </template>
+        </UiItem>
 
         <UiItem
           v-for="(preset, i) in availablePresets"
