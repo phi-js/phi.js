@@ -5,23 +5,36 @@ let lastUsedView = 'text'
 <script setup>
 import { ref, watch, nextTick, computed } from 'vue'
 import draggable from 'vuedraggable'
+import { useI18n } from '@/packages/i18n'
 import { UiItem, UiIcon, UiInput } from '@/packages/ui/components'
 
-// import { normalize } from '@/packages/ui/helpers'
+const i18n = useI18n({
+  en: {
+    'OptionsEditor.AddOption': 'Add option',
+    'OptionsEditor.List': 'List',
+    'OptionsEditor.Text': 'Text',
+    'OptionsEditor.Value': 'Value',
+    'OptionsEditor.TextareaPlaceholder': 'Write one option per line',
+  },
+  es: {
+    'OptionsEditor.AddOption': 'Agregar opción',
+    'OptionsEditor.List': 'Lista',
+    'OptionsEditor.Text': 'Texto',
+    'OptionsEditor.Value': 'Valor',
+    'OptionsEditor.TextareaPlaceholder': 'Escribe una opción por linea',
+  },
+})
 
+// import { normalize } from '@/packages/ui/helpers'
 // Store default option values AS IS.
 function normalize(str) {
   return str
 }
 
-
 const props = defineProps({
   /* Arreglo de OPTIONS
   [
-    {
-      text: 'xxxx',
-      value: 'yyyy'
-    }
+    { text: 'xxxx', value: 'yyyy' }
   ]
   */
   modelValue: {
@@ -102,6 +115,27 @@ function onViewChange() {
     ref="refRoot"
     class="OptionsEditor"
   >
+    <div class="OptionsEditor__viewPicker">
+      <label>
+        <input
+          v-model="currentView"
+          type="radio"
+          value="text"
+          @change="onViewChange()"
+        >
+        {{ i18n.t('OptionsEditor.Text') }}
+      </label>
+      <label>
+        <input
+          v-model="currentView"
+          type="radio"
+          value="list"
+          @change="onViewChange()"
+        >
+        {{ i18n.t('OptionsEditor.List') }}
+      </label>
+    </div>
+
     <div class="OptionsEditor__body">
       <div
         v-if="currentView == 'list'"
@@ -126,7 +160,7 @@ function onViewChange() {
                   :value="innerOptions[index].text"
                   type="text"
                   class="OptionEditor__text"
-                  placeholder="Texto"
+                  :placeholder="i18n.t('OptionsEditor.Text')"
                   @input="setOptionText(innerOptions[index], $event.target.value)"
                   @keypress.enter="pushOption"
                   @keydown.backspace="!innerOptions[index].text && deleteOption(index)"
@@ -136,7 +170,7 @@ function onViewChange() {
                   v-model="innerOptions[index].value"
                   type="text"
                   class="OptionEditor__value"
-                  placeholder="Valor"
+                  :placeholder="i18n.t('OptionsEditor.Value')"
                   @input="emitUpdate"
                   @keypress.enter="pushOption"
                 >
@@ -153,7 +187,7 @@ function onViewChange() {
 
         <UiItem
           tabindex="0"
-          text="Agregar opción"
+          :text="i18n.t('OptionsEditor.AddOption')"
           icon="mdi:plus"
           @click="pushOption"
           @keypress.enter="pushOption"
@@ -167,28 +201,9 @@ function onViewChange() {
         <UiInput
           v-model="stringValue"
           type="textarea"
-          placeholder="Escribe una opción por línea"
+          :placeholder="i18n.t('OptionsEditor.TextareaPlaceholder')"
         />
       </div>
-    </div>
-
-    <div class="OptionsEditor__viewPicker">
-      <label>
-        <input
-          v-model="currentView"
-          type="radio"
-          value="text"
-          @change="onViewChange()"
-        >Texto
-      </label>
-      <label>
-        <input
-          v-model="currentView"
-          type="radio"
-          value="list"
-          @change="onViewChange()"
-        >Lista
-      </label>
     </div>
   </div>
 </template>

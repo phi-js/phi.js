@@ -29,7 +29,9 @@ const bodyStyle = computed(() => {
   return {
     // transform: `scale(${scale}%)`, // fucks up children with position:fixed
     width: props.width ? `${props.width}px` : '100%',
-    // height: props.height ? `${props.height}px` : '100%',
+    height: props.height ? `${props.height}px` : '100%',
+    maxHeight: '100%',
+    // height: '100%',
   }
 })
 </script>
@@ -50,24 +52,8 @@ const bodyStyle = computed(() => {
 
 <style lang="scss">
 .UiContentWrapper {
-  --ui-color-darken: rgba(0,0,0, 0.05);
-  --ui-color-lighten: rgba(255,255,255, 0.15);
-
   position: relative;
   padding: 36px 42px;
-
-  // background-image:
-  //   /* Darkener color on top */
-  //   linear-gradient(
-  //     var(--ui-color-darken),
-  //     var(--ui-color-darken)
-  //   ),
-  //   /* Lightener color underneath */
-  //   linear-gradient(
-  //     var(--ui-color-lighten),
-  //     var(--ui-color-lighten)
-  //   );
-
   background-color: #525659;
 
   &__body {

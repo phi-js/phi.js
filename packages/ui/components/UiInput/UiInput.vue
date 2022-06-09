@@ -92,6 +92,7 @@ const classNames = computed(() => {
 
   return [
     attrs.class,
+    'UiInput',
     `UiInput--type-${props.type}`,
     {
       'UiInput--empty': isEmpty,
@@ -157,11 +158,12 @@ const uid = ref('UiInput' + (++_UiInput_counter))
     :type="type"
     :label="props.label"
     :disabled="props.disabled"
+    :class="classNames"
     v-bind="attrs"
+    style="display:block"
   />
   <div
     v-else
-    class="UiInput"
     :class="classNames"
     :style="attrs.style"
   >

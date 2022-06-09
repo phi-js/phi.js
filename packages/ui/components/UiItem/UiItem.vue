@@ -114,7 +114,7 @@ export default {
 
   &__icon {
     font-size: 1.2em;
-    min-width: 1.8em;
+    min-width: 1.2rem;
     max-height: 2.5em;
     padding: var(--ui-item-padding);
   }
