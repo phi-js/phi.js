@@ -37,11 +37,11 @@ function parse(string, sourceData, preserveUndefined = false) {
       if (m && !(m[0] in newValues)) {
         let strExpression = m[1].trim()
 
-        // decode HTML entities < >
-        strExpression = strExpression.replace('&gt;', '>').replace('&lt;', '<')
-
         // Evaluate expression
         let targetValue = evalExpression(strExpression, sourceData)
+
+        // ENCODE HTML present in target value (!)
+        targetValue = targetValue.replaceAll('>', '&gt;').replaceAll('<', '&lt;')
 
         if (targetValue === undefined) {
           if (preserveUndefined) {
