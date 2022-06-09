@@ -3,11 +3,10 @@ export default { inheritAttrs: false }
 </script>
 
 <script setup>
-import { ref, watch, nextTick } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import draggable from 'vuedraggable'
 import { useI18n } from '@/packages/i18n'
 
-import { getPluginData } from '../../functions'
 import CmsBlockEditor from '../CmsBlockEditor/CmsBlockEditor.vue'
 import SlotBlockLauncher from './SlotBlockLauncher.vue'
 
@@ -51,8 +50,11 @@ function emitUpdate() {
   emit('update:slot', innerSlot.value.map((block) => ({ ...block, _uid: undefined })))
 }
 
-async function onDraggableUpdate() {
-  await nextTick()
+// async function onDraggableUpdate() {
+//   await nextTick()
+//   emitUpdate()
+// }
+function onDraggableUpdate() {
   emitUpdate()
 }
 
@@ -78,68 +80,18 @@ function onDraggableEnd() {
   emit('update:dragging', isDragging.value)
 }
 
-/* Perform actions before and after a new block is created */
-const pluginData = getPluginData()
+const refEditors = ref([])
 
-function onBeforeCreateBlock(block) {
-  if (typeof pluginData?.onBeforeCreateBlock == 'function') {
-    try {
-      const result = pluginData.onBeforeCreateBlock(block)
-      if (result === false) {
-        return false
-      }
-      if (result && typeof result == 'object') {
-        return result
-      }
-
-      return block
-
-    } catch (e) {
-      return false
-    }
+function launchBlock(block, targetIndex = null) {
+  if (targetIndex === null) {
+    targetIndex = innerSlot.value.length - 1
   }
-
-  return block
-}
-
-
-let listenForMountedEvents = false
-
-function launchBlock(index, block, position) {
-  const newBlock = onBeforeCreateBlock(block)
-  if (!newBlock) {
-    console.warn('Block creation halted by onBeforeCreateBlock')
-    return
-  }
-
-  listenForMountedEvents = true
-  const targetIndex = position == 'before' ? index : index + 1
-  innerSlot.value.splice(targetIndex, 0, JSON.parse(JSON.stringify(newBlock)))
+  innerSlot.value.splice(targetIndex, 0, JSON.parse(JSON.stringify(block)))
   emitUpdate()
-}
 
-function appendBlock(block) {
-  const newBlock = onBeforeCreateBlock(block)
-  if (!newBlock) {
-    console.warn('Block creation halted by onBeforeCreateBlock')
-    return
-  }
-
-  listenForMountedEvents = true
-  innerSlot.value.push(JSON.parse(JSON.stringify(newBlock)))
-  emitUpdate()
-}
-
-function onBlockEditorMounted(vNode) {
-  if (!listenForMountedEvents) {
-    return
-  }
-
-  if (vNode?.component?.exposed?.onBlockCreated) {
-    vNode.component.exposed.onBlockCreated()
-  }
-
-  listenForMountedEvents = false
+  nextTick(() => {
+    refEditors.value?.[targetIndex]?.onBlockCreated?.()
+  })
 }
 
 const hoveredIndex = ref(-1)
@@ -186,13 +138,13 @@ const hoveredIndex = ref(-1)
             class="SlotItem__launcher SlotItem__launcher--before"
             :direction="$attrs?.direction"
             :title="`Insert before ${element.title || element.component}`"
-            @input="launchBlock(index, $event, 'before')"
+            @input="launchBlock($event, index)"
           />
           <CmsBlockEditor
+            :ref="e => refEditors[index] = e"
             style="flex: 1"
             class="SlotItem__editor"
             :block="element"
-            @vnode-mounted="onBlockEditorMounted"
             @update:block="onEditorUpdate(index, $event)"
             @delete="deleteBlock(index)"
             @mouseenter="hoveredIndex = index"
@@ -202,7 +154,7 @@ const hoveredIndex = ref(-1)
             class="SlotItem__launcher SlotItem__launcher--after"
             :direction="$attrs?.direction"
             :title="`Insert after ${element.title || element.component}`"
-            @input="launchBlock(index, $event, 'after')"
+            @input="launchBlock($event, index + 1)"
           />
         </div>
       </template>
@@ -213,7 +165,7 @@ const hoveredIndex = ref(-1)
       class="LoneLauncher"
       :label="i18n.t('CmsSlotEditor.AddContent')"
       open
-      @input="appendBlock"
+      @input="launchBlock($event)"
     />
   </div>
 </template>

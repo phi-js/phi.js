@@ -30,7 +30,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:block', 'delete'])
+const emit = defineEmits(['update:block', 'cancel', 'delete'])
 
 const i18n = useI18n(dictionary)
 
@@ -69,6 +69,7 @@ provide('$_cms_scaffold_cancel', registerCancelListener)
 function cancel() {
   innerBlock.value = JSON.parse(JSON.stringify(props.block))
   cancelListeners.forEach((callback) => callback(innerBlock.value))
+  emit('cancel')
   return true
 }
 

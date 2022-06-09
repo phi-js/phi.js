@@ -45,7 +45,7 @@ export default {
         props: { direction: 'column' },
       },
 
-      onCreated: false,
+      staging: false,
 
       editor: {
         face: { component: LayoutGroupEditor },

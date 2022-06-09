@@ -1,8 +1,12 @@
 <script setup>
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 
 import { UiItem } from '@/packages/ui'
 import CmsBlockPicker from '../CmsBlockPicker/CmsBlockPicker.vue'
+import { CmsBlockEditor } from '../CmsBlockEditor'
+import { getPluginData } from '../../functions'
+
+const pluginData = getPluginData()
 
 const props = defineProps({
   direction: {
@@ -37,6 +41,8 @@ const isOpen = ref(props.open)
 const isPopupOpen = ref(false)
 const isTriggerHovered = ref(false)
 
+const stagingBlock = ref()
+
 function onTriggerClick() {
   isOpen.value = !isOpen.value
 
@@ -44,6 +50,64 @@ function onTriggerClick() {
     isPopupOpen.value = isOpen.value
   }, 200)
 }
+
+const elStaging = ref()
+
+function onBlockPickerInput(blockDefinition) {
+  const candidateBlock = JSON.parse(JSON.stringify({
+    ...blockDefinition.block,
+    component: blockDefinition.name,
+  }))
+
+  const newBlock = onBeforeCreateBlock(candidateBlock)
+  if (!newBlock) {
+    console.warn('Block creation halted by onBeforeCreateBlock')
+    return
+  }
+
+  if (blockDefinition.staging === false) {
+    emit('input', newBlock)
+    isOpen.value = false
+    return
+  }
+
+  stagingBlock.value = newBlock
+  nextTick(() => elStaging.value.openAction(0))
+}
+
+/* Perform actions before and after a new block is created */
+function onBeforeCreateBlock(block) {
+  if (typeof pluginData?.onBeforeCreateBlock == 'function') {
+    try {
+      const result = pluginData.onBeforeCreateBlock(block)
+      if (result === false) {
+        return false
+      }
+      if (result && typeof result == 'object') {
+        return result
+      }
+
+      return block
+
+    } catch (e) {
+      return false
+    }
+  }
+
+  return block
+}
+
+function onStagingAccept() {
+  emit('input', stagingBlock.value)
+  stagingBlock.value = null
+  isOpen.value = false
+}
+
+function onStagingCancel() {
+  stagingBlock.value = null
+  isOpen.value = props.open
+}
+
 </script>
 
 <template>
@@ -72,16 +136,26 @@ function onTriggerClick() {
 
     <CmsBlockPicker
       v-model:open="isPopupOpen"
-      @update:open="isOpen = $event || props.open"
-      @input="emit('input', $event)"
+      @update:open="!stagingBlock && (isOpen = $event || props.open)"
+      @input="onBlockPickerInput($event)"
     >
       <template #trigger="{ toggle }">
-        <div class="SlotBlockLauncher__box">
+        <div
+          v-show="!stagingBlock"
+          class="SlotBlockLauncher__box"
+        >
           <div
             @click="toggle"
             v-text="props.label"
           />
         </div>
+        <CmsBlockEditor
+          v-if="stagingBlock"
+          ref="elStaging"
+          v-model:block="stagingBlock"
+          @update:block="onStagingAccept"
+          @cancel="onStagingCancel"
+        />
       </template>
     </CmsBlockPicker>
   </div>
@@ -117,8 +191,7 @@ function onTriggerClick() {
 
   &__box {
     display: flex;
-    align-items: stretch;
-    justify-content: center;
+    flex-direction: column;
 
     user-select: none;
 

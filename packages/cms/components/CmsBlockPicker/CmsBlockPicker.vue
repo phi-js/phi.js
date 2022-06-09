@@ -5,7 +5,7 @@ export default { inheritAttrs: false }
 <script setup>
 import { ref, nextTick, watch } from 'vue'
 import PickerContents from './PickerContents.vue'
-import { UiItem, UiPopover } from '@/packages/ui/components'
+import { UiPopover } from '@/packages/ui/components'
 
 const props = defineProps({
   text: {
@@ -81,17 +81,7 @@ async function onPopoverOpen() {
         <slot
           name="trigger"
           :toggle="toggle"
-        >
-          <div class="CmsBlockPicker__trigger">
-            <UiItem
-              class="CmsBlockPicker__item"
-              :icon="props.icon"
-              :text="props.text"
-              :title="props.title"
-              @click="toggle()"
-            />
-          </div>
-        </slot>
+        />
       </template>
 
       <template #contents="{ close }">
@@ -111,28 +101,6 @@ async function onPopoverOpen() {
   &__contents {
     width: 488px;
     min-height: 400px;
-  }
-
-  &__trigger {
-    padding: 6px;
-
-    cursor: pointer;
-    &:hover .CmsBlockPicker__item {
-      background-color: var(--ui-color-primary);
-    }
-  }
-
-  &__item {
-    --ui-item-padding: 3px 6px;
-
-    user-select: none;
-    font-size: 12px;
-    font-weight: bold;
-
-    background-color: #818181;
-    color: #ddd;
-
-    border-radius: 5px;
   }
 }
 </style>

@@ -18,5 +18,5 @@ export default {
     },
   },
 
-  onCreated: false,
+  staging: false,
 }

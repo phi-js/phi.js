@@ -12,6 +12,8 @@ export default {
 
   editor: { component: MediaHtmlBlockEditor },
 
+  staging: false, // Create immediately.  Do not create a "staging" (accept/cancel) preview block
+
   // Focus editor when a new block is created
   onCreated(editorRef) {
     if (editorRef?.focus) {

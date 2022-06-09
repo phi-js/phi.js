@@ -30,20 +30,9 @@ for (const [blockName, blockDefinition] of Object.entries(objAllBlocks)) {
   })
 }
 
-
 function launchBlock(blockDefinition) {
-  if (!blockDefinition?.block) {
-    console.warn('Cannot launch block from object:', blockDefinition)
-    return
-  }
-
-  const jsonBlock = JSON.parse(JSON.stringify({
-    ...blockDefinition.block,
-    component: blockDefinition.name,
-  }))
-  emit('input', jsonBlock)
+  emit('input', blockDefinition)
 }
-
 </script>
 
 <template>

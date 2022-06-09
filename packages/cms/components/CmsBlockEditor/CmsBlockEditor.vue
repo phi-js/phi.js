@@ -32,21 +32,11 @@ const CmsBlockEditor = {
     )
 
     const innerRef = ref()
-    function onBlockCreated() {
-      if (definition?.onCreated === false || definition?.onCreated === null) {
-        return
-      }
 
-      if (typeof definition?.onCreated === 'function') {
-        definition.onCreated(innerRef.value)
-        return
-      }
-
-      if (innerRef.value?.openAction) {
-        innerRef.value.openAction(0)
-      }
-    }
-    expose({ onBlockCreated })
+    expose({
+      onBlockCreated: () => definition?.onCreated?.(innerRef.value),
+      openAction: (actionIndex = 0) => innerRef.value.openAction(actionIndex),
+    })
 
     return (instance) => {
       if (definition?.editor?.component) {
