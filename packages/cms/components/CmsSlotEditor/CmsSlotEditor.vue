@@ -38,12 +38,17 @@ watch(
   () => props.slot,
   (newValue) => {
     innerSlot.value = Array.isArray(newValue) ? JSON.parse(JSON.stringify(newValue)) : []
+
+    let count = 1
+    innerSlot.value.forEach((block) => {
+      block._uid = block._uid ? block._uid : `${block.component}_${count++}`
+    })
   },
   { immediate: true, deep: true },
 )
 
 function emitUpdate() {
-  emit('update:slot', innerSlot.value.concat())
+  emit('update:slot', innerSlot.value.map((block) => ({ ...block, _uid: undefined })))
 }
 
 async function onDraggableUpdate() {
@@ -142,6 +147,7 @@ const hoveredIndex = ref(-1)
 
 <template>
   <div
+    v-bind="$attrs"
     class="CmsSlotEditor"
     :class="{ 'CmsSlotEditor--dragging': isDragging }"
   >
@@ -149,14 +155,19 @@ const hoveredIndex = ref(-1)
       v-model="innerSlot"
       class="CmsSlotEditor__draggable"
       :direction="$attrs?.direction == 'row' ? 'horizontal' : 'vertical'"
+      :style="{
+        display: $attrs?.direction == 'row' ? 'flex' : 'block',
+        flexDirection: $attrs?.direction || 'column',
+        flexWrap: 'wrap',
+      }"
       :group="groupName"
-      item-key="uid"
+      item-key="_uid"
       handle=".Block__drag-handle"
       :animation="111"
       :empty-insert-threshold="0"
       :swap-threshold="0.5"
       :inverted-swap-threshold="1"
-      v-bind="$attrs"
+
       @update:model-value="onDraggableUpdate"
       @start="onDraggableStart()"
       @end="onDraggableEnd()"
@@ -168,7 +179,7 @@ const hoveredIndex = ref(-1)
             `SlotItem--${$attrs?.direction || 'column'}`,
             { 'SlotItem--before-hovered': index === hoveredIndex - 1 }
           ]"
-          :style="{display: 'flex', flexDirection: $attrs?.direction || 'column'}"
+          :style="{flex: 1, display: 'flex', flexDirection: $attrs?.direction || 'column'}"
         >
           <SlotBlockLauncher
             v-if="index === 0"
@@ -209,10 +220,6 @@ const hoveredIndex = ref(-1)
 
 <style lang="scss">
 .SlotItem {
-  // &:hover {
-  //   z-index: 1;
-  // }
-
   &:hover &__launcher {
     z-index: 1;
   }
@@ -221,7 +228,7 @@ const hoveredIndex = ref(-1)
 .CmsSlotEditor {
   // draggable container
   & > &__draggable {
-    // min-height: 24px;
+    min-height: 24px;
     min-width: 100%;
   }
 
@@ -272,12 +279,23 @@ const hoveredIndex = ref(-1)
   }
 }
 
+.SlotItem--column {
+  .SlotItem__launcher--after {
+    top: 3px;
+  }
+}
+
+.SlotItem--row {
+  .SlotItem__launcher--before {
+    left: -5px;
+  }
+  // .SlotItem__launcher--after {
+  //   right: -5px;
+  // }
+}
+
 // SlotItems surounding hovered
 .SlotItem {
-  & > .SlotItem__launcher--after {
-    top: 2px;
-  }
-
   &--before-hovered {
     & > .SlotItem__launcher--after {
       opacity: 0.5;

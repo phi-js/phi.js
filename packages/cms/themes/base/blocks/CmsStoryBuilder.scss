@@ -20,6 +20,12 @@
     height: 100%;
   }
 
+  .CmsStoryEditor .LayoutPageEditor {
+    flex-direction: column;
+    display: flex;
+    height: 100%;    
+  }
+
   &__toolbar {
     position: sticky;
     top: 0;

@@ -121,10 +121,10 @@
       position: absolute;
 
       // Ojo: Hacerlo mas ancho que el bloque puede causar overflows que no queremos
-      top: var(--outline-offset, -2px);
-      bottom: var(--outline-offset, -2px);
-      left: var(--outline-offset, -2px);
-      right: var(--outline-offset, -2px);
+      top: var(--outline-offset-v, -3px);
+      bottom: var(--outline-offset-v, -3px);
+      left: var(--outline-offset-h, -6px);
+      right: var(--outline-offset-h, -6px);
 
       border-radius: 2px;
       border: 2px solid var(--ui-color-primary);
@@ -145,25 +145,24 @@
   }
 }
 
-
-
-/* Toolbar position in nested blocks */
-// .BlockScaffold .BlockScaffold__toolbar-container { left: 8px; }
-// .BlockScaffold .BlockScaffold .BlockScaffold__toolbar-container { left: 48px; }
-// .BlockScaffold .BlockScaffold .BlockScaffold .BlockScaffold__toolbar-container { left: 88px; }
-// .BlockScaffold .BlockScaffold .BlockScaffold .BlockScaffold .BlockScaffold__toolbar-container { left: 128px; }
-
-/* Toolbar position in nested blocks (displacing first group child only) */
-.BlockScaffold__toolbar-container { left: 8px; }
-.BlockScaffold .SlotItem:first-child .BlockScaffold__toolbar-container { left: 48px; }
-.BlockScaffold .BlockScaffold .SlotItem:first-child .BlockScaffold__toolbar-container { left: 88px; }
-.BlockScaffold .BlockScaffold .BlockScaffold .SlotItem:first-child .BlockScaffold__toolbar-container { left: 128px; }
-
+// left border on nested toolbar
 .BlockScaffold .BlockScaffold .BlockScaffold__toolbar {
-  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  border-left: 1px outset rgba(255, 255, 255, 0.2);
 }
 
+/* Toolbar position in nested blocks (displacing first nested toolbar only) */
+.SlotItem {
+  --scaffold-depth: 10px;
+}
 
+.BlockScaffold__toolbar-container {
+  left: var(--scaffold-depth);
+}
+
+.BlockScaffold .SlotItem:first-child { --scaffold-depth: 45px; }
+.BlockScaffold .SlotItem:first-child .SlotItem:first-child  { --scaffold-depth: 85px; }
+.BlockScaffold .SlotItem:first-child .SlotItem:first-child .SlotItem:first-child  { --scaffold-depth: 125px; }
+.BlockScaffold .SlotItem:first-child .SlotItem:first-child .SlotItem:first-child .SlotItem:first-child  { --scaffold-depth: 165px; }
 
 
 // Block's option menu contents

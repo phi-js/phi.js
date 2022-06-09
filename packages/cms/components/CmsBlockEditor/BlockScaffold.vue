@@ -316,7 +316,7 @@ defineExpose({
       <template #default="{ coords }">
         <div
           ref="elWindowContents"
-          class="WindowContents UiForm--wide"
+          class="WindowContents"
         >
           <Component
             :is="getWidth(coords) < 650 ? UiDrawerStack : UiTabs"

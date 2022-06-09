@@ -33,7 +33,7 @@ export default {
       'component': UiUpload,
       'v-model': 'block.props.files',
       'props': {
-        endpoint: '{{ $settings.uploads.endpoint }}',
+        endpoint: '{{ $settings.uploads.assets }}',
         multiple: true,
         inline: false,
         placeholder: {

@@ -21,7 +21,7 @@ export default {
     face: {
       'component': MediaVideoPicker,
       'v-model': 'block.props.url',
-      'props': { endpoint: '{{ $settings.uploads.endpoint }}' },
+      'props': { endpoint: '{{ $settings.uploads.assets }}' },
     },
 
     actions: [

@@ -218,7 +218,7 @@ export default {
     }
 
     // Render function
-    return () => h('div', { class: ['CmsStory', ...storyClassNames.value] }, [
+    return () => !isMounted.value ? null : h('div', { class: ['CmsStory', ...storyClassNames.value] }, [
 
       // Story <style> element in <head>
       h(
@@ -229,30 +229,26 @@ export default {
 
       h(
         'div',
-        { class: 'CmsStory__container' },
+        { class: 'CmsStory__viewport' },
         h(
           Transition,
           { name: `${transitionName.value}--${transitionDirection.value}` },
           () => h(
-            'div',
-            { key: currentPage.value.id },
-            h(
-              KeepAlive,
-              null,
-              currentPage.value && isMounted.value
-                ? h(CmsBlock, {
-                  'onUpdate:errors': onUpdateErrors,
-                  'class': 'CmsStory__page',
-                  'block': currentPage.value,
-                  // 'modelValue': props.modelValue,
-                  'modelValue': {
-                    ...props.modelValue,
-                    $i18n: i18n,
-                  },
-                  'onUpdate:modelValue': onUpdateModelValue,
-                })
-                : null,
-            ),
+            KeepAlive,
+            null,
+            currentPage.value
+              ? h(CmsBlock, {
+                'key': currentPage.value.id,
+                'onUpdate:errors': onUpdateErrors,
+                'class': 'CmsStory__page',
+                'block': currentPage.value,
+                'modelValue': {
+                  ...props.modelValue,
+                  $i18n: i18n,
+                },
+                'onUpdate:modelValue': onUpdateModelValue,
+              })
+              : null,
           ),
         ),
       ),
@@ -266,8 +262,9 @@ export default {
   @import "./transitions.scss";
   --cms-story-transition-duration: var(--ui-duration-quick);
 
-  &__container {
+  &__viewport {
     position: relative;
+    height: 100%;
   }
 }
 </style>

@@ -62,7 +62,7 @@ function cancel() {
       @click="isEditing = true"
     />
     <UiDrawer :open="isEditing">
-      <div class="UiForm UiForm--wide">
+      <div class="UiForm">
         <UiInput
           v-model="innerValue.href"
           type="url"

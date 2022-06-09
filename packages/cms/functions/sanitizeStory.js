@@ -1,5 +1,3 @@
-import forEachBlock from './forEachBlock'
-
 export default function sanitizeStory(story) {
   const emptyPage = {
     component: 'LayoutPage',
@@ -38,12 +36,6 @@ export default function sanitizeStory(story) {
     story.css.classes = []
   }
 
-  // Every block has a unique ID (uid)
-  let count = 1
-  forEachBlock(story, (block) => {
-    block.uid = block.uid ? block.uid : `${block.component}_${count++}`
-  })
-
   // Required attributes for PAGES
   story.pages.forEach((page, index) => {
     // every page has a unique ID
@@ -64,12 +56,3 @@ export default function sanitizeStory(story) {
 
   return story
 }
-
-// let uid = 1
-// function assignUid(block) {
-//   // block.uid = block.uid || uid++
-//   block.uid = uid++
-//   if (block?.slot?.length) {
-//     block.slot.forEach((child) => assignUid(child))
-//   }
-// }
