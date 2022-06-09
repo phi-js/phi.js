@@ -1,8 +1,6 @@
 @import '@/packages/cms/themes/base/classes/coolDetails.scss';
 
 .UiForm {
-  // padding: 8px 16px;
-
   fieldset {
     border: 1px inset #555;
     border-radius: 5px;
@@ -34,31 +32,8 @@
     @extend .coolDetails;
   }
 
-  // details {
-  //   border: 1px inset #555;
-  //   border-radius: 5px;
-  //   padding: 8px;
-  //   margin: 10px 0;
-
-  //   min-inline-size: auto;  // OMG.  El CSS nativo de fieldset es "min-inline-size: min-content;" y eso previene hacer overflow en contenedores angostos
-
-  //   summary {
-  //     user-select: none;
-  //     cursor: pointer;
-  //     padding: 8px;
-  //     border-radius: 5px;
-
-  //     &:hover {
-  //       background-color: rgba(255,255,255, 0.1);
-  //     }
-  //   }
-  // }
-
   /* UiInputCode inside UiForm */
   .UiInputCode {
-    // height: 100%;
-    // max-height: inherit;
-
     .cm-editor { height: 100%; max-height: 400px; }
     .cm-scroller { overflow: auto }
   }

@@ -29,9 +29,8 @@ const bodyStyle = computed(() => {
   return {
     // transform: `scale(${scale}%)`, // fucks up children with position:fixed
     width: props.width ? `${props.width}px` : '100%',
-    height: props.height ? `${props.height}px` : '100%',
-    maxHeight: '100%',
-    // height: '100%',
+    minHeight: props.height ? `${props.height}px` : '100%',
+    height: '100%',
   }
 })
 </script>
