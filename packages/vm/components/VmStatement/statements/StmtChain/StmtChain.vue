@@ -29,6 +29,7 @@ function emitUpdate() {
 function removeItem(index) {
   innerValue.value.chain.splice(index, 1)
   emitUpdate()
+  endangeredIndex.value = -1
 }
 
 

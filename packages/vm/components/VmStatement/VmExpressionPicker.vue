@@ -68,7 +68,7 @@ const items = computed(() => {
     },
   ]
 
-  return [...fns, ...code]
+  return [...code, ...fns]
 })
 
 const i18n = useI18n({
