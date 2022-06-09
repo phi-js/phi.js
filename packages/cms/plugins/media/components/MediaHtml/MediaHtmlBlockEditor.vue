@@ -52,6 +52,25 @@ watch(
   { immediate: true },
 )
 
+// toggleHeading clears textAlign (tiptap bug?)
+// keep alignment on toggleHeading;
+function toggleHeading(level) {
+  // Determine current textAlign  (there is no _known_ method to get the set value :()
+  const curTextAlign =
+    editor.isActive({ textAlign: 'left' }) ? 'left'
+      : editor.isActive({ textAlign: 'center' }) ? 'center'
+        : editor.isActive({ textAlign: 'right' }) ? 'right'
+          : editor.isActive({ textAlign: 'justify' }) ? 'justify'
+            : null
+
+  const chain = editor.chain().focus().toggleHeading({ level })
+  if (curTextAlign) {
+    chain.setTextAlign(curTextAlign)
+  }
+
+  return chain.run()
+}
+
 const allCommands = computed(() => {
   return {
     p: {
@@ -62,19 +81,19 @@ const allCommands = computed(() => {
 
     h1: {
       text: 'H1',
-      callback: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
+      callback: () => toggleHeading(1),
       isActive: editor.isActive('heading', { level: 1 }),
     },
 
     h2: {
       text: 'H2',
-      callback: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+      callback: () => toggleHeading(2),
       isActive: editor.isActive('heading', { level: 2 }),
     },
 
     h3: {
       text: 'H3',
-      callback: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
+      callback: () => toggleHeading(3),
       isActive: editor.isActive('heading', { level: 3 }),
     },
 
