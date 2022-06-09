@@ -40,14 +40,14 @@ function parse(string, sourceData, preserveUndefined = false) {
         // Evaluate expression
         let targetValue = evalExpression(strExpression, sourceData)
 
-        // ENCODE HTML present in target value (!)
-        targetValue = targetValue.replaceAll('>', '&gt;').replaceAll('<', '&lt;')
-
         if (targetValue === undefined) {
           if (preserveUndefined) {
             continue // Si la propiedad no existe, se conserva la cadena (e.j. el texto se conserva '{{ propiedadQueNoExiste }}')
           }
           targetValue = ''
+        } else if (typeof targetValue === 'string') {
+          // ENCODE HTML present in target value (!)
+          targetValue = targetValue.replaceAll('>', '&gt;').replaceAll('<', '&lt;')
         }
 
         /*
