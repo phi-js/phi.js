@@ -16,7 +16,7 @@ const props = defineProps({
     :style="{
       display: props.direction == 'row' ? 'flex' : 'block',
       flexDirection: props.direction,
-      flexWrap: 'nowap',
+      flexWrap: 'wrap',
     }"
   >
     <slot />
