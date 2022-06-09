@@ -110,10 +110,10 @@ function openAction(actionIndex) {
   // (check 2 ticks ahead! UiWindow of newly created blocks is not fully done after first tick, apparently)
   nextTick(() => {
     if (!elWindowContents.value) {
-      nextTick(() => elWindowContents.value.querySelector('input, textarea')?.focus?.())
+      nextTick(() => elWindowContents.value.querySelector('input[type=text], textarea')?.focus?.())
       return
     }
-    elWindowContents.value.querySelector('input, textarea')?.focus?.()
+    elWindowContents.value.querySelector('input[type=text], textarea')?.focus?.()
   })
 
   return true

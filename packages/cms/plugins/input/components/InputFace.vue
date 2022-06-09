@@ -56,7 +56,7 @@ watchEffect(() => {
   >
     <!-- stand-in for empty Select fields -->
     <div
-      v-if="isSelect"
+      v-if="isSelect && !Array.isArray(translatedProps?.options)"
       class="InputFace__dummy"
       :class="attrs?.class"
       :style="attrs?.style"
