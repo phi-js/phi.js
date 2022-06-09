@@ -37,7 +37,7 @@ async function toggleHeightAuto(setAuto = true, refresh) {
   >
     <UiResizable
       v-slot="{ isDragging, newBounds, refresh }"
-      :enabled="['e']"
+      :enabled="['s']"
       @update:coords="emit('update:modelValue', { ...modelValue, height: $event.height })"
     >
       <MediaImage

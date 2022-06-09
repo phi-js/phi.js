@@ -6,7 +6,7 @@ export default { inheritAttrs: false }
 import { useAttrs, computed, ref, watchEffect } from 'vue'
 import { useI18n } from '../../../../i18n'
 import { parseTranslations } from '../../../functions'
-import { UiItem, UiInput } from '@/packages/ui/components'
+import { UiInput } from '@/packages/ui/components'
 
 const attrs = useAttrs()
 
@@ -52,14 +52,14 @@ watchEffect(() => {
 <template>
   <div
     class="InputFace"
-    :class="attrs?.class"
-    :style="attrs?.style"
     @click="openAction('InputSettings')"
   >
     <!-- stand-in for empty Select fields -->
     <div
       v-if="isSelect && !translatedProps?.options?.length"
       class="InputFace__dummy"
+      :class="attrs?.class"
+      :style="attrs?.style"
     >
       <span>Click to add options</span>
       <UiInput
@@ -70,6 +70,8 @@ watchEffect(() => {
     </div>
     <UiInput
       v-else
+      :class="attrs?.class"
+      :style="attrs?.style"
       v-bind="translatedProps"
       style="pointer-events: none;"
     />

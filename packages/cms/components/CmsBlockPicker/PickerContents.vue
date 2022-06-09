@@ -169,7 +169,7 @@ watch(
       @keydown.down="onSearchArrow('down')"
       @keydown.left="onSearchArrow('left')"
       @keydown.right="onSearchArrow('right')"
-      @keydown.enter="onSearchEnter()"
+      @keyup.enter="onSearchEnter()"
     />
     <div
       ref="elTree"

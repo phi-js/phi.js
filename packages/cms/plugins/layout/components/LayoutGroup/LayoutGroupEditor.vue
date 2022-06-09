@@ -41,43 +41,39 @@ const cssAttributes = computed(() => getCssObjectAttributes(props.modelValue?.cs
     group-name="cms-slot"
     :direction="props.modelValue?.props?.direction || 'column'"
     :style="{
-      display: 'flex',
+      display: props.modelValue?.props?.direction == 'row' ? 'flex' : 'block',
       flexDirection: props.modelValue?.props?.direction || 'column',
-      xxxflexWrap: 'wrap',
+      flexWrap: 'wrap',
     }"
     @update:slot="onSlotUpdate"
   />
 </template>
 
 <style lang="scss">
-// make bottom room for nested editors
 .LayoutGroupEditor {
-  padding-bottom: 30px;
-}
+  padding-bottom: 22px; // make bottom room for nested editors
 
-.LayoutGroupEditor > * {
-  flex: 1;
+  & > * {
+    flex: 1;
+  }
 }
-
-// Better for positioning elements and understading group nesting in the editor
-// ... but fucks up pixel-perfect wyiswyg
-// .BlockScaffold--LayoutGroup {
-//   padding: 4px 4px 20px 4px;
-// }
 
 // Dashed outline
 .BlockScaffold.BlockScaffold--LayoutGroup {
   &::before {
-    --outline-offset: -6px;
-    z-index: 0;
-
-    // border: 1px dashed #777;
-    // z-index: 0;
+    --outline-offset: -12px;
+    bottom: -2px !important;
   }
-
-  // &:hover::before {
-  //   border: 1px solid var(--ui-color-primary);
-  //   opacity: 1;
-  // }
 }
+
+.BlockScaffold .BlockScaffold.BlockScaffold--LayoutGroup::before {
+  --outline-offset: -7px;
+  bottom: -2px !important;
+}
+
+.BlockScaffold .BlockScaffold .BlockScaffold.BlockScaffold--LayoutGroup::before {
+  --outline-offset: -5px;
+  bottom: -2px !important;
+}
+
 </style>

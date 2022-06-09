@@ -74,33 +74,22 @@ const multipleOptions = [
 
 <template>
   <div class="InputSettings UiForm">
-    <details open>
-      <summary v-text="i18n.t('InputSettings.Data')" />
-      <section>
-        <UiInput
-          v-model="block['v-model']"
-          :label="i18n.t('InputSettings.VariableName')"
-          type="text"
-          @update:model-value="emitUpdate"
-        />
-      </section>
-    </details>
-
     <details
       v-if="isSelect"
       open
     >
       <summary v-text="i18n.t('InputSettings.Options')" />
       <section>
+        <OptionsEditor
+          v-model="block.props.options"
+          @update:model-value="emitUpdate"
+        />
+
         <UiInput
           v-model="block.props.multiple"
           :label="i18n.t('InputSettings.ValueType')"
           type="select-buttons"
           :options="multipleOptions"
-          @update:model-value="emitUpdate"
-        />
-        <OptionsEditor
-          v-model="block.props.options"
           @update:model-value="emitUpdate"
         />
       </section>
@@ -134,6 +123,18 @@ const multipleOptions = [
           :label="i18n.t('InputSettings.Placeholder')"
           @update:model-value="emitUpdate"
           @update:block="emitUpdate"
+        />
+      </section>
+    </details>
+
+    <details open>
+      <summary v-text="i18n.t('InputSettings.Data')" />
+      <section>
+        <UiInput
+          v-model="block['v-model']"
+          :label="i18n.t('InputSettings.VariableName')"
+          type="text"
+          @update:model-value="emitUpdate"
         />
       </section>
     </details>

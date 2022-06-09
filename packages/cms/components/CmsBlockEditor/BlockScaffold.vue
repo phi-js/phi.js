@@ -1,5 +1,5 @@
 <script setup>
-import { ref, shallowRef, watch, computed, provide } from 'vue'
+import { ref, shallowRef, watch, computed, provide, nextTick } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import dictionary from './BlockScaffold.i18n.js'
 
@@ -100,8 +100,21 @@ watch(
 const availableActions = computed(() => editors.value?.actions || [])
 const currentActionIndex = ref(null)
 
+const elWindowContents = ref()
+
 function openAction(actionIndex) {
   currentActionIndex.value = actionIndex
+
+  // focus first input in newly opened UiWindow
+  // (check 2 ticks ahead! UiWindow of newly created blocks is not fully done after first tick, apparently)
+  nextTick(() => {
+    if (!elWindowContents.value) {
+      nextTick(() => elWindowContents.value.querySelector('input, textarea')?.focus?.())
+      return
+    }
+    elWindowContents.value.querySelector('input, textarea')?.focus?.()
+  })
+
   return true
 }
 
@@ -301,7 +314,10 @@ defineExpose({
       </template>
 
       <template #default="{ coords }">
-        <div class="WindowContents UiForm--wide">
+        <div
+          ref="elWindowContents"
+          class="WindowContents UiForm--wide"
+        >
           <Component
             :is="getWidth(coords) < 650 ? UiDrawerStack : UiTabs"
             v-model="currentActionIndex"

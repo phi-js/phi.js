@@ -1,11 +1,31 @@
-// NON decorative styles (i.e. layout and dimensions only. no colors)
 .CmsStoryBuilder {
+  display: flex;
+  flex-direction: column;
+
+  &__body {
+    flex: 1;
+  }
+
+  // Chain of height
+  .CmsStory,
+  .CmsStory > .CmsStory__container,
+  .CmsStory > .CmsStory__container > div,
+  .CmsStory > .CmsStory__container > div > .LayoutPage {
+    height: 100%;
+  }
+
+  .CmsStoryEditor,
+  .CmsStoryEditor > div,
+  .CmsStoryEditor > div > * {
+    height: 100%;
+  }
+
   &__toolbar {
     position: sticky;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 2;
+    z-index: 1;
 
     background-color: #333;
     color: #eee;

@@ -95,19 +95,16 @@ function onTriggerClick() {
     cursor: pointer;
     position: absolute;
 
-    // padding: 3px 16px;
     padding: 3px 10px;
     padding-top: 0;
 
     .UiItem {
-      --ui-item-padding: 3px 6px;
-
       user-select: none;
       font-size: 12px;
       font-weight: bold;
 
-      background-color: #a1a1a1;
-      color: #ddd;
+      background-color: #525659;
+      color: #fff;
 
       border-radius: 5px;
     }
@@ -156,7 +153,7 @@ function onTriggerClick() {
 .SlotBlockLauncher--column {
   .SlotBlockLauncher__trigger {
     top: -12px;
-    left: calc(50% - 30px);
+    left: calc(50% - 20px);
   }
 
   .SlotBlockLauncher__box {
@@ -177,8 +174,8 @@ function onTriggerClick() {
 .SlotBlockLauncher--row {
   .SlotBlockLauncher__trigger {
     top: 50%;
-    margin-top: -16px;
-    left: -22px;
+    margin-top: -8px;
+    left: -20px;
   }
 
   .SlotBlockLauncher__box {
@@ -191,15 +188,14 @@ function onTriggerClick() {
   }
 
   &.SlotBlockLauncher--open .SlotBlockLauncher__box {
-    // width: 120px;
     width: auto;
   }
+
 
   &.SlotBlockLauncher--teasing {
     border-left: 4px dashed var(--ui-color-primary);
     margin-left: -4px;
   }
-
 
   ///damn
   & > .CmsBlockPicker,

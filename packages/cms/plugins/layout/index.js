@@ -6,7 +6,8 @@ import LayoutColumn from './components/LayoutColumn/LayoutColumn.vue'
 
 import LayoutGroup from './components/LayoutGroup/LayoutGroup.vue'
 import LayoutGroupEditor from './components/LayoutGroup/LayoutGroupEditor.vue'
-import CmsPropsForm from '../../components/CmsPropsForm/CmsPropsForm.vue'
+// import CmsPropsForm from '../../components/CmsPropsForm/CmsPropsForm.vue'
+import { UiForm } from '@/packages/ui'
 
 export default {
   blocks: {
@@ -38,7 +39,12 @@ export default {
       tags: ['layout'],
       title: 'Group',
       icon: 'mdi:group',
-      block: { component: LayoutGroup },
+
+      block: {
+        component: LayoutGroup,
+        props: { direction: 'column' },
+      },
+
       onCreated: false,
 
       editor: {
@@ -46,8 +52,9 @@ export default {
         actions: [
           {
             'id': 'group',
-            'title': 'Group settings',
-            'component': CmsPropsForm,
+            'title': 'Group options',
+            // 'component': CmsPropsForm,
+            'component': UiForm,
             'v-model': 'block',
             'props': {
               fields: [
@@ -59,7 +66,10 @@ export default {
                 {
                   label: 'Content direction',
                   type: 'select-list',
-                  options: ['row', 'column'],
+                  options: [
+                    { value: 'column', text: 'Columna' },
+                    { value: 'row', text: 'Fila' },
+                  ],
                   model: 'props.direction',
                 },
               ],

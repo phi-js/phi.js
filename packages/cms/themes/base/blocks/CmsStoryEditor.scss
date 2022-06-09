@@ -1,12 +1,6 @@
 /* Default LayoutPageEditor + LayoutRowEditor + BlockEditor theme */
 
 /* Prevent overflows on things when dragging */
-.CmsSlotEditor--dragging {
-  .LayoutRowEditor {
-    pointer-events: none;
-  }
-}
-
 .LayoutPageEditor {
   position: relative;
 

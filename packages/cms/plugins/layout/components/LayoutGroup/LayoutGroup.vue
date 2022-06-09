@@ -13,7 +13,11 @@ const props = defineProps({
 <template>
   <div
     class="LayoutGroup"
-    :style="{display: 'flex', flexDirection: props.direction}"
+    :style="{
+      display: props.direction == 'row' ? 'flex' : 'block',
+      flexDirection: props.direction,
+      flexWrap: 'nowap',
+    }"
   >
     <slot />
   </div>

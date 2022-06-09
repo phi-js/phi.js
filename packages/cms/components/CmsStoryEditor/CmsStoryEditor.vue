@@ -117,7 +117,7 @@ if (sanitizedStory.value?.themes) {
 
 <template>
   <div
-    class="CmsStoryEditor CmsStory"
+    class="CmsStoryEditor"
     :class="storyClassNames"
   >
     <StyleTag />
@@ -130,7 +130,6 @@ if (sanitizedStory.value?.themes) {
         <KeepAlive>
           <CmsBlockEditor
             v-model:block="currentPage"
-            class="CmsStoryEditor__page CmsStory__page"
             @update:block="onUpdateCurrentPage"
           />
         </KeepAlive>

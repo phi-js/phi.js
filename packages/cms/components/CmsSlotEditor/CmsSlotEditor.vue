@@ -166,11 +166,7 @@ const hoveredIndex = ref(-1)
           :class="[
             'SlotItem',
             `SlotItem--${$attrs?.direction || 'column'}`,
-            {
-              'SlotItem--before-hovered': index === hoveredIndex - 1,
-              'SlotItem--hovered': index === hoveredIndex,
-              'SlotItem--after-hovered': hoveredIndex > -1 && index === hoveredIndex + 1,
-            }
+            { 'SlotItem--before-hovered': index === hoveredIndex - 1 }
           ]"
           :style="{display: 'flex', flexDirection: $attrs?.direction || 'column'}"
         >
@@ -223,21 +219,21 @@ const hoveredIndex = ref(-1)
 }
 
 .CmsSlotEditor {
+  // draggable container
   & > &__draggable {
-    // draggable container
-    min-width: 100%;
     // min-height: 24px;
+    min-width: 100%;
   }
 
   &--dragging {
     // prevent dragging blocks into droppable elements (like editable texts or file uploads) present in the block
     // !!! -> What about <draggable> in nested block faces (i.e. LayoutGroupEditor) ?
-    // .BlockScaffold__face {
-    //   pointer-events: none;
-    // }
-    .BlockScaffold__face > .tiptap-editor-contents {
+    .BlockScaffold__face {
       pointer-events: none;
     }
+    // .BlockScaffold__face > .tiptap-editor-contents {
+    //   pointer-events: none;
+    // }
   }
 
   .LoneLauncher {
@@ -267,7 +263,7 @@ const hoveredIndex = ref(-1)
   }
 
   &:hover > &__launcher {
-    opacity: 0.8;
+    opacity: 0.5;
   }
 
   & > &__launcher:hover,
@@ -276,24 +272,18 @@ const hoveredIndex = ref(-1)
   }
 }
 
-
 // SlotItems surounding hovered
 .SlotItem {
-  // &--hovered {
-  //   background-color: rgba(255, 255, 136, 0.05);
-  // }
-
-  &--before-hovered {
-    // background-color: rgba(255,0,0, 0.1);
-    & > .SlotItem__launcher--after {
-      opacity: 0.8;
-      z-index: 1;
-    }
+  & > .SlotItem__launcher--after {
+    top: 2px;
   }
 
-  // &--after-hovered {
-  //   background-color: rgba(0,0,255, 0.1);
-  // }
+  &--before-hovered {
+    & > .SlotItem__launcher--after {
+      opacity: 0.5;
+      z-index: 2;
+    }
+  }
 }
 
 

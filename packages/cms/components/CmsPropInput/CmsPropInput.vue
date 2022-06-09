@@ -37,7 +37,7 @@ innerValue = {
 
 import { useAttrs, computed, ref, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import { UiInput } from '../../../ui'
+import { UiInput, UiIcon } from '@/packages/ui'
 
 import useModelSchema from '@/packages/vm/components/VmStatement/useModelSchema.js'
 import getSchemaVariables from '@/packages/vm/helpers/getSchemaVariables.js'
@@ -76,11 +76,6 @@ function parseValue(incoming) {
   if (!incoming) {
     return retval
   }
-
-  // if (typeof incoming == 'number') {
-  //   retval.type = 'number'
-  //   return retval
-  // }
 
   // Variable strings "{{someVarName}}"
   const varName = incoming.match(/{{(.*?)}}/)?.[1]
@@ -202,6 +197,8 @@ function onVariablePickerChange($event) {
 
   emitUpdate()
 }
+
+const isOpen = ref(false)
 </script>
 
 <template>
@@ -211,29 +208,6 @@ function onVariablePickerChange($event) {
     :class="`CmsPropInput--${innerValue.type}}`"
   >
     <div class="CmsPropInput__body UiGroup">
-      <select
-        class="CmsPropInput__picker UiInput"
-        :value="innerValue.type"
-        @change="setType($event.target.value)"
-      >
-        <!-- <option
-          value="number"
-          v-text="i18n.t('CmsPropInput.Number')"
-        /> -->
-        <option
-          value="text"
-          v-text="i18n.t('CmsPropInput.Text')"
-        />
-        <option
-          value="lang"
-          v-text="i18n.t('CmsPropInput.Translation')"
-        />
-        <option
-          value="variable"
-          v-text="i18n.t('CmsPropInput.Variable')"
-        />
-      </select>
-
       <template v-if="innerValue.type == 'variable'">
         <select
           class="UiInput"
@@ -271,11 +245,50 @@ function onVariablePickerChange($event) {
       <template v-else>
         <UiInput
           v-model="innerValue.value"
-          xxxx-type="innerValue.type"
           type="text"
           @update:model-value="emitUpdate()"
         />
       </template>
+
+      <select
+        v-show="isOpen"
+        class="CmsPropInput__picker UiInput"
+        :value="innerValue.type"
+        @change="setType($event.target.value)"
+      >
+        <option
+          value="text"
+          v-text="i18n.t('CmsPropInput.Text')"
+        />
+        <option
+          value="lang"
+          v-text="i18n.t('CmsPropInput.Translation')"
+        />
+        <option
+          value="variable"
+          v-text="i18n.t('CmsPropInput.Variable')"
+        />
+      </select>
+
+      <UiIcon
+        :src="isOpen ? 'mdi:minus' : 'mdi:dots-vertical'"
+        class="CmsPropInput__toggler"
+        @click="isOpen = !isOpen"
+      />
     </div>
   </UiInput>
 </template>
+
+<style lang="scss">
+.CmsPropInput__toggler {
+  cursor: pointer;
+  border-radius: 4px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  align-self: stretch;
+  width: 40px;
+
+
+  background-color: rgba(255,255,255, 0.1);
+}
+</style>
