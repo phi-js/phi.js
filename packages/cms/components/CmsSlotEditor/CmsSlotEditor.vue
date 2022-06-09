@@ -285,29 +285,4 @@ const hoveredIndex = ref(-1)
     }
   }
 }
-
-
-// Show the launcher of the last block in the LayoutPage !!!
-.CmsSlotEditor > .LayoutPage {
-  & > .SlotItem {
-    &:last-child {
-      & > .SlotItem__launcher--before {
-        .SlotBlockLauncher__trigger {
-          top: auto;
-          bottom: 2px;
-        }
-      }
-
-      & > .SlotItem__launcher--after {
-        position: relative;
-        top: 4px;
-        opacity: 0.7;
-
-        .SlotBlockLauncher__trigger {
-          top: 2px;
-        }
-      }
-    }
-  }
-}
 </style>
