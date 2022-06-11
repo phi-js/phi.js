@@ -9,7 +9,12 @@ export default {
 
     'BlockScaffold.action.paragraphs': 'Paragraphs',
     'BlockScaffold.action.InputSettings': 'Field options',
+
+    'BlockScaffold.SetVariableName': 'Set variable name',
+    'BlockScaffold.CurrentVariable': 'Variable:',
+    'BlockScaffold.NoVariableSet': 'No variable set',
   },
+
   es: {
     'BlockScaffold.action.css': 'Estilos',
     'BlockScaffold.action.validation': 'Validación',
@@ -20,5 +25,9 @@ export default {
 
     'BlockScaffold.action.paragraphs': 'Párrafos',
     'BlockScaffold.action.InputSettings': 'Opciones',
+
+    'BlockScaffold.SetVariableName': 'Establecer nombre de variable',
+    'BlockScaffold.CurrentVariable': 'Variable:',
+    'BlockScaffold.NoVariableSet': 'No tiene variable asociada',
   },
 }

@@ -100,16 +100,6 @@ const defaultStory = {
                           do: 'TOMA YA TU',
                           assign: 'items[1].name',
                         },
-                        {
-                          do: {
-                            eval: `
-                              console.log('OH INDEED', $modelValue)
-                              //return $modelValue.items.map(i => ({...i, name: 'YEE'}))
-                              $modelValue.items.forEach((i,k) => i.name = 'Yyeeee ' + (k || ''))
-                            `,
-                          },
-                          // assign: 'items',
-                        },
                       ],
                     },
                   },

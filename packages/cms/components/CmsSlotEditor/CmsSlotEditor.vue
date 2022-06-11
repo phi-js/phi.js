@@ -1,5 +1,6 @@
 <script>
 export default { inheritAttrs: false }
+var _CmsSlotEditor_counter = 0
 </script>
 
 <script setup>
@@ -9,6 +10,8 @@ import { useI18n } from '@/packages/i18n'
 
 import CmsBlockEditor from '../CmsBlockEditor/CmsBlockEditor.vue'
 import SlotBlockLauncher from './SlotBlockLauncher.vue'
+
+import activeUid from './activeUid.js'
 
 const props = defineProps({
   slot: {
@@ -22,6 +25,12 @@ const props = defineProps({
     required: false,
     default: 'slot-draggable',
   },
+
+  withContentAdder: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['update:slot', 'update:dragging'])
@@ -33,6 +42,8 @@ const i18n = useI18n({
 
 const innerSlot = ref([])
 
+const localCounter = _CmsSlotEditor_counter++
+
 watch(
   () => props.slot,
   (newValue) => {
@@ -40,7 +51,7 @@ watch(
 
     let count = 1
     innerSlot.value.forEach((block) => {
-      block._uid = block._uid ? block._uid : `${block.component}_${count++}`
+      block._uid = block._uid ? block._uid : `_${localCounter}_${block.component}_${count++}`
     })
   },
   { immediate: true, deep: true },
@@ -84,17 +95,65 @@ const refEditors = ref([])
 
 function launchBlock(block, targetIndex = null) {
   if (targetIndex === null) {
-    targetIndex = innerSlot.value.length - 1
+    targetIndex = innerSlot.value.length
   }
   innerSlot.value.splice(targetIndex, 0, JSON.parse(JSON.stringify(block)))
   emitUpdate()
 
   nextTick(() => {
+    activeUid.value = refEditors.value?.[targetIndex]?.block?._uid
     refEditors.value?.[targetIndex]?.onBlockCreated?.()
   })
 }
 
-const hoveredIndex = ref(-1)
+function onEditorClick(element) {
+  if (activeUid.value != element._uid && window?.navigator?.vibrate) {
+    window.navigator.vibrate(1)
+  }
+
+  activeUid.value = element._uid
+  registerBlurListeners()
+}
+
+/*
+Handle click-outside and ESC keypress to unset current active block.
+
+Since the event that gives focus to the block has a .stop:
+<CmsBlockEditor @click.stop="onEditorClick(element)"
+
+then any event registered in window.addEventListener('click') will not fire.
+Only clicks from other elements will trigger it, so it is equivalent to a "click outsite"
+*/
+const onClickOutside = (evt) => {
+  // EXCEPTION!
+  // Ignore clicks on UiWindow and UiPopovers (i.e. )
+  if (evt.target.closest('.UiWindow, *[data-tippy-root]')) {
+    evt.stopPropagation()
+    return
+  }
+
+  activeUid.value = null
+  clearBlurListeners()
+}
+
+const onKeyPress = (e) => {
+  if ((e.code == 'Escape')) {
+    activeUid.value = null
+    clearBlurListeners()
+  }
+}
+
+function registerBlurListeners() {
+  clearBlurListeners() // clear existing
+
+  window.addEventListener('click', onClickOutside)
+  window.addEventListener('keydown', onKeyPress, true)
+}
+
+function clearBlurListeners() {
+  window.removeEventListener('click', onClickOutside)
+  window.removeEventListener('keydown', onKeyPress, true)
+}
 </script>
 
 <template>
@@ -129,16 +188,17 @@ const hoveredIndex = ref(-1)
           :class="[
             'SlotItem',
             `SlotItem--${$attrs?.direction || 'column'}`,
-            { 'SlotItem--before-hovered': index === hoveredIndex - 1 }
+            `SlotItem--is-${element.component}`,
+            {'SlotItem--active': activeUid === element._uid},
           ]"
           :style="{flex: 1, display: 'flex', flexDirection: $attrs?.direction || 'column'}"
         >
           <SlotBlockLauncher
-            v-if="index === 0"
             class="SlotItem__launcher SlotItem__launcher--before"
             :direction="$attrs?.direction"
             :title="`Insert before ${element.title || element.component}`"
             @input="launchBlock($event, index)"
+            @click="activeUid = null"
           />
           <CmsBlockEditor
             :ref="e => refEditors[index] = e"
@@ -147,112 +207,26 @@ const hoveredIndex = ref(-1)
             :block="element"
             @update:block="onEditorUpdate(index, $event)"
             @delete="deleteBlock(index)"
-            @mouseenter="hoveredIndex = index"
-            @mouseleave="hoveredIndex = -1"
+            @click.stop="onEditorClick(element)"
           />
           <SlotBlockLauncher
+            v-if="index === innerSlot.length - 1"
             class="SlotItem__launcher SlotItem__launcher--after"
             :direction="$attrs?.direction"
             :title="`Insert after ${element.title || element.component}`"
             @input="launchBlock($event, index + 1)"
+            @click="activeUid = null"
           />
         </div>
       </template>
     </draggable>
 
     <SlotBlockLauncher
-      v-if="!innerSlot.length"
+      v-if="props.withContentAdder || !innerSlot.length"
       class="LoneLauncher"
       :label="i18n.t('CmsSlotEditor.AddContent')"
-      open
+      :open="true"
       @input="launchBlock($event)"
     />
   </div>
 </template>
-
-<style lang="scss">
-.SlotItem {
-  &:hover &__launcher {
-    z-index: 1;
-  }
-}
-
-.CmsSlotEditor {
-  // draggable container
-  & > &__draggable {
-    min-height: 24px;
-    min-width: 100%;
-  }
-
-  &--dragging {
-    // prevent dragging blocks into droppable elements (like editable texts or file uploads) present in the block
-    // !!! -> What about <draggable> in nested block faces (i.e. LayoutGroupEditor) ?
-    .BlockScaffold__face {
-      pointer-events: none;
-    }
-    // .BlockScaffold__face > .tiptap-editor-contents {
-    //   pointer-events: none;
-    // }
-  }
-
-  .LoneLauncher {
-    border: 0;
-    margin: 0;
-
-    .SlotBlockLauncher__trigger {
-      position: initial;
-
-      .UiItem {
-        --ui-item-padding: 8px 12px;
-        font-size: 1em;
-        background-color: #999;
-
-        &:hover {
-          background-color: var(--ui-color-primary);
-        }
-      }
-    }
-  }
-}
-
-// Show picker when container is hovered
-.SlotItem {
-  & > &__launcher {
-    opacity: 0;
-  }
-
-  &:hover > &__launcher {
-    opacity: 0.5;
-  }
-
-  & > &__launcher:hover,
-  & > &__launcher.SlotBlockLauncher--open {
-    opacity: 1 !important;
-  }
-}
-
-.SlotItem--column {
-  .SlotItem__launcher--after {
-    top: 3px;
-  }
-}
-
-.SlotItem--row {
-  .SlotItem__launcher--before {
-    left: -5px;
-  }
-  // .SlotItem__launcher--after {
-  //   right: -5px;
-  // }
-}
-
-// SlotItems surounding hovered
-.SlotItem {
-  &--before-hovered {
-    & > .SlotItem__launcher--after {
-      opacity: 0.5;
-      z-index: 2;
-    }
-  }
-}
-</style>

@@ -9,10 +9,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  // block: {
-  //   type: Object,
-  //   required: true,
-  // },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -43,22 +39,3 @@ const cssAttributes = computed(() => getCssObjectAttributes(props.modelValue?.cs
     @update:slot="onSlotUpdate"
   />
 </template>
-
-<style lang="scss">
-.LayoutGroupEditor {
-  padding-bottom: 22px; // make bottom room for nested editors
-}
-
-// .LayoutGroupEditor {
-.BlockScaffold.BlockScaffold--LayoutGroup > .BlockScaffold__face {
-  padding-top: 6px;
-  padding-left: 6px;
-  padding-right: 6px;
-}
-
-.BlockScaffold.BlockScaffold--LayoutGroup {
-  margin-top: -6px;
-  margin-left: -6px;
-  margin-right: -6px;
-}
-</style>

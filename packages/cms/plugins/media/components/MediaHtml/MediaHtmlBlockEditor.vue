@@ -190,7 +190,7 @@ const alignment = computed(() => {
 
 <template>
   <BlockScaffold
-    class="MediaHtmlBlockEditor BlockScaffold--default"
+    class="MediaHtmlBlockEditor"
     v-bind="$attrs"
     :block="props.block"
     :focused="isFocused"
@@ -258,10 +258,10 @@ const alignment = computed(() => {
       />
     </template>
 
-    <template #default="{ blockCssAttributes, innerBlock }">
+    <template #default="slotData">
       <EditorContentWrapper
-        v-bind="blockCssAttributes"
-        :value="innerBlock?.props?.value"
+        v-bind="slotData?.blockCssAttributes"
+        :value="slotData?.innerBlock?.props?.value"
         :editor="editor"
       />
     </template>
@@ -280,7 +280,7 @@ const alignment = computed(() => {
 }
 
 .tiptap-editor-contents [contenteditable] {
-  min-height: 32px;
+  // min-height: 32px;
   outline: none;
 }
 

@@ -1,0 +1,174 @@
+.CmsSlotEditor {
+  // vvuedraggable instance
+  & > &__draggable {
+    min-width: 100%;
+  }
+
+  &--dragging {
+    // prevent dragging blocks into droppable elements (like editable texts or file uploads) present in the block
+    // !!! -> What about <draggable> in nested block faces (i.e. LayoutGroupEditor) ?
+    .BlockScaffold__face {
+      pointer-events: none;
+    }
+    // .BlockScaffold__face > .tiptap-editor-contents {
+    //   pointer-events: none;
+    // }
+  }
+}
+
+.SlotItem {
+  position: relative;
+
+  &__launcher--before {
+    z-index: 1;
+  }
+
+  /* "outline" around editor */
+  &__editor {
+    &::before {
+      content: "";
+      display: block;
+      position: absolute;
+      pointer-events: none;
+
+      border-radius: 2px;
+      border: 2px solid var(--ui-color-primary);
+
+      --outline-offset-v: 0;
+      --outline-offset-h: 0;
+
+      // Ojo: Hacerlo mas ancho que el bloque puede causar overflows que no queremos
+      top: var(--outline-offset-v, -2px);
+      bottom: var(--outline-offset-v, -2px);
+      left: var(--outline-offset-h, -6px);
+      right: var(--outline-offset-h, -6px);
+    }
+  }
+}
+
+
+/* Hovered/focused: show slotitem outlines and blockscaffold toolbars */
+
+/* OFF/hidden state */
+.SlotItem {
+  &__editor::before { // outline
+    display: none;
+  }
+
+  & > .BlockScaffold > .BlockScaffold__toolbar-container { // toolbar
+    visibility: hidden;
+    z-index: 1;
+  }
+
+  &__launcher { // top and bottom launchers
+    display: none;
+  }
+}
+
+/* Focused/Active state */
+.SlotItem--active {
+  z-index: 1;
+
+  & > .SlotItem__editor::before {  // outline
+    display: block;
+    border-width: 2px !important;
+    opacity: 1 !important;
+  }
+
+  & > .BlockScaffold > .BlockScaffold__toolbar-container { // toolbar
+    visibility: visible;
+  }
+
+  & > .SlotItem__launcher {
+    display: block;
+  }
+
+  // Show "before" launcher from next SlotItem
+  & + .SlotItem > .SlotItem__launcher--before {
+    display: block;
+    z-index: 1;
+  }
+}
+
+// Make sure opened launchers are always visible
+.SlotItem {
+  &__launcher.SlotBlockLauncher--open {
+    display: block;
+    opacity: 1 !important;
+  }
+}
+
+
+
+
+/* Shome -some- parts on hover */
+.SlotItem__editor:hover::before {  // outline
+  display: block;
+  border-width: 1px;
+  opacity: 0.5;
+}
+
+// .SlotItem:hover {
+//   & > .SlotItem__launcher {
+//     display: block;
+//     z-index: 1;
+//     opacity: 0.5;
+//   }
+
+//   // Show "before" launcher from next SlotItem
+//   & + .SlotItem > .SlotItem__launcher--before {
+//     display: block;
+//     opacity: 0.5;
+//   }
+// }
+
+
+/* Special case: Create a non-displacing horizontal padding inside LayoutGroup */
+.SlotItem--is-LayoutGroup {
+  & > .SlotItem__editor {
+    padding-top: 4px;
+
+    padding-left: 4px;
+    padding-right: 4px;
+    margin-left: -4px;
+    margin-right: -4px;
+
+    padding-bottom: 4px;
+  }
+  // & > .SlotItem__editor {
+  //   padding: 0 5px;
+  //   margin-left: -5px;
+  //   margin-right: -5px;
+
+  //   padding-top: 5px;
+  //   margin-top: -5px;
+
+  //   padding-bottom: 5px;
+  //   margin-bottom: -5px;
+  // }
+}
+
+
+
+
+
+// // BlockScaffold INSIDE a CmsSlotEditor
+
+// // left border on nested toolbar
+// .BlockScaffold .BlockScaffold .BlockScaffold__toolbar {
+//   border-left: 1px outset rgba(255, 255, 255, 0.2);
+// }
+
+// /* Toolbar position in nested blocks (displacing first nested toolbar only) */
+// .SlotItem {
+//   --scaffold-depth: 10px;
+// }
+
+// .BlockScaffold__toolbar-container {
+//   left: var(--scaffold-depth);
+// }
+
+// .BlockScaffold .SlotItem:first-child { --scaffold-depth: 45px; }
+// .BlockScaffold .SlotItem:first-child .SlotItem:first-child  { --scaffold-depth: 85px; }
+// .BlockScaffold .SlotItem:first-child .SlotItem:first-child .SlotItem:first-child  { --scaffold-depth: 125px; }
+// .BlockScaffold .SlotItem:first-child .SlotItem:first-child .SlotItem:first-child .SlotItem:first-child  { --scaffold-depth: 165px; }

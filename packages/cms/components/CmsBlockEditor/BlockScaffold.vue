@@ -1,13 +1,13 @@
 <script setup>
-import { ref, shallowRef, watch, computed, provide, nextTick } from 'vue'
+import { ref, shallowRef, watch, computed, provide, nextTick, getCurrentInstance } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import dictionary from './BlockScaffold.i18n.js'
+import UiDrawerStack from '@/packages/ui/components/UiDrawerStack/UiDrawerStack.vue'
 
+import dictionary from './BlockScaffold.i18n.js'
 import { getBlockEditors, getBlockDefinition, getCssObjectAttributes } from '../../functions'
 import EditorAction from './EditorAction.vue'
 import {
   UiItem,
-  UiInputWedge,
   UiIcon,
   UiPopover,
   UiWindow,
@@ -15,7 +15,7 @@ import {
   UiTab,
 } from '@/packages/ui/components'
 
-import UiDrawerStack from '../../../ui/components/UiDrawerStack/UiDrawerStack.vue'
+import activeUid from '../CmsSlotEditor/activeUid.js'
 
 const props = defineProps({
   block: {
@@ -147,7 +147,34 @@ function getWidth(coords) {
   return parseInt(coords?.width)
 }
 
+function renameVModel() {
+  let res = window.prompt(i18n.t('BlockScaffold.SetVariableName'), innerBlock.value['v-model'])?.trim?.()
+  if (res === undefined) { // prompt cancelled
+    return
+  }
+
+  res = res.replaceAll(/[^a-zA-Z0-9.]/g, '') // remove invalid characters
+  innerBlock.value['v-model'] = res
+  accept()
+}
+
+/* Find the chain of BlockScaffold parents */
+const instance = getCurrentInstance()
+const ancestry = []
+const descendants = []
+
+let parent = instance
+while (parent.parent) {
+  parent = parent.parent
+  if (parent.exposed?.isBlockScaffold) {
+    ancestry.unshift(parent.vnode.props.block)
+    parent.exposed.descendants.push({ ...props.block })
+  }
+}
+
 defineExpose({
+  isBlockScaffold: true,
+  descendants,
   openAction,
   openActionId,
 })
@@ -166,6 +193,20 @@ defineExpose({
     ]"
   >
     <div class="BlockScaffold__toolbar-container">
+      <div
+        v-if="ancestry.length"
+        class="BlockScaffold__ancestry"
+      >
+        <UiIcon
+          v-for="parentBlock in ancestry"
+          :key="parentBlock._uid"
+          class="BlockScaffold__ancestryIcon BlockScaffold__ancestryIcon--up"
+          :title="`Select parent block (${parentBlock.title || parentBlock.component})`"
+          src="mdi:chevron-up"
+          @click.stop.prevent="activeUid = parentBlock._uid"
+        />
+      </div>
+
       <div class="BlockScaffold__toolbar">
         <UiItem
           class="BlockScaffold__toolbar-title Block__drag-handle"
@@ -184,12 +225,16 @@ defineExpose({
         <div class="BlockScaffold__toolbar-spacer" />
 
         <!-- Quick access buttons -->
-        <UiInputWedge
+        <UiIcon
           v-if="innerBlock['v-model'] !== undefined"
-          v-model="innerBlock['v-model']"
-          :color="innerBlock['v-model'] ? 'var(--ui-color-primary)' : undefined"
-          placeholder="Variable"
-          @update:model-value="accept()"
+          :style="{color: innerBlock['v-model'] ? 'var(--ui-color-primary)' : undefined}"
+          :title="innerBlock['v-model']
+            ? i18n.t('BlockScaffold.CurrentVariable') + ' ' + innerBlock['v-model']
+            : i18n.t('BlockScaffold.NoVariableSet')
+          "
+          class="BlockScaffold__toolbar-icon"
+          src="mdi:variable"
+          @click="renameVModel()"
         />
 
         <UiIcon
@@ -264,6 +309,18 @@ defineExpose({
           </template>
         </UiPopover>
       </div>
+
+      <div
+        v-if="descendants.length"
+        class="BlockScaffold__descendants"
+      >
+        <UiIcon
+          class="BlockScaffold__ancestryIcon BlockScaffold__ancestryIcon--down"
+          :title="`Select child block (${descendants[0].title || descendants[0].component})`"
+          src="mdi:chevron-down"
+          @click.stop.prevent="activeUid = descendants[0]._uid"
+        />
+      </div>
     </div>
 
     <div class="BlockScaffold__face">
@@ -277,18 +334,15 @@ defineExpose({
           v-model:block="innerBlock"
           :action="editors.face"
           v-bind="blockCssAttributes"
-          xxxv-bind="{ ...innerBlock?.props, ...blockCssAttributes }"
-          tabindex="0"
           :open-action="openActionId"
           @update:block="accept()"
           @delete="emitDelete()"
         />
 
-        <!-- block component as face. Clicking will open settings window -->
+        <!-- No editor.face defined. Use block component as face -->
         <div
           v-else-if="definition?.block?.component"
           class="BlockScaffold__defaultFace"
-          @click="openAction(0)"
         >
           <Component
             :is="definition.block.component"

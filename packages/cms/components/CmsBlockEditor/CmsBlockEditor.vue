@@ -34,6 +34,7 @@ const CmsBlockEditor = {
     const innerRef = ref()
 
     expose({
+      block: innerBlock,
       onBlockCreated: () => definition?.onCreated?.(innerRef.value),
       openAction: (actionIndex = 0) => innerRef.value.openAction(actionIndex),
     })

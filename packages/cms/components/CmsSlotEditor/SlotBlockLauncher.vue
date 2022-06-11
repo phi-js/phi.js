@@ -47,7 +47,7 @@ function onTriggerClick() {
   isOpen.value = !isOpen.value
 
   setTimeout(() => {
-    isPopupOpen.value = isOpen.value
+    isPopupOpen.value = isOpen.value || props.open
   }, 200)
 }
 
@@ -100,14 +100,13 @@ function onBeforeCreateBlock(block) {
 function onStagingAccept() {
   emit('input', stagingBlock.value)
   stagingBlock.value = null
-  isOpen.value = false
+  isOpen.value = props.open
 }
 
 function onStagingCancel() {
   stagingBlock.value = null
   isOpen.value = props.open
 }
-
 </script>
 
 <template>
@@ -153,6 +152,7 @@ function onStagingCancel() {
           v-if="stagingBlock"
           ref="elStaging"
           v-model:block="stagingBlock"
+          class="SlotBlockLauncher__stagedEditor"
           @update:block="onStagingAccept"
           @cancel="onStagingCancel"
         />
@@ -168,9 +168,7 @@ function onStagingCancel() {
   &__trigger {
     cursor: pointer;
     position: absolute;
-
-    padding: 3px 10px;
-    padding-top: 0;
+    padding: 6px;
 
     .UiItem {
       user-select: none;
@@ -223,10 +221,38 @@ function onStagingCancel() {
   }
 }
 
+.SlotBlockLauncher {
+  &__stagedEditor {
+    position: relative;
+    border: 1px solid transparent; // prevent margin collapse
+
+    &::before {
+      content: '';
+
+      pointer-events: none;
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      bottom: -5px;
+      left: -5px;
+
+      border-radius: 5px;
+      border: 2px dashed var(--ui-color-primary);
+    }
+
+    .BlockScaffold__toolbar-container {
+      display: none;
+    }
+  }
+}
+
+
+
+// the trigger is 32x32 px, position centered
 .SlotBlockLauncher--column {
   .SlotBlockLauncher__trigger {
-    top: -12px;
-    left: calc(50% - 20px);
+    top: -16px;
+    left: calc(50% - 16px);
   }
 
   .SlotBlockLauncher__box {
@@ -238,17 +264,17 @@ function onStagingCancel() {
   }
 
   &.SlotBlockLauncher--teasing {
+    margin-top: -2px;
+    margin-bottom: -2px;
     border-top: 4px dashed var(--ui-color-primary);
-    margin-top: -4px;
   }
 }
 
 
 .SlotBlockLauncher--row {
   .SlotBlockLauncher__trigger {
-    top: 50%;
-    margin-top: -8px;
-    left: -20px;
+    top: calc(50% - 16px);
+    left: -16px;
   }
 
   .SlotBlockLauncher__box {
@@ -264,10 +290,9 @@ function onStagingCancel() {
     width: auto;
   }
 
-
   &.SlotBlockLauncher--teasing {
-    border-left: 4px dashed var(--ui-color-primary);
-    margin-left: -4px;
+    margin-left: -3px;
+    border-left: 3px dashed var(--ui-color-primary);
   }
 
   ///damn

@@ -42,7 +42,7 @@
 
     display: flex;
     flex-wrap: nowrap;
-    align-items: center;
+    align-items: flex-start;
   }
 
 
@@ -70,99 +70,93 @@
       color: var(--ui-color-primary);
     }
   }
-
-  // /* UiInput inside toolbar */
-  // &__toolbar {
-  //   input.UiInput,
-  //   .UiInput__element {
-  //     background-color: rgba(255, 255, 255, 0.2);
-  //     color: #bbb;
-  //     font-size: 14px;
-  //   }
-  // }
 }
 
-/* Prevent toolbar from being "hoverable" white outside the element */
+
+/* Ancestor & Descendant blocks */
 .BlockScaffold {
-  & > .BlockScaffold__toolbar-container {
-    pointer-events: none;
+  &__toolbar {
+    margin-left: 8px;
+    z-index: 1;
   }
 
-  &:hover {
-    & > .BlockScaffold__toolbar-container {
-      pointer-events: initial;
-    }
-  }
-}
+  &__ancestry {
+    position: relative;
+    margin-left: 15px;
+    margin-right: -4px;
 
-
-
-// BlockScaffold INSIDE a CmsSlotEditor
-.CmsSlotEditor {
-
-  /* Toolbar visible on hover or focused */
-  .BlockScaffold {
-    &__toolbar-container {
-      transition: opacity var(--ui-duration-snap);
-      opacity: 0;
-    }
-
-    &--focused > .BlockScaffold__toolbar-container,
-    &:hover > .BlockScaffold__toolbar-container {
-      opacity: 1;
-    }
+    display: flex;
+    flex-wrap: nowrap;
   }
 
-  /* "outline" on hover */
-  .BlockScaffold {
-    &::before {
-      content: "";
-      display: block;
-      position: absolute;
+  &__descendants {
+    position: absolute;
+    right: -32px;
+    // bottom: -4px;
+    bottom: 0;
+  }
 
-      // Ojo: Hacerlo mas ancho que el bloque puede causar overflows que no queremos
-      top: var(--outline-offset-v, -3px);
-      bottom: var(--outline-offset-v, -3px);
-      left: var(--outline-offset-h, -6px);
-      right: var(--outline-offset-h, -6px);
+  &__ancestryIcon--down {
+    padding: 5px 10px 5px 20px;
+    background-color: #777;
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 5px;
 
-      border-radius: 2px;
-      border: 2px solid var(--ui-color-primary);
-
-      transition: all var(--ui-duration-snap);
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    // outline visible on hover, focused or when window is open
-    &.BlockScaffold--focused,
-    &.BlockScaffold--window-open,
+    cursor: pointer;
     &:hover {
-      &::before {
-        opacity: 0.7;
+      // opacity: 1;
+      background-color: #999;
+    }
+
+  }
+
+  &__ancestryIcon--up {
+    width: 8px;
+
+    opacity: 0;
+    pointer-events: none;
+
+    &:last-child {
+      position: absolute;
+      right: -16px;
+      top: -4px;
+
+      pointer-events: all;
+      opacity: 1;
+
+      width: auto;
+      padding: 5px 20px 5px 10px;
+
+      // background-color: #313131;
+      background-color: #777;
+      color: rgba(255, 255, 255, 0.7);
+      border-radius: 5px;
+
+      cursor: pointer;
+      &:hover {
+        // opacity: 1;
+        background-color: #999;
       }
     }
   }
 }
 
-// left border on nested toolbar
-.BlockScaffold .BlockScaffold .BlockScaffold__toolbar {
-  border-left: 1px outset rgba(255, 255, 255, 0.2);
-}
 
-/* Toolbar position in nested blocks (displacing first nested toolbar only) */
-.SlotItem {
-  --scaffold-depth: 10px;
-}
 
-.BlockScaffold__toolbar-container {
-  left: var(--scaffold-depth);
-}
 
-.BlockScaffold .SlotItem:first-child { --scaffold-depth: 45px; }
-.BlockScaffold .SlotItem:first-child .SlotItem:first-child  { --scaffold-depth: 85px; }
-.BlockScaffold .SlotItem:first-child .SlotItem:first-child .SlotItem:first-child  { --scaffold-depth: 125px; }
-.BlockScaffold .SlotItem:first-child .SlotItem:first-child .SlotItem:first-child .SlotItem:first-child  { --scaffold-depth: 165px; }
+
+// /* Prevent toolbar from being "hoverable" white outside the element */
+// .BlockScaffold {
+//   & > .BlockScaffold__toolbar-container {
+//     pointer-events: none;
+//   }
+
+//   &:hover {
+//     & > .BlockScaffold__toolbar-container {
+//       pointer-events: initial;
+//     }
+//   }
+// }
 
 
 // Block's option menu contents

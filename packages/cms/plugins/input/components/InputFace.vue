@@ -50,10 +50,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div
-    class="InputFace"
-    @click="openAction('InputSettings')"
-  >
+  <div class="InputFace">
     <!-- stand-in for empty Select fields -->
     <div
       v-if="isSelect && !Array.isArray(translatedProps?.options)"
