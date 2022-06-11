@@ -97,8 +97,10 @@ function onSearchChange() {
 }
 
 function onSearchEnter() {
-  emit('select-item', filteredItems.value?.[focusedIndex.value])
-  searchString.value = ''
+  if (filteredItems.value?.[focusedIndex.value]) {
+    emit('select-item', filteredItems.value?.[focusedIndex.value])
+    searchString.value = ''
+  }
 }
 
 function onItemClick(item) {
