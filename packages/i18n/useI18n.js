@@ -1,6 +1,7 @@
 import { inject, useAttrs } from 'vue'
 import { toDate } from '@/packages/ui/helpers'
 import baseDictionary from './languages'
+import { locale, availableLocales } from './locale.js'
 
 export default function useI18n(componentDictionary = null) {
   const injected = inject('$_phi_i18n') || {}
@@ -17,7 +18,7 @@ export default function useI18n(componentDictionary = null) {
   t('There are %number% people', { number: 4 })
   */
   function t(word, params = null, defaultValue = null) {
-    const targetLocale = attrs?.['i18n-language'] || injected.locale
+    const targetLocale = attrs?.['i18n-language'] || locale.value
     const baseLocale = targetLocale.substr(0, 2)
 
     let translated = (
@@ -39,24 +40,20 @@ export default function useI18n(componentDictionary = null) {
 
   return {
     get locale() {
-      return injected.locale
+      return locale.value
     },
 
     set locale(newValue) {
-      injected.locale = newValue
+      locale.value = newValue
     },
 
-    availableLocales: [
-      { value: 'en', text: 'English' },
-      { value: 'es', text: 'Español' },
-      { value: 'de', text: 'Deutsch' },
-    ],
+    availableLocales,
 
     t,
 
     // Format date
     d(date, options = undefined) {
-      let targetLocale = attrs?.['i18n-language'] || injected.locale
+      let targetLocale = attrs?.['i18n-language'] || locale.value
 
       // Sanitize locale
       targetLocale = targetLocale.replace('_', '-')
@@ -93,7 +90,7 @@ export default function useI18n(componentDictionary = null) {
 
     // Format currency
     $(value, currency = null) {
-      const targetLocale = attrs?.['i18n-language'] || injected.locale
+      const targetLocale = attrs?.['i18n-language'] || locale.value
       return Number(value).toLocaleString(targetLocale, {
         style: 'currency',
         currency: currency || injected.defaultCurrency,
