@@ -2,7 +2,7 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import tippy from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
-import 'tippy.js/themes/light-border.css'
+// import 'tippy.js/themes/light-border.css'
 
 var tippyInstance = null
 
@@ -20,6 +20,10 @@ const props = defineProps({
   /*
   Tippy placement attribute
   https://atomiks.github.io/tippyjs/#placements
+  top, top-start, top-end
+  right, right-start, right-end
+  bottom, bottom-start, bottom-end
+  left, left-start, left-end
   */
   placement: {
     type: String,

@@ -19,21 +19,24 @@ const emit = defineEmits(['update:modelValue'])
 </script>
 
 <template>
-  <div class="UiInputUrl UiGroup" tabindex="0">
+  <div
+    class="UiInputUrl UiGroup"
+    tabindex="0"
+  >
     <input
       class="UiInputUrl__input UiInput__element"
       type="text"
       :value="props.modelValue"
       :placeholder="$attrs.placeholder"
       @input="emit('update:modelValue', $event.target.value)"
-    />
+    >
     <UiUpload
       v-if="endpoint"
       class="UiInputUrl__uploader"
       :endpoint="endpoint"
       v-bind="$attrs"
-      placeholder="Subir archivo"
-      @update:modelValue="emit('update:modelValue', $event?.url)"
+      :model-value="[]"
+      @update:model-value="emit('update:modelValue', $event?.url)"
     />
   </div>
 </template>

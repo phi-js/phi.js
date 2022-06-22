@@ -23,6 +23,13 @@
   }
 }
 
+textarea.UiInput__element {
+  width: 100%;
+  min-height: 100px;
+  font-family: inherit;
+  font-size: inherit;
+}
+
 .UiInput {
   &__label {
     font-weight: bold;

@@ -27,18 +27,20 @@
 
     &--open {
       .UiDrawerStack__trigger {
-        background-color: rgba(255,255,255, 0.03);
+        background-color: rgba(255,255,255, 0.05);
         // .UiItem__icon {
         //   color: var(--ui-color-primary);
         // }
       }
     }
+
+    .UiDrawer__contents {
+      background-color: rgba(255,255,255, 0.03);
+    }
   }
 
   &__component {
-    padding: 12px;
-    padding-bottom: 40px;
-    // border-left: 4px solid var(--ui-color-primary);
+    padding: 6px 0 32px 16px;
   }
 
 

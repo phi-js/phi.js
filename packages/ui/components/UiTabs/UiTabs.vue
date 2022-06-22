@@ -34,7 +34,10 @@ const emit = defineEmits(['update:modelValue'])
 // Obtain tabs from default slot contents
 const slots = useSlots()
 
-const tabs = ref(getTabs())
+// const tabs = ref(getTabs())
+const tabs = computed(() => getTabs())
+
+
 function getTabs() {
   if (!slots?.default) {
     return []
@@ -174,85 +177,3 @@ function selectTab(incomingTab, scrollIntoView = true) {
     </div>
   </div>
 </template>
-
-<style lang="scss">
-// Tab placement
-.UiTabs {
-  &__header {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    overflow-x: auto;
-
-    /*firefox only*/
-    scrollbar-width: thin;
-
-    /*webkit based browsers only*/
-    &::-webkit-scrollbar {
-      height: 8px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border-radius: 5px;
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-  }
-
-  &__tabList {
-    flex: 1;
-
-    display: flex;
-    flex-wrap: nowrap;
-    overflow: hidden;
-  }
-}
-
-// Tab bottom border + animations
-.UiTabs {
-  .UiTab {
-    position: relative;
-
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      border-radius: 2px;
-      background-color: var(--ui-color-primary);
-
-      transform: scaleX(0);
-      transition: transform var(--ui-duration-snap);
-    }
-
-    &--selected {
-      &::after {
-        transform: scaleX(1);
-      }
-    }
-  }
-
-  &--direction-left {
-    .UiTab {
-      &--incoming::after {
-        transform-origin: bottom right;
-      }
-      &--outgoing::after {
-        transform-origin: bottom left;
-      }
-    }
-  }
-
-  &--direction-right {
-    .UiTab {
-      &--incoming::after {
-        transform-origin: bottom left;
-      }
-      &--outgoing::after {
-        transform-origin: bottom right;
-      }
-    }
-  }
-}
-</style>

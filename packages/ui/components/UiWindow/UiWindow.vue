@@ -64,7 +64,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:open', 'update:dock', 'update:coords'])
+const emit = defineEmits(['update:open', 'update:dock', 'update:coords', 'cancel'])
 
 
 /*
@@ -119,6 +119,11 @@ function close() {
   isOpen.value = false
   emit('update:open', isOpen.value)
   resetBody()
+}
+
+function cancel() {
+  emit('cancel')
+  close()
 }
 
 /* Every dock holds a memory of its last used coords */
@@ -365,7 +370,7 @@ const isTransparent = ref(false)
 
           <UiIcon
             src="mdi:close"
-            @click="close"
+            @click="cancel"
           />
         </div>
 

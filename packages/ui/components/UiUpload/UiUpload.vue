@@ -2,6 +2,8 @@
 // Base sample in https://codesandbox.io/s/uppy-vue-example-buz4w?file=/src/components/HelloWorld.vue
 import { ref, watch, computed, onBeforeUnmount } from 'vue'
 
+import { useI18n } from '@/packages/i18n'
+
 import draggable from 'vuedraggable' //fails when using phi.js as a bundled library
 // import draggable from 'vuedraggable/src/vuedraggable'
 
@@ -63,10 +65,15 @@ const props = defineProps({
   placeholder: {
     type: [String, Object],
     required: false,
-    default: 'Upload files',
+    default: null,
   },
 })
 const emit = defineEmits(['update:modelValue', 'upload'])
+
+const i18n = useI18n({
+  en: { 'UiUpload.Upload': 'Upload' },
+  es: { 'UiUpload.Upload': 'Subir archivo' },
+})
 
 const innerFiles = ref([])
 watch(
@@ -197,7 +204,7 @@ const dashboardProps = computed(() => ({
         class="UiUpload__trigger UiButton"
         @click="isOpen = !isOpen"
       >
-        {{ props.placeholder }}
+        {{ props.placeholder || i18n.t('UiUpload.Upload') }}
       </button>
     </template>
 

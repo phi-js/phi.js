@@ -162,11 +162,15 @@ watch(
       ref="elTree"
       class="UiItemFinder__tree"
     >
+      <div class="UiItemFinder__body">
+        <slot name="body" />
+      </div>
+
       <details
-        v-for="groupItem in tree"
+        v-for="(groupItem, index) in tree"
         :key="groupItem.id"
         class="UiItemFinder__details"
-        open
+        :open="index == 0"
       >
         <summary>{{ groupItem.text }}</summary>
         <section>
@@ -191,6 +195,9 @@ watch(
 </template>
 
 <style lang="scss">
+@import '@/packages/ui/themes/base/modifiers/clickable.scss';
+@import '@/packages/cms/themes/base/classes/coolDetails.scss';
+
 .UiItemFinder {
   display: flex;
   flex-direction: column;
@@ -217,7 +224,6 @@ watch(
 
   &__tree {
     flex: 1;
-    max-height: 300px;
     overflow-y: auto;
     user-select: none;
 
@@ -251,10 +257,7 @@ watch(
 
 
   &__details {
-    & > summary {
-      padding: 12px;
-      font-weight: bold;
-    }
+    @extend .coolDetails;
 
     & > section {
       display: flex;
