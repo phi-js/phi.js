@@ -10,31 +10,21 @@ const defaultStory = {
       component: 'LayoutPage',
       slot: [
         {
-          component: 'LayoutRow',
-          slot: [
-            {
-              component: 'LayoutColumn',
-              slot: [
-                {
-                  component: 'MediaImage',
-                  props: {
-                    alt: 'Phi.js',
-                    title: 'Hello world!',
-                    src: '/phi.svg',
-                    align: 'center',
-                  },
-                },
-                {
-                  component: 'MediaHtml',
-                  props: { value: '<h1 style="text-align: center">Phi<em>.js</em></h1>' },
-                },
-                {
-                  component: 'MediaLoremIpsum',
-                  props: { nParagraphs: 3 },
-                },
-              ],
-            },
-          ],
+          component: 'MediaImage',
+          props: {
+            alt: 'Phi.js',
+            title: 'Hello world!',
+            src: '/phi.svg',
+            align: 'center',
+          },
+        },
+        {
+          component: 'MediaHtml',
+          props: { value: '<h1 style="text-align: center">Phi<em>.js</em></h1>' },
+        },
+        {
+          component: 'MediaLoremIpsum',
+          props: { nParagraphs: 3 },
         },
       ],
     },
