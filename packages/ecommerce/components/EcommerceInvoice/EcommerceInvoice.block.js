@@ -16,12 +16,10 @@ export default {
         'id': 'InvoiceItems',
         'title': 'Invoice items',
         'component': UiInput,
-        props: {
-          type: 'json'
-        },
+        'props': { type: 'json' },
         'v-model': 'block.props.blueprint',
       },
-    ]
+    ],
     // face: {
     //   'component': UiItemEditor,
     //   'v-model': 'block.props',
