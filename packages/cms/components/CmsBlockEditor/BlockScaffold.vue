@@ -110,7 +110,7 @@ function openAction(actionIndex) {
   // (check 2 ticks ahead! UiWindow of newly created blocks is not fully done after first tick, apparently)
   nextTick(() => {
     if (!elWindowContents.value) {
-      nextTick(() => elWindowContents.value.querySelector('input[type=text], textarea')?.focus?.())
+      nextTick(() => elWindowContents.value?.querySelector?.('input[type=text], textarea')?.focus?.())
       return
     }
     elWindowContents.value.querySelector('input[type=text], textarea')?.focus?.()
@@ -193,133 +193,135 @@ defineExpose({
     ]"
   >
     <div class="BlockScaffold__toolbar-container">
-      <div
-        v-if="ancestry.length"
-        class="BlockScaffold__ancestry"
-      >
-        <UiIcon
-          v-for="parentBlock in ancestry"
-          :key="parentBlock._uid"
-          class="BlockScaffold__ancestryIcon BlockScaffold__ancestryIcon--up"
-          :title="`Select parent block (${parentBlock.title || parentBlock.component})`"
-          src="mdi:chevron-up"
-          @click.stop.prevent="activeUid = parentBlock._uid"
-        />
-      </div>
-
-      <div class="BlockScaffold__toolbar">
-        <UiItem
-          class="BlockScaffold__toolbar-title Block__drag-handle"
-          icon="mdi:drag"
-          :text="innerBlock?.title || definition?.title || ''"
-        />
-        <slot name="toolbar">
-          <EditorAction
-            v-if="editors.toolbar"
-            v-model:block="innerBlock"
-            :action="editors.toolbar"
-            @update:block="accept"
-          />
-        </slot>
-
-        <div class="BlockScaffold__toolbar-spacer" />
-
-        <!-- Quick access buttons -->
-        <UiIcon
-          v-if="innerBlock['v-model'] !== undefined"
-          :style="{color: innerBlock['v-model'] ? 'var(--ui-color-primary)' : undefined}"
-          :title="innerBlock['v-model']
-            ? i18n.t('BlockScaffold.CurrentVariable') + ' ' + innerBlock['v-model']
-            : i18n.t('BlockScaffold.NoVariableSet')
-          "
-          class="BlockScaffold__toolbar-icon"
-          src="mdi:variable"
-          @click="renameVModel()"
-        />
-
-        <UiIcon
-          v-if="innerBlock?.rules?.length"
-          title="This block has validation rules"
-          class="BlockScaffold__toolbar-icon"
-          src="mdi:message-alert"
-          @click="openActionId('validation')"
-        />
-
-        <UiIcon
-          v-if="innerBlock?.css?.classes?.length || innerBlock?.css?.style"
-          title="This block has CSS styles"
-          class="BlockScaffold__toolbar-icon"
-          src="mdi:palette-advanced"
-          @click="openActionId('css')"
-        />
-
-        <UiIcon
-          v-if="innerBlock['v-if']"
-          title="This block has conditional visibility"
-          class="BlockScaffold__toolbar-icon"
-          src="mdi:eye"
-          @click="openActionId('visibility')"
-        />
-
-        <UiIcon
-          v-if="innerBlock['v-for']"
-          title="This block repeats"
-          class="BlockScaffold__toolbar-icon"
-          src="mdi:repeat-variant"
-          @click="openActionId('visibility')"
-        />
-
-        <UiIcon
-          v-if="hasEvents"
-          title="Has events"
-          class="BlockScaffold__toolbar-icon"
-          src="mdi:gesture-tap"
-          @click="openActionId('events')"
-        />
-
-
-        <!-- dropdown options -->
-        <UiPopover
-          v-model:open="popupIsOpen"
-          class="BlockPopover"
-          placement="bottom"
+      <div class="BlockScaffold__toolbar-stick">
+        <div
+          v-if="ancestry.length"
+          class="BlockScaffold__ancestry"
         >
-          <template #trigger>
-            <UiIcon
-              class="BlockScaffold__toolbar-icon"
-              src="mdi:dots-vertical"
-            />
-          </template>
-          <template #contents="{ close }">
-            <UiItem
-              v-for="(action, i) in availableActions"
-              :key="i"
-              :text="i18n.t(`BlockScaffold.action.${action.id}`, null, action.title)"
-              :icon="action.icon"
-              class="BlockPopover__item BlockPopover__item--action"
-              @click="openAction(i) && close()"
-            />
+          <UiIcon
+            v-for="parentBlock in ancestry"
+            :key="parentBlock._uid"
+            class="BlockScaffold__ancestryIcon BlockScaffold__ancestryIcon--up"
+            :title="`Select parent block (${parentBlock.title || parentBlock.component})`"
+            src="mdi:chevron-up"
+            @click.stop.prevent="activeUid = parentBlock._uid"
+          />
+        </div>
 
-            <UiItem
-              :text="i18n.t('BlockScaffold.action.delete')"
-              icon="mdi:close"
-              class="BlockPopover__item BlockPopover__item--delete"
-              @click="emitDelete() && close()"
+        <div class="BlockScaffold__toolbar">
+          <UiItem
+            class="BlockScaffold__toolbar-title Block__drag-handle"
+            icon="mdi:drag"
+            :text="innerBlock?.title || definition?.title || ''"
+          />
+          <slot name="toolbar">
+            <EditorAction
+              v-if="editors.toolbar"
+              v-model:block="innerBlock"
+              :action="editors.toolbar"
+              @update:block="accept"
             />
-          </template>
-        </UiPopover>
-      </div>
+          </slot>
 
-      <div
-        v-if="descendants.length"
-        class="BlockScaffold__descendants"
-      >
-        <UiIcon
-          class="BlockScaffold__ancestryIcon BlockScaffold__ancestryIcon--down"
-          :title="`Select child block (${descendants[0].title || descendants[0].component})`"
-          src="mdi:chevron-down"
-          @click.stop.prevent="activeUid = descendants[0]._uid"
-        />
+          <div class="BlockScaffold__toolbar-spacer" />
+
+          <!-- Quick access buttons -->
+          <UiIcon
+            v-if="innerBlock['v-model'] !== undefined"
+            :style="{color: innerBlock['v-model'] ? 'var(--ui-color-primary)' : undefined}"
+            :title="innerBlock['v-model']
+              ? innerBlock['v-model']
+              : i18n.t('BlockScaffold.NoVariableSet')
+            "
+            class="BlockScaffold__toolbar-icon"
+            src="mdi:variable"
+            @click="renameVModel()"
+          />
+
+          <UiIcon
+            v-if="innerBlock?.rules?.length"
+            title="This block has validation rules"
+            class="BlockScaffold__toolbar-icon"
+            src="mdi:message-alert"
+            @click="openActionId('validation')"
+          />
+
+          <UiIcon
+            v-if="innerBlock?.css?.classes?.length || innerBlock?.css?.style"
+            title="This block has CSS styles"
+            class="BlockScaffold__toolbar-icon"
+            src="mdi:palette-advanced"
+            @click="openActionId('css')"
+          />
+
+          <UiIcon
+            v-if="innerBlock['v-if']"
+            title="This block has conditional visibility"
+            class="BlockScaffold__toolbar-icon"
+            src="mdi:eye"
+            @click="openActionId('visibility')"
+          />
+
+          <UiIcon
+            v-if="innerBlock['v-for']"
+            title="This block repeats"
+            class="BlockScaffold__toolbar-icon"
+            src="mdi:repeat-variant"
+            @click="openActionId('visibility')"
+          />
+
+          <UiIcon
+            v-if="hasEvents"
+            title="Has events"
+            class="BlockScaffold__toolbar-icon"
+            src="mdi:gesture-tap"
+            @click="openActionId('events')"
+          />
+
+
+          <!-- dropdown options -->
+          <UiPopover
+            v-model:open="popupIsOpen"
+            class="BlockPopover"
+            placement="bottom-end"
+          >
+            <template #trigger>
+              <UiIcon
+                class="BlockScaffold__toolbar-icon"
+                src="mdi:dots-vertical"
+              />
+            </template>
+            <template #contents="{ close }">
+              <UiItem
+                v-for="(action, i) in availableActions"
+                :key="i"
+                :text="i18n.t(`BlockScaffold.action.${action.id}`, null, action.title)"
+                :icon="action.icon"
+                class="BlockPopover__item BlockPopover__item--action"
+                @click="openAction(i) && close()"
+              />
+
+              <UiItem
+                :text="i18n.t('BlockScaffold.action.delete')"
+                icon="mdi:close"
+                class="BlockPopover__item BlockPopover__item--delete"
+                @click="emitDelete() && close()"
+              />
+            </template>
+          </UiPopover>
+        </div>
+
+        <div
+          v-if="descendants.length"
+          class="BlockScaffold__descendants"
+        >
+          <UiIcon
+            class="BlockScaffold__ancestryIcon BlockScaffold__ancestryIcon--down"
+            :title="`Select child block (${descendants[0].title || descendants[0].component})`"
+            src="mdi:chevron-down"
+            @click.stop.prevent="activeUid = descendants[0]._uid"
+          />
+        </div>
       </div>
     </div>
 
@@ -359,6 +361,7 @@ defineExpose({
       :open="windowIsOpen"
       class="BlockScaffold__window"
       @update:open="currentActionIndex = null"
+      @cancel="cancel"
     >
       <template #header>
         <UiItem
@@ -374,8 +377,9 @@ defineExpose({
           class="WindowContents"
         >
           <Component
-            :is="getWidth(coords) < 650 ? UiDrawerStack : UiTabs"
+            :is="UiTabs"
             v-model="currentActionIndex"
+            xxxx-is="getWidth(coords) < 650 ? UiDrawerStack : UiTabs"
             class="WindowContents__tabs"
           >
             <UiTab

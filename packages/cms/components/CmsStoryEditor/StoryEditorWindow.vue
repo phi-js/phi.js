@@ -11,6 +11,7 @@ import BlockCssEditor from '../CmsBlockEditor/BlockCssEditor.vue'
 import ListenersEditor from '../ListenersEditor/ListenersEditor.vue'
 import StoryDictionaryEditor from './StoryDictionaryEditor.vue'
 import StoryMethodsEditor from './StoryMethodsEditor.vue'
+import CmsThemePicker from '../CmsThemePicker/CmsThemePicker.vue'
 
 const props = defineProps({
   story: {
@@ -196,7 +197,19 @@ const availableEvents = computed(() => [
           <BlockCssEditor
             v-model="currentPage"
             @update:model-value="emitCurrentPageUpdate"
-          />
+          >
+            <template #default>
+              <UiTab
+                value="theme"
+                text="Theme"
+              >
+                <CmsThemePicker
+                  v-model="innerStory.themes"
+                  @update:model-value="emitStoryUpdate"
+                />
+              </UiTab>
+            </template>
+          </BlockCssEditor>
         </UiTab>
 
         <UiTab

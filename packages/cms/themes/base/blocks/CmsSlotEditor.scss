@@ -90,6 +90,27 @@
   }
 }
 
+
+// Slotitem focused via tabIndex
+.SlotItem__editor:focus-visible {
+  outline: none;
+
+  &::before {
+    display: block;
+    border-width: 2px !important;
+    // opacity: 0.7 !important;
+  }
+}
+
+
+// The last launcher of the last item is always visible
+.SlotItem:last-child {
+  & > .SlotItem__launcher--after {
+    display: block;
+    // opacity: 0.7;
+  }
+}
+
 // Make sure opened launchers are always visible
 .SlotItem {
   &__launcher.SlotBlockLauncher--open {
@@ -108,67 +129,26 @@
   opacity: 0.5;
 }
 
-// .SlotItem:hover {
-//   & > .SlotItem__launcher {
-//     display: block;
-//     z-index: 1;
-//     opacity: 0.5;
-//   }
 
-//   // Show "before" launcher from next SlotItem
-//   & + .SlotItem > .SlotItem__launcher--before {
-//     display: block;
-//     opacity: 0.5;
-//   }
-// }
-
-
-/* Special case: Create a non-displacing horizontal padding inside LayoutGroup */
+/* Special case: LayoutGroup */
 .SlotItem--is-LayoutGroup {
-  & > .SlotItem__editor {
-    padding-top: 4px;
+  // LayoutGroup outline is always visible
+  & > .SlotItem__editor::before {
+    display: block;
+    border-width: 1px;
+    opacity: 0.3;
+  }
 
-    padding-left: 4px;
-    padding-right: 4px;
+  /* Create a non-displacing horizontal padding inside */
+  & > .SlotItem__editor {
+    padding: 4px;
     margin-left: -4px;
     margin-right: -4px;
-
-    padding-bottom: 4px;
   }
-  // & > .SlotItem__editor {
-  //   padding: 0 5px;
-  //   margin-left: -5px;
-  //   margin-right: -5px;
 
-  //   padding-top: 5px;
-  //   margin-top: -5px;
-
-  //   padding-bottom: 5px;
-  //   margin-bottom: -5px;
-  // }
+  &.SlotItem--column {
+    & > .SlotItem__editor {
+      padding-bottom: 16px;
+    }
+  }
 }
-
-
-
-
-
-// // BlockScaffold INSIDE a CmsSlotEditor
-
-// // left border on nested toolbar
-// .BlockScaffold .BlockScaffold .BlockScaffold__toolbar {
-//   border-left: 1px outset rgba(255, 255, 255, 0.2);
-// }
-
-// /* Toolbar position in nested blocks (displacing first nested toolbar only) */
-// .SlotItem {
-//   --scaffold-depth: 10px;
-// }
-
-// .BlockScaffold__toolbar-container {
-//   left: var(--scaffold-depth);
-// }
-
-// .BlockScaffold .SlotItem:first-child { --scaffold-depth: 45px; }
-// .BlockScaffold .SlotItem:first-child .SlotItem:first-child  { --scaffold-depth: 85px; }
-// .BlockScaffold .SlotItem:first-child .SlotItem:first-child .SlotItem:first-child  { --scaffold-depth: 125px; }
-// .BlockScaffold .SlotItem:first-child .SlotItem:first-child .SlotItem:first-child .SlotItem:first-child  { --scaffold-depth: 165px; }

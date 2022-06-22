@@ -1,5 +1,8 @@
 <template>
-  <div class="MediaHtml story-html" v-html="value" />
+  <div
+    class="MediaHtml story-html"
+    v-html="value"
+  />
 </template>
 
 <script>

@@ -55,6 +55,8 @@ function emitUpdate() {
     class="BlockCssEditor"
     name="BlockCssEditor"
   >
+    <slot name="default" />
+
     <UiTab text="Properties">
       <BlockCssStyle
         v-model="css.style"

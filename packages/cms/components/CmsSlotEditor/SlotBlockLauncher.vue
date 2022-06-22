@@ -107,6 +107,19 @@ function onStagingCancel() {
   stagingBlock.value = null
   isOpen.value = props.open
 }
+
+const elBox = ref()
+
+function onPickerUpdateOpen($event) {
+  if (!stagingBlock.value) {
+    isOpen.value = $event || props.open
+
+    if (isOpen.value && window.innerWidth < 600) { // 2DO: Check CORRECTLY to see if using mobile
+      elBox.value?.scrollIntoView?.()
+    }
+  }
+}
+
 </script>
 
 <template>
@@ -135,12 +148,13 @@ function onStagingCancel() {
 
     <CmsBlockPicker
       v-model:open="isPopupOpen"
-      @update:open="!stagingBlock && (isOpen = $event || props.open)"
+      @update:open="onPickerUpdateOpen"
       @input="onBlockPickerInput($event)"
     >
       <template #trigger="{ toggle }">
         <div
           v-show="!stagingBlock"
+          ref="elBox"
           class="SlotBlockLauncher__box"
         >
           <div
@@ -155,6 +169,13 @@ function onStagingCancel() {
           class="SlotBlockLauncher__stagedEditor"
           @update:block="onStagingAccept"
           @cancel="onStagingCancel"
+        />
+      </template>
+
+      <template #body="{ close }">
+        <Component
+          :is="pluginData.getSlotComponent('BlockLauncher')"
+          @input="close(); emit('input', $event);"
         />
       </template>
     </CmsBlockPicker>

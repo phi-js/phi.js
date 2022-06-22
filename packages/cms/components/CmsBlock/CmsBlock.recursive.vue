@@ -259,24 +259,21 @@ const CmsBlock = {
     }
 
     /* Validation listeners */
-    if (props.block?.rules?.length) {
-      const blockRules = getBlockRules(
-        props.block,
-        getModelProperty,
-        (expr) => blockVM.eval(expr, innerModel),
-      )
+    const blockRules = getBlockRules(
+      props.block,
+      getModelProperty,
+      (expr) => blockVM.eval(expr, innerModel),
+    )
 
-      if (blockRules.length) {
-        watchEffect(() => {
-          if (!isVisible.value) {
-            setErrors(null)
-            return
-          }
-
-          runValidators(blockRules).then(setErrors)
-        })
+    watchEffect(() => {
+      if (!isVisible.value) {
+        emit('update:errors', [])
+        return
       }
-    }
+      if (blockRules.length) {
+        runValidators(blockRules).then(setErrors)
+      }
+    })
 
     /*
     Block listeners defined via plugins

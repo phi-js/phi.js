@@ -42,7 +42,6 @@ const i18n = useI18n({
     'PropBackground.Color': 'Color',
     'PropBackground.Image': 'Image',
     'PropBackground.RemoveImage': 'Remove image',
-    'PropBackground.ImageUrl': 'Image URL',
     'PropBackground.HorizontalPosition': 'Horizontal position',
     'PropBackground.VerticalPosition': 'Vertical position',
     'PropBackground.Repeat': 'Repeat',
@@ -59,7 +58,6 @@ const i18n = useI18n({
     'PropBackground.Color': 'Color',
     'PropBackground.Image': 'Imagen',
     'PropBackground.RemoveImage': 'Quitar imagen',
-    'PropBackground.ImageUrl': 'URL de la imagen',
     'PropBackground.HorizontalPosition': 'Posición horizontal',
     'PropBackground.VerticalPosition': 'Posición vertical',
     'PropBackground.Repeat': 'Repetir',
@@ -215,6 +213,13 @@ const backgroundIsFixed = computed({
       @update:model-value="emitUpdate()"
     />
 
+    <!-- <UiInput
+      v-model="backgroundImageUrl"
+      :label="i18n.t('PropBackground.Image')"
+      type="url"
+      :endpoint="endpoint"
+    /> -->
+
     <UiInput
       :label="i18n.t('PropBackground.Image')"
     >
@@ -235,7 +240,6 @@ const backgroundIsFixed = computed({
         v-model="backgroundImageUrl"
         type="url"
         :endpoint="endpoint"
-        :placeholder="i18n.t('PropBackground.ImageUrl')"
       />
     </UiInput>
 

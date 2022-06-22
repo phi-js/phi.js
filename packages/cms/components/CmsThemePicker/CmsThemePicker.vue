@@ -1,53 +1,75 @@
 <script setup>
-import { ref } from 'vue'
-import { UiInput } from '@/packages/ui'
-import themes from './themes.js'
+import { ref, watch, computed } from 'vue'
 
 const props = defineProps({
-  /* ID of active theme */
-  active: {
-    type: String,
+  /* Array of selected themes:
+  [
+    {
+      name: 'ThemeOne', // theme name IS the class name
+      url: 'https://phi.co/css/themes/ThemeOne.css', // CSS url
+      thumbnail: 'https:// ... thumbnail image URL ',
+      description: '... description text ...',
+    },
+    ...
+  ],
+  */
+  modelValue: {
+    type: Array,
     required: false,
-    default: null,
+    default: () => [],
   },
 })
 
-const emit = defineEmits(['selectTheme'])
+const emit = defineEmits(['update:modelValue'])
 
-const activeId = ref()
+const selectedThemes = ref([])
+watch(
+  () => props.modelValue,
+  (newValue) => selectedThemes.value = Array.isArray(newValue) ? newValue.concat() : [],
+  { immediate: true },
+)
 
-function selectTheme(theme) {
-  activeId.value = theme.id
-  emit('selectTheme', theme)
+// Hash.  selectedThemeNames[themeName] = BOOL
+const selectedThemeNames = computed(() => {
+  const retval = {}
+  selectedThemes.value.forEach((theme) => retval[theme.name] = true)
+  return retval
+})
+
+function toggleTheme(theme) {
+  // const foundIndex = selectedThemes.value.findIndex((t) => t.name == theme.name)
+  // if (foundIndex >= 0) {
+  //   selectedThemes.value.splice(foundIndex, 1)
+  // } else {
+  //   selectedThemes.value.push(theme)
+  // }
+
+  theme.enabled = !theme.enabled
+
+  emit('update:modelValue', selectedThemes.value.concat())
 }
-
 </script>
 
 <template>
   <div class="CmsThemePicker">
-    <UiInput
-      class="CmsThemePicker__search"
-      type="search"
-      placeholder="Buscar plantillas"
-    />
-
     <div class="CmsThemePicker__list">
       <div
-        v-for="theme in themes"
-        :key="theme.id"
+        v-for="theme in selectedThemes"
+        :key="theme.name"
         class="Theme"
-        :class="{ 'Theme--active': theme.id == activeId }"
-        @click="selectTheme(theme)"
+        :class="{ 'Theme--active': theme.enabled }"
+        @click="toggleTheme(theme)"
       >
         <img
+          v-if="theme.thumbnail"
           :src="theme.thumbnail"
-          :alt="theme.text"
+          :alt="theme.title || theme.name"
           class="Theme__thumbnail"
         >
         <div class="Theme__details">
           <h3
             class="Theme__name"
-            v-text="theme.name"
+            v-text="theme.title || theme.name"
           />
           <div
             class="Theme__description"
@@ -61,7 +83,6 @@ function selectTheme(theme) {
 
 <style lang="scss">
 .CmsThemePicker {
-
   &__search {
     .UiInput__elem {
       display: block;
@@ -72,6 +93,7 @@ function selectTheme(theme) {
   &__list {
     display: flex;
     flex-wrap: wrap;
+    padding: 12px;
   }
 }
 
@@ -79,8 +101,6 @@ function selectTheme(theme) {
   cursor: pointer;
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 36px;
-
   border: 1px solid transparent;
 
   user-select: none;
@@ -93,16 +113,27 @@ function selectTheme(theme) {
     background-color: rgba(255, 255, 255, 0.1);
   }
 
+
+  opacity: 0.6;
+
   &--active {
     border-color: var(--ui-color-primary);
     background-color: rgba(255, 255, 255, 0.17) !important;
+    opacity: 1;
   }
 
   &__thumbnail {
-    width: 300px;
+    align-self: flex-start;
+    width: 50%;
+    height: auto;
+    padding: 8px;
+
+    max-width: 200px;
+    order: 2;
   }
 
   &__details {
+    padding: 12px;
     flex: 1;
   }
 

@@ -5,10 +5,12 @@ imports all external CSS files if applies, and returns an ARRAY of class names t
 export default function useThemes(story) {
   const retval = []
   const foundThemes = story?.themes?.length ? story.themes : []
-  foundThemes.forEach((theme) => {
-    importTheme(theme)
-    retval.push(theme.name)
-  })
+  foundThemes
+    .filter((theme) => theme.enabled)
+    .forEach((theme) => {
+      importTheme(theme)
+      retval.push(theme.name)
+    })
   return retval
 }
 

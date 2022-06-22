@@ -3,8 +3,23 @@ import { addedPlugins } from './usePlugin'
 
 export default function getPluginData() {
 
+  const eventListeners = {} // hash of all registered events  eventListeners[eventName] = [ ...ARRAY of callbacks ]
+  function addEventListener(eventName, callback) {
+    if (!eventListeners[eventName]) {
+      eventListeners[eventName] = []
+    }
+    eventListeners[eventName].push(callback)
+  }
+
+
   const allBlocks = {} // hash allBlocks['SomeBlockName']
-  addedPlugins.forEach((plugin) => Object.assign(allBlocks, plugin.blocks))
+  addedPlugins.forEach((plugin) => {
+    Object.assign(allBlocks, plugin.blocks)
+
+    if (plugin.onStoryMounted) {
+      addEventListener('storyMounted', plugin.onStoryMounted)
+    }
+  })
 
   const blockCreators = addedPlugins
     .map((plugin) => plugin.onBeforeCreateBlock)
@@ -76,5 +91,13 @@ export default function getPluginData() {
 
     slots: allSlots,
     getSlotComponent,
+
+    emit: (eventName, $event, ctx) => {
+      if (!eventListeners[eventName]) {
+        return
+      }
+
+      eventListeners[eventName].forEach((callback) => callback($event, ctx))
+    },
   }
 }

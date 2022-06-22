@@ -10,8 +10,8 @@ export default {
   block: {
     component: MediaLoremIpsum,
     props: {
-      nParagraphs: '2',
-      nWords: '42',
+      nParagraphs: '1',
+      nWords: '44',
     },
   },
 

@@ -99,7 +99,7 @@ function parseValue(incoming) {
 const i18n = useI18n({
   en: {
     // 'CmsPropInput.Number': 'Number',
-    'CmsPropInput.Text': 'Value',
+    'CmsPropInput.Text': 'Constant',
     'CmsPropInput.Translation': 'Translation',
     'CmsPropInput.Variable': 'Variable',
 
@@ -111,7 +111,7 @@ const i18n = useI18n({
   },
   es: {
     // 'CmsPropInput.Number': 'Número',
-    'CmsPropInput.Text': 'Valor',
+    'CmsPropInput.Text': 'Constante',
     'CmsPropInput.Translation': 'Traducción',
     'CmsPropInput.Variable': 'Variable',
 

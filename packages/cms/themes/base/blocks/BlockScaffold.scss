@@ -36,8 +36,12 @@
 
   // Position toolbar above the block
   &__toolbar-container {
-    position: absolute;
-    bottom: 100%;
+    position: sticky;
+    top: 48px;
+    width: max-content;
+
+    // position: absolute;
+    // bottom: 100%;
     // z-index: 1; // messes up nested + overlapping toolbar containers inside groups. Breaks the block dragging.
 
     display: flex;
@@ -45,12 +49,17 @@
     align-items: flex-start;
   }
 
+  &__toolbar-stick {
+    position: absolute;
+    bottom: 100%;
+  }
 
   // Toolbar width
   &__toolbar {
+    position: relative; // allows z-index above .ancestry and .descendants
     flex-wrap: nowrap;
     width: max-content; // No soportado en IE ni EDGE !!!
-    max-width: 600px;
+    max-width: 80vw;
   }
 
   &__toolbar-icon {
@@ -81,7 +90,7 @@
   }
 
   &__ancestry {
-    position: relative;
+    position: absolute;
     margin-left: 15px;
     margin-right: -4px;
 
@@ -91,8 +100,7 @@
 
   &__descendants {
     position: absolute;
-    right: -32px;
-    // bottom: -4px;
+    right: -36px;
     bottom: 0;
   }
 
@@ -104,7 +112,6 @@
 
     cursor: pointer;
     &:hover {
-      // opacity: 1;
       background-color: #999;
     }
 
@@ -118,8 +125,8 @@
 
     &:last-child {
       position: absolute;
-      right: -16px;
-      top: -4px;
+      top: 0;
+      left: -40px;
 
       pointer-events: all;
       opacity: 1;
@@ -174,9 +181,29 @@
     color: #ccc;
     --ui-item-padding: 8px 12px;
 
+    .UiItem {
+      &__icon {
+        opacity: 0.5;
+      }
+
+      &__body {
+        border-left: 1px inset rgba(255, 255, 255, 0.1);
+        padding-left: 8px;
+      }
+    }
+
     &:hover {
       color: #fff;
       background-color: rgba(255, 255, 255, 0.1);
+
+      .UiItem__icon {
+        opacity: 1;
+      }
     }
+  }
+
+  &__item--delete:hover {
+    border-radius: 4px;
+    background-color: var(--ui-color-danger);
   }
 }

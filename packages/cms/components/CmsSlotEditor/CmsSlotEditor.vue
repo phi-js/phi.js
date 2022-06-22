@@ -26,10 +26,10 @@ const props = defineProps({
     default: 'slot-draggable',
   },
 
-  withContentAdder: {
-    type: Boolean,
+  label: {
+    type: String,
     required: false,
-    default: false,
+    default: null,
   },
 })
 
@@ -97,20 +97,21 @@ function launchBlock(block, targetIndex = null) {
   if (targetIndex === null) {
     targetIndex = innerSlot.value.length
   }
-  innerSlot.value.splice(targetIndex, 0, JSON.parse(JSON.stringify(block)))
+
+  const arrBlocks = Array.isArray(block) ? JSON.parse(JSON.stringify(block)) : [JSON.parse(JSON.stringify(block))]
+  innerSlot.value.splice(targetIndex, 0, ...arrBlocks)
   emitUpdate()
 
   nextTick(() => {
-    activeUid.value = refEditors.value?.[targetIndex]?.block?._uid
-    refEditors.value?.[targetIndex]?.onBlockCreated?.()
+    arrBlocks.forEach((newBlock, index) => {
+      refEditors.value?.[targetIndex + index]?.onBlockCreated?.()
+    })
+
+    activeUid.value = refEditors.value?.[targetIndex]?.arrBlocks?.[0]?._uid
   })
 }
 
 function onEditorClick(element) {
-  if (activeUid.value != element._uid && window?.navigator?.vibrate) {
-    window.navigator.vibrate(1)
-  }
-
   activeUid.value = element._uid
   registerBlurListeners()
 }
@@ -126,7 +127,7 @@ Only clicks from other elements will trigger it, so it is equivalent to a "click
 */
 const onClickOutside = (evt) => {
   // EXCEPTION!
-  // Ignore clicks on UiWindow and UiPopovers (i.e. )
+  // Ignore clicks on UiWindow and UiPopovers
   if (evt.target.closest('.UiWindow, *[data-tippy-root]')) {
     evt.stopPropagation()
     return
@@ -187,7 +188,7 @@ function clearBlurListeners() {
         <div
           :class="[
             'SlotItem',
-            `SlotItem--${$attrs?.direction || 'column'}`,
+            `SlotItem--${element?.props?.direction || $attrs?.direction || 'column'}`,
             `SlotItem--is-${element.component}`,
             {'SlotItem--active': activeUid === element._uid},
           ]"
@@ -205,9 +206,12 @@ function clearBlurListeners() {
             style="flex: 1"
             class="SlotItem__editor"
             :block="element"
+            tabindex="0"
             @update:block="onEditorUpdate(index, $event)"
             @delete="deleteBlock(index)"
+
             @click.stop="onEditorClick(element)"
+            @keyup.enter.stop="onEditorClick(element)"
           />
           <SlotBlockLauncher
             v-if="index === innerSlot.length - 1"
@@ -222,9 +226,9 @@ function clearBlurListeners() {
     </draggable>
 
     <SlotBlockLauncher
-      v-if="props.withContentAdder || !innerSlot.length"
+      v-if="!innerSlot.length"
       class="LoneLauncher"
-      :label="i18n.t('CmsSlotEditor.AddContent')"
+      :label="props.label || i18n.t('CmsSlotEditor.AddContent')"
       :open="true"
       @input="launchBlock($event)"
     />

@@ -23,18 +23,7 @@
   .CmsStoryEditor .LayoutPageEditor {
     flex-direction: column;
     display: flex;
-    height: 100%;    
-  }
-
-  &__toolbar {
-    position: sticky;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
-
-    background-color: #333;
-    color: #eee;
+    height: 100%;
   }
 
   &__toolbar-compact {
@@ -53,8 +42,8 @@
   }
 
   &__toolbar-large {
-    border-radius: var(--ui-radius);
-    overflow: hidden; // keep overflow inside border radius
+    background-color: #333;
+    color: #eee;
   }
 
   &__controls {
@@ -82,12 +71,17 @@
 
     font-size: 0.85em;
     --ui-item-padding: 8px 12px;
+
+    overflow-x: auto;
+    min-height: 40px;
   }
 
   &__tabItem {
     @extend .ui--clickable;
 
     &--sitemap {
+      white-space: nowrap;
+
       strong {
         color: var(--ui-color-primary);
       }
@@ -112,6 +106,34 @@
   }
 }
 
+
+
+// Tabs and options layout in mobile
+@media (max-width:500px) {
+  .CmsStoryBuilder__controls {
+    margin-left: auto;
+  }
+
+  .CmsStoryBuilder__toolbar {
+    .UiTabs {
+      &__header {
+        flex-wrap: wrap;
+      }
+
+      &__tabList {
+        .UiTab {
+          flex: 1;
+        }
+      }
+    }
+  }
+
+  .CmsStoryBuilder__toolbar-large {
+    .Page__crumbs {
+      display: none;
+    }
+  }
+}
 
 
 // Expanded / Collapsed

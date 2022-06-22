@@ -13,7 +13,7 @@ import {
 } from 'vue'
 
 import { CmsBlock } from '../CmsBlock'
-import { sanitizeStory, parseTranslations, forEachBlock, setProperty, useThemes } from '../../functions'
+import { getPluginData, sanitizeStory, parseTranslations, forEachBlock, setProperty, useThemes } from '../../functions'
 import { useI18n } from '../../../i18n'
 import { VM } from '../../../vm'
 
@@ -73,9 +73,26 @@ export default {
       onUpdateModelValue(modelValue)
     }
 
+
+    // Get enabled plugins
+    const pluginData = getPluginData()
+
     // Evaluate story.setup()
     const isMounted = ref(false)
     onMounted(() => {
+      pluginData.emit('storyMounted', sanitizedStory.value, {
+        patchModelValue: (objData) => {
+          if (!objData || typeof objData !== 'object') {
+            return
+          }
+          const modelValue = { ...props.modelValue }
+          for (const [propName, propValue] of Object.entries(objData)) {
+            setProperty(modelValue, propName, propValue)
+          }
+          onUpdateModelValue(modelValue)
+        },
+      })
+
       if (!sanitizedStory.value.setup) {
         isMounted.value = true
         return

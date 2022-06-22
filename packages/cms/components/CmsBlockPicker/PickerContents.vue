@@ -40,5 +40,9 @@ function launchBlock(blockDefinition) {
     class="PickerContents"
     :items="allBlocks"
     @select-item="launchBlock"
-  />
+  >
+    <template #body>
+      <slot name="body" />
+    </template>
+  </UiItemFinder>
 </template>
