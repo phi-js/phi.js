@@ -1,6 +1,15 @@
 @import '@/packages/cms/themes/base/classes/coolDetails.scss';
 
 .UiForm {
+  padding: 8px 12px;
+
+  & > .UiInput {
+    margin-bottom: 12px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
   fieldset {
     border: 1px inset #555;
     border-radius: 5px;

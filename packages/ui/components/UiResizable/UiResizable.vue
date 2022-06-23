@@ -177,55 +177,55 @@ function onResizerMove(evt) {
   }
 
   switch (zone.value) {
-    case 'move':
-      newBounds.top = bounds.top + diff.y
-      newBounds.left = bounds.left + diff.x
-      break
+  case 'move':
+    newBounds.top = bounds.top + diff.y
+    newBounds.left = bounds.left + diff.x
+    break
 
-    case 'n':
-      newBounds.top = bounds.top + diff.y
-      newBounds.height = bounds.height - diff.y
-      break
+  case 'n':
+    newBounds.top = bounds.top + diff.y
+    newBounds.height = bounds.height - diff.y
+    break
 
-    case 'ne':
-      newBounds.top = bounds.top + diff.y
-      newBounds.height = bounds.height - diff.y
+  case 'ne':
+    newBounds.top = bounds.top + diff.y
+    newBounds.height = bounds.height - diff.y
 
-      newBounds.width = bounds.width + diff.x
-      break
+    newBounds.width = bounds.width + diff.x
+    break
 
-    case 'e':
-      newBounds.width = bounds.width + diff.x
-      break
+  case 'e':
+    newBounds.width = bounds.width + diff.x
+    break
 
-    case 'se':
-      newBounds.width = bounds.width + diff.x
-      newBounds.height = bounds.height + diff.y
-      break
+  case 'se':
+    newBounds.width = bounds.width + diff.x
+    newBounds.height = bounds.height + diff.y
+    break
 
-    case 's':
-      newBounds.height = bounds.height + diff.y
-      break
+  case 's':
+    newBounds.height = bounds.height + diff.y
+    break
 
-    case 'sw':
-      newBounds.height = bounds.height + diff.y
+  case 'sw':
+    newBounds.height = bounds.height + diff.y
 
-      newBounds.left = bounds.left + diff.x
-      newBounds.width = bounds.width - diff.x
-      break
+    newBounds.left = bounds.left + diff.x
+    newBounds.width = bounds.width - diff.x
+    break
 
-    case 'w':
-      newBounds.left = bounds.left + diff.x
-      newBounds.width = bounds.width - diff.x
-      break
+  case 'w':
+    newBounds.left = bounds.left + diff.x
+    newBounds.width = bounds.width - diff.x
+    break
 
-    case 'nw':
-      newBounds.top = bounds.top + diff.y
-      newBounds.height = bounds.height - diff.y
+  case 'nw':
+    newBounds.top = bounds.top + diff.y
+    newBounds.height = bounds.height - diff.y
 
-      newBounds.left = bounds.left + diff.x
-      newBounds.width = bounds.width - diff.x
-      break
+    newBounds.left = bounds.left + diff.x
+    newBounds.width = bounds.width - diff.x
+    break
   }
 
   // Restrictions
@@ -286,7 +286,11 @@ function startMove(evt) {
 </script>
 
 <template>
-  <div ref="rootEl" class="UiResizable" :style="elementStyle">
+  <div
+    ref="rootEl"
+    class="UiResizable"
+    :style="elementStyle"
+  >
     <slot
       :startMove="startMove"
       :styles="elementStyle"

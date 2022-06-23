@@ -50,12 +50,11 @@ textarea.UiInput__element {
   &__errors {
     list-style: none;
     margin: 0;
-    padding: 0;
-    margin: 0.5rem 0 1rem 0;
+    padding: 3px;
 
     font-weight: bold;
     font-size: 14px;
-    color: #e03535;
+    color: #ff8c8c;
   }
 
   &--disabled {
@@ -66,8 +65,6 @@ textarea.UiInput__element {
   &--invalid {
     .UiInput {
       &__element {
-        background-color: #ea545511;
-        border: 1px solid #ea5455;
         outline-color: #ea5455;
       }
     }
