@@ -94,12 +94,12 @@ function decrementHeight(bigIncrement = false, newBounds) {
 
 // &--empty,
 // &:hover {
-.SlotItem--active {
+.SlotItem--active > .BlockScaffold > .BlockScaffold__face > .MediaImageFace {
   .MediaImageFace__infobox {
     opacity: 1;
   }
 
-  .MediaImageFace .UiResizable__hotzone {
+  .UiResizable__hotzone {
     display: block;
   }
 }
