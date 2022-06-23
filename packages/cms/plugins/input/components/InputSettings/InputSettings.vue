@@ -73,7 +73,10 @@ const multipleOptions = [
 </script>
 
 <template>
-  <div class="InputSettings UiForm">
+  <div
+    class="InputSettings UiForm"
+    style="padding:0"
+  >
     <details
       v-if="isSelect"
       open

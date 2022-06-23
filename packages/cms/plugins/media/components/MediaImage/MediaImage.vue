@@ -8,10 +8,10 @@ const props = defineProps({
     default: null,
   },
 
-  href: {
-    type: String,
+  height: {
+    type: [Number, String],
     required: false,
-    default: null,
+    default: null, // CSS height property applied to container element
   },
 
   align: {
@@ -20,40 +20,29 @@ const props = defineProps({
     default: 'center', // left, right, center
   },
 
-  width: {
+  href: {
     type: String,
     required: false,
-    default: 'auto', // CSS width property applied to <img> element
-  },
-
-  height: {
-    type: [Number, String],
-    required: false,
-    default: null, // CSS height property applied to container element
+    default: null,
   },
 
 })
 
 const isError = ref(false)
 const containerStyle = computed(() => ({
-  textAlign: props.align,
   height: props.height || undefined,
-  boxSizing: 'content-box',
+  boxSizing: 'border-box',
+  overflowX: 'clip',
+  display: 'flex',
+  justifyContent: props.align,
+  // textAlign: props.align,
   // backgroundPosition: `top ${props.align}`,
   // backgroundRepeat: 'no-repeat',
   // backgroundImage: `url(${props.src})`,
   // backgroundSize: 'contain',
 }))
 
-const imgStyle = computed(() => ({
-  // opacity: 0,
-  width: props.width || undefined,
-  // height: '100%',
-  display: 'inline-block', // inline-block para reacionar a text-align del padre
-  margin: 'auto',
-  maxWidth: '100%',
-  maxHeight: '100%',
-}))
+const imgStyle = computed(() => ({ height: '100%' }))
 
 watch(
   () => props.src,

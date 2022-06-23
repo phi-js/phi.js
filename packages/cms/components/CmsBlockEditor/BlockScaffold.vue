@@ -348,7 +348,6 @@ defineExpose({
         >
           <Component
             :is="definition.block.component"
-            style="pointer-events: none"
             v-bind="{ ...innerBlock?.props, ...blockCssAttributes }"
           />
         </div>

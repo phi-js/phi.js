@@ -3,7 +3,8 @@
     @extend .coolDetails;
 
     & > section {
-      padding: 6px 24px 24px 24px;
+      // padding: 6px 24px 24px 24px;
+      padding: 0 12px;
     }
   }
 }

@@ -6,6 +6,16 @@
   --ui-item-padding: 8px 12px;
 }
 
+/* Make BlockScaffold__defaultFace clickable only if parent SlotItem is FOCUSED */
+.BlockScaffold__defaultFace {
+  pointer-events: none;
+}
+
+.SlotItem--active .BlockScaffold__defaultFace {
+  pointer-events: initial;
+}
+
+
 .BlockScaffold {
   position: relative;
 
@@ -52,6 +62,7 @@
   &__toolbar-stick {
     position: absolute;
     bottom: 100%;
+    left: 16px;
   }
 
   // Toolbar width

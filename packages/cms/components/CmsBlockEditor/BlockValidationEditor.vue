@@ -85,7 +85,7 @@ const hasRequiredRule = computed(() => rules.value.find((r) => !!r.required))
 </script>
 
 <template>
-  <div class="BlockValidationEditor UiForm">
+  <div class="BlockValidationEditor">
     <details
       v-for="(rule, k) in rules"
       :key="k"
@@ -167,9 +167,15 @@ const hasRequiredRule = computed(() => rules.value.find((r) => !!r.required))
 
 <style lang="scss">
 @import '@/packages/ui/themes/base/modifiers/clickable.scss';
+@import '@/packages/cms/themes/base/classes/itemDetails.scss';
+
+.BlockValidationEditor {
+  padding: 8px;
+}
 
 .ValidationRule {
   position: relative;
+  @extend .itemDetails;
 
   summary {
     position: relative;

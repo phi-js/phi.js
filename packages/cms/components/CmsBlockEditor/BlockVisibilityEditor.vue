@@ -33,14 +33,14 @@ function emitUpdate() {
 
 const i18n = useI18n({
   en: {
-    'BlockVisibilityEditor.visibleWhen': 'Show block if ...',
+    'BlockVisibilityEditor.visibleWhen': 'Show block if',
     'BlockVisibilityEditor.Repeat': 'Repeat',
     'BlockVisibilityEditor.RepeatForEveryItemIn': 'Repeat block for every $item in',
     'BlockVisibilityEditor.VariableName': 'Variable name',
     'BlockVisibilityEditor.subtext': 'The variable must contain an array',
   },
   es: {
-    'BlockVisibilityEditor.visibleWhen': 'Mostrar bloque si ...',
+    'BlockVisibilityEditor.visibleWhen': 'Mostrar bloque si',
     'BlockVisibilityEditor.Repeat': 'Repetir',
     'BlockVisibilityEditor.RepeatForEveryItemIn': 'Repetir bloque por cada $item en',
     'BlockVisibilityEditor.VariableName': 'Nombre de variable',

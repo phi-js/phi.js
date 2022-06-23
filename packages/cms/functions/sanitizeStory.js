@@ -40,7 +40,7 @@ export default function sanitizeStory(story) {
   story.pages.forEach((page, index) => {
     // every page has a unique ID
     if (!page.id) {
-      page.id = `page-${index}`
+      page.id = index === 0 ? 'start' : `page-${index + 1}`
     }
 
     // every page has info object (text, subtext, icon)

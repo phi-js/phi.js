@@ -1,6 +1,5 @@
-import UiVideo from '../../../../../ui/components/UiVideo/UiVideo.vue'
+import UiVideo from '@/packages/ui/components/UiVideo/UiVideo.vue'
 import MediaVideoSettings from './MediaVideoSettings.vue'
-import MediaVideoPicker from './MediaVideoPicker.vue'
 
 export default {
   tags: ['video'],
@@ -18,16 +17,12 @@ export default {
   },
 
   editor: {
-    face: {
-      'component': MediaVideoPicker,
-      'v-model': 'block.props.url',
-      'props': { endpoint: '{{ $settings.uploads.assets }}' },
-    },
-
     actions: [
       {
-        title: 'Video',
+        id: 'video',
+        title: 'Video settings',
         component: MediaVideoSettings,
+        props: { endpoint: '{{ $settings.uploads.assets }}' },
       },
     ],
   },
