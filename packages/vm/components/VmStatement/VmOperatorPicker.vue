@@ -97,7 +97,7 @@ const schemaPropertiesList = computed(() => {
   >
     <option
       value=""
-      v-text="' + ' + i18n.t('VmOperatorPicker.AddContition')"
+      v-text="' + &nbsp;&nbsp;' + i18n.t('VmOperatorPicker.AddContition')"
     />
     <optgroup
       :label="i18n.t('VmOperatorPicker.Variables')"
