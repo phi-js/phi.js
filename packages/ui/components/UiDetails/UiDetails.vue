@@ -1,0 +1,364 @@
+<script>
+const UiDetailsGroups = {}
+</script>
+
+<script setup>
+import { onMounted, ref, watch } from 'vue'
+import { UiIcon } from '../UiIcon'
+import { UiItem } from '../UiItem'
+
+const props = defineProps({
+  open: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+
+  text: {
+    type: [String, Number],
+    required: false,
+    default: null,
+  },
+
+  subtext: {
+    type: [String, Number],
+    required: false,
+    default: '',
+  },
+
+  icon: {
+    type: [String, Number],
+    required: false,
+    default: null,
+  },
+
+  badge: {
+    type: [String, Number],
+    required: false,
+    default: null,
+  },
+
+  /* Animation duration (ms.) */
+  duration: {
+    type: Number,
+    required: false,
+    default: 100,
+  },
+
+  /* Animation easing */
+  easing: {
+    type: String,
+    required: false,
+    default: 'ease-out',
+  },
+
+  /* Group name.  Only one item in the group is open at a time */
+  group: {
+    type: String,
+    required: false,
+    default: null,
+  },
+
+  onDelete: {
+    type: Function,
+    required: false,
+    default: null,
+  },
+})
+
+const emit = defineEmits(['update:open', 'delete'])
+
+const isOpen = ref(props.open)
+
+const refEl = ref()
+const refSummary = ref()
+const refContents = ref()
+
+let animation = null
+const isClosing = ref(false)
+const isExpanding = ref(false)
+const isDeleting = ref(false)
+
+watch(
+  () => props.open,
+  (newValue) => {
+    if (newValue == refEl.value.open) {
+      return
+    }
+    newValue ? open() : shrink()
+    isOpen.value = newValue
+  },
+)
+
+function onSummaryClick($event) {
+  $event.preventDefault()
+
+  if (isClosing.value || !refEl.value.open) {
+    open()
+  } else if (isExpanding.value || refEl.value.open) {
+    shrink()
+  }
+}
+
+function open() {
+  refEl.value.style.height = `${refEl.value.offsetHeight}px`
+  refEl.value.open = true
+  window.requestAnimationFrame(() => expand())
+}
+
+function expand() {
+  if (!refEl.value) {
+    return
+  }
+
+  refEl.value.style.overflow = 'hidden'
+  isExpanding.value = true
+
+  const startHeight = `${refEl.value.offsetHeight}px`
+  const endHeight = `${refSummary.value.offsetHeight + refContents.value.offsetHeight}px`
+
+  if (animation) {
+    animation.cancel()
+  }
+
+  // Start a WAAPI animation
+  animation = refEl.value.animate(
+    { height: [startHeight, endHeight] },
+    {
+      duration: props.duration,
+      easing: props.easing,
+    },
+  )
+
+  animation.onfinish = () => onAnimationFinish(true)
+  animation.oncancel = () => isExpanding.value = false
+
+  // Close other items in the group
+  closeOthersInGroup()
+}
+
+function shrink() {
+  if (!refEl.value) {
+    return
+  }
+
+  refEl.value.style.overflow = 'hidden'
+  isClosing.value = true
+  const startHeight = `${refEl.value.offsetHeight}px`
+  const endHeight = `${refSummary.value.offsetHeight}px`
+
+  if (animation) {
+    animation.cancel()
+  }
+
+  animation = refEl.value.animate(
+    { height: [startHeight, endHeight] },
+    {
+      duration: props.duration,
+      easing: props.easing,
+    },
+  )
+
+  animation.onfinish = () => onAnimationFinish(false)
+  animation.oncancel = () => isClosing.value = false
+}
+
+function onAnimationFinish(open) {
+  refEl.value.open = open
+  isOpen.value = open
+
+  animation = null
+  isClosing.value = false
+  isExpanding.value = false
+  refEl.value.style.height = refEl.value.style.overflow = ''
+
+  emit('update:open', open)
+}
+
+
+// Group functionality.
+const detailsInstance = {
+  open,
+  shrink,
+}
+
+onMounted(() => {
+  // Store in global drawer group
+  if (props.group) {
+    if (typeof UiDetailsGroups[props.group] == 'undefined') {
+      UiDetailsGroups[props.group] = []
+    }
+    UiDetailsGroups[props.group].push(detailsInstance)
+  }
+})
+
+function closeOthersInGroup() {
+  if (props.group && Array.isArray(UiDetailsGroups[props.group])) {
+    UiDetailsGroups[props.group].forEach((otherInstance) => {
+      if (otherInstance !== detailsInstance) {
+        otherInstance.shrink()
+      }
+    })
+  }
+}
+</script>
+
+<template>
+  <details
+    ref="refEl"
+    :open="props.open"
+    class="UiDetails"
+    :class="{
+      'UiDetails--opening': isExpanding,
+      'UiDetails--closing': isClosing,
+      'UiDetails--deleting': isDeleting,
+    }"
+    :style="{ '--details-transition-duration': `${props.duration}ms`}"
+  >
+    <summary
+      ref="refSummary"
+      class="UiDetails__summary"
+      @click="onSummaryClick"
+    >
+      <UiItem
+        v-bind="props"
+        class="UiDetails__item"
+      >
+        <template #default>
+          <slot
+            name="summary"
+            :is-open="isOpen"
+          />
+        </template>
+
+        <template #actions>
+          <slot name="actions">
+            <UiIcon
+              v-if="props.onDelete"
+              src="mdi:close"
+              class="UiDetails__deleter"
+              @mouseenter="isDeleting = true"
+              @mouseleave="isDeleting = false"
+              @click="emit('delete')"
+            />
+          </slot>
+        </template>
+      </UiItem>
+    </summary>
+    <div
+      ref="refContents"
+      class="UiDetails__contents"
+    >
+      <slot name="contents">
+        <slot name="default" />
+      </slot>
+    </div>
+  </details>
+</template>
+
+<style lang="scss">
+.UiDetails {
+  --details-color-open: rgba(255, 255, 255, 0.06);
+  --details-color-hover: rgba(255, 255, 255, 0.03);
+  // --details-color-open: rgba(0,0,0, 0.06);
+  // --details-color-hover: rgba(0,0,0, 0.03);
+
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: background-color var(--details-transition-duration) ease;
+
+  & > summary {
+    display: flex;
+    flex-wrap: nowrap;
+    // align-items: flex-start;
+    align-items: center;
+    padding: 8px;
+
+    user-select: none;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--details-color-hover);
+    }
+  }
+
+  &__item {
+    flex: 1;
+    --ui-item-padding: 0 4px;
+  }
+
+  &__deleter {
+    width: 32px;
+    height: 32px;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  & > &__contents {
+    padding: 6px 8px;
+  }
+
+  &[open] {
+    background-color: var(--details-color-open);
+
+    & > summary:hover {
+      background-color: transparent !important;
+    }
+  }
+
+  &--closing {
+    background-color: transparent !important;
+  }
+
+  &--deleting {
+    background-color: rgba(255, 0, 0, 0.2) !important;
+  }
+}
+
+
+// Animated summary arrow
+.UiDetails {
+  --details-arrow-height: 8px;
+  --details-arrow-width: 12px;
+  --details-arrow-color: #ccc;
+
+  & > summary {
+    // Hide the default marker
+    &::marker,
+    &::-webkit-details-marker {
+      display: none;
+      content: "";
+    }
+
+    // Create a triangle marker with CSS borders
+    &::before {
+      content: '';
+      display: block;
+      width: 0;
+      height: 0;
+      margin: 0 4px;
+
+      border-style: solid;
+      border-width: calc(var(--details-arrow-height) / 2) calc(var(--details-arrow-width) / 2);
+      border-color: transparent transparent transparent var(--details-arrow-color);
+
+      transform: rotate(0);
+      transform-origin: .2rem 50%;
+      transition: var(--details-transition-duration) transform ease;
+    }
+  }
+
+  &--closing > summary::before {
+    transform: rotate(0) !important;
+  }
+
+  &[open] {
+    & > summary::before {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+</style>
