@@ -302,13 +302,13 @@ const isTransparent = ref(false)
             <slot name="header" />
           </div>
 
-          <UiIcon
+          <!-- <UiIcon
             v-show="!dock"
             class="UiWindow__eyeIcon"
             src="mdi:eye-outline"
             @mouseenter="isTransparent = true"
             @mouseleave="isTransparent = false"
-          />
+          /> -->
 
           <UiPopover>
             <template #trigger>

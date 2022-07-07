@@ -266,7 +266,8 @@ watch(
 
       & > div {
         flex: 1;
-        min-width: 200px;
+        min-width: 120px;
+        max-width: 250px;
       }
     }
   }

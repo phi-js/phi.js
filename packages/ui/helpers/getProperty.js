@@ -6,8 +6,8 @@ export default function getProperty(sourceObject, propertyName) {
   }
 
   // remove trailing "$."
-  if (propertyName.substr(0, 2) == '$.') {
-    propertyName = propertyName.substr(2)
+  if (propertyName.substring(0, 2) == '$.') {
+    propertyName = propertyName.substring(2)
   }
 
   if (!sourceObject || !propertyName) {

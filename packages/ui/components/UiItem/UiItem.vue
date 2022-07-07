@@ -84,7 +84,7 @@ export default {
     <div
       v-if="hasSlot('actions')"
       class="UiItem__actions"
-      @click.stop="$emit('click-actions', $event)"
+      @click.stop.prevent="$emit('click-actions', $event)"
     >
       <slot name="actions" />
     </div>
@@ -115,7 +115,7 @@ export default {
   &__icon {
     font-size: 1.2em;
     min-width: 1.2rem;
-    max-height: 2.5em;
+    // max-height: 2.5em; // when item is an align-stretch child of a flex, alignments is fd up
     padding: var(--ui-item-padding);
   }
 

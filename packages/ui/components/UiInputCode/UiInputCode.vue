@@ -57,7 +57,7 @@ onMounted(() => {
 watch(
   () => props.modelValue,
   (newValue) => {
-    if (newValue == cmView.state.doc.toString()) {
+    if (!cmView || newValue == cmView.state.doc.toString()) {
       return
     }
     _haltEmit = true
