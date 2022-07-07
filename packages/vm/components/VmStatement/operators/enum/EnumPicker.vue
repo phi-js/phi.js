@@ -27,10 +27,34 @@ const arrValue = computed({
   },
 })
 
-const enumOptions = computed(() => {
-  return props.fieldSchema?.enum || props.fieldSchema?.items?.enum || []
-})
+function getOptions(schema) {
+  if (schema?.items) {
+    return getOptions(schema.items)
+  }
 
+  if (Array.isArray(schema?.oneOf)) {
+    return schema.oneOf.map((item) => ({
+      value: item?.const,
+      text: item?.title,
+    }))
+  }
+
+  if (Array.isArray(schema?.enum)) {
+    return schema.enum.map((item) => {
+      if (typeof item == 'object') {
+        return {
+          value: item?.value,
+          text: item?.text,
+        }
+      }
+      return { value: item, text: item }
+    })
+  }
+
+  return []
+}
+
+const enumOptions = computed(() => getOptions(props.fieldSchema))
 </script>
 
 <template>

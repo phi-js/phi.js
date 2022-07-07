@@ -16,17 +16,28 @@ export default {
       },
 
       callback: function({ url, options }) {
-        if (options && options.body && typeof options.body != 'string') {
-          options.body = JSON.stringify(options.body)
-        }
-
-        if (options?.method) {
-          options.method = options.method.toUpperCase()
-        }
-
-        return fetch(url, options).then((response) => response.json())
+        return fetch(url, sanitizeOptions(options))
+          .then((response) => response.json())
       },
     },
 
   },
+}
+
+function sanitizeOptions(options) {
+  const retval = {}
+
+  retval.method = typeof options?.method == 'string'
+    ? options.method.trim().toUpperCase()
+    : 'GET'
+
+  if (typeof options?.body == 'string') {
+    retval.body = JSON.stringify(options.body)
+  }
+
+  if (options.headers) {
+    retval.headers = options.headers
+  }
+
+  return retval
 }

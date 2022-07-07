@@ -70,7 +70,7 @@ function getPropertiesArray(schema, retval = [], prefix = '') {
     return []
   }
 
-  if (schema.type == 'object') {
+  if (schema.type == 'object' && typeof schema.properties == 'object') {
     for (const [propertyName, propertySchema] of Object.entries(schema.properties)) {
       getPropertiesArray(propertySchema, retval, (prefix ? prefix + '.' : '') + propertyName)
     }
@@ -108,7 +108,7 @@ const schemaPropertiesList = computed(() => {
           :key="prop.name"
           :value="'prop:' + prop.name"
         >
-          {{ prop?.info?.text || prop.title || prop.text || prop.name }}
+          {{ prop.title || prop.name }}
         </option>
       </template>
       <option

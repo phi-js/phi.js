@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, reactive, watch, nextTick, onBeforeMount } from 'vue'
-import { UiItem } from '@/packages/ui/components'
+
+import { UiItem, UiDetails } from '@/packages/ui'
 import VmStatement from '../VmStatement.vue'
 import allOperators from '../operators'
 import useModelSchema from '../useModelSchema'
@@ -26,6 +27,7 @@ onBeforeMount(() => {
 
   if (innerModel.op === null) {
     innerModel.op = availableOperators.value?.[0]?.operator
+    emitInput()
   }
 })
 
@@ -70,7 +72,13 @@ const availableOperators = computed(() => {
   let fieldType = fieldSchema.value?.type || 'string'
   return allOperators.filter((op) => {
     return op.type == fieldType
-      || (op.operator.substring(0, 5) === 'enum.' && fieldSchema.value?.enum?.length)
+    || (
+      op.operator.substring(0, 5) === 'enum.'
+      && (
+        fieldSchema.value?.enum?.length
+        || fieldSchema.value?.oneOf?.length
+      )
+    )
   })
 })
 
@@ -116,7 +124,10 @@ const operationRedaction = computed(() => {
   const fieldName = innerModel.field
   const opName = currentOperator.value?.text || innerModel.op
   const stringArgs = argsToString(innerModel.args)
-  return `${fieldName} ${opName} ${stringArgs}`
+  return {
+    text: fieldName,
+    subtext: `${opName} ${stringArgs}`,
+  }
 })
 
 function argsToString(strArgs) {
@@ -133,19 +144,18 @@ function argsToString(strArgs) {
 </script>
 
 <template>
-  <details
+  <UiDetails
+    v-model:open="detailsIsOpen"
     class="StmtOp"
-    :open="detailsIsOpen"
+    v-bind="operationRedaction"
   >
-    <summary v-text="operationRedaction" />
-
-    <section>
+    <div class="StmtOp__body">
       <div class="StmtOp__field">
         <UiItem
-          v-if="fieldSchema?.info"
-          :text="innerModel.field"
-          :subtext="fieldSchema?.info?.text"
-          :icon="fieldSchema?.info?.icon"
+          v-if="fieldSchema?.title"
+          :text="fieldSchema.title"
+          :subtext="innerModel.field"
+          :icon="fieldSchema?.icon"
         />
         <input
           v-else
@@ -209,6 +219,6 @@ function argsToString(strArgs) {
           @update:model-value="emitInput"
         />
       </div>
-    </section>
-  </details>
+    </div>
+  </UiDetails>
 </template>

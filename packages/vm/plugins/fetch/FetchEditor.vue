@@ -88,7 +88,7 @@ const i18n = useI18n({
         class="FetchEditor__inputUrl"
         type="text"
         placeholder="https:// ... "
-        @input="emitInput"
+        @update:model-value="emitInput"
       />
     </div>
 

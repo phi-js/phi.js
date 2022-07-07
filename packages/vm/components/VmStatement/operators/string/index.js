@@ -5,7 +5,7 @@ export default [
     operator: 'string.same',
     type: 'string',
     icon: 'mdi:equal',
-    text: 'es similar a',
+    text: 'es igual a',
     editor: {
       component: UiInput,
       props: { type: 'text' },
