@@ -26,20 +26,37 @@ const lyrics = ref(availableLyrics[0])
 const currentTime = ref(0)
 
 function onWordEnter(word) {
-  console.log('LyricsPlayer.docs onWordEnter', word)
+  console.info('LyricsPlayer.docs onWordEnter', word)
 }
 </script>
 
 <template>
   <select @change="lyrics = availableLyrics[$event.target.value]; currentTime = 0">
-    <option v-for="(lyr, k) in availableLyrics" :key="k" :value="k">{{ lyr.title }}</option>
+    <option
+      v-for="(lyr, k) in availableLyrics"
+      :key="k"
+      :value="k"
+    >
+      {{ lyr.title }}
+    </option>
   </select>
 
   <pre>currentTime: {{ currentTime }}</pre>
 
-  <div class="LyricsPlayerDemo" :key="lyrics.title">
-    <UiVideo class="video" :url="lyrics.url" @timeupdate="currentTime = $event.time" />
-    <LyricsPlayer :lyrics="lyrics" :currentTime="currentTime" @wordEnter="onWordEnter" />
+  <div
+    :key="lyrics.title"
+    class="LyricsPlayerDemo"
+  >
+    <UiVideo
+      class="video"
+      :url="lyrics.url"
+      @timeupdate="currentTime = $event.time"
+    />
+    <LyricsPlayer
+      :lyrics="lyrics"
+      :current-time="currentTime"
+      @word-enter="onWordEnter"
+    />
   </div>
 </template>
 
