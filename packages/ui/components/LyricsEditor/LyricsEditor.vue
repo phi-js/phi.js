@@ -1,10 +1,22 @@
 <template>
   <div class="lyrics-editor">
-    <textarea v-model="input" style="display: block; width: 100%; height: 16em" />
-    <button type="button" @click="generateOutput">Continuar</button>
+    <textarea
+      v-model="input"
+      style="display: block; width: 100%; height: 16em"
+    />
+    <button
+      type="button"
+      @click="generateOutput"
+    >
+      Continuar
+    </button>
 
     <template v-if="output">
-      <input type="text" placeholder="Focus me, space to tap" @keydown.space.prevent="onTap" />
+      <input
+        type="text"
+        placeholder="Focus me, space to tap"
+        @keydown.space.prevent="onTap"
+      >
 
       <div class="text-container">
         <div
@@ -145,7 +157,7 @@ export default {
 
     onTap() {
       if (this.startTime === null) {
-        console.log('Not started')
+        console.warn('Not started')
         return
       }
 
