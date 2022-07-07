@@ -32,15 +32,30 @@ innerValue = {
   value: 'algunaCosa'
 }
 
+propValue = {
+  "$i18n": {
+    "en": "Some thing",
+    "es": "Alguna cosa"
+  }
+}
+innerValue = {
+  type: 'dictionary',
+  value: {
+    "en": "Some thing",
+    "es": "Alguna cosa"
+  }
+}
+
 <CmsPropInput v-model="propValue" />
 */
 
 import { useAttrs, computed, ref, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import { UiInput, UiIcon } from '@/packages/ui'
+import { UiInput, UiIcon, UiItem } from '@/packages/ui'
 
 import useModelSchema from '@/packages/vm/components/VmStatement/useModelSchema.js'
 import getSchemaVariables from '@/packages/vm/helpers/getSchemaVariables.js'
+import DictionaryEditor from './DictionaryEditor.vue'
 
 const props = defineProps({
   modelValue: {
@@ -67,13 +82,20 @@ watch(
 )
 
 function parseValue(incoming) {
+  if (typeof incoming?.$i18n === 'object') {
+    return {
+      type: 'dictionary',
+      value: incoming.$i18n,
+    }
+  }
+
   const retval = {
     // type: innerValue.value?.type || attrs?.type || 'text',
     type: 'text',
     value: incoming,
   }
 
-  if (!incoming) {
+  if (!incoming || typeof incoming !== 'string') {
     return retval
   }
 
@@ -128,6 +150,14 @@ function setType(typeName) {
     return false
   }
 
+  if (typeName == 'dictionary') { // convert data to dictionary
+    if (typeof innerValue.value.value === 'string') {
+      innerValue.value.value = { en: innerValue.value.value }
+    }
+  } else if (innerValue.value.type == 'dictionary' && typeof innerValue.value.value == 'object') { // convert dictionary to string
+    innerValue.value.value = innerValue.value.value[Object.keys(innerValue.value.value)[0]]
+  }
+
   // When transforming a value into an variable,
   // only keep the current string value if it matches an existing variable
   if (typeName == 'variable' && innerValue.value.value) {
@@ -139,6 +169,11 @@ function setType(typeName) {
 
   innerValue.value.type = typeName
   emitUpdate()
+
+  isOpen.value = false
+  if (typeName == 'dictionary') {
+    isDictionaryOpen.value = true
+  }
 }
 
 function emitUpdate() {
@@ -153,6 +188,10 @@ function emitUpdate() {
 
   case 'lang':
     emit('update:modelValue', 'lang(' + innerValue.value.value + ')')
+    break
+
+  case 'dictionary':
+    emit('update:modelValue', { $i18n: innerValue.value.value })
     break
 
   default:
@@ -199,6 +238,15 @@ function onVariablePickerChange($event) {
 }
 
 const isOpen = ref(false)
+const isDictionaryOpen = ref(false)
+
+const dictionaryItemText = computed(() => {
+  if (!innerValue.value?.value || typeof innerValue.value?.value != 'object') {
+    return 'Ver traducciones'
+  }
+
+  return innerValue.value.value[Object.keys(innerValue.value.value)[0]]
+})
 </script>
 
 <template>
@@ -242,6 +290,14 @@ const isOpen = ref(false)
           @update:model-value="emitUpdate()"
         />
       </template>
+      <template v-else-if="innerValue.type == 'dictionary'">
+        <UiItem
+          class="CmsPropInput__dictionaryItem"
+          :text="dictionaryItemText"
+          :icon="isDictionaryOpen ? 'mdi:menu-down' : 'mdi:menu-right'"
+          @click="isDictionaryOpen = !isDictionaryOpen"
+        />
+      </template>
       <template v-else>
         <UiInput
           v-model="innerValue.value"
@@ -261,9 +317,13 @@ const isOpen = ref(false)
           v-text="i18n.t('CmsPropInput.Text')"
         />
         <option
-          value="lang"
+          value="dictionary"
           v-text="i18n.t('CmsPropInput.Translation')"
         />
+        <!-- <option
+          value="lang"
+          v-text="i18n.t('CmsPropInput.Translation')"
+        /> -->
         <option
           value="variable"
           v-text="i18n.t('CmsPropInput.Variable')"
@@ -276,19 +336,64 @@ const isOpen = ref(false)
         @click="isOpen = !isOpen"
       />
     </div>
+
+    <div
+      v-if="innerValue.type == 'dictionary'"
+      v-show="isDictionaryOpen"
+      class="CmsPropInput__footer"
+    >
+      <DictionaryEditor
+        v-model="innerValue.value"
+        @update:model-value="emitUpdate()"
+      />
+    </div>
   </UiInput>
 </template>
 
 <style lang="scss">
-.CmsPropInput__toggler {
-  cursor: pointer;
-  border-radius: 4px;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  align-self: stretch;
-  width: 40px;
+.CmsPropInput {
+  &__toggler {
+    cursor: pointer;
+    border-radius: 4px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    align-self: stretch;
+    width: 40px;
+    background-color: rgba(255,255,255, 0.1);
+  }
 
+  &__dictionaryItem {
+    cursor: pointer;
+    background-color: rgba(255,255,255, 0.1);
+    --ui-item-padding: 8px 12px;
+    max-width: 210px;
 
-  background-color: rgba(255,255,255, 0.1);
+    border-radius: 4px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  &__footer {
+    padding: 8px;
+    margin-bottom: 40px;
+
+    .UiButton {
+      margin-left: 2rem;
+    }
+
+    .UiInput {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      margin-bottom: 8px;
+
+      &__label {
+        display: block;
+        width: 2rem;
+        min-width: 0 !important;
+      }
+    }
+  }
 }
+
 </style>

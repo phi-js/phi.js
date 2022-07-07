@@ -37,5 +37,5 @@ export default {
   'StoryEditorWindow.events.storySetup': 'on story setup',
   'StoryEditorWindow.events.pageSetup': 'on page setup',
   'StoryEditorWindow.events.pageEnter': 'on page enter',
-  'StoryEditorWindow.events.pageLeave': 'on page leavae',
+  'StoryEditorWindow.events.pageLeave': 'on page leave',
 }

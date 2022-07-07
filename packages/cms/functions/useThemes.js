@@ -1,12 +1,11 @@
 /*
 Given a STORY object, looks for the "themes" property,
-imports all external CSS files if applies, and returns an ARRAY of class names to be applied to the story
+imports all external CSS files, and returns an ARRAY of class names to be applied to the story
 */
 export default function useThemes(story) {
   const retval = []
   const foundThemes = story?.themes?.length ? story.themes : []
   foundThemes
-    .filter((theme) => theme.enabled)
     .forEach((theme) => {
       importTheme(theme)
       retval.push(theme.name)
@@ -18,7 +17,7 @@ export default function useThemes(story) {
 const alreadyImported = {} // hash.  alreadyImported[themeName] = true|false
 
 function importTheme({ url, name }) {
-  if (alreadyImported[name]) {
+  if (alreadyImported[name] || document.querySelector(`link[href="${url}"]`)) {
     return
   }
 

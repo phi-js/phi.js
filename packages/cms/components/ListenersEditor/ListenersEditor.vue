@@ -1,7 +1,8 @@
 <script setup>
 import { ref, watch, computed, nextTick } from 'vue'
+
 import { VmStatement } from '@/packages/vm'
-import { UiItem, UiIcon, UiInput } from '@/packages/ui'
+import { UiItem, UiIcon, UiInput, UiDetails } from '@/packages/ui'
 
 const props = defineProps({
   /*
@@ -111,33 +112,19 @@ const endangeredIndex = ref(-1)
     ref="el"
     class="ListenersEditor"
   >
-    <details
+    <UiDetails
       v-for="(event, i) in events"
       :key="i"
       class="ListenersEditor__listener"
-      :class="{'ListenersEditor__listener--endangered': endangeredIndex === i}"
+      :text="eventNames[event.name] || event.name"
+      group="ListenersEditor"
+      @delete="removeEvent(i)"
     >
-      <summary class="ListenersEditor__summary">
-        <UiItem
-          :text="eventNames[event.name] || event.name"
-        >
-          <template #actions>
-            <UiIcon
-              src="mdi:close"
-              @click.prevent="removeEvent(i)"
-              @mouseenter="endangeredIndex = i"
-              @mouseleave="endangeredIndex = -1"
-            />
-          </template>
-        </UiItem>
-      </summary>
-      <section>
-        <VmStatement
-          v-model="events[i].stmt"
-          @update:model-value="emitUpdate"
-        />
-      </section>
-    </details>
+      <VmStatement
+        v-model="events[i].stmt"
+        @update:model-value="emitUpdate"
+      />
+    </UiDetails>
 
     <UiInput
       v-if="eventPickerOptions.length"

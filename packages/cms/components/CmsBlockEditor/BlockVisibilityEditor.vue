@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { VmStatement } from '@/packages/vm'
-import { UiInput } from '@/packages/ui'
+import { UiInput, UiDetails } from '@/packages/ui'
 
 const props = defineProps({
   /**
@@ -51,38 +51,37 @@ const i18n = useI18n({
 
 <template>
   <div class="BlockVisibilityEditor">
-    <details open>
-      <summary v-text="i18n.t('BlockVisibilityEditor.visibleWhen')" />
-      <section>
-        <VmStatement
-          v-model="block['v-if']"
-          :default="{ and: [] }"
-          @update:model-value="emitUpdate"
-        />
-        <!-- <UiInput
-          v-model="block.transition"
-          type="checkbox"
-          label="Usar animación"
-          @update:model-value="emitUpdate"
-        /> -->
-      </section>
-    </details>
+    <UiDetails
+      open
+      :text="i18n.t('BlockVisibilityEditor.visibleWhen')"
+      group="BlockVisibilityEditor"
+    >
+      <VmStatement
+        v-model="block['v-if']"
+        :default="{ and: [] }"
+        @update:model-value="emitUpdate"
+      />
+      <!-- <UiInput
+        v-model="block.transition"
+        type="checkbox"
+        label="Usar animación"
+        @update:model-value="emitUpdate"
+      /> -->
+    </UiDetails>
 
-
-
-    <details>
-      <summary v-text="i18n.t('BlockVisibilityEditor.Repeat')" />
-      <section>
-        <UiInput
-          v-model="block['v-for']"
-          type="text"
-          model="v-for"
-          :label="i18n.t('BlockVisibilityEditor.RepeatForEveryItemIn')"
-          :placeholder="i18n.t('BlockVisibilityEditor.VariableName')"
-          :subtext="i18n.t('BlockVisibilityEditor.subtext')"
-          @update:model-value="emitUpdate"
-        />
-      </section>
-    </details>
+    <UiDetails
+      :text="i18n.t('BlockVisibilityEditor.Repeat')"
+      group="BlockVisibilityEditor"
+    >
+      <UiInput
+        v-model="block['v-for']"
+        type="text"
+        model="v-for"
+        :label="i18n.t('BlockVisibilityEditor.RepeatForEveryItemIn')"
+        :placeholder="i18n.t('BlockVisibilityEditor.VariableName')"
+        :subtext="i18n.t('BlockVisibilityEditor.subtext')"
+        @update:model-value="emitUpdate"
+      />
+    </UiDetails>
   </div>
 </template>

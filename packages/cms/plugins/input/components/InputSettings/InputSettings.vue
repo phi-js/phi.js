@@ -1,10 +1,11 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
-import { useI18n } from '@/packages/i18n'
-import { UiInput } from '@/packages/ui/components'
-import OptionsEditor from '@/packages/ui/components/UiInputEditor/editors/OptionsEditor.vue'
-import CmsPropInput from '../../../../components/CmsPropInput/CmsPropInput.vue'
 
+import { useI18n } from '@/packages/i18n'
+import { UiInput, UiDetails } from '@/packages/ui/components'
+import OptionsEditor from '@/packages/ui/components/UiInputEditor/editors/OptionsEditor.vue'
+
+import CmsPropInput from '../../../../components/CmsPropInput/CmsPropInput.vue'
 import { getPluginData } from '../../../../functions'
 const pluginData = getPluginData()
 
@@ -17,6 +18,8 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const block = ref({ props: {} })
+const autoSetModel = ref(!props.modelValue?.['v-model'])
+
 watch(
   () => props.modelValue,
   (newValue) => block.value = JSON.parse(JSON.stringify(newValue)),
@@ -29,9 +32,30 @@ const emitUpdate = function () {
   emit('update:modelValue', block.value)
 }
 
+function onUpdateModel() {
+  autoSetModel.value = !block.value['v-model'].trim()
+  emitUpdate()
+}
+
+function onUpdateLabel() {
+  if (autoSetModel.value) {
+    block.value['v-model'] = camelize(block.value.props.label)
+  }
+  emitUpdate()
+}
+
+function camelize(str) {
+  if (typeof str?.$i18n === 'object') {
+    str = str.$i18n[Object.keys(str.$i18n)[0]]
+  }
+  return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+    return index === 0 ? word.toLowerCase() : word.toUpperCase()
+  }).replace(/[^a-zA-Z0-9]+/g, '')
+}
+
 const i18n = useI18n({
   en: {
-    'InputSettings.Labels': 'Labels',
+    'InputSettings.Texts': 'Texts',
     'InputSettings.Options': 'Options',
     'InputSettings.Data': 'Data',
     'InputSettings.Single': 'Single',
@@ -45,7 +69,7 @@ const i18n = useI18n({
     'InputSettings.Advanced': 'Advanced options',
   },
   es: {
-    'InputSettings.Labels': 'Etiquetas',
+    'InputSettings.Texts': 'Textos',
     'InputSettings.Options': 'Opciones',
     'InputSettings.Data': 'Datos',
     'InputSettings.Single': 'Único',
@@ -73,92 +97,107 @@ const multipleOptions = [
 </script>
 
 <template>
-  <div
-    class="InputSettings UiForm"
-    style="padding:0"
-  >
-    <details
+  <div class="InputSettings UiForm--wide">
+    <UiDetails
+      open
+      group="InputSettings"
+      :text="i18n.t('InputSettings.Data')"
+    >
+      <CmsPropInput
+        v-model="block.props.label"
+        v-model:block="block"
+        type="text"
+        :label="i18n.t('InputSettings.Label')"
+        @update:model-value="onUpdateLabel"
+        @update:block="emitUpdate"
+      />
+
+      <UiInput
+        v-model="block['v-model']"
+        :label="i18n.t('InputSettings.VariableName')"
+        type="text"
+        @update:model-value="onUpdateModel"
+      />
+    </UiDetails>
+
+    <UiDetails
       v-if="isSelect"
+      group="InputSettings"
+      :text="i18n.t('InputSettings.Options')"
       open
     >
-      <summary v-text="i18n.t('InputSettings.Options')" />
-      <section>
-        <OptionsEditor
-          v-model="block.props.options"
-          @update:model-value="emitUpdate"
-        />
+      <OptionsEditor
+        v-model="block.props.options"
+        @update:model-value="emitUpdate"
+      />
 
-        <UiInput
-          v-model="block.props.multiple"
-          :label="i18n.t('InputSettings.ValueType')"
-          type="select-buttons"
-          :options="multipleOptions"
-          @update:model-value="emitUpdate"
-        />
-      </section>
-    </details>
+      <UiInput
+        v-model="block.props.multiple"
+        :label="i18n.t('InputSettings.ValueType')"
+        type="select-buttons"
+        :options="multipleOptions"
+        @update:model-value="emitUpdate"
+      />
+    </UiDetails>
 
-    <details open>
-      <summary v-text="i18n.t('InputSettings.Labels')" />
-      <section>
-        <CmsPropInput
-          v-model="block.props.label"
-          v-model:block="block"
-          type="text"
-          :label="i18n.t('InputSettings.Label')"
-          @update:model-value="emitUpdate"
-          @update:block="emitUpdate"
-        />
+    <UiDetails
+      group="InputSettings"
+      :text="i18n.t('InputSettings.Texts')"
+    >
+      <CmsPropInput
+        v-model="block.props.subtext"
+        v-model:block="block"
+        type="text"
+        :label="i18n.t('InputSettings.Subtext')"
+        @update:model-value="emitUpdate"
+        @update:block="emitUpdate"
+      />
 
-        <CmsPropInput
-          v-model="block.props.subtext"
-          v-model:block="block"
-          type="text"
-          :label="i18n.t('InputSettings.Subtext')"
-          @update:model-value="emitUpdate"
-          @update:block="emitUpdate"
-        />
+      <CmsPropInput
+        v-model="block.props.placeholder"
+        v-model:block="block"
+        type="text"
+        :label="i18n.t('InputSettings.Placeholder')"
+        @update:model-value="emitUpdate"
+        @update:block="emitUpdate"
+      />
+    </UiDetails>
 
-        <CmsPropInput
-          v-model="block.props.placeholder"
-          v-model:block="block"
-          type="text"
-          :label="i18n.t('InputSettings.Placeholder')"
-          @update:model-value="emitUpdate"
-          @update:block="emitUpdate"
-        />
-      </section>
-    </details>
+    <UiDetails
+      group="InputSettings"
+      :text="i18n.t('InputSettings.Advanced')"
+    >
+      <UiInput
+        v-model="block.props.debounce"
+        :label="i18n.t('InputSettings.Debounce')"
+        type="number"
+        placeholder="ms."
+        @update:model-value="emitUpdate"
+      />
 
-    <details open>
-      <summary v-text="i18n.t('InputSettings.Data')" />
-      <section>
-        <UiInput
-          v-model="block['v-model']"
-          :label="i18n.t('InputSettings.VariableName')"
-          type="text"
-          @update:model-value="emitUpdate"
-        />
-      </section>
-    </details>
-
-    <details>
-      <summary v-text="i18n.t('InputSettings.Advanced')" />
-      <section>
-        <UiInput
-          v-model="block.props.debounce"
-          :label="i18n.t('InputSettings.Debounce')"
-          type="number"
-          placeholder="ms."
-          @update:model-value="emitUpdate"
-        />
-
-        <Component
-          :is="pluginData.getSlotComponent('InputSettings')"
-          v-model="block"
-          @update:model-value="emitUpdate"
-        />
-      </section>
-    </details>
+      <Component
+        :is="pluginData.getSlotComponent('InputSettings')"
+        v-model="block"
+        @update:model-value="emitUpdate"
+      />
+    </UiDetails>
   </div>
 </template>
+
+<style lang="scss">
+.InputSettings {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .UiDetails__contents {
+    padding-left: 12px;
+    padding-bottom: 24px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+</style>

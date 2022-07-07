@@ -48,17 +48,14 @@ export default {
       const sanitized = JSON.parse(JSON.stringify(sanitizeStory(props.story))) // clone is important, otherwise we'll be mutating prop (i.e. when setting block.props and block.rules below)
 
       forEachBlock(sanitized, (block) => {
-        if (!block.i18n) {
-          return
-        }
         if (block.props) {
-          block.props = parseTranslations(block.props, block.i18n, i18n.locale)
+          block.props = parseTranslations(block.props, i18n.locale, block.i18n)
         }
         if (block.rules) {
-          block.rules = parseTranslations(block.rules, block.i18n, i18n.locale)
+          block.rules = parseTranslations(block.rules, i18n.locale, block.i18n)
         }
         if (block['v-on']) {
-          block['v-on'] = parseTranslations(block['v-on'], block.i18n, i18n.locale)
+          block['v-on'] = parseTranslations(block['v-on'], i18n.locale, block.i18n)
         }
       })
 

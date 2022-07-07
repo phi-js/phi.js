@@ -1,75 +1,28 @@
 .StmtAndOr {
-  border: 0;
-  margin: 0;
-  padding: 0;
-
-  --stmt-legend-height: 30px;
-
-  position: relative;
-  border-radius: 4px;
-  padding-top: var(--stmt-legend-height); // make room for the absolutely positioned legend
-
-  & > legend {
-    margin: 0;
-    padding: 0;
-
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    height: var(--stmt-legend-height);
-  }
-
   &__body {
-    // border-left: 2px solid var(--ui-color-primary);
-    margin-left: 4px;
-    padding-left: 6px;
-    padding-top: 6px;
-
-    // Nested statements
-    .StmtAndOr {
-      background-color: rgba(255,255,255, 0.08);
-      padding: 12px 6px;
-      padding-top: 40px;
-    }
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
 
-
-  & > legend > select {
+  &__select {
     background: transparent;
     border-radius: 5px;
 
     color: inherit;
+    font: inherit;
+
     border: 0;
-    padding: 4px;
-
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  &__item {
-    position: relative;
-
-    &--endangered {
-      background-color: rgba(255,128,128, 0.2);
-    }
-  }
-
-  &__deleter {
-    width: 42px;
-    height: 42px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    cursor: pointer;
+    padding: 0;
+    margin: 0;
   }
 
   &__adder {
     color: inherit;
     border: 0;
-    padding: 8px;
+    padding: 10px 8px;
     background: rgba(255,255,255, 0);
     border-radius: 4px;
-    opacity: 0.7;
 
     &:hover {
       background: rgba(255,255,255, 0.1);

@@ -75,10 +75,23 @@ function onBlockPickerInput(blockDefinition) {
   nextTick(() => elStaging.value.openAction(0))
 }
 
+function onSlotComponentInput(block) {
+  const newBlock = onBeforeCreateBlock(block)
+  emit('input', newBlock)
+}
+
+
 /* Perform actions before and after a new block is created */
 function onBeforeCreateBlock(block) {
   if (typeof pluginData?.onBeforeCreateBlock == 'function') {
     try {
+      // Run onBeforeCreateBlock on children first
+      if (block?.slot?.length) {
+        for (let i = 0; i < block.slot.length; i++) {
+          block.slot[i] = onBeforeCreateBlock(block.slot[i])
+        }
+      }
+
       const result = pluginData.onBeforeCreateBlock(block)
       if (result === false) {
         return false
@@ -175,7 +188,7 @@ function onPickerUpdateOpen($event) {
       <template #body="{ close }">
         <Component
           :is="pluginData.getSlotComponent('BlockLauncher')"
-          @input="close(); emit('input', $event);"
+          @input="onSlotComponentInput($event); close();"
         />
       </template>
     </CmsBlockPicker>

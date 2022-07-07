@@ -1,7 +1,9 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { UiInput } from '@/packages/ui'
+
 import { useI18n } from '@/packages/i18n'
+import { UiInput, UiDetails } from '@/packages/ui'
+
 import SpacingEditor from './props/SpacingEditor.vue'
 import PropBackground from './props/PropBackground.vue'
 import { useStorySettings } from '../../functions'
@@ -68,72 +70,72 @@ const i18n = useI18n({
 
 <template>
   <div class="BlockCssStyle">
-    <details>
-      <summary v-text="i18n.t('BlockCssStyle.Background')" />
-      <section>
-        <PropBackground
-          v-model="innerValue"
-          :endpoint="uploadsEndpoint"
-          @update:model-value="emitUpdate()"
-        />
-      </section>
-    </details>
+    <UiDetails
+      group="BlockCssStyle"
+      :text="i18n.t('BlockCssStyle.Background')"
+    >
+      <PropBackground
+        v-model="innerValue"
+        :endpoint="uploadsEndpoint"
+        @update:model-value="emitUpdate()"
+      />
+    </UiDetails>
 
-    <details>
-      <summary v-text="i18n.t('BlockCssStyle.Font')" />
-      <section>
-        <UiInput
-          v-model="innerValue['color']"
-          :label="i18n.t('BlockCssStyle.colorForeground')"
-          type="color-css"
-          @update:model-value="emitUpdate()"
-        />
-        <UiInput
-          v-model="innerValue['--ui-color-primary']"
-          :label="i18n.t('BlockCssStyle.colorPrimary')"
-          type="color-css"
-          @update:model-value="emitUpdate()"
-        />
-        <UiInput
-          v-model="innerValue['--ui-color-danger']"
-          :label="i18n.t('BlockCssStyle.colorDanger')"
-          type="color-css"
-          @update:model-value="emitUpdate()"
-        />
-      </section>
-    </details>
+    <UiDetails
+      group="BlockCssStyle"
+      :text="i18n.t('BlockCssStyle.Font')"
+    >
+      <UiInput
+        v-model="innerValue['color']"
+        :label="i18n.t('BlockCssStyle.colorForeground')"
+        type="color-css"
+        @update:model-value="emitUpdate()"
+      />
+      <UiInput
+        v-model="innerValue['--ui-color-primary']"
+        :label="i18n.t('BlockCssStyle.colorPrimary')"
+        type="color-css"
+        @update:model-value="emitUpdate()"
+      />
+      <UiInput
+        v-model="innerValue['--ui-color-danger']"
+        :label="i18n.t('BlockCssStyle.colorDanger')"
+        type="color-css"
+        @update:model-value="emitUpdate()"
+      />
+    </UiDetails>
 
-    <details>
-      <summary v-text="i18n.t('BlockCssStyle.Padding')" />
-      <section>
-        <SpacingEditor
-          v-model="innerValue.padding"
-          empty-value="0"
-          @update:model-value="emitUpdate()"
-        />
-      </section>
-    </details>
+    <UiDetails
+      group="BlockCssStyle"
+      :text="i18n.t('BlockCssStyle.Padding')"
+    >
+      <SpacingEditor
+        v-model="innerValue.padding"
+        empty-value="0"
+        @update:model-value="emitUpdate()"
+      />
+    </UiDetails>
 
-    <details>
-      <summary v-text="i18n.t('BlockCssStyle.Margin')" />
-      <section>
-        <UiInput
-          :model-value="parseInt(innerValue['--ui-content-width'])"
-          :label="i18n.t('BlockCssStyle.ContentWidth')"
-          placeholder="px"
+    <UiDetails
+      group="BlockCssStyle"
+      :text="i18n.t('BlockCssStyle.Margin')"
+    >
+      <UiInput
+        :model-value="parseInt(innerValue['--ui-content-width'])"
+        :label="i18n.t('BlockCssStyle.ContentWidth')"
+        placeholder="px"
 
-          type="number-slide"
-          min="600"
-          max="2048"
-          :step="10"
-          @update:model-value="innerValue['--ui-content-width'] = $event + 'px'; emitUpdate()"
-        />
-        <SpacingEditor
-          v-model="innerValue.margin"
-          empty-value="auto"
-          @update:model-value="emitUpdate()"
-        />
-      </section>
-    </details>
+        type="number-slide"
+        min="600"
+        max="2048"
+        :step="10"
+        @update:model-value="innerValue['--ui-content-width'] = $event + 'px'; emitUpdate()"
+      />
+      <SpacingEditor
+        v-model="innerValue.margin"
+        empty-value="auto"
+        @update:model-value="emitUpdate()"
+      />
+    </UiDetails>
   </div>
 </template>

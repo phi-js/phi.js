@@ -41,11 +41,12 @@ const isSelect = computed(() =>
 const i18n = useI18n()
 const translatedProps = ref()
 watchEffect(() => {
-  if (props.modelValue.i18n) {
-    translatedProps.value = parseTranslations({ ...props.modelValue?.props }, props.modelValue.i18n, i18n.locale)
-  } else {
-    translatedProps.value = { ...props.modelValue?.props }
-  }
+  translatedProps.value = parseTranslations({ ...props.modelValue?.props }, i18n.locale, props.modelValue.i18n)
+  // if (props.modelValue.i18n) {
+  //   translatedProps.value = parseTranslations({ ...props.modelValue?.props }, props.modelValue.i18n, i18n.locale)
+  // } else {
+  //   translatedProps.value = { ...props.modelValue?.props }
+  // }
 })
 </script>
 
@@ -55,7 +56,7 @@ watchEffect(() => {
     <div
       v-if="isSelect && !Array.isArray(translatedProps?.options)"
       class="InputFace__dummy"
-      :class="attrs?.class"
+      :class="[modelValue?.component, attrs?.class]"
       :style="attrs?.style"
     >
       <span>Click to add options</span>
@@ -67,7 +68,7 @@ watchEffect(() => {
     </div>
     <UiInput
       v-else
-      :class="attrs?.class"
+      :class="[modelValue?.component, attrs?.class]"
       :style="attrs?.style"
       v-bind="translatedProps"
       style="pointer-events: none;"

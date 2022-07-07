@@ -24,6 +24,11 @@ export default function sanitizeStory(story) {
     story.paths = []
   }
 
+  // Every story has an ARRAY of themes
+  if (!Array.isArray(story.themes)) {
+    story.themes = []
+  }
+
   /* Every story has an CSS object:
   css: {
     classes: []

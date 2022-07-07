@@ -81,10 +81,10 @@ const i18n = useI18n({
     'StoryEditorWindow.sitemap': 'Pages',
     'StoryEditorWindow.thisPage': 'This Page',
 
-    'StoryEditorWindow.events.storySetup': 'on story setup',
-    'StoryEditorWindow.events.pageSetup': 'on page setup',
-    'StoryEditorWindow.events.pageEnter': 'on page enter',
-    'StoryEditorWindow.events.pageLeave': 'on page leavae',
+    'StoryEditorWindow.events.storySetup': 'The document is loaded',
+    'StoryEditorWindow.events.pageSetup': 'The page is loaded',
+    'StoryEditorWindow.events.pageEnter': 'User enters the page',
+    'StoryEditorWindow.events.pageLeave': 'User leaves the page',
   },
   es: {
     'StoryEditorWindow.events': 'Eventos',

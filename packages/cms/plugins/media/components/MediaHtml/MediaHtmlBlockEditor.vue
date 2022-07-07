@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed, watch, onBeforeUnmount } from 'vue'
-import { UiIcon, UiPopover } from '@/packages/ui/components'
+import { ref, computed, onBeforeUnmount, watchEffect } from 'vue'
+import { useI18n } from '@/packages/i18n'
+import { UiIcon, UiPopover } from '@/packages/ui'
 import BlockScaffold from '../../../../components/CmsBlockEditor/BlockScaffold.vue'
 
 import { Editor } from '@tiptap/vue-3'
@@ -18,6 +19,9 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:block'])
 
+const i18n = useI18n()
+const curLanguage = ref(i18n.locale)
+
 const innerValue = ref('')
 const isFocused = ref(false)
 
@@ -33,24 +37,45 @@ const editor = new Editor({
   onBlur: () => isFocused.value = false,
   onUpdate: () => {
     innerValue.value = editor.getHTML()
-    emit('update:block', { ...props.block, props: { ...props.block.props, value: innerValue.value } })
+    emitUpdate()
   },
 })
+
+function emitUpdate() {
+  const objValue = props.block?.props?.value?.['$i18n']
+    ? { ...props.block.props.value }
+    : { $i18n: {} }
+
+  objValue['$i18n'][curLanguage.value] = innerValue.value
+  emit('update:block', { ...props.block, props: { ...props.block.props, value: objValue } })
+}
 
 onBeforeUnmount(() => editor.destroy())
 
 defineExpose({ focus: () => editor.commands.focus() })
 
-watch(
-  () => props.block?.props?.value,
-  (incomingValue) => {
-    if (incomingValue != innerValue.value) {
-      innerValue.value = incomingValue
-      editor.commands.setContent(innerValue.value, false)
-    }
-  },
-  { immediate: true },
-)
+watchEffect(() => {
+  const incomingValue = props.block?.props?.value
+  let targetValue = ''
+
+  if (incomingValue?.['$i18n'] && typeof incomingValue?.['$i18n'] === 'object') {
+    targetValue = incomingValue['$i18n']?.[curLanguage.value]
+      || incomingValue['$i18n'][Object.keys(incomingValue['$i18n'])[0]]
+  } else {
+    targetValue = incomingValue
+  }
+
+  if (targetValue != innerValue.value) {
+    innerValue.value = targetValue
+  }
+})
+
+
+function setLanguage(newValue) {
+  emitUpdate()
+  curLanguage.value = newValue
+}
+
 
 // toggleHeading clears textAlign (tiptap bug?)
 // keep alignment on toggleHeading;
@@ -256,12 +281,40 @@ const alignment = computed(() => {
         @click="option.callback"
         v-text="option.text"
       />
+
+
+      <!-- Current language selector -->
+      <UiPopover>
+        <template #trigger>
+          <button
+            type="button"
+            class="BlockScaffold__toolbar-icon expansible"
+            v-text="curLanguage"
+          />
+        </template>
+        <template #contents="{ close }">
+          <div
+            class="UiGroup"
+            @click="close"
+          >
+            <button
+              v-for="(locale) in i18n.availableLocales.value"
+              :key="locale.value"
+              type="button"
+              class="BlockScaffold__toolbar-icon"
+              :class="{ 'BlockScaffold__toolbar-icon--active': curLanguage == locale.value }"
+              @click="setLanguage(locale.value)"
+              v-text="locale.value"
+            />
+          </div>
+        </template>
+      </UiPopover>
     </template>
 
     <template #default="slotData">
       <EditorContentWrapper
         v-bind="slotData?.blockCssAttributes"
-        :value="slotData?.innerBlock?.props?.value"
+        :value="innerValue"
         :editor="editor"
       />
     </template>
