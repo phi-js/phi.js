@@ -6,20 +6,43 @@
 
   &--dragging {
     // prevent dragging blocks into droppable elements (like editable texts or file uploads) present in the block
-    // !!! -> What about <draggable> in nested block faces (i.e. LayoutGroupEditor) ?
+    // // !!! -> What about <draggable> in nested block faces (i.e. LayoutGroupEditor) ?
     .BlockScaffold__face {
       pointer-events: none;
     }
+
     // .BlockScaffold__face > .tiptap-editor-contents {
     //   pointer-events: none;
     // }
+
+
+    // .BlockScaffold__face > * {
+    //   pointer-events: none;
+    // }
+    // .BlockScaffold__face > .LayoutGroupEditor {
+    //   pointer-events: initial;
+    // }
+  }
+
+  &__footer {
+    padding: 24px 0;
+
+    .SlotBlockLauncher {
+      &__trigger {
+        justify-content: flex-start;
+        padding-left: 20px;
+      }
+    }
   }
 }
 
 .SlotItem {
   position: relative;
 
-  &__launcher--before {
+  // &__launcher--before {
+  //   z-index: 1;
+  // }
+  &__launcher {
     z-index: 1;
   }
 
@@ -86,7 +109,6 @@
   // Show "before" launcher from next SlotItem
   & + .SlotItem > .SlotItem__launcher--before {
     display: block;
-    z-index: 1;
   }
 }
 
@@ -103,13 +125,13 @@
 }
 
 
-// The last launcher of the last item is always visible
-.SlotItem:last-child {
-  & > .SlotItem__launcher--after {
-    display: block;
-    // opacity: 0.7;
-  }
-}
+// // The last launcher of the last item is always visible
+// .SlotItem:last-child {
+//   & > .SlotItem__launcher--after {
+//     display: block;
+//     // opacity: 0.7;
+//   }
+// }
 
 // Make sure opened launchers are always visible
 .SlotItem {
@@ -145,10 +167,11 @@
     margin-left: -4px;
     margin-right: -4px;
   }
+}
 
-  &.SlotItem--column {
-    & > .SlotItem__editor {
-      padding-bottom: 16px;
-    }
+/* Hide lone launcher inside ROW UiGroups */
+.SlotItem--row {
+  .CmsSlotEditor__footer--not-empty {
+    display: none;
   }
 }

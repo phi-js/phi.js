@@ -170,7 +170,8 @@ watch(
     max-height: 80%;
     overflow: hidden;
 
-    background-color: #fff;
+    background-color: var(--ui-color-background);
+    border-radius: 4px;
   }
 
   &__contents {

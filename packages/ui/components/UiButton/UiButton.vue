@@ -78,6 +78,7 @@ const currentText = computed(() => {
       :icon="errors.length ? 'mdi:alert-circle' : props.icon"
       :text="currentText"
       :subtext="$attrs.subtext"
+      :badge="$attrs.badge"
     >
       <template #actions>
         <UiIcon src="mdi:timer-sand" />

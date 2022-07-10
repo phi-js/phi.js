@@ -1,5 +1,5 @@
 <script setup>
-import { provide, ref, watchEffect, computed, watch } from 'vue'
+import { provide, ref, watchEffect, computed, watch, useSlots } from 'vue'
 import { CmsStory } from '../CmsStory'
 import { CmsStoryEditor } from '../CmsStoryEditor'
 import { CmsStoryGraph } from '../CmsStoryGraph'
@@ -39,18 +39,27 @@ const props = defineProps({
     default: 'preview', // editor | preview
   },
 
-  expanded: {
-    type: Boolean,
+  contentSize: {
+    type: Object,
     required: false,
-    default: false,
+    default: () => ({
+      width: null,
+      height: null,
+    }),
   },
 })
 
-const emit = defineEmits(['update:story', 'update:modelValue', 'update:expanded', 'story-emit'])
+const emit = defineEmits(['story-emit', 'update:story', 'update:modelValue', 'update:tab', 'update:contentSize'])
+
+const contentSize = ref()
+watch(
+  () => props.contentSize,
+  (newValue) => contentSize.value = newValue,
+  { immediate: true },
+)
 
 const i18n = useI18n({
   en: {
-    'CmsStoryBuilder.Edit': 'Edit',
     'CmsStoryBuilder.Editor': 'Editor',
     'CmsStoryBuilder.Styles': 'Styles',
     'CmsStoryBuilder.Events': 'Events',
@@ -63,7 +72,6 @@ const i18n = useI18n({
     'CmsStoryBuilder.hideToolbar': 'Close editor',
   },
   es: {
-    'CmsStoryBuilder.Edit': 'Editar',
     'CmsStoryBuilder.Editor': 'Editor',
     'CmsStoryBuilder.Styles': 'Estilos',
     'CmsStoryBuilder.Events': 'Eventos',
@@ -93,7 +101,26 @@ const currentPage = computed(() => {
   return foundPage || innerStory.value.pages[0]
 })
 
-const currentTab = ref(props.tab)
+const currentTab = ref()
+
+watch(
+  () => props.tab,
+  (newValue) => currentTab.value = newValue,
+  { immediate: true },
+)
+
+const isEditorLoaded = ref()
+watch(
+  currentTab,
+  (newValue) => {
+    if (newValue == 'editor') {
+      isEditorLoaded.value = true
+    }
+  },
+  { immediate: true },
+)
+
+
 const windowTab = ref()
 const isSitemapOpen = ref(false)
 
@@ -133,62 +160,28 @@ const { push, undo, redo, hasUndo, hasRedo } = useUndo(innerStory.value, (newVal
 
 const isModelExplorerOpen = ref(false)
 
-const contentSize = ref({
-  width: null,
-  height: null,
+const slots = useSlots()
+const contentSlot = computed(() => {
+  return slots?.[`contents-${currentTab.value}`]
 })
-
-
-// expanded/collapsed
-const isExpanded = ref()
-const isEditorLoaded = ref()
-
-watch(
-  () => props.expanded,
-  (newValue) => setExpanded(newValue),
-  { immediate: true },
-)
-
-function setExpanded(newValue) {
-  isExpanded.value = newValue
-  emit('update:expanded', isExpanded.value)
-
-  currentTab.value = isExpanded.value ? 'editor' : 'preview'
-  if (currentTab.value == 'editor') {
-    isEditorLoaded.value = true
-  }
-}
 </script>
 
 <template>
-  <div
-    class="CmsStoryBuilder"
-    :class="{
-      'CmsStoryBuilder--expanded': isExpanded,
-      'CmsStoryBuilder--collapsed': !isExpanded,
-    }"
-  >
+  <div class="CmsStoryBuilder">
     <div class="CmsStoryBuilder__toolbar">
-      <div class="CmsStoryBuilder__toolbar-compact">
-        <slot name="header" />
-        <UiItem
-          class="CmsStoryBuilder__expander"
-          :text="i18n.t('CmsStoryBuilder.Edit')"
-          icon="mdi:pencil"
-          @click="setExpanded(true)"
-        />
-      </div>
-
       <UiTabs
         v-model="currentTab"
-        class="CmsStoryBuilder__toolbar-large"
+        @update:model-value="emit('update:tab', $event)"
       >
         <template #left>
           <slot name="header" />
         </template>
 
         <template #right>
-          <div class="CmsStoryBuilder__controls">
+          <div
+            v-show="!contentSlot"
+            class="CmsStoryBuilder__controls"
+          >
             <UiIcon
               class="CmsStoryBuilder__controlItem"
               src="mdi:arrow-u-left-top"
@@ -207,14 +200,10 @@ function setExpanded(newValue) {
             <UiResolutionPicker
               v-model="contentSize"
               class="CmsStoryBuilder__controlItem"
+              @update:model-value="emit('update:contentSize', $event)"
             />
 
-            <UiIcon
-              class="CmsStoryBuilder__controlItem"
-              src="mdi:arrow-collapse"
-              :title="i18n.t('CmsStoryBuilder.hideToolbar')"
-              @click="setExpanded(false)"
-            />
+            <slot name="right" />
           </div>
         </template>
 
@@ -296,17 +285,28 @@ function setExpanded(newValue) {
               @click="isModelExplorerOpen = true"
             />
 
+            <slot name="preview-options" />
             <slot name="corner" />
           </div>
         </UiTab>
+        <slot name="default" />
       </UiTabs>
     </div>
 
 
-    <UiContentWrapper
+    <div
+      v-show="contentSlot"
       class="CmsStoryBuilder__body"
-      :class="{'UiContentWrapper--no-border': !isExpanded}"
-      v-bind="contentSize"
+    >
+      <Component :is="contentSlot" />
+      <!-- <slot :name="`contents-data`">
+        You have content, apparently ?
+      </slot> -->
+    </div>
+    <UiContentWrapper
+      v-show="!contentSlot"
+      class="CmsStoryBuilder__body"
+      :size="contentSize"
     >
       <CmsStoryEditor
         v-if="isEditorLoaded"

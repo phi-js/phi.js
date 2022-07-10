@@ -97,7 +97,11 @@ export default function getPluginData() {
         return
       }
 
-      eventListeners[eventName].forEach((callback) => callback($event, ctx))
+      const promises = []
+      eventListeners[eventName].forEach((callback) => {
+        promises.push(callback($event, ctx))
+      })
+      return Promise.all(promises)
     },
   }
 }

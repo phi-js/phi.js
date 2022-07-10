@@ -43,7 +43,6 @@ const cssVariables = computed(() => {
     v-model:slot="pageSlot"
     :style="cssVariables"
     class="LayoutGroupEditor"
-    group-name="cms-slot"
     :direction="props.modelValue?.props?.direction || 'column'"
     :label="`Add content to ${props.modelValue?.title || 'group'}`"
     @update:slot="onSlotUpdate"

@@ -45,7 +45,10 @@ export default {
   },
 
   data() {
-    return { innerModel: null }
+    return {
+      innerModel: null,
+      highlightedIndex: -1,
+    }
   },
 
   watch: {
@@ -78,6 +81,8 @@ export default {
         this.innerModel.list.push({ op: null })
       }
       this.emitInput()
+
+      this.highlightedIndex = this.innerModel.list.length - 1
     },
 
     emitInput() {
@@ -123,7 +128,7 @@ export default {
           <VmStatement
             v-model="innerModel.list[i]"
             :group="`StmtAndOr-${uid}`"
-            :open="false"
+            :open="highlightedIndex == i"
             @update:model-value="emitInput"
             @delete="removeCondition(i)"
           />

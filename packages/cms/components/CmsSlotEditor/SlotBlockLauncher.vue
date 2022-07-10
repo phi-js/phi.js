@@ -16,6 +16,12 @@ const props = defineProps({
     validator: (v) => ['row', 'column'].includes(v),
   },
 
+  text: {
+    type: String,
+    required: false,
+    default: null,
+  },
+
   label: {
     type: String,
     required: false,
@@ -149,13 +155,14 @@ function onPickerUpdateOpen($event) {
     <div
       v-show="!isOpen"
       class="SlotBlockLauncher__trigger"
+      :title="props.title"
       @click="onTriggerClick"
       @mouseenter="isTriggerHovered = true"
       @mouseleave="isTriggerHovered = false"
     >
       <UiItem
         icon="mdi:plus"
-        :title="title"
+        :text="props.text"
       />
     </div>
 
@@ -202,9 +209,13 @@ function onPickerUpdateOpen($event) {
   &__trigger {
     cursor: pointer;
     position: absolute;
-    padding: 6px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
 
     .UiItem {
+      --ui-item-padding: 0 6px;
+
       user-select: none;
       font-size: 12px;
       font-weight: bold;
@@ -241,16 +252,16 @@ function onPickerUpdateOpen($event) {
       justify-content: center;
       text-align: center;
 
-      border: 2px dashed var(--ui-color-primary);
-      border-radius: 3px;
-
       font-weight: bold;
       font-size: 1em;
 
-      cursor: pointer;
-      &:hover {
-        background-color: rgba(255,255,255, 0.1);
-      }
+      background-color: var(--ui-color-hover);
+      // border: 2px dashed var(--ui-color-primary);
+      // border-radius: 3px;
+      // cursor: pointer;
+      // &:hover {
+      //   background-color: rgba(255,255,255, 0.1);
+      // }
     }
   }
 }
@@ -282,11 +293,13 @@ function onPickerUpdateOpen($event) {
 
 
 
-// the trigger is 32x32 px, position centered
+
 .SlotBlockLauncher--column {
   .SlotBlockLauncher__trigger {
-    top: -16px;
-    left: calc(50% - 16px);
+    top: -12px;
+    bottom: auto;
+    left: 0;
+    right: 0;
   }
 
   .SlotBlockLauncher__box {
@@ -300,15 +313,19 @@ function onPickerUpdateOpen($event) {
   &.SlotBlockLauncher--teasing {
     margin-top: -2px;
     margin-bottom: -2px;
-    border-top: 4px dashed var(--ui-color-primary);
+    border-top: 2px dashed var(--ui-color-primary);
+    border-bottom: 2px dashed var(--ui-color-primary);
   }
 }
 
 
 .SlotBlockLauncher--row {
   .SlotBlockLauncher__trigger {
-    top: calc(50% - 16px);
-    left: -16px;
+    flex-direction: column;
+    top: 0;
+    bottom: 0;
+    left: -12px;
+    right: auto;
   }
 
   .SlotBlockLauncher__box {

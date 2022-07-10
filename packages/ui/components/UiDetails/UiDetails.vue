@@ -66,7 +66,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:open', 'delete'])
+const emit = defineEmits(['update:open', 'delete', 'open', 'close'])
 
 const isOpen = ref(props.open)
 
@@ -138,7 +138,7 @@ function expand() {
 }
 
 function shrink() {
-  if (!refEl.value) {
+  if (!refEl.value || !isOpen.value || isClosing.value) {
     return
   }
 
@@ -173,6 +173,7 @@ function onAnimationFinish(open) {
   refEl.value.style.height = refEl.value.style.overflow = ''
 
   emit('update:open', open)
+  open ? emit('open') : emit('close')
 }
 
 
@@ -228,11 +229,16 @@ function closeOthersInGroup() {
           <slot
             name="summary"
             :is-open="isOpen"
+            :close="shrink"
           />
         </template>
 
         <template #actions>
-          <slot name="actions">
+          <slot
+            name="actions"
+            :is-open="isOpen"
+            :close="shrink"
+          >
             <UiIcon
               v-if="props.onDelete"
               src="mdi:close"
@@ -249,116 +255,17 @@ function closeOthersInGroup() {
       ref="refContents"
       class="UiDetails__contents"
     >
-      <slot name="contents">
-        <slot name="default" />
+      <slot
+        name="contents"
+        :is-open="isOpen"
+        :close="shrink"
+      >
+        <slot
+          name="default"
+          :is-open="isOpen"
+          :close="shrink"
+        />
       </slot>
     </div>
   </details>
 </template>
-
-<style lang="scss">
-.UiDetails {
-  --details-color-open: rgba(255, 255, 255, 0.06);
-  --details-color-hover: rgba(255, 255, 255, 0.03);
-  // --details-color-open: rgba(0,0,0, 0.06);
-  // --details-color-hover: rgba(0,0,0, 0.03);
-
-  border-radius: 4px;
-  box-sizing: border-box;
-  transition: background-color var(--details-transition-duration) ease;
-
-  & > summary {
-    display: flex;
-    flex-wrap: nowrap;
-    // align-items: flex-start;
-    align-items: center;
-    padding: 8px;
-
-    user-select: none;
-    cursor: pointer;
-
-    &:hover {
-      background-color: var(--details-color-hover);
-    }
-  }
-
-  &__item {
-    flex: 1;
-    --ui-item-padding: 0 4px;
-  }
-
-  &__deleter {
-    width: 32px;
-    height: 32px;
-
-    &:hover {
-      color: #fff;
-    }
-  }
-
-  & > &__contents {
-    padding: 6px 8px;
-  }
-
-  &[open] {
-    background-color: var(--details-color-open);
-
-    & > summary:hover {
-      background-color: transparent !important;
-    }
-  }
-
-  &--closing {
-    background-color: transparent !important;
-  }
-
-  &--deleting {
-    background-color: rgba(255, 0, 0, 0.2) !important;
-  }
-}
-
-
-// Animated summary arrow
-.UiDetails {
-  --details-arrow-height: 8px;
-  --details-arrow-width: 12px;
-  --details-arrow-color: #ccc;
-
-  & > summary {
-    // Hide the default marker
-    &::marker,
-    &::-webkit-details-marker {
-      display: none;
-      content: "";
-    }
-
-    // Create a triangle marker with CSS borders
-    &::before {
-      content: '';
-      display: block;
-      width: 0;
-      height: 0;
-      margin: 0 4px;
-
-      border-style: solid;
-      border-width: calc(var(--details-arrow-height) / 2) calc(var(--details-arrow-width) / 2);
-      border-color: transparent transparent transparent var(--details-arrow-color);
-
-      transform: rotate(0);
-      transform-origin: .2rem 50%;
-      transition: var(--details-transition-duration) transform ease;
-    }
-  }
-
-  &--closing > summary::before {
-    transform: rotate(0) !important;
-  }
-
-  &[open] {
-    & > summary::before {
-      transform: rotate(90deg);
-    }
-  }
-}
-
-</style>

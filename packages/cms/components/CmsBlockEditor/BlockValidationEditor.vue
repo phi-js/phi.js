@@ -1,7 +1,8 @@
 <script setup>
 import { ref, watchEffect, computed } from 'vue'
+
 import { useI18n } from '@/packages/i18n'
-import { UiInput } from '@/packages/ui'
+import { UiInput, UiDetails } from '@/packages/ui'
 import { VmStatement } from '@/packages/vm'
 
 const props = defineProps({
@@ -85,60 +86,58 @@ const hasRequiredRule = computed(() => rules.value.find((r) => !!r.required))
 </script>
 
 <template>
-  <div class="BlockValidationEditor">
-    <details
+  <div class="BlockValidationEditor UiForm--wide">
+    <UiDetails
       v-for="(rule, k) in rules"
       :key="k"
       class="ValidationRule"
+      group="BlockValidationEditor"
+      @delete="removeRule(rule)"
     >
-      <summary>
+      <template #summary>
         <span v-if="rule.regex !== undefined">{{ i18n.t('BlockValidationEditor.RegEx') }}</span>
         <span v-else-if="rule.eval !== undefined">{{ i18n.t('BlockValidationEditor.Expression') }}</span>
         <span v-else-if="rule.required">{{ i18n.t('BlockValidationEditor.Required') }}</span>
-        <div
-          class="ValidationRule__delete"
-          @click="removeRule(rule)"
-        >
-          &times;
-        </div>
-      </summary>
+      </template>
 
-      <section v-if="rule.required">
-        <UiInput
-          v-model="rule.message"
-          type="text"
-          :label="i18n.t('BlockValidationEditor.ErrorMessage')"
-          @update:model-value="emitUpdate()"
-        />
-      </section>
+      <template #default>
+        <template v-if="rule.required">
+          <UiInput
+            v-model="rule.message"
+            type="text"
+            :label="i18n.t('BlockValidationEditor.ErrorMessage')"
+            @update:model-value="emitUpdate()"
+          />
+        </template>
 
-      <section v-else-if="rule.regex !== undefined">
-        <UiInput
-          v-model="rule.regex"
-          type="text"
-          :label="i18n.t('BlockValidationEditor.RegularExpression')"
-          @update:model-value="emitUpdate()"
-        />
-        <UiInput
-          v-model="rule.message"
-          type="text"
-          :label="i18n.t('BlockValidationEditor.ErrorMessage')"
-          @update:model-value="emitUpdate()"
-        />
-      </section>
+        <template v-else-if="rule.regex !== undefined">
+          <UiInput
+            v-model="rule.regex"
+            type="text"
+            :label="i18n.t('BlockValidationEditor.RegularExpression')"
+            @update:model-value="emitUpdate()"
+          />
+          <UiInput
+            v-model="rule.message"
+            type="text"
+            :label="i18n.t('BlockValidationEditor.ErrorMessage')"
+            @update:model-value="emitUpdate()"
+          />
+        </template>
 
-      <section v-else-if="rule.eval !== undefined">
-        <VmStatement
-          v-model="rule.eval"
-          @update:model-value="emitUpdate()"
-        />
-        <UiInput
-          v-model="rule.message"
-          :label="i18n.t('BlockValidationEditor.ErrorMessage')"
-          @update:model-value="emitUpdate()"
-        />
-      </section>
-    </details>
+        <template v-else-if="rule.eval !== undefined">
+          <VmStatement
+            v-model="rule.eval"
+            @update:model-value="emitUpdate()"
+          />
+          <UiInput
+            v-model="rule.message"
+            :label="i18n.t('BlockValidationEditor.ErrorMessage')"
+            @update:model-value="emitUpdate()"
+          />
+        </template>
+      </template>
+    </UiDetails>
 
     <select
       class="BlockValidationEditor__adder UiInput"
@@ -166,34 +165,41 @@ const hasRequiredRule = computed(() => rules.value.find((r) => !!r.required))
 </template>
 
 <style lang="scss">
-@import '@/packages/ui/themes/base/modifiers/clickable.scss';
-@import '@/packages/cms/themes/base/classes/itemDetails.scss';
-
 .BlockValidationEditor {
   padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.ValidationRule {
-  position: relative;
-  @extend .itemDetails;
+// @import '@/packages/ui/themes/base/modifiers/clickable.scss';
+// @import '@/packages/cms/themes/base/classes/itemDetails.scss';
 
-  summary {
-    position: relative;
-  }
+// .BlockValidationEditor {
+//   padding: 8px;
+// }
 
-  &__delete {
-    @extend .ui--clickable;
+// .ValidationRule {
+//   position: relative;
+//   @extend .itemDetails;
 
-    position: absolute;
-    top: 0;
-    right: 0;
+//   summary {
+//     position: relative;
+//   }
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+//   &__delete {
+//     @extend .ui--clickable;
 
-    width: 40px;
-    height: 40px;
-  }
-}
+//     position: absolute;
+//     top: 0;
+//     right: 0;
+
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+
+//     width: 40px;
+//     height: 40px;
+//   }
+// }
 </style>

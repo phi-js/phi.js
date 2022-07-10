@@ -1,10 +1,12 @@
 <script>
+import { nextTick, ref, watch } from 'vue'
 export default { inheritAttrs: false }
 var _CmsSlotEditor_counter = 0
+
+const isDragging = ref(false) // isDragging is GLOBAL for ALL instances
 </script>
 
 <script setup>
-import { nextTick, ref, watch } from 'vue'
 import draggable from 'vuedraggable'
 import { useI18n } from '@/packages/i18n'
 
@@ -78,8 +80,6 @@ function deleteBlock(index) {
   innerSlot.value.splice(index, 1)
   emitUpdate()
 }
-
-const isDragging = ref(false)
 
 function onDraggableStart() {
   isDragging.value = true
@@ -161,7 +161,7 @@ function clearBlurListeners() {
   <div
     v-bind="$attrs"
     class="CmsSlotEditor"
-    :class="{ 'CmsSlotEditor--dragging': isDragging }"
+    :class="{'CmsSlotEditor--dragging': isDragging}"
   >
     <draggable
       v-model="innerSlot"
@@ -225,12 +225,17 @@ function clearBlurListeners() {
       </template>
     </draggable>
 
-    <SlotBlockLauncher
-      v-if="!innerSlot.length"
-      class="LoneLauncher"
-      :label="props.label || i18n.t('CmsSlotEditor.AddContent')"
-      :open="true"
-      @input="launchBlock($event)"
-    />
+    <div
+      class="CmsSlotEditor__footer"
+      :class="{'CmsSlotEditor__footer--not-empty': innerSlot.length > 0}"
+    >
+      <SlotBlockLauncher
+        text="Add content"
+        :title="props.label"
+        :label="props.label || i18n.t('CmsSlotEditor.AddContent')"
+        :open="false"
+        @input="launchBlock($event)"
+      />
+    </div>
   </div>
 </template>

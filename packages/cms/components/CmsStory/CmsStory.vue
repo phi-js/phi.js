@@ -75,9 +75,11 @@ export default {
     const pluginData = getPluginData()
 
     // Evaluate story.setup()
-    const isMounted = ref(false)
-    onMounted(() => {
-      pluginData.emit('storyMounted', sanitizedStory.value, {
+    const isMounted = ref()
+    onMounted(async () => {
+      isMounted.value = false
+
+      await pluginData.emit('storyMounted', sanitizedStory.value, {
         patchModelValue: (objData) => {
           if (!objData || typeof objData !== 'object') {
             return
@@ -95,7 +97,6 @@ export default {
         return
       }
 
-      isMounted.value = false
       storyVM.eval(sanitizedStory.value.setup, props.modelValue)
       isMounted.value = true
     })

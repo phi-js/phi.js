@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch, nextTick } from 'vue'
-import { UiItem, UiInput } from '../'
+import { UiItem, UiInput, UiDetails } from '../'
 import findNearestElement from './findNearestElement.js'
 
 const props = defineProps({
@@ -162,18 +162,17 @@ watch(
       ref="elTree"
       class="UiItemFinder__tree"
     >
-      <div class="UiItemFinder__body">
-        <slot name="body" />
-      </div>
+      <slot name="body" />
 
-      <details
+      <UiDetails
         v-for="(groupItem, index) in tree"
         :key="groupItem.id"
         class="UiItemFinder__details"
         :open="index == 0"
+        group="UiItemFinder"
+        :text="groupItem.text"
       >
-        <summary>{{ groupItem.text }}</summary>
-        <section>
+        <div class="UiItemFinder__list">
           <div
             v-for="(item) in groupItem.children"
             :key="item.id"
@@ -188,19 +187,29 @@ watch(
               @click="onItemClick(item)"
             />
           </div>
-        </section>
-      </details>
+        </div>
+      </UiDetails>
     </div>
   </div>
 </template>
 
 <style lang="scss">
-@import '@/packages/ui/themes/base/modifiers/clickable.scss';
-@import '@/packages/cms/themes/base/classes/coolDetails.scss';
-
 .UiItemFinder {
   display: flex;
   flex-direction: column;
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 12px 18px 12px;
+
+    & > div {
+      flex: 1;
+      min-width: 120px;
+      max-width: 250px;
+    }
+  }
 
   &__search {
     display: block;
@@ -210,13 +219,13 @@ watch(
       outline: none !important;
 
       width: 100%;
-      background: transparent;
+      background-color: transparent !important;
       border-radius: 0;
       border: 0;
       margin: 0;
-      color: inherit;
+      color: inherit !important;
       &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-        color: inherit;
+        color: inherit !important;
         opacity: 1; /* Firefox */
       }
     }
@@ -226,6 +235,11 @@ watch(
     flex: 1;
     overflow-y: auto;
     user-select: none;
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
 
     &::-webkit-scrollbar {
       width: 12px;
@@ -239,8 +253,6 @@ watch(
   }
 
   &__item {
-    margin: 5px;
-
     --ui-item-padding: 8px 12px;
     border: 1px solid rgba(255,255,255, 0.1);
     border-radius: 4px;
@@ -255,21 +267,5 @@ watch(
     }
   }
 
-
-  &__details {
-    @extend .coolDetails;
-
-    & > section {
-      display: flex;
-      flex-wrap: wrap;
-      padding: 0 12px 18px 12px;
-
-      & > div {
-        flex: 1;
-        min-width: 120px;
-        max-width: 250px;
-      }
-    }
-  }
 }
 </style>

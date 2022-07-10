@@ -2,35 +2,33 @@
 import { computed } from 'vue'
 const props = defineProps({
 
-  // Width: int (pixels)
-  width: {
-    type: [Number, String],
+  /*
+  SIZE object
+  If null, no borders or content delimiters are shown.  It basically does nothing
+
+  {
+    width: int | null,
+    height: int | null,
+    scale: int | null,
+  }
+  */
+  size: {
+    type: Object,
     required: false,
     default: null,
-  },
-
-  // Height: int (pixels)
-  height: {
-    type: [Number, String],
-    required: false,
-    default: null,
-  },
-
-  // Scale: int 0-100
-  scale: {
-    type: [Number, String],
-    required: false,
-    default: 100,
   },
 })
 
 const bodyStyle = computed(() => {
-  // const scale = Math.min(Math.max(parseInt(props.scale), 25), 150)
+  const intWidth = parseInt(props.size?.width)
+  const intHeight = parseInt(props.size?.height)
+  // const scale = Math.min(Math.max(parseInt(props.size.scale), 25), 150)
+
   return {
-    // transform: `scale(${scale}%)`, // fucks up children with position:fixed
-    width: props.width ? `${props.width}px` : '100%',
-    minHeight: props.height ? `${props.height}px` : '100%',
+    width: intWidth >= 0 ? `${intWidth}px` : '100%',
+    minHeight: intHeight >= 0 ? `${intHeight}px` : '100%',
     height: '100%',
+    // transform: `scale(${props.size.scale}%)`, // fucks up children with position:fixed
   }
 })
 </script>
@@ -38,7 +36,7 @@ const bodyStyle = computed(() => {
 <template>
   <div
     class="UiContentWrapper"
-    :class="{'UiContentWrapper--desktop': !props.width || !props.height}"
+    :class="{'UiContentWrapper--no-border': !size?.width || !size?.height}"
   >
     <div
       class="UiContentWrapper__body"
@@ -67,13 +65,26 @@ const bodyStyle = computed(() => {
   }
 }
 
-.UiContentWrapper--no-border.UiContentWrapper--desktop {
+.UiContentWrapper--no-border {
   padding: 0;
   background-color: transparent;
 
   .UiContentWrapper__body {
     overflow: visible;
     box-shadow: none;
+  }
+}
+
+
+@media only screen and (max-width: 768px) {
+  .UiContentWrapper {
+    padding: 0;
+    background-color: transparent;
+
+    &__body {
+      overflow: visible;
+      box-shadow: none;
+    }
   }
 }
 </style>

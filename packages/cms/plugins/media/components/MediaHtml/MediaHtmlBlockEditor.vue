@@ -1,8 +1,10 @@
 <script setup>
 import { ref, computed, onBeforeUnmount, watchEffect } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import { UiIcon, UiPopover } from '@/packages/ui'
+import { UiIcon, UiPopover, UiTabs, UiTab, UiButton } from '@/packages/ui'
 import BlockScaffold from '../../../../components/CmsBlockEditor/BlockScaffold.vue'
+
+import googleTranslate from '../../../../components/CmsPropInput/googleTranslate'
 
 import { Editor } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
@@ -21,6 +23,7 @@ const emit = defineEmits(['update:block'])
 
 const i18n = useI18n()
 const curLanguage = ref(i18n.locale)
+const isLanguageOpen = ref(false)
 
 const innerValue = ref('')
 const isFocused = ref(false)
@@ -211,6 +214,25 @@ const alignment = computed(() => {
   return { current, available }
 })
 
+async function doTranslation() {
+  const dictionary = props.block?.props?.value?.$i18n
+  if (!dictionary || typeof dictionary !== 'object') {
+    return
+  }
+
+  const sourceLanguage = Object.keys(dictionary)[0]
+  const sourceValue = dictionary[sourceLanguage]
+  const targetLanguage = curLanguage.value
+
+  // const results = await googleTranslate([sourceValue], targetLanguage, sourceLanguage)
+  const results = await googleTranslate([sourceValue], targetLanguage)
+  if (results?.[0]) {
+    innerValue.value = results?.[0]
+    emitUpdate()
+  }
+
+}
+
 </script>
 
 <template>
@@ -282,36 +304,39 @@ const alignment = computed(() => {
         v-text="option.text"
       />
 
-
-      <!-- Current language selector -->
-      <UiPopover>
-        <template #trigger>
-          <button
-            type="button"
-            class="BlockScaffold__toolbar-icon expansible"
-            v-text="curLanguage"
-          />
-        </template>
-        <template #contents="{ close }">
-          <div
-            class="UiGroup"
-            @click="close"
-          >
-            <button
-              v-for="(locale) in i18n.availableLocales.value"
-              :key="locale.value"
-              type="button"
-              class="BlockScaffold__toolbar-icon"
-              :class="{ 'BlockScaffold__toolbar-icon--active': curLanguage == locale.value }"
-              @click="setLanguage(locale.value)"
-              v-text="locale.value"
-            />
-          </div>
-        </template>
-      </UiPopover>
+      <UiIcon
+        src="mdi:translate"
+        class="BlockScaffold__toolbar-icon"
+        :class="{ 'BlockScaffold__toolbar-icon--active': isLanguageOpen }"
+        @click="isLanguageOpen = !isLanguageOpen"
+      />
     </template>
 
     <template #default="slotData">
+      <UiTabs
+        v-if="isLanguageOpen"
+        :model-value="curLanguage"
+        @update:model-value="setLanguage($event)"
+      >
+        <template #default>
+          <UiTab
+            v-for="(locale) in i18n.availableLocales.value"
+            :key="locale.value"
+            :text="locale.text"
+            :value="locale.value"
+          />
+        </template>
+
+        <template #right>
+          <UiButton
+            v-if="innerValue == '<p></p>'"
+            label="Translate"
+            icon="mdi:translate"
+            class="UiButton--cancel"
+            @click="doTranslation()"
+          />
+        </template>
+      </UiTabs>
       <EditorContentWrapper
         v-bind="slotData?.blockCssAttributes"
         :value="innerValue"

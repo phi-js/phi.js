@@ -130,6 +130,7 @@ if (sanitizedStory.value?.themes) {
         <KeepAlive>
           <CmsBlockEditor
             v-model:block="currentPage"
+            class="CmsStory__page"
             @update:block="onUpdateCurrentPage"
           />
         </KeepAlive>

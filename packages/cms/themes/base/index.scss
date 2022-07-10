@@ -3,9 +3,6 @@
   --ui-content-width: auto;
   --ui-radius: 5px;
 
-  --ui-color-background: transparent;
-  --ui-color-foreground: #333;
-
   @import '@/packages/ui/themes/base/modifiers/clickable.scss';
 
   @import './classes/coolAdder.scss';

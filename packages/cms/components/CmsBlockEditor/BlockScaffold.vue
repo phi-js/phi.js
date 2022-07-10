@@ -292,6 +292,11 @@ defineExpose({
               />
             </template>
             <template #contents="{ close }">
+              <slot
+                name="dropdown"
+                :close="close"
+              />
+
               <UiItem
                 v-for="(action, i) in availableActions"
                 :key="i"

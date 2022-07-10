@@ -26,10 +26,6 @@
     height: 100%;
   }
 
-  &__toolbar-compact {
-    display: flex;
-  }
-
   &__expander {
     @extend .ui--clickable;
     margin-left: auto;
@@ -41,7 +37,7 @@
     --ui-item-padding: 8px 16px;
   }
 
-  &__toolbar-large {
+  &__toolbar {
     background-color: #333;
     color: #eee;
   }
@@ -68,12 +64,41 @@
   &__tabOptions {
     display: flex;
     align-items: stretch;
+    padding: 4px;
+    gap: 4px;
 
     font-size: 0.85em;
     --ui-item-padding: 8px 12px;
 
     overflow-x: auto;
-    min-height: 40px;
+    min-height: 48px;
+  }
+
+  &__tabOptions a {
+    @extend .ui--clickable;
+    display: flex;
+    color: inherit;
+
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 4px;
+
+    /* hide icons */
+    .UiItem {
+      &__icon {
+        order: 2;
+        opacity: 0.4;
+        font-size: 0.9em;
+      }
+
+      &__body {
+        padding: 8px 0 8px 16px !important;
+      }
+
+      &:hover .UiItem__icon {
+        opacity: 1;
+      }
+    }    
   }
 
   &__tabItem {
@@ -112,6 +137,7 @@
 @media (max-width:500px) {
   .CmsStoryBuilder__controls {
     margin-left: auto;
+    order: 1;
   }
 
   .CmsStoryBuilder__toolbar {
@@ -121,81 +147,14 @@
       }
 
       &__tabList {
+        flex: none;
+        order: 2;
+        width: 100%;
+
         .UiTab {
           flex: 1;
         }
       }
     }
   }
-
-  .CmsStoryBuilder__toolbar-large {
-    .Page__crumbs {
-      display: none;
-    }
-  }
-}
-
-
-// Expanded / Collapsed
-.CmsStoryBuilder {
-  &--collapsed {
-    .CmsStoryBuilder__toolbar-compact {
-      display: flex;
-    }
-    .CmsStoryBuilder__toolbar-large {
-      display: none;
-    }
-  }
-
-  &--expanded {
-    .CmsStoryBuilder__toolbar-compact {
-      display: none;
-    }
-    .CmsStoryBuilder__toolbar-large {
-      display: block;
-    }
-  }
-
-
-  // &__corner {
-  //   position: absolute;
-  //   top: 0;
-  //   right: 0;
-  //   z-index: 3;
-  //   cursor: pointer;
-
-  //   transition: all var(--ui-duration-snap) ease;
-  //   width: 24px;
-  //   height: 24px;
-
-  //   background: linear-gradient(
-  //     -135deg,
-  //     #41b883,
-  //     #2a7754 45%,
-  //     #236346 50%,
-  //     #aaa 50%,
-  //     #bbb 56%,
-  //     #ccc 62%,
-  //     #f3f3f3 80%,
-  //     #fff 100%
-  //   );
-  //   box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-
-  //   &:hover {
-  //     width: 40px;
-  //     height: 40px;
-  //     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-
-  //     background: linear-gradient(
-  //       -135deg,
-  //       #41b883,
-  //       #3db17d 50%,
-  //       #aaa 50%,
-  //       #bbb 56%,
-  //       #ccc 62%,
-  //       #f3f3f3 80%,
-  //       #fff 100%
-  //     );
-  //   }
-  // }
 }
