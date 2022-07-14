@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import { UiInput } from '@/packages/ui'
+import { UiInput, UiDetails } from '@/packages/ui'
 
 const props = defineProps({
   modelValue: {
@@ -92,29 +92,27 @@ const i18n = useI18n({
       />
     </div>
 
-    <details
+    <UiDetails
       v-if="innerValue.args.options.method != 'get'"
       class="FetchEditor__body"
+      :text="i18n.t('FetchEditor.Body')"
     >
-      <summary>{{ i18n.t('FetchEditor.Body') }}</summary>
-      <section>
-        <UiInput
-          v-model="innerValue.args.options.body"
-          type="json"
-          @update:model-value="emitInput"
-        />
-      </section>
-    </details>
+      <UiInput
+        v-model="innerValue.args.options.body"
+        type="json"
+        @update:model-value="emitInput"
+      />
+    </UiDetails>
 
-    <details class="FetchEditor__headers">
-      <summary>{{ i18n.t('FetchEditor.Headers') }}</summary>
-      <section>
-        <UiInput
-          v-model="innerValue.args.options.headers"
-          type="json"
-          @update:model-value="emitInput"
-        />
-      </section>
-    </details>
+    <UiDetails
+      class="FetchEditor__headers"
+      :text="i18n.t('FetchEditor.Headers')"
+    >
+      <UiInput
+        v-model="innerValue.args.options.headers"
+        type="json"
+        @update:model-value="emitInput"
+      />
+    </UiDetails>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, computed, defineAsyncComponent } from 'vue'
-import { plugins } from '../../../plugins/registerPlugin.js'
+import { registeredFunctions } from '../../../plugins/registerPlugin.js'
 
 import VmStatement from '../VmStatement.vue'
 
@@ -34,14 +34,7 @@ watch(
 )
 
 const editor = computed(() => {
-  const allFunctions = {}
-  plugins.forEach((plugin) => {
-    for (let fnName in plugin.functions) {
-      allFunctions[fnName] = plugin.functions[fnName]
-    }
-  })
-
-  const candidate = allFunctions?.[props.modelValue?.call]?.editor
+  const candidate = registeredFunctions?.[props.modelValue?.call]?.editor
   if (!candidate) {
     return null
   }

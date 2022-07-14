@@ -1,27 +1,31 @@
 import FetchEditor from './FetchEditor.vue'
 
 export default {
-  text: 'HTTPS fetch functions',
+  text: 'HTTP calls',
 
-  functions: {
-    fetch: {
-      tabs: ['http'],
-      icon: 'mdi:api',
-      text: 'Fetch',
-      subtext: 'Ejecutar request HTTP',
+  functions: [
+    {
+      title: 'HTTP',
+      children: [
+        {
+          name: 'fetch',
+          icon: 'mdi:api',
+          text: 'Fetch',
+          subtext: 'Ejecutar request HTTP',
 
-      editor: {
-        component: FetchEditor,
-        props: null,
-      },
+          editor: {
+            component: FetchEditor,
+            props: null,
+          },
 
-      callback: function({ url, options }) {
-        return fetch(url, sanitizeOptions(options))
-          .then((response) => response.json())
-      },
+          callback: function({ url, options }) {
+            return fetch(url, sanitizeOptions(options))
+              .then((response) => response.json())
+          },
+        },
+      ],
     },
-
-  },
+  ],
 }
 
 function sanitizeOptions(options) {

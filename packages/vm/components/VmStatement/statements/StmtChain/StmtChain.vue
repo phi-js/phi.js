@@ -43,9 +43,9 @@ function onPickerInput({ expression, definition }) {
 
   let newItem = {
     info: {
-      text: definition.text,
+      text: definition.text || definition.title,
       icon: definition.icon,
-      secondary: definition.secondary,
+      secondary: definition.secondary || definition.description,
     },
     do: expression,
     assign: null,

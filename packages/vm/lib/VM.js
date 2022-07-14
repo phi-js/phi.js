@@ -1,17 +1,10 @@
 import { getProperty, setProperty, parse } from './utils'
 
 import vmOperators from './operators/index.js'
-import { plugins } from '../plugins/registerPlugin'
+import { registeredFunctions } from '../plugins/registerPlugin'
 
 export default class VM {
   constructor() {
-    this.functions = {}
-    plugins.forEach((plugin) => {
-      for (let fnName in plugin.functions) {
-        this.functions[fnName] = plugin.functions[fnName].callback
-      }
-    })
-
     this.operators = Object.assign({}, vmOperators)
     this.onModelSet = null
   }
@@ -143,12 +136,13 @@ export default class VM {
    *
    */
   async stmtCall(functionName, functionArgs = null, functionThen = null, localScope = null) {
-    if (typeof this.functions[functionName] == 'undefined') {
+    if (typeof registeredFunctions[functionName]?.callback == 'undefined') {
       throw `undefined function '${functionName}'`
     }
 
+    const callback = registeredFunctions[functionName].callback
     const args = functionArgs ? this.eval(functionArgs, localScope) : null
-    const result = await this.functions[functionName].bind(this)(args, localScope, this)
+    const result = await callback.bind(this)(args, localScope, this)
 
     if (functionThen) {
       return this.eval(functionThen, localScope)

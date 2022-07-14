@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import { UiIcon, UiItem, UiDrawer, UiInput } from '@/packages/ui'
+import { UiIcon, UiItem, UiInput, UiDetails } from '@/packages/ui'
 import VmStatement from '../../VmStatement.vue'
 
 const props = defineProps({
@@ -65,8 +65,8 @@ const i18n = useI18n({
 
 <template>
   <div class="StmtChainItem">
-    <UiDrawer v-model:open="isOpen">
-      <template #trigger>
+    <UiDetails v-model:open="isOpen">
+      <template #summary>
         <div class="StmtChainItem__trigger">
           <UiItem
             class="StmtChainItem__face"
@@ -100,24 +100,24 @@ const i18n = useI18n({
               @update:model-value="accept()"
             />
 
-            <details class="StmtChainItem__assign">
-              <summary>
+            <UiDetails class="StmtChainItem__assign">
+              <template #summary>
                 <span v-text="i18n.t('StmtChainItem.assignResult')" />
                 <em v-text="innerValue.assign" />
-              </summary>
-              <section>
+              </template>
+              <template #default>
                 <UiInput
                   v-model="innerValue.assign"
                   type="text"
                   :placeholder="i18n.t('StmtChainItem.variableName')"
                   @update:model-value="accept()"
                 />
-              </section>
-            </details>
+              </template>
+            </UiDetails>
           </template>
         </div>
       </template>
-    </UiDrawer>
+    </UiDetails>
 
     <div
       v-if="isIfStatement"
