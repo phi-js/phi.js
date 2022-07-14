@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import CmsBlock from '../packages/cms/components/CmsBlock/CmsBlock.vue'
+import CmsBlock from '../packages/cms/components/CmsBlock/CmsBlock.recursive.vue'
 import CmsBlockEditor from '../packages/cms/components/CmsBlockEditor/CmsBlockEditor.vue'
 
 // import somePage from '../packages/cms/samples/0.empty.js'
