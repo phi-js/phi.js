@@ -9,54 +9,62 @@ import LayoutGroupEditor from './components/LayoutGroup/LayoutGroupEditor.vue'
 import LayoutGroupSettings from './components/LayoutGroup/LayoutGroupSettings.vue'
 
 export default {
-  blocks: {
-    LayoutPage: {
-      disabled: true, // hide from CmsBlockPicker
-      title: 'Página',
-      icon: 'mdi:page-layout-body',
-      block: { component: LayoutPage },
-      editor: { component: LayoutPageEditor },
-    },
+  blocks: [
+    {
+      title: 'Layout',
+      children: [
+        {
+          name: 'LayoutPage',
+          private: true, // hide from CmsBlockPicker
+          title: 'Página',
+          icon: 'mdi:page-layout-body',
+          block: { component: LayoutPage },
+          editor: { component: LayoutPageEditor },
+        },
 
-    LayoutRow: {
-      disabled: true, // hide from CmsBlockPicker
-      title: 'Row',
-      icon: 'mdi:page-layout-body',
-      block: { component: LayoutRow },
-      editor: { component: LayoutRowEditor },
-    },
+        {
+          name: 'LayoutRow',
+          private: true, // hide from CmsBlockPicker
+          title: 'Row',
+          icon: 'mdi:page-layout-body',
+          block: { component: LayoutRow },
+          editor: { component: LayoutRowEditor },
+        },
 
-    LayoutColumn: {
-      disabled: true, // hide from CmsBlockPicker
-      title: 'Column',
-      icon: 'mdi:page-layout-sidebar-left',
-      block: { component: LayoutColumn },
-    },
+        {
+          name: 'LayoutColumn',
+          private: true, // hide from CmsBlockPicker
+          title: 'Column',
+          icon: 'mdi:page-layout-sidebar-left',
+          block: { component: LayoutColumn },
+        },
 
-    LayoutGroup: {
-      tags: ['layout'],
-      title: 'Group',
-      icon: 'mdi:group',
+        {
+          name: 'LayoutGroup',
+          title: 'Group',
+          icon: 'mdi:group',
 
-      block: {
-        component: LayoutGroup,
-        props: { direction: 'column' },
-      },
-
-      // staging: false,
-      staging: true,
-
-      editor: {
-        face: { component: LayoutGroupEditor },
-        actions: [
-          {
-            'id': 'group',
-            'title': 'Group options',
-            'component': LayoutGroupSettings,
-            'v-model': 'block',
+          block: {
+            component: LayoutGroup,
+            props: { direction: 'column' },
           },
-        ],
-      },
+
+          staging: true,
+
+          editor: {
+            face: { component: LayoutGroupEditor },
+            actions: [
+              {
+                'id': 'group',
+                'title': 'Group options',
+                'component': LayoutGroupSettings,
+                'v-model': 'block',
+              },
+            ],
+          },
+        },
+      ],
     },
-  },
+  ],
+
 }

@@ -1,11 +1,11 @@
 import GoToEditor from './GoToEditor.vue'
 import CallEditor from './CallEditor.vue'
 
-export default {
-  'Story.goTo': {
+export default [
+  {
+    name: 'Story.goTo',
     icon: 'mdi:arrow-right-thick',
-    text: 'Go to page',
-    tabs: ['navigation'],
+    title: 'Go to page',
 
     editor: {
       component: GoToEditor,
@@ -21,10 +21,10 @@ export default {
     },
   },
 
-  'Story.goBack': {
+  {
+    name: 'Story.goBack',
     icon: 'mdi:arrow-left-thick',
-    text: 'Go back',
-    tabs: ['navigation'],
+    title: 'Go back',
 
     callback: function(args = null, _scope = null, _vm = null) {
       if (!_vm?.custom?.story) {
@@ -35,10 +35,10 @@ export default {
     },
   },
 
-  'Story.call': {
+  {
+    name: 'Story.call',
     icon: 'mdi:variable',
-    text: 'Call function',
-    tabs: ['navigation'],
+    title: 'Call function',
 
     editor: {
       component: CallEditor,
@@ -73,11 +73,11 @@ export default {
     },
   },
 
-
   // Emit activity hook
-  'Story.emit': {
+  {
+    name: 'Story.emit',
     icon: 'mdi:arrow-top-right-thick',
-    text: 'Emit event',
+    title: 'Emit event',
 
     callback: (args = null, _scope = null, _vm = null) => {
       if (!_vm?.custom?.story) {
@@ -98,4 +98,4 @@ export default {
       })
     },
   },
-}
+]

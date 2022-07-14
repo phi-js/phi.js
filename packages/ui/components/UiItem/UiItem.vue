@@ -106,17 +106,13 @@ export default {
   display: flex;
   align-items: stretch;
 
+  padding: var(--ui-item-padding);
+  gap: var(--ui-item-padding);
+
   &__icon,
   &__body,
   &__badge {
     box-sizing: border-box;
-  }
-
-  &__icon {
-    font-size: 1.2em;
-    min-width: 1.2rem;
-    // max-height: 2.5em; // when item is an align-stretch child of a flex, alignments is fd up
-    padding: var(--ui-item-padding);
   }
 
   &__body {
@@ -125,11 +121,6 @@ export default {
     flex-direction: column;
     justify-content: center;
     min-width: 0; // Allows correct cropping of overflown texts (see https://css-tricks.com/flexbox-truncated-text/)
-    padding: var(--ui-item-padding);
-
-    &:nth-child(2) {
-      padding-left: 0;
-    }
   }
 
   &__text {
@@ -151,8 +142,8 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--ui-item-padding);
-    padding-left: 0;
+    // padding: var(--ui-item-padding);
+    // padding-left: 0;
   }
 
   &__badge {

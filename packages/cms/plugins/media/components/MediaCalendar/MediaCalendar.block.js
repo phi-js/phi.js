@@ -1,9 +1,8 @@
 import { UiCalendar, UiForm } from '../../../../../ui/components'
 
 export default {
-  tags: ['embed'],
   name: 'MediaCalendar',
-  title: 'Calendario',
+  title: 'Calendar',
   icon: 'mdi:calendar',
 
   block: {

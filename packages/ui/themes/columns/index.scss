@@ -1,8 +1,8 @@
 .ui-theme-columns {
   @import '../base/variables.scss';
-  @import '../base/blocks/UiButton.scss';
-  @import '../base/blocks/UiGroup.scss';
-  @import '../base/blocks/UiInput.scss';
+  @import '../base/components/UiButton.scss';
+  @import '../base/components/UiGroup.scss';
+  @import '../base/components/UiInput.scss';
   @import '../base/modifiers/clickable.scss';
 
   --input-label-width: 250px;

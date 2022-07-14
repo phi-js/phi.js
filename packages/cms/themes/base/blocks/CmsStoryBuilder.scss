@@ -40,6 +40,10 @@
   &__toolbar {
     background-color: #333;
     color: #eee;
+
+    .UiTabs__header {
+      background-color: rgba(255,255,255, 0.03);
+    }
   }
 
   &__controls {
@@ -68,10 +72,10 @@
     gap: 4px;
 
     font-size: 0.85em;
-    --ui-item-padding: 8px 12px;
+    --ui-item-padding: 8px 14px;
 
     overflow-x: auto;
-    min-height: 48px;
+    // min-height: 48px;
   }
 
   &__tabOptions a {
@@ -83,16 +87,12 @@
     font-size: 14px;
     border-radius: 4px;
 
-    /* hide icons */
+    /* place item icons to the right (order:2) */
     .UiItem {
       &__icon {
         order: 2;
         opacity: 0.4;
         font-size: 0.9em;
-      }
-
-      &__body {
-        padding: 8px 0 8px 16px !important;
       }
 
       &:hover .UiItem__icon {
@@ -122,10 +122,6 @@
     .UiItem {
       &__icon {
         display: none;
-      }
-
-      &__body {
-        padding: 8px 16px !important;
       }
     }
   }

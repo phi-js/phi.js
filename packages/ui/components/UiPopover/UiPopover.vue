@@ -58,6 +58,8 @@ onMounted(() => {
     arrow: true,
     inertia: true,
     maxWidth: 'none',
+    theme: 'ui-popover',
+
     onShow: () => {
       isOpen.value = true
       emit('update:open', true)

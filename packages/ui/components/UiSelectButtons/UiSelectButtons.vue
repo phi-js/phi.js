@@ -48,6 +48,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:modelValue'])
 
+const refEl = ref()
 const innerValue = ref([])
 
 watch(
@@ -73,6 +74,10 @@ function toggleValue(value) {
     'update:modelValue',
     props.multiple ? innerValue.value : innerValue.value[0],
   )
+
+  // Emit native form change event.
+  // All Ui***Input components should either contain native html inputs or behave EXACTLY like them
+  refEl.value.dispatchEvent(new Event('change', { bubbles: true }))
 }
 
 const { options } = useOptionsManager(toRef(props, 'options'), {
@@ -83,7 +88,10 @@ const { options } = useOptionsManager(toRef(props, 'options'), {
 </script>
 
 <template>
-  <div class="UiSelectButtons UiGroup">
+  <div
+    ref="refEl"
+    class="UiSelectButtons UiGroup"
+  >
     <UiItem
       v-for="option in options"
       :key="option.value"

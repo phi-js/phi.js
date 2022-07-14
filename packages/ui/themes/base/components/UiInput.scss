@@ -1,6 +1,5 @@
 .UiInputNativeElement {
   box-sizing: border-box;
-  min-height: 42px;
 
   outline-color: var(--ui-color-primary);
   padding: 8px 12px;
@@ -10,7 +9,7 @@
   border-top: 1px solid rgba(0,0,0, .26);
   border-left: 1px solid rgba(0,0,0, .26);
 
-  font-size: 1em;
+  font: inherit;
   color: rgba(0, 0, 0, 0.8);
   background-color: #fcfcfc;
 
@@ -26,8 +25,7 @@
 textarea.UiInput__element {
   width: 100%;
   min-height: 100px;
-  font-family: inherit;
-  font-size: inherit;
+  font: inherit;
 }
 
 .UiInput {
@@ -66,6 +64,28 @@ textarea.UiInput__element {
     .UiInput {
       &__element {
         outline-color: #ea5455;
+      }
+    }
+  }
+
+  &--required {
+    .UiInput__label::after {
+      content: ' *';
+      color: green;
+    }
+  }
+
+  &--invalid {
+    .UiInput__label::after {
+      color: #ea5455;
+    }
+  }
+
+  // HIDE errors in required BUT empty fields
+  &.UiInput--required.UiInput--empty {
+    .UiInput {
+      &__errors {
+        display: none;
       }
     }
   }

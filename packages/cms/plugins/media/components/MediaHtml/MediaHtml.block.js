@@ -2,7 +2,8 @@ import MediaHtml from './MediaHtml.vue'
 import MediaHtmlBlockEditor from './MediaHtmlBlockEditor.vue'
 
 export default {
-  title: 'Texto',
+  name: 'MediaHtml',
+  title: 'Text',
   icon: 'mdi:text',
 
   block: {

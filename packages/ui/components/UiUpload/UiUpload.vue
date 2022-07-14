@@ -25,6 +25,8 @@ import { Dashboard, DashboardModal } from '@uppy/vue' //fails when using phi.js 
 // import { Dashboard, DashboardModal } from '@uppy/vue/src'
 import { UiItem } from '../UiItem'
 import { UiIcon } from '../UiIcon'
+import { UiButton } from '../UiButton'
+
 import bytes from '../../filters/bytes.js'
 
 const props = defineProps({
@@ -152,6 +154,8 @@ const dashboardProps = computed(() => ({
   height: '100%',
   width: '100%',
 }))
+
+const endangeredIndex = ref(-1)
 </script>
 
 <template>
@@ -159,29 +163,30 @@ const dashboardProps = computed(() => ({
     <div class="UiUpload__files">
       <draggable
         v-model="innerFiles"
-        class="CmsPageLayoutEditor__draggable"
         group="ui-upload-draggable"
         item-key="id"
         @update:model-value="emitUpdate"
       >
-        <template #item="{ element: file }">
+        <template #item="{ element: file, index }">
           <div>
             <a
-              class="ui--clickable"
+              class="UiUpload__file"
+              :class="{'UiUpload__file--danger': endangeredIndex === index}"
               target="_blank"
               :href="file.url"
             >
               <UiItem
-                class="ui--clickable"
                 :text="file.name"
                 :subtext="bytes(file.size)"
                 :icon="file.thumbnail"
               >
                 <template #actions>
                   <UiIcon
+                    class="UiUpload__deleter"
                     src="mdi:close"
-                    class="ui--clickable"
                     @click.prevent="deleteFile(file)"
+                    @mouseenter="endangeredIndex = index"
+                    @mouseleave="endangeredIndex = -1"
                   />
                 </template>
               </UiItem>
@@ -192,20 +197,19 @@ const dashboardProps = computed(() => ({
     </div>
 
     <template v-if="!props.inline">
-      <UiItem
+      <UiButton
         v-if="placeholder?.text"
-        class="UiUpload__trigger ui--clickable"
+        class="UiUpload__button"
         v-bind="placeholder"
         @click="isOpen = !isOpen"
       />
-      <button
+      <UiButton
         v-else
         type="button"
-        class="UiUpload__trigger UiButton"
+        class="UiUpload__button"
+        :label="props.placeholder || i18n.t('UiUpload.Upload')"
         @click="isOpen = !isOpen"
-      >
-        {{ props.placeholder || i18n.t('UiUpload.Upload') }}
-      </button>
+      />
     </template>
 
     <component

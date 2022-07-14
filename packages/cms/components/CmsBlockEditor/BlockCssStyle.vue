@@ -120,17 +120,6 @@ const i18n = useI18n({
       group="BlockCssStyle"
       :text="i18n.t('BlockCssStyle.Margin')"
     >
-      <UiInput
-        :model-value="parseInt(innerValue['--ui-content-width'])"
-        :label="i18n.t('BlockCssStyle.ContentWidth')"
-        placeholder="px"
-
-        type="number-slide"
-        min="600"
-        max="2048"
-        :step="10"
-        @update:model-value="innerValue['--ui-content-width'] = $event + 'px'; emitUpdate()"
-      />
       <SpacingEditor
         v-model="innerValue.margin"
         empty-value="auto"

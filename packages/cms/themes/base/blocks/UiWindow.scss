@@ -1,14 +1,6 @@
-  //// !!! TESTING!!!  HIDE ICONS INSIDE .UiWindow tabs
-  .UiWindow .UiTab {
-    .UiItem {
-      height: 46px;
-
-      &__icon {
-        display: none;
-      }
-
-      &__body {
-        padding: 8px 16px !important;
-      }
-    }
+// !!! HIDE ICONS inside .UiWindow tabs
+.UiWindow .UiTab {
+  .UiItem__icon {
+    display: none;
   }
+}

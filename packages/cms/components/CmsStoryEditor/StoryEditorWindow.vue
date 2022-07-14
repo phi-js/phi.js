@@ -123,6 +123,14 @@ const storyEvents = computed({
         name: 'page.onLeave',
         stmt: currentPage.value.onLeave,
       },
+      {
+        name: 'page.onSubmit',
+        stmt: currentPage.value['v-on']?.submit,
+      },
+      {
+        name: 'page.onChange',
+        stmt: currentPage.value['v-on']?.change,
+      },
     ].filter((evt) => !!evt.stmt)
   },
 
@@ -149,6 +157,20 @@ const storyEvents = computed({
       case 'page.onLeave':
         currentPage.value.onLeave = evt.stmt
         break
+
+      case 'page.onSubmit':
+        if (typeof currentPage.value['v-on'] == 'undefined') {
+          currentPage.value['v-on'] = {}
+        }
+        currentPage.value['v-on'].submit = evt.stmt
+        break
+
+      case 'page.onChange':
+        if (typeof currentPage.value['v-on'] == 'undefined') {
+          currentPage.value['v-on'] = {}
+        }
+        currentPage.value['v-on'].change = evt.stmt
+        break
       }
     })
 
@@ -172,6 +194,14 @@ const availableEvents = computed(() => [
   {
     event: 'page.onLeave',
     text: i18n.t('StoryEditorWindow.events.pageLeave'),
+  },
+  {
+    event: 'page.onSubmit',
+    text: 'onSubmit',
+  },
+  {
+    event: 'page.onChange',
+    text: 'onChange',
   },
 ])
 

@@ -5,9 +5,6 @@
 
   @import '@/packages/ui/themes/base/modifiers/clickable.scss';
 
-  @import './classes/coolAdder.scss';
-  @import './classes/coolDetails.scss';
-
   @import './blocks/BlockCssStyle.scss';
   @import './blocks/BlockScaffold.scss';
   @import './blocks/BlockVisibilityEditor.scss';
@@ -16,7 +13,6 @@
   @import './blocks/CmsStory.scss';
   @import './blocks/CmsStoryBuilder.scss';
   @import './blocks/CmsStoryEditor.scss';
-  @import './blocks/CssClassManager.scss';
   @import './blocks/LayoutPage.scss';
   @import './blocks/LayoutRow.scss';
   @import './blocks/LayoutRowEditor.scss';
@@ -24,6 +20,5 @@
   @import './blocks/StmtAndOr.scss';
   @import './blocks/StmtChainItem.scss';
   @import './blocks/StmtOp.scss';
-  @import './blocks/StoryMethodsEditor.scss';
   @import './blocks/UiWindow.scss';
 }

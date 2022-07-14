@@ -4,8 +4,6 @@ import InputFace from '../components/InputFace.vue'
 
 
 export default {
-  tags: ['input'],
-
   name: 'InputText',
   title: 'Text',
   icon: 'mdi:form-textbox',

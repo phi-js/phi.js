@@ -1,15 +1,15 @@
 @at-root :root, .color-scheme-light {
-  --details-color-open: rgba(0, 0, 0, 0.05);
-  --details-color-hover: rgba(255, 255, 255, 0.03);
+  // --details-color-open: rgba(0, 0, 0, 0.05);
+  // --details-color-hover: rgba(255, 255, 255, 0.03);
 
   --details-arrow-height: 8px;
   --details-arrow-width: 12px;
-  --details-arrow-color: #888;  
+  --details-arrow-color: #888;
 }
 
 @at-root .color-scheme-dark {
-  --details-color-open: rgba(255, 255, 255, 0.06);
-  --details-color-hover: rgba(255, 255, 255, 0.03);
+  // --details-color-open: rgba(255, 255, 255, 0.06);
+  // --details-color-hover: rgba(255, 255, 255, 0.03);
 
   --details-arrow-height: 8px;
   --details-arrow-width: 12px;
@@ -17,15 +17,19 @@
 }
 
 .UiDetails {
+  --details-color-open: var(--ui-color-z1);
+  --details-color-hover: var(--ui-color-hover);
+
   border-radius: 4px;
   box-sizing: border-box;
   transition: background-color var(--details-transition-duration) ease;
 
   & > summary {
+    border-radius: 4px;
+    padding: 6px;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    padding: 8px;
 
     user-select: none;
     cursor: pointer;
@@ -37,7 +41,6 @@
 
   &__item {
     flex: 1;
-    --ui-item-padding: 0 4px;
   }
 
   &__deleter {
@@ -49,7 +52,7 @@
     }
   }
 
-  & > &__contents {
+  & > .UiDetails__contents {
     padding: 6px 8px;
   }
 

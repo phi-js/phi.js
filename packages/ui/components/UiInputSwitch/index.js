@@ -1,0 +1,1 @@
+export { default as UiInputSwitch } from './UiInputSwitch.vue'

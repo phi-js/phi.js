@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import UiItemFinder from './UiItemFinder.vue'
 
-const n = ref(100)
+const n = ref(10)
 
 const items = computed(() => {
   return Array(n.value)
@@ -12,7 +12,19 @@ const items = computed(() => {
       icon: 'mdi:vuejs',
       text: `Item ${index + 1}`,
       keywords: 'ja je ji',
-      tabs: [(index % 2 ? 'Pares' : 'Impares')],
+      children: Array(4).fill(null).map((_, subindex) => ({
+        id: (index + 1) + '-child-' + subindex,
+        icon: 'mdi:one-up',
+        text: 'Hijole',
+        keywords: 'soy un hijo',
+
+        children: subindex != 0 ? null : [
+          { icon: 'mdi:zip-disk', text: 'opa!' },
+          { icon: 'mdi:zip-disk', text: 'opa!' },
+          { icon: 'mdi:zip-disk', text: 'opa!' },
+          { icon: 'mdi:zip-disk', text: 'opa!' },
+        ],
+      })),
     }))
 })
 
@@ -20,6 +32,9 @@ const items = computed(() => {
 
 <template>
   <div class="UiItemFinderDocs">
+    <h1>UiItemFinder</h1>
+    <p>Recibe una lista (recursiva) de ITEMS, y los presenta en un grid buscable</p>
+    <!-- <pre>{{ items }}</pre> -->
     <UiItemFinder :items="items" />
   </div>
 </template>

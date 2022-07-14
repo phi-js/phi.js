@@ -96,6 +96,7 @@ const { selection, isSelected, select, toggle } = useSelectionManager(
     if (!props.multiple) {
       close()
     }
+    root.value.dispatchEvent(new Event('change', { bubbles: true }))
   },
 )
 

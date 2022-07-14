@@ -1,9 +1,25 @@
 <script setup>
-import { ref, computed, watch, nextTick } from 'vue'
-import { UiItem, UiInput, UiDetails } from '../'
-import findNearestElement from './findNearestElement.js'
+import { ref, computed, watch } from 'vue'
+import { UiInput } from '../'
+import FinderItem from './FinderItem.vue'
 
 const props = defineProps({
+  /*
+  items = [
+    {
+      keywords: ... searchable words (other tan text and subtext)
+
+      text: ...,
+      subtext: ...,
+      icon: ...,
+      ... any additional data ...,
+
+      children: [
+        ... array of items
+      ]
+    }
+  ]
+  */
   items: {
     type: Array,
     required: false,
@@ -16,14 +32,34 @@ const emit = defineEmits(['select-item'])
 const allItems = ref([])
 watch(
   () => props.items,
-  () => {
-    allItems.value = props.items.map((item) => ({
-      ...item,
-      searchKey: normalize(item.text) + normalize(item.subtext),
-    }))
-  },
+  () => allItems.value = props.items.map(normalize),
   { immediate: true },
 )
+
+function normalize(objItem) {
+  if (!objItem) {
+    return null
+  }
+
+  const retval = { ...objItem }
+  retval.searchKey = buildSearchKey(objItem)
+
+  if (Array.isArray(objItem.children)) {
+    retval.children = objItem.children
+      .map(normalize)
+      .filter((c) => !!c)
+
+    retval.children.forEach((child) => retval.searchKey += child.searchKey)
+  }
+
+  return retval
+}
+
+function buildSearchKey(objItem) {
+  return toKeywords(objItem.text || objItem.title)
+    + toKeywords(objItem.subtext || objItem.description)
+    + toKeywords(objItem.keywords)
+}
 
 
 // Search/Filter items
@@ -31,14 +67,43 @@ const searchString = ref('')
 
 // filteredItems es el "source of truth"
 const filteredItems = computed(() => {
-  const q = normalize(searchString.value)
+  const q = toKeywords(searchString.value)
   if (!q) {
     return allItems.value
   }
-  return allItems.value.filter((item) => item.searchKey.includes(q))
+
+  return allItems.value.map((item) => searchItem(item, q)).filter((c) => !!c)
 })
 
-function normalize(string) {
+/*
+Returns a filtered copy of the item containing only elements matching
+the keywords.
+NULL if there is no match
+*/
+
+function searchItem(item, keywords) {
+  if (!item || !keywords) {
+    return null
+  }
+
+  if (item?.children?.length) {
+    const filteredChildren = item.children.map((child) => searchItem(child, keywords)).filter((c) => !!c)
+    return filteredChildren.length
+      ? {
+        ...item,
+        children: filteredChildren,
+      }
+      : null
+  }
+
+  if (item.searchKey.includes(keywords)) {
+    return item
+  }
+
+  return null
+}
+
+function toKeywords(string) {
   if (!string) {
     return ''
   }
@@ -47,100 +112,25 @@ function normalize(string) {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
-    .replace(/[^a-z0-9]/g, '')
+    .replace(/[^a-z0-9 ]/g, '')
 }
 
-
-// Tree of item tabs (items grouped by tab:)
-/*
-tree: [
-  {
-    id: tabName,
-    text: 'Tab name',
-    subtext: 'Tab description',
-    icon: 'Tab icon',
-    children: [
-      { ...item:  id,icon,text,subtext ... },
-    ]
-  }
-]
-*/
-const tree = computed(() => {
-  const retval = []
-
-  filteredItems.value.forEach((item, _index) => {
-    const itemTabs = Array.isArray(item.tabs) ? item.tabs : ['default']
-    itemTabs.forEach((tabName) => {
-      let foundParent = retval.find((i) => i.id === tabName)
-      if (!foundParent) {
-        foundParent = {
-          id: tabName,
-          text: tabName,
-          children: [],
-        }
-        retval.push(foundParent)
-      }
-
-      foundParent.children.push({ ...item, _index })
-    })
-  })
-
-  return retval
-})
-
-// index of filteredItems.value that is currently focused
-const focusedIndex = ref(0)
-const elTree = ref()
-
-function onSearchChange() {
-  focusedIndex.value = 0
-}
+const refEl = ref()
 
 function onSearchEnter() {
-  if (filteredItems.value?.[focusedIndex.value]) {
-    emit('select-item', filteredItems.value?.[focusedIndex.value])
-    searchString.value = ''
+  // FinderItem--item
+  const firstElement = refEl.value.querySelector('.FinderItem--item')
+  if (!firstElement) {
+    return
   }
+
+  firstElement.click()
 }
 
-function onItemClick(item) {
-  emit('select-item', filteredItems.value[item._index])
+function onClickItem(item) {
+  emit('select-item', item)
   searchString.value = ''
 }
-
-function onSearchArrow(key) {
-  const focusedElement = elTree.value.querySelector('.UiItemFinder__item--focused')
-  if (!focusedElement) {
-    return
-  }
-
-  const nearestElement = findNearestElement(
-    elTree.value.querySelectorAll('.UiItemFinder__item'),
-    focusedElement,
-    key,
-  )
-
-  if (nearestElement?.dataset?.itemIndex >= 0) {
-    focusedIndex.value = parseInt(nearestElement.dataset.itemIndex)
-    return
-  }
-
-  // Not found.  wrap around left/right
-  if (key == 'left') {
-    focusedIndex.value = parseInt(focusedElement.previousElementSibling?.dataset?.itemIndex) || focusedIndex.value
-  } else if (key == 'right') {
-    focusedIndex.value = parseInt(focusedElement.nextElementSibling?.dataset?.itemIndex) || focusedIndex.value
-  }
-}
-
-// Keep focused element in view of parent scroll container
-watch(
-  focusedIndex,
-  () => nextTick(() => {
-    const focusedElement = elTree.value.querySelector('.UiItemFinder__item--focused')
-    focusedElement && focusedElement.scrollIntoView({ block: 'nearest' })
-  }),
-)
 </script>
 
 <template>
@@ -150,67 +140,28 @@ watch(
       type="search"
       class="UiItemFinder__search"
       placeholder="Buscar ..."
-      @update:model-value="onSearchChange"
-
-      @keydown.up="onSearchArrow('up')"
-      @keydown.down="onSearchArrow('down')"
-      @keydown.left="onSearchArrow('left')"
-      @keydown.right="onSearchArrow('right')"
       @keyup.enter="onSearchEnter()"
     />
     <div
-      ref="elTree"
-      class="UiItemFinder__tree"
+      ref="refEl"
+      class="UiItemFinder__body"
     >
       <slot name="body" />
 
-      <UiDetails
-        v-for="(groupItem, index) in tree"
-        :key="groupItem.id"
-        class="UiItemFinder__details"
-        :open="index == 0"
-        group="UiItemFinder"
-        :text="groupItem.text"
-      >
-        <div class="UiItemFinder__list">
-          <div
-            v-for="(item) in groupItem.children"
-            :key="item.id"
-          >
-            <UiItem
-              class="UiItemFinder__item"
-              :class="{'UiItemFinder__item--focused': item._index === focusedIndex}"
-              :icon="item.icon"
-              :text="item.text"
-              :subtext="item.subtext"
-              :data-item-index="item._index"
-              @click="onItemClick(item)"
-            />
-          </div>
-        </div>
-      </UiDetails>
+      <FinderItem
+        v-for="(item, i) in filteredItems"
+        :key="i"
+        :group="!searchString.trim() ? 'UiItemFinder' : null"
+        :item="item"
+        :open="i == 0 || !!searchString.trim()"
+        @click-item="onClickItem"
+      />
     </div>
   </div>
 </template>
 
 <style lang="scss">
 .UiItemFinder {
-  display: flex;
-  flex-direction: column;
-
-  &__list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 0 12px 18px 12px;
-
-    & > div {
-      flex: 1;
-      min-width: 120px;
-      max-width: 250px;
-    }
-  }
-
   &__search {
     display: block;
     border-bottom: 1px inset #777;
@@ -226,46 +177,9 @@ watch(
       color: inherit !important;
       &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
         color: inherit !important;
-        opacity: 1; /* Firefox */
+        opacity: 0.8; /* Firefox */
       }
     }
   }
-
-  &__tree {
-    flex: 1;
-    overflow-y: auto;
-    user-select: none;
-
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding: 5px;
-
-    &::-webkit-scrollbar {
-      width: 12px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: rgba(255, 255, 255, 0.4);
-      border-radius: 6px;
-      border: 2px solid #333;
-    }
-  }
-
-  &__item {
-    --ui-item-padding: 8px 12px;
-    border: 1px solid rgba(255,255,255, 0.1);
-    border-radius: 4px;
-
-    &--focused {
-      border: 1px solid var(--ui-color-primary);
-    }
-
-    cursor: pointer;
-    &:hover {
-      background-color: rgba(255,255,255, 0.1);
-    }
-  }
-
 }
 </style>

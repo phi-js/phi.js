@@ -124,6 +124,11 @@ const CmsBlock = {
           blockProps.value[propName] = getModelProperty(variableName)
         }
       }
+
+      // Set "required" prop if applies
+      if (props.block?.rules?.length && props.block.rules.find((r) => r.required)) {
+        blockProps.value.required = true
+      }
     })
 
     /* style and class properties */

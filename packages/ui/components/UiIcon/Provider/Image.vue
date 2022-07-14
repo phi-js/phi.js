@@ -1,6 +1,6 @@
 <template>
   <div
-    class="ui-icon-image"
+    class="UiIcon__image"
     :style="styles"
   />
 </template>
@@ -21,10 +21,13 @@ export default {
       let src = this.fullValue
 
       return {
-        display: 'inline-block',
+        display: 'block',
 
-        width: '1em',
-        height: '1em',
+        minWidth: '1em',
+        minHeight: '1em',
+        width: '100%',
+        height: '100%',
+
         backgroundImage: `url('${src}')`,
         backgroundSize: 'cover',
       }

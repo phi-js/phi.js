@@ -4,9 +4,9 @@ import { UiInput } from '@/packages/ui/components'
 
 export default {
   name: 'MediaFileList',
-  title: 'Archivos',
+  title: 'Files',
   icon: 'mdi:folder-upload',
-  description: 'Lista de archivos',
+  description: 'List or gallery of uploaded files',
 
   block: {
     component: UiFileList,

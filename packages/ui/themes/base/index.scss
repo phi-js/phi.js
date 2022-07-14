@@ -1,16 +1,19 @@
 .ui-theme-base {
   @import './variables.scss';
 
-  @import './blocks/UiButton.scss';
-  @import './blocks/UiDetails.scss';
-  @import './blocks/UiDrawerStack.scss';
-  @import './blocks/UiForm.scss';
-  @import './blocks/UiGroup.scss';
-  @import './blocks/UiInput.scss';
-  @import './blocks/UiLoading.scss';
-  @import './blocks/UiTab.scss';
-  @import './blocks/UiToolbar.scss';
-  @import './blocks/UiWindow.scss';
+  @import './components/UiButton.scss';
+  @import './components/UiDetails.scss';
+  @import './components/UiDrawerStack.scss';
+  @import './components/UiForm.scss';
+  @import './components/UiGroup.scss';
+  @import './components/UiInput.scss';
+  @import './components/UiInputSwitch.scss';
+  @import './components/UiLoading.scss';
+  @import './components/UiSelectList.scss';
+  @import './components/UiTab.scss';
+  @import './components/UiToolbar.scss';
+  @import './components/UiUpload.scss';
+  @import './components/UiWindow.scss';
 
   @import './modifiers/clickable.scss';
 }

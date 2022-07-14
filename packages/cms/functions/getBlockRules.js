@@ -25,8 +25,6 @@ export default function getBlockRules(block, getModelProperty, vmEval) {
           callback,
           message: rule.message || 'This field is required',
           breaking: true,
-          // trigger: ['update:modelValue', 'blur'],
-          trigger: ['update:modelValue'],
           block,
         })
       }
@@ -42,8 +40,6 @@ export default function getBlockRules(block, getModelProperty, vmEval) {
           callback,
           message: rule.message || 'Field does not match RegEx',
           breaking: true,
-          // trigger: ['update:modelValue', 'blur'],
-          trigger: ['update:modelValue'],
           block,
         })
       }
@@ -54,8 +50,6 @@ export default function getBlockRules(block, getModelProperty, vmEval) {
           callback: () => vmEval(rule.eval),
           message: rule.message || 'Invalid value',
           breaking: false,
-          // trigger: ['update:modelValue', 'blur'],
-          trigger: ['update:modelValue'],
           block,
         })
       }

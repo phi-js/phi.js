@@ -164,13 +164,15 @@ function shrink() {
 }
 
 function onAnimationFinish(open) {
-  refEl.value.open = open
-  isOpen.value = open
-
   animation = null
+  isOpen.value = open
   isClosing.value = false
   isExpanding.value = false
-  refEl.value.style.height = refEl.value.style.overflow = ''
+
+  if (refEl.value) {
+    refEl.value.open = open
+    refEl.value.style.height = refEl.value.style.overflow = ''
+  }
 
   emit('update:open', open)
   open ? emit('open') : emit('close')
@@ -217,6 +219,7 @@ function closeOthersInGroup() {
     :style="{ '--details-transition-duration': `${props.duration}ms`}"
   >
     <summary
+      v-show="$slots.summary || $slots.actions || props.text || props.subtext || props.icon"
       ref="refSummary"
       class="UiDetails__summary"
       @click="onSummaryClick"

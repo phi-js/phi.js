@@ -1,8 +1,8 @@
 .ui-theme-material {
-  @import './../base/blocks/UiButton.scss';
-  @import './../base/blocks/UiGroup.scss';
+  @import './../base/components/UiButton.scss';
+  @import './../base/components/UiGroup.scss';
   @import './../base/modifiers/clickable.scss';
   @import './../base/variables.scss';
 
-  @import './blocks/UiInput.scss';
+  @import './components/UiInput.scss';
 }

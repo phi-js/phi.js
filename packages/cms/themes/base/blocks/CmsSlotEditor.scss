@@ -30,7 +30,9 @@
     .SlotBlockLauncher {
       &__trigger {
         justify-content: flex-start;
-        padding-left: 20px;
+        .UiItem {
+          --ui-item-padding: 6px 12px;
+        }
       }
     }
   }
@@ -39,9 +41,6 @@
 .SlotItem {
   position: relative;
 
-  // &__launcher--before {
-  //   z-index: 1;
-  // }
   &__launcher {
     z-index: 1;
   }
@@ -124,14 +123,6 @@
   }
 }
 
-
-// // The last launcher of the last item is always visible
-// .SlotItem:last-child {
-//   & > .SlotItem__launcher--after {
-//     display: block;
-//     // opacity: 0.7;
-//   }
-// }
 
 // Make sure opened launchers are always visible
 .SlotItem {

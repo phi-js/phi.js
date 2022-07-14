@@ -39,7 +39,6 @@ const isVisible = ref(true)
         :slot="props.block.slot"
         class="MediaDialogEditor__slot"
         group-name="dialog-slot"
-        :show-launcher="true"
         @update:slot="emit('update:block', {...props.block, slot: $event})"
       />
     </template>
@@ -49,7 +48,7 @@ const isVisible = ref(true)
 <style lang="scss">
 .MediaDialogEditor {
   &__slot {
-    background: #fff;
+    background-color: var(--ui-color-background);
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 5px;

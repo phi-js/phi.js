@@ -1,14 +1,24 @@
 // import NavigationMenu from './components/NavigationMenu/NavigationMenu.block.js'
 import NavigationLink from './components/NavigationLink/NavigationLink.block.js'
 import NavigationBack from './components/NavigationBack/NavigationBack.block.js'
-import fnsStory from './functions/story'
+import storyVmFunctions from './functions/story'
 
 export default {
-  blocks: {
-    // NavigationMenu,
-    NavigationLink,
-    NavigationBack,
-  },
+  blocks: [
+    {
+      title: 'Navigation',
+      children: [
+        // NavigationMenu,
+        NavigationLink,
+        NavigationBack,
+      ],
+    },
+  ],
 
-  functions: fnsStory,
+  functions: [
+    {
+      title: 'Navigation',
+      children: storyVmFunctions,
+    },
+  ],
 }

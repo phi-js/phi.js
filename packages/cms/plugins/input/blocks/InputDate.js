@@ -3,10 +3,7 @@ import InputSettings from '../components/InputSettings/InputSettings.vue'
 import InputFace from '../components/InputFace.vue'
 
 export default {
-  id: 'CmsInputTimestamp', // Deprecated.  kept only for backwards compatibility
-
   name: 'InputDate',
-  tags: ['input'],
   title: 'Fecha',
   icon: 'mdi:calendar',
 

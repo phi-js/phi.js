@@ -1,5 +1,5 @@
 <script setup>
-import { toRef, computed } from 'vue'
+import { ref, toRef, computed } from 'vue'
 import { UiItem } from '../UiItem'
 import useOptionsManager from '../UiSelect/composables/useOptionsManager.js'
 import useSelectionManager from '../UiSelect/composables/useSelectionManager.js'
@@ -64,6 +64,8 @@ const props = defineProps({
   },
 })
 
+const refEl = ref()
+
 const { options } = useOptionsManager(toRef(props, 'options'), {
   optionText: props.optionText,
   optionValue: props.optionValue,
@@ -73,7 +75,10 @@ const { options } = useOptionsManager(toRef(props, 'options'), {
 const { isSelected, toggle } = useSelectionManager(
   toRef(props, 'modelValue'),
   toRef(props, 'multiple'),
-  (newValue) => emit('update:modelValue', newValue),
+  (newValue) => {
+    emit('update:modelValue', newValue)
+    refEl.value.dispatchEvent(new Event('change', { bubbles: true }))
+  },
 )
 
 // Nice tidy list of listed options
@@ -96,12 +101,15 @@ const arrOptions = computed(() =>
 </script>
 
 <template>
-  <div class="UiSelectList">
+  <div
+    ref="refEl"
+    class="UiSelectList"
+  >
     <UiItem
       v-for="option in arrOptions"
       :key="option.value"
       v-bind="option"
-      class="UiSelectItem ui--clickable"
+      class="UiSelectItem"
       :class="{'UiSelectItem--selected': isSelected(option.value)}"
       tabindex="0"
       @click="toggle(option.value)"

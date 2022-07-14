@@ -1,4 +1,6 @@
 .UiButton {
+  --loading-transition-duration: 0.2s;
+
   --ui-button-padding: 8px 16px;
 
   cursor: pointer;
@@ -17,7 +19,7 @@
   font: inherit;
   font-weight: bold;
 
-  transition: background 0.2s, color 0.2s;
+  transition: background-color var(--loading-transition-duration), color var(--loading-transition-duration);
   box-shadow: 0 1px 4px -2px black, inset 0 2px 1px -1px rgb(255 255 255 / 10%);
 
   /* darkener layer */
@@ -34,7 +36,7 @@
     opacity: 0;
     border-radius: 5px;
 
-    transition: opacity 0.2s;
+    transition: opacity var(--ui-duration-snap);
   }
 
   &:hover {
@@ -77,40 +79,39 @@ button.UiButton {
 
 // Loading Animation
 .UiButton {
+  position: relative;
+
   .UiItem {
     &__icon,
     &__actions {
       overflow: hidden;
-      max-width: 100px;
-      transition: all 0.2s;
+      max-width: 20px;
+      min-width: 0;
+      transition: 
+        opacity var(--loading-transition-duration),
+        max-width var(--loading-transition-duration) ease-in;
     }
 
     &__actions {
       opacity: 0;
       max-width: 0;
-      padding-left: 0;
-      padding-right: 0;
+      
+      // "hide"
+      position: absolute;
+      right: 0;
     }
   }
 
   &--loading {
     .UiItem {
-      &__body {
-        padding: var(--ui-item-padding);
-      }
-
       &__icon {
-        opacity: 0;
-        min-width: 0;
         max-width: 0;
-        padding-left: 0;
-        padding-right: 0;
       }
 
       &__actions {
+        position: initial;
         opacity: 1;
-        max-width: 100px;
-        padding: var(--ui-item-padding);
+        max-width: 20px;
       }
     }
   }

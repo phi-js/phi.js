@@ -1,0 +1,45 @@
+.UiInputSwitch {
+  --ui-switch-size: 1rem;
+  --ui-switch-padding: 2px;
+
+  box-sizing: border-box;
+  position: relative;
+
+  padding: var(--ui-switch-padding);
+  width: calc(var(--ui-switch-size) * 2 + var(--ui-switch-padding) * 2);
+  border-radius: calc(var(--ui-switch-size) / 2);
+
+  background-color: rgba(255,255,255, 0.1618);
+
+  user-select: none;
+  cursor: pointer;
+  transition: background-color var(--ui-duration-snap);
+
+  &__icon {
+    color: #888;
+    font-size: 12px;
+    width: var(--ui-switch-size);
+    height: var(--ui-switch-size);
+
+    border-radius: 50%;
+    background-color: #fff;
+
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-left: 0;
+    transition: margin-left var(--ui-duration-snap);
+
+    padding-top: 0.12rem; // !!! hack. correclty center icon vertically :(
+  }
+
+  &--checked {
+    background-color: var(--ui-color-primary);
+    .UiInputSwitch__icon {
+      margin-left: calc(var(--ui-switch-size));
+    }
+  }
+}

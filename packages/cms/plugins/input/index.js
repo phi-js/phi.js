@@ -9,15 +9,22 @@ import InputText from './blocks/InputText.js'
 import InputTextarea from './blocks/InputTextarea.js'
 
 export default {
-  blocks: {
-    InputText,
-    InputTextarea,
-    InputSelect,
-    InputCheckbox,
-    InputDate,
-    InputNumber,
-    InputUpload,
-    InputPassword,
-    InputButton,
-  },
+  blocks: [
+    {
+      title: 'Form',
+      order: 0,
+
+      children: [
+        InputText,
+        InputTextarea,
+        InputSelect,
+        InputCheckbox,
+        InputDate,
+        InputNumber,
+        InputUpload,
+        InputPassword,
+        InputButton,
+      ],
+    },
+  ],
 }

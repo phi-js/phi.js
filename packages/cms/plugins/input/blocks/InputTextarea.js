@@ -3,8 +3,6 @@ import InputSettings from '../components/InputSettings/InputSettings.vue'
 import InputFace from '../components/InputFace.vue'
 
 export default {
-  tags: ['input'],
-
   name: 'InputTextarea',
   title: 'Textarea',
   icon: 'mdi:form-textarea',

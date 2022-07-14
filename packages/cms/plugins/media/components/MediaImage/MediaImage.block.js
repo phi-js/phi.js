@@ -6,7 +6,7 @@ import MediaImageFace from './MediaImageFace.vue'
 
 export default {
   name: 'MediaImage',
-  title: 'Imagen',
+  title: 'Image',
   icon: 'mdi:image',
 
   block: {

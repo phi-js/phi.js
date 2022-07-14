@@ -306,7 +306,7 @@ async function doTranslation() {
 
       <UiIcon
         src="mdi:translate"
-        class="BlockScaffold__toolbar-icon"
+        class="BlockScaffold__toolbar-icon expansible"
         :class="{ 'BlockScaffold__toolbar-icon--active': isLanguageOpen }"
         @click="isLanguageOpen = !isLanguageOpen"
       />
@@ -315,6 +315,7 @@ async function doTranslation() {
     <template #default="slotData">
       <UiTabs
         v-if="isLanguageOpen"
+        class="MediaHtmlBlockEditor__tabs"
         :model-value="curLanguage"
         @update:model-value="setLanguage($event)"
       >
@@ -367,6 +368,19 @@ async function doTranslation() {
     &::after {
       content: "▾";
     }
+  }
+
+  &__tabs {
+    background-color: #333;
+    color: #eee;
+
+    display: none; // only show under focused editor (.SlotItem--active)
+  }
+}
+
+.SlotItem--active {
+  .MediaHtmlBlockEditor__tabs {
+    display: block;
   }
 }
 </style>

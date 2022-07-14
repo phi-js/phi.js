@@ -2,8 +2,13 @@ import EcommerceInvoice from '../components/EcommerceInvoice/EcommerceInvoice.bl
 import EcommercePaymentButton from '../components/EcommercePaymentButton/EcommercePaymentButton.block.js'
 
 export default {
-  blocks: {
-    EcommerceInvoice,
-    EcommercePaymentButton,
-  },
+  blocks: [
+    {
+      title: 'eCommerce',
+      children: [
+        EcommerceInvoice,
+        EcommercePaymentButton,
+      ],
+    },
+  ],
 }

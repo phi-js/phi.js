@@ -1,35 +1,11 @@
 <script setup>
-import { ref } from 'vue'
-import { useI18n } from '@/packages/i18n'
 import { UiItemFinder } from '@/packages/ui'
-import { getPluginData } from '../../functions'
-
-import dictionary from './PickerContents.i18n.js'
-const i18n = useI18n(dictionary)
+import { availableBlocks } from '../../functions/usePlugin'
 
 const emit = defineEmits(['input'])
 
-const pluginData = getPluginData()
-const objAllBlocks = pluginData?.blocks || {}
-
 // Raw array of all available blocks
 // (All those without disabled:true in their definition i.e. LayoutPage)
-const allBlocks = ref([])
-for (const [blockName, blockDefinition] of Object.entries(objAllBlocks)) {
-  if (blockDefinition?.disabled) {
-    continue
-  }
-
-  allBlocks.value.push({
-    ...blockDefinition,
-    id: blockName,
-    name: blockName,
-    text: blockDefinition.title || blockName,
-    // rename block "tags" to "tabs"
-    tabs: (blockDefinition.tags || ['default']).map((tagName) => i18n.t(`PickerContents.Tab.${tagName}`)),
-  })
-}
-
 function launchBlock(blockDefinition) {
   emit('input', blockDefinition)
 }
@@ -38,7 +14,7 @@ function launchBlock(blockDefinition) {
 <template>
   <UiItemFinder
     class="PickerContents"
-    :items="allBlocks"
+    :items="availableBlocks"
     @select-item="launchBlock"
   >
     <template #body>
@@ -46,3 +22,19 @@ function launchBlock(blockDefinition) {
     </template>
   </UiItemFinder>
 </template>
+
+<style lang="scss">
+.PickerContents {
+  display: flex;
+  flex-direction: column;
+
+  .UiItemFinder__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    & > * {
+      margin-bottom: 8px;
+    }
+  }
+}
+</style>

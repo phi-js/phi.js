@@ -6,8 +6,6 @@ const UiInput = defineAsyncComponent(() =>
 import InputSettings from '../components/InputSettings/InputSettings.vue'
 
 export default {
-  tags: ['input'],
-
   name: 'InputUpload',
   title: 'Archivo',
   icon: 'mdi:paperclip',

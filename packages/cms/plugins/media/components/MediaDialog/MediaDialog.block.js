@@ -2,9 +2,8 @@ import { UiDialog, UiForm } from '../../../../../ui/components'
 import MediaDialogEditor from './MediaDialogEditor.vue'
 
 export default {
-  tags: ['layout'],
   name: 'MediaDialog',
-  title: 'Dialogo emergente',
+  title: 'Popup',
   icon: 'mdi:dock-window',
 
   block: {

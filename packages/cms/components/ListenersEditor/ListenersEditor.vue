@@ -2,7 +2,7 @@
 import { ref, watch, computed, nextTick } from 'vue'
 
 import { VmStatement } from '@/packages/vm'
-import { UiItem, UiIcon, UiInput, UiDetails } from '@/packages/ui'
+import { UiInput, UiDetails } from '@/packages/ui'
 
 const props = defineProps({
   /*

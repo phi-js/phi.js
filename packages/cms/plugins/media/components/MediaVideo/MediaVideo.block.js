@@ -2,9 +2,7 @@ import UiVideo from '@/packages/ui/components/UiVideo/UiVideo.vue'
 import MediaVideoSettings from './MediaVideoSettings.vue'
 
 export default {
-  tags: ['video'],
-
-  id: 'MediaVideo',
+  name: 'MediaVideo',
   title: 'Video',
   icon: 'mdi:youtube',
 
