@@ -1,5 +1,5 @@
 <script setup>
-import { computed, useAttrs, useSlots } from 'vue'
+import { computed, useAttrs, useSlots, ref, watch } from 'vue'
 import { UiItem } from '../UiItem'
 import { UiIcon } from '../UiIcon'
 
@@ -37,6 +37,28 @@ const props = defineProps({
   },
 })
 
+
+// Dampen isLoading value
+// i.e. avoid flashing when isLoading changes back and forth too quickly
+const isLoading = ref(props.isLoading)
+let timeout = null
+
+watch(
+  () => props.isLoading,
+  (newValue) => {
+    clearTimeout(timeout)
+
+    if (newValue) {
+      // timeout = setTimeout(() => isLoading.value = true, 180)
+      isLoading.value = true
+    } else {
+      isLoading.value = false
+    }
+  },
+  { immediate: true },
+)
+
+
 // Get text from slot
 const slots = useSlots()
 const slotText = slots?.default?.()?.[0]?.children
@@ -56,7 +78,7 @@ const currentText = computed(() => {
     return errors.value[0]
   }
 
-  const retval = props.isLoading
+  const retval = isLoading.value
     ? props.loadingLabel || props.label || $attrs.value || slotText
     : props.label || $attrs.value || slotText
 
@@ -69,7 +91,7 @@ const currentText = computed(() => {
     type="button"
     class="UiButton UiButton--component"
     :class="{
-      'UiButton--loading': props.isLoading,
+      'UiButton--loading': isLoading,
       'UiButton--error': errors.length,
     }"
     v-bind="$attrs"
