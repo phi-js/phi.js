@@ -17,14 +17,16 @@ export default function useI18n(componentDictionary = null) {
   Using params:
   t('There are %number% people', { number: 4 })
   */
-  function t(word, params = null, defaultValue = null) {
+  function t(word, params = null, defaultValue = null, customDictionary = null) {
+    const sourceDictionary = customDictionary ? { ...dictionary, ...customDictionary } : dictionary
+
     const targetLocale = attrs?.['i18n-language'] || locale.value
     const baseLocale = targetLocale.substr(0, 2)
 
     let translated = (
-      dictionary?.[targetLocale]?.[word] ||
-      dictionary?.[baseLocale]?.[word] ||
-      dictionary?.[injected.fallbackLocale]?.[word] ||
+      sourceDictionary?.[targetLocale]?.[word] ||
+      sourceDictionary?.[baseLocale]?.[word] ||
+      sourceDictionary?.[injected.fallbackLocale]?.[word] ||
       defaultValue ||
       word
     )
