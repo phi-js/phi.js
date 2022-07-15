@@ -7,7 +7,7 @@ export default function useUndo(initialValue, onEmit) {
   const pointer = ref(0)
   let debounceTimeout = null
 
-  function push(newData, debounce = 0) {
+  function push(newData, debounce = 300) {
     if (debounce > 0) {
       clearTimeout(debounceTimeout)
       debounceTimeout = setTimeout(() => _push(newData), debounce)
