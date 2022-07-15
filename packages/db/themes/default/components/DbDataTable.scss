@@ -70,6 +70,10 @@
     td:first-child {
       position: sticky;
       left: 0;
+      z-index: 1;
+    }
+
+    th:first-child {
       z-index: 2;
     }
   }
