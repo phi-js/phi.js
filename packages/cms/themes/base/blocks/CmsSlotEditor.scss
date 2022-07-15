@@ -1,27 +1,14 @@
 .CmsSlotEditor {
-  // vvuedraggable instance
-  & > &__draggable {
-    min-width: 100%;
+  // vuedraggable instance
+  & > .CmsSlotEditor__draggable {
+    min-height: 50px;
   }
 
   &--dragging {
     // prevent dragging blocks into droppable elements (like editable texts or file uploads) present in the block
-    // // !!! -> What about <draggable> in nested block faces (i.e. LayoutGroupEditor) ?
-    .BlockScaffold__face {
+    .tiptap-editor-contents {
       pointer-events: none;
     }
-
-    // .BlockScaffold__face > .tiptap-editor-contents {
-    //   pointer-events: none;
-    // }
-
-
-    // .BlockScaffold__face > * {
-    //   pointer-events: none;
-    // }
-    // .BlockScaffold__face > .LayoutGroupEditor {
-    //   pointer-events: initial;
-    // }
   }
 
   &__footer {

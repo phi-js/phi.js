@@ -63,21 +63,8 @@ function emitUpdate() {
   emit('update:slot', innerSlot.value.map((block) => ({ ...block, _uid: undefined })))
 }
 
-// async function onDraggableUpdate() {
-//   await nextTick()
-//   emitUpdate()
-// }
-function onDraggableUpdate() {
-  emitUpdate()
-}
-
-function onEditorUpdate(slotIndex, newBlock) {
-  innerSlot.value[slotIndex] = newBlock
-  emitUpdate()
-}
-
-function deleteBlock(index) {
-  innerSlot.value.splice(index, 1)
+async function onDraggableUpdate() {
+  await nextTick() // Fixes glitch when dragging blocks outside a nested CmsSlotEditor
   emitUpdate()
 }
 
@@ -90,6 +77,18 @@ function onDraggableEnd() {
   isDragging.value = false
   emit('update:dragging', isDragging.value)
 }
+
+
+function onEditorUpdate(slotIndex, newBlock) {
+  innerSlot.value[slotIndex] = newBlock
+  emitUpdate()
+}
+
+function deleteBlock(index) {
+  innerSlot.value.splice(index, 1)
+  emitUpdate()
+}
+
 
 const refEditors = ref([])
 
@@ -230,7 +229,7 @@ function clearBlurListeners() {
       :class="{'CmsSlotEditor__footer--not-empty': innerSlot.length > 0}"
     >
       <SlotBlockLauncher
-        text="Add content"
+        :text="i18n.t('CmsSlotEditor.AddContent')"
         :title="props.label"
         :label="props.label || i18n.t('CmsSlotEditor.AddContent')"
         :open="false"
