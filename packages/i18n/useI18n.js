@@ -27,8 +27,7 @@ export default function useI18n(componentDictionary = null) {
       sourceDictionary?.[targetLocale]?.[word] ||
       sourceDictionary?.[baseLocale]?.[word] ||
       sourceDictionary?.[injected.fallbackLocale]?.[word] ||
-      defaultValue ||
-      word
+      (defaultValue !== null ? defaultValue : word)
     )
 
     if (params && typeof params === 'object') {
