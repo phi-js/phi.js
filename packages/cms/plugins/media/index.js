@@ -17,7 +17,11 @@ import MediaMap from './components/MediaMap/MediaMap.block.js'
 import MediaPdf from './components/MediaPdf/MediaPdf.block.js'
 import MediaVideo from './components/MediaVideo/MediaVideo.block.js'
 
+import i18n from './i18n'
+
 export default {
+  i18n,
+
   // ORDER MATTERS (block picker shows blocks in this order)
   blocks: [
     {

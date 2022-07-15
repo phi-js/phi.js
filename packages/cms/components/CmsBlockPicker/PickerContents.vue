@@ -1,6 +1,6 @@
 <script setup>
 import { UiItemFinder } from '@/packages/ui'
-import { availableBlocks } from '../../functions/usePlugin'
+import { useAvailableBlocks } from '../../functions/usePlugin'
 
 const emit = defineEmits(['input'])
 
@@ -9,6 +9,9 @@ const emit = defineEmits(['input'])
 function launchBlock(blockDefinition) {
   emit('input', blockDefinition)
 }
+
+const availableBlocks = useAvailableBlocks()
+
 </script>
 
 <template>

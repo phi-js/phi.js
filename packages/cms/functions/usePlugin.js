@@ -1,4 +1,6 @@
+import { computed } from 'vue'
 import vmRegisterPlugin from '@/packages/vm/plugins/registerPlugin.js'
+import { useI18n } from '@/packages/i18n'
 
 export const addedPlugins = []
 
@@ -20,7 +22,6 @@ usePlugin([
   pluginLayout,
   pluginNavigation,
 ])
-
 
 export default function usePlugin(plugin) {
   if (Array.isArray(plugin)) {
@@ -74,4 +75,48 @@ function registerDefinition(definition) {
   if (definition.block) {
     allBlocks[definition.name] = definition
   }
+}
+
+
+/* Available blocks, with translated texts */
+export function useAvailableBlocks() {
+  let dictionary = {}
+  addedPlugins.forEach((plugin) => {
+    if (plugin.i18n) {
+      dictionary = deepMerge(dictionary, plugin.i18n)
+    }
+  })
+  const i18n = useI18n(dictionary)
+
+  return computed(() => availableBlocks.map((b) => translateBlock(b, i18n)))
+}
+
+function translateBlock(block, i18n) {
+  return {
+    ...block,
+
+    title: block.name
+      ? i18n.t(`plugin.component.${block.name}.title`, null, block.title)
+      : i18n.t(`plugin.title.${block.title}`, null, block.title),
+
+    description: block.name
+      ? i18n.t(`plugin.component.${block.name}.description`, null, '')
+      : block.description,
+
+    children: Array.isArray(block.children)
+      ? block.children.map((c) => translateBlock(c, i18n))
+      : undefined,
+  }
+}
+
+function deepMerge(obj1, obj2) {
+  if (obj1 === null || typeof obj1 != 'object') {
+    return obj2 || obj1
+  }
+
+  let retval = { ...obj2 }
+  for (let prop in obj1) {
+    retval[prop] = deepMerge(obj1[prop], obj2?.[prop])
+  }
+  return retval
 }

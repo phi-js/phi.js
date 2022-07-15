@@ -8,7 +8,11 @@ import InputSelect from './blocks/InputSelect.js'
 import InputText from './blocks/InputText.js'
 import InputTextarea from './blocks/InputTextarea.js'
 
+import i18n from './i18n'
+
 export default {
+  i18n,
+
   blocks: [
     {
       title: 'Form',
