@@ -72,6 +72,16 @@ const storySchema = computed(() => {
 
 provide('$_vm_modelSchema', storySchema)
 
+
+// MediaLink calls injectedStory.goTo()
+// So for MediaLink to work inside a story editor, we must provide a $_cms_story.goTo()
+provide('$_cms_story', {
+  goTo: (pageId) => {
+    emit('update:currentPageId', pageId)
+  },
+})
+
+
 const currentPage = ref()
 watchEffect(() => {
   const foundPage = sanitizedStory.value.pages.find((p) => p.id == props.currentPageId)

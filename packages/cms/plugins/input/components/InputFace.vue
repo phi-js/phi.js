@@ -3,7 +3,7 @@ export default { inheritAttrs: false }
 </script>
 
 <script setup>
-import { useAttrs, computed, ref, watchEffect } from 'vue'
+import { useAttrs, computed } from 'vue'
 import { useI18n } from '../../../../i18n'
 import { parseTranslations } from '../../../functions'
 import { UiInput } from '@/packages/ui/components'
@@ -39,14 +39,8 @@ const isSelect = computed(() =>
   && props.modelValue.props.type.substring(0, 6) == 'select')
 
 const i18n = useI18n()
-const translatedProps = ref()
-watchEffect(() => {
-  translatedProps.value = parseTranslations({ ...props.modelValue?.props }, i18n.locale, props.modelValue.i18n)
-  // if (props.modelValue.i18n) {
-  //   translatedProps.value = parseTranslations({ ...props.modelValue?.props }, props.modelValue.i18n, i18n.locale)
-  // } else {
-  //   translatedProps.value = { ...props.modelValue?.props }
-  // }
+const translatedProps = computed(() => {
+  return parseTranslations({ ...props.modelValue?.props }, i18n.locale, props.modelValue.i18n)
 })
 </script>
 

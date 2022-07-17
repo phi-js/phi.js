@@ -21,8 +21,8 @@
   }
 
   .CmsStoryEditor .LayoutPageEditor {
-    flex-direction: column;
-    display: flex;
+    // flex-direction: column;  // centers content vertically when it shouldnt
+    // display: flex;
     height: 100%;
   }
 
@@ -49,6 +49,7 @@
   &__controls {
     display: flex;
     align-items: stretch;
+    margin: 0 1rem;
   }
 
   &__controlItem {
@@ -131,11 +132,6 @@
 
 // Tabs and options layout in mobile
 @media (max-width:500px) {
-  .CmsStoryBuilder__controls {
-    margin-left: auto;
-    order: 1;
-  }
-
   .CmsStoryBuilder__toolbar {
     .UiTabs {
       &__header {

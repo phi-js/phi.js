@@ -20,7 +20,9 @@ function onFormChange($event) {
     @submit.prevent="onFormSubmit"
     @change="onFormChange"
   >
-    <slot />
+    <div class="LayoutPage__contents">
+      <slot />
+    </div>
 
     <!-- this element must exist in order to trigger onSubmit when hittin ENTER on a text field -->
     <input

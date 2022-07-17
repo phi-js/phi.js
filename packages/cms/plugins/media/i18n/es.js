@@ -1,6 +1,6 @@
 export default {
   'plugin.title.Content': 'Contenido',
-  'plugin.title.Layout': 'Diseño',
+  'plugin.title.Layout': 'Interfaz',
   'plugin.title.Video': 'Video',
   'plugin.title.Embed': 'Insertar',
   'plugin.title.Placeholder': 'Placeholder',

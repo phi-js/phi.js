@@ -3,6 +3,7 @@ import { ref, shallowRef, watch, computed, provide, nextTick, getCurrentInstance
 import { useI18n } from '@/packages/i18n'
 import UiDrawerStack from '@/packages/ui/components/UiDrawerStack/UiDrawerStack.vue'
 
+import { parseTranslations } from '../../functions'
 import dictionary from './BlockScaffold.i18n.js'
 import { getBlockEditors, getBlockDefinition, getCssObjectAttributes } from '../../functions'
 import EditorAction from './EditorAction.vue'
@@ -171,6 +172,11 @@ while (parent.parent) {
     parent.exposed.descendants.push({ ...props.block })
   }
 }
+
+
+const defaultFaceProps = computed(() => {
+  return parseTranslations({ ...innerBlock.value.props }, i18n.locale, innerBlock.value.i18n)
+})
 
 defineExpose({
   isBlockScaffold: true,
@@ -353,7 +359,7 @@ defineExpose({
         >
           <Component
             :is="definition.block.component"
-            v-bind="{ ...innerBlock?.props, ...blockCssAttributes }"
+            v-bind="{ ...defaultFaceProps, ...blockCssAttributes }"
           />
         </div>
       </slot>

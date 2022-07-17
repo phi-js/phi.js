@@ -1,6 +1,10 @@
 .LayoutPage {
   position: relative;
   min-height: 100%;
-  // flex-direction: column;
-  // display: flex;
+  background-color: var(--ui-color-background);
+  color: var(--ui-color-foreground);
+
+  &__contents {
+    padding: 12px;
+  }
 }

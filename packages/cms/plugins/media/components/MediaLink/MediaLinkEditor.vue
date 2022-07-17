@@ -1,6 +1,7 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
-import { UiItem, UiInput, UiButton, UiDrawer } from '../../../../../ui'
+import { ref, watch, inject, computed } from 'vue'
+import { UiInput, UiTabs, UiTab } from '@/packages/ui'
+import CmsPropInput from '../../../../components/CmsPropInput/CmsPropInput.vue'
 
 const props = defineProps({
   /*
@@ -19,65 +20,97 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:modelValue', 'delete'])
+const emit = defineEmits(['update:modelValue'])
 
 const innerValue = ref({})
-const isEditing = ref(false)
-
-const isEmpty = computed(() => !innerValue.value.href && !innerValue.value.text && !innerValue.value.subtext)
-const sanitizedValue = computed(() => ({
-  href: innerValue.value.href,
-  text: innerValue.value.text || 'Sin título',
-  subtext: innerValue.value.subtext,
-  icon: innerValue.value.icon || 'mdi:open-in-new',
-}))
 
 watch(
   () => props.modelValue,
-  (newValue) => {
-    innerValue.value = { target: '_blank', ...newValue }
-    isEditing.value = isEmpty.value
+  (newValue) => innerValue.value = {
+    target: '_blank',
+    ...newValue,
   },
   { immediate: true },
 )
 
-function accept() {
+function emitUpdate(varName) {
+  if (varName == 'href' && innerValue.value.href) {
+    innerValue.value.pageHash = null
+  } else if (varName == 'pageHash' && innerValue.value.pageHash) {
+    innerValue.value.href = ''
+  }
+
   emit('update:modelValue', { ...innerValue.value })
-  isEditing.value = false
 }
 
-function cancel() {
-  innerValue.value = { ...props.modelValue }
-  isEditing.value = false
-  if (isEmpty.value) {
-    emit('delete')
-  }
-}
+const injectedStoryData = inject('$_cms_story_builder', null)
+const availablePages = computed(() => injectedStoryData?.story?.value?.pages || [])
+const optionsPages = computed(() => availablePages.value.map((p) => ({
+  value: p.hash || p.id,
+  text: p.title || p.info?.text || p.id,
+})))
+
+const currentTab = ref(innerValue.value.pageHash || (availablePages.value.length && !innerValue.value.href)
+  ? 'internal'
+  : 'external')
+
 </script>
 
 <template>
-  <div class="MediaLinkEditor">
-    <UiItem
-      v-bind="sanitizedValue"
-      @click="isEditing = true"
-    />
-    <UiDrawer :open="isEditing">
-      <div class="UiForm">
+  <UiTabs
+    v-model="currentTab"
+    class="MediaLinkEditor"
+  >
+    <UiTab
+      text="Internal"
+      value="internal"
+    >
+      <div class="MediaLinkEditor__tabContents">
+        <UiInput
+          v-model="innerValue.pageHash"
+          label="Target page"
+          type="select-list"
+          :options="optionsPages"
+          @update:model-value="emitUpdate('pageHash')"
+        />
+        <CmsPropInput
+          v-model="innerValue.text"
+          type="text"
+          label="Titulo"
+          @update:model-value="emitUpdate()"
+        />
+        <CmsPropInput
+          v-model="innerValue.subtext"
+          type="text"
+          label="Descripcion"
+          @update:model-value="emitUpdate()"
+        />
+      </div>
+    </UiTab>
+
+    <UiTab
+      text="External"
+      value="external"
+    >
+      <div class="MediaLinkEditor__tabContents">
         <UiInput
           v-model="innerValue.href"
           type="url"
           label="URL"
           placeholder="http://..."
+          @update:model-value="emitUpdate('href')"
         />
-        <UiInput
+        <CmsPropInput
           v-model="innerValue.text"
           type="text"
           label="Titulo"
+          @update:model-value="emitUpdate()"
         />
-        <UiInput
+        <CmsPropInput
           v-model="innerValue.subtext"
           type="text"
           label="Descripcion"
+          @update:model-value="emitUpdate()"
         />
         <UiInput
           v-model="innerValue.target"
@@ -87,20 +120,9 @@ function cancel() {
             { value: '_blank', text: 'Nueva pestaña' },
             { value: '_self', text: 'Pestaña actual' },
           ]"
+          @update:model-value="emitUpdate()"
         />
-        <footer>
-          <UiButton
-            class="UiButton--main"
-            label="OK"
-            @click="accept"
-          />
-          <UiButton
-            class="UiButton--cancel"
-            label="Cancel"
-            @click="cancel"
-          />
-        </footer>
       </div>
-    </UiDrawer>
-  </div>
+    </UiTab>
+  </UiTabs>
 </template>

@@ -4,6 +4,7 @@ import { CmsStory } from '../CmsStory'
 import { CmsStoryEditor } from '../CmsStoryEditor'
 import { CmsStoryGraph } from '../CmsStoryGraph'
 import StoryEditorWindow from '../CmsStoryEditor/StoryEditorWindow.vue'
+import { useThemes } from '../../functions'
 
 import { useI18n } from '../../../i18n'
 import {
@@ -164,10 +165,26 @@ const slots = useSlots()
 const contentSlot = computed(() => {
   return slots?.[`contents-${currentTab.value}`]
 })
+
+
+// Apply theme classes to entire CmsStoryBuilder
+// (So that the builde --ui-color-primary reacts to the theme)
+// THEMES
+const storyClassNames = ref([])
+if (innerStory.value?.themes) {
+  watch(
+    () => innerStory.value.themes,
+    () => storyClassNames.value = useThemes(innerStory.value),
+    { immediate: true },
+  )
+}
 </script>
 
 <template>
-  <div class="CmsStoryBuilder">
+  <div
+    class="CmsStoryBuilder"
+    :class="storyClassNames"
+  >
     <div class="CmsStoryBuilder__toolbar">
       <UiTabs
         v-model="currentTab"
@@ -202,9 +219,8 @@ const contentSlot = computed(() => {
               class="CmsStoryBuilder__controlItem"
               @update:model-value="emit('update:contentSize', $event)"
             />
-
-            <slot name="right" />
           </div>
+          <slot name="right" />
         </template>
 
         <UiTab

@@ -27,10 +27,12 @@ const cssAttributes = computed(() => getCssObjectAttributes(props.block?.css, pr
 </script>
 
 <template>
-  <CmsSlotEditor
-    v-bind="cssAttributes"
-    v-model:slot="pageSlot"
-    class="LayoutPageEditor LayoutPage"
-    @update:slot="onSlotUpdate"
-  />
+  <div class="LayoutPageEditor LayoutPage">
+    <CmsSlotEditor
+      v-bind="cssAttributes"
+      v-model:slot="pageSlot"
+      class="LayoutPage__contents"
+      @update:slot="onSlotUpdate"
+    />
+  </div>
 </template>

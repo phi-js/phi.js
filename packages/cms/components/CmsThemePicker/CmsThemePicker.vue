@@ -52,8 +52,8 @@ function selectTheme(theme) {
 </script>
 
 <template>
-  <div class="CmsThemePicker UiForm">
-    <div class="CmsThemePicker__selected">
+  <div class="CmsThemePicker">
+    <!-- <div class="CmsThemePicker__selected">
       <div
         v-for="theme in selectedThemes"
         :key="theme.name"
@@ -76,135 +76,78 @@ function selectTheme(theme) {
           />
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <fieldset>
-      <legend>Select theme</legend>
-      <div class="CmsThemePicker__available">
-        <div
-          v-for="(theme,i) in listedThemes"
-          :key="theme.name"
-          class="Theme"
-          :class="{'Theme--active': theme.isActive}"
-          :title="theme.description"
-          @click="selectTheme(availableThemes[i])"
+    <!-- <fieldset>
+      <legend>Select theme</legend> -->
+    <div class="CmsThemePicker__available">
+      <div
+        v-for="(theme,i) in listedThemes"
+        :key="theme.name"
+        class="Theme"
+        :class="{'Theme--active': theme.isActive}"
+        :title="theme.description"
+        @click="selectTheme(availableThemes[i])"
+      >
+        <img
+          v-if="theme.thumbnail"
+          :src="theme.thumbnail"
+          :alt="theme.title || theme.name"
+          class="Theme__thumbnail"
         >
-          <img
-            v-if="theme.thumbnail"
-            :src="theme.thumbnail"
-            :alt="theme.title || theme.name"
-            class="Theme__thumbnail"
-          >
-          <div class="Theme__details">
-            <h3
-              class="Theme__name"
-              v-text="theme.title || theme.name"
-            />
-          </div>
+        <div class="Theme__details">
+          <h3
+            class="Theme__name"
+            v-text="theme.title || theme.name"
+          />
         </div>
       </div>
-    </fieldset>
+    </div>
+    <!-- </fieldset> -->
   </div>
 </template>
 
 <style lang="scss">
 .CmsThemePicker {
-  &__search {
-    .UiInput__elem {
-      display: block;
-      width: 100%;
-    }
-  }
-
-  &__list {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 12px;
-  }
-
-  &__available {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
+  padding: 6px;
+  .Theme {
+    margin-bottom: 6px;
   }
 }
 
-.CmsThemePicker__available .Theme {
-  position: relative;
-  width: 200px;
-  height: 133px;
+.Theme {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
   border-radius: 4px;
-  overflow: clip;
+  padding: 6px;
+
+  &__thumbnail {
+    width: 112px;
+    border-radius: 4px;
+  }
+
+  &__details {
+    flex: 1;
+    padding: 12px 16px;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: 1.45em;
+    font-weight: 300;
+  }
+
+
+  &--active {
+    background-color: var(--ui-color-primary) !important;
+    color: #fff;
+  }
 
   user-select: none;
   cursor: pointer;
-
-  &--active {
-    border: 2px solid var(--ui-color-primary);
-  }
-
-  &__thumbnail {
-    position: absolute;
-    width: 100%;
-  }
-
-  &__details {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 8px 12px;
-
-    background-color: rgba(0,0,0, 0.7);
-  }
-
-  &__name {
-    margin: 0;
-  }
-}
-
-
-.CmsThemePicker__selected .Theme {
-  display: flex;
-  flex-wrap: wrap;
-  border: 1px solid transparent;
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  border-radius: 4px;
-
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-
-  transition: all var(--ui-duration-snap);
-
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-
-  &__thumbnail {
-    align-self: flex-start;
-    width: 50%;
-    height: auto;
-    padding: 8px;
-
-    max-width: 200px;
-  }
-
-  &__details {
-    padding: 12px;
-    flex: 1;
-  }
-
-  &__name {
-    font-size: 1.2em;
-    font-weight: normal;
-    margin: 0;
-  }
-
-  &__description {
-    opacity: 0.8;
-    font-size: 0.9em;
-    margin: 0;
+    background-color: var(--ui-color-hover);
   }
 }
 </style>

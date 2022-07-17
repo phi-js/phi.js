@@ -100,7 +100,9 @@ function deleteNode() {
     cursor: pointer;
     font-size: 14px;
     font-weight: bold;
+
     background-color: #f4f4f4;
+    color: #333;
 
     white-space: nowrap;
     max-width: 200px;
@@ -128,7 +130,7 @@ function deleteNode() {
         color: #fff;
 
         &:hover {
-          background-color: var(--ui-color-primary);
+          background-color: var(--ui-color-hover);
           opacity: 1;
         }
       }
@@ -138,9 +140,8 @@ function deleteNode() {
   &__menu {
     .UiItem {
       --ui-item-padding: 8px 12px;
-
       &:hover {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: var(--ui-color-hover);
       }
     }
   }
