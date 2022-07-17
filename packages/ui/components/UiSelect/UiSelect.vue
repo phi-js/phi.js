@@ -250,12 +250,12 @@ const placeholderOption = computed(() => {
             <slot name="chip">
               <UiItem
                 v-bind="option"
-                class="UiChip ui--clickable"
+                class="UiChip"
                 @click="clickChip(option)"
               >
                 <template #actions>
                   <div
-                    class="UiChip__btn-close ui--clickable"
+                    class="UiChip__btn-close"
                     @click.stop="clickOption(option)"
                     @mouseenter="
                       $event.target
@@ -277,7 +277,6 @@ const placeholderOption = computed(() => {
 
           <div
             style="flex: 1; display: flex; align-items: center"
-            class="ui--clickable"
             @click="toggleDialog"
           >
             <slot
@@ -337,7 +336,7 @@ const placeholderOption = computed(() => {
                 v-bind="option"
               >
                 <UiItem
-                  class="UiOption ui--clickable"
+                  class="UiOption"
                   v-bind="option"
                   @click="clickOption(option)"
                 />
@@ -349,72 +348,3 @@ const placeholderOption = computed(() => {
     </UiPopover>
   </div>
 </template>
-
-<style lang="scss">
-.UiSelect {
-  display: inline-block;
-
-  &__face {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  &__options {
-    margin: 3px;
-    padding-right: 3px;
-    max-height: 350px;
-    overflow-y: auto;
-
-    /*firefox only*/
-    scrollbar-width: thin;
-
-    /*webkit based browsers only*/
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border-radius: 3px;
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-  }
-
-  &__search-input {
-    display: block;
-    width: 100%;
-    border: 0;
-    margin: 0;
-    background: transparent;
-  }
-
-  .UiOption {
-    &--focused {
-      background-color: #ff8;
-    }
-
-    &--selected {
-      font-weight: bold;
-    }
-  }
-
-  .UiChip {
-    transition: all 0.18s;
-
-    &__btn-close {
-      width: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-
-      transition: all var(--ui-duration-snap);
-    }
-
-    &--threatened {
-      background-color: var(--ui-color-danger);
-      opacity: 0.7;
-      color: #fff;
-    }
-  }
-}
-</style>

@@ -1,7 +1,9 @@
 .UiUpload {
   &__file {
     display: block;
-    max-width: 380px;
+    // max-width: 380px;
+    width: 320px;
+    max-width: 85vw;
     color: inherit;
 
     --ui-item-padding: 8px;

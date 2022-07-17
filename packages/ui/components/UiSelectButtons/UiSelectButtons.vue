@@ -115,8 +115,8 @@ const { options } = useOptionsManager(toRef(props, 'options'), {
     font-size: inherit;
     --ui-item-padding: 8px 16px;
 
-    background-color: rgba(255,255,255, 0.05);
-    color: #ccc;
+    background-color: var(--ui-color-z1);
+    color: #999;
 
     border: 0;
     border-radius: 0;
@@ -132,7 +132,7 @@ const { options } = useOptionsManager(toRef(props, 'options'), {
     }
 
     &:hover {
-      background-color: rgba(255,255,255, 0.1);
+      background-color: var(--ui-color-hover);
     }
 
     &--selected,

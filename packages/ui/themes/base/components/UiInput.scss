@@ -71,13 +71,14 @@ textarea.UiInput__element {
   &--required {
     .UiInput__label::after {
       content: ' *';
-      color: green;
+      opacity: 0.3;
     }
   }
 
   &--invalid {
     .UiInput__label::after {
       color: #ea5455;
+      opacity: 1;
     }
   }
 

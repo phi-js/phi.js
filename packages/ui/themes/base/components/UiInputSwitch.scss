@@ -42,4 +42,10 @@
       margin-left: calc(var(--ui-switch-size));
     }
   }
+
+  &--unchecked {
+    .UiInputSwitch__icon {
+      color: var(--ui-color-primary);
+    }
+  }
 }

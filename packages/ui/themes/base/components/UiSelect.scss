@@ -1,0 +1,85 @@
+.UiSelect {
+  display: inline-block;
+
+  &__face {
+    @extend .ui--clickable;
+    display: flex;
+    flex-wrap: nowrap;
+
+    .UiItem {
+      &__text {
+        max-width: 160px;
+      }
+    }
+  }
+
+  &__options {
+    min-width: 200px;
+    max-height: 350px;
+    overflow-y: auto;
+
+    /*firefox only*/
+    scrollbar-width: thin;
+
+    /*webkit based browsers only*/
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
+
+    // Declared inside UiSelect__options, since that is the element
+    // teleported to body, and therefore no longer a child of .UiSelect
+    .UiOption {
+      --ui-color-hover:  rgba(255,255,255, 0.04);
+
+      @extend .ui--clickable;
+
+      &--focused {
+        background-color: rgba(255,255,255, 0.2);
+      }
+  
+      &--selected {
+        font-weight: bold;
+      }
+    }
+
+    --ui-item-padding: 8px 10px;
+  }
+
+  &__search-input {
+    display: block;
+    width: 100%;
+    border: 0;
+    margin: 0;
+    background: transparent;
+
+    padding: 8px 10px;
+    color: inherit;
+    outline: none;
+  }
+
+  .UiChip {
+    transition: all 0.18s;
+
+    &__btn-close {
+      width: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+
+      transition: all var(--ui-duration-snap);
+    }
+
+    &--threatened {
+      background-color: var(--ui-color-danger);
+      opacity: 0.7;
+      color: #fff;
+    }
+  }
+}
