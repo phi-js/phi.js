@@ -289,6 +289,7 @@ const isManagerOpen = ref(false)
           <td
             v-for="(column) in visibleColumns"
             :key="column._i"
+            :style="{'--db-datatable-title': `'${column.title}'`}"
           >
             <UiOutput
               class="DbDataTable__output"
