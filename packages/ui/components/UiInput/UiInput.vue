@@ -4,7 +4,7 @@ export default { inheritAttrs: false }
 </script>
 
 <script setup>
-import { computed, useAttrs, ref } from 'vue'
+import { computed, useAttrs, ref, inject } from 'vue'
 import types from './types.js'
 import UiButton from '../UiButton/UiButton.vue'
 
@@ -65,6 +65,8 @@ const props = defineProps({
   },
 })
 
+const injectedTypes = inject('_ui_input_types', {})
+
 let timeout = null
 
 function emitUpdate(newValue) {
@@ -107,7 +109,7 @@ const classNames = computed(() => {
 })
 
 const customComponent = computed(() => {
-  return types[props.type]
+  return types[props.type] || injectedTypes[props.type]
 })
 
 const showLabel = computed(() => {
