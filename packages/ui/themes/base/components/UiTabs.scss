@@ -3,7 +3,8 @@
   &__header {
     display: flex;
     flex-wrap: nowrap;
-    align-items: center;
+    align-items: stretch;
+
     overflow-x: auto;
 
     /*firefox only*/
@@ -25,11 +26,9 @@
 
     display: flex;
     flex-wrap: nowrap;
-    overflow: hidden;
-
     gap: 4px;
-    padding: 0 4px;
 
+    overflow: hidden;
     overflow-x: auto;
 
     /*firefox only*/

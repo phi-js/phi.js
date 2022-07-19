@@ -43,12 +43,7 @@
 
     .UiTabs {
       &__header {
-        background-color: rgba(255,255,255, 0.03);
-      }
-
-
-      &__tabList {
-        justify-content: center;
+        padding: 4px;
       }
     }
   }
@@ -64,18 +59,27 @@
       opacity: 0;
       pointer-events: none;
     }
+
+    .UiPopover__trigger {
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
   }
 
   &__controlItem {
     @extend .ui--clickable;
+    border-radius: 4px;
 
-    min-height: 40px;
     align-self: stretch;
     min-width: 40px;
 
     &[disabled=true] {
       cursor: default;
-      opacity: 0.5;
+      opacity: 0.4;
+      &:hover {
+        background-color: transparent;
+      }
     }
   }
 
