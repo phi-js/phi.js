@@ -51,8 +51,8 @@
 .UiTabs {
   .UiTab {
     position: relative;
-    border-radius: 4px;
-    overflow: hidden;
+    border-radius: 4px;  
+    // overflow: hidden; // Messes badge z-index
 
     &::after {
       content: "";

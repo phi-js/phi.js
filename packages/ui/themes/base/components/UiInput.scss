@@ -43,6 +43,12 @@ textarea.UiInput__element {
 
   &__element {
     @extend .UiInputNativeElement;
+
+    &[type=color] {
+      padding: 0;
+      margin: 0;
+      border: 0;
+    }
   }
 
   &__errors {
