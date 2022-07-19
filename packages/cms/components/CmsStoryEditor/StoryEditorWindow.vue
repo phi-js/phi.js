@@ -12,6 +12,7 @@ import ListenersEditor from '../ListenersEditor/ListenersEditor.vue'
 import StoryDictionaryEditor from './StoryDictionaryEditor.vue'
 import StoryMethodsEditor from './StoryMethodsEditor.vue'
 import CmsThemePicker from '../CmsThemePicker/CmsThemePicker.vue'
+import CmsStoryStyle from '../CmsStoryStyle/CmsStoryStyle.vue'
 
 const props = defineProps({
   story: {
@@ -224,7 +225,11 @@ const availableEvents = computed(() => [
           icon="mdi:palette-advanced"
           :text="i18n.t('StoryEditorWindow.style')"
         >
-          <BlockCssEditor
+          <CmsStoryStyle
+            v-model:story="innerStory"
+            @update:story="emitStoryUpdate"
+          />
+          <!-- <BlockCssEditor
             v-model="currentPage"
             @update:model-value="emitCurrentPageUpdate"
           >
@@ -239,7 +244,7 @@ const availableEvents = computed(() => [
                 />
               </UiTab>
             </template>
-          </BlockCssEditor>
+          </BlockCssEditor> -->
         </UiTab>
 
         <UiTab

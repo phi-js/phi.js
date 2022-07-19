@@ -12,6 +12,8 @@ import {
   onMounted,
 } from 'vue'
 
+import { colorScheme } from '@/packages/ui'
+
 import { CmsBlock } from '../CmsBlock'
 import { getPluginData, sanitizeStory, parseTranslations, forEachBlock, setProperty, useThemes } from '../../functions'
 import { useI18n } from '../../../i18n'
@@ -226,48 +228,68 @@ export default {
       storyCSS.value = storyVM.eval(strCSS, props.modelValue)
     })
 
+    const storyStyleProp = ref()
+    watchEffect(() => {
+      const objStyle = {
+        ...sanitizedStory.value.css?.style,
+        ...sanitizedStory.value.css?.[`style-${colorScheme.value}`],
+      }
+
+      if (objStyle) {
+        storyStyleProp.value = storyVM.eval(objStyle, props.modelValue)
+      }
+    })
+
     // Determine story THEME
-    const storyClassNames = ref([])
+    const themeClassNames = ref([])
     if (sanitizedStory.value?.themes) {
-      storyClassNames.value = useThemes(sanitizedStory.value)
+      themeClassNames.value = useThemes(sanitizedStory.value)
     }
 
     // Render function
-    return () => !isMounted.value ? null : h('div', { class: ['CmsStory', ...storyClassNames.value] }, [
-
-      // Story <style> element in <head>
-      h(
-        Teleport,
-        { to: 'head' },
-        h('style', { type: 'text/css', class: 'CmsStory__style' }, storyCSS.value),
-      ),
-
-      h(
+    return () => !isMounted.value
+      ? null
+      : h(
         'div',
-        { class: 'CmsStory__viewport' },
-        h(
-          Transition,
-          { name: `${transitionName.value}--${transitionDirection.value}` },
-          () => h(
-            KeepAlive,
-            null,
-            currentPage.value
-              ? h(CmsBlock, {
-                'key': currentPage.value.id,
-                'onUpdate:errors': onUpdateErrors,
-                'class': 'CmsStory__page',
-                'block': currentPage.value,
-                'modelValue': {
-                  ...props.modelValue,
-                  $i18n: i18n,
-                },
-                'onUpdate:modelValue': onUpdateModelValue,
-              })
-              : null,
+        {
+          class: ['CmsStory', ...themeClassNames.value],
+          style: storyStyleProp.value,
+        },
+        [
+          // Story <style> element in <head>
+          h(
+            Teleport,
+            { to: 'head' },
+            h('style', { type: 'text/css', class: 'CmsStory__style' }, storyCSS.value),
           ),
-        ),
-      ),
-    ])
+
+          h(
+            'div',
+            { class: 'CmsStory__viewport' },
+            h(
+              Transition,
+              { name: `${transitionName.value}--${transitionDirection.value}` },
+              () => h(
+                KeepAlive,
+                null,
+                currentPage.value
+                  ? h(CmsBlock, {
+                    'key': currentPage.value.id,
+                    'onUpdate:errors': onUpdateErrors,
+                    'class': 'CmsStory__page',
+                    'block': currentPage.value,
+                    'modelValue': {
+                      ...props.modelValue,
+                      $i18n: i18n,
+                    },
+                    'onUpdate:modelValue': onUpdateModelValue,
+                  })
+                  : null,
+              ),
+            ),
+          ),
+        ],
+      )
   },
 }
 </script>

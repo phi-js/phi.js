@@ -1,5 +1,8 @@
 <script setup>
 import { ref, watch, watchEffect, computed, defineComponent, h, Teleport, provide } from 'vue'
+
+import { colorScheme } from '@/packages/ui'
+
 import { sanitizeStory, getStorySchema, useThemes } from '../../functions'
 import { CmsBlockEditor } from '../CmsBlockEditor'
 
@@ -123,12 +126,19 @@ if (sanitizedStory.value?.themes) {
     { immediate: true },
   )
 }
+
+const storyStyleProp = computed(() => ({
+  ...sanitizedStory.value.css?.style,
+  ...sanitizedStory.value.css?.[`style-${colorScheme.value}`],
+}))
+
 </script>
 
 <template>
   <div
     class="CmsStoryEditor"
     :class="storyClassNames"
+    :style="storyStyleProp"
   >
     <StyleTag />
 

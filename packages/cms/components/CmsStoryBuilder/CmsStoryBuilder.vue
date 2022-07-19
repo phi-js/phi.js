@@ -196,8 +196,8 @@ if (innerStory.value?.themes) {
 
         <template #right>
           <div
-            v-show="!contentSlot"
             class="CmsStoryBuilder__controls"
+            :class="{'CmsStoryBuilder__controls--hidden': !!contentSlot}"
           >
             <UiIcon
               class="CmsStoryBuilder__controlItem"
@@ -368,7 +368,6 @@ if (innerStory.value?.themes) {
     <UiWindow
       v-model:open="isModelExplorerOpen"
       name="phi"
-      class="CmsStoryBuilder__controls"
     >
       <template #header>
         <UiItem

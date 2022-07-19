@@ -6,5 +6,7 @@
 
   &__contents {
     padding: 12px;
+    margin: auto;
+    max-width: var(--ui-content-width);
   }
 }
