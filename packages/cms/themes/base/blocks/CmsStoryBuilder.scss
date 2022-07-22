@@ -4,6 +4,41 @@
 
   &__body {
     flex: 1;
+
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__sidebar {
+    background-color: #525659;
+
+    // must not have padding or borders
+    // since this is the CONTAINER side element which shows/hides by setting width:0
+    margin: 0;
+    padding: 0;
+
+    transition: max-width var(--ui-duration-snap);
+
+    white-space: nowrap;
+
+    &--visible {
+      max-width: 180px;
+    }
+
+    &--hidden {
+      overflow: hidden;
+      max-width: 0;
+      box-sizing: content-box !important;
+    }
+  }
+
+  &__pageList {
+    padding: 36px 24px;
+    padding-right: 12px;
   }
 
   // Chain of height
@@ -122,13 +157,17 @@
 
   &__tabItem {
     @extend .ui--clickable;
+    user-select: none;
 
     &--sitemap {
       white-space: nowrap;
-
       strong {
         color: var(--ui-color-primary);
       }
+    }
+
+    &--sitemap-open {
+      background-color: var(--ui-color-hover);
     }
   }
 
@@ -165,6 +204,25 @@
           flex: 1;
         }
       }
+    }
+  }
+}
+
+
+// Sidebar in mobile
+@media (max-width:500px) {
+  .CmsStoryBuilder {
+    &__body {
+      position: relative;
+    }
+
+    &__sidebar {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+      overflow-y: auto;
     }
   }
 }

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watchEffect, nextTick } from 'vue'
-import { UiItem, UiDrawer, UiInput, UiIcon } from '../../../ui'
+import { UiItem, UiDetails, UiInput } from '../../../ui'
 import { VmStatement } from '../../../vm'
 
 const props = defineProps({
@@ -24,14 +24,22 @@ function emitUpdate() {
   emit('update:story', { ...props.story, methods: storyMethods.value })
 }
 
-function appendMethod() {
-  endangeredIndex.value = -1
+const newMethod = ref({
+  name: '',
+  do: { chain: [] },
+})
 
-  const newMethod = {
+function resetNewMethod() {
+  newMethod.value = {
     name: '',
     do: { chain: [] },
   }
-  storyMethods.value.push(newMethod)
+}
+
+function appendMethod() {
+  storyMethods.value.push(newMethod.value)
+  emitUpdate()
+  resetNewMethod()
 
   // Expand newly created element
   nextTick(() => {
@@ -44,7 +52,6 @@ function deleteMethodAt(i) {
   emitUpdate()
 }
 
-const endangeredIndex = ref(-1)
 </script>
 
 <template>
@@ -52,45 +59,62 @@ const endangeredIndex = ref(-1)
     ref="el"
     class="StoryMethodsEditor"
   >
-    <details
+    <UiDetails
       v-for="(method, i) in storyMethods"
       :key="i"
+      group="StoryMethodsEditor"
       class="StoryMethodsEditor__method"
-      :class="{'StoryMethodsEditor__method--endangered': endangeredIndex === i}"
+      :text="method.name || '...'"
+      @delete="deleteMethodAt(i)"
     >
-      <summary>
-        <UiItem
-          :text="method.name || '...'"
-        >
-          <template #actions>
-            <UiIcon
-              src="mdi:close"
-              @click="deleteMethodAt(i)"
-              @mouseenter="endangeredIndex = i"
-              @mouseleave="endangeredIndex = -1"
-            />
-          </template>
-        </UiItem>
-      </summary>
-      <section>
+      <!-- <UiInput
+        v-model="storyMethods[i].name"
+        type="text"
+        placeholder="Function name"
+        @update:model-value="emitUpdate()"
+      /> -->
+      <VmStatement
+        v-model="storyMethods[i].do"
+        @update:model-value="emitUpdate()"
+      />
+    </UiDetails>
+
+    <UiDetails
+      v-slot="{ close }"
+      group="StoryMethodsEditor"
+      text="Crear función"
+    >
+      <form @submit.prevent="appendMethod(); close();">
         <UiInput
-          v-model="storyMethods[i].name"
+          v-model="newMethod.name"
           type="text"
           placeholder="Function name"
-          @update:model-value="emitUpdate()"
         />
-        <VmStatement
-          v-model="storyMethods[i].do"
-          @update:model-value="emitUpdate()"
-        />
-      </section>
-    </details>
-
-    <UiItem
-      icon="mdi:plus"
-      text="Crear función"
-      class="StoryMethodsEditor__adder"
-      @click="appendMethod()"
-    />
+        <footer>
+          <button
+            type="submit"
+            class="UiButton"
+          >
+            Create
+          </button>
+          <button
+            type="button"
+            class="UiButton UiButton--cancel"
+            @click="resetNewMethod(); close();"
+          >
+            Cancel
+          </button>
+        </footer>
+      </form>
+    </UiDetails>
   </div>
 </template>
+
+<style lang="scss">
+.StoryMethodsEditor {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+</style>

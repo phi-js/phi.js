@@ -7,11 +7,11 @@ import { ref, watch, computed } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { UiWindow, UiTabs, UiTab, UiInput } from '@/packages/ui'
 
-import BlockCssEditor from '../CmsBlockEditor/BlockCssEditor.vue'
+// import BlockCssEditor from '../CmsBlockEditor/BlockCssEditor.vue'
 import ListenersEditor from '../ListenersEditor/ListenersEditor.vue'
 import StoryDictionaryEditor from './StoryDictionaryEditor.vue'
 import StoryMethodsEditor from './StoryMethodsEditor.vue'
-import CmsThemePicker from '../CmsThemePicker/CmsThemePicker.vue'
+// import CmsThemePicker from '../CmsThemePicker/CmsThemePicker.vue'
 import CmsStoryStyle from '../CmsStoryStyle/CmsStoryStyle.vue'
 
 const props = defineProps({
@@ -74,6 +74,7 @@ function emitCurrentPageUpdate() {
 const i18n = useI18n({
   en: {
     'StoryEditorWindow.events': 'Events',
+    'StoryEditorWindow.code': 'Code',
     'StoryEditorWindow.global': 'Global',
     'StoryEditorWindow.i18n': 'Languages',
     'StoryEditorWindow.methods': 'Functions',
@@ -89,6 +90,7 @@ const i18n = useI18n({
   },
   es: {
     'StoryEditorWindow.events': 'Eventos',
+    'StoryEditorWindow.code': 'Código',
     'StoryEditorWindow.global': 'Global',
     'StoryEditorWindow.i18n': 'Idiomas',
     'StoryEditorWindow.methods': 'Funciones',
@@ -248,16 +250,37 @@ const availableEvents = computed(() => [
         </UiTab>
 
         <UiTab
-          value="events"
-          icon="mdi:gesture-tap"
-          :text="i18n.t('StoryEditorWindow.events')"
+          value="code"
+          icon="mdi:code-json"
+          :text="i18n.t('StoryEditorWindow.code')"
         >
-          <ListenersEditor
-            v-model="storyEvents"
-            class="StoryEditorWindow__events"
-            :available-events="availableEvents"
-          />
+          <UiTabs>
+            <UiTab
+              value="events"
+              icon="mdi:gesture-tap"
+              :text="i18n.t('StoryEditorWindow.events')"
+            >
+              <ListenersEditor
+                v-model="storyEvents"
+                class="StoryEditorWindow__events"
+                :available-events="availableEvents"
+              />
+            </UiTab>
+
+            <UiTab
+              value="methods"
+              icon="mdi:variable"
+              :text="i18n.t('StoryEditorWindow.methods')"
+            >
+              <StoryMethodsEditor
+                v-model:story="innerStory"
+                @update:story="emitStoryUpdate"
+              />
+            </UiTab>
+          </UiTabs>
         </UiTab>
+
+
 
         <UiTab
           value="i18n"
@@ -265,17 +288,6 @@ const availableEvents = computed(() => [
           :text="i18n.t('StoryEditorWindow.i18n')"
         >
           <StoryDictionaryEditor
-            v-model:story="innerStory"
-            @update:story="emitStoryUpdate"
-          />
-        </UiTab>
-
-        <UiTab
-          value="methods"
-          icon="mdi:variable"
-          :text="i18n.t('StoryEditorWindow.methods')"
-        >
-          <StoryMethodsEditor
             v-model:story="innerStory"
             @update:story="emitStoryUpdate"
           />

@@ -26,31 +26,24 @@ const innerValue = ref()
 watchEffect(() => innerValue.value = { ...props.modelValue })
 
 function emitUpdate() {
+  // use first .XXXXX declaration to detemrine name
+  const foundName = innerValue.value.css.match(/\.([a-zA-Z0-9_-]+)/)?.[1]
+  if (foundName) {
+    innerValue.value.name = foundName
+  } else {
+    innerValue.value.name = 'Untitled Class'
+  }
+
   emit('update:modelValue', { ...innerValue.value })
-}
-
-const oldName = ref(props.modelValue?.name)
-function onNameChanged(newName) {
-  // Update class name in css
-  innerValue.value.css = innerValue.value.css.replaceAll(`.${oldName.value} `, `.${newName} `)
-
-  emitUpdate()
-  emit('rename', { newName, oldName: oldName.value })
-  oldName.value = newName
 }
 </script>
 
 <template>
-  <div class="CssClassEditor">
-    <UiInput
-      v-model="innerValue.name"
-      @update:model-value="onNameChanged"
-    />
-    <UiInput
-      v-model="innerValue.css"
-      type="code"
-      lang="css"
-      @update:model-value="emitUpdate"
-    />
-  </div>
+  <UiInput
+    v-model="innerValue.css"
+    class="CssClassEditor"
+    type="code"
+    lang="css"
+    @update:model-value="emitUpdate"
+  />
 </template>

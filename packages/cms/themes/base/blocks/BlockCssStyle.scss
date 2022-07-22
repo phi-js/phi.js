@@ -1,5 +1,3 @@
-@import '@/packages/ui/themes/base/components/UiForm--wide.scss';
-
 .BlockCssStyle {
   padding: 8px;
   display: flex;
@@ -8,7 +6,6 @@
 
   .UiDetails {
     &__contents {
-      @extend .UiForm--wide;
       padding: 6px 12px 24px 12px;
     }
   }

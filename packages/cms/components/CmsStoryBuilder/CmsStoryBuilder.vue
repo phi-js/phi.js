@@ -3,6 +3,7 @@ import { provide, ref, watchEffect, computed, watch, useSlots } from 'vue'
 import { CmsStory } from '../CmsStory'
 import { CmsStoryEditor } from '../CmsStoryEditor'
 import { CmsStoryGraph } from '../CmsStoryGraph'
+import StoryPageList from './StoryPageList.vue'
 import StoryEditorWindow from '../CmsStoryEditor/StoryEditorWindow.vue'
 import { useThemes } from '../../functions'
 
@@ -62,8 +63,8 @@ watch(
 const i18n = useI18n({
   en: {
     'CmsStoryBuilder.Editor': 'Editor',
-    'CmsStoryBuilder.Styles': 'Styles',
-    'CmsStoryBuilder.Events': 'Events',
+    'CmsStoryBuilder.Style': 'Style',
+    'CmsStoryBuilder.Code': 'Code',
     'CmsStoryBuilder.Languages': 'Languages',
     'CmsStoryBuilder.Source': 'Source',
     'CmsStoryBuilder.Preview': 'Preview',
@@ -74,8 +75,8 @@ const i18n = useI18n({
   },
   es: {
     'CmsStoryBuilder.Editor': 'Editor',
-    'CmsStoryBuilder.Styles': 'Estilos',
-    'CmsStoryBuilder.Events': 'Eventos',
+    'CmsStoryBuilder.Style': 'Estilo',
+    'CmsStoryBuilder.Code': 'Código',
     'CmsStoryBuilder.Languages': 'Idiomas',
     'CmsStoryBuilder.Source': 'Fuente',
     'CmsStoryBuilder.Preview': 'Vista previa',
@@ -86,13 +87,18 @@ const i18n = useI18n({
   },
 })
 
+const currentPageId = ref()
+
 // inner story value
 const innerStory = ref()
 watchEffect(() => {
   innerStory.value = JSON.parse(JSON.stringify(props.story))
+
+  if (!currentPageId.value) {
+    currentPageId.value = props.story?.pages?.[0]?.id
+  }
 })
 
-const currentPageId = ref(props.story?.pages?.[0]?.id)
 const currentPage = computed(() => {
   if (!innerStory.value?.pages?.length) {
     return null
@@ -231,30 +237,31 @@ if (innerStory.value?.themes) {
           <div class="CmsStoryBuilder__tabOptions">
             <UiItem
               class="CmsStoryBuilder__tabItem CmsStoryBuilder__tabItem--sitemap"
+              :class="{'CmsStoryBuilder__tabItem--sitemap-open': isSitemapOpen}"
               @click="isSitemapOpen = !isSitemapOpen"
               @click-actions="isSitemapOpen = !isSitemapOpen"
             >
               <template #default>
-                <strong>#</strong><span>{{ currentPage?.info?.text }}</span>
+                <strong>#</strong><span>{{ currentPage?.hash }}</span>
               </template>
               <template #actions>
-                <UiIcon src="mdi:menu-down" />
+                <UiIcon :src="isSitemapOpen ? 'mdi:close' : 'mdi:menu-down'" />
               </template>
             </UiItem>
 
             <UiItem
               class="CmsStoryBuilder__tabItem"
-              :text="i18n.t('CmsStoryBuilder.Styles')"
+              :text="i18n.t('CmsStoryBuilder.Style')"
               icon="mdi:palette-advanced"
               :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'style'}"
               @click="windowTab = 'style'"
             />
             <UiItem
-              :text="i18n.t('CmsStoryBuilder.Events')"
+              :text="i18n.t('CmsStoryBuilder.Code')"
               icon="mdi:gesture-tap"
               class="CmsStoryBuilder__tabItem"
               :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'events'}"
-              @click="windowTab = 'events'"
+              @click="windowTab = 'code'"
             />
             <UiItem
               :text="i18n.t('CmsStoryBuilder.Languages')"
@@ -263,13 +270,13 @@ if (innerStory.value?.themes) {
               :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'i18n'}"
               @click="windowTab = 'i18n'"
             />
-            <UiItem
+            <!-- <UiItem
               :text="i18n.t('CmsStoryBuilder.Source')"
               icon="mdi:code-json"
               class="CmsStoryBuilder__tabItem"
               :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'source'}"
               @click="windowTab = 'source'"
-            />
+            /> -->
 
             <slot name="corner" />
           </div>
@@ -283,14 +290,15 @@ if (innerStory.value?.themes) {
           <div class="CmsStoryBuilder__tabOptions">
             <UiItem
               class="CmsStoryBuilder__tabItem CmsStoryBuilder__tabItem--sitemap"
+              :class="{'CmsStoryBuilder__tabItem--sitemap-open': isSitemapOpen}"
               @click="isSitemapOpen = !isSitemapOpen"
               @click-actions="isSitemapOpen = !isSitemapOpen"
             >
               <template #default>
-                <strong>#</strong><span>{{ currentPage?.info?.text }}</span>
+                <strong>#</strong><span>{{ currentPage?.hash }}</span>
               </template>
               <template #actions>
-                <UiIcon src="mdi:menu-down" />
+                <UiIcon :src="isSitemapOpen ? 'mdi:close' : 'mdi:menu-down'" />
               </template>
             </UiItem>
 
@@ -311,38 +319,56 @@ if (innerStory.value?.themes) {
 
 
     <div
-      v-show="contentSlot"
+      v-if="contentSlot"
       class="CmsStoryBuilder__body"
     >
-      <Component :is="contentSlot" />
-      <!-- <slot :name="`contents-data`">
-        You have content, apparently ?
-      </slot> -->
+      <div class="CmsStoryBuilder__content">
+        <Component :is="contentSlot" />
+      </div>
     </div>
-    <UiContentWrapper
-      v-show="!contentSlot"
+    <div
+      v-if="!contentSlot"
       class="CmsStoryBuilder__body"
-      :size="contentSize"
     >
-      <CmsStoryEditor
-        v-if="isEditorLoaded"
-        v-show="currentTab == 'editor'"
-        v-model:current-page-id="currentPageId"
-        v-model:story="innerStory"
-        @update:story="onUpdateStory()"
-      />
+      <div
+        class="CmsStoryBuilder__sidebar"
+        :class="{
+          'CmsStoryBuilder__sidebar--visible': isSitemapOpen,
+          'CmsStoryBuilder__sidebar--hidden': !isSitemapOpen,
+        }"
+      >
+        <StoryPageList
+          v-model:current-page-id="currentPageId"
+          v-model:story="innerStory"
+          class="CmsStoryBuilder__pageList"
+          @update:story="onUpdateStory()"
+        />
+      </div>
 
-      <CmsStory
-        v-if="currentTab != 'editor'"
-        v-model:current-page-id="currentPageId"
-        :model-value="props.modelValue"
-        :story="innerStory"
-        @update:model-value="emit('update:modelValue', $event)"
-        @story-emit="emit('story-emit', $event)"
-      />
-    </UiContentWrapper>
+      <UiContentWrapper
+        :size="contentSize"
+        class="CmsStoryBuilder__content"
+      >
+        <CmsStoryEditor
+          v-if="isEditorLoaded"
+          v-show="currentTab == 'editor'"
+          v-model:current-page-id="currentPageId"
+          v-model:story="innerStory"
+          @update:story="onUpdateStory()"
+        />
 
-    <UiDialog
+        <CmsStory
+          v-if="currentTab != 'editor'"
+          v-model:current-page-id="currentPageId"
+          :model-value="props.modelValue"
+          :story="innerStory"
+          @update:model-value="emit('update:modelValue', $event)"
+          @story-emit="emit('story-emit', $event)"
+        />
+      </UiContentWrapper>
+    </div>
+
+    <!-- <UiDialog
       v-slot="{ close }"
       v-model:open="isSitemapOpen"
     >
@@ -354,7 +380,7 @@ if (innerStory.value?.themes) {
           @update:story="onUpdateStory()"
         />
       </div>
-    </UiDialog>
+    </UiDialog> -->
 
     <StoryEditorWindow
       v-model:story="innerStory"

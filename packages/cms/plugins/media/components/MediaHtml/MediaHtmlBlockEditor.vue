@@ -330,7 +330,7 @@ async function doTranslation() {
 
         <template #right>
           <UiButton
-            v-if="innerValue == '<p></p>'"
+            v-show="curLanguage != 'en'"
             label="Translate"
             icon="mdi:translate"
             class="UiButton--cancel"

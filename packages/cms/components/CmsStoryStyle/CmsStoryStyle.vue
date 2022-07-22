@@ -2,10 +2,11 @@
 import { onMounted, ref, watch, reactive, nextTick } from 'vue'
 
 import { colorScheme, UiTabs, UiTab, UiDetails } from '@/packages/ui'
+import CssStyleEditor from '@/packages/ui/components/CssStyleEditor/CssStyleEditor.vue'
 
 import { useStorySettings } from '../../functions'
 import CmsThemePicker from '../CmsThemePicker/CmsThemePicker.vue'
-import CssStyleEditor from '../CssStyleEditor/CssStyleEditor.vue'
+import CssClassManager from '../CssClassManager/CssClassManager.vue'
 
 const settings = useStorySettings()
 const uploadsEndpoint = settings.uploads.assets
@@ -26,6 +27,9 @@ watch(
     innerStory.value = { css: {}, ...newStory }
     if (!innerStory.value.css?.style) {
       innerStory.value.css.style = {}
+    }
+    if (!innerStory.value.css?.classes) {
+      innerStory.value.css.classes = []
     }
   },
   { immediate: true },
@@ -57,19 +61,7 @@ const drawers = [
   {
     title: 'Margins',
     properties: {
-      '--ui-content-width': {
-        title: 'Max. content width',
-        format: 'range',
-        props: {
-          min: 250,
-          max: 1000,
-          step: 1,
-        },
-
-        filterInput: (value) => parseInt(value),
-        filterOutput: (intValue) => `${intValue}px`,
-      },
-
+      '--ui-content-width': { title: 'Max. content width', format: 'css-unit' },
       '--cms-page-margin': { format: 'css-spacing' },
     },
   },
@@ -123,9 +115,13 @@ async function getCurrentCssValues() {
       />
     </UiTab>
 
-    <!-- <UiTab text="Classes">
-      ...Class manager
-    </UiTab> -->
+    <UiTab text="Classes">
+      <CssClassManager
+        v-model="innerStory.css.classes"
+        class="CmsStoryStyle__classes"
+        @update:model-value="emitUpdate"
+      />
+    </UiTab>
 
     <UiTab text="Properties">
       <div class="CmsStoryStyle__properties">
@@ -182,6 +178,7 @@ async function getCurrentCssValues() {
 
 <style lang="scss">
 .CmsStoryStyle {
+  &__classes,
   &__properties {
     display: flex;
     flex-direction: column;

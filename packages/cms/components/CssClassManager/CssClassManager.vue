@@ -15,12 +15,9 @@ Manages (CRUD) an ARRAY of CSSCLASS objects:
     description,
   }
 ]
-
-and a SELECTION.  An array of selected class names
-i.e. ['myClass', 'someOtherClass']
 */
-import { ref, watch, computed, watchEffect } from 'vue'
-import { UiDrawer, UiItem, UiIcon } from '../../../ui'
+import { ref, watchEffect } from 'vue'
+import { UiDetails, UiItem } from '../../../ui'
 import CssClassEditor from './CssClassEditor.vue'
 
 const props = defineProps({
@@ -29,96 +26,45 @@ const props = defineProps({
     required: false,
     default: null,
   },
-
-  selection: {
-    type: Array,
-    required: false,
-    default: () => [],
-  },
 })
 
-const emit = defineEmits(['update:modelValue', 'update:selection'])
+const emit = defineEmits(['update:modelValue'])
 
 const arrClasses = ref([])
 watchEffect(() => {
-  arrClasses.value = props.modelValue?.length ? JSON.parse(JSON.stringify(props.modelValue)) : []
+  arrClasses.value = props.modelValue?.length ? [ ...props.modelValue ] : []
 })
 
 function emitUpdate() {
   emit('update:modelValue', [ ...arrClasses.value ])
 }
 
-/* Manage selection */
-const innerSelection = ref([])
-watch(
-  () => props.selection,
-  (newValue) => {
-    innerSelection.value = Array.isArray(newValue) ? newValue.concat() : []
-  },
-  { immediate: true },
-)
-
-// isSelected[class NAME] = true|false
-const isSelected = computed(() => {
-  const retval = {}
-  innerSelection.value.forEach((className) => retval[className] = true)
-
-  return retval
-})
-
-function toggleClassName(className) {
-  const foundIndex = innerSelection.value.indexOf(className)
-  if (foundIndex === -1) {
-    innerSelection.value.push(className)
-  } else {
-    innerSelection.value.splice(foundIndex, 1)
-  }
-
-  emit('update:selection', innerSelection.value.concat())
-}
-
-function onClassRename({ newName, oldName }) {
-  innerSelection.value = innerSelection.value.map((className) => className == oldName ? newName : className)
-  emit('update:selection', innerSelection.value.concat())
-}
-
-
-
 function onDeleteClass(index) {
-  const deletedClass = arrClasses.value[index]
   arrClasses.value.splice(index, 1)
   emitUpdate()
-
-  // remove class from selection
-  innerSelection.value = innerSelection.value.filter((className) => className != deletedClass.name)
-  emit('update:selection', innerSelection.value.concat())
 }
 
-const isDrawerOpen = ref([]) // isDrawerOpen[drawer index] = true|false
 
-function createNewClass() {
-  const newClass = {
+const isCreatorOpen = ref(false)
+
+const newClass = ref({
+  name: 'new-class',
+  css: '.new-class {\n\n}',
+})
+
+function onCreatorSubmit() {
+  arrClasses.value.push({ ...newClass.value })
+  emitUpdate()
+  resetCreator()
+}
+
+function resetCreator() {
+  isCreatorOpen.value = false
+  newClass.value = {
     name: 'new-class',
     css: '.new-class {\n\n}',
   }
-
-  arrClasses.value.push(newClass)
-  emitUpdate()
-  isDrawerOpen.value[arrClasses.value.length - 1] = true
-
-  // select newly created class
-  innerSelection.value.push(newClass.name)
-  emit('update:selection', innerSelection.value.concat())
 }
-
-/*
-Class names present in selection but not present in arrClasses (modelValue)
-*/
-const orphanedClasses = computed(() => innerSelection.value.filter((className) =>
-  !arrClasses.value.find((objClass) => objClass.name == className)))
-
-const endangeredIndex = ref(-1)
-
 </script>
 
 <template>
@@ -127,46 +73,49 @@ const endangeredIndex = ref(-1)
       v-for="(cssClass, i) in arrClasses"
       :key="i"
     >
-      <details
-        :open="isDrawerOpen[i]"
+      <UiDetails
         class="CssClassManager__classItem"
-        :class="{
-          'CssClassManager__classItem--selected': isSelected[cssClass.name],
-          'CssClassManager__classItem--endangered': endangeredIndex === i
-        }"
+        :text="cssClass.text || cssClass.name"
+        :subtext="cssClass.text ? '.' + cssClass.name : ''"
+        @delete="onDeleteClass(i)"
       >
-        <summary>
-          <UiItem
-            :icon="isSelected[cssClass.name] ? 'mdi:checkbox-marked' : 'mdi:checkbox-blank-outline'"
-            :text="cssClass.text || cssClass.name"
-            :subtext="cssClass.text ? '.' + cssClass.name : ''"
-            @click-icon.stop.prevent="toggleClassName(cssClass.name)"
-          >
-            <template #actions>
-              <UiIcon
-                src="mdi:close"
-                @click="onDeleteClass(i)"
-                @mouseenter="endangeredIndex = i"
-                @mouseleave="endangeredIndex = -1"
-              />
-            </template>
-          </UiItem>
-        </summary>
-        <section>
-          <CssClassEditor
-            v-model="arrClasses[i]"
-            @update:model-value="emitUpdate()"
-            @rename="onClassRename"
-          />
-        </section>
-      </details>
+        <template #default>
+          <section>
+            <CssClassEditor
+              v-model="arrClasses[i]"
+              @update:model-value="emitUpdate()"
+            />
+          </section>
+        </template>
+      </UiDetails>
     </template>
 
-    <UiItem
-      icon="mdi:plus"
+    <UiDetails
+      v-model:open="isCreatorOpen"
       text="Add class"
       class="CssClassManager__adder"
-      @click="createNewClass"
-    />
+    >
+      <form @submit.prevent="onCreatorSubmit">
+        <CssClassEditor
+          v-model="newClass"
+        />
+
+        <footer>
+          <button
+            type="submit"
+            class="UiButton"
+          >
+            Create
+          </button>
+          <button
+            type="button"
+            class="UiButton UiButton--cancel"
+            @click="resetCreator"
+          >
+            Cancel
+          </button>
+        </footer>
+      </form>
+    </UiDetails>
   </div>
 </template>

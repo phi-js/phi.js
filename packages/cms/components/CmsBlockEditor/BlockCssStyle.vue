@@ -1,12 +1,14 @@
 <script setup>
 import { ref, watch } from 'vue'
-
 import { useI18n } from '@/packages/i18n'
-import { UiInput, UiDetails } from '@/packages/ui'
+import { UiDetails } from '@/packages/ui'
 
-import SpacingEditor from './props/SpacingEditor.vue'
-import PropBackground from './props/PropBackground.vue'
 import { useStorySettings } from '../../functions'
+import CssStyleEditor from '@/packages/ui/components/CssStyleEditor/CssStyleEditor.vue'
+import CssBackgroundEditor from '@/packages/ui/components/CssStyleEditor/CssBackgroundEditor.vue'
+
+// import SpacingEditor from './props/SpacingEditor.vue'
+// import PropBackground from './props/PropBackground.vue'
 
 const props = defineProps({
   /*
@@ -43,38 +45,38 @@ function emitUpdate() {
 
 const i18n = useI18n({
   en: {
-    'BlockCssStyle.ContentWidth': 'Max. content width',
-    'BlockCssStyle.Background': 'Background',
+    'BlockCssStyle.background': 'Background',
+    'BlockCssStyle.Dimensions': 'Dimensions',
     'BlockCssStyle.Margin': 'Margin',
     'BlockCssStyle.Padding': 'Padding',
-    'BlockCssStyle.Font': 'Font',
-    'BlockCssStyle.colorBackground': 'Background',
-    'BlockCssStyle.colorForeground': 'Color',
-    'BlockCssStyle.colorPrimary': 'Contrast',
-    'BlockCssStyle.colorDanger': 'Warning',
+
+    'BlockCssStyle.width': 'Width',
+    'BlockCssStyle.height': 'Height',
+    'BlockCssStyle.minWidth': 'Min. width',
+    'BlockCssStyle.minHeight': 'Min. height',
   },
 
   es: {
-    'BlockCssStyle.ContentWidth': 'Ancho máximo del contenido',
-    'BlockCssStyle.Background': 'Fondo',
+    'BlockCssStyle.background': 'Fondo',
+    'BlockCssStyle.Dimensions': 'Dimensiones',
     'BlockCssStyle.Margin': 'Márgen',
     'BlockCssStyle.Padding': 'Relleno',
-    'BlockCssStyle.Font': 'Fuente',
-    'BlockCssStyle.colorBackground': 'Fondo',
-    'BlockCssStyle.colorForeground': 'Color',
-    'BlockCssStyle.colorPrimary': 'Contraste',
-    'BlockCssStyle.colorDanger': 'Advertencia',
+
+    'BlockCssStyle.width': 'Ancho',
+    'BlockCssStyle.height': 'Alto',
+    'BlockCssStyle.minWidth': 'Ancho min.',
+    'BlockCssStyle.minHeight': 'Alto min.',
   },
 })
 </script>
 
 <template>
-  <div class="BlockCssStyle">
+  <div class="BlockCssStyle UiForm--wide">
     <UiDetails
       group="BlockCssStyle"
-      :text="i18n.t('BlockCssStyle.Background')"
+      :text="i18n.t('BlockCssStyle.background')"
     >
-      <PropBackground
+      <CssBackgroundEditor
         v-model="innerValue"
         :endpoint="uploadsEndpoint"
         @update:model-value="emitUpdate()"
@@ -83,35 +85,19 @@ const i18n = useI18n({
 
     <UiDetails
       group="BlockCssStyle"
-      :text="i18n.t('BlockCssStyle.Font')"
+      :text="i18n.t('BlockCssStyle.Dimensions')"
     >
-      <UiInput
-        v-model="innerValue['color']"
-        :label="i18n.t('BlockCssStyle.colorForeground')"
-        type="color-css"
-        @update:model-value="emitUpdate()"
-      />
-      <UiInput
-        v-model="innerValue['--ui-color-primary']"
-        :label="i18n.t('BlockCssStyle.colorPrimary')"
-        type="color-css"
-        @update:model-value="emitUpdate()"
-      />
-      <UiInput
-        v-model="innerValue['--ui-color-danger']"
-        :label="i18n.t('BlockCssStyle.colorDanger')"
-        type="color-css"
-        @update:model-value="emitUpdate()"
-      />
-    </UiDetails>
-
-    <UiDetails
-      group="BlockCssStyle"
-      :text="i18n.t('BlockCssStyle.Padding')"
-    >
-      <SpacingEditor
-        v-model="innerValue.padding"
-        empty-value="0"
+      <CssStyleEditor
+        v-model="innerValue"
+        :endpoint="uploadsEndpoint"
+        :schema="{
+          properties: {
+            'width': {title: i18n.t('BlockCssStyle.width'), format: 'css-unit'},
+            'height': {title: i18n.t('BlockCssStyle.height'), format: 'css-unit'},
+            'min-width': {title: i18n.t('BlockCssStyle.minWidth'), format: 'css-unit'},
+            'min-height': {title: i18n.t('BlockCssStyle.minHeight'), format: 'css-unit'},
+          }
+        }"
         @update:model-value="emitUpdate()"
       />
     </UiDetails>
@@ -120,9 +106,30 @@ const i18n = useI18n({
       group="BlockCssStyle"
       :text="i18n.t('BlockCssStyle.Margin')"
     >
-      <SpacingEditor
-        v-model="innerValue.margin"
-        empty-value="auto"
+      <CssStyleEditor
+        v-model="innerValue"
+        :endpoint="uploadsEndpoint"
+        :schema="{
+          properties: {
+            'margin': {format: 'css-spacing'},
+          }
+        }"
+        @update:model-value="emitUpdate()"
+      />
+    </UiDetails>
+
+    <UiDetails
+      group="BlockCssStyle"
+      :text="i18n.t('BlockCssStyle.Padding')"
+    >
+      <CssStyleEditor
+        v-model="innerValue"
+        :endpoint="uploadsEndpoint"
+        :schema="{
+          properties: {
+            'padding': {format: 'css-spacing'},
+          }
+        }"
         @update:model-value="emitUpdate()"
       />
     </UiDetails>

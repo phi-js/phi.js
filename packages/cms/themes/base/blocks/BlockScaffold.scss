@@ -188,6 +188,7 @@
   }
 
   &__item {
+    user-select: none;
     cursor: pointer;
     color: #ccc;
     --ui-item-padding: 8px 12px;
