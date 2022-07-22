@@ -1,4 +1,6 @@
-import { UiItem, UiItemEditor } from '@/packages/ui/components'
+import { h } from 'vue'
+import { UiItem } from '@/packages/ui/components'
+import MediaItemSettings from './MediaItemSettings.vue'
 
 export default {
   name: 'MediaItem',
@@ -9,8 +11,32 @@ export default {
 
   editor: {
     face: {
-      'component': UiItemEditor,
-      'v-model': 'block.props',
+      component: {
+        props: {
+          modelValue: {
+            type: Object,
+            required: false,
+            default: () => ({}),
+          },
+        },
+
+        render() {
+          return h(UiItem, {
+            ...this.modelValue.props,
+            text: this.modelValue.props?.text || 'Empty item',
+            icon: this.modelValue.props?.icon || 'mdi:help-rhombus',
+          })
+        },
+      },
     },
+
+    actions: [
+      {
+        id: 'MediaItem',
+        title: 'Item',
+        icon: 'mdi:card-account-details',
+        component: MediaItemSettings,
+      },
+    ],
   },
 }
