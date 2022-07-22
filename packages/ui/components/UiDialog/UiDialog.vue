@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
+
 const props = defineProps({
   open: {
     type: [String, Number, Boolean],
@@ -13,13 +14,33 @@ const props = defineProps({
     default: null,
   },
 })
+
 const emit = defineEmits(['update:open', 'open', 'close'])
 
+const refDialog = ref()
+
 const isOpen = ref(false)
+
+onMounted(() => {
+  isOpen.value = !!props.open
+  if (isOpen.value) {
+    refDialog.value.showModal()
+  } else if (refDialog.value) {
+    refDialog.value.close()
+  }
+})
+
 watch(
   () => props.open,
-  (newValue) => isOpen.value = !!newValue,
-  { immediate: true },
+  (newValue) => {
+    isOpen.value = !!newValue
+    if (isOpen.value) {
+      refDialog.value.showModal()
+    } else if (refDialog.value) {
+      refDialog.value.close()
+    }
+  },
+  // { immediate: true },
 )
 
 function open() {
@@ -29,38 +50,24 @@ function open() {
 }
 
 function close() {
+  refDialog.value.close()
   isOpen.value = false
   emit('update:open', isOpen.value)
   emit('close')
 }
 
-async function cancel() {
-  if (props.onCancel) {
-    let res = await props.onCancel()
-    if (res !== undefined && !res) {
-      return
+async function onDialogClose($event) {
+  if (!$event.target.returnValue) {
+    if (props.onCancel) {
+      let res = await props.onCancel()
+      if (res !== undefined && !res) {
+        return
+      }
     }
   }
+
   return close()
 }
-
-function escapeListener(event) {
-  if (event?.key === 'Escape') {
-    cancel()
-  }
-}
-
-watch(
-  isOpen,
-  (newValue) => {
-    if (newValue) {
-      document.addEventListener('keydown', escapeListener)
-    } else {
-      document.removeEventListener('keydown', escapeListener)
-    }
-  },
-  { immediate: true },
-)
 </script>
 
 <template>
@@ -81,114 +88,87 @@ watch(
       />
     </div>
 
-    <Teleport to="body">
-      <transition name="UiDialog__transition">
-        <div
-          v-show="isOpen"
-          class="UiDialog__widget"
-          :class="$attrs.class"
-        >
-          <div
-            class="UiDialog__scrim"
-            @click="cancel()"
-          />
+    <dialog
+      ref="refDialog"
+      class="UiDialog__dialog"
+      :open="isOpen"
+      @close="onDialogClose"
+    >
+      <div class="UiDialog__header">
+        <slot
+          name="header"
+          :close="close"
+        />
+      </div>
 
-          <div class="UiDialog__container">
-            <div
-              v-if="$slots.header"
-              class="UiDialog__header"
-            >
-              <slot
-                name="header"
-                :close="close"
-              />
-            </div>
+      <div
+        v-if="$slots.contents || $slots.default"
+        class="UiDialog__contents"
+      >
+        <slot
+          name="contents"
+          :close="close"
+        />
+        <slot
+          name="default"
+          :close="close"
+        />
+      </div>
 
-            <div
-              v-if="$slots.contents || $slots.default"
-              class="UiDialog__contents"
-            >
-              <slot
-                name="contents"
-                :close="close"
-              />
-              <slot
-                name="default"
-                :close="close"
-              />
-            </div>
-
-            <div
-              v-if="$slots.footer"
-              class="UiDialog__footer"
-            >
-              <slot
-                name="footer"
-                :close="close"
-              />
-            </div>
-          </div>
-        </div>
-      </transition>
-    </Teleport>
+      <div
+        v-if="$slots.footer"
+        class="UiDialog__footer"
+      >
+        <slot
+          name="footer"
+          :close="close"
+        />
+      </div>
+      <button
+        v-else
+        class="UiDialog__btnClose"
+        @click="close"
+      >
+        &times;
+      </button>
+    </dialog>
   </div>
 </template>
 
 <style lang="scss">
 .UiDialog {
-  &__widget {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 4; // !!! se pelea con el z-index de UiWindow (y otros elementos "fixed")
+  &__dialog {
+    z-index: 1;
 
-    display: flex;
-    justify-content: center;
-    align-items: baseline;
-    padding-top: 10%;
-  }
-
-  &__scrim {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-
-    z-index: -1;
-  }
-
-  &__container {
-    display: flex;
-    flex-direction: column;
-
-    width: 90vw;
-    max-width: 1000px;
-    max-height: 80%;
-    overflow: hidden;
-
+    border: 0;
+    border-radius: 5px;
     background-color: var(--ui-color-background);
-    border-radius: 4px;
-  }
+    color: var(--ui-color-foreground);
 
-  &__contents {
-    flex: 1;
-    overflow: auto;
-    max-height: 800px;
-  }
+    // min-width: 500px;
+    max-width: 70vw;
 
-  &__transition {
-    &-enter-active,
-    &-leave-active {
-      transition: opacity var(--ui-duration-snap);
+    &::backdrop {
+      background: rgba(0,0,0, 0.5);
     }
 
-    &-enter-from,
-    &-leave-to {
-      opacity: 0;
+    position: relative;
+  }
+
+  &__btnClose {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+
+    background: transparent;
+    color: inherit;
+    border: 0;
+    padding: 8px 12px;
+    border-radius: 5px;
+
+    cursor: pointer;
+    &:hover {
+      background-color: var(--ui-color-hover);
     }
   }
 }
