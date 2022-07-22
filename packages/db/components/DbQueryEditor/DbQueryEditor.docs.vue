@@ -1,15 +1,19 @@
 <script setup>
 import { ref } from 'vue'
 import { schema } from '../../samples.js'
-import DbQueryWhere from './DbQueryWhere.vue'
+import DbQueryEditor from './DbQueryEditor.vue'
 
-const where = ref()
-
+const query = ref()
 </script>
 
 <template>
   <div class="DbQueryEditor-docs">
     <h1>DbQueryEditor</h1>
+    <DbQueryEditor
+      v-model="query"
+      :schema="schema"
+    />
+
 
     <details>
       <summary>Schema</summary>
@@ -18,11 +22,6 @@ const where = ref()
       </section>
     </details>
 
-    <DbQueryWhere
-      v-model="where"
-      :schema="schema"
-    />
-
-    <pre>where: {{ where }}</pre>
+    <pre>query: {{ query }}</pre>
   </div>
 </template>
