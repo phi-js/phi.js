@@ -3,6 +3,8 @@ import { reactive, watch, computed, ref } from 'vue'
 import { UiOutput, UiPopover, UiItem, UiDialog } from '@/packages/ui'
 import { getProperty } from '@/packages/ui/helpers'
 
+import deduceColumns from '@/packages/ui/components/UiTable/deduceColumns'
+
 import DbColumnEditor from '../DbColumnManager/DbColumnEditor.vue'
 import DbColumnManager from '../DbColumnManager/DbColumnManager.vue'
 
@@ -60,7 +62,14 @@ const inner = reactive({
 
 watch(
   () => props.columns,
-  (newValue) => inner.columns = newValue,
+  (newValue) => {
+    inner.columns = newValue
+
+    if (!inner.columns?.length) {
+      inner.columns = deduceColumns(props.records)
+        .map((c) => ({ ...c, enabled: true, property: c.value }))
+    }
+  },
   { immediate: true },
 )
 
