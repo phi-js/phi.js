@@ -152,6 +152,7 @@
 
   /* Specific output formats */
   .UiOutput--format-textarea {
+    white-space: pre-wrap;
     max-height: 6rem;
     overflow: auto;
   }
