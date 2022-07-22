@@ -132,6 +132,16 @@ const onClickOutside = (evt) => {
     return
   }
 
+  // Another exception! If the element has disapeared, ignore
+  /*
+  This took a while to fix! When clicking on a item that disapears
+  (i.e. the "delete image" icon in CssBackgroundEditor)
+  the closest .UiWindow or data-tippy-root are now null, causing a blur and closing the blockScaffoldWindow.
+  */
+  if (!evt.target.closest('body')) {
+    return
+  }
+
   activeUid.value = null
   clearBlurListeners()
 }
