@@ -191,7 +191,6 @@ export default {
       padding: 8px 12px;
       font-size: 28px;
       border: 1px solid transparent;
-      color: #666;
 
       &.--selected {
         color: var(--ui-color-primary);
