@@ -126,7 +126,7 @@ const i18n = useI18n({
         :text="i18n.t('DbQueryEditor.From')"
         value="from"
       >
-        <div class="UiGroup details__contents">
+        <div class="UiGroup ">
           <UiInput
             v-model="innerQuery.from.source"
             label="source"
@@ -143,42 +143,70 @@ const i18n = useI18n({
         </div>
 
         <!-- ON -->
-        <div v-if="props.isNested">
-          <div
-            v-for="(joinCondition, i) in innerQuery.on"
-            :key="i"
-            class="UiGroup"
-          >
-            <UiInput
-              v-model="innerQuery.on[i].local"
-              label="local"
-              type="text"
-              @update:model-value="emitUpdate()"
-            />
-            <UiInput
-              v-model="innerQuery.on[i].foreign"
-              label="foreign"
-              type="text"
-              @update:model-value="emitUpdate()"
-            />
-            <UiIcon
-              class="ui--clickable"
-              src="mdi:close"
-              @click="innerQuery.on.splice(i,1); emitUpdate();"
+        <fieldset v-if="props.isNested">
+          <legend>ON</legend>
+          <div>
+            <select
+              v-model="innerQuery.single"
+              @change="emitUpdate()"
+            >
+              <option :value="true">
+                Uno
+              </option>
+              <option :value="false">
+                Muchos
+              </option>
+            </select>
+
+            <div
+              v-for="(joinCondition, i) in innerQuery.on"
+              :key="i"
+              class="UiGroup"
+            >
+              <UiInput
+                v-model="innerQuery.on[i].local"
+                label="local"
+                type="text"
+                @update:model-value="emitUpdate()"
+              />
+              <UiInput
+                v-model="innerQuery.on[i].foreign"
+                label="foreign"
+                type="text"
+                @update:model-value="emitUpdate()"
+              />
+              <UiIcon
+                src="mdi:close"
+                @click="innerQuery.on.splice(i,1); emitUpdate();"
+              />
+            </div>
+
+            <UiItem
+              icon="mdi:plus"
+              text="Agregar join"
+              @click="innerQuery.on.push({local:'', foreign:''})"
             />
           </div>
+        </fieldset>
 
-          <UiItem
-            class="ui--clickable"
-            icon="mdi:plus"
-            text="Agregar join"
-            @click="innerQuery.on.push({local:'', foreign:''})"
-          />
-        </div>
+        <fieldset v-if="isAllowed.properties">
+          <legend>{{ i18n.t('DbQueryEditor.Properties') }}</legend>
+          <div>
+            <DbQueryProperties
+              v-model="innerQuery.properties"
+              @update:model-value="emitUpdate()"
+            />
+          </div>
+        </fieldset>
+      </UiTab>
 
-
+      <UiTab
+        v-if="isAllowed.where"
+        :text="i18n.t('DbQueryEditor.Where')"
+        value="where"
+      >
         <!-- MATCH -->
-        <div class="details__contents">
+        <div>
           <div
             v-for="(_, i) in innerQuery.match"
             :key="i"
@@ -197,40 +225,19 @@ const i18n = useI18n({
               @update:model-value="emitUpdate()"
             />
             <UiIcon
-              class="ui--clickable"
               src="mdi:close"
               @click="innerQuery.match.splice(i,1); emitUpdate();"
             />
           </div>
 
           <UiItem
-            class="ui--clickable"
             icon="mdi:plus"
             text="Agregar match"
             @click="innerQuery.match.push({propertyName:'', propertyValue:''})"
           />
         </div>
-      </UiTab>
 
-      <UiTab
-        v-if="isAllowed.properties"
-        :text="i18n.t('DbQueryEditor.Properties')"
-        value="properties"
-      >
-        <div class="details__contents">
-          <DbQueryProperties
-            v-model="innerQuery.properties"
-            @update:model-value="emitUpdate()"
-          />
-        </div>
-      </UiTab>
-
-      <UiTab
-        v-if="isAllowed.where"
-        :text="i18n.t('DbQueryEditor.Where')"
-        value="where"
-      >
-        <div class="details__contents">
+        <div>
           <DbQueryWhere
             v-model="innerQuery.where"
             :schema="props.schema"
@@ -245,7 +252,7 @@ const i18n = useI18n({
           :text="i18n.t('DbQueryEditor.Limit')"
           value="limit"
         >
-          <div class="UiGroup details__contents">
+          <div class="UiGroup ">
             <UiInput
               v-model="innerQuery.limit"
               label="limit"
@@ -278,3 +285,11 @@ const i18n = useI18n({
     </UiTabs>
   </div>
 </template>
+
+<style lang="scss">
+.DbQueryEditor {
+  .UiTabs__contents {
+    padding: 8px;
+  }
+}
+</style>

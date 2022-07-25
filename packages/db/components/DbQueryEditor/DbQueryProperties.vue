@@ -89,18 +89,6 @@ function onPickerChange(newValue) {
             >
           </summary>
           <div class="details__contents">
-            <select
-              v-model="prop.value.single"
-              @change="emitInput()"
-            >
-              <option :value="true">
-                Uno
-              </option>
-              <option :value="false">
-                Muchos
-              </option>
-            </select>
-
             <DbQueryEditor
               v-model="prop.value"
               :is-nested="true"
