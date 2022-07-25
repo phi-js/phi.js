@@ -42,10 +42,20 @@ export default {
   },
 
   'string.empty'(value) {
+    // be nice
+    if (Array.isArray(value)) {
+      return value.length == 0
+    }
+
     return !value || !value.trim()
   },
 
   'string.nempty'(value) {
+    // be nice
+    if (Array.isArray(value)) {
+      return value.length > 0
+    }
+
     return value && !!value.trim()
   },
 }

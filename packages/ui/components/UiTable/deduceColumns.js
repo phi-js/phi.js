@@ -67,14 +67,14 @@ function populateColumns(record, hashColumns, prefix = '') {
     if (Array.isArray(propValue)) {
       hashColumns[columnName] = {
         title: columnName,
-        value: `$.${columnName}`,
+        value: columnName,
         type: 'array',
         items: { type: guessType(propValue?.[0], propName) },
       }
     } else {
       hashColumns[columnName] = {
         title: columnName,
-        value: `$.${columnName}`,
+        value: columnName,
         type: guessType(propValue, propName),
       }
     }

@@ -113,7 +113,9 @@ export default class VM {
    */
   stmtOperator(opName, field = null, args = null, localScope = null) {
     if (typeof this.operators[opName] == 'undefined') {
-      throw `undefined operator '${opName}'`
+      // throw `undefined operator '${opName}'`
+      console.warn(`undefined operator '${opName}'`)
+      return undefined
     }
 
     const fieldValue = getProperty(localScope, field)

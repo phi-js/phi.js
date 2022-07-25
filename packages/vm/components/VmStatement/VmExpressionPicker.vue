@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { availableFunctions } from '../../plugins/registerPlugin.js'
 import { useI18n } from '@/packages/i18n'
-import { UiItem, UiPopover, UiItemFinder } from '@/packages/ui'
+import { UiItem, UiDialog, UiItemFinder } from '@/packages/ui'
 
 const emit = defineEmits(['input'])
 
@@ -67,11 +67,7 @@ const i18n = useI18n({
 </script>
 
 <template>
-  <UiPopover
-    class="VmExpressionPicker"
-    placement="bottom-start"
-    :tippy="{offset: [-20, 0], theme: 'vm-picker-popup'}"
-  >
+  <UiDialog class="VmExpressionPicker">
     <template #trigger="{ isOpen }">
       <UiItem
         class="VmExpressionPicker__item"
@@ -86,31 +82,20 @@ const i18n = useI18n({
         @select-item="onSelectItem($event); close();"
       />
     </template>
-  </UiPopover>
+  </UiDialog>
 </template>
 
 <style lang="scss">
-.tippy-box[data-theme~='vm-picker-popup'] {
-  box-shadow: 1px 2px 4px #00000020;
-  // .tippy-arrow {
-  // }
-}
-
 .VmExpressionPicker {
-  &__contents {
-    min-width: 400px;
-    max-width: 97vw;
+  dialog {
+    width: 500px;
+    max-width: 95vw;
+
+    min-height: 50vh;
     max-height: 80vh;
 
-    .UiItemFinder__body {
-      padding: 6px;
-    }
-
     .FinderItem {
-      margin-bottom: 6px;
-      &:last-child {
-        margin-bottom: 0;
-      }
+      margin: 3px 0;
     }
   }
 }

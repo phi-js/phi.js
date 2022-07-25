@@ -24,9 +24,11 @@ const isOpen = ref(false)
 onMounted(() => {
   isOpen.value = !!props.open
   if (isOpen.value) {
-    refDialog.value.showModal()
+    refDialog.value?.showModal?.()
+    document.body.style.overflow = 'clip'
   } else if (refDialog.value) {
-    refDialog.value.close()
+    refDialog.value?.close?.()
+    document.body.style.overflow = null
   }
 })
 
@@ -35,22 +37,27 @@ watch(
   (newValue) => {
     isOpen.value = !!newValue
     if (isOpen.value) {
-      refDialog.value.showModal()
+      refDialog.value?.showModal?.()
+      document.body.style.overflow = 'clip'
     } else if (refDialog.value) {
-      refDialog.value.close()
+      refDialog.value?.close?.()
+      document.body.style.overflow = null
     }
   },
   // { immediate: true },
 )
 
 function open() {
+  refDialog.value?.showModal?.()
+  document.body.style.overflow = 'clip'
   isOpen.value = true
   emit('update:open', isOpen.value)
   emit('open')
 }
 
 function close() {
-  refDialog.value.close()
+  refDialog.value?.close?.()
+  document.body.style.overflow = null
   isOpen.value = false
   emit('update:open', isOpen.value)
   emit('close')
@@ -91,7 +98,6 @@ async function onDialogClose($event) {
     <dialog
       ref="refDialog"
       class="UiDialog__dialog"
-      :open="isOpen"
       @close="onDialogClose"
     >
       <div class="UiDialog__header">
@@ -153,6 +159,20 @@ async function onDialogClose($event) {
     }
 
     position: relative;
+
+    &::-webkit-scrollbar {
+      width: 7px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(255,255,255, 0.1);
+      border-radius: 6px;
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+    }
+
   }
 
   &__btnClose {
