@@ -14,7 +14,7 @@
   border: none;
   border-radius: 5px;
 
-  background: var(--ui-color-primary) !important; // !important on account of tailwindcss being a dick
+  background-color: var(--ui-color-primary);
   color: #eee;
   font: inherit;
   font-weight: bold;

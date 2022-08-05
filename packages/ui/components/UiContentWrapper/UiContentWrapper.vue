@@ -50,7 +50,7 @@ const bodyStyle = computed(() => {
 <style lang="scss">
 .UiContentWrapper {
   position: relative;
-  padding: 36px 42px;
+  padding: 26px 28px;
   background-color: #525659;
 
   &__body {
