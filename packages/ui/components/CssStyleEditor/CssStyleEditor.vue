@@ -6,6 +6,7 @@ import CssBackgroundAttachment from './types/background-attachment.vue'
 import CssBackgroundSize from './types/background-size.vue'
 import cssPosition from './types/position.vue'
 import cssRepeat from './types/repeat.vue'
+import cssSlider from './types/slider.vue'
 import cssSpacing from './types/spacing.vue'
 import cssUnit from './types/unit.vue'
 import cssUrl from './types/url.vue'
@@ -15,6 +16,7 @@ provide('_ui_input_types', {
   'css-background-size': CssBackgroundSize,
   'css-position': cssPosition,
   'css-repeat': cssRepeat,
+  'css-slider': cssSlider,
   'css-spacing': cssSpacing,
   'css-unit': cssUnit,
   'css-url': cssUrl,
@@ -134,7 +136,7 @@ const inputs = computed(() => {
 
       <UiIcon
         class="CssStyleEditor__deleter"
-        src="mdi:backspace-outline"
+        src="mdi:backspace"
         :title="`Reset ${input.props?.label || ''}`"
         @click="innerValue[input.propName] = null; emitUpdate()"
       />
@@ -147,11 +149,8 @@ const inputs = computed(() => {
   &__property {
     display: flex;
     flex-wrap: nowrap;
+    align-items: flex-end;
     margin-bottom: 1rem;
-  }
-
-  &__input {
-    flex: 1;
   }
 
   &__deleter {
@@ -159,13 +158,18 @@ const inputs = computed(() => {
     width: 30px;
     height: 30px;
 
+    margin: 0 0 4px 12px;
+
     display: flex;
     align-items: center;
     justify-content: center;
 
     border-radius: 4px;
+    opacity: 0.3;
     cursor: pointer;
+
     &:hover {
+      opacity: 1;
       background-color: var(--ui-color-hover);
     }
   }

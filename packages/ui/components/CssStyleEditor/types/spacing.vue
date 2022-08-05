@@ -26,80 +26,28 @@ const props = defineProps({
   emptyValue: {
     type: String,
     required: false,
-    default: '0',
+    default: null,
   },
 })
 
 const emit = defineEmits(['update:modelValue'])
 
-const innerValue = ref({
-  top: { value: null, units: null },
-  right: { value: null, units: null },
-  bottom: { value: null, units: null },
-  left: { value: null, units: null },
-})
 
+/*
+Parsed input string as object:
+{
+  top: '0px',
+  right: null,
+  bottom: '10px',
+  left: '3%'
+}
+*/
+const innerValue = ref()
 watch(
   () => props.modelValue,
-  () => innerValue.value = parseString(props.modelValue),
+  (newValue) => innerValue.value = parseString(newValue),
   { immediate: true },
 )
-
-/*
-Given a string "12px 4%"
-returns an Object:
-{
-  top: { value: 12, units: 'px'},
-  right: { value: 4, units: '%'},
-  bottom: { value: 12, units: 'px'},
-  left: { value: 4, units: '%'},
-}
-*/
-function parseString(str) {
-  const retval = {
-    top: { value: null, units: null },
-    right: { value: null, units: null },
-    bottom: { value: null, units: null },
-    left: { value: null, units: null },
-  }
-
-  if (!str) {
-    return retval
-  }
-
-  const parts = str.split(' ')
-
-  retval.top = parseUnits(parts?.[0])
-  retval.right = parseUnits(parts?.[1])
-  retval.bottom = parseUnits(parts?.[2])
-  retval.left = parseUnits(parts?.[3])
-
-  return retval
-}
-
-/*
-Given a string: "12px"  || "auto"
-returns
-{ value: 12, units: 'px' }
-*/
-function parseUnits(part) {
-  if (part === props.emptyValue) {
-    return { value: null, units: null }
-  }
-
-  const intValue = parseInt(part)
-  if (isNaN(intValue)) {
-    return { value: part, units: null }
-  }
-
-  const units = part.replace(intValue, '')
-  return { value: intValue, units }
-}
-
-function areEqual(dimensionA, dimensionB) {
-  return dimensionA.value == dimensionB.value && dimensionA.units == dimensionB.units
-}
-
 
 /*
 Converts the local dimensions object
@@ -113,45 +61,73 @@ into
 "12px 4% 12px 4%"
 */
 function emitUpdate() {
-  const strDimensions = [
-    innerValue.value.top,
-    innerValue.value.right,
-    innerValue.value.bottom,
-    innerValue.value.left,
-  ]
-    .map((objUnits) => objUnits.value == null
-      ? props.emptyValue
-      : `${objUnits.value || '0'}${(objUnits.units || 'px')}`)
-    .join(' ')
-
-  emit('update:modelValue', strDimensions)
+  const x = innerValue.value
+  const fallBack = props.emptyValue || 0
+  emit(
+    'update:modelValue',
+    `${x.top || fallBack} ${x.right || fallBack} ${x.bottom || fallBack} ${x.left || fallBack}`
+      .trim(),
+  )
 }
+
+
+/*
+Given a string "12px 4%"
+returns an Object:
+{
+  top: '12px',
+  right: '4%',
+  bottom: '12px',
+  left: '4%',
+}
+*/
+function parseString(str) {
+  const retval = {
+    top: null,
+    right: null,
+    bottom: null,
+    left: null,
+  }
+
+  if (!str) {
+    return retval
+  }
+
+  const parts = str.split(' ')
+  retval.top = parts?.[0] || props.emptyValue
+  retval.right = parts?.[1] || props.emptyValue
+  retval.bottom = parts?.[2] || retval.top
+  retval.left = parts?.[3] || retval.bottom
+
+  return retval
+}
+
+
+
 
 
 const vertical = computed({
   get: () => {
-    return areEqual(innerValue.value.top, innerValue.value.bottom)
-      ? innerValue.value.top.value
+    return innerValue.value.top == innerValue.value.bottom
+      ? innerValue.value.top
       : null
   },
-
   set: (newValue) => {
-    innerValue.value.top.value = newValue
-    innerValue.value.bottom.value = newValue
+    innerValue.value.top = newValue
+    innerValue.value.bottom = newValue
     emitUpdate()
   },
 })
 
 const horizontal = computed({
   get: () => {
-    return areEqual(innerValue.value.left, innerValue.value.right)
-      ? innerValue.value.left.value
+    return innerValue.value.left == innerValue.value.right
+      ? innerValue.value.left
       : null
   },
-
   set: (newValue) => {
-    innerValue.value.left.value = newValue
-    innerValue.value.right.value = newValue
+    innerValue.value.left = newValue
+    innerValue.value.right = newValue
     emitUpdate()
   },
 })
@@ -163,23 +139,28 @@ const horizontal = computed({
       <template #summary>
         <UiInput
           v-model="vertical"
-          type="number"
+          type="css-slider"
+          min="0"
+          max="300"
           label="Vertical"
-          :placeholder="`${innerValue.top.value || 'auto'} & ${innerValue.bottom.value || 'auto'}`"
           @click="$event.stopPropagation()"
         />
       </template>
       <template #default>
         <div class="SpacingEditor__body">
           <UiInput
-            v-model="innerValue.top.value"
-            type="number"
+            v-model="innerValue.top"
+            type="css-slider"
+            min="0"
+            max="300"
             label="Top"
             @update:model-value="emitUpdate"
           />
           <UiInput
-            v-model="innerValue.bottom.value"
-            type="number"
+            v-model="innerValue.bottom"
+            type="css-slider"
+            min="0"
+            max="300"
             label="Bottom"
             @update:model-value="emitUpdate"
           />
@@ -191,23 +172,28 @@ const horizontal = computed({
       <template #summary>
         <UiInput
           v-model="horizontal"
-          type="number"
+          type="css-slider"
+          min="0"
+          max="300"
           label="Horizontal"
-          :placeholder="`${innerValue.left.value || 'auto'} & ${innerValue.right.value || 'auto'}`"
           @click="$event.stopPropagation()"
         />
       </template>
       <template #default>
         <div class="SpacingEditor__body">
           <UiInput
-            v-model="innerValue.left.value"
-            type="number"
+            v-model="innerValue.left"
+            type="css-slider"
+            min="0"
+            max="300"
             label="Left"
             @update:model-value="emitUpdate"
           />
           <UiInput
-            v-model="innerValue.right.value"
-            type="number"
+            v-model="innerValue.right"
+            type="css-slider"
+            min="0"
+            max="300"
             label="Right"
             @update:model-value="emitUpdate"
           />

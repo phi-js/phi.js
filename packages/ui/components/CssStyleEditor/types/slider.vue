@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed, useAttrs } from 'vue'
 import { UiInput } from '@/packages/ui'
 import { parseUnitString, unitToString } from '../helpers'
 
@@ -15,13 +15,13 @@ const props = defineProps({
   },
 
   defaultValue: {
-    type: String,
+    type: [String, Number],
     required: false,
-    default: null,
+    default: 0,
   },
 })
-
 const emit = defineEmits(['update:modelValue'])
+const attrs = useAttrs()
 
 const innerValue = ref({
   value: null,
@@ -30,31 +30,42 @@ const innerValue = ref({
 
 watch(
   () => props.modelValue,
-  (newValue) => innerValue.value = parseUnitString(newValue || props.defaultValue),
+  (newValue) => {
+    innerValue.value = parseUnitString(newValue)
+    if (!innerValue.value.units) {
+      innerValue.value.value = props.defaultValue
+      innerValue.value.units = 'px'
+    }
+  },
   { immediate: true },
 )
 
 function emitUpdate() {
-  // if (!innerValue.value.units && !isNaN(parseInt(innerValue.value.value))) {
-  //   innerValue.value.units = 'px'
-  // }
-
   emit('update:modelValue', unitToString(innerValue.value))
 }
+
+const rangeAttributes = computed(() => ({
+  min: innerValue.value.units == '%' ? 20 : parseInt(attrs.min),
+  max: innerValue.value.units == '%' ? 100 : parseInt(attrs.max),
+}))
 </script>
 
 <template>
-  <div class="CssUnit">
+  <div
+    class="CssSlider"
+    :class="{'CssSlider--null': !innerValue.value || innerValue.value == props.defaultValue}"
+  >
     <UiInput
-      v-model="innerValue.value"
-      v-bind="{ ...$attrs, label: undefined }"
-      class="CssUnit__input"
-      :type="innerValue.units ? 'number' : 'text'"
-      @update:model-value="emitUpdate()"
+      :model-value="innerValue.value"
+      class="CssSlider__input"
+      type="range"
+      v-bind="rangeAttributes"
+      @update:model-value="innerValue.value = $event; emitUpdate();"
     />
+    <span>{{ innerValue.value || 'auto' }}</span>
     <select
       v-model="innerValue.units"
-      class="CssUnit__select"
+      class="CssSlider__select"
       @change="emitUpdate()"
     >
       <option value="px">
@@ -63,29 +74,30 @@ function emitUpdate() {
       <option value="%">
         %
       </option>
-      <option value="pt">
-        pt
-      </option>
-      <option value="vw">
-        vw
-      </option>
-      <option value="vh">
-        vh
-      </option>
     </select>
   </div>
 </template>
 
 <style lang="scss">
-.CssUnit {
+.CssSlider {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
 
-  .UiInput__element {
-    width: 6rem;
+  &__input {
+    flex: 1;
+    padding-right: 20px;
+
+    input {
+      width: 100%;
+    }
   }
 
+  &--null {
+    opacity: 0.5;
+  }
+
+  & > span,
   &__select {
     background: transparent;
     color: inherit;
@@ -93,6 +105,8 @@ function emitUpdate() {
     border: 0;
     margin: 0;
     padding: 5px;
+
+    font-size: 14px;
   }
 }
 </style>
