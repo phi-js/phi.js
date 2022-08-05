@@ -126,20 +126,26 @@ const i18n = useI18n({
         :text="i18n.t('DbQueryEditor.From')"
         value="from"
       >
-        <div class="UiGroup ">
-          <UiInput
-            v-model="innerQuery.from.source"
-            label="source"
-            type="select-native"
-            :options="availableSources"
-            @update:model-value="emitUpdate()"
-          />
-          <UiInput
-            v-model="innerQuery.from.table"
-            label="table"
-            type="text"
-            @update:model-value="emitUpdate()"
-          />
+        <div class="UiGroup">
+          <slot
+            name="from-picker"
+            :from="innerQuery?.from || {source:'', table:''}"
+            :setFrom="($event) => {innerQuery.from = $event; emitUpdate();}"
+          >
+            <UiInput
+              v-model="innerQuery.from.source"
+              label="source"
+              type="select-native"
+              :options="availableSources"
+              @update:model-value="emitUpdate()"
+            />
+            <UiInput
+              v-model="innerQuery.from.table"
+              label="table"
+              type="text"
+              @update:model-value="emitUpdate()"
+            />
+          </slot>
         </div>
 
         <!-- ON -->

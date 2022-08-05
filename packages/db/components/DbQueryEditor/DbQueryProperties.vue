@@ -36,6 +36,8 @@ const pickerOptions = ref([
   { text: 'Subquery', value: 'query' },
 ])
 
+const refInput = ref()
+
 function onPickerChange(newValue) {
   if (newValue == 'property') {
     innerProperties.value.push({
@@ -52,6 +54,14 @@ function onPickerChange(newValue) {
         single: true,
       },
     })
+  }
+
+  if (refInput.value) {
+    try {
+      refInput.value.querySelector('select').selectedIndex = 0
+    } catch (err) {
+      //zzzzz
+    }
   }
 }
 </script>
@@ -99,13 +109,15 @@ function onPickerChange(newValue) {
       </template>
     </div>
 
-    <UiInput
-      placeholder="Agregar ..."
-      type="select-native"
-      :options="pickerOptions"
-      :model-value="null"
-      @update:model-value="onPickerChange($event)"
-    />
+    <div ref="refInput">
+      <UiInput
+        placeholder="Agregar ..."
+        type="select-native"
+        :options="pickerOptions"
+        :model-value="null"
+        @update:model-value="onPickerChange($event)"
+      />
+    </div>
   </div>
 </template>
 
