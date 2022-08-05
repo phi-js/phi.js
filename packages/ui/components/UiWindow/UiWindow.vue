@@ -13,6 +13,35 @@ import { UiResizable } from '../UiResizable'
 const attrs = useAttrs()
 
 const props = defineProps({
+  /** Nombre para guardar las coordenadas de la ventana en localStorage.  (null = no recordar) */
+  name: {
+    type: String,
+    required: false,
+    default: null,
+  },
+
+  open: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+
+  /*
+  Arreglo de coordenadas iniciales
+  (valores enteros, medidos en pixeles)
+  {
+    "top": 10,
+    "left": 10,
+    "width": 500,
+    "height": 500
+  }
+  */
+  coords: {
+    type: Object,
+    required: false,
+    default: null,
+  },
+
   dock: {
     type: String,
     required: false,
@@ -22,39 +51,10 @@ const props = defineProps({
       'right',
       'bottom',
       'left',
-      'popup',
       null,
     ].includes(value),
   },
 
-  open: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-
-
-  /*
-  Arreglo reactivo de coordenadas (valores css)
-  {
-    "top": "0px",
-    "left": "0px",
-    "width": "0px",
-    "height": "0px"
-  }
-  */
-  coords: {
-    type: Object,
-    required: false,
-    default: null,
-  },
-
-  /** Nombre para guardar las coordenadas de la ventana en localStorage.  (null = no recordar) */
-  name: {
-    type: String,
-    required: false,
-    default: null,
-  },
 
   /* <Teleport> target */
   container: {
@@ -67,25 +67,14 @@ const props = defineProps({
 const emit = defineEmits(['update:open', 'update:dock', 'update:coords', 'cancel'])
 
 
-/*
-Arreglo interno CANONICO de las coords de la ventana
-*/
-const coords = ref({
-  top: '150px',
-  left: '200px',
-  width: '500px',
-  height: '700px',
+/* Stored coords (for each dock) */
+const storedCoords = ref({
+  default: { top: 100, left: 100, width: 600, height: 400 },
+  top: { height: 300 },
+  bottom: { height: 300 },
+  left: { width: 400 },
+  right: { width: 400 },
 })
-watch(
-  () => props.coords,
-  (newValue) => {
-    if (!newValue) {
-      return
-    }
-    coords.value = newValue
-  },
-  { immediate: true },
-)
 
 
 /*
@@ -126,25 +115,14 @@ function cancel() {
   close()
 }
 
-/* Every dock holds a memory of its last used coords */
-const dockCoords = ref({
-  default: { top: '64px', left: '256px', width: '1024px', height: '768px' },
-
-  top: { left: 0, right: 0, top: 0, height: '33vh' },
-  bottom: { left: 0, right: 0, bottom: 0, height: '33vh' },
-  left: { top: 0, bottom: 0, left: 0, width: '33vw' },
-  right: { top: 0, bottom: 0, right: 0, width: '33vw' },
-})
-
 
 /* locally stored window position */
 onMounted(() => {
   if (props.name) {
     const storedValue = JSON.parse(localStorage.getItem(`ui-window:${props.name}`))
     if (storedValue) {
-      coords.value = storedValue?.coords
       dock.value = storedValue?.dock
-      dockCoords.value = storedValue?.dockCoords
+      storedCoords.value = storedValue?.storedCoords
     }
   }
 
@@ -159,9 +137,8 @@ function persistData() {
   }
 
   localStorage.setItem(`ui-window:${props.name}`, JSON.stringify({
-    coords: coords.value,
     dock: dock.value,
-    dockCoords: dockCoords.value,
+    storedCoords: storedCoords.value,
   }))
 }
 
@@ -171,12 +148,9 @@ function dockTo(newDockPosition) {
   }
 
   dock.value = newDockPosition
-
-  const dockName = newDockPosition || 'default'
-  coords.value = dockCoords.value[dockName]
-  repositionBody()
-
   emit('update:dock', dock.value)
+
+  repositionBody()
   persistData()
 }
 
@@ -184,46 +158,46 @@ function onResizableMoveEnd() {
   dockTo(targetDock.value)
 }
 
-function onResizableEnd() {
-  const dockName = dock.value || 'default'
-  dockCoords.value[dockName] = coords.value
+function onResizableEnd(coords) {
+  storedCoords.value[dock.value || 'default'] = coords
   persistData()
 }
 
-function onResizableUpdateCoords() {
+function onResizableUpdateCoords(newCoords) {
+  storedCoords.value[dock.value || 'default'] = newCoords
   if (dock.value) { // reposition body while dragging docked window
     repositionBody()
   }
-  emit('update:coords', coords.value)
 }
 
 
 function repositionBody() {
+  const currentCoords = storedCoords.value[dock.value]
+
   switch (dock.value) {
   case 'top':
-    document.body.style.marginTop = Math.max(parseInt(coords.value.height), 0) + 'px'
+    document.body.style.marginTop = Math.max(parseInt(currentCoords.height), 0) + 'px'
     document.body.style.marginBottom = 'initial'
     document.body.style.marginLeft = 'initial'
     document.body.style.marginRight = 'initial'
     break
   case 'bottom':
     document.body.style.marginTop = 'initial'
-    document.body.style.marginBottom = Math.max(parseInt(coords.value.height), 0) + 'px'
+    document.body.style.marginBottom = Math.max(parseInt(currentCoords.height), 0) + 'px'
     document.body.style.marginLeft = 'initial'
     document.body.style.marginRight = 'initial'
-
     break
   case 'left':
     document.body.style.marginTop = 'initial'
     document.body.style.marginBottom = 'initial'
-    document.body.style.marginLeft = Math.max(parseInt(coords.value.width), 0) + 'px'
+    document.body.style.marginLeft = Math.max(parseInt(currentCoords.width), 0) + 'px'
     document.body.style.marginRight = 'initial'
     break
   case 'right':
     document.body.style.marginTop = 'initial'
     document.body.style.marginBottom = 'initial'
     document.body.style.marginLeft = 'initial'
-    document.body.style.marginRight = Math.max(parseInt(coords.value.width), 0) + 'px'
+    document.body.style.marginRight = Math.max(parseInt(currentCoords.width), 0) + 'px'
     break
   default:
     document.body.style.marginTop = 'initial'
@@ -263,6 +237,7 @@ const isTransparent = ref(false)
         `UiWindow--docked-${dock}`
       ]"
     >
+      <!-- DOCK ZONES -->
       <div
         class="UiWindow__dockzone UiWindow__dockzone--top"
         @mouseenter="targetDock = 'top'"
@@ -286,8 +261,8 @@ const isTransparent = ref(false)
 
       <UiResizable
         v-slot="{ startMove }"
-        v-model:coords="coords"
         v-model:isMoving="isMoving"
+        :coords="storedCoords[dock ? dock : 'default']"
         class="UiWindow__box"
         @update:coords="onResizableUpdateCoords"
         @move-end="onResizableMoveEnd"
@@ -312,11 +287,7 @@ const isTransparent = ref(false)
 
           <UiPopover>
             <template #trigger>
-              <UiIcon
-                :src="dock
-                  ? (dock == 'popup' ? 'mdi:window-restore' : `mdi:dock-${dock}`)
-                  : 'mdi:card-outline'"
-              />
+              <UiIcon src="mdi:dots-vertical" />
             </template>
             <template #contents="popover">
               <div
@@ -324,7 +295,7 @@ const isTransparent = ref(false)
                 @click="popover.close()"
               >
                 <UiIcon
-                  src="mdi:card-outline"
+                  src="mdi:dock-window"
                   class="UiWindow__dockIcon"
                   :class="{ 'UiWindow__dockIcon--active': !dock }"
                   @click="dockTo(null)"
@@ -392,3 +363,40 @@ const isTransparent = ref(false)
     </div>
   </Teleport>
 </template>
+
+<style lang="scss">
+/* CSS enforced dock positions */
+.UiWindow {
+  &--docked-top &__box {
+    top: 0 !important;
+    bottom: auto !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: auto !important;
+  }
+
+  &--docked-bottom &__box {
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: auto !important;
+  }
+
+  &--docked-left &__box {
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: auto !important;
+    height: auto !important;
+  }
+
+  &--docked-right &__box {
+    top: 0 !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+    height: auto !important;
+  }
+}
+</style>

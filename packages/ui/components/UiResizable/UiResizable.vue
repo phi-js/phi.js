@@ -1,10 +1,16 @@
 <script setup>
-import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue'
+import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
 
 const props = defineProps({
-  /**
-   * Objeto con las propiedades CSS que este componente modifica: top, left, width y hegiht
-   */
+  /*
+  Object containing the coordinates (int value, pixels)
+  {
+    top: 5,
+    left: 5,
+    width: 400,
+    height: 300,
+  }
+  */
   coords: {
     type: Object,
     required: false,
@@ -14,13 +20,13 @@ const props = defineProps({
   minWidth: {
     type: [String, Number],
     required: false,
-    default: 128,
+    default: 400,
   },
 
   minHeight: {
     type: [String, Number],
     required: false,
-    default: 128,
+    default: 300,
   },
 
   /**
@@ -48,94 +54,67 @@ const emit = defineEmits([
 
 const rootEl = ref()
 
-const bounds = reactive({
+const currentCoords = reactive({
   top: undefined,
   left: undefined,
   width: undefined,
   height: undefined,
 })
+const initialCoords = ref()
 
-const newBounds = reactive({ ...bounds })
+onMounted(() => {
+  if (props.coords) {
+    currentCoords.top = props.coords.top
+    currentCoords.left = props.coords.left
+    currentCoords.width = props.coords.width
+    currentCoords.height = props.coords.height
+  } else {
+    obtainElementCoords()
+  }
+})
 
 watch(
   () => props.coords,
   () => {
-    parseProps()
-  },
-  // no puede ser immediate, porque durante la primera ejecucion no existe getboundingClientRect
-)
-onMounted(() => {
-  parseProps()
-})
-
-async function parseProps() {
-  if (props?.coords) {
-    let hasRawCss = false
-    props.coords && Object.values(props.coords).forEach((coordValue) => {
-      if (typeof coordValue !== 'string' || coordValue.substr(-2) != 'px') {
-        hasRawCss = true
-      }
-    })
-
-    if (hasRawCss) {
-      // set element styles directly first ...
-      rootEl.value.top = props.coords.top
-      rootEl.value.left = props.coords.left
-      rootEl.value.width = props.coords.width
-      rootEl.value.height = props.coords.height
-      rootEl.value.bottom = props.coords.bottom
-      rootEl.value.right = props.coords.right
-
-      // and then get the element size in pixels after next tick
-      await nextTick()
-      obtainElementBounds()
-
-      emit('update:coords', {
-        top: newBounds.top + 'px',
-        left: newBounds.left + 'px',
-        width: newBounds.width + 'px',
-        height: newBounds.height + 'px',
-      })
-      return
+    if (props.coords) {
+      currentCoords.top = props.coords.top
+      currentCoords.left = props.coords.left
+      currentCoords.width = props.coords.width
+      currentCoords.height = props.coords.height
     }
+  },
+)
 
-    newBounds.top = parseInt(props.coords.top)
-    newBounds.left = parseInt(props.coords.left)
-    newBounds.width = parseInt(props.coords.width)
-    newBounds.height = parseInt(props.coords.height)
-  } else {
-    obtainElementBounds()
-  }
-}
 
-function obtainElementBounds() {
+function obtainElementCoords() {
   const elBounds = rootEl.value.getBoundingClientRect()
-
-  bounds.top = rootEl.value.offsetTop
-  bounds.left = rootEl.value.offsetLeft
-  bounds.width = elBounds.width
-  bounds.height = elBounds.height
-
-  newBounds.top = bounds.top
-  newBounds.left = bounds.left
-  newBounds.width = bounds.width
-  newBounds.height = bounds.height
+  currentCoords.top = Math.floor(rootEl.value.offsetTop)
+  currentCoords.left = Math.floor(rootEl.value.offsetLeft)
+  currentCoords.width = Math.floor(elBounds.width)
+  currentCoords.height = Math.floor(elBounds.height)
 }
+
+async function reset() {
+  currentCoords.top = undefined
+  currentCoords.left = undefined
+  currentCoords.width = undefined
+  currentCoords.height = undefined
+
+  await nextTick()
+  obtainElementCoords()
+}
+
 
 const isDragging = ref(false)
 const start = reactive({ x: null, y: null })
 const zone = ref(null)
 
 const elementStyle = computed(() => {
-  if (!isDragging.value) {
-    return props.coords
-  }
-
   return {
-    top: newBounds.top + 'px',
-    left: newBounds.left + 'px',
-    width: newBounds.width + 'px',
-    height: newBounds.height + 'px',
+    top: currentCoords.top ? currentCoords.top + 'px' : undefined,
+    left: currentCoords.left ? currentCoords.left + 'px' : undefined,
+    width: currentCoords.width ? currentCoords.width + 'px' : undefined,
+    height: currentCoords.height ? currentCoords.height + 'px' : undefined,
   }
 })
 
@@ -149,10 +128,12 @@ function onResizerStart(evt, targetZone) {
   const pointer = evt.type == 'touchstart' ? evt.touches[0] : evt
 
   zone.value = targetZone
+
   start.x = pointer.clientX
   start.y = pointer.clientY
 
-  obtainElementBounds()
+  obtainElementCoords()
+  initialCoords.value = { ...currentCoords }
 
   isDragging.value = true
   emit('update:isDragging', isDragging.value)
@@ -176,80 +157,72 @@ function onResizerMove(evt) {
     y: pointer.clientY - start.y,
   }
 
-  switch (zone.value) {
-  case 'move':
-    newBounds.top = bounds.top + diff.y
-    newBounds.left = bounds.left + diff.x
-    break
+  const targetCoords = { ...currentCoords }
 
-  case 'n':
-    newBounds.top = bounds.top + diff.y
-    newBounds.height = bounds.height - diff.y
-    break
-
-  case 'ne':
-    newBounds.top = bounds.top + diff.y
-    newBounds.height = bounds.height - diff.y
-
-    newBounds.width = bounds.width + diff.x
-    break
-
-  case 'e':
-    newBounds.width = bounds.width + diff.x
-    break
-
-  case 'se':
-    newBounds.width = bounds.width + diff.x
-    newBounds.height = bounds.height + diff.y
-    break
-
-  case 's':
-    newBounds.height = bounds.height + diff.y
-    break
-
-  case 'sw':
-    newBounds.height = bounds.height + diff.y
-
-    newBounds.left = bounds.left + diff.x
-    newBounds.width = bounds.width - diff.x
-    break
-
-  case 'w':
-    newBounds.left = bounds.left + diff.x
-    newBounds.width = bounds.width - diff.x
-    break
-
-  case 'nw':
-    newBounds.top = bounds.top + diff.y
-    newBounds.height = bounds.height - diff.y
-
-    newBounds.left = bounds.left + diff.x
-    newBounds.width = bounds.width - diff.x
-    break
+  const viewport = {
+    width: document.documentElement.clientWidth, // minds the scrollbar width
+    height: window.innerHeight,
   }
 
-  // Restrictions
-  newBounds.width = Math.max(newBounds.width, props.minWidth)
-  newBounds.height = Math.max(newBounds.height, props.minHeight)
+  if (zone.value == 'move') {
+    targetCoords.top = Math.max(initialCoords.value.top + diff.y, 0)
+    targetCoords.left = Math.max(initialCoords.value.left + diff.x, 0)
 
-  if (zone.value != 'move') {
-    newBounds.top = Math.min(newBounds.top, bounds.top + bounds.height - props.minHeight)
-    newBounds.left = Math.min(newBounds.left, bounds.left + bounds.width - props.minWidth)
+    // Squish into viewport
+    targetCoords.left = Math.min(targetCoords.left, viewport.width - props.minWidth)
+    targetCoords.width = Math.min(
+      Math.max(targetCoords.width, initialCoords.value.width),
+      viewport.width - targetCoords.left,
+    )
+
+    targetCoords.top = Math.min(targetCoords.top, viewport.height - props.minHeight)
+    targetCoords.height = Math.min(
+      Math.max(targetCoords.height, initialCoords.value.height),
+      viewport.height - targetCoords.top,
+    )
   }
 
-  emit('step', {
-    top: newBounds.top + 'px',
-    left: newBounds.left + 'px',
-    width: newBounds.width + 'px',
-    height: newBounds.height + 'px',
-  })
+  // resize height from north
+  if (['n', 'ne', 'nw'].includes(zone.value)) {
+    targetCoords.top = Math.max(initialCoords.value.top + diff.y, 0)
 
-  emit('update:coords', {
-    top: newBounds.top + 'px',
-    left: newBounds.left + 'px',
-    width: newBounds.width + 'px',
-    height: newBounds.height + 'px',
-  })
+    const offsetTop = initialCoords.value.top - targetCoords.top
+    targetCoords.height = Math.max(initialCoords.value.height + offsetTop, props.minHeight)
+
+    targetCoords.top = Math.min(
+      targetCoords.top,
+      initialCoords.value.top + initialCoords.value.height - targetCoords.height,
+    )
+  }
+
+  // resize height from south
+  if (['s', 'se', 'sw'].includes(zone.value)) {
+    targetCoords.height = Math.max(initialCoords.value.height + diff.y, props.minHeight)
+    targetCoords.height = Math.min(targetCoords.height, viewport.height - initialCoords.value.top)
+  }
+
+  // resize width from west
+  if (['w', 'nw', 'sw'].includes(zone.value)) {
+    targetCoords.left = Math.max(initialCoords.value.left + diff.x, 0)
+    const offsetLeft = initialCoords.value.left - targetCoords.left
+    targetCoords.width = Math.max(initialCoords.value.width + offsetLeft, props.minWidth)
+
+    // eslint-disable-next-line max-len
+    targetCoords.left = Math.min(targetCoords.left, initialCoords.value.left + initialCoords.value.width - targetCoords.width)
+  }
+
+  // resize width from east
+  if (['e', 'ne', 'se'].includes(zone.value)) {
+    targetCoords.width = Math.max(initialCoords.value.width + diff.x, props.minWidth)
+    targetCoords.width = Math.min(targetCoords.width, viewport.width - initialCoords.value.left)
+  }
+
+
+  currentCoords.top = Math.floor(targetCoords.top)
+  currentCoords.left = Math.floor(targetCoords.left)
+  currentCoords.width = Math.floor(targetCoords.width)
+  currentCoords.height = Math.floor(targetCoords.height)
+  emit('update:coords', { ...currentCoords })
 }
 
 function onResizerEnd() {
@@ -258,17 +231,7 @@ function onResizerEnd() {
   window.removeEventListener('mouseup', onResizerEnd)
   window.removeEventListener('touchend', onResizerEnd)
 
-  bounds.top = newBounds.top
-  bounds.left = newBounds.left
-  bounds.width = newBounds.width
-  bounds.height = newBounds.height
-
-  emit('update:coords', {
-    top: bounds.top + 'px',
-    left: bounds.left + 'px',
-    width: bounds.width + 'px',
-    height: bounds.height + 'px',
-  })
+  emit('update:coords', { ...currentCoords })
 
   isDragging.value = false
   emit('update:isDragging', isDragging.value)
@@ -277,7 +240,7 @@ function onResizerEnd() {
     emit('moveEnd') // emitir DESPUES de update:coords
   }
 
-  emit('end')
+  emit('end', { ...currentCoords })
 }
 
 function startMove(evt) {
@@ -292,11 +255,10 @@ function startMove(evt) {
     :style="elementStyle"
   >
     <slot
+      :coords="currentCoords"
       :startMove="startMove"
-      :styles="elementStyle"
-      :newBounds="newBounds"
       :isDragging="isDragging"
-      :refresh="obtainElementBounds"
+      :reset="reset"
     />
     <div
       v-for="zoneName in availableZones"

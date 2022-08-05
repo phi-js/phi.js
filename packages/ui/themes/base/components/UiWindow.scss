@@ -12,9 +12,12 @@
     pointer-events: initial !important;
   }
 
-
   &__eyeIcon {
     width: 32px;
+  }
+
+  &__dockIcon--active {
+    color: var(--ui-color-primary);
   }
 
   &--transparent {
@@ -34,7 +37,7 @@
 
 /* Hide dragger and resizers when docked */
 .UiWindow {
-  &--docked &__box {
+  &--docked .UiWindow__box {
     .UiWindow__dragger {
       pointer-events: none;
     }
@@ -44,68 +47,34 @@
     }
   }
 
-  &--docked-top &__box {
+  &--docked-top .UiWindow__box {
     .UiResizable__hotzone.--s {
       display: block;
     }
   }
 
-  &--docked-bottom &__box {
+  &--docked-bottom .UiWindow__box {
     .UiResizable__hotzone.--n {
       display: block;
     }
   }
 
-  &--docked-left &__box {
+  &--docked-left .UiWindow__box {
     .UiResizable__hotzone.--e {
       display: block;
     }
   }
 
-  &--docked-right &__box {
+  &--docked-right .UiWindow__box {
     .UiResizable__hotzone.--w {
       display: block;
     }
   }
 }
 
-/* CSS enforced dock positions */
-.UiWindow {
-  &--docked-top &__box {
-    top: 0 !important;
-    bottom: auto !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: auto !important;
-  }
-
-  &--docked-bottom &__box {
-    top: auto !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: auto !important;
-  }
-
-  &--docked-left &__box {
-    top: 0 !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: auto !important;
-    height: auto !important;
-  }
-
-  &--docked-right &__box {
-    top: 0 !important;
-    bottom: 0 !important;
-    right: 0 !important;
-    left: auto !important;
-    height: auto !important;
-  }
-}
 
 .UiWindow {
-  --ui-window-dockzone-size: 30px;
+  --ui-window-dockzone-size: 60px;
   text-align: left;
 
   &--external {
@@ -204,10 +173,6 @@
     }
   }
 }
-
-
-
-
 
 .UiWindow {
   // background: rgba(0,0,0, 0.1); //scrim background
