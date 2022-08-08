@@ -1,13 +1,14 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { availableFunctions } from '../../plugins/registerPlugin.js'
 import { useI18n } from '@/packages/i18n'
 import { UiItem, UiDialog, UiItemFinder } from '@/packages/ui'
 
 const emit = defineEmits(['input'])
 
-function onSelectItem($event) {
+const injectedFunctions = inject('$_vm_functions', {})
 
+function onSelectItem($event) {
   const emitValue = {
     definition: $event,
     expression: null,
@@ -29,6 +30,8 @@ function onSelectItem($event) {
 
 const items = computed(() => {
   return [
+    ...injectedFunctions.value,
+
     {
       title: 'Code',
       children: [
