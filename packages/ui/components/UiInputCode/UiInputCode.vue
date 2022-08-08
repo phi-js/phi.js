@@ -78,6 +78,6 @@ watch(
 /* forzed style in code items */
 .UiInputCode {
   background: #fff !important;
-  color: initial !important;
+  color: #000 !important;
 }
 </style>

@@ -64,7 +64,7 @@ export default {
       class="UiItem__body"
       @click="$emit('click-body', $event)"
     >
-      <h3
+      <h1
         v-if="text"
         class="UiItem__text"
         v-text="text"
@@ -134,7 +134,7 @@ export default {
 
   &__subtext {
     margin: 0;
-    opacity: 0.8;
+    // opacity: 0.8; // fails lighthouse contrast test
     font-size: 0.82em;
   }
 

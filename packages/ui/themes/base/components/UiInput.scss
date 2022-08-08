@@ -1,8 +1,15 @@
 .UiInputNativeElement {
   box-sizing: border-box;
 
+  width: 100%; // ... hmmmmmm
+  // max-width: 325px;
+  // min-width: 200px;
+  // min-width: 50px;
+  min-width: max-content;
+
   outline-color: var(--ui-color-primary);
-  padding: 8px 12px;
+  // padding: 8px 12px;
+  padding: 7px;
 
   border-radius: 5px;
   border: 1px solid rgba(0,0,0, 0.15);
@@ -31,13 +38,14 @@ textarea.UiInput__element {
 .UiInput {
   &__label {
     font-weight: bold;
-    font-size: 14px;
-    padding: 4px 0;
+    // font-size: 14px;
+    font-size: 0.9em;
+    padding: 5px 0;
     display: block;
   }
 
   &__subtext {
-    font-size: 14px;
+    font-size: 0.9em;
     opacity: 0.8;
   }
 
@@ -48,6 +56,9 @@ textarea.UiInput__element {
       padding: 0;
       margin: 0;
       border: 0;
+      // min-width: 50px;
+      min-width: 20px;
+      max-width: 60px;
     }
   }
 

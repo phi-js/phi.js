@@ -3,8 +3,8 @@
 This blocks edits a STRING in the format
 "0px 0px 0px 0px"  (string) top right bottom left
 */
-import { ref, watch, computed } from 'vue'
-import { UiInput, UiDetails } from '@/packages/ui'
+import { onMounted, ref, watch } from 'vue'
+import { UiInput, UiIcon } from '@/packages/ui'
 
 const props = defineProps({
   modelValue: {
@@ -32,6 +32,10 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
+const linked = ref({
+  vertical: true,
+  horizontal: true,
+})
 
 /*
 Parsed input string as object:
@@ -45,9 +49,16 @@ Parsed input string as object:
 const innerValue = ref()
 watch(
   () => props.modelValue,
-  (newValue) => innerValue.value = parseString(newValue),
+  (newValue) => {
+    innerValue.value = parseString(newValue)
+  },
   { immediate: true },
 )
+
+onMounted(() => {
+  linked.value.vertical = innerValue.value.top == innerValue.value.bottom
+  linked.value.horizontal = innerValue.value.left == innerValue.value.right
+})
 
 /*
 Converts the local dimensions object
@@ -60,9 +71,20 @@ Converts the local dimensions object
 into
 "12px 4% 12px 4%"
 */
-function emitUpdate() {
+function emitUpdate(position) {
   const x = innerValue.value
   const fallBack = props.emptyValue || 0
+
+  if (['top', 'bottom'].includes(position) && linked.value.vertical) {
+    const otherPosition = position == 'top' ? 'bottom' : 'top'
+    innerValue.value[otherPosition] = innerValue.value[position]
+  }
+
+  if (['left', 'right'].includes(position) && linked.value.horizontal) {
+    const otherPosition = position == 'left' ? 'right' : 'left'
+    innerValue.value[otherPosition] = innerValue.value[position]
+  }
+
   emit(
     'update:modelValue',
     `${x.top || fallBack} ${x.right || fallBack} ${x.bottom || fallBack} ${x.left || fallBack}`
@@ -102,112 +124,143 @@ function parseString(str) {
   return retval
 }
 
+// position: vertical | horizontal
+function toggleLinked(position) {
+  linked.value[position] = !linked.value[position]
 
-
-
-
-const vertical = computed({
-  get: () => {
-    return innerValue.value.top == innerValue.value.bottom
-      ? innerValue.value.top
-      : null
-  },
-  set: (newValue) => {
-    innerValue.value.top = newValue
-    innerValue.value.bottom = newValue
-    emitUpdate()
-  },
-})
-
-const horizontal = computed({
-  get: () => {
-    return innerValue.value.left == innerValue.value.right
-      ? innerValue.value.left
-      : null
-  },
-  set: (newValue) => {
-    innerValue.value.left = newValue
-    innerValue.value.right = newValue
-    emitUpdate()
-  },
-})
+  if (linked.value[position]) {
+    const positionA = position == 'vertical' ? 'top' : 'left'
+    const positionB = position == 'vertical' ? 'bottom' : 'right'
+    innerValue.value[positionB] = innerValue.value[positionA]
+  }
+}
 </script>
 
 <template>
   <div class="SpacingEditor">
-    <UiDetails>
-      <template #summary>
+    <div
+      class="SpacingEditor__group"
+      :class="{'SpacingEditor__group--linked': linked.vertical}"
+    >
+      <div class="SpacingEditor__linker">
+        <UiIcon
+          :src="linked.vertical ? 'mdi:link-variant' : 'mdi:link-variant-off'"
+          @click="toggleLinked('vertical')"
+        />
+      </div>
+      <div class="SpacingEditor__inputs">
         <UiInput
-          v-model="vertical"
+          v-model="innerValue.top"
           type="css-slider"
           min="0"
           max="300"
-          label="Vertical"
-          @click="$event.stopPropagation()"
+          label="Top"
+          @update:model-value="emitUpdate('top')"
         />
-      </template>
-      <template #default>
-        <div class="SpacingEditor__body">
-          <UiInput
-            v-model="innerValue.top"
-            type="css-slider"
-            min="0"
-            max="300"
-            label="Top"
-            @update:model-value="emitUpdate"
-          />
-          <UiInput
-            v-model="innerValue.bottom"
-            type="css-slider"
-            min="0"
-            max="300"
-            label="Bottom"
-            @update:model-value="emitUpdate"
-          />
-        </div>
-      </template>
-    </UiDetails>
+        <UiInput
+          v-model="innerValue.bottom"
+          type="css-slider"
+          min="0"
+          max="300"
+          label="Bottom"
+          @update:model-value="emitUpdate('bottom')"
+        />
+      </div>
+    </div>
 
-    <UiDetails>
-      <template #summary>
+    <div
+      class="SpacingEditor__group"
+      :class="{'SpacingEditor__group--linked': linked.horizontal}"
+    >
+      <div class="SpacingEditor__linker">
+        <UiIcon
+          :src="linked.horizontal ? 'mdi:link-variant' : 'mdi:link-variant-off'"
+          @click="toggleLinked('horizontal')"
+        />
+      </div>
+      <div class="SpacingEditor__inputs">
         <UiInput
-          v-model="horizontal"
+          v-model="innerValue.left"
           type="css-slider"
           min="0"
           max="300"
-          label="Horizontal"
-          @click="$event.stopPropagation()"
+          label="Left"
+          @update:model-value="emitUpdate('left')"
         />
-      </template>
-      <template #default>
-        <div class="SpacingEditor__body">
-          <UiInput
-            v-model="innerValue.left"
-            type="css-slider"
-            min="0"
-            max="300"
-            label="Left"
-            @update:model-value="emitUpdate"
-          />
-          <UiInput
-            v-model="innerValue.right"
-            type="css-slider"
-            min="0"
-            max="300"
-            label="Right"
-            @update:model-value="emitUpdate"
-          />
-        </div>
-      </template>
-    </UiDetails>
+        <UiInput
+          v-model="innerValue.right"
+          type="css-slider"
+          min="0"
+          max="300"
+          label="Right"
+          @update:model-value="emitUpdate('right')"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <style lang="scss">
 .SpacingEditor {
-  &__body {
-    margin-left: 30px;
-    margin-bottom: 12px;
+  &__group {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 1rem 0;
+    margin-bottom: 2rem;
+  }
+
+  &__inputs {
+    flex: 1;
+  }
+
+  &__linker {
+    // order: 1;
+    display: flex;
+    align-items: center;
+
+    position: relative;
+    padding-right: 6px;
+    margin-right: 12px;
+
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 4px;
+
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255, 0.3);
+      border-right: 0;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .UiIcon {
+      width: 30px;
+      height: 30px;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--ui-color-hover);
+      }
+    }
+  }
+
+  &__group--linked {
+    .SpacingEditor__linker {
+      &:after {
+        // border: 1px solid var(--ui-color-primary);
+        border-color: var(--ui-color-primary);
+      }
+
+      .UiIcon {
+        color: var(--ui-color-primary);
+      }
+    }
   }
 }
 </style>

@@ -25,19 +25,19 @@ const props = defineProps({
   },
 
   label: {
-    type: String,
+    type: [String, Number],
     required: false,
     default: '',
   },
 
   placeholder: {
-    type: String,
+    type: [String, Number],
     required: false,
     default: '',
   },
 
   subtext: {
-    type: String,
+    type: [String, Number],
     required: false,
     default: '',
   },

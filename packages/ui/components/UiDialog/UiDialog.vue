@@ -151,8 +151,11 @@ async function onDialogClose($event) {
     background-color: var(--ui-color-background);
     color: var(--ui-color-foreground);
 
-    // min-width: 500px;
-    max-width: 70vw;
+    margin: 15vh auto auto auto;
+    min-width: 40vw;
+    max-width: 95vw;
+    max-height: 95vh;
+    padding: 0;
 
     &::backdrop {
       background: rgba(0,0,0, 0.5);

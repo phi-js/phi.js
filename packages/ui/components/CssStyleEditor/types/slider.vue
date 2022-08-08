@@ -62,9 +62,14 @@ const rangeAttributes = computed(() => ({
       v-bind="rangeAttributes"
       @update:model-value="innerValue.value = $event; emitUpdate();"
     />
-    <span>{{ innerValue.value || 'auto' }}</span>
+    <!-- <span>{{ innerValue.value || 'auto' }}</span> -->
+    <input
+      type="number"
+      :value="innerValue.value || null"
+      placeholder="auto"
+      @input="innerValue.value = $event.target.value; emitUpdate();"
+    >
     <select
-      v-model="innerValue.units"
       class="CssSlider__select"
       @change="emitUpdate()"
     >
@@ -94,10 +99,14 @@ const rangeAttributes = computed(() => ({
   }
 
   &--null {
-    opacity: 0.5;
+    opacity: 0.7;
   }
 
-  & > span,
+  & > input {
+    width: 4rem;
+  }
+
+  & > input,
   &__select {
     background: transparent;
     color: inherit;

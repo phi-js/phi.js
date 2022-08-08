@@ -69,7 +69,7 @@ const emit = defineEmits(['update:open', 'update:dock', 'update:coords', 'cancel
 
 /* Stored coords (for each dock) */
 const storedCoords = ref({
-  default: { top: 100, left: 100, width: 600, height: 400 },
+  default: { top: 100, left: 100, width: 500, height: 550 },
   top: { height: 300 },
   bottom: { height: 300 },
   left: { width: 400 },

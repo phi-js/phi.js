@@ -126,6 +126,13 @@ const inputs = computed(() => {
       :key="i"
       class="CssStyleEditor__property"
     >
+      <UiIcon
+        class="CssStyleEditor__deleter"
+        src="mdi:cancel"
+        :title="`Reset ${input.props?.label || ''}`"
+        @click="innerValue[input.propName] = null; emitUpdate()"
+      />
+
       <UiInput
         class="CssStyleEditor__input"
         v-bind="input.props"
@@ -133,24 +140,25 @@ const inputs = computed(() => {
         :endpoint="$attrs.endpoint"
         @update:model-value="innerValue[input.propName] = $event; emitUpdate()"
       />
-
-      <UiIcon
-        class="CssStyleEditor__deleter"
-        src="mdi:backspace"
-        :title="`Reset ${input.props?.label || ''}`"
-        @click="innerValue[input.propName] = null; emitUpdate()"
-      />
     </div>
   </div>
 </template>
 
 <style lang="scss">
 .CssStyleEditor {
-  &__property {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: flex-end;
-    margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 8px 0;
+
+  // &__property {
+  //   display: flex;
+  //   flex-wrap: nowrap;
+  //   align-items: flex-start;
+  // }
+
+  &__input {
+    flex: 1;
   }
 
   &__deleter {
@@ -158,7 +166,9 @@ const inputs = computed(() => {
     width: 30px;
     height: 30px;
 
-    margin: 0 0 4px 12px;
+    // margin: 0 0 0 1rem;
+    margin: 2px;
+    float: right;
 
     display: flex;
     align-items: center;
@@ -171,6 +181,7 @@ const inputs = computed(() => {
     &:hover {
       opacity: 1;
       background-color: var(--ui-color-hover);
+      color: var(--ui-color-danger);
     }
   }
 }

@@ -42,7 +42,7 @@
     &::-webkit-scrollbar-thumb {
       border-radius: 2px;
       background-color: rgba(255, 255, 255, 0.2);
-    }    
+    }
   }
 }
 
@@ -50,7 +50,6 @@
 .UiTabs {
   .UiTab {
     position: relative;
-    border-radius: 4px;  
     // overflow: hidden; // Messes badge z-index
 
     &::after {
@@ -63,6 +62,7 @@
       border-radius: 2px;
       background-color: var(--ui-color-primary);
 
+      transform-origin: center;
       transform: scaleX(0);
       transition: transform var(--ui-duration-snap);
     }
@@ -74,27 +74,29 @@
     }
   }
 
-  &--direction-left {
-    .UiTab {
-      &--incoming::after {
-        transform-origin: bottom right;
-      }
-      &--outgoing::after {
-        transform-origin: bottom left;
-      }
-    }
-  }
+  // // Stretch the tab underline from the direction
+  // // of the previous tab
+  // &--direction-left {
+  //   .UiTab {
+  //     &--incoming::after {
+  //       transform-origin: bottom right;
+  //     }
+  //     &--outgoing::after {
+  //       transform-origin: bottom left;
+  //     }
+  //   }
+  // }
 
-  &--direction-right {
-    .UiTab {
-      &--incoming::after {
-        transform-origin: bottom left;
-      }
-      &--outgoing::after {
-        transform-origin: bottom right;
-      }
-    }
-  }
+  // &--direction-right {
+  //   .UiTab {
+  //     &--incoming::after {
+  //       transform-origin: bottom left;
+  //     }
+  //     &--outgoing::after {
+  //       transform-origin: bottom right;
+  //     }
+  //   }
+  // }
 }
 
 
@@ -107,6 +109,7 @@
   .UiItem {
     // text-align: center;
     justify-content: center;
+    border-radius: 4px;
 
     &__body {
       flex: none;

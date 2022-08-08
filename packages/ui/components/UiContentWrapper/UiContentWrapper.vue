@@ -70,6 +70,7 @@ const bodyStyle = computed(() => {
   background-color: transparent;
 
   .UiContentWrapper__body {
+    background-color: transparent;
     overflow: visible;
     box-shadow: none;
   }

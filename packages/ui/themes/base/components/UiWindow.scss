@@ -174,13 +174,22 @@
   }
 }
 
+
 .UiWindow {
   // background: rgba(0,0,0, 0.1); //scrim background
 
+  // Window body color theme (dark)
+  --ui-color-background: #2f2f2f;
+  --ui-color-foreground: #eeeeee;
+  --ui-color-z1: rgba(255, 255, 255, 0.06);
+  --ui-color-z2: #48484c;
+  --ui-color-z3: #68686c;
+  --ui-color-hover: rgba(255,255,255, 0.08);
+
   &__box {
     border-radius: 5px;
-    color: #ccc;
-    background: #2f2f2f;
+    color: var(--ui-color-foreground);
+    background: var(--ui-color-background);
   }
 
   &--docked {

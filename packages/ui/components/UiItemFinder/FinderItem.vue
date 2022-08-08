@@ -78,14 +78,14 @@ const emit = defineEmits(['click-item'])
 
   &--item {
     --ui-item-padding: 8px 12px;
-    border-radius: 4px;
-    background: linear-gradient(0deg, rgba(213,213,213, 0.1) 0%, rgba(252,252,252, 0.15) 100%);
+    // background: linear-gradient(0deg, rgba(213,213,213, 0.1) 0%, rgba(252,252,252, 0.15) 100%);
 
     outline: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+
     &:focus {
-      border: 1px solid var(--ui-color-primary);
-      margin-top: -1px;
-      margin-bottom: -1px;
+      border-color: var(--ui-color-primary);
     }
 
     cursor: pointer;
