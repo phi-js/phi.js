@@ -4,7 +4,7 @@ import { useI18n } from '@/packages/i18n'
 import { UiIcon, UiPopover, UiTabs, UiTab, UiButton } from '@/packages/ui'
 import BlockScaffold from '../../../../components/CmsBlockEditor/BlockScaffold.vue'
 
-import googleTranslate from '../../../../components/CmsPropInput/googleTranslate'
+import googleTranslate from '../../../../components/CmsPropInput/types/googleTranslate'
 
 import { Editor } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
@@ -312,7 +312,7 @@ async function doTranslation() {
       />
     </template>
 
-    <template #default="slotData">
+    <template #default="{ innerBlock }">
       <UiTabs
         v-if="isLanguageOpen"
         class="MediaHtmlBlockEditor__tabs"
@@ -339,9 +339,10 @@ async function doTranslation() {
         </template>
       </UiTabs>
       <EditorContentWrapper
-        v-bind="slotData?.blockCssAttributes"
         :value="innerValue"
         :editor="editor"
+        :class="innerBlock?.props?.class"
+        :style="innerBlock?.props?.style"
       />
     </template>
   </BlockScaffold>

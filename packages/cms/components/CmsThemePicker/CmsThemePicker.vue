@@ -1,19 +1,29 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
+import { UiItem } from '@/packages/ui'
 import { getAvailableThemes } from '../../themes'
 
 const props = defineProps({
-  /* Array of selected themes:
+  /* Array of stylesheets:
   [
     {
-      title: 'The theme\'s name',
-      name: 'ThemeOne', // theme name IS the class name
-      url: 'https://phi.co/css/themes/ThemeOne.css', // CSS url
-      thumbnail: 'https:// ... thumbnail image URL ',
-      description: '... description text ...',
-    },
+      id: // required.  Unique ID
+      title: 'Some Title, if you want',
+      description: 'Also a description',
+
+      container: css selector of parent container (to which classes are applied).  default: body
+
+      // SRC can be:
+      // a url
+      src: 'https:// ....'
+      // a string containing a CSS declaration
+      src: '.something\n{\n  border-radius: 2px;}',
+      // an object containing CSS properties (to be applied to "container" element if present, --2do: apply to ":root" if no container)
+
+      type: optional. A descriptive indicator of the type of stylesheet (font, class, palette, ...any custom string)
+    }
     ...
-  ],
+  ]
   */
   modelValue: {
     type: Array,
@@ -30,122 +40,81 @@ getAvailableThemes().then((r) => availableThemes.value = r)
 const selectedThemes = ref([])
 watch(
   () => props.modelValue,
-  (newValue) => selectedThemes.value = Array.isArray(newValue) ? newValue.concat() : [],
+  (newValue) => {
+    selectedThemes.value = newValue.filter((sheet) => sheet.type == 'theme')
+  },
   { immediate: true },
 )
 
 const listedThemes = computed(() => availableThemes.value.map((theme) => ({
   ...theme,
-  isActive: selectedThemes.value.findIndex((t) => t.name == theme.name) >= 0,
+  isActive: selectedThemes.value.findIndex((t) => t.id == theme.id) >= 0,
 })))
 
 
 function selectTheme(theme) {
-  const foundIndex = selectedThemes.value.findIndex((t) => t.name == theme.name)
-  if (foundIndex >= 0) {
-    return
+  const returnValue = props.modelValue.filter((sheet) => sheet.type != 'theme')
+
+  const foundIndex = selectedThemes.value.findIndex((t) => t.id == theme.id)
+  if (foundIndex === -1) {
+    returnValue.unshift({ ...theme, type: 'theme' })
   }
 
-  selectedThemes.value = [theme]
-  emit('update:modelValue', selectedThemes.value.concat())
+  emit('update:modelValue', returnValue)
 }
 </script>
 
 <template>
   <div class="CmsThemePicker">
-    <!-- <div class="CmsThemePicker__selected">
-      <div
-        v-for="theme in selectedThemes"
-        :key="theme.name"
-        class="Theme"
-      >
-        <img
-          v-if="theme.thumbnail"
-          :src="theme.thumbnail"
-          :alt="theme.title || theme.name"
-          class="Theme__thumbnail"
-        >
-        <div class="Theme__details">
-          <h3
-            class="Theme__name"
-            v-text="theme.title || theme.name"
-          />
-          <div
-            class="Theme__description"
-            v-text="theme.description"
-          />
-        </div>
-      </div>
-    </div> -->
-
-    <!-- <fieldset>
-      <legend>Select theme</legend> -->
-    <div class="CmsThemePicker__available">
-      <div
-        v-for="(theme,i) in listedThemes"
-        :key="theme.name"
-        class="Theme"
-        :class="{'Theme--active': theme.isActive}"
-        :title="theme.description"
-        @click="selectTheme(availableThemes[i])"
-      >
-        <img
-          v-if="theme.thumbnail"
-          :src="theme.thumbnail"
-          :alt="theme.title || theme.name"
-          class="Theme__thumbnail"
-        >
-        <div class="Theme__details">
-          <h3
-            class="Theme__name"
-            v-text="theme.title || theme.name"
-          />
-        </div>
-      </div>
-    </div>
-    <!-- </fieldset> -->
+    <UiItem
+      v-for="(theme,i) in listedThemes"
+      :key="i"
+      class="Theme"
+      :class="{'Theme--active': theme.isActive}"
+      :icon="theme.thumbnail"
+      :text="theme.title || theme.id"
+      :subtext="theme.description"
+      @click="selectTheme(availableThemes[i])"
+    />
   </div>
 </template>
 
 <style lang="scss">
 .CmsThemePicker {
-  padding: 6px;
-  .Theme {
-    margin-bottom: 6px;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px;
 }
 
 .Theme {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: flex-start;
+  user-select: none;
+  cursor: pointer;
+  --ui-item-padding: 6px;
   border-radius: 4px;
-  padding: 6px;
 
-  &__thumbnail {
-    width: 112px;
-    border-radius: 4px;
+  .UiItem {
+    &__body {
+      padding-left: 6px;
+    }
+
+    &__text {
+      font-size: 1.4em;
+    }
+
+    &__icon {
+      width: 100px;
+      height: 60px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
   }
-
-  &__details {
-    flex: 1;
-    padding: 12px 16px;
-  }
-
-  &__name {
-    margin: 0;
-    font-size: 1.45em;
-    font-weight: 300;
-  }
-
 
   &--active {
     background-color: var(--ui-color-primary) !important;
     color: #fff;
   }
 
-  user-select: none;
-  cursor: pointer;
   &:hover {
     background-color: var(--ui-color-hover);
   }

@@ -18,6 +18,9 @@ const CmsBlockEditor = {
 
   setup(props, { emit, attrs, expose }) {
     const definition = getBlockDefinition(props.block)
+    if (!definition) {
+      console.warn('CmsBlockEditor: No definition found', props.block)
+    }
 
     const innerBlock = ref(props.block)
     watch(
@@ -40,6 +43,10 @@ const CmsBlockEditor = {
     })
 
     return (instance) => {
+      if (!definition) {
+        return
+      }
+
       if (definition?.editor?.component) {
         const customEditor = h(
           definition.editor.component,

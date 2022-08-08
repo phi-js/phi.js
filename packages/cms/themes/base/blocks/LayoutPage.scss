@@ -1,11 +1,13 @@
 .LayoutPage {
   position: relative;
   min-height: 100%;
-  background-color: var(--ui-color-background);
-  color: var(--ui-color-foreground);
 
-  &__contents {
-    padding: 12px;
+  padding: var(--ui-content-margin);
+
+  &__contents,
+  &__header,
+  &__footer {
+    padding: 10px;
     margin: auto;
     max-width: var(--ui-content-width);
   }

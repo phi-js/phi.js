@@ -1,8 +1,5 @@
 export default function sanitizeStory(story) {
-  const emptyPage = {
-    component: 'LayoutPage',
-    slot: [],
-  }
+  const emptyPage = { component: 'LayoutPage' }
 
   const defaultStory = {
     title: '',
@@ -24,9 +21,9 @@ export default function sanitizeStory(story) {
     story.paths = []
   }
 
-  // Every story has an ARRAY of themes
-  if (!Array.isArray(story.themes)) {
-    story.themes = []
+  // Every story has an ARRAY of stylesheets
+  if (!Array.isArray(story.stylesheets)) {
+    story.stylesheets = []
   }
 
   /* Every story has an CSS object:
@@ -48,9 +45,9 @@ export default function sanitizeStory(story) {
       page.id = index === 0 ? 'start' : `page-${index + 1}`
     }
 
-    // every page has info object (text, subtext, icon)
-    if (!page.info) {
-      page.info = { text: page.id }
+    // every page has a title
+    if (!page.title) {
+      page.title = page.id
     }
 
     // every page has a hash name (used in navigation url.to.page/#hash)

@@ -3,9 +3,9 @@ export default { inheritAttrs: false }
 </script>
 
 <script setup>
-import { computed, nextTick } from 'vue'
+import { computed } from 'vue'
 import MediaImage from './MediaImage.vue'
-import { UiInput, UiResizable } from '../../../../../ui'
+import { UiResizable } from '../../../../../ui'
 
 const props = defineProps({
   /* objeto PROPS para MediaImage:
@@ -13,6 +13,7 @@ const props = defineProps({
     align: 'center',
     width: 'auto',
     href: 'https://phidias.co',
+    height: '130px'
   */
   modelValue: {
     type: Object,
@@ -23,24 +24,27 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 const isEmpty = computed(() => !props.modelValue?.src?.trim?.())
 
-function toggleHeightAuto(setAuto = true, refresh) {
+function toggleHeightAuto(setAuto = true) {
   emit('update:modelValue', { ...props.modelValue, height: setAuto ? 'auto' : undefined })
-  nextTick(() => refresh())
 }
 
-function onInputChange($event, newBounds) {
+function onInputChange($event, coords) {
   emit('update:modelValue', { ...props.modelValue, height: $event.target.value + 'px' })
-  newBounds.height = parseInt($event.target.value)
+  coords.height = parseInt($event.target.value)
 }
 
-function incrementHeight(bigIncrement = false, newBounds) {
-  newBounds.height = parseInt(props.modelValue.height) + (bigIncrement ? 20 : 1)
-  emit('update:modelValue', { ...props.modelValue, height: newBounds.height + 'px' })
+function incrementHeight(bigIncrement = false, coords) {
+  coords.height = parseInt(props.modelValue.height) + (bigIncrement ? 20 : 1)
+  emit('update:modelValue', { ...props.modelValue, height: coords.height + 'px' })
 }
 
-function decrementHeight(bigIncrement = false, newBounds) {
-  newBounds.height = parseInt(props.modelValue.height) - (bigIncrement ? 20 : 1)
-  emit('update:modelValue', { ...props.modelValue, height: newBounds.height + 'px' })
+function decrementHeight(bigIncrement = false, coords) {
+  coords.height = parseInt(props.modelValue.height) - (bigIncrement ? 20 : 1)
+  emit('update:modelValue', { ...props.modelValue, height: coords.height + 'px' })
+}
+
+function onImageResize(coords) {
+  emit('update:modelValue', { ...props.modelValue, height: `${coords.height}px` })
 }
 </script>
 
@@ -50,13 +54,15 @@ function decrementHeight(bigIncrement = false, newBounds) {
     :class="{ 'MediaImageFace--empty': isEmpty, 'MediaImageFace--notempty': !isEmpty }"
   >
     <UiResizable
-      v-slot="{ newBounds, refresh }"
+      v-slot="{ coords, reset }"
       :enabled="['s']"
-      @update:coords="emit('update:modelValue', { ...modelValue, height: $event.height })"
+      :min-height="100"
+      @end="onImageResize"
     >
       <MediaImage
         class="MediaImageFace__image"
         v-bind="{ ...$attrs, ...modelValue }"
+        :height="coords?.height ? coords.height + 'px' : modelValue.height"
       />
 
       <div class="MediaImageFace__infobox">
@@ -68,20 +74,20 @@ function decrementHeight(bigIncrement = false, newBounds) {
             <input
               type="checkbox"
               :checked="modelValue.height == 'auto'"
-              @change="toggleHeightAuto($event.target.checked, refresh)"
+              @change="toggleHeightAuto($event.target.checked); reset();"
             >
             auto
           </label>
           <input
             type="number"
             step="1"
-            min="10"
-            :value="newBounds.height"
-            @keydown.exact.down.prevent="incrementHeight(true, newBounds)"
-            @keydown.exact.up.prevent="decrementHeight(true, newBounds)"
-            @keydown.shift.down.prevent="incrementHeight(false, newBounds)"
-            @keydown.shift.up.prevent="decrementHeight(false, newBounds)"
-            @input="onInputChange($event, newBounds)"
+            min="100"
+            :value="coords.height"
+            @keydown.exact.down.prevent="incrementHeight(true, coords)"
+            @keydown.exact.up.prevent="decrementHeight(true, coords)"
+            @keydown.shift.down.prevent="incrementHeight(false, coords)"
+            @keydown.shift.up.prevent="decrementHeight(false, coords)"
+            @input="onInputChange($event, coords)"
           >
           <span>px</span>
         </div>
@@ -108,15 +114,14 @@ function decrementHeight(bigIncrement = false, newBounds) {
   position: relative;
   --imageface-resizer-size: 30px;
 
+  margin-bottom: 16px; // make room for the content adder at the bottom of the block
+
   &__infobox {
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-
-    padding: 8px;
-    background-color: rgba(0, 0, 0, 0.5);
 
     opacity: 0;
   }
@@ -157,7 +162,6 @@ function decrementHeight(bigIncrement = false, newBounds) {
     position: absolute;
     bottom: 0;
     right: var(--imageface-resizer-size);
-    height: var(--imageface-resizer-size);
 
     display: flex;
     flex-wrap: nowrap;
@@ -182,15 +186,9 @@ function decrementHeight(bigIncrement = false, newBounds) {
     }
 
     & > input {
-      background: transparent;
-      font-weight: bold;
-      color: #eee;
-      border: 0;
-
       width: 4rem;
-      padding: 3px 6px;
-      border-radius: 3px;
-      background-color: rgba(255,255,255, 0.1);
+      border-radius: 4px;
+      border: 1px solid #999;
     }
 
     & > span {

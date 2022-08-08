@@ -3,7 +3,7 @@ import { ref, watch, computed } from 'vue'
 
 import { useI18n } from '@/packages/i18n'
 import { UiInput, UiButton } from '@/packages/ui'
-import { fillGaps } from './googleTranslate.js'
+import { fillGaps } from './types/googleTranslate.js'
 
 const props = defineProps({
   /*

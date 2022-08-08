@@ -38,14 +38,30 @@ const isSelect = computed(() =>
   props.modelValue?.props?.type
   && props.modelValue.props.type.substring(0, 6) == 'select')
 
+const isButton = computed(() =>
+  props.modelValue?.props?.type
+  && ['button', 'submit', 'cancel'].includes(props.modelValue.props.type))
+
+
 const i18n = useI18n()
 const translatedProps = computed(() => {
   return parseTranslations({ ...props.modelValue?.props }, i18n.locale, props.modelValue.i18n)
 })
+
+function onClickFace() {
+  if (!props.openAction) {
+    return
+  }
+
+  props.openAction('InputSettings')
+}
 </script>
 
 <template>
-  <div class="InputFace">
+  <div
+    class="InputFace"
+    @click="onClickFace"
+  >
     <!-- stand-in for empty Select fields -->
     <div
       v-if="isSelect && !Array.isArray(translatedProps?.options)"
@@ -63,9 +79,11 @@ const translatedProps = computed(() => {
     <UiInput
       v-else
       :class="[modelValue?.component, attrs?.class]"
-      :style="attrs?.style"
+      :style="[
+        attrs?.style,
+        !isButton ? 'pointer-events: none;' : null
+      ]"
       v-bind="translatedProps"
-      style="pointer-events: none;"
     />
   </div>
 </template>
@@ -73,6 +91,7 @@ const translatedProps = computed(() => {
 <style lang="scss">
 .InputFace {
   cursor: pointer;
+  pointer-events: none;
 
   &__dummy {
     position: relative;
@@ -92,6 +111,13 @@ const translatedProps = computed(() => {
       opacity: 0.66;
       position: relative;
     }
+  }
+}
+
+.SlotItem--active {
+  .InputFace {
+    cursor: initial;
+    pointer-events: initial;
   }
 }
 

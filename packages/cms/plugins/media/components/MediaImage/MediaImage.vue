@@ -42,7 +42,10 @@ const containerStyle = computed(() => ({
   // backgroundSize: 'contain',
 }))
 
-const imgStyle = computed(() => ({ height: '100%' }))
+const imgStyle = computed(() => ({
+  height: '100%',
+  maxWidth: '100%',
+}))
 
 watch(
   () => props.src,

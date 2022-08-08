@@ -5,13 +5,11 @@ Presents a window with options for the current page and the story (style, dictio
 */
 import { ref, watch, computed } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import { UiWindow, UiTabs, UiTab, UiInput } from '@/packages/ui'
+import { UiWindow, UiTabs, UiTab, UiInput, UiItem } from '@/packages/ui'
 
-// import BlockCssEditor from '../CmsBlockEditor/BlockCssEditor.vue'
 import ListenersEditor from '../ListenersEditor/ListenersEditor.vue'
 import StoryDictionaryEditor from './StoryDictionaryEditor.vue'
 import StoryMethodsEditor from './StoryMethodsEditor.vue'
-// import CmsThemePicker from '../CmsThemePicker/CmsThemePicker.vue'
 import CmsStoryStyle from '../CmsStoryStyle/CmsStoryStyle.vue'
 
 const props = defineProps({
@@ -45,6 +43,11 @@ watch(
   () => props.story,
   (newStory) => {
     innerStory.value = JSON.parse(JSON.stringify(newStory))
+
+    if (!innerStory.value?.pages?.length) {
+      return // .... hmmmm
+    }
+
     const foundPageIndex = innerStory.value.pages.findIndex((p) => p.id == props.currentPageId)
     currentPage.value = foundPageIndex >= 0 ? innerStory.value.pages?.[foundPageIndex] : innerStory.value.pages?.[0]
   },
@@ -217,117 +220,98 @@ const availableEvents = computed(() => [
     :open="!!props.currentTab"
     @update:open="emit('update:currentTab', null)"
   >
-    <template #default>
-      <UiTabs
-        :model-value="currentTab"
-        @update:model-value="emit('update:currentTab', $event)"
-      >
-        <UiTab
-          value="style"
-          icon="mdi:palette-advanced"
-          :text="i18n.t('StoryEditorWindow.style')"
-        >
-          <CmsStoryStyle
-            v-model:story="innerStory"
-            @update:story="emitStoryUpdate"
-          />
-          <!-- <BlockCssEditor
-            v-model="currentPage"
-            @update:model-value="emitCurrentPageUpdate"
-          >
-            <template #default>
-              <UiTab
-                value="theme"
-                text="Theme"
-              >
-                <CmsThemePicker
-                  v-model="innerStory.themes"
-                  @update:model-value="emitStoryUpdate"
-                />
-              </UiTab>
-            </template>
-          </BlockCssEditor> -->
-        </UiTab>
-
-        <UiTab
-          value="code"
-          icon="mdi:code-json"
-          :text="i18n.t('StoryEditorWindow.code')"
-        >
-          <UiTabs>
-            <UiTab
-              value="events"
-              icon="mdi:gesture-tap"
-              :text="i18n.t('StoryEditorWindow.events')"
-            >
-              <ListenersEditor
-                v-model="storyEvents"
-                class="StoryEditorWindow__events"
-                :available-events="availableEvents"
-              />
-            </UiTab>
-
-            <UiTab
-              value="methods"
-              icon="mdi:variable"
-              :text="i18n.t('StoryEditorWindow.methods')"
-            >
-              <StoryMethodsEditor
-                v-model:story="innerStory"
-                @update:story="emitStoryUpdate"
-              />
-            </UiTab>
-          </UiTabs>
-        </UiTab>
-
-
-
-        <UiTab
-          value="i18n"
-          icon="mdi:translate"
-          :text="i18n.t('StoryEditorWindow.i18n')"
-        >
-          <StoryDictionaryEditor
-            v-model:story="innerStory"
-            @update:story="emitStoryUpdate"
-          />
-        </UiTab>
-
-        <UiTab
-          value="source"
-          icon="mdi:code-json"
-          :text="i18n.t('StoryEditorWindow.source')"
-        >
-          <div class="StoryEditorWindow__tab">
-            <UiTabs>
-              <UiTab
-                :text="i18n.t('StoryEditorWindow.thisPage')"
-                icon="mdi:code-json"
-                value="source-page"
-              >
-                <UiInput
-                  v-model="currentPage"
-                  type="json"
-                  @update:model-value="emitCurrentPageUpdate"
-                />
-              </UiTab>
-
-              <UiTab
-                :text="i18n.t('StoryEditorWindow.global')"
-                icon="mdi:code-json"
-                value="source-story"
-              >
-                <UiInput
-                  v-model="innerStory"
-                  type="json"
-                  @update:model-value="emitStoryUpdate"
-                />
-              </UiTab>
-            </UiTabs>
-          </div>
-        </UiTab>
-      </UiTabs>
+    <template #header>
+      <UiItem
+        class="StoryEditorWindow__header"
+        :text="i18n.t('StoryEditorWindow.' + props.currentTab)"
+      />
     </template>
+
+    <template #default>
+      <div
+        v-if="currentTab == 'style'"
+        class="contents-style"
+      >
+        <CmsStoryStyle
+          v-model:story="innerStory"
+          @update:story="emitStoryUpdate"
+        />
+      </div>
+      <div
+        v-if="currentTab == 'code'"
+        class="contents-code"
+      >
+        <UiTabs>
+          <UiTab
+            value="methods"
+            icon="mdi:variable"
+            :text="i18n.t('StoryEditorWindow.methods')"
+          >
+            <StoryMethodsEditor
+              v-model:story="innerStory"
+              @update:story="emitStoryUpdate"
+            />
+          </UiTab>
+
+          <UiTab
+            value="events"
+            icon="mdi:gesture-tap"
+            :text="i18n.t('StoryEditorWindow.events')"
+          >
+            <ListenersEditor
+              v-model="storyEvents"
+              class="StoryEditorWindow__events"
+              :available-events="availableEvents"
+            />
+          </UiTab>
+        </UiTabs>
+      </div>
+      <div
+        v-if="currentTab == 'i18n'"
+        class="contents-i18n"
+      >
+        <StoryDictionaryEditor
+          v-model:story="innerStory"
+          @update:story="emitStoryUpdate"
+        />
+      </div>
+      <div
+        v-if="currentTab == 'source'"
+        class="StoryEditorWindow__tab contents-source"
+      >
+        <UiInput
+          v-model="innerStory"
+          type="json"
+          @update:model-value="emitStoryUpdate"
+        />
+        <!-- <UiTabs>
+          <UiTab
+            :text="i18n.t('StoryEditorWindow.thisPage')"
+            icon="mdi:code-json"
+            value="source-page"
+          >
+            <UiInput
+              v-model="currentPage"
+              type="json"
+              @update:model-value="emitCurrentPageUpdate"
+            />
+          </UiTab>
+
+          <UiTab
+            :text="i18n.t('StoryEditorWindow.global')"
+            icon="mdi:code-json"
+            value="source-story"
+          >
+            <UiInput
+              v-model="innerStory"
+              type="json"
+              @update:model-value="emitStoryUpdate"
+            />
+          </UiTab>
+        </UiTabs> -->
+      </div>
+    </template>
+
     <template #footer="{ close }">
       <button
         type="button"
@@ -344,3 +328,11 @@ const availableEvents = computed(() => [
     </template>
   </UiWindow>
 </template>
+
+<style lang="scss">
+.StoryEditorWindow {
+  &__header {
+    --ui-item-padding: 8px 12px;
+  }
+}
+</style>

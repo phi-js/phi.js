@@ -1,6 +1,5 @@
 import UiFileList from '../../../../../ui/components/UiFileList/UiFileList.vue'
-import UiUpload from '../../../../../ui/components/UiUpload/UiUpload.vue'
-import { UiInput } from '@/packages/ui/components'
+import { UiInput, UiUpload } from '@/packages/ui'
 
 export default {
   name: 'MediaFileList',

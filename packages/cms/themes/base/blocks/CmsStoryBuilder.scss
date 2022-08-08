@@ -5,12 +5,16 @@
   &__body {
     flex: 1;
 
+    // Display:flex fucks up the <table> overflow in the StoryEditor's "Data" tab
+    // BUT it is necessary to position CmsStoryBuilder__sidebar to the left
+
     display: flex;
     flex-wrap: nowrap;
   }
 
   &__content {
     flex: 1;
+    max-width: 100%; // fixes fuck up described above (line 8)
   }
 
   &__sidebar {
@@ -132,32 +136,39 @@
     // min-height: 48px;
   }
 
+  &__tabOptions {
+    & > a,
+    & > .UiItem {
+      @extend .ui--clickable;
+
+      font-weight: 600;
+      font-size: 14px;
+      border-radius: 4px;
+
+      .UiItem {
+        &__icon {
+          // order: 2; place item icons to the right
+          opacity: 0.4;
+          font-size: 0.9em;
+        }
+
+        &:hover .UiItem__icon {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
   &__tabOptions a {
-    @extend .ui--clickable;
     display: flex;
     color: inherit;
-
-    font-weight: 600;
-    font-size: 14px;
-    border-radius: 4px;
-
-    /* place item icons to the right (order:2) */
-    .UiItem {
-      &__icon {
-        order: 2;
-        opacity: 0.4;
-        font-size: 0.9em;
-      }
-
-      &:hover .UiItem__icon {
-        opacity: 1;
-      }
-    }    
   }
 
   &__tabItem {
     @extend .ui--clickable;
     user-select: none;
+    display: flex;
+    align-items: center;
 
     &--sitemap {
       white-space: nowrap;
@@ -185,8 +196,6 @@
   }
 }
 
-
-
 // Tabs and options layout in mobile
 @media (max-width:500px) {
   .CmsStoryBuilder__toolbar {
@@ -196,10 +205,6 @@
       }
 
       &__tabList {
-        flex: none;
-        order: 2;
-        width: 100%;
-
         .UiTab {
           flex: 1;
         }

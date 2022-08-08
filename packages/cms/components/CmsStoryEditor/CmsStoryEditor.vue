@@ -1,9 +1,7 @@
 <script setup>
-import { ref, watch, watchEffect, computed, defineComponent, h, Teleport, provide } from 'vue'
+import { ref, watch, watchEffect, provide } from 'vue'
 
-import { colorScheme } from '@/packages/ui'
-
-import { sanitizeStory, getStorySchema, useThemes } from '../../functions'
+import { sanitizeStory, useStylesheets } from '../../functions'
 import { CmsBlockEditor } from '../CmsBlockEditor'
 
 const props = defineProps({
@@ -36,125 +34,137 @@ watch(
   },
 )
 
-/* Provide VM schema */
-const storySchema = computed(() => {
-  const storySchema = getStorySchema(sanitizedStory.value)
-
-  if (!storySchema.properties?.$i18n) {
-    storySchema.properties.$i18n = {
-      type: 'object',
-      properties: {
-        locale: {
-          type: 'string',
-          info: { text: 'Language' },
-          enum: [
-            { value: 'en' },
-            { value: 'es' },
-            { value: 'fr' },
-            { value: 'de' },
-          ],
-        },
-      },
-    }
-  }
-
-  if (!storySchema.properties?.$errors) {
-    storySchema.properties.$errors = {
-      type: 'object',
-      properties: {
-        length: {
-          type: 'number',
-          info: { text: 'No. of errors' },
-        },
-      },
-    }
-  }
-
-  return storySchema
-})
-
-provide('$_vm_modelSchema', storySchema)
-
 
 // MediaLink calls injectedStory.goTo()
 // So for MediaLink to work inside a story editor, we must provide a $_cms_story.goTo()
-provide('$_cms_story', {
+const providedStory = {
   goTo: (pageId) => {
     emit('update:currentPageId', pageId)
   },
-})
+
+  goNext: () => {
+    const currentIndex = sanitizedStory.value.pages.findIndex((p) => p.id == props.currentPageId)
+    const nextId = sanitizedStory.value.pages?.[currentIndex + 1]?.id
+    if (nextId) {
+      transitionDirection.value = 'fw'
+      emit('update:currentPageId', nextId)
+    }
+  },
+
+  goBack: () => {
+    const currentIndex = sanitizedStory.value.pages.findIndex((p) => p.id == props.currentPageId)
+    const prevId = sanitizedStory.value.pages?.[currentIndex - 1]?.id
+    if (prevId) {
+      transitionDirection.value = 'bw'
+      emit('update:currentPageId', prevId)
+    }
+  },
+}
+
+provide('$_cms_story', providedStory)
 
 
 const currentPage = ref()
 watchEffect(() => {
   const foundPage = sanitizedStory.value.pages.find((p) => p.id == props.currentPageId)
   currentPage.value = foundPage || sanitizedStory.value.pages?.[0]
+  currentPage.value.slots = {
+    ...currentPage.value.slots,
+    header: sanitizedStory.value.header,
+    footer: sanitizedStory.value.footer,
+  }
 })
 
 function onUpdateCurrentPage() {
+  const targetValue = currentPage.value
+
+  if (targetValue.slots.header) {
+    sanitizedStory.value.header = targetValue.slots.header
+    delete targetValue.slots.header
+  }
+  if (targetValue.slots.footer) {
+    sanitizedStory.value.footer = targetValue.slots.footer
+    delete targetValue.slots.footer
+  }
+
   emit('update:story', {
     ...sanitizedStory.value,
-    pages: sanitizedStory.value.pages.map((page) => page.id == currentPage.value.id ? { ...currentPage.value } : page),
+    pages: sanitizedStory.value.pages.map((page) => page.id == targetValue.id ? { ...targetValue } : page),
   })
 }
 
 const transitionName = ref('slideX')
 const transitionDirection = ref('fw') // fw, bw
 
-const storyCSS = computed(() => sanitizedStory.value.css.classes.map((c) => c.css).join('\n'))
-const StyleTag = defineComponent({
-  render: () => h(
-    Teleport,
-    { to: 'head' },
-    h(
-      'style',
-      {
-        type: 'text/css',
-        class: 'CmsStory__style',
-      },
-      storyCSS.value,
-    ),
-  ),
-})
+// STYLESHEETS
+watchEffect(() => useStylesheets(sanitizedStory.value.stylesheets))
 
-// THEMES
-const storyClassNames = ref([])
-if (sanitizedStory.value?.themes) {
-  watch(
-    () => sanitizedStory.value.themes,
-    () => storyClassNames.value = useThemes(sanitizedStory.value),
-    { immediate: true },
-  )
+function onFormSubmit($event) {
+  let data = new FormData($event.target)
+  if ($event.submitter) {
+    data.append($event.submitter.name, $event.submitter.value)
+  }
+  let goTo = data.get('story-goto')
+  switch (goTo) {
+  case '':
+  case 0:
+  case null:
+  case undefined:
+    /// zzzz
+    break
+  case 'next':
+    providedStory?.goNext?.()
+    break
+  case 'back':
+    providedStory?.goBack?.()
+    break
+  default:
+    providedStory?.goTo?.(goTo)
+    break
+  }
 }
 
-const storyStyleProp = computed(() => ({
-  ...sanitizedStory.value.css?.style,
-  ...sanitizedStory.value.css?.[`style-${colorScheme.value}`],
-}))
-
+const isAnimating = ref(false)
 </script>
 
 <template>
-  <div
-    class="CmsStoryEditor"
-    :class="storyClassNames"
-    :style="storyStyleProp"
-  >
-    <StyleTag />
-
-    <Transition :name="`${transitionName}--${transitionDirection}`">
-      <div
-        v-if="currentPage"
-        :key="currentPage.id"
+  <div class="CmsStoryEditor">
+    <div
+      class="CmsStoryEditor__viewport"
+      :class="{'CmsStoryEditor__viewport--animating': isAnimating}"
+    >
+      <Transition
+        :name="`${transitionName}--${transitionDirection}`"
+        @before-enter="isAnimating = true"
+        @after-leave="isAnimating = false"
       >
         <KeepAlive>
           <CmsBlockEditor
+            v-if="currentPage?.id"
+            :key="currentPage?.id"
             v-model:block="currentPage"
             class="CmsStory__page"
             @update:block="onUpdateCurrentPage"
+            @submit="onFormSubmit"
           />
         </KeepAlive>
-      </div>
-    </Transition>
+      </Transition>
+    </div>
   </div>
 </template>
+
+<style lang="scss">
+.CmsStoryEditor {
+  --cms-story-transition-duration: var(--ui-duration-quick);
+  @import "../CmsStory/transitions.scss";
+
+  &__viewport {
+    position: relative;
+    height: 100%;
+
+    &--animating {
+      overflow: hidden;
+    }
+  }
+}
+</style>

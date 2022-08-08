@@ -1,6 +1,9 @@
 .BlockVisibilityEditor {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 8px;
+  & > label {
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.8;
+    padding: 8px;
+    display: block;
+  }
 }

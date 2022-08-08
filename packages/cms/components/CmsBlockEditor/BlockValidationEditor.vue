@@ -48,6 +48,8 @@ function appendRule(ruleType) {
     })
     break
   }
+
+  emitUpdate()
 }
 
 function removeRule(rule) {

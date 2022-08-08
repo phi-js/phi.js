@@ -9,7 +9,7 @@ export default {
 
   block: {
     component: UiInput,
-    props: { type: 'button' },
+    props: { type: 'submit' },
   },
 
   emits: [

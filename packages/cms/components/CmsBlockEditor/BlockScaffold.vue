@@ -5,7 +5,7 @@ import UiDrawerStack from '@/packages/ui/components/UiDrawerStack/UiDrawerStack.
 
 import { parseTranslations } from '../../functions'
 import dictionary from './BlockScaffold.i18n.js'
-import { getBlockEditors, getBlockDefinition, getCssObjectAttributes } from '../../functions'
+import { getBlockEditors, getBlockDefinition } from '../../functions'
 import EditorAction from './EditorAction.vue'
 import {
   UiItem,
@@ -44,32 +44,14 @@ watch(
   { immediate: true },
 )
 
-/* Global scaffold accept catcher */
-const acceptListeners = []
-function registerAcceptListener(callback) {
-  acceptListeners.push(callback)
-  return () => acceptListeners.splice(acceptListeners.indexOf(callback), 1) // return unmount function
-}
-provide('$_cms_scaffold_accept', registerAcceptListener)
-
 function accept() {
   const blockClone = JSON.parse(JSON.stringify(innerBlock.value))
   emit('update:block', blockClone)
-  acceptListeners.forEach((callback) => callback(blockClone))
   return true
 }
 
-/* Global scaffold cancel catcher */
-const cancelListeners = []
-function registerCancelListener(callback) {
-  cancelListeners.push(callback)
-  return () => cancelListeners.splice(cancelListeners.indexOf(callback), 1) // return unmount function
-}
-provide('$_cms_scaffold_cancel', registerCancelListener)
-
 function cancel() {
   innerBlock.value = JSON.parse(JSON.stringify(props.block))
-  cancelListeners.forEach((callback) => callback(innerBlock.value))
   emit('cancel')
   return true
 }
@@ -78,8 +60,6 @@ function emitDelete() {
   emit('delete')
   return true
 }
-
-const blockCssAttributes = computed(() => getCssObjectAttributes(innerBlock.value?.css, innerBlock.value))
 
 // Available block editors
 const editors = shallowRef({})
@@ -234,12 +214,11 @@ defineExpose({
           <!-- Quick access buttons -->
           <UiIcon
             v-if="innerBlock['v-model'] !== undefined"
-            :style="{color: innerBlock['v-model'] ? 'var(--ui-color-primary)' : undefined}"
             :title="innerBlock['v-model']
               ? innerBlock['v-model']
               : i18n.t('BlockScaffold.NoVariableSet')
             "
-            class="BlockScaffold__toolbar-icon"
+            class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--variable"
             src="mdi:variable"
             @click="renameVModel()"
           />
@@ -247,23 +226,23 @@ defineExpose({
           <UiIcon
             v-if="innerBlock?.rules?.length"
             title="This block has validation rules"
-            class="BlockScaffold__toolbar-icon"
+            class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--validation"
             src="mdi:message-alert"
             @click="openActionId('validation')"
           />
 
           <UiIcon
-            v-if="innerBlock?.css?.classes?.length || innerBlock?.css?.style"
+            v-if="innerBlock?.props?.class || innerBlock?.props?.style"
             title="This block has CSS styles"
-            class="BlockScaffold__toolbar-icon"
-            src="mdi:palette-advanced"
+            class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--css"
+            src="mdi:water"
             @click="openActionId('css')"
           />
 
           <UiIcon
             v-if="innerBlock['v-if']"
             title="This block has conditional visibility"
-            class="BlockScaffold__toolbar-icon"
+            class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--visibility"
             src="mdi:eye"
             @click="openActionId('visibility')"
           />
@@ -271,7 +250,7 @@ defineExpose({
           <UiIcon
             v-if="innerBlock['v-for']"
             title="This block repeats"
-            class="BlockScaffold__toolbar-icon"
+            class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--repeat"
             src="mdi:repeat-variant"
             @click="openActionId('visibility')"
           />
@@ -279,7 +258,7 @@ defineExpose({
           <UiIcon
             v-if="hasEvents"
             title="Has events"
-            class="BlockScaffold__toolbar-icon"
+            class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--events"
             src="mdi:gesture-tap"
             @click="openActionId('events')"
           />
@@ -293,7 +272,7 @@ defineExpose({
           >
             <template #trigger>
               <UiIcon
-                class="BlockScaffold__toolbar-icon"
+                class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--trigger"
                 src="mdi:dots-vertical"
               />
             </template>
@@ -340,13 +319,13 @@ defineExpose({
       <slot
         name="default"
         :innerBlock="innerBlock"
-        :blockCssAttributes="blockCssAttributes"
       >
         <EditorAction
           v-if="editors.face"
           v-model:block="innerBlock"
           :action="editors.face"
-          v-bind="blockCssAttributes"
+          :class="innerBlock?.props?.class"
+          :style="innerBlock?.props?.style"
           :open-action="openActionId"
           @update:block="accept()"
           @delete="emitDelete()"
@@ -359,7 +338,9 @@ defineExpose({
         >
           <Component
             :is="definition.block.component"
-            v-bind="{ ...defaultFaceProps, ...blockCssAttributes }"
+            v-bind="defaultFaceProps"
+            :class="innerBlock?.props?.class"
+            :style="innerBlock?.props?.style"
           />
         </div>
       </slot>

@@ -3,34 +3,20 @@
 el valor de propValue se interpreta internamente asi:
 
 propValue = "Hola"
-innerValue = {
-  type: 'string',
-  value: 'Hola'
-}
+type -> 'constant'
 
 propValue = 123
-innerValue = {
-  type: 'number',
-  value: 'Hola'
-}
+type -> 'constant'
 
 propValue = "{{algo}}"
-innerValue = {
-  type: 'variable',
-  value: 'algo'
-}
+type -> 'expression'
 
 propValue = "{{algo ? 'si' : 'no'}}"
-innerValue = {
-  type: 'expression',
-  value: 'algo ? 'si' : 'no''
-}
+type -> 'expression'
 
+*** not yet implemented
 propValue = "lang(algunaCosa)"
-innerValue = {
-  type: 'lang',
-  value: 'algunaCosa'
-}
+type -> 'lang'
 
 propValue = {
   "$i18n": {
@@ -38,24 +24,14 @@ propValue = {
     "es": "Alguna cosa"
   }
 }
-innerValue = {
-  type: 'dictionary',
-  value: {
-    "en": "Some thing",
-    "es": "Alguna cosa"
-  }
-}
+type -> 'dictionary'
 
-<CmsPropInput v-model="propValue" />
+<CmsPropInput v-model="propValue" :block="block" />
 */
-
-import { useAttrs, computed, ref, watch } from 'vue'
+import { watch, computed, ref } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import { UiInput, UiIcon, UiItem } from '@/packages/ui'
 
-import useModelSchema from '@/packages/vm/components/VmStatement/useModelSchema.js'
-import getSchemaVariables from '@/packages/vm/helpers/getSchemaVariables.js'
-import DictionaryEditor from './DictionaryEditor.vue'
+import * as TypeEditors from './types/index.js'
 
 const props = defineProps({
   modelValue: {
@@ -71,329 +47,123 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['update:modelValue', 'update:block'])
-const attrs = useAttrs()
 
-const innerValue = ref()
-
+const type = ref('')
 watch(
   () => props.modelValue,
-  () => innerValue.value = parseValue(props.modelValue),
+  (newValue) => type.value = findType(newValue),
   { immediate: true },
 )
 
-function parseValue(incoming) {
-  if (typeof incoming?.$i18n === 'object') {
-    return {
-      type: 'dictionary',
-      value: incoming.$i18n,
-    }
+const editorComponent = computed(() => {
+  return TypeEditors[type.value]
+})
+
+function findType(incomingValue) {
+  // {"$i18n": { ... dictionary }}
+  if (typeof incomingValue?.$i18n === 'object') {
+    return 'dictionary'
   }
 
-  const retval = {
-    // type: innerValue.value?.type || attrs?.type || 'text',
-    type: 'text',
-    value: incoming,
+  if (!incomingValue || typeof incomingValue !== 'string') {
+    return 'constant'
   }
 
-  if (!incoming || typeof incoming !== 'string') {
-    return retval
-  }
-
-  // Variable strings "{{someVarName}}"
-  const varName = incoming.match(/{{(.*?)}}/)?.[1]
-  if (typeof varName == 'string') {
-    retval.type = 'variable'
-    retval.value = varName
-    return retval
+  // Expression "{{a ? 'foo' : 'bar'}}"
+  if (/{{([^}]*?)}}/.test(incomingValue)) {
+    return 'expression'
   }
 
   // Lang strings "lang(comeLangKey)"
-  const text = incoming.match(/lang\(([^"]*?)\)/)?.[1]
-  if (typeof text == 'string') {
-    retval.type = 'lang'
-    retval.value = text
-    return retval
+  if (/lang\(([^"]*?)\)/.test(incomingValue)) {
+    return 'lang'
   }
 
-  return retval
+  return 'constant'
 }
 
 const i18n = useI18n({
   en: {
-    // 'CmsPropInput.Number': 'Number',
-    'CmsPropInput.Text': 'Constant',
-    'CmsPropInput.Translation': 'Translation',
-    'CmsPropInput.Variable': 'Variable',
-
-    'CmsPropInput.SelectVariable': 'Select variable ...',
-    'CmsPropInput.DocumentVariables': 'Document variables',
-    'CmsPropInput.Other': 'Other',
-    'CmsPropInput.CustomVariableName': 'Type variable name ...',
-    'CmsPropInput.TypeAName': 'Type a variable name',
+    'CmsPropInput.constant': 'Constant',
+    'CmsPropInput.dictionary': 'Translation',
+    // 'CmsPropInput.lang': 'Lang string',
+    'CmsPropInput.expression': 'Variable',
   },
   es: {
-    // 'CmsPropInput.Number': 'Número',
-    'CmsPropInput.Text': 'Constante',
-    'CmsPropInput.Translation': 'Traducción',
-    'CmsPropInput.Variable': 'Variable',
-
-    'CmsPropInput.SelectVariable': 'Escoger ...',
-    'CmsPropInput.DocumentVariables': 'Variables del documento',
-    'CmsPropInput.Other': 'Otras',
-    'CmsPropInput.CustomVariableName': 'Escribir nombre de variable ...',
-    'CmsPropInput.TypeAName': 'Esribe un nombre de variable',
+    'CmsPropInput.constant': 'Constante',
+    'CmsPropInput.dictionary': 'Traducción',
+    // 'CmsPropInput.lang': 'Lang string',
+    'CmsPropInput.expression': 'Variable',
   },
-})
-
-function setType(typeName) {
-  if (innerValue.value.type == typeName) {
-    return false
-  }
-
-  if (typeName == 'dictionary') { // convert data to dictionary
-    if (typeof innerValue.value.value === 'string') {
-      innerValue.value.value = { en: innerValue.value.value }
-    }
-  } else if (innerValue.value.type == 'dictionary' && typeof innerValue.value.value == 'object') { // convert dictionary to string
-    innerValue.value.value = innerValue.value.value[Object.keys(innerValue.value.value)[0]]
-  }
-
-  // When transforming a value into an variable,
-  // only keep the current string value if it matches an existing variable
-  if (typeName == 'variable' && innerValue.value.value) {
-    const foundVariable = schemaVariables.value.find((schemaVar) => schemaVar.name == innerValue.value.value)
-    if (!foundVariable) {
-      innerValue.value.value = ''
-    }
-  }
-
-  innerValue.value.type = typeName
-  emitUpdate()
-
-  isOpen.value = false
-  if (typeName == 'dictionary') {
-    isDictionaryOpen.value = true
-  }
-}
-
-function emitUpdate() {
-  if (!innerValue.value.value) {
-    innerValue.value.value = ''
-  }
-
-  switch (innerValue.value.type) {
-  case 'variable':
-    emit('update:modelValue', '{{' + innerValue.value.value + '}}')
-    break
-
-  case 'lang':
-    emit('update:modelValue', 'lang(' + innerValue.value.value + ')')
-    break
-
-  case 'dictionary':
-    emit('update:modelValue', { $i18n: innerValue.value.value })
-    break
-
-  default:
-    emit('update:modelValue', innerValue.value.value)
-    break
-  }
-}
-
-const modelSchema = useModelSchema()
-const schemaVariables = computed(() => getSchemaVariables(modelSchema.value))
-
-const variableSelectorOptions = computed(() => {
-  const retval = schemaVariables.value.map((schemaVar) => ({
-    value: schemaVar.name,
-    text: schemaVar.name,
-  }))
-
-  if (innerValue.value.value) {
-    const found = schemaVariables.value.find((schemaVar) => schemaVar.name == innerValue.value.value)
-    if (!found) {
-      retval.push({
-        value: innerValue.value.value,
-        text: innerValue.value.value,
-      })
-    }
-  }
-
-  return retval
-})
-
-function onVariablePickerChange($event) {
-  if ($event == 'custom') {
-    const varName = prompt(i18n.t('CmsPropInput.TypeAName'), innerValue.value.value)
-    if (!varName) {
-      innerValue.value.value = ''
-      return false
-    }
-    innerValue.value.value = varName
-  } else {
-    innerValue.value.value = $event || ''
-  }
-
-  emitUpdate()
-}
-
-const isOpen = ref(false)
-const isDictionaryOpen = ref(false)
-
-const dictionaryItemText = computed(() => {
-  if (!innerValue.value?.value || typeof innerValue.value?.value != 'object') {
-    return 'Ver traducciones'
-  }
-
-  return innerValue.value.value[Object.keys(innerValue.value.value)[0]]
 })
 </script>
 
 <template>
-  <UiInput
-    v-bind="attrs"
+  <div
     class="CmsPropInput"
-    :class="`CmsPropInput--${innerValue.type}}`"
+    :class="`CmsPropInput--${type}`"
   >
-    <div class="CmsPropInput__body UiGroup">
-      <template v-if="innerValue.type == 'variable'">
-        <select
-          class="UiInput"
-          :value="innerValue.value || ''"
-          @change="onVariablePickerChange($event.target.value)"
-        >
-          <option
-            :value="''"
-            v-text="i18n.t('CmsPropInput.SelectVariable')"
-          />
+    <label
+      class="CmsPropInput__label UiInput__label"
+      for=""
+      v-text="$attrs.label"
+    />
 
-          <optgroup :label="i18n.t('CmsPropInput.DocumentVariables')">
-            <option
-              v-for="opt in variableSelectorOptions"
-              :key="opt.value"
-              :value="opt.value"
-              v-text="opt.text"
-            />
-          </optgroup>
-          <optgroup :label="i18n.t('CmsPropInput.Other')">
-            <option
-              value="custom"
-              v-text="i18n.t('CmsPropInput.CustomVariableName')"
-            />
-          </optgroup>
-        </select>
-      </template>
-      <template v-else-if="innerValue.type == 'lang'">
-        <UiInput
-          v-model="innerValue.value"
-          type="text"
-          @update:model-value="emitUpdate()"
-        />
-      </template>
-      <template v-else-if="innerValue.type == 'dictionary'">
-        <UiItem
-          class="CmsPropInput__dictionaryItem"
-          :text="dictionaryItemText"
-          :icon="isDictionaryOpen ? 'mdi:menu-down' : 'mdi:menu-right'"
-          @click="isDictionaryOpen = !isDictionaryOpen"
-        />
-      </template>
-      <template v-else>
-        <UiInput
-          v-model="innerValue.value"
-          type="text"
-          @update:model-value="emitUpdate()"
-        />
-      </template>
-
-      <select
-        v-show="isOpen"
-        class="CmsPropInput__picker UiInput"
-        :value="innerValue.type"
-        @change="setType($event.target.value)"
-      >
-        <option
-          value="text"
-          v-text="i18n.t('CmsPropInput.Text')"
-        />
-        <option
-          value="dictionary"
-          v-text="i18n.t('CmsPropInput.Translation')"
-        />
-        <!-- <option
-          value="lang"
-          v-text="i18n.t('CmsPropInput.Translation')"
-        /> -->
-        <option
-          value="variable"
-          v-text="i18n.t('CmsPropInput.Variable')"
-        />
-      </select>
-
-      <UiIcon
-        :src="isOpen ? 'mdi:minus' : 'mdi:dots-vertical'"
-        class="CmsPropInput__toggler"
-        @click="isOpen = !isOpen"
-      />
-    </div>
-
-    <div
-      v-if="innerValue.type == 'dictionary'"
-      v-show="isDictionaryOpen"
-      class="CmsPropInput__footer"
+    <select
+      v-model="type"
+      class="CmsPropInput__typeSelect"
     >
-      <DictionaryEditor
-        v-model="innerValue.value"
-        @update:model-value="emitUpdate()"
+      <option
+        value="constant"
+        v-text="i18n.t('CmsPropInput.constant')"
       />
-    </div>
-  </UiInput>
+      <option
+        value="dictionary"
+        v-text="i18n.t('CmsPropInput.dictionary')"
+      />
+      <option
+        value="expression"
+        v-text="i18n.t('CmsPropInput.expression')"
+      />
+      <!-- <option
+        value="lang"
+        v-text="i18n.t('CmsPropInput.lang')"
+      /> -->
+    </select>
+
+    <Component
+      :is="editorComponent"
+      v-if="editorComponent"
+      class="CmsPropInput__component"
+      :model-value="props.modelValue"
+      :block="props.block"
+      @update:model-value="emit('update:modelValue', $event)"
+    />
+  </div>
 </template>
 
 <style lang="scss">
 .CmsPropInput {
-  &__toggler {
-    cursor: pointer;
-    border-radius: 4px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    align-self: stretch;
-    width: 40px;
-    background-color: rgba(255,255,255, 0.1);
+  display: flex;
+  flex-wrap: wrap;
+
+  &__typeSelect {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 12px;
+    font-weight: 600;
+
+    margin-left: auto;
+
+    opacity: 0.5;
+    &:hover {
+      opacity: 1;
+    }
   }
 
-  &__dictionaryItem {
-    cursor: pointer;
-    background-color: rgba(255,255,255, 0.1);
-    --ui-item-padding: 8px 12px;
-    max-width: 210px;
-
-    border-radius: 4px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-
-  &__footer {
-    padding: 8px;
-    margin-bottom: 40px;
-
-    .UiButton {
-      margin-left: 2rem;
-    }
-
-    .UiInput {
-      display: flex;
-      flex-wrap: nowrap;
-      align-items: center;
-      margin-bottom: 8px;
-
-      &__label {
-        display: block;
-        width: 2rem;
-        min-width: 0 !important;
-      }
-    }
+  &__component {
+    min-width: 100%;
   }
 }
-
 </style>

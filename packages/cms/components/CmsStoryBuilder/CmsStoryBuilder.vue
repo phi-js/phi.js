@@ -2,17 +2,15 @@
 import { provide, ref, watchEffect, computed, watch, useSlots } from 'vue'
 import { CmsStory } from '../CmsStory'
 import { CmsStoryEditor } from '../CmsStoryEditor'
-import { CmsStoryGraph } from '../CmsStoryGraph'
 import StoryPageList from './StoryPageList.vue'
 import StoryEditorWindow from '../CmsStoryEditor/StoryEditorWindow.vue'
-import { useThemes } from '../../functions'
+import { getStorySchema } from '../../functions'
 
 import { useI18n } from '../../../i18n'
 import {
   UiTabs,
   UiTab,
   UiItem,
-  UiDialog,
   UiIcon,
   UiWindow,
   UiInput,
@@ -49,9 +47,22 @@ const props = defineProps({
       height: null,
     }),
   },
+
+  currentPageId: {
+    type: [String, Number],
+    required: false,
+    default: null,
+  },
 })
 
-const emit = defineEmits(['story-emit', 'update:story', 'update:modelValue', 'update:tab', 'update:contentSize'])
+const emit = defineEmits([
+  'story-emit',
+  'update:story',
+  'update:modelValue',
+  'update:tab',
+  'update:contentSize',
+  'update:currentPageId',
+])
 
 const contentSize = ref()
 watch(
@@ -68,7 +79,7 @@ const i18n = useI18n({
     'CmsStoryBuilder.Languages': 'Languages',
     'CmsStoryBuilder.Source': 'Source',
     'CmsStoryBuilder.Preview': 'Preview',
-    'CmsStoryBuilder.DataExplorer': 'Data',
+    'CmsStoryBuilder.DataExplorer': 'Debugger',
     'CmsStoryBuilder.Undo': 'Undo',
     'CmsStoryBuilder.Redo': 'Redo',
     'CmsStoryBuilder.hideToolbar': 'Close editor',
@@ -80,7 +91,7 @@ const i18n = useI18n({
     'CmsStoryBuilder.Languages': 'Idiomas',
     'CmsStoryBuilder.Source': 'Fuente',
     'CmsStoryBuilder.Preview': 'Vista previa',
-    'CmsStoryBuilder.DataExplorer': 'Datos',
+    'CmsStoryBuilder.DataExplorer': 'Depurador',
     'CmsStoryBuilder.Undo': 'Deshacer',
     'CmsStoryBuilder.Redo': 'Rehacer',
     'CmsStoryBuilder.hideToolbar': 'Cerrar editor',
@@ -88,6 +99,32 @@ const i18n = useI18n({
 })
 
 const currentPageId = ref()
+watch(
+  () => props.currentPageId,
+  (newPageId) => currentPageId.value = newPageId,
+  { immediate: true },
+)
+
+function updatePageId($event) {
+  /*
+  Vue bug(?)  Combining
+  v-model:current-page-id="currentPageId"
+  @update:current-page-id="updatePageId($event)"
+
+  will NOT TRIGGER the v-model update on the variable.
+  So, do it here :(
+
+
+  Note: It works when NOT using dashes in the prop names, i.e:
+  v-model:currentPageId="currentPageId"
+  @update:currentPageId="updatePageId($event)"
+  */
+  if (currentPageId.value != $event) {
+    currentPageId.value = $event
+  }
+  emit('update:currentPageId', currentPageId.value)
+}
+
 
 // inner story value
 const innerStory = ref()
@@ -96,9 +133,31 @@ watchEffect(() => {
 
   if (!currentPageId.value) {
     currentPageId.value = props.story?.pages?.[0]?.id
+    updatePageId(currentPageId.value)
   }
 })
 
+// Used by VmExpressionPicker
+provide('$_vm_functions', computed(() => {
+  if (!innerStory.value.methods?.length) {
+    return []
+  }
+  return [{
+    title: 'Functions',
+    children: innerStory.value.methods
+      .map((storyMethod) => ({
+        icon: 'mdi:code-parentheses-box',
+        title: storyMethod.name,
+        expression: {
+          call: 'Story.call',
+          args: { fn: storyMethod.name },
+        },
+      })),
+  }]
+}))
+
+
+// Current page (specified by currentPageId)
 const currentPage = computed(() => {
   if (!innerStory.value?.pages?.length) {
     return null
@@ -158,6 +217,46 @@ provide('$_cms_story_builder', {
   cancel: onWindowCancel,
 })
 
+/* Provide VM schema */
+const storySchema = computed(() => {
+  const storySchema = getStorySchema(innerStory.value)
+
+  if (!storySchema.properties?.$i18n) {
+    storySchema.properties.$i18n = {
+      type: 'object',
+      properties: {
+        locale: {
+          type: 'string',
+          title: 'Language',
+          enum: [
+            { value: 'en' },
+            { value: 'es' },
+            { value: 'fr' },
+            { value: 'de' },
+          ],
+        },
+      },
+    }
+  }
+
+  if (!storySchema.properties?.$errors) {
+    storySchema.properties.$errors = {
+      type: 'object',
+      properties: {
+        length: {
+          type: 'number',
+          title: 'No. of errors',
+        },
+      },
+    }
+  }
+
+  return storySchema
+})
+
+provide('$_vm_modelSchema', storySchema)
+
+
 
 // undo/redo functionality
 const { push, undo, redo, hasUndo, hasRedo } = useUndo(innerStory.value, (newValue) => {
@@ -171,26 +270,10 @@ const slots = useSlots()
 const contentSlot = computed(() => {
   return slots?.[`contents-${currentTab.value}`]
 })
-
-
-// Apply theme classes to entire CmsStoryBuilder
-// (So that the builde --ui-color-primary reacts to the theme)
-// THEMES
-const storyClassNames = ref([])
-if (innerStory.value?.themes) {
-  watch(
-    () => innerStory.value.themes,
-    () => storyClassNames.value = useThemes(innerStory.value),
-    { immediate: true },
-  )
-}
 </script>
 
 <template>
-  <div
-    class="CmsStoryBuilder"
-    :class="storyClassNames"
-  >
+  <div class="CmsStoryBuilder">
     <div class="CmsStoryBuilder__toolbar">
       <UiTabs
         v-model="currentTab"
@@ -252,7 +335,7 @@ if (innerStory.value?.themes) {
             <UiItem
               class="CmsStoryBuilder__tabItem"
               :text="i18n.t('CmsStoryBuilder.Style')"
-              icon="mdi:palette-advanced"
+              icon="mdi:water"
               :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'style'}"
               @click="windowTab = 'style'"
             />
@@ -263,20 +346,20 @@ if (innerStory.value?.themes) {
               :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'events'}"
               @click="windowTab = 'code'"
             />
-            <UiItem
+            <!-- <UiItem
               :text="i18n.t('CmsStoryBuilder.Languages')"
               icon="mdi:translate"
               class="CmsStoryBuilder__tabItem"
               :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'i18n'}"
               @click="windowTab = 'i18n'"
-            />
-            <!-- <UiItem
+            /> -->
+            <UiItem
               :text="i18n.t('CmsStoryBuilder.Source')"
               icon="mdi:code-json"
               class="CmsStoryBuilder__tabItem"
               :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'source'}"
               @click="windowTab = 'source'"
-            /> -->
+            />
 
             <slot name="corner" />
           </div>
@@ -341,6 +424,7 @@ if (innerStory.value?.themes) {
           v-model:current-page-id="currentPageId"
           v-model:story="innerStory"
           class="CmsStoryBuilder__pageList"
+          @update:current-page-id="updatePageId($event)"
           @update:story="onUpdateStory()"
         />
       </div>
@@ -354,6 +438,7 @@ if (innerStory.value?.themes) {
           v-show="currentTab == 'editor'"
           v-model:current-page-id="currentPageId"
           v-model:story="innerStory"
+          @update:current-page-id="updatePageId($event)"
           @update:story="onUpdateStory()"
         />
 
@@ -362,25 +447,12 @@ if (innerStory.value?.themes) {
           v-model:current-page-id="currentPageId"
           :model-value="props.modelValue"
           :story="innerStory"
+          @update:current-page-id="updatePageId($event)"
           @update:model-value="emit('update:modelValue', $event)"
           @story-emit="emit('story-emit', $event)"
         />
       </UiContentWrapper>
     </div>
-
-    <!-- <UiDialog
-      v-slot="{ close }"
-      v-model:open="isSitemapOpen"
-    >
-      <div class="CmsStoryBuilder__sitemap">
-        <CmsStoryGraph
-          v-model:current-page-id="currentPageId"
-          v-model:story="innerStory"
-          @update:current-page-id="currentPageId = $event; close()"
-          @update:story="onUpdateStory()"
-        />
-      </div>
-    </UiDialog> -->
 
     <StoryEditorWindow
       v-model:story="innerStory"

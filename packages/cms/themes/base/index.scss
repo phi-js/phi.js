@@ -1,8 +1,5 @@
 /* This stylesheet declares the base CSS for all block / block editor components */
 .cms-theme-base {
-  --ui-content-width: auto;
-  --ui-radius: 5px;
-
   @import '@/packages/ui/themes/base/modifiers/clickable.scss';
 
   @import './blocks/BlockCssStyle.scss';
@@ -13,8 +10,6 @@
   @import './blocks/CmsStoryBuilder.scss';
   @import './blocks/CmsStoryEditor.scss';
   @import './blocks/LayoutPage.scss';
-  @import './blocks/LayoutRow.scss';
-  @import './blocks/LayoutRowEditor.scss';
   @import './blocks/ListenersEditor.scss';
   @import './blocks/StmtAndOr.scss';
   @import './blocks/StmtChainItem.scss';

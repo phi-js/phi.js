@@ -108,7 +108,7 @@ export default async function getBlockEditors(block) {
   retval.actions.push({
     'id': 'css',
     'title': 'Style',
-    'icon': 'mdi:palette-advanced',
+    'icon': 'mdi:water',
     'component': BlockCssEditor,
     'v-model': 'block',
   })

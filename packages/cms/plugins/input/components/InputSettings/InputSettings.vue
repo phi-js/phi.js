@@ -66,7 +66,6 @@ const i18n = useI18n({
     'InputSettings.VariableName': 'Variable name',
     'InputSettings.Debounce': 'Input delay',
     'InputSettings.ValueType': 'Value type',
-    'InputSettings.Advanced': 'Advanced options',
   },
   es: {
     'InputSettings.Texts': 'Textos',
@@ -80,7 +79,6 @@ const i18n = useI18n({
     'InputSettings.VariableName': 'Nombre de variable',
     'InputSettings.Debounce': 'Demorar input',
     'InputSettings.ValueType': 'Tipo de dato',
-    'InputSettings.Advanced': 'Opciones avanzadas',
   },
 })
 
@@ -98,28 +96,6 @@ const multipleOptions = [
 
 <template>
   <div class="InputSettings UiForm--wide">
-    <UiDetails
-      open
-      group="InputSettings"
-      :text="i18n.t('InputSettings.Data')"
-    >
-      <CmsPropInput
-        v-model="block.props.label"
-        v-model:block="block"
-        type="text"
-        :label="i18n.t('InputSettings.Label')"
-        @update:model-value="onUpdateLabel"
-        @update:block="emitUpdate"
-      />
-
-      <UiInput
-        v-model="block['v-model']"
-        :label="i18n.t('InputSettings.VariableName')"
-        type="text"
-        @update:model-value="onUpdateModel"
-      />
-    </UiDetails>
-
     <UiDetails
       v-if="isSelect"
       group="InputSettings"
@@ -143,7 +119,17 @@ const multipleOptions = [
     <UiDetails
       group="InputSettings"
       :text="i18n.t('InputSettings.Texts')"
+      open
     >
+      <CmsPropInput
+        v-model="block.props.label"
+        v-model:block="block"
+        type="text"
+        :label="i18n.t('InputSettings.Label')"
+        @update:model-value="onUpdateLabel"
+        @update:block="emitUpdate"
+      />
+
       <CmsPropInput
         v-model="block.props.subtext"
         v-model:block="block"
@@ -165,8 +151,15 @@ const multipleOptions = [
 
     <UiDetails
       group="InputSettings"
-      :text="i18n.t('InputSettings.Advanced')"
+      :text="i18n.t('InputSettings.Data')"
     >
+      <UiInput
+        v-model="block['v-model']"
+        :label="i18n.t('InputSettings.VariableName')"
+        type="text"
+        @update:model-value="onUpdateModel"
+      />
+
       <UiInput
         v-model="block.props.debounce"
         :label="i18n.t('InputSettings.Debounce')"
@@ -186,18 +179,17 @@ const multipleOptions = [
 
 <style lang="scss">
 .InputSettings {
-  padding: 8px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 
   .UiDetails__contents {
-    padding-left: 12px;
-    padding-bottom: 24px;
+    padding-left: 12px !important;
+    padding-bottom: 24px !important;
 
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 16px;
   }
 }
 </style>

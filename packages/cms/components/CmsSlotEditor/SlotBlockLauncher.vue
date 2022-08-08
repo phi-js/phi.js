@@ -44,17 +44,14 @@ const props = defineProps({
 const emit = defineEmits(['input'])
 
 const isOpen = ref(props.open)
-const isPopupOpen = ref(false)
+const isPopupOpen = ref(props.open)
 const isTriggerHovered = ref(false)
 
 const stagingBlock = ref()
 
 function onTriggerClick() {
   isOpen.value = !isOpen.value
-
-  setTimeout(() => {
-    isPopupOpen.value = isOpen.value || props.open
-  }, 200)
+  isPopupOpen.value = isOpen.value || props.open
 }
 
 const elStaging = ref()
@@ -127,15 +124,13 @@ function onStagingCancel() {
   isOpen.value = props.open
 }
 
-const elBox = ref()
-
+// const elBox = ref()
 function onPickerUpdateOpen($event) {
   if (!stagingBlock.value) {
     isOpen.value = $event || props.open
-
-    if (isOpen.value && window.innerWidth < 600) { // 2DO: Check CORRECTLY to see if using mobile
-      elBox.value?.scrollIntoView?.()
-    }
+    // if (isOpen.value && window.innerWidth < 600) { // 2DO: Check CORRECTLY to see if using mobile
+    //   elBox.value?.scrollIntoView?.()
+    // }
   }
 }
 
@@ -166,32 +161,20 @@ function onPickerUpdateOpen($event) {
       />
     </div>
 
+    <CmsBlockEditor
+      v-if="stagingBlock"
+      ref="elStaging"
+      v-model:block="stagingBlock"
+      class="SlotBlockLauncher__stagedEditor"
+      @update:block="onStagingAccept"
+      @cancel="onStagingCancel"
+    />
+
     <CmsBlockPicker
       v-model:open="isPopupOpen"
       @update:open="onPickerUpdateOpen"
       @input="onBlockPickerInput($event)"
     >
-      <template #trigger="{ toggle }">
-        <div
-          v-show="!stagingBlock"
-          ref="elBox"
-          class="SlotBlockLauncher__box"
-        >
-          <div
-            @click="toggle"
-            v-text="props.label"
-          />
-        </div>
-        <CmsBlockEditor
-          v-if="stagingBlock"
-          ref="elStaging"
-          v-model:block="stagingBlock"
-          class="SlotBlockLauncher__stagedEditor"
-          @update:block="onStagingAccept"
-          @cancel="onStagingCancel"
-        />
-      </template>
-
       <template #body="{ close }">
         <Component
           :is="pluginData.getSlotComponent('BlockLauncher')"

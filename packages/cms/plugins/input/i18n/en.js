@@ -1,13 +1,13 @@
 export default {
-  'plugin.title.Form': 'Form',
+  'plugin.title.Form': 'Form inputs',
 
-  'plugin.component.InputText': 'Text',
-  'plugin.component.InputTextarea': 'Textarea',
-  'plugin.component.InputSelect': 'Select',
-  'plugin.component.InputCheckbox': 'Checkbox',
-  'plugin.component.InputDate': 'Date',
-  'plugin.component.InputNumber': 'Number',
-  'plugin.component.InputUpload': 'Upload',
-  'plugin.component.InputPassword': 'Password',
-  'plugin.component.InputButton': 'Button',
+  'plugin.component.InputText.title': 'Text',
+  'plugin.component.InputTextarea.title': 'Textarea',
+  'plugin.component.InputSelect.title': 'Select',
+  'plugin.component.InputCheckbox.title': 'Checkbox',
+  'plugin.component.InputDate.title': 'Date',
+  'plugin.component.InputNumber.title': 'Number',
+  'plugin.component.InputUpload.title': 'Upload',
+  'plugin.component.InputPassword.title': 'Password',
+  'plugin.component.InputButton.title': 'Submit button',
 }

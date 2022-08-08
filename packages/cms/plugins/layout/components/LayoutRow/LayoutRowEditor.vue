@@ -3,7 +3,6 @@ import { ref, watch, reactive } from 'vue'
 import { UiIcon } from '@/packages/ui/components'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
 import BlockScaffold from '../../../../components/CmsBlockEditor/BlockScaffold.vue'
-import { getCssObjectAttributes } from '../../../../functions'
 
 const props = defineProps({
   block: {
@@ -19,10 +18,7 @@ watch(
   () => props.block?.slot,
   (newValue) => {
     columns.value = Array.isArray(newValue) ? newValue : []
-    columns.value = columns.value.map((col) => ({
-      ...col,
-      cssAttributes: getCssObjectAttributes(col.css, col),
-    }))
+    columns.value = columns.value.map((col) => ({ ...col }))
   },
   { immediate: true },
 )
@@ -186,10 +182,9 @@ function isLeftGhostVisible(colIndex) {
       </template>
     </template>
 
-    <template #default="{ blockCssAttributes }">
+    <template #default>
       <div
         ref="$el"
-        v-bind="blockCssAttributes"
         class="LayoutRowEditor__body LayoutRow"
         :class="{'LayoutRowEditor--dragging': isDragging}"
         @mousemove="onResizerMove($event)"
@@ -218,7 +213,6 @@ function isLeftGhostVisible(colIndex) {
             <div
               class="LayoutRowEditor__column LayoutColumn"
               :style="{flex: column?.props?.flex || 1}"
-              v-bind="column.cssAttributes"
             >
               <CmsSlotEditor
                 v-model:slot="column.slot"

@@ -1,16 +1,13 @@
 <script setup>
 /*
-Modifies a CSSCLASS object:
+Modifies a type=class stylesheet object:
 {
-  name: 'myClass',
-  css: `
-    .myClass {
-      border: 1px solid red;
-    }
-  `,
-}
+  id: 'highlihgtedTexts',
+  src: '.highlihgtedTexts {\n}\n\n.highlihgtedTexts h2 {\n  color: var(--ui-color-primary);\n  font-weight: 600;\n  font-size: 3em;\n}',
+  type: 'class',
+},
 */
-import { ref, watchEffect } from 'vue'
+import { ref, watch } from 'vue'
 import { UiInput } from '../../../ui'
 
 const props = defineProps({
@@ -23,15 +20,19 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'rename'])
 
 const innerValue = ref()
-watchEffect(() => innerValue.value = { ...props.modelValue })
+watch(
+  () => props.modelValue,
+  (newValue) => innerValue.value = { ...newValue },
+  { immediate: true },
+)
 
 function emitUpdate() {
   // use first .XXXXX declaration to detemrine name
-  const foundName = innerValue.value.css.match(/\.([a-zA-Z0-9_-]+)/)?.[1]
+  const foundName = innerValue.value.src.match(/\.([a-zA-Z0-9_-]+)/)?.[1]
   if (foundName) {
-    innerValue.value.name = foundName
+    innerValue.value.id = foundName
   } else {
-    innerValue.value.name = 'Untitled Class'
+    innerValue.value.id = 'Untitled Class'
   }
 
   emit('update:modelValue', { ...innerValue.value })
@@ -40,7 +41,7 @@ function emitUpdate() {
 
 <template>
   <UiInput
-    v-model="innerValue.css"
+    v-model="innerValue.src"
     class="CssClassEditor"
     type="code"
     lang="css"

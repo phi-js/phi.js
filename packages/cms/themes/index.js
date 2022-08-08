@@ -37,18 +37,19 @@ export async function getAvailableThemes() {
 export function getAvailableStoryClasses(objStory) {
   const retval = []
 
-  // Classes declared in themes
-  if (Array.isArray(objStory?.themes)) {
-    objStory.themes.forEach((theme) => {
-      if (Array.isArray(theme?.classes)) {
-        retval.push(...theme.classes)
+  // Classes declared in stylesheets
+  if (Array.isArray(objStory?.stylesheets)) {
+    objStory.stylesheets.forEach((sheet) => {
+      if (sheet.type == 'class') {
+        retval.push(sheet)
       }
     })
-  }
 
-  // Classes declared in story.css
-  if (Array.isArray(objStory?.css?.classes)) {
-    retval.push(...objStory.css.classes)
+    objStory.stylesheets.forEach((sheet) => {
+      if (Array.isArray(sheet?.classes)) {
+        retval.push(...sheet.classes)
+      }
+    })
   }
 
   return retval

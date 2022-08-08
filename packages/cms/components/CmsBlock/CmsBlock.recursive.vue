@@ -11,7 +11,6 @@ import {
   setProperty,
   getBlockRules,
   runValidators,
-  getCssObjectAttributes,
 } from '../../functions'
 
 const CmsBlock = {
@@ -92,7 +91,6 @@ const CmsBlock = {
     /* Block visibility (v-if) */
     const isVisible = ref(false)
     if (props.block['v-if']) {
-      // watchEffect(async () => isVisible.value = await blockVM.eval(props.block['v-if'], evaluableModel.value)) // Avoid. Async. Watch.Effect.!.!.!
       watchEffect(() => isVisible.value = blockVM.eval(props.block['v-if'], evaluableModel.value))
     } else {
       isVisible.value = true
@@ -130,21 +128,6 @@ const CmsBlock = {
         blockProps.value.required = true
       }
     })
-
-    /* style and class properties */
-    const cssProps = ref({
-      style: null,
-      class: null,
-    })
-
-    watchEffect(() => {
-      if (typeof props.block?.css !== 'object') {
-        return
-      }
-      const evaldCSS = parse(props.block.css, evaluableModel.value)
-      cssProps.value = getCssObjectAttributes(evaldCSS, props.block)
-    })
-
 
     /* Validation management */
     const errors = ref([])
@@ -290,7 +273,7 @@ const CmsBlock = {
         pushListener(
           propName,
           ($event) => {
-            return listener.callback($event, props.block)
+            return listener.callback($event, props.block, innerModel)
           },
         )
       })
@@ -308,26 +291,33 @@ const CmsBlock = {
 
     watchEffect(() => {
       const slots = { ...props.block.slots }
-      if (props.block.slot) {
+      if (!slots.default?.length && props.block?.slot?.length) {
         slots.default = props.block.slot
       }
 
       for (const slotName in slots) {
-        const arrChildren = Array.isArray(slots[slotName]) ? slots[slotName] : [slots[slotName]]
+        const arrChildren = (Array.isArray(slots[slotName]) ? slots[slotName] : [slots[slotName]])
+          .filter((child) => !!child)
+
+        if (!arrChildren.length) {
+          continue
+        }
+
         blockSlots.value[slotName] = (slotBindings) => {
-          return arrChildren.map((child, index) => h(
-            CmsBlock,
-            {
-              'block': child,
-              'modelValue': props.modelValue,
-              'slotBindings': slotBindings,
-              'onUpdate:modelValue': ($event) => onChildUpdateModelvalue($event),
-              'onUpdate:errors': ($event) => {
-                childErrors[slotName + ':' + index] = $event
-                emitErrors()
+          return arrChildren
+            .map((child, index) => h(
+              CmsBlock,
+              {
+                'block': child,
+                'modelValue': props.modelValue,
+                'slotBindings': slotBindings,
+                'onUpdate:modelValue': ($event) => onChildUpdateModelvalue($event),
+                'onUpdate:errors': ($event) => {
+                  childErrors[slotName + ':' + index] = $event
+                  emitErrors()
+                },
               },
-            },
-          ))
+            ))
         }
       }
     })
@@ -372,7 +362,6 @@ const CmsBlock = {
       blockProps,
       blockListeners,
       blockSlots,
-      cssProps,
       emitUpdate,
       iterable,
       iterations,
@@ -397,8 +386,7 @@ const CmsBlock = {
         ...this.attrs,
         ...this.blockProps,
         ...this.blockListeners,
-        style: [this.blockProps.style, this.cssProps.style],
-        class: [this.attrs?.class, 'CmsBlock', this.blockDefinition.name, this.blockProps.class, this.cssProps.class],
+        class: [this.attrs?.class, 'CmsBlock', this.blockDefinition.name, this.blockProps.class],
         errors: this.errors,
       },
       this.blockSlots,

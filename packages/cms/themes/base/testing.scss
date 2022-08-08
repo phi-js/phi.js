@@ -1,10 +1,9 @@
-// Large, spaced inputs
-.CmsBlock.UiInput {
-  margin-bottom: 1rem;
-  .UiInput__label {
-    font-size: initial;
-  }
-}
+// .CmsStory,
+// .CmsStoryEditor {
+//   background-color: var(--ui-color-background);
+//   color: var(--ui-color-foreground);
+//   font-size: var(--ui-font-size);
+// }
 
 // Buttony MediaLinks
 .MediaLink {
@@ -31,4 +30,56 @@
   flex-direction: column;
   padding: 18px;
   gap: 18px;
+}
+
+
+.UiWindow {
+  .UiTabs__header {
+    padding: 4px;
+  }
+
+  .UiTabs__contents {
+    padding: 4px;
+    padding-top: 0;
+
+    // nested tab header
+    .UiTabs__header {
+      padding: 4px 0;
+    }
+  }
+
+  .UiTab {
+    flex: 1;
+    max-width: none;
+  }
+
+  .UiTabs__contents .UiTabs__contents {
+    background-color: var(--ui-color-z1);
+    // background-color: rgba(255, 255, 255, .03);
+    border-radius: 5px;
+  }
+}
+
+
+// Make sure all editor/builder components have a consistent font
+// i.e. do NOT inherit the default font
+.CmsStoryBuilder__toolbar,
+.CmsStoryBuilder__sidebar,
+.UiWindow,
+.BlockScaffold__toolbar,
+.tippy-content,
+.UiDialog__contents {
+  font-family: "Nunito", sans-serif;
+  font-size: 16px;
+
+  --ui-font-titles: "Nunito", sans-serif;
+  --ui-font-texts: "Nunito", sans-serif;
+
+  --ui-color-hover: rgba(255,255,255, 0.1);
+  --ui-color-z1: rgba(255, 255, 255, 0.1);
+}
+
+.BlockScaffold__toolbar,
+.tippy-content {
+  font-size: 14px;
 }

@@ -1,42 +1,46 @@
 <script setup>
 /*
-Manages (CRUD) an ARRAY of CSSCLASS objects:
+Given an array of STYLESHEETS,
+this component will CRUD manage those with type=class
 [
   {
-    name: 'myClass',
-    css: `
-      .myClass {
-        border: 1px solid red;
-      }
-    `,
-
-    text,
-    subtext,
-    description,
-  }
+    id: 'highlihgtedTexts',
+    src: '.highlihgtedTexts {\n}\n\n.highlihgtedTexts h2 {\n  color: var(--ui-color-primary);\n  font-weight: 600;\n  font-size: 3em;\n}',
+    type: 'class',
+  },
+  {
+    id: 'my-group',
+    src: '.my-group {\n  margin: 2rem 0;\n  border-radius: 5px;\n  background-color: var(--ui-color-z1);\n  padding: 12px 16px;\n}\n\n.my-group h3 {\n  font-weight: 600;\n}',
+    type: 'class',
+  },
+  ...
 ]
 */
-import { ref, watchEffect } from 'vue'
-import { UiDetails, UiItem } from '../../../ui'
+import { ref, watch } from 'vue'
+import { UiDetails } from '../../../ui'
 import CssClassEditor from './CssClassEditor.vue'
 
 const props = defineProps({
   modelValue: {
     type: Array,
     required: false,
-    default: null,
+    default: () => [],
   },
 })
 
 const emit = defineEmits(['update:modelValue'])
 
 const arrClasses = ref([])
-watchEffect(() => {
-  arrClasses.value = props.modelValue?.length ? [ ...props.modelValue ] : []
-})
+watch(
+  () => props.modelValue,
+  (newValue) => arrClasses.value = newValue.filter((sheet) => sheet.type == 'class'),
+  { immediate: true },
+)
 
 function emitUpdate() {
-  emit('update:modelValue', [ ...arrClasses.value ])
+  const targetValue = props.modelValue.filter((sheet) => sheet.type != 'class')
+  targetValue.push(...arrClasses.value)
+  emit('update:modelValue', targetValue)
 }
 
 function onDeleteClass(index) {
@@ -44,12 +48,12 @@ function onDeleteClass(index) {
   emitUpdate()
 }
 
-
 const isCreatorOpen = ref(false)
 
 const newClass = ref({
-  name: 'new-class',
-  css: '.new-class {\n\n}',
+  id: 'new-class',
+  src: '.new-class {\n  \n}',
+  type: 'class',
 })
 
 function onCreatorSubmit() {
@@ -61,8 +65,9 @@ function onCreatorSubmit() {
 function resetCreator() {
   isCreatorOpen.value = false
   newClass.value = {
-    name: 'new-class',
-    css: '.new-class {\n\n}',
+    id: 'new-class',
+    src: '.new-class {\n  \n}',
+    type: 'class',
   }
 }
 </script>
@@ -74,9 +79,10 @@ function resetCreator() {
       :key="i"
     >
       <UiDetails
+        group="CssClassManager"
         class="CssClassManager__classItem"
-        :text="cssClass.text || cssClass.name"
-        :subtext="cssClass.text ? '.' + cssClass.name : ''"
+        :text="cssClass.title || cssClass.id"
+        :subtext="cssClass.description"
         @delete="onDeleteClass(i)"
       >
         <template #default>
@@ -92,6 +98,7 @@ function resetCreator() {
 
     <UiDetails
       v-model:open="isCreatorOpen"
+      group="CssClassManager"
       text="Add class"
       class="CssClassManager__adder"
     >
@@ -119,3 +126,16 @@ function resetCreator() {
     </UiDetails>
   </div>
 </template>
+
+<style lang="scss">
+.CssClassManager {
+  &__adder {
+    footer {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 6px;
+      margin-top: 1rem;
+    }
+  }
+}
+</style>

@@ -1,6 +1,6 @@
 import { h, reactive } from 'vue'
 import { parse } from '@/packages/vm/lib/utils'
-import { getProperty, setProperty, getCssObjectAttributes, getBlockDefinition } from '../../functions'
+import { getProperty, setProperty, getBlockDefinition } from '../../functions'
 
 /*
 block: {
@@ -120,21 +120,6 @@ export default function blockToVNode(block, modelValue, blockVM, masterValue = n
       } else {
         parsedProps[propName] = eventCallback
       }
-    }
-  }
-
-
-  /* Block "css" property */
-  if (block.css && typeof block.css === 'object') {
-    const evaldCSS = parse(block.css, modelValue)
-    const cssProps = getCssObjectAttributes(evaldCSS, block)
-
-    if (cssProps.class) {
-      parsedProps.class = parsedProps.class ? [parsedProps.class, cssProps.class] : cssProps.class
-    }
-
-    if (cssProps.style) {
-      parsedProps.style = parsedProps.style ? [parsedProps.style, cssProps.style] : cssProps.style
     }
   }
 

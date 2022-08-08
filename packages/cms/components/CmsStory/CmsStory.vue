@@ -8,14 +8,19 @@ import {
   h,
   Transition,
   KeepAlive,
-  Teleport,
   onMounted,
+  computed,
 } from 'vue'
 
-import { colorScheme } from '@/packages/ui'
-
 import { CmsBlock } from '../CmsBlock'
-import { getPluginData, sanitizeStory, parseTranslations, forEachBlock, setProperty, useThemes } from '../../functions'
+import {
+  getPluginData,
+  sanitizeStory,
+  parseTranslations,
+  forEachBlock,
+  setProperty,
+  useStylesheets,
+} from '../../functions'
 import { useI18n } from '../../../i18n'
 import { VM } from '../../../vm'
 
@@ -43,13 +48,29 @@ export default {
   emits: ['update:modelValue', 'update:currentPageId', 'story-emit'],
 
   setup(props, { emit }) {
+    // Determine current page
+    const currentPage = ref()
+
     // Sanitize and translate (precompile) incoming story
     const i18n = useI18n()
     const sanitizedStory = ref(null)
     watchEffect(() => {
-      const sanitized = JSON.parse(JSON.stringify(sanitizeStory(props.story))) // clone is important, otherwise we'll be mutating prop (i.e. when setting block.props and block.rules below)
+      sanitizedStory.value = JSON.parse(JSON.stringify(sanitizeStory(props.story))) // clone is important, otherwise we'll be mutating prop (i.e. when setting block.props and block.rules below)
 
-      forEachBlock(sanitized, (block) => {
+      // The story changed from the outside, so reload the currentPage value
+      if (currentPage.value?.id) {
+        setCurrentPage(currentPage.value.id)
+      }
+    })
+
+    // Parse translations
+    const translatedPage = computed(() => {
+      if (!currentPage.value) {
+        return
+      }
+
+      const pageClone = JSON.parse(JSON.stringify(currentPage.value))
+      forEachBlock(pageClone, (block) => {
         if (block.props) {
           block.props = parseTranslations(block.props, i18n.locale, block.i18n)
         }
@@ -61,15 +82,23 @@ export default {
         }
       })
 
-      sanitizedStory.value = sanitized
+      return pageClone
     })
+
+
+    // Story modelValue
+    const innerModel = ref({})
+    watch(
+      () => props.modelValue,
+      (newValue) => innerModel.value = newValue, // OJO. REFERENCE to prop !!!
+      { immediate: true },
+    )
 
     // StoryVM
     const storyVM = new VM
     storyVM.onModelSet = (propName, propValue) => {
-      const modelValue = { ...props.modelValue }
-      setProperty(modelValue, propName, propValue)
-      onUpdateModelValue(modelValue)
+      setProperty(innerModel.value, propName, propValue)
+      onUpdateModelValue(innerModel.value)
     }
 
 
@@ -86,11 +115,10 @@ export default {
           if (!objData || typeof objData !== 'object') {
             return
           }
-          const modelValue = { ...props.modelValue }
           for (const [propName, propValue] of Object.entries(objData)) {
-            setProperty(modelValue, propName, propValue)
+            setProperty(innerModel.value, propName, propValue)
           }
-          onUpdateModelValue(modelValue)
+          onUpdateModelValue(innerModel.value)
         },
       })
 
@@ -99,78 +127,162 @@ export default {
         return
       }
 
-      storyVM.eval(sanitizedStory.value.setup, props.modelValue)
+      storyVM.eval(sanitizedStory.value.setup, innerModel.value)
       isMounted.value = true
     })
 
-    // Determine current page
-    const currentPage = ref()
+    // Navigation history and direction
+    const navigationHistory = ref([]) // array of page IDs
+    const loadedPages = {} // loadedPages[page-id] = true | false
     const transitionName = ref('slideX')
     const transitionDirection = ref('fw') // fw, bw
 
-    watchEffect(() => {
-      const foundPage = sanitizedStory.value.pages.find((page) => page.id == props.currentPageId)
+    // Hash of window.scrollY positions when leaving a page
+    // previousY[page name] = n
+    let previousScrollY = {}
+
+    // Set the current page
+    const setCurrentPage = (pageId) => {
+      const foundPage = pageId
+        ? sanitizedStory.value.pages.find((page) => page.id == pageId)
+        : null
+
       currentPage.value = foundPage || sanitizedStory.value.pages?.[0]
-    })
-
-    // Story navigation
-    // Watch current page changes
-    const navigationHistory = ref([]) // array of page IDs
-    const loadedPages = {} // loadedPages[page-id] = true | false
-
-    watch(
-      () => props.currentPageId,
-      (newPageId, oldPageId) => {
-        if (!newPageId) {
-          newPageId = sanitizedStory.value.pages?.[0]?.id
-        }
-
-        navigationHistory.value.push(newPageId)
-
-        const pageTo = sanitizedStory.value.pages.find((page) => page.id == newPageId)
-
-        // Evaluate page setup() (once)
-        if (pageTo?.setup && !loadedPages[pageTo.id]) {
-          storyVM.eval(pageTo.setup, props.modelValue)
-          loadedPages[pageTo.id] = true
-        }
-
-        // Evaluate page onEnter()
-        if (pageTo?.onEnter) {
-          storyVM.eval(pageTo.onEnter, props.modelValue)
-        }
-
-        // Evaluate page onLeave()
-        if (oldPageId) {
-          const pageFrom = sanitizedStory.value.pages.find((page) => page.id == oldPageId)
-          if (pageFrom?.onLeave) {
-            storyVM.eval(pageFrom.onLeave, props.modelValue)
-          }
-        }
-      },
-      { immediate: true },
-    )
-
-    function goTo(pageId) {
-      const foundPage = sanitizedStory.value.pages.find((page) => page.id == pageId)
-      if (!foundPage) {
-        console.warn(`CmsStory.goTo: page '${pageId}' not found`)
+      if (!currentPage.value?.id) {
         return
       }
 
-      currentPage.value = foundPage
-      emit('update:currentPageId', pageId)
+      // Splice story header and footer into page slots
+      currentPage.value.slots = {
+        ...currentPage.value.slots,
+        header: !currentPage.value.omitHeader ? sanitizedStory.value.header : undefined,
+        footer: !currentPage.value.omitFooter ? sanitizedStory.value.footer : undefined,
+      }
+    }
+
+    const navigateToPage = (pageId) => {
+      if (pageId && pageId == currentPage.value?.id) {
+        return
+      }
+
+      const previousId = currentPage.value?.id
+
+      previousScrollY[previousId] = window.scrollY
+
+      setCurrentPage(pageId)
+      if (currentPage.value?.id) {
+        emit('update:currentPageId', currentPage.value.id)
+      }
+
+      if (previousId) {
+        const previousIndex = sanitizedStory.value.pages.findIndex((p) => p.id == previousId)
+        const nextIndex = sanitizedStory.value.pages.findIndex((p) => p.id == currentPage.value.id)
+        transitionDirection.value = nextIndex > previousIndex ? 'fw' : 'bw'
+      }
+
+      if (navigationHistory.value[navigationHistory.value.length - 1]?.id == pageId) {
+        return
+      }
+      navigationHistory.value.push(pageId)
+
+      const pageTo = currentPage.value
+
+      // Evaluate page setup() (once)
+      if (pageTo?.setup && !loadedPages[pageTo.id]) {
+        storyVM.eval(pageTo.setup, innerModel.value)
+        loadedPages[pageTo.id] = true
+      }
+
+      // Evaluate page onEnter()
+      if (pageTo?.onEnter) {
+        storyVM.eval(pageTo.onEnter, innerModel.value)
+      }
+
+      // Evaluate page onLeave()
+      if (previousId) {
+        const pageFrom = sanitizedStory.value.pages.find((page) => page.id == previousId)
+        if (pageFrom?.onLeave) {
+          storyVM.eval(pageFrom.onLeave, innerModel.value)
+        }
+      }
+    }
+
+    watch(
+      () => props.currentPageId,
+      (newPageId) => navigateToPage(newPageId),
+      { immediate: true },
+    )
+
+    ////// Story navigation
+
+    // Visible pages.  All pages without v-if, or truthy v-if
+    const visiblePages = computed(() => {
+      return sanitizedStory.value.pages
+        .filter((page) => !page['v-if'] || storyVM.eval(page['v-if'], innerModel.value))
+        .map((page) => ({
+          id: page.id,
+          hash: page.hash,
+          title: page.title,
+        }))
+    })
+
+    const pageNav = computed(() => {
+      const currentIndex = visiblePages.value.findIndex((p) => p.id == currentPage.value?.id)
+      const previousPage = visiblePages.value?.[currentIndex - 1]
+      const nextPage = visiblePages.value?.[currentIndex + 1]
+
+      return {
+        current: {
+          id: currentPage.value?.id,
+          hash: currentPage.value?.hash,
+          title: currentPage.value?.title,
+        },
+
+        prev: previousPage
+          ? {
+            id: previousPage?.id,
+            hash: previousPage?.hash,
+            title: previousPage?.title,
+          }
+          : null,
+
+        next: nextPage
+          ? {
+            id: nextPage?.id,
+            hash: nextPage?.hash,
+            title: nextPage?.title,
+          }
+          : null,
+      }
+    })
+
+    function goTo(pageId) {
+      navigateToPage(pageId)
+    }
+
+    function goNext() {
+      const currentPageIndex = visiblePages.value.findIndex((p) => p.id == currentPage.value?.id)
+      const nextPage = visiblePages.value?.[currentPageIndex + 1]
+      if (!nextPage?.id) {
+        console.warn('CmsStory.goNext: No next page')
+        return
+      }
+
+      goTo(nextPage.id)
     }
 
     function goBack() {
       navigationHistory.value.pop() // remove THIS page from history
-      const lastPageId = navigationHistory.value.pop()
-      if (!lastPageId) {
+      const currentPageIndex = visiblePages.value.findIndex((p) => p.id == currentPage.value?.id)
+      const prevPage = visiblePages.value?.[currentPageIndex - 1]
+
+      // const lastPageId = navigationHistory.value.pop()
+      if (!prevPage?.id) {
         console.warn('CmsStory.goBack: Already at start')
         return
       }
 
-      goTo(lastPageId)
+      goTo(prevPage.id)
     }
 
     const globals = reactive({ $errors: [] })
@@ -189,24 +301,28 @@ export default {
 
     // Provide global story methods (used by CmsBlock)
     const providedData = {
+      goNext,
       goTo,
       goBack,
       globals,
       sanitizedStory,
       emitStoryEvent,
+      visiblePages,
+      nav: pageNav,
     }
     provide('$_cms_story', providedData)
     storyVM.custom = { story: providedData }
 
 
     function onUpdateModelValue(event) {
-      emit('update:modelValue', event)
+      innerModel.value = event
+      emit('update:modelValue', innerModel.value)
 
       // evaluate story[v-on][update:modelValue]
       if (sanitizedStory.value?.['v-on']?.['update:modelValue']) {
         const initialSetter = storyVM.onModelSet
         storyVM.onModelSet = null
-        storyVM.eval(sanitizedStory.value['v-on']['update:modelValue'], props.modelValue)
+        storyVM.eval(sanitizedStory.value['v-on']['update:modelValue'], innerModel.value)
           .then(() => storyVM.onModelSet = initialSetter)
       }
     }
@@ -221,29 +337,19 @@ export default {
       globals.$errors = evt
     }
 
-    // Global CSS
-    const storyCSS = ref()
+    /* Story defined stylesheets */
     watchEffect(() => {
-      const strCSS = sanitizedStory.value.css.classes.map((c) => c.css).join('\n')
-      storyCSS.value = storyVM.eval(strCSS, props.modelValue)
-    })
-
-    const storyStyleProp = ref()
-    watchEffect(() => {
-      const objStyle = {
-        ...sanitizedStory.value.css?.style,
-        ...sanitizedStory.value.css?.[`style-${colorScheme.value}`],
-      }
-
-      if (objStyle) {
-        storyStyleProp.value = storyVM.eval(objStyle, props.modelValue)
+      if (Array.isArray(sanitizedStory.value?.stylesheets)) {
+        const parsedSheets = storyVM.eval(sanitizedStory.value.stylesheets, innerModel.value)
+        useStylesheets(parsedSheets)
       }
     })
 
-    // Determine story THEME
-    const themeClassNames = ref([])
-    if (sanitizedStory.value?.themes) {
-      themeClassNames.value = useThemes(sanitizedStory.value)
+    /* Preserve previous window scroll position when navigating */
+    function onTransitionEnter() {
+      if (previousScrollY?.[currentPage.value?.id]) {
+        window.scrollTo(0, previousScrollY[currentPage.value.id])
+      }
     }
 
     // Render function
@@ -251,24 +357,19 @@ export default {
       ? null
       : h(
         'div',
-        {
-          class: ['CmsStory', ...themeClassNames.value],
-          style: storyStyleProp.value,
-        },
+        { class: 'CmsStory' },
         [
-          // Story <style> element in <head>
-          h(
-            Teleport,
-            { to: 'head' },
-            h('style', { type: 'text/css', class: 'CmsStory__style' }, storyCSS.value),
-          ),
-
           h(
             'div',
             { class: 'CmsStory__viewport' },
             h(
               Transition,
-              { name: `${transitionName.value}--${transitionDirection.value}` },
+              {
+                'name': `${transitionName.value}--${transitionDirection.value}`,
+                'enter-active-class': `animating ${transitionName.value}--${transitionDirection.value}-enter-active`,
+                'leave-active-class': `animating ${transitionName.value}--${transitionDirection.value}-leave-active`,
+                'onEnter': onTransitionEnter,
+              },
               () => h(
                 KeepAlive,
                 null,
@@ -277,10 +378,12 @@ export default {
                     'key': currentPage.value.id,
                     'onUpdate:errors': onUpdateErrors,
                     'class': 'CmsStory__page',
-                    'block': currentPage.value,
+                    'block': translatedPage.value,
                     'modelValue': {
-                      ...props.modelValue,
+                      ...innerModel.value,
                       $i18n: i18n,
+                      $pages: visiblePages.value,
+                      $nav: pageNav.value,
                     },
                     'onUpdate:modelValue': onUpdateModelValue,
                   })
@@ -298,10 +401,14 @@ export default {
 .CmsStory {
   @import "./transitions.scss";
   --cms-story-transition-duration: var(--ui-duration-quick);
+  // --cms-story-transition-duration: 5s;
 
   &__viewport {
     position: relative;
-    height: 100%;
+
+    // o height 100%, o overflow:hidden.  Pero tener AMBOS causa que no se haga scroll en la vista final del story
+    // height: 100%;
+    overflow: hidden;
   }
 }
 </style>

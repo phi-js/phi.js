@@ -89,6 +89,15 @@
       // color: #fff;
       color: var(--ui-color-primary);
     }
+
+    &--variable,
+    &--validation,
+    &--css,
+    &--visibility,
+    &--repeat,
+    &--events {
+      color: var(--ui-color-primary);
+    }
   }
 }
 

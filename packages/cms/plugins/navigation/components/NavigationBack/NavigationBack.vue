@@ -36,6 +36,8 @@ function onClick() {
 
 <template>
   <UiButton
+    v-if="!injectedStory.nav?.value || injectedStory.nav.value.prev"
+    type="button"
     class="NavigationBack"
     :icon="props.icon || 'mdi:arrow-left-thick'"
     :label="props.text || 'Back'"

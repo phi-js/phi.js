@@ -28,15 +28,28 @@ const availableBlocks = useAvailableBlocks()
 
 <style lang="scss">
 .PickerContents {
+  user-select: none;
   display: flex;
   flex-direction: column;
 
   .UiItemFinder__body {
     flex: 1;
-    overflow-y: auto;
     padding: 8px;
     & > * {
       margin-bottom: 8px;
+    }
+
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 7px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(255,255,255, 0.1);
+      border-radius: 6px;
+    }
+    &:hover::-webkit-scrollbar-thumb {
+      background-color: #ccc;
     }
   }
 }

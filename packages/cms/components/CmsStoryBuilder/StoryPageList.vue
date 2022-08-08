@@ -1,6 +1,10 @@
 <script setup>
-import { ref } from 'vue'
-import { UiInput, UiItem, UiIcon, UiPopover } from '@/packages/ui/components'
+import { ref, shallowRef, watch, nextTick } from 'vue'
+import draggable from 'vuedraggable'
+
+import { UiInput, UiItem, UiIcon, UiPopover, UiTabs, UiTab } from '@/packages/ui/components'
+import { getBlockEditors } from '../../functions'
+import EditorAction from '../CmsBlockEditor/EditorAction.vue'
 
 const props = defineProps({
   story: {
@@ -20,25 +24,44 @@ const emit = defineEmits([
   'update:currentPageId',
 ])
 
+const availableActions = shallowRef([])
+getBlockEditors({ component: 'LayoutPage' }).then((editors) => availableActions.value = editors?.actions || [])
+
 function onPageClick(page) {
   emit('update:currentPageId', page.id)
 }
 
+const innerPages = ref()
+watch(
+  () => props.story.pages,
+  (arrPages) => innerPages.value = Array.isArray(arrPages) ? arrPages : [],
+  { immediate: true },
+)
 
-const editingPage = ref({})
+function emitUpdate() {
+  emit('update:story', {
+    ...props.story,
+    pages: innerPages.value,
+  })
+}
 
-function openPageEditor(page) {
-  editingPage.value = {
-    id: page.id,
-    title: page.title,
-    hash: page.hash,
+
+const editingPage = ref()
+const editorTab = ref()
+
+function openPageEditor(page, tab = null) {
+  if (tab) {
+    editorTab.value = tab
   }
-  isHashDirty.value = true
-  refDialog.value.showModal()
+
+  editingPage.value = page
+
+  nextTick(() => refDialog.value.showModal())
+  // refDialog.value.showModal()
+
 }
 
 function openPageCreator() {
-  isHashDirty.value = false
   editingPage.value = {
     id: '',
     hash: '',
@@ -49,14 +72,12 @@ function openPageCreator() {
     slot: [],
   }
 
-  refDialog.value.showModal()
+  nextTick(() => refDialog.value.showModal())
+  // refDialog.value.showModal()
 }
 
-let isHashDirty = ref(false)
-
 function resetForm() {
-  editingPage.value = {}
-  isHashDirty.value = false
+  editingPage.value = null
 }
 
 function deletePageAt(index) {
@@ -65,12 +86,16 @@ function deletePageAt(index) {
   }
 
   const story = { ...props.story }
+  const deletedPageId = story.pages[index].id
+
   story.pages.splice(index, 1)
   emit('update:story', story)
 
-  const newActiveId = story.pages?.[index]?.id || story.pages[story.pages.length - 1]?.id
-  if (newActiveId) {
-    emit('update:currentPageId', newActiveId)
+  if (deletedPageId == props.currentPageId) {
+    const newActiveId = story.pages?.[index]?.id || story.pages[story.pages.length - 1]?.id
+    if (newActiveId) {
+      emit('update:currentPageId', newActiveId)
+    }
   }
 }
 
@@ -91,36 +116,13 @@ function onDialogClose($event) {
         // ????
         return
       }
-      Object.assign(story.pages[foundPageIndex], {
-        title: editingPage.value.title,
-        hash: editingPage.value.hash,
-      })
 
+      Object.assign(story.pages[foundPageIndex], editingPage.value)
       emit('update:story', story)
     }
   }
 
   resetForm()
-}
-
-function onTitleChange() {
-  if (!isHashDirty.value) {
-    editingPage.value.hash = toValidHash(editingPage.value.title)
-  }
-}
-
-function toValidHash(string) {
-  if (!string) {
-    return ''
-  }
-
-  return string
-    .toString()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, '')
-    .substring(0, 16)
 }
 </script>
 
@@ -132,31 +134,34 @@ function toValidHash(string) {
       class="StoryPageList__dialog"
       @close="onDialogClose"
     >
-      <form method="dialog">
-        <section>
-          <UiInput
-            v-model="editingPage.title"
-            type="text"
-            label="Title"
-            @update:model-value="onTitleChange"
-          />
-          <UiInput
-            v-model="editingPage.hash"
-            type="text"
-            label="Hash"
-            @update:model-value="isHashDirty = true"
-          />
-        </section>
+      <form
+        v-if="editingPage"
+        method="dialog"
+      >
+        <UiTabs :model-value="editorTab">
+          <UiTab
+            v-for="action in availableActions"
+            :key="action.id"
+            :value="action.id"
+            :text="action.title"
+          >
+            <EditorAction
+              v-model:block="editingPage"
+              :action="action"
+            />
+          </UiTab>
+        </UiTabs>
 
         <footer>
           <button
+            type="submit"
             class="UiButton"
             value="ok"
-            :disabled="editingPage.hash && !editingPage.hash.trim()"
           >
             OK
           </button>
           <button
+            type="submit"
             class="UiButton UiButton--cancel"
             value="cancel"
           >
@@ -166,73 +171,67 @@ function toValidHash(string) {
       </form>
     </dialog>
 
-    <div class="StoryPageList__pages">
-      <div
-        v-for="(page, i) in props.story.pages"
-        :key="page.id"
-        class="StoryPage"
-        :class="{'StoryPage--selected': page.id == props.currentPageId}"
-        @click="onPageClick(page)"
-      >
-        <UiItem
-          :text="page.title || page.hash"
-          :subtext="`#${page.hash}`"
+    <draggable
+      v-model="innerPages"
+      class="StoryPageList__draggable"
+      group="StoryPageList"
+      handle=".UiItem__icon"
+      item-key="id"
+      :animation="111"
+      :empty-insert-threshold="0"
+      :swap-threshold="0.5"
+      :inverted-swap-threshold="1"
+
+      @update:model-value="emitUpdate"
+    >
+      <template #item="{ element, index }">
+        <div
+          class="StoryPage"
+          :class="{'StoryPage--selected': element.id == props.currentPageId}"
+          @click="onPageClick(element)"
         >
-          <template #actions>
-            <UiPopover>
-              <template #trigger>
-                <UiIcon src="mdi:dots-vertical" />
-              </template>
-              <template #contents>
-                <div class="StoryPage__menuItems">
-                  <UiItem
-                    class="BlockPopover__item"
-                    icon="mdi:pencil"
-                    text="Rename"
-                    @click="openPageEditor(page)"
-                  />
-                  <UiItem
-                    class="BlockPopover__item"
-                    icon="mdi:water"
-                    text="Style"
-                  />
-                  <!-- <UiItem
-                    class="BlockPopover__item"
-                    icon="mdi:eye-outline"
-                    text="Visibility"
-                  /> -->
-                  <UiItem
-                    class="BlockPopover__item"
-                    icon="mdi:gesture-double-tap"
-                    text="Events"
-                  />
-                  <UiItem
-                    class="BlockPopover__item BlockPopover__item--delete"
-                    :style="props.story.pages.length == 1 ? 'opacity:0.5; pointer-events:none' : null"
-                    icon="mdi:close"
-                    text="Delete"
-                    @click="deletePageAt(i)"
-                  />
-                </div>
-              </template>
-            </UiPopover>
-          </template>
-        </UiItem>
-      </div>
-    </div>
+          <UiItem
+            class="StoryPage__item"
+            icon="mdi:drag-vertical"
+            :text="element.title || element.hash"
+            :subtext="`#${element.hash}`"
+          >
+            <template #actions>
+              <UiPopover>
+                <template #trigger>
+                  <UiIcon src="mdi:dots-vertical" />
+                </template>
+                <template #contents>
+                  <div class="StoryPage__menuItems">
+                    <UiItem
+                      v-for="action in availableActions"
+                      :key="action.id"
+                      class="BlockPopover__item"
+                      :text="action.title"
+                      :icon="action.icon"
+                      @click="openPageEditor(element, action.id)"
+                    />
+                    <UiItem
+                      class="BlockPopover__item BlockPopover__item--delete"
+                      :style="props.story.pages.length == 1 ? 'opacity:0.5; pointer-events:none' : null"
+                      icon="mdi:close"
+                      text="Delete"
+                      @click="deletePageAt(index)"
+                    />
+                  </div>
+                </template>
+              </UiPopover>
+            </template>
+          </UiItem>
+        </div>
+      </template>
+    </draggable>
 
     <UiInput
       type="button"
       label="Add page"
       @click="openPageCreator"
     />
-
-    <!-- <button
-      class="UiButton"
-      @click="openPageCreator"
-    >
-      Add page
-    </button> -->
   </div>
 </template>
 
@@ -246,7 +245,11 @@ function toValidHash(string) {
     background-color: var(--ui-color-background);
     color: var(--ui-color-foreground);
 
-    min-width: 500px;
+    min-width: 40vw;
+    min-height: 40vh;
+
+    max-width: 70vw;
+    max-height: 70vh;
 
     &::backdrop {
       background: rgba(0,0,0, 0.5);
@@ -268,7 +271,6 @@ function toValidHash(string) {
 
 .StoryPage {
   user-select: none;
-
   width: 128px;
   margin-bottom: 2rem;
   padding: 8px;
@@ -292,6 +294,14 @@ function toValidHash(string) {
   &--selected {
     border: 2px solid var(--ui-color-primary);
     opacity: 1;
+  }
+
+  &__item {
+    .UiItem__icon {
+      cursor: move;
+      // width: 30px;
+      padding-right: 12px;
+    }
   }
 }
 </style>

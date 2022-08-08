@@ -7,40 +7,36 @@ import { useStorySettings } from '../../functions'
 import CssStyleEditor from '@/packages/ui/components/CssStyleEditor/CssStyleEditor.vue'
 import CssBackgroundEditor from '@/packages/ui/components/CssStyleEditor/CssBackgroundEditor.vue'
 
-// import SpacingEditor from './props/SpacingEditor.vue'
-// import PropBackground from './props/PropBackground.vue'
-
 const props = defineProps({
-  /*
-  Object defining CSS rules/variables
-  {
-    "color": "#000000",
-    "background-color": "#000000",
-    "--ui-content-width": "70%",
-    ...
-  }
-  */
-  modelValue: {
+  block: {
     type: Object,
     required: false,
     default: () => ({}),
   },
 })
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:block'])
 
 const settings = useStorySettings()
 const uploadsEndpoint = settings.uploads.assets
 
-const innerValue = ref({})
+const innerStyle = ref({})
 
 watch(
-  () => props.modelValue,
-  (newValue) => innerValue.value = typeof newValue == 'object' ? { ...newValue } : {},
+  () => props.block,
+  (block) => innerStyle.value = typeof block?.props?.style == 'object'
+    ? { ...block.props.style }
+    : {},
   { immediate: true },
 )
 
 function emitUpdate() {
-  emit('update:modelValue', { ...innerValue.value })
+  emit('update:block', {
+    ...props.block,
+    props: {
+      ...props.block?.props,
+      style: { ...innerStyle.value },
+    },
+  })
 }
 
 const i18n = useI18n({
@@ -71,24 +67,13 @@ const i18n = useI18n({
 </script>
 
 <template>
-  <div class="BlockCssStyle UiForm--wide">
-    <UiDetails
-      group="BlockCssStyle"
-      :text="i18n.t('BlockCssStyle.background')"
-    >
-      <CssBackgroundEditor
-        v-model="innerValue"
-        :endpoint="uploadsEndpoint"
-        @update:model-value="emitUpdate()"
-      />
-    </UiDetails>
-
-    <UiDetails
+  <div class="BlockCssStyle">
+    <!-- <UiDetails
       group="BlockCssStyle"
       :text="i18n.t('BlockCssStyle.Dimensions')"
     >
       <CssStyleEditor
-        v-model="innerValue"
+        v-model="innerStyle"
         :endpoint="uploadsEndpoint"
         :schema="{
           properties: {
@@ -100,18 +85,18 @@ const i18n = useI18n({
         }"
         @update:model-value="emitUpdate()"
       />
-    </UiDetails>
+    </UiDetails> -->
 
     <UiDetails
       group="BlockCssStyle"
       :text="i18n.t('BlockCssStyle.Margin')"
     >
       <CssStyleEditor
-        v-model="innerValue"
+        v-model="innerStyle"
         :endpoint="uploadsEndpoint"
         :schema="{
           properties: {
-            'margin': {format: 'css-spacing'},
+            'margin': {format: {type: 'css-spacing', props: {emptyValue: 'auto'}}},
           }
         }"
         @update:model-value="emitUpdate()"
@@ -123,13 +108,24 @@ const i18n = useI18n({
       :text="i18n.t('BlockCssStyle.Padding')"
     >
       <CssStyleEditor
-        v-model="innerValue"
+        v-model="innerStyle"
         :endpoint="uploadsEndpoint"
         :schema="{
           properties: {
-            'padding': {format: 'css-spacing'},
+            'padding': {format: {type: 'css-spacing', props: {emptyValue: '0'}}},
           }
         }"
+        @update:model-value="emitUpdate()"
+      />
+    </UiDetails>
+
+    <UiDetails
+      group="BlockCssStyle"
+      :text="i18n.t('BlockCssStyle.background')"
+    >
+      <CssBackgroundEditor
+        v-model="innerStyle"
+        :endpoint="uploadsEndpoint"
         @update:model-value="emitUpdate()"
       />
     </UiDetails>

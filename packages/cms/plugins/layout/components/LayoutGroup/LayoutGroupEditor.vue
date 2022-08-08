@@ -1,7 +1,6 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
-import { getCssObjectAttributes } from '../../../../functions'
 
 const props = defineProps({
   /* BLOCK object */
@@ -26,8 +25,6 @@ function onSlotUpdate() {
   emit('update:modelValue', { ...props.modelValue, slot: pageSlot })
 }
 
-const cssAttributes = computed(() => getCssObjectAttributes(props.modelValue?.css, props.modelValue))
-
 const cssVariables = computed(() => {
   return {
     '--layout-group-align-items': props.modelValue?.props?.alignItems,
@@ -39,7 +36,6 @@ const cssVariables = computed(() => {
 
 <template>
   <CmsSlotEditor
-    v-bind="cssAttributes"
     v-model:slot="pageSlot"
     :style="cssVariables"
     class="LayoutGroupEditor"

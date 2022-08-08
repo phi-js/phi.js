@@ -131,7 +131,7 @@ const endangeredIndex = ref(-1)
       class="ListenersEditor__adder"
       type="select-native"
       :options="eventPickerOptions"
-      placeholder="Cuando ..."
+      placeholder="When ..."
       @update:model-value="addEvent($event)"
     />
   </div>
