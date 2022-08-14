@@ -5,11 +5,9 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    // align-items: flex-start;
 
     &__label {
       min-width: var(--ui-form-label-width);
-      padding: 8px;
     }
 
     &__body {

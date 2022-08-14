@@ -1,14 +1,7 @@
 .UiInputNativeElement {
   box-sizing: border-box;
-
-  width: 100%; // ... hmmmmmm
-  // max-width: 325px;
-  // min-width: 200px;
-  // min-width: 50px;
   min-width: max-content;
-
   outline-color: var(--ui-color-primary);
-  // padding: 8px 12px;
   padding: 7px;
 
   border-radius: 5px;
@@ -60,6 +53,17 @@ textarea.UiInput__element {
       min-width: 20px;
       max-width: 60px;
     }
+  }
+
+  // The invisible text field added to support HTML5 validation
+  // below custom components:
+  &__validatorInput {
+    // position: absolute;
+    display: block;
+    overflow: hidden;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
   }
 
   &__errors {
