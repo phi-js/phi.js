@@ -241,16 +241,15 @@ function closeOthersInGroup() {
             name="actions"
             :is-open="isOpen"
             :close="shrink"
-          >
-            <UiIcon
-              v-if="props.onDelete"
-              src="mdi:close"
-              class="UiDetails__deleter"
-              @mouseenter="isDeleting = true"
-              @mouseleave="isDeleting = false"
-              @click="emit('delete')"
-            />
-          </slot>
+          />
+          <UiIcon
+            v-if="props.onDelete"
+            src="mdi:close"
+            class="UiDetails__deleter"
+            @mouseenter="isDeleting = true"
+            @mouseleave="isDeleting = false"
+            @click="emit('delete')"
+          />
         </template>
       </UiItem>
     </summary>
