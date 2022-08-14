@@ -32,7 +32,7 @@ watch(
     <UiInput
       v-model="innerModel.eval"
       type="code"
-      @update:modelValue="emitUpdate"
+      @update:model-value="emitUpdate"
     />
     <span>}</span>
   </div>

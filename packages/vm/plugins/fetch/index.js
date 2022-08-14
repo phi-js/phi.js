@@ -29,18 +29,22 @@ export default {
 }
 
 function sanitizeOptions(options) {
-  const retval = {}
+  const retval = { ...options }
 
   retval.method = typeof options?.method == 'string'
     ? options.method.trim().toUpperCase()
     : 'GET'
 
-  if (typeof options?.body == 'string') {
-    retval.body = JSON.stringify(options.body)
+  if (retval.body && typeof retval.body == 'object') {
+    retval.body = JSON.stringify(retval.body)
+    if (!retval.headers) {
+      retval.headers = {}
+    }
+    retval.headers['content-type'] = 'application/json'
   }
 
-  if (options.headers) {
-    retval.headers = options.headers
+  if (!retval.headers) {
+    retval.headers = undefined
   }
 
   return retval

@@ -92,12 +92,22 @@ export default class VM {
      *   }
      * }
      */
+
+    // /*
+    // Only PARSE object (parse is recursive)
+    // i.e. if the generic object has subproperties that can be interpreted as statements (i.e. object.and, object.call, etc)
+    // then they are NOT evaluated
+    // */
+    // return parse(expr, localScope, true)
+
     /*
-    Only PARSE object (parse is recursive)
-    i.e. if the generic object has subproperties that can be interpreted as statements (i.e. object.and, object.call, etc)
-    then they are NOT evaluated
+      Eval object recursivelly
     */
-    return parse(expr, localScope, true)
+    const retval = {}
+    for (const [propName, propValue] of Object.entries(expr)) {
+      retval[propName] = this.eval(propValue, localScope)
+    }
+    return retval
   }
 
 
@@ -161,12 +171,12 @@ export default class VM {
    *   "else": "...expr..."
    * }
    */
-  async stmtIf(condition, exprThen = null, exprElse = null, localScope = null) {
-    const boo = await this.eval(condition, localScope)
+  stmtIf(condition, exprThen = null, exprElse = null, localScope = null) {
+    const boo = this.eval(condition, localScope)
     if (boo) {
-      return exprThen ? (await this.eval(exprThen, localScope)) : undefined
+      return exprThen ? (this.eval(exprThen, localScope)) : undefined
     }
-    return exprElse ? (await this.eval(exprElse, localScope)) : undefined
+    return exprElse ? (this.eval(exprElse, localScope)) : undefined
   }
 
   /**
@@ -182,8 +192,8 @@ export default class VM {
    *    "default": "... expr ..."
    * }
   */
-  async stmtSwitch(expr, cases = [], defaultCase = null, localScope = null) {
-    let res = await this.eval(expr, localScope)
+  stmtSwitch(expr, cases = [], defaultCase = null, localScope = null) {
+    let res = this.eval(expr, localScope)
 
     for (let i = 0; i < cases.length; i++) {
       if (cases[i].value == res) {
