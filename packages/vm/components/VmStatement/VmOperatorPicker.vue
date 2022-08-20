@@ -111,10 +111,11 @@ const schemaPropertiesList = computed(() => {
           {{ prop.title || prop.name }}
         </option>
       </template>
-      <option
+
+      <!-- <option
         value="prop:custom"
         v-text="i18n.t('VmOperatorPicker.Other')"
-      />
+      /> -->
     </optgroup>
 
     <optgroup :label="i18n.t('VmOperatorPicker.Conditions')">

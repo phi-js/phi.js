@@ -1,12 +1,15 @@
 <script setup>
-import { ref, computed, reactive, watch, nextTick, onBeforeMount } from 'vue'
+import { ref, computed, reactive, watch, nextTick, onBeforeMount, inject } from 'vue'
 
-import { UiItem, UiDetails } from '@/packages/ui'
+import { UiDetails } from '@/packages/ui'
 import VmStatement from '../VmStatement.vue'
-import allOperators from '../operators'
+import baseOperators from '../operators'
 import useModelSchema from '../useModelSchema'
 
 const modelSchema = useModelSchema()
+
+const injectedOperators = inject('$_vm_operators', [])
+const allOperators = baseOperators.concat(injectedOperators)
 
 const props = defineProps({
   modelValue: {
@@ -57,7 +60,11 @@ const fieldSchema = computed(() => {
 
   let targetSchema = modelSchema.value
 
-  const parts = innerModel.field.split('.')
+  const fieldName = innerModel.field.substring(0, 2) == '$.'
+    ? innerModel.field.substring(2)
+    : innerModel.field
+
+  const parts = fieldName.split('.')
   const lastPart = parts[parts.length - 1]
 
   for (let i = 0; i < parts.length - 1; i++) {
@@ -120,8 +127,7 @@ function onChangeOp() {
 const currentOperator = computed(() => availableOperators.value.find((opDef) => opDef.operator == innerModel?.op))
 
 const operationRedaction = computed(() => {
-  // const fieldName = fieldSchema.value?.info?.text || innerModel.field
-  const fieldName = innerModel.field
+  const fieldName = fieldSchema.value?.title || innerModel.field
   const opName = currentOperator.value?.text || innerModel.op
   const stringArgs = argsToString(innerModel.args)
   return {
@@ -132,6 +138,9 @@ const operationRedaction = computed(() => {
 
 function argsToString(strArgs) {
   if (Array.isArray(strArgs)) {
+    if (strArgs.length > 4) {
+      return `${strArgs.length} items`
+    }
     return strArgs.map((subArg) => argsToString(subArg)).join(', ')
   }
 
@@ -150,15 +159,11 @@ function argsToString(strArgs) {
     v-bind="operationRedaction"
   >
     <div class="StmtOp__body">
-      <div class="StmtOp__field">
-        <UiItem
-          v-if="fieldSchema?.title"
-          :text="fieldSchema.title"
-          :subtext="innerModel.field"
-          :icon="fieldSchema?.icon"
-        />
+      <div
+        v-if="!fieldSchema"
+        class="StmtOp__field"
+      >
         <input
-          v-else
           v-model="innerModel.field"
           type="text"
           class="UiInput"
@@ -166,7 +171,10 @@ function argsToString(strArgs) {
         >
       </div>
 
-      <div class="StmtOp__op">
+      <div
+        v-if="availableOperators?.length > 1"
+        class="StmtOp__op"
+      >
         <select
           v-model="innerModel.op"
           class="UiInput"

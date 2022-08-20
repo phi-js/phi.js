@@ -4,13 +4,12 @@ const VmStatement = defineAsyncComponent(() => import('../VmStatement.vue'))
 
 import VmOperatorPicker from '../VmOperatorPicker.vue'
 import { useI18n } from '@/packages/i18n'
-import { UiDetails } from '@/packages/ui'
 
 let globalCounter = 0
 
 export default {
   name: 'StmtAndOr',
-  components: { UiDetails, VmStatement, VmOperatorPicker },
+  components: { VmStatement, VmOperatorPicker },
 
   props: {
     modelValue: {
@@ -94,13 +93,12 @@ export default {
 </script>
 
 <template>
-  <UiDetails
+  <div
     class="StmtAndOr"
     open
   >
-    <template #summary="{ isOpen }">
+    <div class="StmtAndOr__header">
       <select
-        v-if="isOpen"
         v-model="innerModel.operator"
         class="StmtAndOr__select"
         @change="emitInput"
@@ -115,30 +113,27 @@ export default {
           v-text="i18n.t('StmtAndOr.anyOf')"
         />
       </select>
-      <span v-else>{{ innerModel.operator == 'and' ? i18n.t('StmtAndOr.allOf') : i18n.t('StmtAndOr.anyOf') }}</span>
-    </template>
+    </div>
 
-    <template #default>
-      <div class="StmtAndOr__body">
-        <div
-          v-for="(_, i) in innerModel.list"
-          :key="i"
-          class="StmtAndOr__item"
-        >
-          <VmStatement
-            v-model="innerModel.list[i]"
-            :group="`StmtAndOr-${uid}`"
-            :open="highlightedIndex == i"
-            @update:model-value="emitInput"
-            @delete="removeCondition(i)"
-          />
-        </div>
-
-        <VmOperatorPicker
-          class="StmtAndOr__adder"
-          @input="pushOperator"
+    <div class="StmtAndOr__body">
+      <div
+        v-for="(_, i) in innerModel.list"
+        :key="i"
+        class="StmtAndOr__item"
+      >
+        <VmStatement
+          v-model="innerModel.list[i]"
+          :group="`StmtAndOr-${uid}`"
+          xxxx-open="highlightedIndex == i"
+          @update:model-value="emitInput"
+          @delete="removeCondition(i)"
         />
       </div>
-    </template>
-  </UiDetails>
+
+      <VmOperatorPicker
+        class="StmtAndOr__adder"
+        @input="pushOperator"
+      />
+    </div>
+  </div>
 </template>

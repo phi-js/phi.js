@@ -36,7 +36,7 @@ export default {
   props: {
     // El atributo ARGS del statement  {"op": "hasAny", "field": "...", "args": XXXXXXXXXXX}
     modelValue: {
-      type: Object,
+      type: [Array, String],
       required: false,
       default: null,
     },
