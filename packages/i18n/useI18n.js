@@ -94,7 +94,7 @@ export default function useI18n(componentDictionary = null) {
       const targetLocale = attrs?.['i18n-language'] || locale.value
       return Number(value).toLocaleString(targetLocale, {
         style: 'currency',
-        currency: currency || injected.defaultCurrency,
+        currency: currency || injected.defaultCurrency || 'USD',
       })
     },
   }
