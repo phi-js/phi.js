@@ -6,6 +6,9 @@ import VmStatement from '../VmStatement.vue'
 import baseOperators from '../operators'
 import useModelSchema from '../useModelSchema'
 
+import useVmI18n from '../../../i18n'
+const i18n = useVmI18n()
+
 const modelSchema = useModelSchema()
 
 const injectedOperators = inject('$_vm_operators', [])
@@ -75,9 +78,17 @@ const fieldSchema = computed(() => {
   return targetSchema?.properties?.[lastPart]
 })
 
+const translatedOperators = computed(() => {
+  return allOperators.map((op) => ({
+    ...op,
+    text: i18n.t(`StmtOp.operator.${op.operator}.title`, null, op.text),
+    subtext: i18n.t(`StmtOp.operator.${op.operator}.description`, null, op.text),
+  }))
+})
+
 const availableOperators = computed(() => {
   let fieldType = fieldSchema.value?.type || 'string'
-  return allOperators.filter((op) => {
+  return translatedOperators.value.filter((op) => {
     return op.type == fieldType
     || (
       op.operator.substring(0, 5) === 'enum.'

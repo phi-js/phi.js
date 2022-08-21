@@ -1,11 +1,13 @@
 <script setup>
 import { ref, watch } from 'vue'
 import draggable from 'vuedraggable'
+import { UiIcon } from '@/packages/ui'
+
+import useVmI18n from '../../../../i18n'
+const i18n = useVmI18n()
 
 import StmtChainItem from './StmtChainItem.vue'
 import VmExpressionPicker from '../../VmExpressionPicker.vue'
-import { useI18n } from '@/packages/i18n'
-import { UiIcon } from '@/packages/ui'
 
 const props = defineProps({
   modelValue: {
@@ -78,19 +80,6 @@ function deifify(item, i) {
   innerValue.value.chain.splice(i, 1, ...item.do.then.chain)
   emitUpdate()
 }
-
-const i18n = useI18n({
-  en: {
-    'StmtChain.ifify': 'Wrap in conditional',
-    'StmtChain.deifify': 'Remove conditional',
-    'StmtChain.deleteItem': 'Delete action',
-  },
-  es: {
-    'StmtChain.ifify': 'Insertar en condicional',
-    'StmtChain.deifify': 'Remover condicional',
-    'StmtChain.deleteItem': 'Eliminar acción',
-  },
-})
 
 const endangeredIndex = ref(-1)
 </script>

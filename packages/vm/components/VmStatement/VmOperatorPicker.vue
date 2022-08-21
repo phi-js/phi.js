@@ -1,6 +1,9 @@
 <script setup>
 import { computed } from 'vue'
-import { useI18n } from '@/packages/i18n'
+
+import useVmI18n from '../../i18n'
+const i18n = useVmI18n()
+
 import useModelSchema from './useModelSchema.js'
 const modelSchema = useModelSchema()
 
@@ -37,33 +40,6 @@ function onSelectChange($evt) {
 
   emit('input', {})
 }
-
-const i18n = useI18n({
-  en: {
-    'VmOperatorPicker.AddContition': 'Add condition',
-    'VmOperatorPicker.Other': 'Other ...',
-    'VmOperatorPicker.allOf': 'All of the following',
-    'VmOperatorPicker.anyOf': 'Any of the following',
-    'VmOperatorPicker.Variables': 'Variables',
-    'VmOperatorPicker.Conditions': 'Conditions',
-  },
-  es: {
-    'VmOperatorPicker.AddContition': 'Agregar condición',
-    'VmOperatorPicker.Other': 'Otra ...',
-    'VmOperatorPicker.allOf': 'Todas las siguientes',
-    'VmOperatorPicker.anyOf': 'Cualquiera de las siguientes',
-    'VmOperatorPicker.Variables': 'Variables',
-    'VmOperatorPicker.Conditions': 'Condiciones',
-  },
-  de: {
-    'VmOperatorPicker.AddContition': 'Bedingung hinzufügen',
-    'VmOperatorPicker.Other': 'Bedingung hinzufügen ...',
-    'VmOperatorPicker.allOf': 'Alles',
-    'VmOperatorPicker.anyOf': 'Irgendein',
-    'VmOperatorPicker.Variables': 'Variablen',
-    'VmOperatorPicker.Conditions': 'Bedingungen',
-  },
-})
 
 function getPropertiesArray(schema, retval = [], prefix = '') {
   if (!schema?.type) {

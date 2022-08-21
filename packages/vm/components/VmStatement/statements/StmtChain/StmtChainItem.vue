@@ -1,8 +1,9 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { useI18n } from '@/packages/i18n'
 import { UiIcon, UiItem, UiInput, UiDetails } from '@/packages/ui'
 import VmStatement from '../../VmStatement.vue'
+import useVmI18n from '../../../../i18n'
+const i18n = useVmI18n()
 
 const props = defineProps({
   modelValue: {
@@ -42,25 +43,6 @@ function rename() {
     accept()
   }
 }
-
-const i18n = useI18n({
-  en: {
-    'StmtChainItem.chooseName': 'New name:',
-    'StmtChainItem.renameAction': 'Rename this action',
-    'StmtChainItem.assignResult': 'Assign result to:',
-    'StmtChainItem.then': 'then',
-    'StmtChainItem.else': 'else',
-    'StmtChainItem.variableName': 'Variable name',
-  },
-  es: {
-    'StmtChainItem.chooseName': 'Nuevo nombre:',
-    'StmtChainItem.renameAction': 'Renombrar acción',
-    'StmtChainItem.assignResult': 'Asignar resultado en:',
-    'StmtChainItem.then': 'then',
-    'StmtChainItem.else': 'else',
-    'StmtChainItem.variableName': 'Nombre de variable',
-  },
-})
 </script>
 
 <template>

@@ -1,8 +1,10 @@
 <script setup>
 import { computed, inject } from 'vue'
-import { availableFunctions } from '../../plugins/registerPlugin.js'
-import { useI18n } from '@/packages/i18n'
+
 import { UiItem, UiDialog, UiItemFinder } from '@/packages/ui'
+import { availableFunctions } from '../../plugins/registerPlugin.js'
+import useVmI18n from '../../i18n'
+const i18n = useVmI18n()
 
 const emit = defineEmits(['input'])
 
@@ -55,18 +57,6 @@ const items = computed(() => {
     ...availableFunctions,
   ]
 })
-
-const i18n = useI18n({
-  en: {
-    'VmExpressionPicker.label': 'Add action...',
-    'VmExpressionPicker.Cancel': 'Cancel',
-  },
-  es: {
-    'VmExpressionPicker.label': 'Agregar acción...',
-    'VmExpressionPicker.Cancel': 'Cancelar',
-  },
-})
-
 </script>
 
 <template>

@@ -3,7 +3,7 @@ import { defineAsyncComponent } from 'vue'
 const VmStatement = defineAsyncComponent(() => import('../VmStatement.vue'))
 
 import VmOperatorPicker from '../VmOperatorPicker.vue'
-import { useI18n } from '@/packages/i18n'
+import useVmI18n from '../../../i18n'
 
 let globalCounter = 0
 
@@ -22,20 +22,7 @@ export default {
   emits: ['update:modelValue'],
 
   setup() {
-    const i18n = useI18n({
-      en: {
-        'StmtAndOr.allOf': 'All of the following',
-        'StmtAndOr.anyOf': 'Any of the following',
-      },
-      es: {
-        'StmtAndOr.allOf': 'Todas las siguientes',
-        'StmtAndOr.anyOf': 'Cualquiera de las siguientes',
-      },
-      de: {
-        'StmtAndOr.allOf': 'Alles',
-        'StmtAndOr.anyOf': 'Irgendein',
-      },
-    })
+    const i18n = useVmI18n()
 
     return {
       i18n,

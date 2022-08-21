@@ -1,7 +1,8 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { useI18n } from '@/packages/i18n'
 import { UiInput, UiDetails } from '@/packages/ui'
+import useVmI18n from '../../i18n'
+const i18n = useVmI18n()
 
 const props = defineProps({
   modelValue: {
@@ -42,18 +43,6 @@ watch(
 function emitInput() {
   emit('update:modelValue', JSON.parse(JSON.stringify(innerValue.value)))
 }
-
-const i18n = useI18n({
-  en: {
-    'FetchEditor.Body': 'Body',
-    'FetchEditor.Headers': 'Headers',
-  },
-  es: {
-    'FetchEditor.Body': 'Body',
-    'FetchEditor.Headers': 'Encabezados',
-  },
-})
-
 </script>
 
 <template>
