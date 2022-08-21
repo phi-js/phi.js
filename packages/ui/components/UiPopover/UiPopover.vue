@@ -71,7 +71,7 @@ onMounted(() => {
       emit('close')
     },
 
-    appendTo: () => document.body,
+    appendTo: () => document.querySelector('dialog[open]') || document.body,
 
     ...props.tippy,
   })
