@@ -25,7 +25,7 @@ onMounted(() => {
   isOpen.value = !!props.open
   if (isOpen.value) {
     refDialog.value?.showModal?.()
-    document.body.style.overflow = 'clip'
+    document.body.style.overflow = 'hidden'
   } else if (refDialog.value) {
     refDialog.value?.close?.()
     document.body.style.overflow = null
@@ -38,7 +38,7 @@ watch(
     isOpen.value = !!newValue
     if (isOpen.value) {
       refDialog.value?.showModal?.()
-      document.body.style.overflow = 'clip'
+      document.body.style.overflow = 'hidden'
     } else if (refDialog.value) {
       refDialog.value?.close?.()
       document.body.style.overflow = null
@@ -49,7 +49,7 @@ watch(
 
 function open() {
   refDialog.value?.showModal?.()
-  document.body.style.overflow = 'clip'
+  document.body.style.overflow = 'hidden'
   isOpen.value = true
   emit('update:open', isOpen.value)
   emit('open')
@@ -121,48 +121,22 @@ async function onDialogClose($event) {
         />
       </div>
 
-      <div
-        v-if="$slots.footer"
-        class="UiDialog__footer"
-      >
-        <slot
-          name="footer"
-          :close="close"
-        />
-      </div>
-      <button
-        v-else
-        class="UiDialog__btnClose"
-        @click="close"
-      >
-        &times;
-      </button>
+      <slot
+        name="footer"
+        :close="close"
+      />
     </dialog>
   </div>
 </template>
 
 <style lang="scss">
 .UiDialog {
-  &__dialog {
-    z-index: 1;
-
-    border: 0;
-    border-radius: 5px;
-    background-color: var(--ui-color-background);
-    color: var(--ui-color-foreground);
-
-    margin: 15vh auto auto auto;
+  &__contents {
     min-width: 40vw;
     max-width: 95vw;
-    max-height: 95vh;
-    padding: 0;
+    max-height: 75vh;
 
-    &::backdrop {
-      background: rgba(0,0,0, 0.5);
-    }
-
-    position: relative;
-
+    overflow: auto;
     &::-webkit-scrollbar {
       width: 7px;
     }
@@ -175,23 +149,20 @@ async function onDialogClose($event) {
     &:hover::-webkit-scrollbar-thumb {
       background-color: #ccc;
     }
-
   }
 
-  &__btnClose {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-
-    background: transparent;
-    color: inherit;
+  &__dialog {
     border: 0;
-    padding: 8px 12px;
     border-radius: 5px;
+    background-color: var(--ui-color-background);
+    color: var(--ui-color-foreground);
+    padding: 0;
 
-    cursor: pointer;
-    &:hover {
-      background-color: var(--ui-color-hover);
+    overflow: visible; // allows UiPopover inside dialog to show correctly
+    margin-top: 10%;
+
+    &::backdrop {
+      background: rgba(0,0,0, 0.6);
     }
   }
 }
