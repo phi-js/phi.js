@@ -6,8 +6,8 @@ export default {
     threshold: {
       type: [String, Number],
       required: false,
-      default: '0.0'
-    }
+      default: '0.0',
+    },
   },
 
   /*
@@ -17,17 +17,7 @@ export default {
   emits: ['show', 'hide'], // show: the event is scroll into a fully visible position.  hide: event is occluded or hiden
 
   data() {
-    return {
-      IntersectionObserver: null,
-    };
-  },
-
-  methods: {
-    callbackObserver(entries) {
-      entries.forEach(({ isIntersecting }) => {
-        isIntersecting ? this.$emit('show') : this.$emit('hide')
-      });
-    },
+    return { IntersectionObserver: null }
   },
 
   created() {
@@ -36,22 +26,30 @@ export default {
       {
         root: this.$el,
         threshold: this.threshold,
-      }
-    );
+      },
+    )
   },
 
   mounted() {
-    this.IntersectionObserver.observe(this.$el);
+    this.IntersectionObserver.observe(this.$el)
   },
 
-  beforeDestroy() {
-    this.IntersectionObserver.disconnect();
+  beforeUnmount() {
+    this.IntersectionObserver.disconnect()
   },
-};
+
+  methods: {
+    callbackObserver(entries) {
+      entries.forEach(({ isIntersecting }) => {
+        isIntersecting ? this.$emit('show') : this.$emit('hide')
+      })
+    },
+  },
+}
 </script>
 
 <template>
   <div class="UiIntersectionObserver">
-    <slot></slot>
+    <slot />
   </div>
 </template>
