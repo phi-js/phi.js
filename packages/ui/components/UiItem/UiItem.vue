@@ -135,7 +135,7 @@ export default {
   &__subtext {
     margin: 0;
     // opacity: 0.8; // fails lighthouse contrast test
-    font-size: 0.82em;
+    font-size: 0.75em;
   }
 
   &__actions {
@@ -149,13 +149,13 @@ export default {
   &__badge {
     background-color: var(--ui-item-badge-color);
     color: #fff;
-    font-size: min(0.7em, 26px);
-    width: 1.5em;
-    height: 1.5em;
+    font-size: min(0.6em, 26px);
+    width: 0.9rem;
+    height: 0.9rem;
 
     position: absolute;
-    top: 0.35em;
-    left: -0.4em;
+    top: 0.6rem;
+    left: 0;
 
     border-radius: 50%;
     overflow: hidden;
