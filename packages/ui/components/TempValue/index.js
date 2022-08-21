@@ -1,0 +1,1 @@
+export { default as TempValue } from './TempValue.vue'
