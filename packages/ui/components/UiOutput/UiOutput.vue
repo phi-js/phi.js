@@ -1,11 +1,22 @@
-<script setup>
-import { shallowRef, watchEffect, computed, defineAsyncComponent } from 'vue'
+<script>
+export default { inheritAttrs: false }
+</script>
 
-const availableFormats = {
-  date: defineAsyncComponent(() => import('./formats/date.vue')),
-  image: defineAsyncComponent(() => import('./formats/image.vue')),
-  upload: defineAsyncComponent(() => import('./formats/upload.vue')),
-  location: defineAsyncComponent(() => import('./formats/location.vue')),
+<script setup>
+import { shallowRef, computed, defineAsyncComponent, watch, useAttrs } from 'vue'
+
+import { injectedTypes } from '.'
+
+const attrs = useAttrs()
+
+const availableTypes = {
+  currency: defineAsyncComponent(() => import('./types/currency.vue')),
+  date: defineAsyncComponent(() => import('./types/date.vue')),
+  email: defineAsyncComponent(() => import('./types/email.vue')),
+  geo: defineAsyncComponent(() => import('./types/geo.vue')),
+  image: defineAsyncComponent(() => import('./types/image.vue')),
+  upload: defineAsyncComponent(() => import('./types/upload.vue')),
+  url: defineAsyncComponent(() => import('./types/url.vue')),
 }
 
 const props = defineProps({
@@ -15,101 +26,111 @@ const props = defineProps({
     default: null,
   },
 
-  schema: {
-    type: Object,
+  type: {
+    type: String,
+    required: false,
+    default: null,
+  },
+
+  format: {
+    type: [Object, String],
+    required: false,
+    default: null,
+  },
+
+  items: {
+    type: [Object, String],
+    required: false,
+    default: null,
+  },
+
+  oneOf: {
+    type: Array,
     required: false,
     default: null,
   },
 })
 
 const innerValue = shallowRef()
-const innerSchema = shallowRef()
 
-watchEffect(() => {
-  innerSchema.value = props.schema && typeof props.schema == 'object'
-    ? props.schema
-    : { type: 'string' }
+watch(
+  () => props.value,
+  (newValue) => {
+    if (props.type == 'array') {
+      innerValue.value = Array.isArray(props.value)
+        ? props.value
+        : props.value !== null && props.value !== undefined
+          ? [props.value]
+          : []
+    } else {
+      innerValue.value = newValue
+    }
+  },
+  { immediate: true },
+)
 
-  if (innerSchema.value.type == 'array') {
-    innerValue.value = Array.isArray(props.value)
-      ? props.value
-      : props.value !== null
-        ? [props.value]
-        : []
-
-    return
-  }
-
-  innerValue.value = props.value
-
-  // If "oneOf", use option title as innerValue
-  if (innerSchema.value?.oneOf?.length) {
-    const foundItem = innerSchema.value.oneOf.find((item) => item?.const == props.value)
-    if (foundItem) {
-      innerValue.value = foundItem.title
+const displayValue = computed(() => {
+  if (Array.isArray(props.oneOf)) {
+    const foundItem = props.oneOf.find((item) => item?.const == props.value)
+    if (foundItem?.title) {
+      return foundItem.title
     }
   }
 
-  if (innerSchema.value.type == 'boolean') {
-    if (innerValue.value === true) {
-      innerValue.value = 'true'
-    } else if (innerValue.value === false) {
-      innerValue.value = 'false'
-    }
-  }
-
-  // Sanitize urls
-  if (['url', 'uri', 'uri-reference', 'iri', 'iri-reference'].includes(innerSchema.value.format)) {
-    if (innerValue.value.substring(0, 4) != 'http') {
-      innerValue.value = 'https://' + innerValue.value
-    }
-  }
+  return innerValue.value
 })
 
-const customComponent = computed(() => availableFormats[innerSchema.value.format])
+const customType = computed(() => ({
+  component: availableTypes[props.type] || injectedTypes[props.type],
+  props: typeof props.format == 'object' && props.format
+    ? props.format
+    : { format: props.format },
+}))
+
+const itemsProp = computed(() => {
+  if (typeof props.items == 'object' && props.items) {
+    return {
+      ...props.items,
+      type: props.items?.type || 'text',
+    }
+  }
+  return { type: props.items }
+})
 </script>
 
 <template>
-  <div
+  <template v-if="innerValue === null">
+    <!-- NULL -->
+  </template>
+  <ul
+    v-else-if="props.type == 'array'"
+    v-bind="attrs"
     class="UiOutput"
-    :class="`UiOutput--format-${innerSchema.format}`"
+    :class="`UiOutput--array UiOutput--${itemsProp.type}`"
   >
-    <template v-if="innerValue === null">
-      <!-- NULL -->
-    </template>
-    <ul v-else-if="innerSchema.type == 'array'">
-      <li
-        v-for="(item, i) in innerValue"
-        :key="i"
-      >
-        <UiOutput
-          :value="item"
-          :schema="innerSchema.items"
-        />
-      </li>
-    </ul>
-    <Component
-      :is="customComponent"
-      v-else-if="customComponent"
-      :value="innerValue"
-      :schema="innerSchema"
+    <li
+      v-for="(item, i) in innerValue"
+      :key="i"
+    >
+      <UiOutput
+        :value="item"
+        v-bind="itemsProp"
+      />
+    </li>
+  </ul>
+  <Component
+    :is="customType.component"
+    v-else-if="customType.component"
+    class="UiOutput"
+    :class="`UiOutput--${props.type}`"
+    v-bind="{ ...attrs, ...customType.props}"
+    :value="innerValue"
+  />
+  <template v-else>
+    <span
+      v-bind="attrs"
+      :class="`UiOutput UiOutput--${props.type || 'text'}`"
+      v-text="displayValue"
     />
-    <template v-else-if="innerSchema.format == 'url' || innerSchema.format == 'link'">
-      <a
-        :href="innerValue"
-        target="_blank"
-        v-text="innerValue"
-      />
-    </template>
-    <template v-else-if="innerSchema.format == 'email'">
-      <a
-        :href="'mailto:'+innerValue"
-        target="_blank"
-        v-text="innerValue"
-      />
-    </template>
-    <template v-else>
-      <span v-text="innerValue" />
-    </template>
-  </div>
+  </template>
 </template>

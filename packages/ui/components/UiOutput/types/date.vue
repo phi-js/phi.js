@@ -15,7 +15,7 @@ const props = defineProps({
 <template>
   <UiItem
     icon="mdi:calendar"
-    :text="i18n.d(props.value)"
+    :text="i18n.d(props.value, $attrs)"
   />
   <!-- <span v-text="i18n.d(props.value)" /> -->
 </template>
