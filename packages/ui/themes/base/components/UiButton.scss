@@ -61,6 +61,7 @@
     color: #fff;
   }
 
+  &--danger,
   &--error {
     background: var(--ui-color-danger) !important;
     color: #fff;

@@ -58,12 +58,16 @@ textarea.UiInput__element {
   // The invisible text field added to support HTML5 validation
   // below custom components:
   &__validatorInput {
-    // position: absolute;
-    display: block;
+    box-sizing: border-box;
     overflow: hidden;
+    position: absolute;
+    display: block;
+    width: 0;
     height: 0;
+
     opacity: 0;
     pointer-events: none;
+    z-index: -3;
   }
 
   &__errors {
