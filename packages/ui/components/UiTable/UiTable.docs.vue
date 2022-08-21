@@ -1,117 +1,126 @@
 <script setup>
-import { UiTable, UiColumn } from './index.js'
-import records from './records.js'
+import { ref, computed } from 'vue'
+import { getProperty } from '../../helpers'
+import { columns as sampleColumns, records } from './samples'
 
-const columns = [
-  {
-    header: 'Timestamp',
-    value: '$.timestamp',
-    type: 'date',
-    format: 'dd-mm-yyyy',
-  },
+import UiTable from './UiTable.vue'
 
-  {
-    header: 'Full name',
-    value: (record) => `${record.person.lastName}, ${record.person.firstName}`,
-  },
+// import getSchemaColumns from './getSchemaColumns.js'
+// const columns = ref(getSchemaColumns(schema))
+const columns = ref(sampleColumns)
 
-  {
-    header: 'First image',
-    value: (record) => record.manyImages[0],
-    type: 'image',
-  },
+const order = ref([
+  { value: '$.id', desc: false },
+])
 
-  {
-    header: 'Other images',
-    value: (record) => record.manyImages.slice(1),
-    type: 'image',
-  },
-]
+const sortedRecords = computed(() => {
+  if (!order.value.length) {
+    return records
+  }
+
+  return records.concat().sort((a, b) => {
+    for (let i = 0; i < order.value.length; i++) {
+      const curOrder = order.value[i]
+      const valueA = getProperty(a, curOrder.value)
+      const valueB = getProperty(b, curOrder.value)
+
+      if (valueA > valueB) {
+        return curOrder.desc ? -1 : 1
+      }
+      if (valueA < valueB) {
+        return curOrder.desc ? 1 : -1
+      }
+    }
+    return 0
+  })
+})
 </script>
 
 <template>
-  <div class="UiTableDocs">
+  <div class="UiTable-docs">
     <h1>UiTable</h1>
 
-    <p>Dado un arreglo de objetos arbitratios:</p>
-    <pre class="docs-code"><code>const records = {{ records }}</code></pre>
+    <p>Este componente es una tabla -bruta- que recibe:</p>
 
-    <p>Podemos definir una tabla así</p>
-    <pre class="docs-code"><code>
-&lt;UiTable :data="records">
-  &lt;UiColumn header="Columna 1" value="timestamp" />
+    <ul>
+      <li>
+        <strong>records:</strong>
+        An arreglo de objetos JSON arbitrarios
+      </li>
 
-  &lt;UiColumn header="Columna 2">
-    &lt;template #content>Item 1&lt;/template>
-  &lt;/UiColumn>
+      <li>
+        <strong>columns:</strong>
+        Un arreglo describiendo las columnas a mostrar
+        <pre>
+columns: [
+  {
+    value: '$.person.bday', // JSONPath hacia el valor del RECORD a mostrar en la columna
+    title: 'User ID',       // Titulo a mostrar en el encabezado
+    type: 'date',           // Tipo de output (propiedad enviada a &lt;UiOutput type="...")
+    format: 'day'           // Opcional. Propiedad "format" de &lt;UiOutput
+  },
+  ...
+]
+        </pre>
+      </li>
 
-  &lt;UiColumn>
-    &lt;template #header>Columna 3&lt;/template>
-    &lt;template #content="{ item }">
-      &lt;img :src="item.image" :alt="item.image" style="max-width: 120px; max-height: 120px" />
-    &lt;/template>
-    &lt;template #footer>Footer Columna 3&lt;/template>
-  &lt;/UiColumn>
-&lt;/UiTable>
-  </code></pre>
+      <li>
+        <strong>order:</strong>
+        ARRAY indicando el orden actual de las columnas.  El orden de los elementos del arreglo determina la prioridad
+        <pre>
+order: [
+  { value: '$.id', desc: true },
+  { value: '$.record.question2', desc: false },
+]
+        </pre>
+      </li>
 
-    <UiTable :data="records">
-      <UiColumn
-        header="Columna 1"
-        value="timestamp"
-      />
+      <li>Emite un evento scroll-bottom cuando se ha hecho scroll hasta el final</li>
+    </ul>
 
-      <UiColumn header="Columna 2">
-        <template #content>
-          Item 1
-        </template>
-      </UiColumn>
+    <section>
+      <h2>Format</h2>
+      <p>A cell value is rendered depending on the column's type and format.  If <strong>format</strong> can be:</p>
 
-      <UiColumn>
-        <template #header>
-          <h3>Columna 3</h3>
-          <small>with contents</small>
-        </template>
-        <template #content="{ item }">
-          <img
-            :src="item.image"
-            :alt="item.image"
-            style="max-width: 120px; max-height: 120px"
-          >
-        </template>
-        <template #footer>
-          Footer Columna 3
-        </template>
-      </UiColumn>
-    </UiTable>
-
-    <hr>
-
-    <h2>Columns as props</h2>
-
-    <UiTable
-      class="OtherTable"
-      :data="records"
-      :columns="columns"
-    />
+      <ul>
+        <li>
+          <strong>A String:</strong> one of the internally available formats:
+          <small>(Rendered via UiOutput)</small>
+          <p>url, link, email, date, image, (geo)location, upload, url, uri, uri-reference, iri, iri-reference</p>
+        </li>
+      </ul>
+    </section>
   </div>
+
+  <hr>
+
+  <details>
+    <summary>Columns</summary>
+    <section>
+      <pre><code>{{ columns }}</code></pre>
+    </section>
+  </details>
+
+  <details>
+    <summary>Order</summary>
+    <section>
+      <pre><code>{{ order }}</code></pre>
+    </section>
+  </details>
+
+  <UiTable
+    v-model:columns="columns"
+    v-model:order="order"
+    :records="sortedRecords"
+  />
 </template>
 
 <style lang="scss">
-.UiTableDocs {
-  .docs-code {
-    max-height: 200px;
-    overflow: auto;
-  }
-
-  .OtherTable {
-    .UiOutput {
-      &--type-image {
-        img {
-          max-width: 50px;
-          display: inline-block;
-        }
-      }
+.UiTable-docs {
+  details {
+    section {
+      max-height: 500px;
+      overflow: auto;
     }
   }
 }

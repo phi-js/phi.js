@@ -86,22 +86,33 @@ function guessType(value, propName = '') {
     return 'boolean'
   }
 
-  if (propName.toLowerCase().includes('date')) {
-    return 'date'
+  // "upload" objects (name, size, url, thumbnail, preview)
+  if (value?.name && value?.url && value?.size) {
+    return 'upload'
+  }
+
+  // "upload" objects (id, firstname, lastname, ...)
+  if (value?.id && (value?.firstname || value?.firstName)) {
+    return 'person'
   }
 
   if (isNumber(value)) {
     return 'number'
   }
 
-  if (!value || Array.isArray(value) || typeof value !== 'string') {
+  if (!value || typeof value !== 'string') {
     return 'text'
+  }
+
+  if (propName.toLowerCase().includes('date')) {
+    return 'date'
   }
 
   if (value.startsWith('http:') || value.startsWith('https:')) {
     if (['.jpg', '.jpeg', '.png', '.gif', '.gifv'].some((extension) => value.toLowerCase().endsWith(extension))) {
       return 'image'
     }
+
     return 'url'
   }
 
