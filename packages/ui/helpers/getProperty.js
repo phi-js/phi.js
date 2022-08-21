@@ -1,6 +1,11 @@
 // https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-with-string-key
 
 export default function getProperty(sourceObject, propertyName) {
+  if (!propertyName || typeof propertyName !== 'string') {
+    console.warn('getProperty called without property name', propertyName)
+    return undefined
+  }
+
   if (propertyName == '$') {
     return sourceObject
   }
