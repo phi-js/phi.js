@@ -1,6 +1,6 @@
 <script setup>
 import { ref, defineAsyncComponent, watch } from 'vue'
-import { UiDrawer } from '../UiDrawer'
+import { UiDetails } from '../UiDetails'
 const UiTree = defineAsyncComponent(() => import('./UiTree.vue'))
 
 const props = defineProps({
@@ -89,7 +89,10 @@ function collapse() {
 </script>
 
 <template>
-  <div class="UiTree" :class="{ 'UiTree--open': isOpen, 'UiTree--closed': !isOpen }">
+  <div
+    class="UiTree"
+    :class="{ 'UiTree--open': isOpen, 'UiTree--closed': !isOpen }"
+  >
     <div
       class="UiTree__face"
       :class="{ 'UiTree__face--open': isOpen, 'UiTree__face--closed': !isOpen }"
@@ -105,10 +108,11 @@ function collapse() {
         :depth="props.depth"
       />
     </div>
-    <UiDrawer
-      v-if="children"
+    <UiDetails
+      v-if="children?.length"
       v-model:open="isOpen"
       :drawer-group="`UiTree-${props.name}-${props.depth}`"
+      :group="`UiTree-${props.name}-${props.depth}`"
     >
       <UiTree
         class="UiTree__children"
@@ -118,9 +122,12 @@ function collapse() {
         :depth="props.depth + 1"
       >
         <template #default="slotProps">
-          <slot name="default" v-bind="slotProps" />
+          <slot
+            name="default"
+            v-bind="slotProps"
+          />
         </template>
       </UiTree>
-    </UiDrawer>
+    </UiDetails>
   </div>
 </template>
