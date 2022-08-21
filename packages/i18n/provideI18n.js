@@ -9,5 +9,14 @@ export default function provideI18n(options) {
     locale.value = options.locale
   }
 
-  return provided
+  return {
+    ...provided,
+
+    get locale() {
+      return locale.value
+    },
+    set locale(newValue) {
+      locale.value = newValue
+    },
+  }
 }
