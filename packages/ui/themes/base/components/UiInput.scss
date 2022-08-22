@@ -29,9 +29,10 @@ textarea.UiInput__element {
 }
 
 .UiInput {
+  user-select: none;
+
   &__label {
     font-weight: bold;
-    // font-size: 14px;
     font-size: 0.9em;
     padding: 5px 0;
     display: block;
@@ -113,6 +114,14 @@ textarea.UiInput__element {
       &__errors {
         display: none;
       }
+    }
+  }
+}
+
+.UiInput {
+  &--type-checkbox {
+    label {
+      cursor: pointer;
     }
   }
 }

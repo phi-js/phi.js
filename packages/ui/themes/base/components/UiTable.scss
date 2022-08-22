@@ -34,6 +34,7 @@
   &__toolbar {
     display: flex;
     align-items: center;
+    gap: 4px;
     padding: 4px;
 
     background-color: var(--ui-table-color-header);
@@ -49,7 +50,7 @@
   }
 
   &__toolbarItem {
-    --ui-item-padding: 8px 16px;
+    --ui-item-padding: 8px 12px;
     cursor: pointer;
     user-select: none;
     border-radius: 4px;

@@ -1,5 +1,7 @@
 <script setup>
 import { reactive, watch, computed, ref } from 'vue'
+import { useI18n } from '@/packages/i18n'
+
 import { UiInput, UiOutput, UiPopover, UiItem, UiDialog, UiIntersectionObserver } from '../'
 import { getProperty } from '../../helpers'
 
@@ -40,6 +42,27 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['click-record', 'update:columns', 'update:order', 'scroll-bottom'])
+
+const i18n = useI18n({
+  en: {
+    'UiTable.HideColumn': 'Hide',
+    'UiTable.Expand': 'Expand',
+    'UiTable.Collapse': 'Collapse',
+    'UiTable.OpenSettings': 'Manage columns',
+  },
+  es: {
+    'UiTable.HideColumn': 'Ocultar',
+    'UiTable.Expand': 'Expandir',
+    'UiTable.Collapse': 'Colapsar',
+    'UiTable.OpenSettings': 'Administrar columnas',
+  },
+  de: {
+    'UiTable.HideColumn': 'Ausblenden',
+    'UiTable.Expand': 'Erweitern Sie',
+    'UiTable.Collapse': 'Kollabieren',
+    'UiTable.OpenSettings': 'Spalten verwalten',
+  },
+})
 
 const inner = reactive({
   columns: props.columns,
@@ -236,13 +259,14 @@ watch(
         <UiItem
           class="UiTable__toolbarItem UiTable__toolbarItem--settings"
           icon="mdi:cog"
-          title="Open settings"
+          :title="i18n.t('UiTable.OpenSettings')"
           @click="isSettingsOpen = true"
         />
 
         <UiItem
           class="UiTable__toolbarItem UiTable__toolbarItem--fullscreen"
           :icon="isFullscreen ? 'mdi:fullscreen-exit' : 'mdi:fullscreen'"
+          :title="i18n.t(isFullscreen ? 'UiTable.Collapse' : 'UiTable.Expand')"
           @click="isFullscreen = !isFullscreen"
         />
       </div>
@@ -297,7 +321,7 @@ watch(
                       />
                       <UiItem
                         icon="mdi:close"
-                        text="Hide column"
+                        :text="i18n.t('UiTable.HideColumn')"
                         @click="hideColumn(inner.columns[column._i]); close()"
                       />
                     </div>
