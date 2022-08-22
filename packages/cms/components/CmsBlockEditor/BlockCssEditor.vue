@@ -1,7 +1,10 @@
 <script setup>
-import { UiTabs, UiTab } from '../../../ui/components'
+// import { inject } from 'vue'
+
+import { UiTabs, UiTab } from '@/packages/ui'
 import BlockCssClasses from './BlockCssClasses.vue'
 import BlockCssStyle from './BlockCssStyle.vue'
+// import CssClassManager from '../CssClassManager/CssClassManager.vue'
 
 const props = defineProps({
   /**
@@ -13,6 +16,8 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['update:modelValue'])
+
+// const injectedStoryBuilder = inject('$_cms_story_builder', { story: null })
 </script>
 
 <template>
@@ -27,6 +32,8 @@ const emit = defineEmits(['update:modelValue'])
         :block="props.modelValue"
         @update:block="emit('update:modelValue', $event)"
       />
+
+      <!-- <CssClassManager v-model="injectedStoryBuilder.story.value.stylesheets" /> -->
     </UiTab>
 
     <UiTab text="Properties">

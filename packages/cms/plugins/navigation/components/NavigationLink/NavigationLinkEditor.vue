@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watchEffect, computed } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { UiInput } from '@/packages/ui'
 
 import NavigationPagePicker from '../NavigationPagePicker/NavigationPagePicker.vue'
@@ -35,23 +35,6 @@ function emitUpdate() {
     props: blockProps.value,
   })
 }
-
-const propDisabledValue = computed({
-  get() {
-    return !!blockProps.value.disabled
-  },
-
-  set(newValue) {
-    if (newValue) {
-      blockProps.value.disabled = '{{!!$errors.length}}'
-    } else {
-      blockProps.value.disabled = null
-    }
-
-    emitUpdate()
-  },
-})
-
 </script>
 
 <template>
@@ -83,11 +66,5 @@ const propDisabledValue = computed({
         @update:page-id="emitUpdate()"
       />
     </UiInput>
-
-    <UiInput
-      v-model="propDisabledValue"
-      type="checkbox"
-      label="Disable on errors"
-    />
   </div>
 </template>

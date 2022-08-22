@@ -1,5 +1,5 @@
 <script setup>
-import { ref, shallowRef, watch, computed, provide, nextTick, getCurrentInstance } from 'vue'
+import { ref, inject, shallowRef, watch, computed, nextTick, getCurrentInstance } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import UiDrawerStack from '@/packages/ui/components/UiDrawerStack/UiDrawerStack.vue'
 
@@ -45,13 +45,27 @@ watch(
 )
 
 function accept() {
-  const blockClone = JSON.parse(JSON.stringify(innerBlock.value))
-  emit('update:block', blockClone)
+  emit('update:block', JSON.parse(JSON.stringify(innerBlock.value)))
   return true
 }
 
+
+
+// Keep a "snapshot" of the entire story stylesheets
+// and revert changes on cancel (This is to aid BlockCssCasses and should be done in a proper way instead)
+const injectedStoryEditor = inject('$_cms_story_builder', {})
+const injectedStory = shallowRef(injectedStoryEditor.story)
+let initialStylesheets = null
+
+
 function cancel() {
   innerBlock.value = JSON.parse(JSON.stringify(props.block))
+
+  if (initialStylesheets) {
+    injectedStory.value.stylesheets = JSON.parse(JSON.stringify(initialStylesheets))
+    initialStylesheets = null
+  }
+
   emit('cancel')
   return true
 }
@@ -97,6 +111,9 @@ function openAction(actionIndex) {
     elWindowContents.value.querySelector('input[type=text], textarea')?.focus?.()
   })
 
+  // Keep a "snapshot" of the entire story object to revert on cancel
+  initialStylesheets = JSON.parse(JSON.stringify(injectedStory.value.stylesheets))
+
   return true
 }
 
@@ -128,16 +145,16 @@ function getWidth(coords) {
   return parseInt(coords?.width)
 }
 
-function renameVModel() {
-  let res = window.prompt(i18n.t('BlockScaffold.SetVariableName'), innerBlock.value['v-model'])?.trim?.()
-  if (res === undefined) { // prompt cancelled
-    return
-  }
+// function renameVModel() {
+//   let res = window.prompt(i18n.t('BlockScaffold.SetVariableName'), innerBlock.value['v-model'])?.trim?.()
+//   if (res === undefined) { // prompt cancelled
+//     return
+//   }
 
-  res = res.replaceAll(/[^a-zA-Z0-9.]/g, '') // remove invalid characters
-  innerBlock.value['v-model'] = res
-  accept()
-}
+//   res = res.replaceAll(/[^a-zA-Z0-9.]/g, '') // remove invalid characters
+//   innerBlock.value['v-model'] = res
+//   accept()
+// }
 
 /* Find the chain of BlockScaffold parents */
 const instance = getCurrentInstance()
@@ -219,8 +236,8 @@ defineExpose({
               : i18n.t('BlockScaffold.NoVariableSet')
             "
             class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--variable"
-            src="mdi:variable"
-            @click="renameVModel()"
+            src="mdi:code-json"
+            @click="openActionId('data')"
           />
 
           <UiIcon
@@ -228,7 +245,7 @@ defineExpose({
             title="This block has validation rules"
             class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--validation"
             src="mdi:message-alert"
-            @click="openActionId('validation')"
+            @click="openActionId('InputSettings')"
           />
 
           <UiIcon

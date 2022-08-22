@@ -119,20 +119,3 @@ function onPopState() {
     </UiDialog>
   </div>
 </template>
-
-<style lang="scss">
-.CmsBlockPicker dialog {
-  width: 500px;
-  height: 600px;
-  max-width: 90vw;
-  max-height: 90vh;
-  padding: 0;
-
-  // Chain of heights to allow scrolling of UiItemFinder__body
-  .UiDialog__contents,
-  .UiDialog__contents form,
-  .CmsBlockPicker__contents {
-    height: 100%;
-  }
-}
-</style>

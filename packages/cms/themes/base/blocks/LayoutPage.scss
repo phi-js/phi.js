@@ -11,4 +11,11 @@
     margin: auto;
     max-width: var(--ui-content-width);
   }
+
+  &:invalid {
+    input[type=submit],
+    button[type=submit] {
+      opacity: 0.6;
+    }
+  }
 }

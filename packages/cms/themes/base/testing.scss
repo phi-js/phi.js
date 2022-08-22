@@ -35,17 +35,7 @@
 
 .UiWindow {
   .UiTabs__header {
-    padding: 4px;
-  }
-
-  .UiTabs__contents {
-    padding: 4px;
-    padding-top: 0;
-
-    // nested tab header
-    .UiTabs__header {
-      padding: 4px 0;
-    }
+    margin: 4px;
   }
 
   .UiTab {
@@ -53,9 +43,22 @@
     max-width: none;
   }
 
+  .UiTabs__contents {
+    margin: 4px;
+  }
+
+  .UiTabs__contents .UiTabs__header {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   .UiTabs__contents .UiTabs__contents {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 6px;
+    // padding: 0 8px;
+
     background-color: var(--ui-color-z1);
-    // background-color: rgba(255, 255, 255, .03);
     border-radius: 5px;
   }
 }

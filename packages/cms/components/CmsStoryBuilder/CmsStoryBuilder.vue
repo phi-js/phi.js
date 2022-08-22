@@ -239,18 +239,6 @@ const storySchema = computed(() => {
     }
   }
 
-  if (!storySchema.properties?.$errors) {
-    storySchema.properties.$errors = {
-      type: 'object',
-      properties: {
-        length: {
-          type: 'number',
-          title: 'No. of errors',
-        },
-      },
-    }
-  }
-
   return storySchema
 })
 
@@ -475,6 +463,7 @@ const contentSlot = computed(() => {
       </template>
       <template #default>
         <UiInput
+          v-if="isModelExplorerOpen"
           type="json"
           :model-value="props.modelValue"
           @update:model-value="emit('update:modelValue', $event)"

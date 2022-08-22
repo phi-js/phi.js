@@ -59,7 +59,7 @@ const fontCss = {
         type: 'css-unit',
         props: {
           min: 9,
-          max: 20,
+          max: 30,
           units: 'pt',
           defaultValue: '12pt',
         },
@@ -245,7 +245,6 @@ const innerStoryVariablesDark = computed({
     display: flex;
     flex-direction: column;
     gap: 6px;
-    padding: 12px;
   }
 
   &__properties {

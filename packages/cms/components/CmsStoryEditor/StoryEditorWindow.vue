@@ -7,10 +7,11 @@ import { ref, watch, computed } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { UiWindow, UiTabs, UiTab, UiInput, UiItem } from '@/packages/ui'
 
+import CmsStoryStyle from '../CmsStoryStyle/CmsStoryStyle.vue'
 import ListenersEditor from '../ListenersEditor/ListenersEditor.vue'
 import StoryDictionaryEditor from './StoryDictionaryEditor.vue'
 import StoryMethodsEditor from './StoryMethodsEditor.vue'
-import CmsStoryStyle from '../CmsStoryStyle/CmsStoryStyle.vue'
+import StoryComputedEditor from './StoryComputedEditor.vue'
 
 const props = defineProps({
   story: {
@@ -80,6 +81,7 @@ const i18n = useI18n({
     'StoryEditorWindow.code': 'Code',
     'StoryEditorWindow.global': 'Global',
     'StoryEditorWindow.i18n': 'Languages',
+    'StoryEditorWindow.computedVariables': 'Computed variables',
     'StoryEditorWindow.methods': 'Functions',
     'StoryEditorWindow.source': 'Source',
     'StoryEditorWindow.style': 'Style',
@@ -96,6 +98,7 @@ const i18n = useI18n({
     'StoryEditorWindow.code': 'Código',
     'StoryEditorWindow.global': 'Global',
     'StoryEditorWindow.i18n': 'Idiomas',
+    'StoryEditorWindow.computedVariables': 'Variables computadas',
     'StoryEditorWindow.methods': 'Funciones',
     'StoryEditorWindow.source': 'Fuente',
     'StoryEditorWindow.style': 'Estilos',
@@ -243,17 +246,6 @@ const availableEvents = computed(() => [
       >
         <UiTabs>
           <UiTab
-            value="methods"
-            icon="mdi:variable"
-            :text="i18n.t('StoryEditorWindow.methods')"
-          >
-            <StoryMethodsEditor
-              v-model:story="innerStory"
-              @update:story="emitStoryUpdate"
-            />
-          </UiTab>
-
-          <UiTab
             value="events"
             icon="mdi:gesture-tap"
             :text="i18n.t('StoryEditorWindow.events')"
@@ -262,6 +254,30 @@ const availableEvents = computed(() => [
               v-model="storyEvents"
               class="StoryEditorWindow__events"
               :available-events="availableEvents"
+            />
+          </UiTab>
+
+          <UiTab
+            value="computed"
+            icon="mdi:variable"
+            :text="i18n.t('StoryEditorWindow.computedVariables')"
+          >
+            <StoryComputedEditor
+              v-model="innerStory.computed"
+              class="StoryEditorWindow__computed"
+              @update:model-value="emitStoryUpdate"
+            />
+          </UiTab>
+
+          <UiTab
+            value="methods"
+            icon="mdi:variable"
+            :text="i18n.t('StoryEditorWindow.methods')"
+          >
+            <StoryMethodsEditor
+              v-model:story="innerStory"
+              class="StoryEditorWindow__methods"
+              @update:story="emitStoryUpdate"
             />
           </UiTab>
         </UiTabs>
@@ -333,6 +349,25 @@ const availableEvents = computed(() => [
 .StoryEditorWindow {
   &__header {
     --ui-item-padding: 8px 12px;
+  }
+
+
+  // Make sure the source editor stretches to the full window content
+  .contents-source {
+    height: 100%;
+
+    & > .UiInput,
+    & > .UiInput > .UiInput__body,
+    & > .UiInput > .UiInput__body > .UiInputJson {
+      height: 100%;
+    }
+    .UiInputCode {
+      flex: 1;
+      overflow: auto;
+      & > div { //cm-editor
+        height: 100%;
+      }
+    }
   }
 }
 </style>

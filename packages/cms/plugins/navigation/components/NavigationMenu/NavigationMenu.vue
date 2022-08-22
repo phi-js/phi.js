@@ -8,6 +8,8 @@ const props = defineProps({
 
     ... all attributes to be bound to <a>
     target: '',
+    titile: '',
+    ...
   }
   */
   items: {
@@ -35,23 +37,21 @@ const props = defineProps({
 
 <style lang="scss">
 .NavigationMenu {
+  user-select: none;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
 
   &__item {
     display: block;
     color: inherit;
 
-    &--important {
-      color: #fff !important;
-      background-color: var(--ui-color-primary);
-
-      &:hover {
-        background-color: rgba(0,0,0, 0.3);
-      }
+    cursor: pointer;
+    &:hover {
+      background-color: var(--ui-color-hover);
     }
+
+    padding: 8px 16px;
   }
 }
 </style>

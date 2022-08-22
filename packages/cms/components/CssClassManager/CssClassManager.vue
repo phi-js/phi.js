@@ -17,7 +17,7 @@ this component will CRUD manage those with type=class
 ]
 */
 import { ref, watch } from 'vue'
-import { UiDetails } from '../../../ui'
+import { UiDetails } from '@/packages/ui'
 import CssClassEditor from './CssClassEditor.vue'
 
 const props = defineProps({
@@ -28,7 +28,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'created'])
 
 const arrClasses = ref([])
 watch(
@@ -44,6 +44,10 @@ function emitUpdate() {
 }
 
 function onDeleteClass(index) {
+  if (!confirm(`Delete class '${arrClasses.value[index].id}'?`)) {
+    return
+  }
+
   arrClasses.value.splice(index, 1)
   emitUpdate()
 }
@@ -57,8 +61,10 @@ const newClass = ref({
 })
 
 function onCreatorSubmit() {
-  arrClasses.value.push({ ...newClass.value })
+  const created = { ...newClass.value }
+  arrClasses.value.push(created)
   emitUpdate()
+  emit('created', created)
   resetCreator()
 }
 
@@ -78,22 +84,34 @@ function resetCreator() {
       v-for="(cssClass, i) in arrClasses"
       :key="i"
     >
-      <UiDetails
-        group="CssClassManager"
-        class="CssClassManager__classItem"
-        :text="cssClass.title || cssClass.id"
-        :subtext="cssClass.description"
-        @delete="onDeleteClass(i)"
-      >
-        <template #default>
-          <section>
-            <CssClassEditor
-              v-model="arrClasses[i]"
-              @update:model-value="emitUpdate()"
+      <div class="CssClassManager__classItem">
+        <slot
+          name="left"
+          :className="cssClass.id"
+        />
+        <UiDetails
+          group="CssClassManager"
+          :text="cssClass.title || cssClass.id"
+          :subtext="cssClass.description"
+          @delete="onDeleteClass(i)"
+        >
+          <template #default>
+            <section>
+              <CssClassEditor
+                v-model="arrClasses[i]"
+                @update:model-value="emitUpdate()"
+              />
+            </section>
+          </template>
+
+          <template #actions>
+            <slot
+              name="right"
+              :className="cssClass.id"
             />
-          </section>
-        </template>
-      </UiDetails>
+          </template>
+        </UiDetails>
+      </div>
     </template>
 
     <UiDetails
@@ -129,6 +147,16 @@ function resetCreator() {
 
 <style lang="scss">
 .CssClassManager {
+  &__classItem {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+
+    .UiDetails {
+      flex: 1;
+    }
+  }
+
   &__adder {
     footer {
       display: flex;

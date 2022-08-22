@@ -23,12 +23,14 @@ Retorna todos los editores (listos para usar en <component>) relacionados al blo
 }
 */
 import { defineAsyncComponent } from 'vue'
-import getBlockDefinition from './getBlockDefinition.js'
 import { UiInputJson } from '@/packages/ui/components'
+import getBlockDefinition from './getBlockDefinition.js'
+
+
+import BlockDataEditor from '../components/CmsBlockEditor/BlockDataEditor.vue'
 import BlockListenersEditor from '../components/CmsBlockEditor/BlockListenersEditor.vue'
 import BlockVisibilityEditor from '../components/CmsBlockEditor/BlockVisibilityEditor.vue'
 import BlockCssEditor from '../components/CmsBlockEditor/BlockCssEditor.vue'
-import BlockValidationEditor from '../components/CmsBlockEditor/BlockValidationEditor.vue'
 
 export default async function getBlockEditors(block) {
   const definition = getBlockDefinition(block)
@@ -96,13 +98,25 @@ export default async function getBlockEditors(block) {
   // Validation editor (only if v-model property exists in definition)
   if (definition.block['v-model'] != undefined) {
     retval.actions.push({
-      'id': 'validation',
-      'title': 'Validation',
-      'icon': 'mdi:message-alert',
-      'component': BlockValidationEditor,
+      'id': 'data',
+      'title': 'Data',
+      // 'icon': 'mdi:code-braces',
+      'icon': 'mdi:code-json',
+      'component': BlockDataEditor,
       'v-model': 'block',
     })
   }
+
+  // // Validation editor (only if v-model property exists in definition)
+  // if (definition.block['v-model'] != undefined) {
+  //   retval.actions.push({
+  //     'id': 'validation',
+  //     'title': 'Validation',
+  //     'icon': 'mdi:message-alert',
+  //     'component': BlockValidationEditor,
+  //     'v-model': 'block',
+  //   })
+  // }
 
   // Block CSS property
   retval.actions.push({

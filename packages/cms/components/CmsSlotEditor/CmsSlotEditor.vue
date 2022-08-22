@@ -106,7 +106,8 @@ function launchBlock(block, targetIndex = null) {
       refEditors.value?.[targetIndex + index]?.onBlockCreated?.()
     })
 
-    activeUid.value = refEditors.value?.[targetIndex]?.arrBlocks?.[0]?._uid
+    activeUid.value = refEditors.value?.[targetIndex]?.block?._uid
+    setTimeout(() => registerBlurListeners(), 33)
   })
 }
 

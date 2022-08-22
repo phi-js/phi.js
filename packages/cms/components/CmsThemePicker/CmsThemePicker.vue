@@ -84,7 +84,6 @@ function selectTheme(theme) {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 4px;
 }
 
 .Theme {

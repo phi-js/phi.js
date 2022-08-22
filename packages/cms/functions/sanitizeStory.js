@@ -26,18 +26,6 @@ export default function sanitizeStory(story) {
     story.stylesheets = []
   }
 
-  /* Every story has an CSS object:
-  css: {
-    classes: []
-  }
-  */
-  if (!story.css || typeof story.css != 'object') {
-    story.css = { classes: [] }
-  }
-  if (!Array.isArray(story.css.classes)) {
-    story.css.classes = []
-  }
-
   // Required attributes for PAGES
   story.pages.forEach((page, index) => {
     // every page has a unique ID

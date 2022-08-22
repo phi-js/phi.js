@@ -93,14 +93,3 @@ const i18n = useI18n({
     </UiDetails>
   </div>
 </template>
-
-<style lang="scss">
-.BlockVisibilityEditor {
-  .UiDetails {
-    margin-bottom: 1rem;
-    summary {
-      font-size: 14px;
-    }
-  }
-}
-</style>

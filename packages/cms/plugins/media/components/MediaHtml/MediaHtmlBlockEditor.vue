@@ -11,6 +11,9 @@ import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import Underline from '@tiptap/extension-underline'
 import TextAlign from '@tiptap/extension-text-align'
+import Link from '@tiptap/extension-link'
+
+
 import EditorContentWrapper from './EditorContentWrapper.vue'
 
 const props = defineProps({
@@ -34,6 +37,7 @@ const editor = new Editor({
     Underline,
     Placeholder.configure({ placeholder: 'Escribe aquí ...' }),
     TextAlign.configure({ types: ['heading', 'paragraph'] }),
+    Link.configure({ openOnClick: false }),
   ],
   content: '',
   onFocus: () => isFocused.value = true,
@@ -176,6 +180,44 @@ const allCommands = computed(() => {
       callback: () => editor.chain().focus().setTextAlign('justify').run(),
       isActive: editor.isActive({ textAlign: 'justify' }),
     },
+
+    link: {
+      icon: 'mdi:link',
+      text: 'link',
+      callback: () => {
+        const previousUrl = editor.getAttributes('link').href
+        const url = window.prompt('URL', previousUrl)
+
+        // cancelled
+        if (url === null) {
+          return
+        }
+
+        // empty
+        if (url === '') {
+          editor
+            .chain()
+            .focus()
+            .extendMarkRange('link')
+            .unsetLink()
+            .run()
+
+          return
+        }
+
+        // update link
+        editor
+          .chain()
+          .focus()
+          .extendMarkRange('link')
+          .setLink({
+            href: url,
+            // target: '_self',
+          })
+          .run()
+      },
+      isActive: editor.isActive('link'),
+    },
   }
 })
 
@@ -302,6 +344,13 @@ async function doTranslation() {
         :class="{ 'BlockScaffold__toolbar-icon--active': option.isActive }"
         @click="option.callback"
         v-text="option.text"
+      />
+
+      <UiIcon
+        src="mdi:link"
+        class="BlockScaffold__toolbar-icon"
+        :class="{ 'BlockScaffold__toolbar-icon--active': allCommands.link.isActive }"
+        @click="allCommands.link.callback()"
       />
 
       <UiIcon

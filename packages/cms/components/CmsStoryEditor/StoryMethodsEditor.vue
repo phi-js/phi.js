@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watchEffect, nextTick } from 'vue'
-import { UiItem, UiDetails, UiInput } from '../../../ui'
+import { UiDetails, UiInput } from '../../../ui'
 import { VmStatement } from '../../../vm'
 
 const props = defineProps({

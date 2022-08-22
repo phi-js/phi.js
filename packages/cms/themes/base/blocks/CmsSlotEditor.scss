@@ -141,9 +141,10 @@
 
   /* Create a non-displacing horizontal padding inside */
   & > .SlotItem__editor {
-    padding: 4px;
-    margin-left: -4px;
-    margin-right: -4px;
+    padding: 6px;
+    margin: 6px 0;
+    // margin-left: -4px;
+    // margin-right: -4px;
   }
 }
 

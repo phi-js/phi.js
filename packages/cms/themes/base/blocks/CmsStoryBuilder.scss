@@ -82,7 +82,7 @@
 
     .UiTabs {
       &__header {
-        padding: 4px;
+        margin: 4px;
       }
     }
   }
@@ -126,7 +126,7 @@
   &__tabOptions {
     display: flex;
     align-items: stretch;
-    padding: 4px;
+    margin: 4px;
     gap: 4px;
 
     font-size: 0.85em;

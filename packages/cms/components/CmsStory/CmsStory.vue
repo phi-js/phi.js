@@ -48,22 +48,47 @@ export default {
   emits: ['update:modelValue', 'update:currentPageId', 'story-emit'],
 
   setup(props, { emit }) {
-    // Determine current page
-    const currentPage = ref()
-
     // Sanitize and translate (precompile) incoming story
-    const i18n = useI18n()
     const sanitizedStory = ref(null)
     watchEffect(() => {
       sanitizedStory.value = JSON.parse(JSON.stringify(sanitizeStory(props.story))) // clone is important, otherwise we'll be mutating prop (i.e. when setting block.props and block.rules below)
-
-      // The story changed from the outside, so reload the currentPage value
-      if (currentPage.value?.id) {
-        setCurrentPage(currentPage.value.id)
-      }
     })
 
+    // Determine current page
+    const currentPage = ref()
+
+    const setCurrentPage = (pageId) => {
+      const foundPage = pageId
+        ? sanitizedStory.value.pages.find((page) => page.id == pageId)
+        : null
+
+      currentPage.value = foundPage || sanitizedStory.value.pages?.[0]
+      if (!currentPage.value?.id) {
+        return
+      }
+
+      // Splice story header and footer into page slots
+      currentPage.value.slots = {
+        ...currentPage.value.slots,
+        header: !currentPage.value.omitHeader ? sanitizedStory.value.header : undefined,
+        footer: !currentPage.value.omitFooter ? sanitizedStory.value.footer : undefined,
+      }
+    }
+
+    watch(
+      () => sanitizedStory.value,
+      () => {
+        // The story object changed from the outside, so update currentPage
+        if (currentPage.value?.id) {
+          setCurrentPage(currentPage.value.id)
+        }
+      },
+    )
+
+
     // Parse translations
+    const i18n = useI18n()
+
     const translatedPage = computed(() => {
       if (!currentPage.value) {
         return
@@ -101,7 +126,6 @@ export default {
       onUpdateModelValue(innerModel.value)
     }
 
-
     // Get enabled plugins
     const pluginData = getPluginData()
 
@@ -131,6 +155,39 @@ export default {
       isMounted.value = true
     })
 
+
+    // Computed variables
+    const computedVariables = {} // computedVariables[variable name]: fx unregister()
+
+    watchEffect(() => {
+      const seen = []
+
+      if (Array.isArray(sanitizedStory.value.computed)) {
+        sanitizedStory.value.computed.forEach((computation) => {
+          if (!computation?.name || !computation?.statement) {
+            return
+          }
+
+          const targetName = computation.name
+          if (!computedVariables[targetName]) {
+            computedVariables[targetName] = watchEffect(() => {
+              const result = storyVM.eval(computation.statement, innerModel.value)
+              setProperty(innerModel.value, targetName, result)
+            })
+          }
+
+          seen.push(targetName)
+        })
+      }
+
+      Object.keys(computedVariables).forEach((computedVarName) => {
+        if (!seen.includes(computedVarName)) {
+          // unregister
+          computedVariables[computedVarName]()
+        }
+      })
+    })
+
     // Navigation history and direction
     const navigationHistory = ref([]) // array of page IDs
     const loadedPages = {} // loadedPages[page-id] = true | false
@@ -140,25 +197,6 @@ export default {
     // Hash of window.scrollY positions when leaving a page
     // previousY[page name] = n
     let previousScrollY = {}
-
-    // Set the current page
-    const setCurrentPage = (pageId) => {
-      const foundPage = pageId
-        ? sanitizedStory.value.pages.find((page) => page.id == pageId)
-        : null
-
-      currentPage.value = foundPage || sanitizedStory.value.pages?.[0]
-      if (!currentPage.value?.id) {
-        return
-      }
-
-      // Splice story header and footer into page slots
-      currentPage.value.slots = {
-        ...currentPage.value.slots,
-        header: !currentPage.value.omitHeader ? sanitizedStory.value.header : undefined,
-        footer: !currentPage.value.omitFooter ? sanitizedStory.value.footer : undefined,
-      }
-    }
 
     const navigateToPage = (pageId) => {
       if (pageId && pageId == currentPage.value?.id) {
@@ -285,8 +323,6 @@ export default {
       goTo(prevPage.id)
     }
 
-    const globals = reactive({ $errors: [] })
-
     /*
     storyEvent: {
       name: 'custom event name',
@@ -304,7 +340,6 @@ export default {
       goNext,
       goTo,
       goBack,
-      globals,
       sanitizedStory,
       emitStoryEvent,
       visiblePages,
@@ -325,16 +360,6 @@ export default {
         storyVM.eval(sanitizedStory.value['v-on']['update:modelValue'], innerModel.value)
           .then(() => storyVM.onModelSet = initialSetter)
       }
-    }
-
-    function onUpdateErrors(evt) {
-      // globals.$errors is reactive and will trigger an update on ALL blocks when it changes
-      // so make sure not to update the value unnecessarylylylyl
-      if (!evt.length && !globals.$errors.length) {
-        return
-      }
-
-      globals.$errors = evt
     }
 
     /* Story defined stylesheets */
@@ -376,7 +401,6 @@ export default {
                 currentPage.value
                   ? h(CmsBlock, {
                     'key': currentPage.value.id,
-                    'onUpdate:errors': onUpdateErrors,
                     'class': 'CmsStory__page',
                     'block': translatedPage.value,
                     'modelValue': {
@@ -384,6 +408,7 @@ export default {
                       $i18n: i18n,
                       $pages: visiblePages.value,
                       $nav: pageNav.value,
+                      $page: pageNav.value.current,
                     },
                     'onUpdate:modelValue': onUpdateModelValue,
                   })

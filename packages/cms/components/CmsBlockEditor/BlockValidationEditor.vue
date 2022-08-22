@@ -1,9 +1,40 @@
 <script setup>
-import { ref, watchEffect, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 
 import { useI18n } from '@/packages/i18n'
-import { UiInput, UiDetails } from '@/packages/ui'
-import { VmStatement } from '@/packages/vm'
+import { UiInput, UiDrawer, UiItem } from '@/packages/ui'
+import CmsPropInput from '../CmsPropInput/CmsPropInput.vue'
+
+
+/*
+Manage block.rules property
+[
+  {
+    type: 'required',
+    message: 'You must type a name',
+    breaking: true | false  // Do not check further rules if this one fails
+  },
+  {
+    type: 'minlength',
+    value: 6,
+    message: 'Word be at least 6 characters',
+    breaking: false
+  },
+  {
+    type: 'maxlength',
+    value: 30,
+    message: 'Don\'t go over 30 characters',
+    breaking: false
+  },
+  {
+    type: 'pattern',
+    value: 'some|pattern|here',
+    message: 'This doesnt really match whatever',
+    breaking: false
+  }
+]
+*/
+
 
 const props = defineProps({
   /* BLOCK object */
@@ -15,52 +46,99 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-const rules = ref()
+const rules = ref([
+  {
+    type: 'required',
+    message: null,
+    isEnabled: false,
+  },
+  {
+    type: 'minlength',
+    message: null,
+    isEnabled: false,
+  },
+  {
+    type: 'maxlength',
+    message: null,
+    isEnabled: false,
+  },
+  {
+    type: 'pattern',
+    message: null,
+    isEnabled: false,
+  },
+])
 
-watchEffect(() => {
-  rules.value = props.modelValue.rules?.length ? props.modelValue.rules.concat() : []
+const availableRules = computed(() => {
+
+  if (!props.modelValue?.props?.type) {
+    return rules.value
+  }
+
+  const showPattern = [
+    'text',
+    'number',
+    'search',
+    'password',
+    'email',
+    'tel',
+    'url',
+  ].includes(props.modelValue.props.type)
+
+  // eslint-disable-next-line max-len
+  const showMinMax = [
+    'text',
+    'textarea',
+    'search',
+    'password',
+    'email',
+    'tel',
+    'url',
+  ].includes(props.modelValue.props.type) || props.modelValue.props.type.startsWith('select')
+
+  return rules.value.filter((r) => {
+    if (r.type == 'pattern') {
+      return showPattern
+    }
+    if (r.type == 'minlength' || r.type == 'maxlength') {
+      return showMinMax
+    }
+    return true
+  })
 })
 
-function appendRule(ruleType) {
-  if (!ruleType) {
-    return
-  }
+watch(
+  () => props.modelValue?.rules,
+  (incomingRules) => {
+    if (!Array.isArray(incomingRules)) {
+      return
+    }
 
-  switch (ruleType) {
-  case 'required':
-    rules.value.push({
-      required: true,
-      message: '',
+    incomingRules.forEach((rule) => {
+      const matchingRule = rules.value.find((r) => r.type == rule.type)
+      if (!matchingRule) {
+        // incoming value of unknown type
+        return
+      }
+      Object.assign(matchingRule, rule)
+      matchingRule.isEnabled = true
     })
-    break
-
-  case 'regex':
-    rules.value.push({
-      regex: '',
-      message: '',
-    })
-    break
-
-  case 'vm':
-    rules.value.push({
-      eval: { chain: [] },
-      message: '',
-    })
-    break
-  }
-
-  emitUpdate()
-}
-
-function removeRule(rule) {
-  rules.value = rules.value.filter((r) => r !== rule)
-  emitUpdate()
-}
+  },
+  { immediate: true },
+)
 
 function emitUpdate() {
+  const targetValue = rules.value
+    .filter((r) => r.isEnabled)
+    .map((r) => ({
+      type: r.type,
+      message: r.message,
+      value: r.value,
+    }))
+
   emit('update:modelValue', {
     ...props.modelValue,
-    rules: rules.value.concat(),
+    rules: targetValue?.length ? targetValue : null,
   })
 }
 
@@ -72,7 +150,6 @@ const i18n = useI18n({
     'BlockValidationEditor.RegularExpression': 'Regular expression',
     'BlockValidationEditor.ErrorMessage': 'Error message',
     'BlockValidationEditor.Expression': 'Expression',
-    'BlockValidationEditor.AddRule': 'Add rule',
   },
   es: {
     'BlockValidationEditor.Required': 'Requerido',
@@ -80,128 +157,84 @@ const i18n = useI18n({
     'BlockValidationEditor.RegularExpression': 'Expresión regular',
     'BlockValidationEditor.ErrorMessage': 'Mensaje de error',
     'BlockValidationEditor.Expression': 'Expresión',
-    'BlockValidationEditor.AddRule': 'Agregar regla',
   },
 })
-
-const hasRequiredRule = computed(() => rules.value.find((r) => !!r.required))
 </script>
 
 <template>
-  <div class="BlockValidationEditor UiForm--wide">
-    <UiDetails
-      v-for="(rule, k) in rules"
+  <div class="BlockValidationEditor">
+    <div
+      v-for="(rule, k) in availableRules"
       :key="k"
-      class="ValidationRule"
-      group="BlockValidationEditor"
-      @delete="removeRule(rule)"
+      class="BlockValidationEditor__rule"
     >
-      <template #summary>
-        <span v-if="rule.regex !== undefined">{{ i18n.t('BlockValidationEditor.RegEx') }}</span>
-        <span v-else-if="rule.eval !== undefined">{{ i18n.t('BlockValidationEditor.Expression') }}</span>
-        <span v-else-if="rule.required">{{ i18n.t('BlockValidationEditor.Required') }}</span>
-      </template>
+      <UiItem
+        class="BlockValidationEditor__ruleItem"
+        :text="rule.type"
+        :icon="rule.isEnabled ? 'mdi:checkbox-marked' : 'mdi:checkbox-blank-outline'"
+        @click="rule.isEnabled = !rule.isEnabled; emitUpdate()"
+      />
 
-      <template #default>
-        <template v-if="rule.required">
+      <UiDrawer :open="rule.isEnabled">
+        <div class="BlockValidationEditor__ruleBody">
           <UiInput
+            v-if="rule.type == 'pattern'"
+            v-model="rule.value"
+            type="text"
+            label="Pattern"
+            @update:model-value="emitUpdate()"
+          />
+          <UiInput
+            v-else-if="rule.type == 'minlength' || rule.type == 'maxlength'"
+            v-model="rule.value"
+            type="number"
+            label="Value"
+            @update:model-value="emitUpdate()"
+          />
+
+          <CmsPropInput
             v-model="rule.message"
+            :block="props.modelValue"
+            class="BlockValidationEditor__ruleMessage"
             type="text"
             :label="i18n.t('BlockValidationEditor.ErrorMessage')"
             @update:model-value="emitUpdate()"
           />
-        </template>
-
-        <template v-else-if="rule.regex !== undefined">
-          <UiInput
-            v-model="rule.regex"
-            type="text"
-            :label="i18n.t('BlockValidationEditor.RegularExpression')"
-            @update:model-value="emitUpdate()"
-          />
-          <UiInput
-            v-model="rule.message"
-            type="text"
-            :label="i18n.t('BlockValidationEditor.ErrorMessage')"
-            @update:model-value="emitUpdate()"
-          />
-        </template>
-
-        <template v-else-if="rule.eval !== undefined">
-          <VmStatement
-            v-model="rule.eval"
-            @update:model-value="emitUpdate()"
-          />
-          <UiInput
-            v-model="rule.message"
-            :label="i18n.t('BlockValidationEditor.ErrorMessage')"
-            @update:model-value="emitUpdate()"
-          />
-        </template>
-      </template>
-    </UiDetails>
-
-    <select
-      class="BlockValidationEditor__adder UiInput"
-      @change="appendRule($event.target.value); $event.target.value = ''"
-    >
-      <option
-        value=""
-        v-text="i18n.t('BlockValidationEditor.AddRule')"
-      />
-      <option
-        v-if="!hasRequiredRule"
-        value="required"
-        v-text="i18n.t('BlockValidationEditor.Required')"
-      />
-      <option
-        value="regex"
-        v-text="i18n.t('BlockValidationEditor.RegEx')"
-      />
-      <option
-        value="vm"
-        v-text="i18n.t('BlockValidationEditor.Expression')"
-      />
-    </select>
+        </div>
+      </UiDrawer>
+    </div>
   </div>
 </template>
 
 <style lang="scss">
 .BlockValidationEditor {
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  &__rule {
+    border-radius: 4px;
+    background-color: var(--ui-color-z1);
+    margin-bottom: 8px;
+  }
+
+  &__ruleItem {
+    --ui-item-padding: 8px 16px;
+    border-radius: 4px;
+    margin: 2px 0;
+
+    cursor: pointer;
+    user-select: none;
+    &:hover {
+      background-color: var(--ui-color-hover);
+    }
+  }
+
+  &__ruleBody {
+    // border: 1px solid red;
+    // padding: 8px;
+    margin: 0 8px 32px 46px;
+
+    .UiInput__element {
+      width: 100%;
+    }
+  }
+
 }
-
-// @import '@/packages/ui/themes/base/modifiers/clickable.scss';
-// @import '@/packages/cms/themes/base/classes/itemDetails.scss';
-
-// .BlockValidationEditor {
-//   padding: 8px;
-// }
-
-// .ValidationRule {
-//   position: relative;
-//   @extend .itemDetails;
-
-//   summary {
-//     position: relative;
-//   }
-
-//   &__delete {
-//     @extend .ui--clickable;
-
-//     position: absolute;
-//     top: 0;
-//     right: 0;
-
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-
-//     width: 40px;
-//     height: 40px;
-//   }
-// }
 </style>

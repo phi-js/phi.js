@@ -1,7 +1,6 @@
 <script>
 import { h, ref, shallowRef, watchEffect, Transition, inject, computed, watch } from 'vue'
 import { VM } from '@/packages/vm'
-import { parse } from '@/packages/vm/lib/utils'
 import { getBlockDefinition } from '../../functions'
 
 import {
@@ -9,8 +8,6 @@ import {
   useStorySettings,
   getProperty,
   setProperty,
-  getBlockRules,
-  runValidators,
 } from '../../functions'
 
 const CmsBlock = {
@@ -28,7 +25,6 @@ const CmsBlock = {
       default: () => ({}),
     },
 
-
     slotBindings: {
       type: Object,
       required: false,
@@ -36,7 +32,7 @@ const CmsBlock = {
     },
   },
 
-  emits: ['update:modelValue', 'update:errors'],
+  emits: ['update:modelValue'],
 
   setup(props, { emit, attrs }) {
     /* Internal Block VM object */
@@ -50,7 +46,7 @@ const CmsBlock = {
 
     /* modelValue source of truth functions */
     const innerModel = props.modelValue
-    const evaluableModel = computed(() => ({ ...innerModel, ...injectedStory?.globals, $slot: props.slotBindings }))
+    const evaluableModel = computed(() => ({ ...innerModel, $slot: props.slotBindings }))
 
     let _haltEmit = false
 
@@ -106,7 +102,7 @@ const CmsBlock = {
       }
 
       // Parsed block props
-      blockProps.value = parse(
+      blockProps.value = blockVM.eval(
         allProps,
         {
           ...evaluableModel.value,
@@ -123,27 +119,14 @@ const CmsBlock = {
         }
       }
 
-      // Set "required" prop if applies
-      if (props.block?.rules?.length && props.block.rules.find((r) => r.required)) {
-        blockProps.value.required = true
+      // // Set "required" prop if applies
+      // if (props.block?.rules?.length && props.block.rules.find((r) => r.required)) {
+      //   blockProps.value.required = true
+      // }
+      if (props.block?.rules?.length) {
+        blockProps.value.rules = props.block.rules
       }
     })
-
-    /* Validation management */
-    const errors = ref([])
-    const childErrors = {} // childErrors[slot:index]  e.g.  childErrors[default:0] = [....]
-
-    function setErrors(arrErrors) {
-      errors.value = Array.isArray(arrErrors) ? arrErrors : []
-      emitErrors()
-    }
-
-    function emitErrors() {
-      const allChildErrors = []
-      Object.values(childErrors).forEach((errs) => allChildErrors.push(...errs))
-      emit('update:errors', [...errors.value, ...allChildErrors])
-    }
-
 
     /* Block event listeners */
     const blockListeners = ref({})
@@ -193,7 +176,8 @@ const CmsBlock = {
           blockVM.eval(
             listeners[eventName],
             {
-              ...evaluableModel.value,
+              // ...evaluableModel.value,  // evaluableModel is not reacting to outer chages of innerModel., so use innerModel directly instead
+              ...innerModel,
               ...tmpInnerModel,
               $event,
               $block: props.block,
@@ -246,22 +230,6 @@ const CmsBlock = {
       })
     }
 
-    /* Validation listeners */
-    const blockRules = getBlockRules(
-      props.block,
-      getModelProperty,
-      (expr) => blockVM.eval(expr, innerModel),
-    )
-
-    watchEffect(() => {
-      if (!isVisible.value) {
-        emit('update:errors', [])
-        return
-      }
-      if (blockRules.length) {
-        runValidators(blockRules).then(setErrors)
-      }
-    })
 
     /*
     Block listeners defined via plugins
@@ -305,17 +273,13 @@ const CmsBlock = {
 
         blockSlots.value[slotName] = (slotBindings) => {
           return arrChildren
-            .map((child, index) => h(
+            .map((child) => h(
               CmsBlock,
               {
                 'block': child,
                 'modelValue': props.modelValue,
                 'slotBindings': slotBindings,
                 'onUpdate:modelValue': ($event) => onChildUpdateModelvalue($event),
-                'onUpdate:errors': ($event) => {
-                  childErrors[slotName + ':' + index] = $event
-                  emitErrors()
-                },
               },
             ))
         }
@@ -355,7 +319,6 @@ const CmsBlock = {
 
     return {
       attrs,
-      errors,
       isVisible,
       blockDefinition,
       blockComponent,
@@ -375,8 +338,7 @@ const CmsBlock = {
       return
     }
 
-    // Get iterations (v-for)
-    if (Array.isArray(this.iterable)) {
+    if (this.block?.['v-for']) {
       return this.iterations
     }
 
@@ -387,7 +349,6 @@ const CmsBlock = {
         ...this.blockProps,
         ...this.blockListeners,
         class: [this.attrs?.class, 'CmsBlock', this.blockDefinition.name, this.blockProps.class],
-        errors: this.errors,
       },
       this.blockSlots,
     )
