@@ -81,8 +81,8 @@ const fieldSchema = computed(() => {
 const translatedOperators = computed(() => {
   return allOperators.map((op) => ({
     ...op,
-    text: i18n.t(`StmtOp.operator.${op.operator}.title`, null, op.text),
-    subtext: i18n.t(`StmtOp.operator.${op.operator}.description`, null, op.text),
+    text: i18n.t(`StmtOp.operator.${op.operator}.title`, null, ''),
+    subtext: i18n.t(`StmtOp.operator.${op.operator}.description`, null, ''),
   }))
 })
 
@@ -139,7 +139,7 @@ const currentOperator = computed(() => availableOperators.value.find((opDef) => 
 
 const operationRedaction = computed(() => {
   const fieldName = fieldSchema.value?.title || innerModel.field
-  const opName = currentOperator.value?.text || innerModel.op
+  const opName = currentOperator.value?.text ? currentOperator.value?.text + ' ' : ''
   const stringArgs = argsToString(innerModel.args)
   return {
     text: fieldName,
