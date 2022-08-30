@@ -4,10 +4,10 @@ import draggable from 'vuedraggable'
 import { UiIcon } from '@/packages/ui'
 
 import useVmI18n from '../../../../i18n'
-const i18n = useVmI18n()
-
 import StmtChainItem from './StmtChainItem.vue'
 import VmExpressionPicker from '../../VmExpressionPicker.vue'
+
+const i18n = useVmI18n()
 
 const props = defineProps({
   modelValue: {

@@ -77,19 +77,3 @@ const items = computed(() => {
     </template>
   </UiDialog>
 </template>
-
-<style lang="scss">
-.VmExpressionPicker {
-  dialog {
-    width: 500px;
-    max-width: 95vw;
-
-    min-height: 50vh;
-    max-height: 80vh;
-
-    .FinderItem {
-      margin: 3px 0;
-    }
-  }
-}
-</style>
