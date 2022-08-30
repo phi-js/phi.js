@@ -7,4 +7,8 @@ export default {
   'i18n.yesterday': 'ayer',
   'i18n.nDaysAgo': 'hace %n% días',
   'i18n.nWeeksAgo': 'hace %n% semanas',
+
+  'Accept': 'Aceptar',
+  'Cancel': 'Cancelar',
+  'Delete': 'Eliminar',
 }
