@@ -258,18 +258,6 @@ const availableEvents = computed(() => [
           </UiTab>
 
           <UiTab
-            value="computed"
-            icon="mdi:variable"
-            :text="i18n.t('StoryEditorWindow.computedVariables')"
-          >
-            <StoryComputedEditor
-              v-model="innerStory.computed"
-              class="StoryEditorWindow__computed"
-              @update:model-value="emitStoryUpdate"
-            />
-          </UiTab>
-
-          <UiTab
             value="methods"
             icon="mdi:variable"
             :text="i18n.t('StoryEditorWindow.methods')"
@@ -278,6 +266,18 @@ const availableEvents = computed(() => [
               v-model:story="innerStory"
               class="StoryEditorWindow__methods"
               @update:story="emitStoryUpdate"
+            />
+          </UiTab>
+
+          <UiTab
+            value="computed"
+            icon="mdi:variable"
+            :text="i18n.t('StoryEditorWindow.computedVariables')"
+          >
+            <StoryComputedEditor
+              v-model="innerStory.computed"
+              class="StoryEditorWindow__computed"
+              @update:model-value="emitStoryUpdate"
             />
           </UiTab>
         </UiTabs>

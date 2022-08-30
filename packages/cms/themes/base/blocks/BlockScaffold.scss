@@ -189,37 +189,23 @@
 // Block's option menu contents
 .BlockPopover {
   user-select: none;
-  display: flex;
-  align-items: stretch;
 
   .tippy-content {
     padding: 0;
   }
 
   &__item {
+    min-width: 200px;
+    color: #ccc;
+    --ui-item-padding: 8px 14px;
+    font-size: 0.9em;
+
     user-select: none;
     cursor: pointer;
-    color: #ccc;
-    --ui-item-padding: 8px 12px;
-
-    .UiItem {
-      &__icon {
-        opacity: 0.5;
-      }
-
-      &__body {
-        border-left: 1px inset rgba(255, 255, 255, 0.1);
-        padding-left: 8px;
-      }
-    }
 
     &:hover {
       color: #fff;
-      background-color: rgba(255, 255, 255, 0.1);
-
-      .UiItem__icon {
-        opacity: 1;
-      }
+      background-color: var(--ui-color-hover);
     }
   }
 

@@ -4,7 +4,6 @@ import {
   watch,
   watchEffect,
   provide,
-  reactive,
   h,
   Transition,
   KeepAlive,
@@ -171,8 +170,12 @@ export default {
           const targetName = computation.name
           if (!computedVariables[targetName]) {
             computedVariables[targetName] = watchEffect(() => {
-              const result = storyVM.eval(computation.statement, innerModel.value)
-              setProperty(innerModel.value, targetName, result)
+              try {
+                const result = storyVM.eval(computation.statement, innerModel.value)
+                setProperty(innerModel.value, targetName, result)
+              } catch (e) {
+                console.warn(`Error computing variable '${targetName}'`, e)
+              }
             })
           }
 

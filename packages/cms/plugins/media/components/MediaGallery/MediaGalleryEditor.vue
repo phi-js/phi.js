@@ -1,185 +1,80 @@
-<template>
-  <div class="media-gallery-editor">
-    <UiInput label="Vista">
-      <select v-model="innerValue.view" @change="emitInput">
-        <option value="list">Lista</option>
-        <option value="grid">Cuadrícula</option>
-        <option value="gallery">Galería</option>
-      </select>
-    </UiInput>
+<script setup>
+import { ref, watch } from 'vue'
 
-    <UiInput v-show="innerValue.view == 'gallery'" label="Max. a mostrar en vista previa">
-      <input v-model="innerValue.previewLimit" type="number" min="1" @input="emitInput" />
-    </UiInput>
+import { UiUpload, UiInput } from '@/packages/ui'
 
-    <draggable
-      v-model="innerValue.files"
-      class="media-gallery-editor-list"
-      handle=".image-preview"
-      @input="emitInput"
-    >
-      <div v-for="(image, i) in innerValue.files" :key="i" class="editor-list-item">
-        <div class="image-preview">
-          <img :src="image.preview" />
-        </div>
-        <div class="image-title-wrapper">
-          <input v-model="innerValue.files[i].title" class="UiInput" type="text" @input="emitInput" />
-        </div>
-        <UiIcon
-          class="image-delete-icon"
-          value="mdi:delete"
-          title="Eliminar"
-          @click.stop="removeImage(i)"
-        />
-      </div>
-    </draggable>
-
-    <UiFileUploader
-      :path="path"
-      accepted-files="image/*"
-      @success="onUploadSuccess"
-      @error="onUploadError"
-    >
-      <div class="gallery-editor-uploader">Subir imágenes</div>
-    </UiFileUploader>
-  </div>
-</template>
-
-<script>
-import { UiFileUploader, UiInput, UiIcon } from '../../../../../ui'
-// import draggable from 'vuedraggable/src/vuedraggable'
-import draggable from 'vuedraggable'
-
-export default {
-  name: 'MediaGalleryEditor',
-
-  components: {
-    UiInput,
-    UiIcon,
-    UiFileUploader,
-    draggable,
+const props = defineProps({
+  // Block "props" object
+  modelValue: {
+    type: Object, //block.props (files and vue)
+    required: false,
+    default: null,
   },
 
-  props: {
-    value: {
-      type: Object, //block.props (files and vue)
-    },
-
-    path: {
-      type: String,
-      required: true,
-    },
+  endpoint: {
+    type: String,
+    required: true,
   },
+})
 
-  data() {
-    return { innerValue: {} }
+const emit = defineEmits(['update:modelValue'])
+
+const innerValue = ref({})
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    innerValue.value = { ...newValue }
+    if (!Array.isArray(innerValue.value.files)) {
+      innerValue.value.files = []
+    }
   },
+  { immediate: true },
+)
 
-  watch: {
-    value: {
-      immediate: true,
-      handler(newValue) {
-        this.innerValue = JSON.parse(JSON.stringify(newValue))
-        if (!Array.isArray(this.innerValue.files) || !this.innerValue.files) {
-          this.$set(this.innerValue, 'files', [])
-        }
-      },
-    },
-  },
-
-  methods: {
-    removeImage(index) {
-      if (!confirm('Eliminar esta imagen?')) {
-        return
-      }
-      this.innerValue.files.splice(index, 1)
-      this.emitInput()
-    },
-
-    onUploadSuccess(files) {
-      files.forEach((file) => {
-        if (!file.preview) {
-          return
-        }
-
-        this.innerValue.files.push({
-          title: file.name,
-          url: file.url,
-          thumbnail: file.thumbnail,
-          preview: file.preview,
-        })
-      })
-
-      this.emitInput()
-    },
-
-    onUploadError(err) {
-      alert('Error subiendo archivos')
-      console.error('GalleryEditor.vue: Error subiendo archivos', err)
-    },
-
-    emitInput() {
-      this.$emit('input', JSON.parse(JSON.stringify(this.innerValue)))
-    },
-  },
+function emitInput() {
+  emit('update:modelValue', JSON.parse(JSON.stringify(innerValue.value)))
 }
 </script>
 
+<template>
+  <div class="MediaGalleryEditor">
+    <UiInput
+      v-model="innerValue.view"
+      label="Vista"
+      type="select-native"
+      :options="[
+        {value: 'list', text: 'Lista'},
+        {value: 'grid', text: 'Cuadrícula'},
+        {value: 'gallery', text: 'Galería'},
+      ]"
+      @update:model-value="emitInput"
+    />
+
+    <UiInput
+      v-show="innerValue.view == 'gallery'"
+      v-model="innerValue.previewLimit"
+      label="Max. a mostrar en vista previa"
+      type="number"
+      min="1"
+      @update:model-value="emitInput"
+    />
+
+    <UiUpload
+      v-model="innerValue.files"
+      multiple
+      xxx-endpoint="props.endpoint"
+      endpoint="http://phi.local/api/1/stories/tojcpfpis2a/files"
+      :allowed-file-types="['image/*']"
+      @update:model-value="emitInput"
+    />
+  </div>
+</template>
+
 <style lang="scss">
-.media-gallery-editor {
-  .gallery-editor-uploader {
-    min-height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px dashed rgba(0, 0, 0, 0.4);
-
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.05);
-    }
-  }
-
-  .media-gallery-editor-list {
-    .editor-list-item {
-      display: flex;
-      flex-wrap: nowrap;
-      align-items: center;
-
-      .image-preview {
-        cursor: move;
-        width: 90px;
-        height: 60px;
-        overflow: hidden;
-
-        display: flex;
-        align-items: center;
-
-        img {
-          max-width: 100%;
-          max-height: 100%;
-        }
-      }
-
-      .image-title-wrapper {
-        flex: 1;
-        margin: 0 8px;
-
-        input {
-          width: 100%;
-        }
-      }
-
-      .image-delete-icon {
-        font-size: 12px;
-        cursor: pointer;
-        color: rgba(0, 0, 0, 0.4);
-        --ui-icon-size: 20px;
-
-        &:hover {
-          color: var(--ui-color-danger);
-        }
-      }
-    }
+.MediaGalleryEditor {
+  .UiUpload__file {
+    max-width: none;
   }
 }
 </style>

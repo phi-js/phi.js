@@ -8,7 +8,7 @@ export default {
 
   block: {
     component: UiDialog,
-    props: { open: false },
+    props: { open: false, showCloseButton: true },
     slot: [],
   },
 

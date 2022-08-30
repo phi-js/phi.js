@@ -1,5 +1,5 @@
 export default {
-  'plugin.title.Form': 'Form inputs',
+  'plugin.title.Form': 'Form',
 
   'plugin.component.InputText.title': 'Text',
   'plugin.component.InputTextarea.title': 'Textarea',

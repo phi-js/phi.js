@@ -1,30 +1,30 @@
-const MediaGallery = () => import('./MediaGallery.vue')
-const MediaGalleryEditor = () => import('./MediaGalleryEditor.vue')
+import { UiFileList } from '@/packages/ui'
+
+import { defineAsyncComponent } from 'vue'
+const MediaGalleryEditor = defineAsyncComponent(() => import('./MediaGalleryEditor.vue'))
 
 export default {
-  "name": "MediaGallery",
-  "title": "Galería",
-  "icon": "mdi:image-multiple",
+  name: 'MediaGallery',
+  title: 'Image gallery',
+  icon: 'mdi:image-multiple',
 
-  "block": {
-    "component": MediaGallery,
-    "props": {
-      "files": [],
-      "view": "grid",
-      "previewLimit": 4
-    }
+  block: {
+    component: UiFileList,
+    props: {
+      files: [],
+      view: 'gallery',
+      previewLimit: 4,
+    },
   },
 
-  "editor": {
-    "actions": [
+  editor: {
+    actions: [
       {
-        "title": "Galería",
-        "component": MediaGalleryEditor,
-        "v-model": "block.props",
-        "props": {
-          "path": "{{$settings.uploadUrl}}"
-        }
-      }
-    ]
-  }
-};
+        'title': 'Images',
+        'component': MediaGalleryEditor,
+        'v-model': 'block.props',
+        'props': { endpoint: '{{ $settings.uploads.assets }}' },
+      },
+    ],
+  },
+}

@@ -11,7 +11,7 @@ export default {
     component: MediaLoremIpsum,
     props: {
       nParagraphs: '1',
-      nWords: '44',
+      nWords: '120',
     },
   },
 

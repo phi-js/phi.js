@@ -13,6 +13,9 @@ export default {
   'plugin.component.Dialog.tile': 'Popup',
   'plugin.component.MediaVideo.tile': 'Video',
 
+  'plugin.component.MediaGallery.title': 'Image gallery',
+  'plugin.component.MediaGallery.description': 'Mosaic of uploaded files',
+
   'plugin.component.MediaDocument.title': 'MediaDocument',
   'plugin.component.MediaMap.title': 'Map',
   'plugin.component.MediaCalendar.title': 'Calendar',

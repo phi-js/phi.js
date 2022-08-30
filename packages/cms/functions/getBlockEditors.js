@@ -31,6 +31,8 @@ import BlockDataEditor from '../components/CmsBlockEditor/BlockDataEditor.vue'
 import BlockListenersEditor from '../components/CmsBlockEditor/BlockListenersEditor.vue'
 import BlockVisibilityEditor from '../components/CmsBlockEditor/BlockVisibilityEditor.vue'
 import BlockCssEditor from '../components/CmsBlockEditor/BlockCssEditor.vue'
+import BlockValidationEditor from '../components/CmsBlockEditor/BlockValidationEditor.vue'
+import BlockRepeatEditor from '../components/CmsBlockEditor/BlockRepeatEditor.vue'
 
 export default async function getBlockEditors(block) {
   const definition = getBlockDefinition(block)
@@ -107,16 +109,16 @@ export default async function getBlockEditors(block) {
     })
   }
 
-  // // Validation editor (only if v-model property exists in definition)
-  // if (definition.block['v-model'] != undefined) {
-  //   retval.actions.push({
-  //     'id': 'validation',
-  //     'title': 'Validation',
-  //     'icon': 'mdi:message-alert',
-  //     'component': BlockValidationEditor,
-  //     'v-model': 'block',
-  //   })
-  // }
+  // Validation editor (only if v-model property exists in definition)
+  if (definition.block['v-model'] != undefined) {
+    retval.actions.push({
+      'id': 'validation',
+      'title': 'Validation',
+      'icon': 'mdi:message-alert',
+      'component': BlockValidationEditor,
+      'v-model': 'block',
+    })
+  }
 
   // Block CSS property
   retval.actions.push({
@@ -142,6 +144,15 @@ export default async function getBlockEditors(block) {
     'title': 'Events',
     'icon': 'mdi:gesture-tap',
     'component': BlockListenersEditor,
+    'v-model': 'block',
+  })
+
+  // v-for
+  retval.actions.push({
+    'id': 'repeat',
+    'title': 'Repeat',
+    'icon': 'mdi:repeat-variant',
+    'component': BlockRepeatEditor,
     'v-model': 'block',
   })
 

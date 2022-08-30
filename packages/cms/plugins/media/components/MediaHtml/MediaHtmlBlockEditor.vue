@@ -37,7 +37,10 @@ const editor = new Editor({
     Underline,
     Placeholder.configure({ placeholder: 'Escribe aquí ...' }),
     TextAlign.configure({ types: ['heading', 'paragraph'] }),
-    Link.configure({ openOnClick: false }),
+    Link.configure({
+      openOnClick: false,
+      autolink: false,
+    }),
   ],
   content: '',
   onFocus: () => isFocused.value = true,

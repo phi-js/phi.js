@@ -242,7 +242,7 @@ defineExpose({
 
           <UiIcon
             v-if="innerBlock?.rules?.length"
-            title="This block has validation rules"
+            :title="i18n.t('BlockScaffold.quickButton.validation')"
             class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--validation"
             src="mdi:message-alert"
             @click="openActionId('InputSettings')"
@@ -250,7 +250,7 @@ defineExpose({
 
           <UiIcon
             v-if="innerBlock?.props?.class || innerBlock?.props?.style"
-            title="This block has CSS styles"
+            :title="i18n.t('BlockScaffold.quickButton.css')"
             class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--css"
             src="mdi:water"
             @click="openActionId('css')"
@@ -258,30 +258,30 @@ defineExpose({
 
           <UiIcon
             v-if="innerBlock['v-if']"
-            title="This block has conditional visibility"
+            :title="i18n.t('BlockScaffold.quickButton.visibility')"
             class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--visibility"
             src="mdi:eye"
             @click="openActionId('visibility')"
           />
 
           <UiIcon
-            v-if="innerBlock['v-for']"
-            title="This block repeats"
-            class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--repeat"
-            src="mdi:repeat-variant"
-            @click="openActionId('visibility')"
-          />
-
-          <UiIcon
             v-if="hasEvents"
-            title="Has events"
+            :title="i18n.t('BlockScaffold.quickButton.event')"
             class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--events"
             src="mdi:gesture-tap"
             @click="openActionId('events')"
           />
 
+          <UiIcon
+            v-if="innerBlock['v-for']"
+            :title="i18n.t('BlockScaffold.quickButton.repeat')"
+            class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--repeat"
+            src="mdi:repeat-variant"
+            @click="openActionId('repeat')"
+          />
+          <!-- /quick access buttons -->
 
-          <!-- dropdown options -->
+          <!-- Block actions popover -->
           <UiPopover
             v-model:open="popupIsOpen"
             class="BlockPopover"

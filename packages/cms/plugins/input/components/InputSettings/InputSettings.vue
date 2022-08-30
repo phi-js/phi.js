@@ -5,7 +5,6 @@ import { useI18n } from '@/packages/i18n'
 import { UiInput, UiDetails } from '@/packages/ui/components'
 import OptionsEditor from '@/packages/ui/components/UiInputEditor/editors/OptionsEditor.vue'
 
-import BlockValidationEditor from '../../../../components/CmsBlockEditor/BlockValidationEditor.vue'
 import CmsPropInput from '../../../../components/CmsPropInput/CmsPropInput.vue'
 
 const props = defineProps({
@@ -152,16 +151,6 @@ const multipleOptions = [
         :label="i18n.t('InputSettings.ValueType')"
         type="select-buttons"
         :options="multipleOptions"
-        @update:model-value="emitUpdate"
-      />
-    </UiDetails>
-
-    <UiDetails
-      group="InputSettings"
-      :text="i18n.t('InputSettings.Validation')"
-    >
-      <BlockValidationEditor
-        v-model="block"
         @update:model-value="emitUpdate"
       />
     </UiDetails>
