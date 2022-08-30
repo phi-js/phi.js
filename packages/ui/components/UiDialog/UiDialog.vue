@@ -13,6 +13,12 @@ const props = defineProps({
     required: false,
     default: null,
   },
+
+  showCloseButton: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['update:open', 'open', 'close'])
@@ -124,7 +130,17 @@ async function onDialogClose($event) {
       <slot
         name="footer"
         :close="close"
-      />
+      >
+        <button
+          v-if="showCloseButton"
+          class="UiButton"
+          type="button"
+          style="margin: 4px"
+          @click="close"
+        >
+          OK
+        </button>
+      </slot>
     </dialog>
   </div>
 </template>

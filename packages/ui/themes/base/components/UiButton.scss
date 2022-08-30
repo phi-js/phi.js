@@ -1,10 +1,10 @@
 .UiButton {
   --loading-transition-duration: 0.2s;
-
   --ui-button-padding: 8px 16px;
 
   cursor: pointer;
   white-space: nowrap;
+  user-select: none;
 
   box-sizing: border-box;
   min-height: 40px;

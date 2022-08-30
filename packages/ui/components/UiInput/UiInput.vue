@@ -306,7 +306,7 @@ const uid = ref('UiInput' + (++_UiInput_counter))
       :type="type"
       :label="props.label"
       :disabled="props.disabled"
-      :class="classNames"
+
       v-bind="attrs"
       style="display:block"
     />

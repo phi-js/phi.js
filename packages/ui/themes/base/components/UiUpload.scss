@@ -1,13 +1,12 @@
 .UiUpload {
   &__file {
-    display: block;
-    // max-width: 380px;
-    width: 320px;
-    max-width: 85vw;
-    color: inherit;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px;
 
-    --ui-item-padding: 8px;
-
+    max-width: 400px;
     border-radius: 4px;
     background-color: var(--ui-color-hover);
 
@@ -17,22 +16,50 @@
       background-color: var(--ui-color-danger);
       color: #fff;
     }
+  }
 
-    .UiItem {
-      align-items: flex-start;
+  &__figure {
+    img {
+      display: block;
+      width: 120px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
 
-      &__icon {
-        width: 90px;
-        height: 60px;
-        padding: 0;
-
-        border-radius: 4px;
-        overflow: hidden;
-      }
+    small {
+      display: block;
+      font-size: 0.66em;
+      font-weight: bold;
+      margin-top: 5px;
     }
   }
 
+  &__details {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    input {
+      width: 100%;
+      font-size: 1em;
+      font-family: inherit;
+
+      padding: 8px;
+
+      border-radius: 5px;
+      border: 1px inset #999;
+    }
+  }
+
+  &__description {
+    font-size: 0.85em !important;
+  }
+
   &__deleter {
+    cursor: pointer;
     width: 30px;
     height: 30px;
     border-radius: 4px;

@@ -23,7 +23,6 @@ import '@uppy/image-editor/dist/style.css'
 
 import { Dashboard, DashboardModal } from '@uppy/vue' //fails when using phi.js as a bundled library
 // import { Dashboard, DashboardModal } from '@uppy/vue/src'
-import { UiItem } from '../UiItem'
 import { UiIcon } from '../UiIcon'
 import { UiButton } from '../UiButton'
 
@@ -69,6 +68,12 @@ const props = defineProps({
     required: false,
     default: null,
   },
+
+  allowedFileTypes: {
+    type: Array,
+    required: false,
+    default: null,
+  },
 })
 const emit = defineEmits(['update:modelValue', 'upload'])
 
@@ -110,6 +115,7 @@ const uppy = computed(() => new Uppy({
   restrictions: {
     minNumberOfFiles: props.multiple ? null : 1,
     maxNumberOfFiles: props.multiple ? null : 1,
+    allowedFileTypes: Array.isArray(props.allowedFileTypes) ? props.allowedFileTypes : null,
   },
 
 })
@@ -168,29 +174,47 @@ const endangeredIndex = ref(-1)
         @update:model-value="emitUpdate"
       >
         <template #item="{ element: file, index }">
-          <div>
+          <div
+            class="UiUpload__file"
+            :class="{'UiUpload__file--danger': endangeredIndex === index}"
+          >
             <a
-              class="UiUpload__file"
-              :class="{'UiUpload__file--danger': endangeredIndex === index}"
+              class="UiUpload__figure"
               target="_blank"
               :href="file.url"
+              tabindex="-1"
             >
-              <UiItem
-                :text="file.name"
-                :subtext="bytes(file.size)"
-                :icon="file.thumbnail"
+              <img
+                :src="file.thumbnail"
+                :title="file.url"
               >
-                <template #actions>
-                  <UiIcon
-                    class="UiUpload__deleter"
-                    src="mdi:close"
-                    @click.prevent="deleteFile(file)"
-                    @mouseenter="endangeredIndex = index"
-                    @mouseleave="endangeredIndex = -1"
-                  />
-                </template>
-              </UiItem>
+              <small>{{ bytes(file.size) }}</small>
             </a>
+
+            <div class="UiUpload__details">
+              <input
+                class="UiUpload__title"
+                type="text"
+                :value="file.title || file.name"
+                placeholder="Title"
+                @input="file.title = $event.target.value; emitUpdate()"
+              >
+              <input
+                class="UiUpload__description"
+                type="text"
+                :value="file.description"
+                placeholder="Description"
+                @input="file.description = $event.target.value; emitUpdate()"
+              >
+            </div>
+
+            <UiIcon
+              class="UiUpload__deleter"
+              src="mdi:close"
+              @click.prevent="deleteFile(file)"
+              @mouseenter="endangeredIndex = index"
+              @mouseleave="endangeredIndex = -1"
+            />
           </div>
         </template>
       </draggable>

@@ -42,7 +42,7 @@ const props = defineProps({
   duration: {
     type: Number,
     required: false,
-    default: 100,
+    default: 150,
   },
 
   /* Animation easing */

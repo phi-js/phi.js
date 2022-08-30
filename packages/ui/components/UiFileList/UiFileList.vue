@@ -33,7 +33,10 @@ defineProps({
 </script>
 
 <template>
-  <div class="UiFileList">
+  <div
+    class="UiFileList"
+    :class="`UiFileList--${view}`"
+  >
     <UiPhotoGallery
       v-if="view === 'gallery'"
       class="UiFileList__gallery"
@@ -48,11 +51,11 @@ defineProps({
         :key="file.id"
         :href="file.url"
         target="_blank"
+        class="UiFileList__link"
       >
         <UiItem
-          class="ui--clickable"
-          :text="file.name"
-          :subtext="file.size"
+          :text="file.title || file.name"
+          :subtext="file.description"
           :icon="file.thumbnail || `mime:${file.mimetype}`"
         />
       </a>

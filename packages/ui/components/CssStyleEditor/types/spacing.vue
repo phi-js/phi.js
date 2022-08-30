@@ -211,6 +211,17 @@ function toggleLinked(position) {
 
   &__inputs {
     flex: 1;
+
+    & > .UiInput {
+      display: flex;
+
+      & > .UiInput__body {
+        flex: 1;
+      }
+      & > .UiInput__label {
+        width: 70px;
+      }
+    }
   }
 
   &__linker {
@@ -239,7 +250,7 @@ function toggleLinked(position) {
     }
 
     .UiIcon {
-      width: 30px;
+      width: 18px;
       height: 30px;
       border-radius: 4px;
       cursor: pointer;
