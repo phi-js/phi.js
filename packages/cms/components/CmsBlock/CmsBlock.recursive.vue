@@ -301,7 +301,7 @@ const CmsBlock = {
             return h(
               CmsBlock,
               {
-                'key': $index,
+                'key': $item?.id || $index,
                 'block': {
                   ...props.block,
                   'v-for': undefined,
