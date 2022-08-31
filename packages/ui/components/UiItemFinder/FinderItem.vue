@@ -72,25 +72,26 @@ const emit = defineEmits(['click-item'])
   &__children {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
     padding: 8px;
+    padding-top: 0;
   }
 
   &--item {
-    --ui-item-padding: 8px 12px;
-    // background: linear-gradient(0deg, rgba(213,213,213, 0.1) 0%, rgba(252,252,252, 0.15) 100%);
-
-    outline: none;
-    border: 1px solid transparent;
+    --ui-item-padding: 12px 16px;
     border-radius: 4px;
 
-    &:focus {
-      border-color: var(--ui-color-primary);
-    }
-
+    user-select: none;
     cursor: pointer;
     &:hover {
       background-color: var(--ui-color-hover);
+    }
+
+    .UiItem {
+      &__text {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
     }
   }
 }

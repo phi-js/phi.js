@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { UiInput } from '../'
 import FinderItem from './FinderItem.vue'
 
 const props = defineProps({
@@ -135,13 +134,13 @@ function onClickItem(item) {
 
 <template>
   <div class="UiItemFinder">
-    <UiInput
+    <input
       v-model="searchString"
       type="search"
       class="UiItemFinder__search"
       placeholder="Buscar ..."
       @keyup.enter="onSearchEnter()"
-    />
+    >
     <div
       ref="refEl"
       class="UiItemFinder__body"
@@ -163,22 +162,31 @@ function onClickItem(item) {
 <style lang="scss">
 .UiItemFinder {
   &__search {
+    padding: 12px 12px;
     display: block;
-    border-bottom: 1px inset #777;
+    width: 100%;
+    background-color: transparent;
+    outline: none;
+    border: 0;
+    font-size: inherit;
 
-    .UiInput__element { // !!! ugh
-      outline: none !important;
+    border-bottom: 1px solid var(--ui-color-ridge-bottom);
+    color: inherit;
+  }
 
-      width: 100%;
-      background-color: transparent !important;
-      border-radius: 0;
-      border: 0;
-      margin: 0;
-      color: inherit !important;
-      &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-        color: inherit !important;
-        opacity: 0.8; /* Firefox */
-      }
+  .UiDetails {
+    border-radius: 0;
+    border-top: 1px solid var(--ui-color-ridge-top);
+    border-bottom: 1px solid var(--ui-color-ridge-bottom);
+
+    & > summary {
+      border-left: 0;
+      border-right: 0;
+      padding: 11px !important;
+      border-radius: 0 !important;
+
+      font-size: 0.9em;
+      font-weight: bold;
     }
   }
 }
