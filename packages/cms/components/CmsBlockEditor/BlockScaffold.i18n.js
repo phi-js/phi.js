@@ -16,7 +16,8 @@ export default {
     'BlockScaffold.action.delete': 'Delete',
 
     'BlockScaffold.action.paragraphs': 'Paragraphs',
-    'BlockScaffold.action.InputSettings': 'Field options',
+    'BlockScaffold.action.InputSettings': 'Labels',
+    'BlockScaffold.action.InputSelectSettings': 'Option list',
 
     'BlockScaffold.SetVariableName': 'Set variable name',
     'BlockScaffold.CurrentVariable': 'Variable:',
@@ -40,7 +41,8 @@ export default {
     'BlockScaffold.action.delete': 'Eliminar',
 
     'BlockScaffold.action.paragraphs': 'Párrafos',
-    'BlockScaffold.action.InputSettings': 'Opciones',
+    'BlockScaffold.action.InputSettings': 'Etiquetas',
+    'BlockScaffold.action.InputSelectSettings': 'Lista de opciones',
 
     'BlockScaffold.SetVariableName': 'Establecer nombre de variable',
     'BlockScaffold.CurrentVariable': 'Variable:',

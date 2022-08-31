@@ -1,12 +1,11 @@
-// import MediaGallery from './components/MediaGallery/MediaGallery.block.js'
 // import MediaFile from './components/MediaFile/MediaFile.block.js'
 // import MediaMath from './components/MediaMath/MediaMath.block.js'
-// import MediaTable from './components/MediaTable/MediaTable.block.js'
 
 import MediaCalendar from './components/MediaCalendar/MediaCalendar.block.js'
 import MediaDialog from './components/MediaDialog/MediaDialog.block.js'
 import MediaDocument from './components/MediaDocument/MediaDocument.block.js'
 import MediaFileList from './components/MediaFileList/MediaFileList.block.js'
+import MediaGallery from './components/MediaGallery/MediaGallery.block.js'
 import MediaHtml from './components/MediaHtml/MediaHtml.block.js'
 import MediaIframe from './components/MediaIframe/MediaIframe.block.js'
 import MediaImage from './components/MediaImage/MediaImage.block.js'
@@ -31,6 +30,7 @@ export default {
         MediaImage,
         MediaLink,
         MediaFileList,
+        MediaGallery,
       ],
     },
     {
@@ -63,5 +63,4 @@ export default {
       ],
     },
   ],
-
 }

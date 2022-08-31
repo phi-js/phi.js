@@ -385,7 +385,7 @@ defineExpose({
           class="WindowContents"
         >
           <Component
-            :is="UiTabs"
+            :is="UiDrawerStack"
             v-model="currentActionIndex"
             xxxx-is="getWidth(coords) < 650 ? UiDrawerStack : UiTabs"
             class="WindowContents__tabs"
@@ -415,13 +415,13 @@ defineExpose({
           type="button"
           class="UiButton UiButton--main"
           @click="accept() && close()"
-          v-text="'Aceptar'"
+          v-text="i18n.t('Accept')"
         />
         <button
           type="button"
           class="UiButton UiButton--cancel"
           @click="cancel() && close()"
-          v-text="'Cancelar'"
+          v-text="i18n.t('Cancel')"
         />
       </template>
     </UiWindow>

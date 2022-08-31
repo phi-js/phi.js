@@ -104,39 +104,41 @@ const i18n = useI18n({
 </script>
 
 <template>
-  <select
-    class="PropInputExpression__varPicker UiInput"
-    :value="variableName"
-    @change="onVariablePickerChange($event.target.value)"
-  >
-    <option
-      :value="''"
-      v-text="i18n.t('CmsPropInput.SelectVariable')"
+  <div>
+    <select
+      class="PropInputExpression__varPicker UiInput"
+      :value="variableName"
+      @change="onVariablePickerChange($event.target.value)"
+    >
+      <option
+        :value="''"
+        v-text="i18n.t('CmsPropInput.SelectVariable')"
+      />
+
+      <optgroup :label="i18n.t('CmsPropInput.DocumentVariables')">
+        <option
+          v-for="opt in variableSelectorOptions"
+          :key="opt.value"
+          :value="opt.value"
+          v-text="opt.text"
+        />
+      </optgroup>
+      <optgroup :label="i18n.t('CmsPropInput.Other')">
+        <option
+          value="custom"
+          v-text="i18n.t('CmsPropInput.CustomExpression')"
+        />
+      </optgroup>
+    </select>
+
+    <UiInput
+      v-show="showExpressionInput"
+      v-model="strExpression"
+      class="PropInputExpression__expression"
+      type="text"
+      @update:model-value="emitUpdate()"
     />
-
-    <optgroup :label="i18n.t('CmsPropInput.DocumentVariables')">
-      <option
-        v-for="opt in variableSelectorOptions"
-        :key="opt.value"
-        :value="opt.value"
-        v-text="opt.text"
-      />
-    </optgroup>
-    <optgroup :label="i18n.t('CmsPropInput.Other')">
-      <option
-        value="custom"
-        v-text="i18n.t('CmsPropInput.CustomExpression')"
-      />
-    </optgroup>
-  </select>
-
-  <UiInput
-    v-show="showExpressionInput"
-    v-model="strExpression"
-    class="PropInputExpression__expression"
-    type="text"
-    @update:model-value="emitUpdate()"
-  />
+  </div>
 </template>
 
 <style lang="scss">

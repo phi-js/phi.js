@@ -164,6 +164,10 @@ const i18n = useI18n({
 
   &__component {
     min-width: 100%;
+
+    input {
+      width: 100%;
+    }
   }
 }
 </style>

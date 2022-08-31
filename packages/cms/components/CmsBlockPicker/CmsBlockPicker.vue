@@ -4,8 +4,10 @@ export default { inheritAttrs: false }
 
 <script setup>
 import { ref, watch } from 'vue'
-import PickerContents from './PickerContents.vue'
-import { UiDialog } from '@/packages/ui/components'
+import { UiDialog, UiItemFinder } from '@/packages/ui'
+import { useAvailableBlocks } from '../../functions/usePlugin'
+
+const availableBlocks = useAvailableBlocks()
 
 const props = defineProps({
   text: {
@@ -50,7 +52,6 @@ watch(
     isOpen.value = v
 
     // Close on BACK button
-
     if (isOpen.value) {
       // register cancel listeners
       history.pushState({ open: true }, '')
@@ -98,24 +99,20 @@ function onPopState() {
     </div>
 
     <UiDialog
+      v-slot="{ close }"
       v-model:open="isOpen"
+      show-close-button
       @update:open="emit('update:open', $event)"
     >
-      <template #default="{ close }">
-        <form method="dialog">
-          <PickerContents
-            class="CmsBlockPicker__contents"
-            @input="emit('input', $event); close()"
-          >
-            <template #body>
-              <slot
-                name="body"
-                :close="close"
-              />
-            </template>
-          </PickerContents>
-        </form>
-      </template>
+      <UiItemFinder
+        class="PickerContents"
+        :items="availableBlocks"
+        @select-item="emit('input', $event); close()"
+      >
+        <template #body>
+          <slot name="body" />
+        </template>
+      </UiItemFinder>
     </UiDialog>
   </div>
 </template>

@@ -1,6 +1,7 @@
 import { UiInput } from '@/packages/ui/components'
-import InputSettings from '../components/InputSettings/InputSettings.vue'
 import InputFace from '../components/InputFace.vue'
+import InputSettings from '../components/InputSettings/InputSettings.vue'
+import InputSelectSettings from '../components/InputSettings/InputSelectSettings.vue'
 
 export default {
   name: 'InputSelect',
@@ -32,8 +33,16 @@ export default {
 
     actions: [
       {
+        'id': 'InputSelectSettings',
+        'title': 'Select options',
+        'icon': 'mdi:form-dropdown',
+        'component': InputSelectSettings,
+        'v-model': 'block',
+      },
+      {
         'id': 'InputSettings',
-        'title': 'Field options',
+        'title': 'Labels',
+        'icon': 'mdi:text-short',
         'component': InputSettings,
         'v-model': 'block',
       },

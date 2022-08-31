@@ -1,10 +1,7 @@
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 
 import { useI18n } from '@/packages/i18n'
-import { UiInput, UiDetails } from '@/packages/ui/components'
-import OptionsEditor from '@/packages/ui/components/UiInputEditor/editors/OptionsEditor.vue'
-
 import CmsPropInput from '../../../../components/CmsPropInput/CmsPropInput.vue'
 
 const props = defineProps({
@@ -27,9 +24,6 @@ watch(
 const emitUpdate = function () {
   emit('update:modelValue', block.value)
 }
-
-const isSelect = computed(() => block.value?.props?.type && block.value.props.type.substring(0, 6) == 'select')
-
 
 // Auto-set v-model variable name
 const autoSetModel = props.modelValue?.['v-model'] !== undefined && !props.modelValue['v-model']
@@ -88,72 +82,36 @@ const i18n = useI18n({
     'InputSettings.ValueType': 'Tipo de dato',
   },
 })
-
-const multipleOptions = [
-  {
-    text: i18n.t('InputSettings.Single'),
-    value: false,
-  },
-  {
-    text: i18n.t('InputSettings.Multiple'),
-    value: true,
-  },
-]
 </script>
 
 <template>
   <div class="InputSettings">
-    <UiDetails
-      group="InputSettings"
-      :text="i18n.t('InputSettings.Texts')"
-      open
-    >
-      <CmsPropInput
-        v-model:block="block"
-        :model-value="block.props.label"
-        type="text"
-        :label="i18n.t('InputSettings.Label')"
-        @update:model-value="onUpdateLabel"
-        @update:block="emitUpdate"
-      />
+    <CmsPropInput
+      v-model:block="block"
+      :model-value="block.props.label"
+      type="text"
+      :label="i18n.t('InputSettings.Label')"
+      @update:model-value="onUpdateLabel"
+      @update:block="emitUpdate"
+    />
 
-      <CmsPropInput
-        v-model="block.props.subtext"
-        v-model:block="block"
-        type="text"
-        :label="i18n.t('InputSettings.Subtext')"
-        @update:model-value="emitUpdate"
-        @update:block="emitUpdate"
-      />
+    <CmsPropInput
+      v-model="block.props.subtext"
+      v-model:block="block"
+      type="text"
+      :label="i18n.t('InputSettings.Subtext')"
+      @update:model-value="emitUpdate"
+      @update:block="emitUpdate"
+    />
 
-      <CmsPropInput
-        v-model="block.props.placeholder"
-        v-model:block="block"
-        type="text"
-        :label="i18n.t('InputSettings.Placeholder')"
-        @update:model-value="emitUpdate"
-        @update:block="emitUpdate"
-      />
-    </UiDetails>
-
-    <UiDetails
-      v-if="isSelect"
-      group="InputSettings"
-      :text="i18n.t('InputSettings.Options')"
-    >
-      <OptionsEditor
-        v-model="block.props.options"
-        @update:model-value="emitUpdate"
-      />
-
-      <UiInput
-        v-model="block.props.multiple"
-        :label="i18n.t('InputSettings.ValueType')"
-        type="select-buttons"
-        :options="multipleOptions"
-        @update:model-value="emitUpdate"
-      />
-    </UiDetails>
+    <CmsPropInput
+      v-model="block.props.placeholder"
+      v-model:block="block"
+      type="text"
+      :label="i18n.t('InputSettings.Placeholder')"
+      @update:model-value="emitUpdate"
+      @update:block="emitUpdate"
+    />
   </div>
 </template>
 

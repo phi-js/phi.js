@@ -8,6 +8,7 @@ export const allBlocks = {} // hashed list of all block definitions.  allBlocks.
 export const availableBlocks = []
 
 /* Built-in plugins */
+import pluginData from '../plugins/data'
 import pluginInput from '../plugins/input'
 import pluginLayout from '../plugins/layout'
 import pluginMedia from '../plugins/media'
@@ -18,8 +19,9 @@ import pluginVideo from '../plugins/video'
 usePlugin([
   pluginMedia,
   pluginInput,
-  pluginVideo,
   pluginLayout,
+  pluginData,
+  pluginVideo,
   pluginNavigation,
 ])
 

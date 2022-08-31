@@ -53,7 +53,7 @@ function onClickFace() {
     return
   }
 
-  props.openAction('InputSettings')
+  props.openAction(isSelect.value ? 'InputSelectSettings' : 'InputSettings')
 }
 </script>
 

@@ -1,22 +1,23 @@
 import { h } from 'vue'
-import { UiTable, UiForm, UiItem } from '../../../../../ui/components'
+import { UiDataTable, UiForm, UiItem } from '@/packages/ui'
 
 export default {
-  name: 'MediaTable',
-  title: 'Tabla',
+  name: 'DataTable',
+  title: 'Table',
   icon: 'mdi:table',
 
   block: {
-    'component': UiTable,
+    'component': UiDataTable,
     'props': {},
-    'v-model:data': '',
+    'v-model:records': '',
     'v-model:columns': '',
+    'v-model:order': '',
   },
 
   emits: [
     {
-      event: 'click-row',
-      text: 'Row is clicked',
+      event: 'click-record',
+      text: 'Record is clicked',
     },
   ],
 
@@ -40,8 +41,8 @@ export default {
           return h(UiItem, {
             icon: 'mdi:table',
             text: 'Tabla',
-            subtext: 'Click para editar opciones',
-            onClick: () => this.openAction(),
+            // subtext: 'Click para editar opciones',
+            // onClick: () => this.openAction(),
           })
         },
       },
@@ -56,7 +57,7 @@ export default {
         'props': {
           fields: [
             {
-              model: 'v-model:data',
+              model: 'v-model:records',
               type: 'text',
               label: 'Registros',
             },
@@ -64,6 +65,11 @@ export default {
               model: 'v-model:columns',
               type: 'text',
               label: 'Columnas',
+            },
+            {
+              model: 'v-model:order',
+              type: 'text',
+              label: 'Orden',
             },
           ],
         },

@@ -1,5 +1,6 @@
 // !!! HIDE ICONS inside .UiWindow tabs
-.UiWindow .UiTab {
+.UiWindow .UiTab,
+.UiWindow .UiDrawerStack__drawer > summary {
   .UiItem__icon {
     display: none;
   }

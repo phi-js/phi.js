@@ -38,21 +38,21 @@ const i18n = useI18n({
 
 <template>
   <div class="BlockVisibilityEditor">
-    <fieldset>
-      <legend v-text="i18n.t('BlockVisibilityEditor.visibleWhen')" />
-      <VmStatement
-        v-model="block['v-if']"
-        :default="{ and: [] }"
-        @update:model-value="emitUpdate"
-      />
-    </fieldset>
+    <!-- <fieldset> -->
+    <!-- <legend v-text="i18n.t('BlockVisibilityEditor.visibleWhen')" /> -->
+    <VmStatement
+      v-model="block['v-if']"
+      :default="{ and: [] }"
+      @update:model-value="emitUpdate"
+    />
+    <!-- </fieldset> -->
 
-    <UiInput
+    <!-- <UiInput
       v-model="block.transition"
       type="checkbox"
       label="Usar animación"
       @update:model-value="emitUpdate"
-    />
+    /> -->
   </div>
 </template>
 
