@@ -11,7 +11,6 @@ import {
 import { UiIcon, UiInput, UiItem, UiTree } from '@/packages/ui/components'
 
 // Lista de paginas
-// (por ahora VITE no da una forma de listar archivos locales)
 import { normalize } from '@/packages/ui/helpers'
 import { default as pages, docsTree } from './pages.js'
 
