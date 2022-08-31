@@ -11,4 +11,5 @@ export default {
   'Accept': 'Aceptar',
   'Cancel': 'Cancelar',
   'Delete': 'Eliminar',
+  'close': 'cerrar',
 }
