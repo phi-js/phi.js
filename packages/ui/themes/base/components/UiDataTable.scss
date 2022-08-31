@@ -15,7 +15,7 @@
   }
 }
 
-.UiTable--fullscreen {
+.UiDataTable--fullscreen {
   position: fixed;
   top: 0;
   left: 0;
@@ -27,7 +27,7 @@
   max-width: none;
 }
 
-.UiTable {
+.UiDataTable {
   display: flex;
   flex-direction: column;
 
@@ -158,15 +158,15 @@
     align-items: center;
 
     &--ordered {
-      .UiTable__header-title::before {
+      .UiDataTable__header-title::before {
         color: var(--ui-color-primary);
       }
 
-      &-asc .UiTable__header-title::before {
+      &-asc .UiDataTable__header-title::before {
         content: '\25B4' // up arrow triangle
       }
 
-      &-desc .UiTable__header-title::before {
+      &-desc .UiDataTable__header-title::before {
         content: '\25BE' // down arrow triangle
       }
     }
@@ -202,7 +202,7 @@
     }
   }
 
-  .UiTable__header:hover .UiTable__columnPopup {
+  .UiDataTable__header:hover .UiDataTable__columnPopup {
     opacity: 1;
   }
 
@@ -227,14 +227,14 @@
 
 
 
-.UiTable--dragging {
-  .UiTable__header > * {
+.UiDataTable--dragging {
+  .UiDataTable__header > * {
     pointer-events: none;
   }
 }
 
 
-.UiTable {
+.UiDataTable {
   &__settings {
     max-height: 60vh;
 
@@ -257,7 +257,7 @@
 
 /* MOBILE FRIENDLY table */
 @media only screen and (max-width: 768px) {
-  .UiTable {
+  .UiDataTable {
     &__table {
       display: block;
 

@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { getProperty } from '../../helpers'
 import { columns as sampleColumns, records } from './samples'
 
-import UiTable from './UiTable.vue'
+import UiDataTable from './UiDataTable.vue'
 
 // import getSchemaColumns from './getSchemaColumns.js'
 // const columns = ref(getSchemaColumns(schema))
@@ -37,8 +37,8 @@ const sortedRecords = computed(() => {
 </script>
 
 <template>
-  <div class="UiTable-docs">
-    <h1>UiTable</h1>
+  <div class="UiDataTable-docs">
+    <h1>UiDataTable</h1>
 
     <p>Este componente es una tabla -bruta- que recibe:</p>
 
@@ -108,7 +108,7 @@ order: [
     </section>
   </details>
 
-  <UiTable
+  <UiDataTable
     v-model:columns="columns"
     v-model:order="order"
     :records="sortedRecords"
@@ -116,7 +116,7 @@ order: [
 </template>
 
 <style lang="scss">
-.UiTable-docs {
+.UiDataTable-docs {
   details {
     section {
       max-height: 500px;

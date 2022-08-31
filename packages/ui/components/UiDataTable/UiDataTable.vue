@@ -45,22 +45,22 @@ const emit = defineEmits(['click-record', 'update:columns', 'update:order', 'scr
 
 const i18n = useI18n({
   en: {
-    'UiTable.HideColumn': 'Hide',
-    'UiTable.Expand': 'Expand',
-    'UiTable.Collapse': 'Collapse',
-    'UiTable.OpenSettings': 'Manage columns',
+    'UiDataTable.HideColumn': 'Hide',
+    'UiDataTable.Expand': 'Expand',
+    'UiDataTable.Collapse': 'Collapse',
+    'UiDataTable.OpenSettings': 'Manage columns',
   },
   es: {
-    'UiTable.HideColumn': 'Ocultar',
-    'UiTable.Expand': 'Expandir',
-    'UiTable.Collapse': 'Colapsar',
-    'UiTable.OpenSettings': 'Administrar columnas',
+    'UiDataTable.HideColumn': 'Ocultar',
+    'UiDataTable.Expand': 'Expandir',
+    'UiDataTable.Collapse': 'Colapsar',
+    'UiDataTable.OpenSettings': 'Administrar columnas',
   },
   de: {
-    'UiTable.HideColumn': 'Ausblenden',
-    'UiTable.Expand': 'Erweitern Sie',
-    'UiTable.Collapse': 'Kollabieren',
-    'UiTable.OpenSettings': 'Spalten verwalten',
+    'UiDataTable.HideColumn': 'Ausblenden',
+    'UiDataTable.Expand': 'Erweitern Sie',
+    'UiDataTable.Collapse': 'Kollabieren',
+    'UiDataTable.OpenSettings': 'Spalten verwalten',
   },
 })
 
@@ -246,34 +246,34 @@ watch(
 
 <template>
   <div
-    class="UiTable"
+    class="UiDataTable"
     :class="{
-      'UiTable--fullscreen': isFullscreen,
-      'UiTable--dragging': !!dropData.source,
+      'UiDataTable--fullscreen': isFullscreen,
+      'UiDataTable--dragging': !!dropData.source,
     }"
   >
-    <header class="UiTable__toolbar">
+    <header class="UiDataTable__toolbar">
       <slot name="toolbar" />
 
-      <div class="UiTable__toolbar-right">
+      <div class="UiDataTable__toolbar-right">
         <UiItem
-          class="UiTable__toolbarItem UiTable__toolbarItem--settings"
+          class="UiDataTable__toolbarItem UiDataTable__toolbarItem--settings"
           icon="mdi:cog"
-          :title="i18n.t('UiTable.OpenSettings')"
+          :title="i18n.t('UiDataTable.OpenSettings')"
           @click="isSettingsOpen = true"
         />
 
         <UiItem
-          class="UiTable__toolbarItem UiTable__toolbarItem--fullscreen"
+          class="UiDataTable__toolbarItem UiDataTable__toolbarItem--fullscreen"
           :icon="isFullscreen ? 'mdi:fullscreen-exit' : 'mdi:fullscreen'"
-          :title="i18n.t(isFullscreen ? 'UiTable.Collapse' : 'UiTable.Expand')"
+          :title="i18n.t(isFullscreen ? 'UiDataTable.Collapse' : 'UiDataTable.Expand')"
           @click="isFullscreen = !isFullscreen"
         />
       </div>
     </header>
 
-    <div class="UiTable__body">
-      <table class="UiTable__table">
+    <div class="UiDataTable__body">
+      <table class="UiDataTable__table">
         <thead>
           <tr>
             <th
@@ -285,35 +285,35 @@ watch(
             >
               <div
                 :style="{pointerEvents: dropData.target == column ? 'none' : 'initial'}"
-                class="UiTable__header"
+                class="UiDataTable__header"
                 :class="{
-                  'UiTable__header--ordered': columnOrder[column._i],
-                  'UiTable__header--ordered-asc': columnOrder[column._i] == 'asc',
-                  'UiTable__header--ordered-desc': columnOrder[column._i] == 'desc',
+                  'UiDataTable__header--ordered': columnOrder[column._i],
+                  'UiDataTable__header--ordered-asc': columnOrder[column._i] == 'asc',
+                  'UiDataTable__header--ordered-desc': columnOrder[column._i] == 'desc',
 
-                  'UiTable__header--dropping': dropData.target == column._i,
-                  'UiTable__header--dropping-before': dropData.target == column._i && dropData.position == 'before',
-                  'UiTable__header--dropping-after': dropData.target == column._i && dropData.position == 'after',
+                  'UiDataTable__header--dropping': dropData.target == column._i,
+                  'UiDataTable__header--dropping-before': dropData.target == column._i && dropData.position == 'before',
+                  'UiDataTable__header--dropping-after': dropData.target == column._i && dropData.position == 'after',
                 }"
                 draggable="true"
                 @dragstart="onHeaderDragStart($event, column._i)"
                 @dragend="onHeaderDragEnd()"
               >
                 <div
-                  class="UiTable__header-title"
+                  class="UiDataTable__header-title"
                   @click="onClickHeader($event, inner.columns[column._i])"
                 >
                   {{ column.title }}
                 </div>
                 <UiPopover
                   placement="bottom-end"
-                  class="UiTable__columnPopup"
+                  class="UiDataTable__columnPopup"
                 >
                   <template #trigger>
                     <UiItem icon="mdi:dots-vertical" />
                   </template>
                   <template #contents="{ close }">
-                    <div class="UiTable__menuOptions">
+                    <div class="UiDataTable__menuOptions">
                       <slot
                         name="column-popup"
                         :column="inner.columns[column._i]"
@@ -321,7 +321,7 @@ watch(
                       />
                       <UiItem
                         icon="mdi:close"
-                        :text="i18n.t('UiTable.HideColumn')"
+                        :text="i18n.t('UiDataTable.HideColumn')"
                         @click="hideColumn(inner.columns[column._i]); close()"
                       />
                     </div>
@@ -351,7 +351,7 @@ watch(
               />
               <UiOutput
                 v-else
-                class="UiTable__output"
+                class="UiDataTable__output"
                 v-bind="column"
                 :value="columnValues[ri][column._i]"
               />
@@ -380,7 +380,7 @@ watch(
       >
         <form
           method="dialog"
-          class="UiTable__settings"
+          class="UiDataTable__settings"
           @submit="accept"
         >
           <section>
