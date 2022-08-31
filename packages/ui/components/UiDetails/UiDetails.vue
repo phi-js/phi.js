@@ -3,7 +3,7 @@ const UiDetailsGroups = {}
 </script>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { nextTick, onMounted, ref, watch } from 'vue'
 import { UiIcon } from '../UiIcon'
 import { UiItem } from '../UiItem'
 
@@ -106,13 +106,21 @@ function open() {
   window.requestAnimationFrame(() => expand())
 }
 
-function expand() {
+async function expand() {
   if (!refEl.value) {
     return
   }
 
   refEl.value.style.overflow = 'hidden'
   isExpanding.value = true
+
+  /*
+  prevents content jumps in cases like:
+  <UiDetails v-slot="{isOpen}">
+    <Component v-if="isOpen">
+  </UiDetails>
+  */
+  await nextTick()
 
   const startHeight = `${refEl.value.offsetHeight}px`
   const endHeight = `${refSummary.value.offsetHeight + refContents.value.offsetHeight}px`
@@ -259,12 +267,12 @@ function closeOthersInGroup() {
     >
       <slot
         name="contents"
-        :is-open="isOpen"
+        :is-open="isOpen || isExpanding"
         :close="shrink"
       >
         <slot
           name="default"
-          :is-open="isOpen"
+          :is-open="isOpen || isExpanding"
           :close="shrink"
         />
       </slot>

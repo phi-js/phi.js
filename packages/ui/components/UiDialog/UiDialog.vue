@@ -1,5 +1,8 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
+import { useI18n } from '@/packages/i18n'
+
+const i18n = useI18n()
 
 const props = defineProps({
   open: {
@@ -133,13 +136,12 @@ async function onDialogClose($event) {
       >
         <button
           v-if="showCloseButton"
-          class="UiButton"
+          class="UiDialog__closeButton"
           type="button"
           style="margin: 4px"
           @click="close"
-        >
-          OK
-        </button>
+          v-text="i18n.t('close')"
+        />
       </slot>
     </dialog>
   </div>
@@ -147,6 +149,23 @@ async function onDialogClose($event) {
 
 <style lang="scss">
 .UiDialog {
+  &__dialog {
+    position: relative;
+
+    border: 0;
+    border-radius: 5px;
+    background-color: var(--ui-color-background);
+    color: var(--ui-color-foreground);
+    padding: 0;
+
+    overflow: visible; // allows UiPopover inside dialog to show correctly
+    margin-top: 10%;
+
+    &::backdrop {
+      background: rgba(0,0,0, 0.6);
+    }
+  }
+
   &__contents {
     min-width: 40vw;
     max-width: 95vw;
@@ -167,18 +186,19 @@ async function onDialogClose($event) {
     }
   }
 
-  &__dialog {
+  &__closeButton {
+    position: absolute;
+    right: 0;
+    bottom: 100%;
+
+    cursor: pointer;
+    background: transparent;
     border: 0;
-    border-radius: 5px;
-    background-color: var(--ui-color-background);
-    color: var(--ui-color-foreground);
-    padding: 0;
+    border-radius: 4px;
+    padding: 8px 12px;
 
-    overflow: visible; // allows UiPopover inside dialog to show correctly
-    margin-top: 10%;
-
-    &::backdrop {
-      background: rgba(0,0,0, 0.6);
+    &:hover {
+      background-color: rgba(255,255,255, 0.1);
     }
   }
 }

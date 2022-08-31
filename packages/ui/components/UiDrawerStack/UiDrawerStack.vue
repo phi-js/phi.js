@@ -1,9 +1,6 @@
 <script setup>
 import { useSlots } from 'vue'
-
-import { UiDrawer } from '../UiDrawer'
-import { UiItem } from '../UiItem'
-import { UiIcon } from '../UiIcon'
+import { UiDetails } from '../UiDetails'
 
 const props = defineProps({
   modelValue: {
@@ -37,7 +34,7 @@ const slots = useSlots()
 /*
 BEWARE.
 Having slots from a COMPUTED value means that every change will RE-CREATE the inner components.
-The entire contents are reloading when, for instance, the class name of the parent container changes
+This causes the entire contents reloading when, for instance, the class name of the parent container changes
 */
 // const drawers = computed(() => {
 //   if (!slots?.default) {
@@ -102,22 +99,17 @@ function getDrawers() {
 
 <template>
   <div class="UiDrawerStack">
-    <UiDrawer
+    <UiDetails
       v-for="(drawer, i) in drawers"
       :key="i"
       :open="drawer.value == props.modelValue"
       class="UiDrawerStack__drawer"
       :class="{ 'UiDrawerStack__drawer--open': drawer.value == props.modelValue }"
+
+      v-bind="drawer.props"
+      group="UiDrawerStack"
+      @open="emit('update:modelValue', drawer.value)"
     >
-      <template #trigger="{ isOpen }">
-        <div
-          class="UiDrawerStack__trigger"
-          @click.stop="emit('update:modelValue', drawer.value)"
-        >
-          <UiIcon :src="isOpen ? 'mdi:menu-down' : 'mdi:menu-right'" />
-          <UiItem v-bind="drawer.props" /> <!-- { text, subtext, icon } set from <UiTab text="" .. /> -->
-        </div>
-      </template>
       <template #default="{ isOpen }">
         <div
           v-if="drawer.slot"
@@ -129,6 +121,6 @@ function getDrawers() {
           />
         </div>
       </template>
-    </UiDrawer>
+    </UiDetails>
   </div>
 </template>

@@ -118,6 +118,7 @@
   &__body {
     flex: 1;
     overflow: auto; // popovers inside the window will be cropped, unless moved to the <body>
+    overscroll-behavior: contain;
 
     &::-webkit-scrollbar {
       width: 10px;
@@ -185,6 +186,9 @@
   --ui-color-z2: #48484c;
   --ui-color-z3: #68686c;
   --ui-color-hover: rgba(255,255,255, 0.08);
+
+  --ui-color-ridge-top: #cccccc38;
+  --ui-color-ridge-bottom: #00000088;
 
   &__box {
     border-radius: 5px;
