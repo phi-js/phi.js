@@ -1,0 +1,1 @@
+export { default as UiInputDateRange } from './UiInputDateRange.vue'

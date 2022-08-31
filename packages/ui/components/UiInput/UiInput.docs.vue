@@ -1,6 +1,7 @@
 <script setup>
-import { ref, inject, computed } from 'vue'
+import { ref } from 'vue'
 import { UiInput } from './index.js'
+import { availableThemes, currentTheme } from '../../../../dev/theme-utils.js'
 
 const options = [
   { value: 0, text: 'Cero' },
@@ -14,8 +15,14 @@ const modelValue = ref({
   string: '',
   boolean: true,
   number: 0,
+
   date: '1982-01-15',
   time: '16:20',
+  dateTime: '2022-08-25T16:20',
+  week: '',
+  month: '',
+  dateRange: ['2000-01-01', '2000-12-31'],
+
   color: '#ffffff',
   single: null,
   multiple: [],
@@ -32,15 +39,22 @@ const modelValue = ref({
 })
 
 const testUrl = ref('http://v4.local/1/cms/pages/test/files')
-
-import { availableThemes, currentTheme } from '../../../../dev/theme-utils.js'
 </script>
 
 <template>
   <h1>UiInput</h1>
-  <UiInput v-model="testUrl" type="text" label="Upload URL" />
-  <UiInput v-model="currentTheme" type="select-buttons" label="Theme" :options="availableThemes" />
-  <hr />
+  <UiInput
+    v-model="testUrl"
+    type="text"
+    label="Upload URL"
+  />
+  <UiInput
+    v-model="currentTheme"
+    type="select-buttons"
+    label="Theme"
+    :options="availableThemes"
+  />
+  <hr>
 
   <div class="UiInputDocs">
     <div class="UiInputDocs__list">
@@ -64,14 +78,64 @@ import { availableThemes, currentTheme } from '../../../../dev/theme-utils.js'
           label="checkbox"
           placeholder="Acepto tal cosa"
         />
-        <UiInput v-model="modelValue.number" type="number" label="number" />
-        <UiInput v-model="modelValue.string" type="search" label="search" />
-        <UiInput v-model="modelValue.date" type="date" label="date" />
-        <UiInput v-model="modelValue.time" type="time" label="time" />
-        <UiInput v-model="modelValue.date" type="date-time" label="date-time" />
-        <UiInput v-model="modelValue.color" type="color" label="color" />
-        <UiInput type="button" label="button" />
-        <UiInput type="submit" label="submit" />
+        <UiInput
+          v-model="modelValue.number"
+          type="number"
+          label="number"
+        />
+        <UiInput
+          v-model="modelValue.string"
+          type="search"
+          label="search"
+        />
+        <UiInput
+          v-model="modelValue.color"
+          type="color"
+          label="color"
+        />
+        <UiInput
+          type="button"
+          label="button"
+        />
+        <UiInput
+          type="submit"
+          label="submit"
+        />
+      </section>
+
+      <section>
+        <h2>Date inputs</h2>
+        <UiInput
+          v-model="modelValue.date"
+          type="date"
+          label="date"
+        />
+        <UiInput
+          v-model="modelValue.time"
+          type="time"
+          label="time"
+        />
+        <UiInput
+          v-model="modelValue.dateTime"
+          type="datetime-local"
+          label="datetime-local"
+        />
+        <UiInput
+          v-model="modelValue.week"
+          type="week"
+          label="week"
+        />
+        <UiInput
+          v-model="modelValue.month"
+          type="month"
+          label="month"
+        />
+
+        <UiInput
+          v-model="modelValue.dateRange"
+          type="date-range"
+          label="date-range"
+        />
       </section>
 
       <section>
@@ -192,7 +256,12 @@ import { availableThemes, currentTheme } from '../../../../dev/theme-utils.js'
           :endpoint="testUrl"
         />
 
-        <UiInput v-model="modelValue" type="json" label="json" placeholder="Escribe JSON aqui" />
+        <UiInput
+          v-model="modelValue"
+          type="json"
+          label="json"
+          placeholder="Escribe JSON aqui"
+        />
 
         <UiInput
           v-model="modelValue.code"
@@ -212,6 +281,10 @@ import { availableThemes, currentTheme } from '../../../../dev/theme-utils.js'
 .UiInputDocs {
   display: flex;
   position: relative;
+
+  section {
+    margin-bottom: 3rem;
+  }
 
   &__list {
     flex: 2;

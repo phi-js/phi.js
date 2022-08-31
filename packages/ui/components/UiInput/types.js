@@ -9,6 +9,7 @@ import { UiSelectList } from '../UiSelectList'
 import { UiSelectNative } from '../UiSelectNative'
 import { UiUpload } from '../UiUpload'
 import { UiInputColorCss } from '../UiInputColorCss'
+import { UiInputDateRange } from '../UiInputDateRange'
 
 export default {
   'code': UiInputCode,
@@ -22,4 +23,5 @@ export default {
   'upload': UiUpload,
   'url': UiInputUrl,
   'color-css': UiInputColorCss,
+  'date-range': UiInputDateRange,
 }
