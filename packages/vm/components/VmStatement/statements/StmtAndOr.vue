@@ -2,6 +2,7 @@
 import { defineAsyncComponent } from 'vue'
 const VmStatement = defineAsyncComponent(() => import('../VmStatement.vue'))
 
+import { UiDetails } from '@/packages/ui'
 import VmOperatorPicker from '../VmOperatorPicker.vue'
 import useVmI18n from '../../../i18n'
 
@@ -9,7 +10,7 @@ let globalCounter = 0
 
 export default {
   name: 'StmtAndOr',
-  components: { VmStatement, VmOperatorPicker },
+  components: { VmStatement, VmOperatorPicker, UiDetails },
 
   props: {
     modelValue: {
@@ -31,10 +32,7 @@ export default {
   },
 
   data() {
-    return {
-      innerModel: null,
-      highlightedIndex: -1,
-    }
+    return { innerModel: null }
   },
 
   watch: {
@@ -67,8 +65,6 @@ export default {
         this.innerModel.list.push({ op: null })
       }
       this.emitInput()
-
-      this.highlightedIndex = this.innerModel.list.length - 1
     },
 
     emitInput() {
@@ -80,47 +76,50 @@ export default {
 </script>
 
 <template>
-  <div
+  <UiDetails
     class="StmtAndOr"
     open
   >
-    <div class="StmtAndOr__header">
-      <select
-        v-model="innerModel.operator"
-        class="StmtAndOr__select"
-        @change="emitInput"
-        @click.prevent.stop="()=>1"
-      >
-        <option
-          value="and"
-          v-text="i18n.t('StmtAndOr.allOf')"
-        />
-        <option
-          value="or"
-          v-text="i18n.t('StmtAndOr.anyOf')"
-        />
-      </select>
-    </div>
+    <template #summary>
+      <div class="StmtAndOr__header">
+        <select
+          v-model="innerModel.operator"
+          class="StmtAndOr__select"
+          @change="emitInput"
+          @click.prevent.stop="()=>1"
+        >
+          <option
+            value="and"
+            v-text="i18n.t('StmtAndOr.allOf')"
+          />
+          <option
+            value="or"
+            v-text="i18n.t('StmtAndOr.anyOf')"
+          />
+        </select>
+      </div>
+    </template>
 
-    <div class="StmtAndOr__body">
-      <div
-        v-for="(_, i) in innerModel.list"
-        :key="i"
-        class="StmtAndOr__item"
-      >
-        <VmStatement
-          v-model="innerModel.list[i]"
-          :group="`StmtAndOr-${uid}`"
-          xxxx-open="highlightedIndex == i"
-          @update:model-value="emitInput"
-          @delete="removeCondition(i)"
+    <template #default>
+      <div class="StmtAndOr__body">
+        <div
+          v-for="(_, i) in innerModel.list"
+          :key="i"
+          class="StmtAndOr__item"
+        >
+          <VmStatement
+            v-model="innerModel.list[i]"
+            :group="`StmtAndOr-${uid}`"
+            @update:model-value="emitInput"
+            @delete="removeCondition(i)"
+          />
+        </div>
+
+        <VmOperatorPicker
+          class="StmtAndOr__adder"
+          @input="pushOperator"
         />
       </div>
-
-      <VmOperatorPicker
-        class="StmtAndOr__adder"
-        @input="pushOperator"
-      />
-    </div>
-  </div>
+    </template>
+  </UiDetails>
 </template>
