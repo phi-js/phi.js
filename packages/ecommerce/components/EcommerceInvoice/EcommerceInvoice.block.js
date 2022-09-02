@@ -6,8 +6,6 @@ export default {
   title: 'Invoice',
   icon: 'mdi:receipt',
 
-  tags: ['ecommerce'],
-
   block: { component: EcommerceInvoice },
 
   editor: {
