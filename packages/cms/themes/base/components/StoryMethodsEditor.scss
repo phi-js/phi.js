@@ -1,0 +1,23 @@
+.StoryMethodsEditor {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &__method {
+    @extend .outset;
+  }
+
+  &__adder {
+    &[open] {
+      @extend .outset;
+    }
+
+    footer {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 4px;
+    }
+  }
+}

@@ -1,0 +1,27 @@
+.StoryComputedEditor {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .VmStatement {
+    margin: 1rem 0;
+  }  
+
+  &__variable {
+    @extend .outset;
+  }
+
+  &__adder {
+    &[open] {
+      @extend .outset;
+    }
+
+    footer {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 4px;
+    }
+  }
+}

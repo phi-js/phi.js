@@ -85,10 +85,10 @@ resetNewVariable()
     <UiDetails
       v-slot="{ close }"
       group="StoryComputedEditor"
+      class="StoryComputedEditor__adder"
       text="Create computed variable"
     >
       <form
-        class="StoryComputedEditor__variable"
         @submit.prevent="appendVariable(); close();"
       >
         <UiInput
@@ -122,19 +122,3 @@ resetNewVariable()
     </UiDetails>
   </div>
 </template>
-
-<style lang="scss">
-.StoryComputedEditor {
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  &__variable {
-    .VmStatement {
-      margin: 1rem 0 1rem 0;
-      padding: 0 6px;
-    }
-  }
-}
-</style>

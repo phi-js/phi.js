@@ -82,6 +82,7 @@ function deleteMethodAt(i) {
     <UiDetails
       v-slot="{ close }"
       group="StoryMethodsEditor"
+      class="StoryMethodsEditor__adder"
       text="Crear función"
     >
       <form @submit.prevent="appendMethod(); close();">
@@ -109,12 +110,3 @@ function deleteMethodAt(i) {
     </UiDetails>
   </div>
 </template>
-
-<style lang="scss">
-.StoryMethodsEditor {
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-</style>
