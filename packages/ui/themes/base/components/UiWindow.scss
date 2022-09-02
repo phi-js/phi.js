@@ -178,18 +178,7 @@
 
 
 .UiWindow {
-  // background: rgba(0,0,0, 0.1); //scrim background
-
-  // Window body color theme (dark)
-  --ui-color-background: #2f2f2f;
-  --ui-color-foreground: #eeeeee;
-  --ui-color-z1: rgba(255, 255, 255, 0.06);
-  --ui-color-z2: #48484c;
-  --ui-color-z3: #68686c;
-  --ui-color-hover: rgba(255,255,255, 0.08);
-
-  --ui-color-ridge-top: #cccccc38;
-  --ui-color-ridge-bottom: #00000088;
+  // background: rgba(0,0,0, 0.2); //scrim background
 
   &__box {
     border-radius: 5px;
@@ -209,26 +198,6 @@
 
     & > * {
       margin-left: 0.5rem;
-    }
-  }
-
-  select {
-    color: #f3f3f3;
-    option,
-    optgroup {
-      color: #333;
-    }
-  }
-
-  input.UiInput,
-  textarea.UiInput,
-  select.UiInput,
-  .UiInput__element {
-    background: rgba(255,255,255, 0.3);
-    color: #f3f3f3;
-
-    &::placeholder {
-      color: #aaa;
     }
   }
 

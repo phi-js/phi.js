@@ -225,6 +225,7 @@ const isTransparent = ref(false)
       v-show="isOpen"
       v-bind="attrs"
       :class="[
+        'color-scheme-dark',
         'UiWindow UiWindow__scrim',
         {
           'UiWindow--moving': isMoving,

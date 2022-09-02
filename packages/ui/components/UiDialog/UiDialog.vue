@@ -151,6 +151,8 @@ async function onDialogClose($event) {
 .UiDialog {
   &__dialog {
     position: relative;
+    width: 100%;
+    max-width: 40vw;
 
     border: 0;
     border-radius: 5px;
@@ -167,10 +169,7 @@ async function onDialogClose($event) {
   }
 
   &__contents {
-    min-width: 40vw;
-    max-width: 95vw;
     max-height: 75vh;
-
     overflow: auto;
     &::-webkit-scrollbar {
       width: 7px;
