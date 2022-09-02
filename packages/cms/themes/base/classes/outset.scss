@@ -1,8 +1,25 @@
+@at-root {
+  :root,
+  .color-scheme-light {
+    --outset-background: linear-gradient(180deg, rgba(0,0,0,0) 80%, rgba(0,0,0, 0.02) 100%);
+    --outset-background-color: #f4f4f4;
+    --outset-box-shadow: 0 1px 2px #00000033;
+  }
+
+  .color-scheme-dark {
+    --outset-background: none;
+    --outset-background-color: #ffffff11;
+    --outset-box-shadow: 0px -1px 0 #ffffff26, 0 1px 2px #00000033;
+  }
+}
+
+
 .outset {
   border: 0;
   border-radius: 4px;
-  background-color: #ffffff11;
-  box-shadow: 0px -1px 0 #ffffff26, 0 1px 2px #00000033;
+  background: var(--outset-background);
+  background-color: var(--outset-background-color);
+  box-shadow: var(--outset-box-shadow);
 
   &.UiDetails--deleting {
     box-shadow: 0 -2px 0px #ff3d3d99, 0 1px 2px #00000033;

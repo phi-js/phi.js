@@ -300,31 +300,6 @@ const availableEvents = computed(() => [
           type="json"
           @update:model-value="emitStoryUpdate"
         />
-        <!-- <UiTabs>
-          <UiTab
-            :text="i18n.t('StoryEditorWindow.thisPage')"
-            icon="mdi:code-json"
-            value="source-page"
-          >
-            <UiInput
-              v-model="currentPage"
-              type="json"
-              @update:model-value="emitCurrentPageUpdate"
-            />
-          </UiTab>
-
-          <UiTab
-            :text="i18n.t('StoryEditorWindow.global')"
-            icon="mdi:code-json"
-            value="source-story"
-          >
-            <UiInput
-              v-model="innerStory"
-              type="json"
-              @update:model-value="emitStoryUpdate"
-            />
-          </UiTab>
-        </UiTabs> -->
       </div>
     </template>
 

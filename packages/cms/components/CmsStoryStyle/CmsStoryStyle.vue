@@ -7,7 +7,7 @@ import CssStyleEditor from '@/packages/ui/components/CssStyleEditor/CssStyleEdit
 import { useStorySettings } from '../../functions'
 import CmsThemePicker from '../CmsThemePicker/CmsThemePicker.vue'
 import CssClassManager from '../CssClassManager/CssClassManager.vue'
-import CssPalettePicker from '../CssPalettePicker/CssPalettePicker.vue'
+// import CssPalettePicker from '../CssPalettePicker/CssPalettePicker.vue'
 
 const settings = useStorySettings()
 const uploadsEndpoint = settings.uploads.assets
