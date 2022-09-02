@@ -61,7 +61,7 @@ watch(
 
 // Get text from slot
 const slots = useSlots()
-const slotText = slots?.default?.()?.[0]?.children
+const slotText = computed(() => slots?.default?.()?.[0]?.children)
 
 // (arr)errors An array of error strings
 const errors = computed(() => {
@@ -79,8 +79,8 @@ const currentText = computed(() => {
   }
 
   const retval = isLoading.value
-    ? props.loadingLabel || props.label || $attrs.value || slotText
-    : props.label || $attrs.value || slotText
+    ? props.loadingLabel || props.label || $attrs.value || slotText.value
+    : props.label || $attrs.value || slotText.value
 
   return retval || ' '
 })
