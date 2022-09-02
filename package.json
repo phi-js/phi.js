@@ -25,6 +25,7 @@
     "@codemirror/lang-css": "^0.19.3",
     "@codemirror/lang-javascript": "^0.19.7",
     "@codemirror/lang-json": "^0.19.2",
+    "@stripe/stripe-js": "^1.35.0",
     "@tiptap/extension-link": "^2.0.0-beta.43",
     "@tiptap/extension-placeholder": "^2.0.0-beta.53",
     "@tiptap/extension-text-align": "^2.0.0-beta.31",
