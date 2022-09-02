@@ -158,36 +158,3 @@ function onClickItem(item) {
     </div>
   </div>
 </template>
-
-<style lang="scss">
-.UiItemFinder {
-  &__search {
-    padding: 12px 12px;
-    display: block;
-    width: 100%;
-    background-color: transparent;
-    outline: none;
-    border: 0;
-    font-size: inherit;
-
-    border-bottom: 1px solid var(--ui-color-ridge-bottom);
-    color: inherit;
-  }
-
-  .UiDetails {
-    border-radius: 0;
-    border-top: 1px solid var(--ui-color-ridge-top);
-    border-bottom: 1px solid var(--ui-color-ridge-bottom);
-
-    & > summary {
-      border-left: 0;
-      border-right: 0;
-      padding: 11px !important;
-      border-radius: 0 !important;
-
-      font-size: 0.9em;
-      font-weight: bold;
-    }
-  }
-}
-</style>

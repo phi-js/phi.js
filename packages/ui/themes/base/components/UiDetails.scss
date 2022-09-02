@@ -1,18 +1,12 @@
 @at-root {
   :root,
   .color-scheme-light {
-    // --details-color-open: rgba(0, 0, 0, 0.05);
-    // --details-color-hover: rgba(255, 255, 255, 0.03);
     --details-arrow-height: 8px;
     --details-arrow-width: 12px;
     --details-arrow-color: #888;
   }
 
   .color-scheme-dark {
-    // --details-color-open: rgba(255, 255, 255, 0.06);
-    // --details-color-hover: rgba(255, 255, 255, 0.03);
-    --details-arrow-height: 8px;
-    --details-arrow-width: 12px;
     --details-arrow-color: #ccc;
   }
 }
@@ -20,21 +14,16 @@
 .UiDetails {
   border-radius: 4px;
   box-sizing: border-box;
-  transition: background-color var(--details-transition-duration) ease;
 
   & > summary {
     border-radius: 4px;
-    padding: 6px;
+    padding: 3px 6px;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
 
     user-select: none;
     cursor: pointer;
-
-    &:hover {
-      background-color: var(--details-color-hover);
-    }
   }
 
   &__item {
@@ -54,20 +43,8 @@
     padding: 8px;
   }
 
-  &[open] {
-    background-color: var(--details-color-open);
-
-    & > summary:hover {
-      background-color: transparent !important;
-    }
-  }
-
-  &--closing {
-    background-color: transparent !important;
-  }
-
   &--deleting {
-    background-color: rgba(255, 0, 0, 0.2) !important;
+    background-color: rgba(235, 64, 64, 0.4) !important;
   }
 }
 

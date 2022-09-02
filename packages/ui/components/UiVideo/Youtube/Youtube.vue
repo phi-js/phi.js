@@ -93,10 +93,11 @@ export default {
   },
 
   methods: {
-    // Se puede llamar multiples veces y se asegura de solo crear el <script> un avez
+    // Se puede llamar multiples veces y se asegura de solo crear el <script> una vez
     loadApi() {
       if (window._phi_YouTubeLoader) {
-        return new Promise((resolve) => window._phi_YouTubeLoader.then(() => resolve()))
+        // return new Promise((resolve) => window._phi_YouTubeLoader.then(() => resolve()))
+        return window._phi_YouTubeLoader
       }
 
       window._phi_YouTubeLoader = new Promise((resolve) => {

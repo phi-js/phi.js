@@ -66,33 +66,3 @@ const emit = defineEmits(['click-item'])
     @keyup.enter="emit('click-item', props.item)"
   />
 </template>
-
-<style lang="scss">
-.FinderItem {
-  &__children {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 8px;
-    padding-top: 0;
-  }
-
-  &--item {
-    --ui-item-padding: 12px 16px;
-    border-radius: 4px;
-
-    user-select: none;
-    cursor: pointer;
-    &:hover {
-      background-color: var(--ui-color-hover);
-    }
-
-    .UiItem {
-      &__text {
-        font-size: 0.9em;
-        font-weight: bold;
-      }
-    }
-  }
-}
-</style>
