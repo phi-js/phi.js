@@ -15,7 +15,7 @@ export default function getSchemaColumns(objSchema, parentName = '') {
   } else {
     retval.push({
       ...objSchema,
-      property: parentName,
+      value: parentName,
     })
   }
 

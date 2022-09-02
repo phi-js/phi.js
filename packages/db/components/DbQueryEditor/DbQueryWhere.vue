@@ -7,11 +7,9 @@ const props = defineProps({
   A WHERE object (vm statement):
 
   {
-    "where": {
-      "and": [
-        ...
-      ]
-    }
+    "and": [
+      ...
+    ]
   }
   */
   modelValue: {
