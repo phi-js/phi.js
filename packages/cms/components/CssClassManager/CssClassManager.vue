@@ -84,34 +84,48 @@ function resetCreator() {
       v-for="(cssClass, i) in arrClasses"
       :key="i"
     >
-      <div class="CssClassManager__classItem">
-        <slot
-          name="left"
-          :className="cssClass.id"
-        />
-        <UiDetails
-          group="CssClassManager"
-          :text="cssClass.title || cssClass.id"
-          :subtext="cssClass.description"
-          @delete="onDeleteClass(i)"
-        >
-          <template #default>
-            <section>
-              <CssClassEditor
-                v-model="arrClasses[i]"
-                @update:model-value="emitUpdate()"
-              />
-            </section>
-          </template>
-
-          <template #actions>
+      <UiDetails
+        class="CssClassManager__classItem"
+        group="CssClassManager"
+        @delete="onDeleteClass(i)"
+      >
+        <template #summary>
+          <div class="CssClassManager__summary">
             <slot
-              name="right"
+              name="left"
               :className="cssClass.id"
             />
-          </template>
-        </UiDetails>
-      </div>
+            <div class="CssClassManager__info">
+              <h3
+                v-if="cssClass.title || cssClass.id"
+                class="CssClassManager__text"
+                v-text="cssClass.title || cssClass.id"
+              />
+              <p
+                v-if="cssClass.description"
+                class="CssClassManager__subtext"
+                v-text="cssClass.description"
+              />
+            </div>
+          </div>
+        </template>
+
+        <template #default>
+          <section>
+            <CssClassEditor
+              v-model="arrClasses[i]"
+              @update:model-value="emitUpdate()"
+            />
+          </section>
+        </template>
+
+        <template #actions>
+          <slot
+            name="right"
+            :className="cssClass.id"
+          />
+        </template>
+      </UiDetails>
     </template>
 
     <UiDetails
@@ -144,26 +158,3 @@ function resetCreator() {
     </UiDetails>
   </div>
 </template>
-
-<style lang="scss">
-.CssClassManager {
-  &__classItem {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: flex-start;
-
-    .UiDetails {
-      flex: 1;
-    }
-  }
-
-  &__adder {
-    footer {
-      display: flex;
-      flex-wrap: nowrap;
-      gap: 6px;
-      margin-top: 1rem;
-    }
-  }
-}
-</style>

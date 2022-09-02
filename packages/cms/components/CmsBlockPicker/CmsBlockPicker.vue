@@ -110,7 +110,10 @@ function onPopState() {
         @select-item="emit('input', $event); close()"
       >
         <template #body>
-          <slot name="body" />
+          <slot
+            name="body"
+            :close="close"
+          />
         </template>
       </UiItemFinder>
     </UiDialog>

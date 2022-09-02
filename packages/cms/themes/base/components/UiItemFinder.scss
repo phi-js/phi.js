@@ -1,0 +1,58 @@
+.UiItemFinder {
+  &__search {
+    padding: 12px 12px;
+    display: block;
+    width: 100%;
+    background-color: transparent;
+    outline: none;
+    border: 0;
+    font-size: inherit;
+
+    border-bottom: 1px solid var(--ui-color-ridge-bottom);
+    color: inherit;
+  }
+
+  .UiDetails {
+    border-radius: 0;
+    border-top: 1px solid var(--ui-color-ridge-top);
+    border-bottom: 1px solid var(--ui-color-ridge-bottom);
+
+    & > summary {
+      border-left: 0;
+      border-right: 0;
+      padding: 11px !important;
+      border-radius: 0 !important;
+
+      font-size: 0.9em;
+      font-weight: bold;
+    }
+  }
+}
+
+.FinderItem {
+  &__children {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+    padding-top: 0;
+  }
+
+  &--item {
+    --ui-item-padding: 12px 16px;
+    border-radius: 4px;
+
+    user-select: none;
+    cursor: pointer;
+    &:hover {
+      @extend .outset;
+    }
+
+    .UiItem {
+      &__text {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+    }
+  }
+}

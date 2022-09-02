@@ -2,18 +2,22 @@
 .cms-theme-base {
   @import '@/packages/ui/themes/base/modifiers/clickable.scss';
 
-  @import './blocks/BlockCssStyle.scss';
-  @import './blocks/BlockScaffold.scss';
-  @import './blocks/CmsBlock.scss';
-  @import './blocks/CmsSlotEditor.scss';
-  @import './blocks/CmsStoryBuilder.scss';
-  @import './blocks/CmsStoryEditor.scss';
-  @import './blocks/LayoutPage.scss';
-  @import './blocks/ListenersEditor.scss';
-  @import './blocks/StmtAndOr.scss';
-  @import './blocks/StmtChainItem.scss';
-  @import './blocks/StmtOp.scss';
-  @import './blocks/UiWindow.scss';
+  @import './classes/outset.scss';
+
+  @import './components/BlockCssStyle.scss';
+  @import './components/BlockScaffold.scss';
+  @import './components/CmsBlock.scss';
+  @import './components/CmsSlotEditor.scss';
+  @import './components/CmsStoryBuilder.scss';
+  @import './components/CmsStoryEditor.scss';
+  @import './components/CssClassManager.scss';
+  @import './components/LayoutPage.scss';
+  @import './components/ListenersEditor.scss';
+  @import './components/StmtAndOr.scss';
+  @import './components/StmtChainItem.scss';
+  @import './components/StmtOp.scss';
+  @import './components/UiItemFinder.scss';
+  @import './components/UiWindow.scss';
 
   @import './testing.scss'; //!!! testing
 }

@@ -25,12 +25,10 @@
 
 
 .StmtChainItem {
-  border: 0;
-  border-radius: 4px;
-  background-color: rgba(255,255,255, 0.08);
+  @extend .outset;
   margin-bottom: 6px;
 
-  
+
   &__actionIcon {
     @extend .ui--clickable;
     width: 32px;

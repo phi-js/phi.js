@@ -5,11 +5,10 @@ This component receives a modelValue prop with an ARRAY of selected class names 
 It wraps a CssClassManager object, and links its value to the globally provided story class list
 
 */
-import { ref, inject, shallowRef, computed, watch } from 'vue'
+import { ref, inject, shallowRef, watch } from 'vue'
 
-import { UiItem, UiIcon, UiDialog, UiButton } from '@/packages/ui'
+import { UiIcon, UiDialog, UiButton } from '@/packages/ui'
 import { VmStatement } from '@/packages/vm'
-import { getAvailableStoryClasses } from '../../themes'
 import CssClassManager from '../CssClassManager/CssClassManager.vue'
 
 const props = defineProps({
@@ -99,27 +98,6 @@ function emitUpdate() {
   })
 }
 
-// const allStoryClasses = getAvailableStoryClasses(injectedStory.value)
-const availableClasses = computed(() => sanitizeClassArray(getAvailableStoryClasses(injectedStory.value)))
-
-function sanitizeClassArray(arrClasses) {
-  const retval = []
-  arrClasses.forEach((objClass) => {
-    const className = objClass.name || objClass.id
-
-    if (!Array.isArray(objClass.blocks) || objClass.blocks.includes(props.block?.component)) {
-      retval.push({
-        ...objClass,
-        name: className,
-        isSelected: isClassSelected(className),
-        variations: Array.isArray(objClass.variations) ? sanitizeClassArray(objClass.variations) : null,
-      })
-    }
-  })
-
-  return retval
-}
-
 function isClassSelected(className) {
   return classList.value.findIndex((c) => c.name == className) >= 0
 }
@@ -145,23 +123,6 @@ function removeClass(className) {
 
 function toggleClass(className) {
   isClassSelected(className) ? removeClass(className) : addClass(className)
-  emitUpdate()
-}
-
-function toggleVariation(className, parentDefinition) {
-  const foundIndex = classList.value.findIndex((c) => c.name == className)
-  if (foundIndex >= 0) {
-    classList.value.splice(foundIndex, 1)
-  } else {
-    // uncheck all variations
-    parentDefinition.variations.forEach((sibling) => removeClass(sibling.name))
-    addClass(className)
-  }
-
-  if (parentDefinition.name) {
-    const variationIsSelected = parentDefinition.variations.some((variation) => isClassSelected(variation.name))
-    variationIsSelected ? addClass(parentDefinition.name) : removeClass(parentDefinition.name)
-  }
   emitUpdate()
 }
 
@@ -206,7 +167,7 @@ function onEditorClose() {
         <UiIcon
           class="BlockCssClasses__checkbox"
           :src="isClassSelected(className) ? 'mdi:checkbox-marked' : 'mdi:checkbox-blank-outline'"
-          @click="toggleClass(className)"
+          @click.stop.prevent="toggleClass(className)"
         />
       </template>
       <template #right="{ className }">
@@ -218,64 +179,7 @@ function onEditorClose() {
       </template>
     </CssClassManager>
 
-    <!-- <div class="BlockCssClasses__available">
-      <template
-        v-for="objClass in availableClasses"
-        :key="objClass.name"
-      >
-        <fieldset v-if="objClass.variations">
-          <legend>
-            <div>{{ objClass.title }}</div>
-            <small v-if="objClass.subtext">{{ objClass.subtext }}</small>
-          </legend>
-          <section>
-            <UiItem
-              v-for="variation in objClass.variations"
-              :key="variation.name"
-              class="BlockCssClasses__item"
-              :icon="variation.isSelected ? 'mdi:radiobox-marked' : 'mdi:radiobox-blank'"
-              :text="variation.title || variation.name"
-              :subtext="variation.subtext"
-              @click-icon="toggleVariation(variation.name, objClass)"
-            />
-          </section>
-        </fieldset>
-        <UiItem
-          v-else
-          class="BlockCssClasses__item"
-          :class="{'BlockCssClasses__item--condition': hasCondition(objClass.name)}"
-          :text="objClass.title || objClass.name"
-          :subtext="objClass.description"
-          :icon="objClass.isSelected ? 'mdi:checkbox-marked' : 'mdi:checkbox-blank-outline'"
-          @click-icon="toggleClass(objClass.name)"
-        >
-          <template
-            v-if="objClass.isSelected"
-            #actions
-          >
-            <UiIcon
-              :src="hasCondition(objClass.name) ? 'mdi:eye' : 'mdi:eye-outline'"
-              @click="openVisibilityEditor(objClass.name)"
-            />
-          </template>
-        </UiItem>
-      </template>
-    </div>
-    <UiDialog class="BlockCssClasses__classManager">
-      <template #trigger>
-        <UiItem
-          class="BlockCssClasses__item"
-          text="Open class manager"
-          icon="mdi:water"
-        />
-      </template>
-      <template #default>
-        <CssClassManager v-model="injectedStory.stylesheets" />
-      </template>
-    </UiDialog> -->
-
-
-
+    <!-- class visibility conditions editor -->
     <UiDialog
       v-slot="{ close }"
       :open="!!editingClass"
@@ -309,24 +213,10 @@ function onEditorClose() {
 
 <style lang="scss">
 .BlockCssClasses {
-  &__item {
-    --ui-item-padding: 8px 12px;
-    border-radius: 4px;
-    user-select: none;
-    cursor: pointer;
-    &:hover { background-color: var(--ui-color-hover); }
-  }
-
-  &__classManager {
-    .UiDialog__contents {
-      padding: 32px 8px 8px 8px;
-    }
-  }
-
   &__checkbox {
-    width: 32px;
-    height: 44px;
-    padding: 8px;
+    margin-right: 0.5rem;
+    width: 36px;
+    height: 36px;
   }
 }
 </style>

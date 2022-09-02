@@ -240,20 +240,8 @@ const innerStoryVariablesDark = computed({
 
 <style lang="scss">
 .CmsStoryStyle {
-  &__classes,
   &__properties {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  &__properties {
-    gap: 16px;
     padding: 16px 12px;
-  }
-
-  &__palettePicker {
-    margin: 6px 0;
   }
 }
 </style>
