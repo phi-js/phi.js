@@ -21,7 +21,7 @@ const props = defineProps({
   >
     <UiItem
       :icon="props.value.thumbnail"
-      :text="props.value.name"
+      :text="props.value.title || props.value.name"
       :subtext="bytes(props.value.size)"
     />
   </a>

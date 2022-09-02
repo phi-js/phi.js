@@ -245,7 +245,7 @@ defineExpose({
             :title="i18n.t('BlockScaffold.quickButton.validation')"
             class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--validation"
             src="mdi:message-alert"
-            @click="openActionId('InputSettings')"
+            @click="openActionId('validation')"
           />
 
           <UiIcon

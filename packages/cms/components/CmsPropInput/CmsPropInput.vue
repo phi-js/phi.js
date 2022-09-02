@@ -148,11 +148,13 @@ const i18n = useI18n({
   flex-wrap: wrap;
 
   &__typeSelect {
+    // background: transparent; // fucks up option text color (white on white)
+    padding: 2px 6px;
     border: 0;
-    background: transparent;
+    border-radius: 4px;
     color: inherit;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 0.8em;
+    font-weight: bold;
 
     margin-left: auto;
 

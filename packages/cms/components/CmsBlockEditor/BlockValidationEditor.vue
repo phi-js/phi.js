@@ -167,6 +167,7 @@ const i18n = useI18n({
       v-for="(rule, k) in availableRules"
       :key="k"
       class="BlockValidationEditor__rule"
+      :class="{'BlockValidationEditor__rule--open': rule.isEnabled}"
     >
       <UiItem
         class="BlockValidationEditor__ruleItem"
@@ -205,36 +206,3 @@ const i18n = useI18n({
     </div>
   </div>
 </template>
-
-<style lang="scss">
-.BlockValidationEditor {
-  &__rule {
-    border-radius: 4px;
-    background-color: var(--ui-color-z1);
-    margin-bottom: 8px;
-  }
-
-  &__ruleItem {
-    --ui-item-padding: 8px 16px;
-    border-radius: 4px;
-    margin: 2px 0;
-
-    cursor: pointer;
-    user-select: none;
-    &:hover {
-      background-color: var(--ui-color-hover);
-    }
-  }
-
-  &__ruleBody {
-    // border: 1px solid red;
-    // padding: 8px;
-    margin: 0 8px 32px 46px;
-
-    .UiInput__element {
-      width: 100%;
-    }
-  }
-
-}
-</style>

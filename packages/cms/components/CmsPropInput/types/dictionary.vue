@@ -122,3 +122,28 @@ const hasMissingEntries = computed(() => arrEntries.value.some((e) => !e.value |
     />
   </div>
 </template>
+
+<style lang="scss">
+.DictionaryEditor {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 5px;
+
+  .UiInput {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    &__label {
+      width: 30px;
+    }
+
+    &__body {
+      flex: 1;
+    }
+  }
+}
+</style>
