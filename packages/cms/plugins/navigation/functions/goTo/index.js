@@ -2,7 +2,7 @@ import GoToEditor from './GoToEditor.vue'
 
 export default {
   name: 'Story.goTo',
-  icon: 'mdi:arrow-right-thick',
+  icon: 'mdi:file-find',
   title: 'Go to page',
 
   editor: {

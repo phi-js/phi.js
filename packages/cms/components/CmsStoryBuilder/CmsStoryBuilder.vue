@@ -143,9 +143,11 @@ provide('$_vm_functions', computed(() => {
     return []
   }
   return [{
+    name: 'functions',
     title: 'Functions',
     children: innerStory.value.methods
       .map((storyMethod) => ({
+        name: storyMethod.name,
         icon: 'mdi:code-parentheses-box',
         title: storyMethod.name,
         expression: {
