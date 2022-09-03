@@ -66,7 +66,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:open', 'delete', 'open', 'close'])
+const emit = defineEmits(['update:open', 'delete', 'open', 'close', 'before-open', 'before-close'])
 
 const isOpen = ref(props.open)
 
@@ -143,6 +143,8 @@ async function expand() {
 
   // Close other items in the group
   closeOthersInGroup()
+
+  emit('before-open')
 }
 
 function shrink() {
@@ -169,6 +171,8 @@ function shrink() {
 
   animation.onfinish = () => onAnimationFinish(false)
   animation.oncancel = () => isClosing.value = false
+
+  emit('before-close')
 }
 
 function onAnimationFinish(open) {
