@@ -12,5 +12,7 @@ export default {
   'Cancel': 'Cancelar',
   'Delete': 'Eliminar',
   'Search': 'Buscar',
+  'Create': 'Crear',
+  'Creating': 'Creando',
   'close': 'cerrar',
 }

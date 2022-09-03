@@ -15,7 +15,11 @@ export default function useI18n(componentDictionary = null) {
   Translate a string
 
   Using params:
-  t('There are %number% people', { number: 4 })
+  t('There are %number% people', { number: 4 }) DEPRECATED!!!
+
+  new way:
+  t('There are {{number}} people', { number: 4 })
+
   */
   function t(word, params = null, defaultValue = null, customDictionary = null) {
     const sourceDictionary = customDictionary ? { ...dictionary, ...customDictionary } : dictionary
@@ -32,7 +36,8 @@ export default function useI18n(componentDictionary = null) {
 
     if (params && typeof params === 'object') {
       for (let name in params) {
-        translated = translated.replaceAll(`%${name}%`, params[name])
+        // translated = translated.replaceAll(`%${name}%`, params[name])
+        translated = translated.replaceAll(`{{${name}}}`, params[name])
       }
     }
 
