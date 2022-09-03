@@ -1,3 +1,4 @@
+import pluginCode from './code'
 import pluginFetch from './fetch'
 import pluginWindow from './window'
 
@@ -37,5 +38,6 @@ function registerFunctions(objFn) {
 }
 
 // hard-coded default plugins !!!
+registerPlugin(pluginCode)
 registerPlugin(pluginFetch)
 registerPlugin(pluginWindow)

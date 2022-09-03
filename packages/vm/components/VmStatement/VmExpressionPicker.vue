@@ -30,42 +30,35 @@ function onSelectItem($event) {
   }
 }
 
-const items = computed(() => {
-  return [
-    ...injectedFunctions.value,
+function translateItem(fxItem) {
+  if (Array.isArray(fxItem)) {
+    return fxItem.map(translateItem)
+  }
 
-    {
-      title: 'Code',
-      children: [
-        {
-          icon: 'mdi:language-javascript',
-          title: 'JavaScript',
-          expression: { eval: '' },
-        },
+  return ({
+    ...fxItem,
+    title: i18n.t(`VmExpression.${fxItem.name}.title`, null, fxItem.title || fxItem.name),
+    description: i18n.t(`VmExpression.${fxItem.name}.description`, null, fxItem.description || ''),
+    children: Array.isArray(fxItem.children) ? translateItem(fxItem.children) : undefined,
+  })
+}
 
-        {
-          icon: 'mdi:directions-fork',
-          title: 'IF',
-          expression: {
-            if: { and: [] },
-            then: { do: null },
-            else: { do: null },
-          },
-        },
-      ],
-    },
-    ...availableFunctions,
-  ]
-})
+const items = computed(() => translateItem([
+  ...injectedFunctions.value,
+  ...availableFunctions,
+]))
 </script>
 
 <template>
-  <UiDialog class="VmExpressionPicker">
-    <template #trigger="{ isOpen }">
+  <UiDialog
+    class="VmExpressionPicker"
+    show-close-button
+  >
+    <template #trigger>
       <UiItem
         class="VmExpressionPicker__item"
-        :icon="isOpen ? 'mdi:close': 'mdi:plus'"
-        :text="isOpen ? i18n.t('VmExpressionPicker.Cancel') : i18n.t('VmExpressionPicker.label')"
+        icon="mdi:plus"
+        :text="i18n.t('VmExpressionPicker.label')"
       />
     </template>
     <template #contents="{ close }">

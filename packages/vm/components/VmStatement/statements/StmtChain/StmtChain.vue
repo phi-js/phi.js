@@ -51,6 +51,7 @@ function onPickerInput({ expression, definition }) {
     },
     do: expression,
     assign: null,
+    template: definition.template,
   }
 
   innerValue.value.chain.push(newItem)

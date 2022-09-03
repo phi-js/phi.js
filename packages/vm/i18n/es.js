@@ -62,4 +62,33 @@ export default {
 
   'FetchEditor.Body': 'Body',
   'FetchEditor.Headers': 'Encabezados',
+
+  // List items in VmExpressionPicker
+  'VmExpression.code.title': 'Código',
+  'VmExpression.assign.title': 'Asignar variable',
+  'VmExpression.eval.title': 'Javascript',
+  'VmExpression.if.title': 'IF',
+
+  'VmExpression.functions.title': 'Mis funciones',
+
+  'VmExpression.http.title': 'HTTP',
+  'VmExpression.fetch.title': 'Ejecutar Request',
+  'VmExpression.fetch.description': 'Ejecuta un Request HTTP a una URL',
+
+  'VmExpression.window.title': 'Funciones del navegador',
+
+  'VmExpression.console.log.title': 'Mostrar en consola',
+  'VmExpression.console.log.description': 'console.log',
+
+  'VmExpression.window.alert.title': 'Alertar',
+  'VmExpression.window.alert.description': 'window.alert',
+  'VmExpression.window.confirm.title': 'Pedir confirmación',
+  'VmExpression.window.confirm.description': 'window.confirm',
+  'VmExpression.window.prompt.title': 'Introducir texto',
+  'VmExpression.window.prompt.description': 'window.prompt',
+
+  'VmExpression.navigation.title': 'Navegación',
+  'VmExpression.Story.goTo.title': 'Ir a página...',
+  'VmExpression.Story.goNext.title': 'Ir a la página siguiente',
+  'VmExpression.Story.goBack.title': 'Ir a la página anterior',
 }

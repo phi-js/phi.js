@@ -62,4 +62,34 @@ export default {
 
   'FetchEditor.Body': 'Body',
   'FetchEditor.Headers': 'Headers',
+
+
+  // List items in VmExpressionPicker
+  'VmExpression.code.title': 'Code',
+  'VmExpression.assign.title': 'Assign variable',
+  'VmExpression.eval.title': 'Javascript',
+  'VmExpression.if.title': 'IF',
+
+  'VmExpression.functions.title': 'My Functions',
+
+  'VmExpression.http.title': 'HTTP',
+  'VmExpression.fetch.title': 'HTTP Request',
+  'VmExpression.fetch.description': 'Fetch data from a URL',
+
+  'VmExpression.window.title': 'Browser functions',
+
+  'VmExpression.console.log.title': 'Output to console',
+  'VmExpression.console.log.description': 'console.log',
+
+  'VmExpression.window.alert.title': 'Alert',
+  'VmExpression.window.alert.description': 'window.alert',
+  'VmExpression.window.confirm.title': 'Ask confirmation',
+  'VmExpression.window.confirm.description': 'window.confirm',
+  'VmExpression.window.prompt.title': 'Text input prompt',
+  'VmExpression.window.prompt.description': 'window.prompt',
+
+  'VmExpression.navigation.title': 'Navigation',
+  'VmExpression.Story.goTo.title': 'Go to page...',
+  'VmExpression.Story.goNext.title': 'Go to next page',
+  'VmExpression.Story.goBack.title': 'Go to previous page',
 }

@@ -1,17 +1,16 @@
 import FetchEditor from './FetchEditor.vue'
 
 export default {
-  text: 'HTTP calls',
-
   functions: [
     {
+      name: 'http',
       title: 'HTTP',
       children: [
         {
           name: 'fetch',
           icon: 'mdi:api',
-          text: 'Fetch',
-          subtext: 'Ejecutar request HTTP',
+          title: 'Fetch',
+          description: 'Ejecutar request HTTP',
 
           editor: {
             component: FetchEditor,

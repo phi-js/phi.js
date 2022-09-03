@@ -1,31 +1,13 @@
 import WindowDialogEditor from './WindowDialogEditor.vue'
 
 export default {
-  text: 'Window and Console functions',
-  subtext: 'alert, prompt, confirm',
-
   functions: [
     {
-      title: 'Window and Console functions',
+      name: 'window',
       children: [
-        {
-          name: 'console.log',
-          icon: 'mdi:window-maximize',
-          text: 'Log',
-          editor: { component: WindowDialogEditor },
-
-          callback: function(args) {
-            return console.log(
-              '%c[phi]',
-              'background: blue; color: #bada55',
-              args,
-            )
-          },
-        },
         {
           name: 'window.alert',
           icon: 'mdi:window-maximize',
-          text: 'Alert',
           editor: { component: WindowDialogEditor },
 
           callback: function(args) {
@@ -39,7 +21,6 @@ export default {
         {
           name: 'window.confirm',
           icon: 'mdi:window-maximize',
-          text: 'Confirm',
           editor: { component: WindowDialogEditor },
 
           callback: function(args) {
@@ -53,11 +34,24 @@ export default {
         {
           name: 'window.prompt',
           icon: 'mdi:window-maximize',
-          text: 'Prompt',
           editor: { component: WindowDialogEditor },
 
           callback: function({ message, placeholder }) {
             return window.prompt(message, placeholder)
+          },
+        },
+
+        {
+          name: 'console.log',
+          icon: 'mdi:window-maximize',
+          editor: { component: WindowDialogEditor },
+
+          callback: function(args) {
+            return console.log(
+              '%c[phi]',
+              'background: blue; color: #bada55',
+              args,
+            )
           },
         },
       ],

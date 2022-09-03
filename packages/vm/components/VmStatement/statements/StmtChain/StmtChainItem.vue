@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { defineAsyncComponent, ref, shallowRef, watch } from 'vue'
 import { UiIcon, UiItem, UiInput, UiDetails } from '@/packages/ui'
 import VmStatement from '../../VmStatement.vue'
 import useVmI18n from '../../../../i18n'
@@ -43,6 +43,21 @@ function rename() {
     accept()
   }
 }
+
+const customComponent = shallowRef()
+watch(
+  () => innerValue.value.template,
+  (newValue) => {
+    if (!newValue) {
+      return
+    }
+
+    customComponent.value = defineAsyncComponent(() => import(`./templates/${newValue}.vue`))
+  },
+  { immediate: true },
+)
+
+
 </script>
 
 <template>
@@ -71,8 +86,14 @@ function rename() {
 
       <template #contents>
         <div class="StmtChainItem__contents">
+          <Component
+            :is="customComponent"
+            v-if="customComponent"
+            v-model="innerValue"
+            @update:model-value="accept()"
+          />
           <VmStatement
-            v-if="isIfStatement"
+            v-else-if="isIfStatement"
             v-model="innerValue.do.if"
             @update:model-value="accept()"
           />
