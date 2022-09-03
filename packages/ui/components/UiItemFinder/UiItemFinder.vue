@@ -1,6 +1,9 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from '@/packages/i18n'
 import FinderItem from './FinderItem.vue'
+
+const i18n = useI18n()
 
 const props = defineProps({
   /*
@@ -138,7 +141,7 @@ function onClickItem(item) {
       v-model="searchString"
       type="search"
       class="UiItemFinder__search"
-      placeholder="Buscar ..."
+      :placeholder="i18n.t('Search')"
       @keyup.enter="onSearchEnter()"
     >
     <div
