@@ -36,15 +36,15 @@ const props = defineProps({
   tab: {
     type: String,
     required: false,
-    default: 'preview', // editor | preview
+    default: 'editor', // editor | preview
   },
 
   contentSize: {
     type: Object,
     required: false,
     default: () => ({
-      width: null,
-      height: null,
+      width: 'auto',
+      height: 'auto',
     }),
   },
 
