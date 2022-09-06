@@ -35,7 +35,9 @@ async function getStripeInstance() {
   }
 
   if (!stripeInstance) {
-    stripeInstance = await loadStripe(props.publishableKey)
+    stripeInstance = await loadStripe(props.publishableKey,
+      // { stripeAccount: 'acct_1Le2nYHVpLZUUz5C' },
+    )
   }
 
   return stripeInstance

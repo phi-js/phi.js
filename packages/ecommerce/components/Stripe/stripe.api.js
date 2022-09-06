@@ -1,10 +1,8 @@
-// import { getClient } from '@/packages/api'
-import { Client } from '@/packages/api'
+import { getClient } from '@/packages/api'
 
 export default class {
   constructor() {
-    // this.http = getClient('phi')
-    this.http = new Client({ baseURL: 'http://phi.local/' })
+    this.http = getClient('phi')
   }
 
   /*
