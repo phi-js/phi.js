@@ -22,6 +22,7 @@ import { Dashboard, DashboardModal } from '@uppy/vue' //fails when using phi.js 
 // import { Dashboard, DashboardModal } from '@uppy/vue/src'
 import { UiIcon } from '../UiIcon'
 import { UiButton } from '../UiButton'
+import { UiItem } from '../UiItem'
 
 import bytes from '../../filters/bytes.js'
 
@@ -75,8 +76,19 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'upload'])
 
 const i18n = useI18n({
-  en: { 'UiUpload.Upload': 'Upload' },
-  es: { 'UiUpload.Upload': 'Subir archivo' },
+  en: {
+    'UiUpload.Upload': 'Upload',
+    'UiUpload.Rename': 'Rename',
+    'UiUpload.Close': 'Close',
+    'UiUpload.Description': 'Description',
+  },
+
+  es: {
+    'UiUpload.Upload': 'Subir archivo',
+    'UiUpload.Rename': 'Renombrar',
+    'UiUpload.Close': 'Cerrar',
+    'UiUpload.Description': 'Descripción',
+  },
 })
 
 const innerFiles = ref([])
@@ -92,6 +104,8 @@ function emitUpdate() {
 
 // File management
 function deleteFile(file) {
+  endangeredIndex.value = -1
+
   if (!confirm('Delete this file?')) {
     return
   }
@@ -159,13 +173,27 @@ const dashboardProps = computed(() => ({
 }))
 
 const endangeredIndex = ref(-1)
+
+const editingIndexes = ref([])
+
+function openEditor(index) {
+  if (editingIndexes.value.includes(index)) {
+    return
+  }
+  editingIndexes.value.push(index)
+}
+
+function closeEditor(index) {
+  editingIndexes.value.splice(editingIndexes.value.indexOf(index), 1)
+}
+
 </script>
 
 <template>
   <div class="UiUpload">
     <div class="UiUpload__files">
       <div
-        v-for="(file, index) in innerFiler"
+        v-for="(file, index) in innerFiles"
         :key="index"
 
         class="UiUpload__file"
@@ -184,24 +212,49 @@ const endangeredIndex = ref(-1)
           <small>{{ bytes(file.size) }}</small>
         </a>
 
-        <div class="UiUpload__details">
+        <div
+          v-if="editingIndexes.includes(index)"
+          class="UiUpload__editor"
+        >
           <input
             class="UiUpload__title"
             type="text"
-            :value="file.title || file.name"
-            placeholder="Title"
+            :value="file.title"
+            :placeholder="file.name"
             @input="file.title = $event.target.value; emitUpdate()"
           >
           <input
             class="UiUpload__description"
             type="text"
             :value="file.description"
-            placeholder="Description"
+            :placeholder="i18n.t('UiUpload.Description')"
             @input="file.description = $event.target.value; emitUpdate()"
           >
+
+          <UiItem
+            class="UiUpload__actionItem"
+            icon="mdi:check"
+            :text="i18n.t('UiUpload.Close')"
+            @click.prevent="closeEditor(index)"
+          />
+        </div>
+        <div
+          v-else
+          class="UiUpload__details"
+          :title="file.name"
+        >
+          <h1 v-text="file.title || file.name" />
+          <p v-text="file.description" />
+          <UiItem
+            class="UiUpload__actionItem"
+            icon="mdi:pencil"
+            :text="i18n.t('UiUpload.Rename')"
+            @click.prevent="openEditor(index)"
+          />
         </div>
 
         <UiIcon
+          v-if="!editingIndexes.includes(index)"
           class="UiUpload__deleter"
           src="mdi:close"
           @click.prevent="deleteFile(file)"
