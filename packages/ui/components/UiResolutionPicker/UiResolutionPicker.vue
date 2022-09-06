@@ -4,7 +4,7 @@ export default { inheritAttrs: false }
 
 <script setup>
 import { ref, watch, useAttrs } from 'vue'
-import { UiItem, UiIcon, UiPopover } from '@/packages/ui'
+import { UiItem, UiIcon, UiDropdown } from '@/packages/ui'
 
 const availablePresets = [
   {
@@ -122,7 +122,7 @@ function rotate() {
 </script>
 
 <template>
-  <UiPopover class="UiResolutionPicker">
+  <UiDropdown class="UiResolutionPicker">
     <template #trigger>
       <UiIcon
         :class="attrs.class"
@@ -130,12 +130,13 @@ function rotate() {
         :title="resolution.width ? `${resolution.text}\n${resolution.width}x${resolution.height} px` : 'Auto'"
       />
     </template>
-    <template #contents="{ close }">
+    <template #default="{ close }">
       <div class="PresetList">
         <UiItem
           v-for="(preset, i) in availablePresets"
           :key="i"
           :text="preset.text"
+          :icon="preset.icon"
           class="PresetItem"
           :class="{ 'PresetItem--selected': preset.width == resolution.width && preset.height == resolution.height }"
           @click="setPreset(preset) && close()"
@@ -183,14 +184,35 @@ function rotate() {
         />
       </div>
     </template>
-  </UiPopover>
+  </UiDropdown>
 </template>
 
 <style lang="scss">
 .UiResolutionPicker {
-  .tippy-content {
-    padding: 0;
-    max-width: 250px;
+  .UiDropdown {
+    &__container {
+      right: -20px;
+    }
+
+    &__trigger {
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    &__body {
+      margin: 12px 0;
+      margin-left: -24px;
+      border-radius: 8px;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+      background-color: var(--ui-color-z2);
+
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
   }
 }
 
@@ -210,34 +232,38 @@ function rotate() {
 }
 
 .DimensionPicker {
+  display: flex;
+  flex-wrap: nowrap;
+
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding: 8px;
 
   input {
     border: 0;
     border-radius: 3px;
-    background-color: rgba(255, 255, 255, 0.1);
     font-size: 12px;
     padding: 4px;
     margin: 0 4px;
-    color: #fff;
     text-align: center;
+
+    // background-color: rgba(255, 255, 255, 0.1);
+    // color: #fff;
+    background: var(--ui-color-background);
+    color: var(--ui-color-foreground);
   }
 }
 
 .PresetItem {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+  --ui-item-padding: 8px 12px;
+  border-radius: 4px;
+  user-select: none;
 
-  --ui-item-padding: 8px;
+  font-size: 0.9em;
+  font-weight: bold;
 
   cursor: pointer;
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--ui-color-hover);
   }
 
   &--selected {

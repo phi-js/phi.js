@@ -4,9 +4,6 @@ import { ref, watch, computed, onBeforeUnmount } from 'vue'
 
 import { useI18n } from '@/packages/i18n'
 
-import draggable from 'vuedraggable' //fails when using phi.js as a bundled library
-// import draggable from 'vuedraggable/src/vuedraggable'
-
 import Uppy from '@uppy/core'
 import Webcam from '@uppy/webcam'
 import XHRUpload from '@uppy/xhr-upload'
@@ -167,57 +164,51 @@ const endangeredIndex = ref(-1)
 <template>
   <div class="UiUpload">
     <div class="UiUpload__files">
-      <draggable
-        v-model="innerFiles"
-        group="ui-upload-draggable"
-        item-key="id"
-        @update:model-value="emitUpdate"
+      <div
+        v-for="(file, index) in innerFiler"
+        :key="index"
+
+        class="UiUpload__file"
+        :class="{'UiUpload__file--danger': endangeredIndex === index}"
       >
-        <template #item="{ element: file, index }">
-          <div
-            class="UiUpload__file"
-            :class="{'UiUpload__file--danger': endangeredIndex === index}"
+        <a
+          class="UiUpload__figure"
+          target="_blank"
+          :href="file.url"
+          tabindex="-1"
+        >
+          <img
+            :src="file.thumbnail"
+            :title="file.url"
           >
-            <a
-              class="UiUpload__figure"
-              target="_blank"
-              :href="file.url"
-              tabindex="-1"
-            >
-              <img
-                :src="file.thumbnail"
-                :title="file.url"
-              >
-              <small>{{ bytes(file.size) }}</small>
-            </a>
+          <small>{{ bytes(file.size) }}</small>
+        </a>
 
-            <div class="UiUpload__details">
-              <input
-                class="UiUpload__title"
-                type="text"
-                :value="file.title || file.name"
-                placeholder="Title"
-                @input="file.title = $event.target.value; emitUpdate()"
-              >
-              <input
-                class="UiUpload__description"
-                type="text"
-                :value="file.description"
-                placeholder="Description"
-                @input="file.description = $event.target.value; emitUpdate()"
-              >
-            </div>
+        <div class="UiUpload__details">
+          <input
+            class="UiUpload__title"
+            type="text"
+            :value="file.title || file.name"
+            placeholder="Title"
+            @input="file.title = $event.target.value; emitUpdate()"
+          >
+          <input
+            class="UiUpload__description"
+            type="text"
+            :value="file.description"
+            placeholder="Description"
+            @input="file.description = $event.target.value; emitUpdate()"
+          >
+        </div>
 
-            <UiIcon
-              class="UiUpload__deleter"
-              src="mdi:close"
-              @click.prevent="deleteFile(file)"
-              @mouseenter="endangeredIndex = index"
-              @mouseleave="endangeredIndex = -1"
-            />
-          </div>
-        </template>
-      </draggable>
+        <UiIcon
+          class="UiUpload__deleter"
+          src="mdi:close"
+          @click.prevent="deleteFile(file)"
+          @mouseenter="endangeredIndex = index"
+          @mouseleave="endangeredIndex = -1"
+        />
+      </div>
     </div>
 
     <template v-if="!props.inline">

@@ -163,6 +163,8 @@ function toggle() {
     <div
       ref="elTrigger"
       class="UiPopover__trigger"
+      role="button"
+      aria-label="Open popover"
       @click="onTriggerClick"
     >
       <slot

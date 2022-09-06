@@ -52,6 +52,7 @@ const bodyStyle = computed(() => {
   position: relative;
   padding: 26px 28px;
   background-color: #525659;
+  box-shadow: inset 0px 2px 12px 0px rgba(38, 57, 77, 0.7);
 
   &__body {
     transition: width var(--ui-duration-snap) ease, height var(--ui-duration-snap) ease;
@@ -68,6 +69,7 @@ const bodyStyle = computed(() => {
 .UiContentWrapper--no-border {
   padding: 0;
   background-color: transparent;
+  box-shadow: none;
 
   .UiContentWrapper__body {
     background-color: transparent;
