@@ -24,12 +24,9 @@
   &__adder {
     --ui-item-padding: 6px;
 
+    &:hover,
     &[open] {
       @extend .outset;
-    }
-
-    .UiDetails__summary:hover {
-      background-color: var(--ui-color-hover);
     }
 
     footer {

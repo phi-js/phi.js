@@ -1,9 +1,17 @@
 .BlockCssStyle {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 
   .UiDetails {
+    @extend .outset;
+
+    &__summary {
+      padding: 10px;
+      font-size: 0.9em;
+      font-weight: bold;
+    }
+
     &__contents {
       padding: 6px 12px 24px 12px;
     }

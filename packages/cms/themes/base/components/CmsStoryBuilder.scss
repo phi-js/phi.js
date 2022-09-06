@@ -77,12 +77,15 @@
   }
 
   &__toolbar {
-    background-color: #333;
-    color: #eee;
+    // background-color: #333;
+    // color: #eee;
+    background-color: var(--ui-color-background);
+    color: var(--ui-color-foreground);
 
     .UiTabs {
       &__header {
         margin: 4px;
+        overflow: initial;
       }
     }
   }
@@ -90,7 +93,7 @@
   &__controls {
     display: flex;
     align-items: stretch;
-    margin: 0 1rem;
+    margin-left: auto;
 
     opacity: 1;
     transition: opacity var(--ui-duration-snap);

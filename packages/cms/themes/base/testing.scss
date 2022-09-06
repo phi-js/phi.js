@@ -78,15 +78,15 @@
   --ui-font-texts: "Nunito", sans-serif;
 }
 
-// all of the above except window
-.CmsStoryBuilder__toolbar,
-.CmsStoryBuilder__sidebar,
-.BlockScaffold__toolbar,
-.tippy-content,
-.UiDialog__contents {
-  --ui-color-hover: rgba(255,255,255, 0.1);
-  --ui-color-z1: rgba(255, 255, 255, 0.1);
-}
+// // all of the above except window
+// .CmsStoryBuilder__toolbar,
+// .CmsStoryBuilder__sidebar,
+// .BlockScaffold__toolbar,
+// .tippy-content,
+// .UiDialog__contents {
+//   --ui-color-hover: rgba(255,255,255, 0.1);
+//   --ui-color-z1: rgba(255, 255, 255, 0.1);
+// }
 
 .BlockVisibilityEditor > .VmStatement {
   @extend .outset;
