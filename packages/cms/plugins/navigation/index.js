@@ -6,8 +6,9 @@ import NavigationMenu from './components/NavigationMenu/NavigationMenu.block.js'
 import goTo from './functions/goTo'
 import goNext from './functions/goNext'
 import goBack from './functions/goBack'
-// import call from './functions/call'
-// import emit from './functions/emit'
+
+import call from './functions/call'
+import emit from './functions/emit'
 
 export default {
   blocks: [
@@ -29,8 +30,8 @@ export default {
         goTo,
         goNext,
         goBack,
-        // call,
-        // emit,
+        call,
+        emit,
       ],
     },
   ],
