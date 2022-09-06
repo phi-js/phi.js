@@ -81,6 +81,7 @@ const i18n = useI18n({
     'UiUpload.Rename': 'Rename',
     'UiUpload.Close': 'Close',
     'UiUpload.Description': 'Description',
+    'UiUpload.DeleteThisFile': 'Delete this file?',
   },
 
   es: {
@@ -88,6 +89,7 @@ const i18n = useI18n({
     'UiUpload.Rename': 'Renombrar',
     'UiUpload.Close': 'Cerrar',
     'UiUpload.Description': 'Descripción',
+    'UiUpload.DeleteThisFile': 'Eliminar este archivo?',
   },
 })
 
@@ -106,7 +108,7 @@ function emitUpdate() {
 function deleteFile(file) {
   endangeredIndex.value = -1
 
-  if (!confirm('Delete this file?')) {
+  if (!confirm(i18n.t('UiUpload.DeleteThisFile'))) {
     return
   }
 
