@@ -1,0 +1,60 @@
+.UiDropdown {
+  position: relative;
+  display: inline-block;
+
+  &__trigger {
+    display: inline-block;
+    z-index: 4;
+  }
+
+  &__container {
+    position: absolute;
+    // z-index: 999999; // :(
+    z-index: 3;
+
+    top: 100%;
+    // top: calc(100% - 10px);
+    // padding-top: 10px;
+  }
+}
+
+// Base bubble styles
+.UiDropdown {
+  &__body {
+    margin: 12px 0;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    background-color: var(--ui-color-z2);
+  }
+}
+
+
+
+// open/closed styles and transitions
+.UiDropdown {
+  &__container {
+    // z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+
+    transition: all var(--ui-duration-snap);
+  }
+
+  &__body {
+    transition: all var(--ui-duration-snap);
+    transform: translateY(-10px);
+  }
+
+  &--open .UiDropdown {
+    &__container {
+      // z-index: 1;
+      pointer-events: initial;
+      opacity: 1;
+    }
+
+    &__body {
+      transform: translateY(0px);
+    }
+  }
+}

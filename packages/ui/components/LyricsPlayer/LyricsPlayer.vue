@@ -101,7 +101,7 @@ watch(currentWord, () => currentWord.value && emit('wordEnter', currentWord.valu
 
 <style lang="scss">
 .LyricsPlayer {
-  font-size: 1.4em;
+  font-size: 1.2em;
   font-weight: 500;
 
   &__line {

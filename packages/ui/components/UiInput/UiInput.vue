@@ -152,8 +152,10 @@ const validationProps = computed(() => {
     onInvalid: (event) => {
       isInvalid.value = true
       const failedRule = validateValue(event.target.value, props.rules)
-      event.target.setCustomValidity(failedRule?.message || '')
-      emit('invalid', failedRule)
+      if (failedRule) {
+        event.target.setCustomValidity(failedRule?.message || '')
+        emit('invalid', failedRule)
+      }
     },
   }
 })
@@ -295,6 +297,8 @@ const element = ref()
 defineExpose({
   element,
   focus: () => element?.value?.focus?.(),
+  setCustomValidity: (a) => element?.value?.setCustomValidity?.(a),
+  reportValidity: () => element?.value?.reportValidity?.(),
 })
 
 const uid = ref('UiInput' + (++_UiInput_counter))

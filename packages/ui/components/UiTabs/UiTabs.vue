@@ -143,7 +143,8 @@ function selectTab(incomingTab, scrollIntoView = true) {
     <div class="UiTabs__header">
       <slot name="left" />
       <div class="UiTabs__tabList">
-        <div
+        <component
+          :is="tab.props.href ? 'a' : 'div'"
           v-for="(tab, i) in markedTabs"
           :key="i"
           class="UiTab"
@@ -152,6 +153,10 @@ function selectTab(incomingTab, scrollIntoView = true) {
             'UiTab--incoming': tab.isIncoming,
             'UiTab--outgoing': tab.isOutgoing
           }"
+
+          :href="tab.props?.href"
+          :target="tab.props?.target"
+          :title="tab.props?.title"
         >
           <component
             :is="tab.slotTab"
@@ -165,7 +170,7 @@ function selectTab(incomingTab, scrollIntoView = true) {
             style="white-space: nowrap"
             @click="selectTab(tab)"
           />
-        </div>
+        </component>
       </div>
       <slot name="right" />
     </div>

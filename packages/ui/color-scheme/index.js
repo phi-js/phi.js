@@ -9,9 +9,12 @@ browserScheme.value = (window.matchMedia && window.matchMedia('(prefers-color-sc
 
 /* Listen for browser settings changes */
 if (window.matchMedia) {
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
-    browserScheme.value = event.matches ? 'dark' : 'light'
-  })
+  const matched = window.matchMedia('(prefers-color-scheme: dark)')
+  if (matched.addEventListener) {
+    matched.addEventListener('change', (event) => {
+      browserScheme.value = event.matches ? 'dark' : 'light'
+    })
+  }
 }
 
 
