@@ -12,7 +12,6 @@ import {
   UiIcon,
   UiPopover,
   UiWindow,
-  UiTabs,
   UiTab,
 } from '@/packages/ui/components'
 
@@ -84,7 +83,7 @@ watch(
   () => props.block?.component,
   () => {
     definition.value = getBlockDefinition(props.block)
-    getBlockEditors(props.block)
+    getBlockEditors(props.block, injectedStoryEditor.settings)
       .then((e) => {
         editors.value = e
         isDefinitionLoaded.value = true
@@ -140,21 +139,6 @@ const isFocused = computed(() => {
   return props.focused
     || popupIsOpen.value
 })
-
-function getWidth(coords) {
-  return parseInt(coords?.width)
-}
-
-// function renameVModel() {
-//   let res = window.prompt(i18n.t('BlockScaffold.SetVariableName'), innerBlock.value['v-model'])?.trim?.()
-//   if (res === undefined) { // prompt cancelled
-//     return
-//   }
-
-//   res = res.replaceAll(/[^a-zA-Z0-9.]/g, '') // remove invalid characters
-//   innerBlock.value['v-model'] = res
-//   accept()
-// }
 
 /* Find the chain of BlockScaffold parents */
 const instance = getCurrentInstance()
@@ -217,69 +201,72 @@ defineExpose({
             icon="mdi:drag"
             :text="innerBlock?.title || definition?.title || ''"
           />
-          <slot name="toolbar">
-            <EditorAction
-              v-if="editors.toolbar"
-              v-model:block="innerBlock"
-              :action="editors.toolbar"
-              @update:block="accept"
+
+          <div class="BlockScaffold__toolbar-scrollcontent">
+            <slot name="toolbar">
+              <EditorAction
+                v-if="editors.toolbar"
+                v-model:block="innerBlock"
+                :action="editors.toolbar"
+                @update:block="accept"
+              />
+            </slot>
+
+            <div class="BlockScaffold__toolbar-spacer" />
+
+            <!-- Quick access buttons -->
+            <UiIcon
+              v-if="innerBlock['v-model'] !== undefined"
+              :title="innerBlock['v-model']
+                ? innerBlock['v-model']
+                : i18n.t('BlockScaffold.NoVariableSet')
+              "
+              class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--variable"
+              src="mdi:code-json"
+              @click="openActionId('data')"
             />
-          </slot>
 
-          <div class="BlockScaffold__toolbar-spacer" />
+            <UiIcon
+              v-if="innerBlock?.rules?.length"
+              :title="i18n.t('BlockScaffold.quickButton.validation')"
+              class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--validation"
+              src="mdi:message-alert"
+              @click="openActionId('validation')"
+            />
 
-          <!-- Quick access buttons -->
-          <UiIcon
-            v-if="innerBlock['v-model'] !== undefined"
-            :title="innerBlock['v-model']
-              ? innerBlock['v-model']
-              : i18n.t('BlockScaffold.NoVariableSet')
-            "
-            class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--variable"
-            src="mdi:code-json"
-            @click="openActionId('data')"
-          />
+            <UiIcon
+              v-if="innerBlock?.props?.class || innerBlock?.props?.style"
+              :title="i18n.t('BlockScaffold.quickButton.css')"
+              class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--css"
+              src="mdi:water"
+              @click="openActionId('css')"
+            />
 
-          <UiIcon
-            v-if="innerBlock?.rules?.length"
-            :title="i18n.t('BlockScaffold.quickButton.validation')"
-            class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--validation"
-            src="mdi:message-alert"
-            @click="openActionId('validation')"
-          />
+            <UiIcon
+              v-if="innerBlock['v-if']"
+              :title="i18n.t('BlockScaffold.quickButton.visibility')"
+              class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--visibility"
+              src="mdi:eye"
+              @click="openActionId('visibility')"
+            />
 
-          <UiIcon
-            v-if="innerBlock?.props?.class || innerBlock?.props?.style"
-            :title="i18n.t('BlockScaffold.quickButton.css')"
-            class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--css"
-            src="mdi:water"
-            @click="openActionId('css')"
-          />
+            <UiIcon
+              v-if="hasEvents"
+              :title="i18n.t('BlockScaffold.quickButton.event')"
+              class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--events"
+              src="mdi:gesture-tap"
+              @click="openActionId('events')"
+            />
 
-          <UiIcon
-            v-if="innerBlock['v-if']"
-            :title="i18n.t('BlockScaffold.quickButton.visibility')"
-            class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--visibility"
-            src="mdi:eye"
-            @click="openActionId('visibility')"
-          />
-
-          <UiIcon
-            v-if="hasEvents"
-            :title="i18n.t('BlockScaffold.quickButton.event')"
-            class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--events"
-            src="mdi:gesture-tap"
-            @click="openActionId('events')"
-          />
-
-          <UiIcon
-            v-if="innerBlock['v-for']"
-            :title="i18n.t('BlockScaffold.quickButton.repeat')"
-            class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--repeat"
-            src="mdi:repeat-variant"
-            @click="openActionId('repeat')"
-          />
-          <!-- /quick access buttons -->
+            <UiIcon
+              v-if="innerBlock['v-for']"
+              :title="i18n.t('BlockScaffold.quickButton.repeat')"
+              class="BlockScaffold__toolbar-icon BlockScaffold__toolbar-icon--repeat"
+              src="mdi:repeat-variant"
+              @click="openActionId('repeat')"
+            />
+            <!-- /quick access buttons -->
+          </div>
 
           <!-- Block actions popover -->
           <UiPopover
@@ -379,15 +366,13 @@ defineExpose({
         />
       </template>
 
-      <template #default="{ coords }">
+      <template #default>
         <div
           ref="elWindowContents"
           class="WindowContents"
         >
-          <Component
-            :is="UiDrawerStack"
+          <UiDrawerStack
             v-model="currentActionIndex"
-            xxxx-is="getWidth(coords) < 650 ? UiDrawerStack : UiTabs"
             class="WindowContents__tabs"
           >
             <UiTab
@@ -406,7 +391,7 @@ defineExpose({
                 />
               </div>
             </UiTab>
-          </Component>
+          </UiDrawerStack>
         </div>
       </template>
 

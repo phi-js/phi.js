@@ -34,7 +34,12 @@ import BlockCssEditor from '../components/CmsBlockEditor/BlockCssEditor.vue'
 import BlockValidationEditor from '../components/CmsBlockEditor/BlockValidationEditor.vue'
 import BlockRepeatEditor from '../components/CmsBlockEditor/BlockRepeatEditor.vue'
 
-export default async function getBlockEditors(block) {
+/*
+CmsStoryBuilderSettings as defined in prop "settings" of:
+components\CmsStoryBuilder\CmsStoryBuilder.vue
+*/
+
+export default async function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
   const definition = getBlockDefinition(block)
 
   const retval = {
@@ -157,12 +162,14 @@ export default async function getBlockEditors(block) {
   })
 
   // Raw block source editor
-  retval.actions.push({
-    id: 'source',
-    title: 'Source',
-    icon: 'mdi:code-json',
-    component: UiInputJson,
-  })
+  if (CmsStoryBuidlerSettings?.allowSource) {
+    retval.actions.push({
+      id: 'source',
+      title: 'Source',
+      icon: 'mdi:code-json',
+      component: UiInputJson,
+    })
+  }
 
   return retval
 }

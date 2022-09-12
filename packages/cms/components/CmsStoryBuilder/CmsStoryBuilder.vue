@@ -53,6 +53,18 @@ const props = defineProps({
     required: false,
     default: null,
   },
+
+  /*
+  Settings object
+  {
+    allowSource: false, // Show "Source" editor in blocks and main toolbar.  default: false
+  }
+  */
+  settings: {
+    type: Object,
+    required: false,
+    default: null,
+  },
 })
 
 const emit = defineEmits([
@@ -215,6 +227,7 @@ function onWindowCancel() {
 // e.g. BlockCssClasses, NavigationPagePicker
 provide('$_cms_story_builder', {
   story: innerStory,
+  settings: props.settings,
   accept: onWindowAccept,
   cancel: onWindowCancel,
 })
@@ -344,6 +357,7 @@ const contentSlot = computed(() => {
               @click="windowTab = 'i18n'"
             /> -->
             <UiItem
+              v-if="settings?.allowSource"
               :text="i18n.t('CmsStoryBuilder.Source')"
               icon="mdi:code-json"
               class="CmsStoryBuilder__tabItem"
