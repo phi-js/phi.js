@@ -71,6 +71,14 @@
     flex-wrap: nowrap;
     width: max-content; // No soportado en IE ni EDGE !!!
     max-width: 80vw;
+
+  }
+
+  &__toolbar-scrollcontent {
+    flex: 1;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: auto;
   }
 
   &__toolbar-icon {
