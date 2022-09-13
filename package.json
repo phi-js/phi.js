@@ -40,17 +40,17 @@
     "@uppy/xhr-upload": "^2.0.7",
     "katex": "^0.15.3",
     "tippy.js": "^6.3.7",
-    "vue": "^3.2.31",
+    "vue": "^3.2.38",
     "vue-zoomer": "^0.4.0-beta.2",
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^2.3.1",
+    "@vitejs/plugin-vue": "^3.1.0",
     "@vue/compiler-sfc": "^3.2.26",
     "eslint": "^8.12.0",
     "eslint-plugin-vue": "^8.5.0",
-    "rollup-plugin-visualizer": "^5.5.2",
+    "rollup-plugin-visualizer": "^5.7.1",
     "sass": "^1.49.10",
-    "vite": "^2.9.0"
+    "vite": "^3.1.0"
   }
 }
