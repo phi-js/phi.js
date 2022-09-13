@@ -83,6 +83,8 @@ watch(
     if (!inner.columns?.length) {
       inner.columns = deduceColumns(props.records)
         .map((c) => ({ ...c, enabled: true }))
+
+      emitUpdate()
     }
   },
   { immediate: true },
