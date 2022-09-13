@@ -59,7 +59,7 @@ function onClickFace() {
 
 <template>
   <div
-    class="InputFace"
+    class="InputFace CmsBlock UiInput"
     @click="onClickFace"
   >
     <!-- stand-in for empty Select fields -->

@@ -154,10 +154,10 @@ const isFooterEnabled = computed({
   }
 
   &__header {
-    border-bottom: 3px solid #525659;
+    border-bottom: 1px dashed #525659;
   }
   &__footer {
-    border-top: 3px solid #525659;
+    border-top: 1px dashed #525659;
   }
 
   &__separator {
