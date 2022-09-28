@@ -94,6 +94,15 @@ export default function useI18n(componentDictionary = null) {
         || day_diff < 31 && t('i18n.nWeeksAgo', { n: Math.ceil(day_diff / 7) })
     },
 
+    // Weekday (ISO-8601: mon=1 sun=7) to locale name (Monday - Sunday)
+    weekday(nDay) {
+      let targetLocale = attrs?.['i18n-language'] || locale.value
+      const baseLocale = targetLocale.substr(0, 2)
+      var baseDate = new Date(Date.UTC(2017, 0, 1)) // just a Sunday
+      baseDate.setDate(baseDate.getDate() + parseInt(nDay))
+      return baseDate.toLocaleDateString(baseLocale, { weekday: 'long' })
+    },
+
     // Format currency
     $(value, currency = null) {
       const targetLocale = attrs?.['i18n-language'] || locale.value
