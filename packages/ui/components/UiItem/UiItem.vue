@@ -29,6 +29,13 @@ export default {
       required: false,
       default: null,
     },
+
+    /* LINK <a> attributes */
+    href: {
+      type: String,
+      required: false,
+      default: null,
+    },
   },
   emits: ['click', 'click-icon', 'click-body', 'click-actions'],
 
@@ -41,7 +48,9 @@ export default {
 </script>
 
 <template>
-  <div
+  <Component
+    :is="href ? 'a' : 'div'"
+    :href="href"
     class="UiItem"
     @click="$emit('click', $event)"
   >
@@ -94,7 +103,7 @@ export default {
       class="UiItem__badge"
       v-text="badge"
     />
-  </div>
+  </Component>
 </template>
 
 <style lang="scss">
@@ -136,7 +145,7 @@ export default {
   &__subtext {
     margin: 0;
     // opacity: 0.8; // fails lighthouse contrast test
-    font-size: 0.75em;
+    font-size: 0.8em;
   }
 
   &__actions {
