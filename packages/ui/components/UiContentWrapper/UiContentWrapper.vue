@@ -61,8 +61,10 @@ const bodyStyle = computed(() => {
 
     background-color: var(--ui-color-background);
     color: var(--ui-color-foreground);
-
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -22px;
+
+    // https://stackoverflow.com/questions/19718634/how-to-disable-margin-collapsing
+    padding: 0.05px; // prevent margin collapse (i.e. keep children with margins correctly contained inside __body)
   }
 }
 
