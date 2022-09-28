@@ -215,7 +215,7 @@ const allCommands = computed(() => {
           .extendMarkRange('link')
           .setLink({
             href: url,
-            // target: '_self',
+            target: url.startsWith('http') ? '_blank' : '_self',
           })
           .run()
       },
