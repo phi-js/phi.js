@@ -1,6 +1,7 @@
+<!-- eslint-disable max-len -->
 <script>
 export default {
-  name: 'CmsMediaVideo',
+  name: 'UiVideoYoutube',
   props: {
     url: {
       type: String,
@@ -18,6 +19,19 @@ export default {
       type: [Number, String],
       required: false,
       default: 0,
+    },
+
+    /* IFRAME props */
+    autoplay: {
+      type: [Boolean, String, Number],
+      required: false,
+      default: false,
+    },
+
+    controls: {
+      type: [Boolean, String, Number],
+      required: false,
+      default: true,
     },
   },
 
@@ -49,7 +63,7 @@ export default {
       if (!videoId) {
         return null
       }
-      return `https://www.youtube.com/embed/${videoId}?enablejsapi=1`
+      return `https://www.youtube.com/embed/${videoId}?controls=${this.controls ? '1' : '0'}&enablejsapi=1&mute=1&playsinline=1${this.autoplay ? '&autoplay=1' : ''}`
     },
   },
 
@@ -187,31 +201,19 @@ export default {
 </script>
 
 <template>
-  <div class="cms-media-video-youtube">
-    <iframe
-      v-if="iframeSrc"
-      :src="iframeSrc"
-      width="100%"
-      height="100%"
-      frameborder="0"
-      webkitallowfullscreen
-      mozallowfullscreen
-      allowfullscreen
-      style="min-height:inherit; background:inherit"
-    />
-    <div
-      v-else
-      class="empty-video"
-    >
-      Video no encontrado
-    </div>
+  <iframe
+    v-if="iframeSrc"
+    class="UiVideoYoutube"
+    :src="iframeSrc"
+    frameborder="0"
+    webkitallowfullscreen
+    mozallowfullscreen
+    allowfullscreen
+  />
+  <div
+    v-else
+    class="UiVideoYoutube UiVideoYoutube--empty"
+  >
+    Video no encontrado
   </div>
 </template>
-
-<style lang="scss">
-.cms-media-video-youtube {
-  width: 100%;
-  height: 100%;
-  min-height: inherit;
-}
-</style>

@@ -144,24 +144,21 @@ function onUpdateCurrentTime(msTime) {
 </script>
 
 <template>
-  <div class="UiVideo">
-    <component
-      :is="videoComponent"
-      v-if="videoComponent"
-      v-bind="$attrs"
-      v-model:is-playing="innerIsPlaying"
-      v-model:current-time="innerCurrentTime"
-      :url="url"
-      @update:current-time="onUpdateCurrentTime"
-      @update:is-playing="$emit('update:isPlaying', $event)"
-    />
-    <div
-      v-else
-      class="UiVideo--empty"
-    >
-      {{ url ? 'URL inválida' : 'No hay URL' }}
-    </div>
-  </div>
+  <component
+    :is="videoComponent"
+    v-if="videoComponent"
+    v-model:is-playing="innerIsPlaying"
+    v-model:current-time="innerCurrentTime"
+    class="UiVideo"
+    :url="url"
+    @update:current-time="onUpdateCurrentTime"
+    @update:is-playing="$emit('update:isPlaying', $event)"
+  />
+  <div
+    v-else
+    class="UiVideo UiVideo--empty"
+    v-text="url ? 'URL inválida' : 'No hay URL'"
+  />
 </template>
 
 <style lang="scss">

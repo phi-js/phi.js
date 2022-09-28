@@ -9,14 +9,19 @@
       webkitallowfullscreen
       mozallowfullscreen
       allowfullscreen
-    ></iframe>
-    <div v-else class="empty-video">{{ url ? 'URL inválida' : 'No hay URL' }}</div>
+    />
+    <div
+      v-else
+      class="empty-video"
+    >
+      {{ url ? 'URL inválida' : 'No hay URL' }}
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'cms-media-video-vimeo',
+  name: 'UiVideoVimeo',
   props: {
     url: {
       type: String,
@@ -31,116 +36,116 @@ export default {
         isPlaying: false,
         time: null,
       },
-    };
+    }
   },
 
   computed: {
     iframeSrc() {
-      let match = this.url.match(/^.*(vimeo).*/);
+      let match = this.url.match(/^.*(vimeo).*/)
       if (!match) {
-        return null;
+        return null
       }
 
-      match = this.url.match(/^.*(vimeo.com\/)([^#&?]*).*/);
-      let videoId = match && match[2] && match[2].length ? match[2] : null;
+      match = this.url.match(/^.*(vimeo.com\/)([^#&?]*).*/)
+      let videoId = match && match[2] && match[2].length ? match[2] : null
 
       if (!videoId) {
-        return null;
+        return null
       }
 
-      return `https://player.vimeo.com/video/${videoId}?color=ffffff&title=0&byline=0&portrait=0`;
+      return `https://player.vimeo.com/video/${videoId}?color=ffffff&title=0&byline=0&portrait=0`
     },
   },
 
   watch: {
     url() {
-      this.initializePlayer();
+      this.initializePlayer()
     },
   },
 
   mounted() {
-    this.initializePlayer();
+    this.initializePlayer()
   },
 
   methods: {
     loadApi() {
       return new Promise((resolve /*, reject*/) => {
         if (document.getElementById('script-api-vimeo')) {
-          return resolve();
+          return resolve()
         }
 
-        var tag = document.createElement('script');
-        tag.id = 'script-api-vimeo';
-        tag.src = 'https://player.vimeo.com/api/player.js';
+        var tag = document.createElement('script')
+        tag.id = 'script-api-vimeo'
+        tag.src = 'https://player.vimeo.com/api/player.js'
         tag.onload = () => {
-          resolve();
-        };
+          resolve()
+        }
 
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      });
+        var firstScriptTag = document.getElementsByTagName('script')[0]
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
+      })
     },
 
     initializePlayer() {
       if (this.player) {
-        return;
+        return
       }
 
       this.loadApi().then(() => {
         // this.player is a PROXY object, which fucks up .on('xxx') calls.  use as const instead
         // this.player = new Vimeo.Player(this.$el.querySelector('iframe'));
-        const player = new Vimeo.Player(this.$el.querySelector('iframe'));
+        const player = new Vimeo.Player(this.$el.querySelector('iframe'))
 
         player.on('play', (/*eventData*/) => {
-          this.videoData.isPlaying = true;
-          this.$emit('play', this.videoData);
-          this.$emit('input', this.videoData);
-        });
+          this.videoData.isPlaying = true
+          this.$emit('play', this.videoData)
+          this.$emit('input', this.videoData)
+        })
 
         player.on('pause', (/*eventData*/) => {
-          this.videoData.isPlaying = false;
-          this.$emit('pause', this.videoData);
-          this.$emit('input', this.videoData);
-        });
+          this.videoData.isPlaying = false
+          this.$emit('pause', this.videoData)
+          this.$emit('input', this.videoData)
+        })
 
         player.on('end', (/*eventData*/) => {
-          this.videoData.isPlaying = false;
-          this.$emit('end', this.videoData);
-          this.$emit('input', this.videoData);
-        });
+          this.videoData.isPlaying = false
+          this.$emit('end', this.videoData)
+          this.$emit('input', this.videoData)
+        })
 
         player.on('timeupdate', (eventData) => {
-          this.videoData.time = eventData.seconds * 1000;
-          this.$emit('timeupdate', this.videoData);
-          this.$emit('input', this.videoData);
-        });
+          this.videoData.time = eventData.seconds * 1000
+          this.$emit('timeupdate', this.videoData)
+          this.$emit('input', this.videoData)
+        })
 
         this.player = player
-      });
+      })
     },
 
     play() {
-      this.player && this.player.play();
+      this.player && this.player.play()
     },
 
     pause() {
-      this.player && this.player.pause();
+      this.player && this.player.pause()
     },
 
     stop() {
-      this.player && this.player.stop();
+      this.player && this.player.stop()
     },
 
     // Tiempo del video en milisegundos
     async getCurrentTime() {
       if (!this.player) {
-        return null;
+        return null
       }
 
-      return (await this.player.getCurrentTime()) * 1000;
+      return (await this.player.getCurrentTime()) * 1000
     },
   },
-};
+}
 </script>
 
 <style lang="scss">
