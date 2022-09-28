@@ -26,6 +26,13 @@ const props = defineProps({
     default: null,
   },
 
+  /* HREF target */
+  target: {
+    type: String,
+    required: false,
+    default: '_self',
+  },
+
 })
 
 const isError = ref(false)
@@ -71,7 +78,7 @@ function onImageError() {
       <a
         v-if="href"
         :href="href"
-        target="_system"
+        :target="target"
         class="MediaImage__link"
       >
         <img
