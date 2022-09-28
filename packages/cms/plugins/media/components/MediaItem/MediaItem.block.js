@@ -1,6 +1,6 @@
-import { h } from 'vue'
 import { UiItem } from '@/packages/ui/components'
 import MediaItemSettings from './MediaItemSettings.vue'
+import MediaItemFace from './MediaItemFace.vue'
 
 export default {
   name: 'MediaItem',
@@ -10,25 +10,7 @@ export default {
   block: { component: UiItem },
 
   editor: {
-    face: {
-      component: {
-        props: {
-          modelValue: {
-            type: Object,
-            required: false,
-            default: () => ({}),
-          },
-        },
-
-        render() {
-          return h(UiItem, {
-            ...this.modelValue.props,
-            text: this.modelValue.props?.text || 'Empty item',
-            icon: this.modelValue.props?.icon || 'mdi:help-rhombus',
-          })
-        },
-      },
-    },
+    face: { component: MediaItemFace },
 
     actions: [
       {

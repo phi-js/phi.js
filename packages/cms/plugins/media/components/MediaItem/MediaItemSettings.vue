@@ -52,6 +52,11 @@ function emitUpdate() {
       label="Subtext"
       @update:model-value="emitUpdate"
     />
+    <CmsPropInput
+      v-model="innerValue.props.href"
+      label="Link"
+      @update:model-value="emitUpdate"
+    />
   </div>
 </template>
 
