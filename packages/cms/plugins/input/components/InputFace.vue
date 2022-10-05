@@ -120,8 +120,4 @@ function onClickFace() {
     pointer-events: initial;
   }
 }
-
-.BlockScaffold--window-open .InputFace__dummy > span {
-  display: none;
-}
 </style>

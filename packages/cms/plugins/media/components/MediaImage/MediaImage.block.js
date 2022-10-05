@@ -27,6 +27,7 @@ export default {
 
     actions: [
       {
+        'id': 'image',
         'title': 'Image options',
         'component': UiForm,
         'v-model': 'block.props',

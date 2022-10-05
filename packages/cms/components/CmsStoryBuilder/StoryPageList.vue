@@ -25,7 +25,9 @@ const emit = defineEmits([
 ])
 
 const availableActions = shallowRef([])
-getBlockEditors({ component: 'LayoutPage' }).then((editors) => availableActions.value = editors?.actions || [])
+
+const editors = getBlockEditors({ component: 'LayoutPage' })
+availableActions.value = editors?.actions || []
 
 function onPageClick(page) {
   emit('update:currentPageId', page.id)

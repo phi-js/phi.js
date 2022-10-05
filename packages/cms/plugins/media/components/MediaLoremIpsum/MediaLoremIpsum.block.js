@@ -1,5 +1,6 @@
 import MediaLoremIpsum from './MediaLoremIpsum.vue'
 import CmsPropsForm from '../../../../components/CmsPropsForm/CmsPropsForm.vue'
+import { UiForm } from '@/packages/ui'
 
 export default {
   name: 'MediaLoremIpsum',
@@ -16,25 +17,25 @@ export default {
   },
 
   editor: {
-    // toolbar: {
-    //   'v-model': 'block',
-    //   'component': UiForm,
-    //   'props': {
-    //     class: 'UiGroup',
-    //     fields: [
-    //       {
-    //         type: 'text',
-    //         model: 'props.nParagraphs',
-    //         size: 2,
-    //       },
-    //       {
-    //         type: 'text',
-    //         model: 'props.nWords',
-    //         size: 2,
-    //       },
-    //     ],
-    //   },
-    // },
+    toolbar: {
+      'v-model': 'block',
+      'component': UiForm,
+      'props': {
+        class: 'UiGroup',
+        fields: [
+          {
+            type: 'number',
+            model: 'props.nParagraphs',
+            size: 2,
+          },
+          {
+            type: 'number',
+            model: 'props.nWords',
+            size: 2,
+          },
+        ],
+      },
+    },
 
     actions: [
       {

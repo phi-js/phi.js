@@ -1,14 +1,15 @@
 <script setup>
-import { ref, watch, watchEffect, provide } from 'vue'
+import { computed, provide, ref, shallowRef, watch, watchEffect } from 'vue'
 
-import { sanitizeStory, useStylesheets } from '../../functions'
-import { CmsBlockEditor } from '../CmsBlockEditor'
+import { useStylesheets, sanitizeStory } from '../../functions'
+import CmsSlotEditor from '../CmsSlotEditor/CmsSlotEditor.vue'
+import BlockWindow from '../CmsBlockEditor/BlockWindow.vue'
 
 const props = defineProps({
   story: {
     type: Object,
     required: false,
-    default: null,
+    default: () => ({}),
   },
 
   currentPageId: {
@@ -16,155 +17,218 @@ const props = defineProps({
     required: false,
     default: null,
   },
+
+  settings: {
+    type: Object,
+    required: false,
+    default: null,
+  },
 })
 
-const emit = defineEmits(['update:story', 'update:currentPageId'])
+const emit = defineEmits(['update:story', 'update:current-page-id'])
 
-// Sanitize incoming story
-const sanitizedStory = ref(null)
+const innerStory = shallowRef()
+const currentPage = shallowRef()
+
 watch(
   () => props.story,
-  (incomingStory) => {
-    // sanitizedStory.value = JSON.parse(JSON.stringify(sanitizeStory(incomingStory)))
-    sanitizedStory.value = sanitizeStory(incomingStory)
+  () => {
+    innerStory.value = sanitizeStory(JSON.parse(JSON.stringify(props.story)))
+    currentPage.value = innerStory.value.pages.find((p) => p.id == props.currentPageId) || innerStory.value.pages?.[0]
   },
-  {
-    immediate: true,
-    // deep: true, // causes loop (!)
+  { immediate: true },
+)
+
+const transitionDirection = ref('forward') // 'forward' | 'back'
+
+watch(
+  () => props.currentPageId,
+  (newPageId) => {
+    const foundPage = innerStory.value.pages.find((p) => p.id == newPageId)
+    if (!foundPage) {
+      return
+    }
+    currentPage.value = foundPage
   },
 )
 
+watchEffect(() => useStylesheets(props.story.stylesheets))
 
-// MediaLink calls injectedStory.goTo()
-// So for MediaLink to work inside a story editor, we must provide a $_cms_story.goTo()
-const providedStory = {
-  goTo: (pageId) => {
-    emit('update:currentPageId', pageId)
-  },
-
-  goNext: () => {
-    const currentIndex = sanitizedStory.value.pages.findIndex((p) => p.id == props.currentPageId)
-    const nextId = sanitizedStory.value.pages?.[currentIndex + 1]?.id
-    if (nextId) {
-      transitionDirection.value = 'fw'
-      emit('update:currentPageId', nextId)
-    }
-  },
-
-  goBack: () => {
-    const currentIndex = sanitizedStory.value.pages.findIndex((p) => p.id == props.currentPageId)
-    const prevId = sanitizedStory.value.pages?.[currentIndex - 1]?.id
-    if (prevId) {
-      transitionDirection.value = 'bw'
-      emit('update:currentPageId', prevId)
-    }
-  },
+function emitUpdate() {
+  emit('update:story', { ...innerStory.value })
 }
 
-provide('$_cms_story', providedStory)
+// Block editor window (singleton in the story editor)
+const editingBlock = shallowRef() // Instance of SlotItem
+const currentActionId = ref()
 
+function openBlockWindow(SlotBlock, actionId = null) {
+  editingBlock.value = SlotBlock
+  currentActionId.value = actionId
+}
 
-const currentPage = ref()
-watchEffect(() => {
-  const foundPage = sanitizedStory.value.pages.find((p) => p.id == props.currentPageId)
-  currentPage.value = foundPage || sanitizedStory.value.pages?.[0]
-  currentPage.value.slots = {
-    ...currentPage.value.slots,
-    header: sanitizedStory.value.header,
-    footer: sanitizedStory.value.footer,
-  }
+function closeBlockWindow() {
+  editingBlock.value = null
+}
+
+/* Provided context/utilities for child blocks */
+provide('_cms_CmsStoryEditor', {
+  story: innerStory,
+  openBlockWindow,
 })
 
-function onUpdateCurrentPage() {
-  const targetValue = currentPage.value
+const isHeaderEnabled = computed({
+  get() {
+    return currentPage.value?.omitHeader !== true
+  },
+  set(isEnabled) {
+    currentPage.value.omitHeader = !isEnabled
+    emitUpdate()
+  },
+})
 
-  if (targetValue.slots.header) {
-    sanitizedStory.value.header = targetValue.slots.header
-    delete targetValue.slots.header
-  }
-  if (targetValue.slots.footer) {
-    sanitizedStory.value.footer = targetValue.slots.footer
-    delete targetValue.slots.footer
-  }
+const isFooterEnabled = computed({
+  get() {
+    return currentPage.value?.omitFooter !== true
+  },
+  set(isEnabled) {
+    currentPage.value.omitFooter = !isEnabled
+    emitUpdate()
+  },
+})
 
-  emit('update:story', {
-    ...sanitizedStory.value,
-    pages: sanitizedStory.value.pages.map((page) => page.id == targetValue.id ? { ...targetValue } : page),
-  })
-}
-
-const transitionName = ref('slideX')
-const transitionDirection = ref('fw') // fw, bw
-
-// STYLESHEETS
-watchEffect(() => useStylesheets(sanitizedStory.value.stylesheets))
-
-function onFormSubmit($event) {
-  let data = new FormData($event.target)
-  if ($event.submitter) {
-    data.append($event.submitter.name, $event.submitter.value)
-  }
-  let goTo = data.get('story-goto')
-  switch (goTo) {
-  case '':
-  case 0:
-  case null:
-  case undefined:
-    /// zzzz
-    break
-  case 'next':
-    providedStory?.goNext?.()
-    break
-  case 'back':
-    providedStory?.goBack?.()
-    break
-  default:
-    providedStory?.goTo?.(goTo)
-    break
-  }
-}
-
-const isAnimating = ref(false)
 </script>
 
 <template>
-  <div class="CmsStoryEditor">
-    <div
-      class="CmsStoryEditor__viewport"
-      :class="{'CmsStoryEditor__viewport--animating': isAnimating}"
+  <div class="CmsStoryEditor CmsStory">
+    <Transition
+      name="phi-navigation"
+      :enter-from-class="`phi-navigation-enter-from phi-navigation-${transitionDirection}-enter-from`"
+      :enter-active-class="`phi-navigation-enter-active phi-navigation-${transitionDirection}-enter-active`"
+      :enter-to-class="`phi-navigation-enter-to phi-navigation-${transitionDirection}-enter-to`"
+      :leave-from-class="`phi-navigation-leave-from phi-navigation-${transitionDirection}-leave-from`"
+      :leave-active-class="`phi-navigation-leave-active phi-navigation-${transitionDirection}-leave-active`"
+      :leave-to-class="`phi-navigation-leave-to phi-navigation-${transitionDirection}-leave-to`"
     >
-      <Transition
-        :name="`${transitionName}--${transitionDirection}`"
-        @before-enter="isAnimating = true"
-        @after-leave="isAnimating = false"
+      <div
+        :key="currentPage.id"
+        class="CmsStory__page"
       >
-        <KeepAlive>
-          <CmsBlockEditor
-            v-if="currentPage?.id"
-            :key="currentPage?.id"
-            v-model:block="currentPage"
-            class="CmsStory__page"
-            @update:block="onUpdateCurrentPage"
-            @submit="onFormSubmit"
+        <div
+          class="CmsStoryEditor__header"
+          :class="{
+            'CmsStoryEditor__header--empty': !innerStory.header?.length,
+            'CmsStoryEditor__header--disabled': !isHeaderEnabled
+          }"
+        >
+          <CmsSlotEditor
+            v-model:slot="innerStory.header"
+            class="LayoutPage__header"
+            label="TO HEADER"
+            @update:slot="emitUpdate"
           />
-        </KeepAlive>
-      </Transition>
-    </div>
+          <div class="CmsStoryEditor__separator">
+            <label title="Toggle header for this page">
+              <span>Header</span>
+              <input
+                v-model="isHeaderEnabled"
+                type="checkbox"
+              >
+            </label>
+          </div>
+        </div>
+
+        <CmsSlotEditor
+          v-model:slot="currentPage.slots.default"
+          class="CmsStoryEditor__contents LayoutPage__contents"
+          label="TO PAGE"
+          @update:slot="emitUpdate"
+        />
+
+        <div
+          class="CmsStoryEditor__footer"
+          :class="{
+            'CmsStoryEditor__footer--empty': !innerStory.footer?.length,
+            'CmsStoryEditor__footer--disabled': !isFooterEnabled
+          }"
+        >
+          <div class="CmsStoryEditor__separator">
+            <label title="Toggle footer for this page">
+              <span>Footer</span>
+              <input
+                v-model="isFooterEnabled"
+                type="checkbox"
+              >
+            </label>
+          </div>
+
+          <CmsSlotEditor
+            v-model:slot="innerStory.footer"
+            class="LayoutPage__footer"
+            label="TO FOOTER"
+            @update:slot="emitUpdate"
+          />
+        </div>
+      </div>
+    </Transition>
+
+    <BlockWindow
+      v-if="editingBlock"
+      v-model:action-id="currentActionId"
+      v-model:block="editingBlock.innerBlock"
+      open
+      @accept="editingBlock.updateBlock($event); closeBlockWindow()"
+      @cancel="closeBlockWindow()"
+    />
   </div>
 </template>
 
 <style lang="scss">
 .CmsStoryEditor {
-  --cms-story-transition-duration: var(--ui-duration-quick);
-  @import "../CmsStory/transitions.scss";
-
-  &__viewport {
+  &__header,
+  &__footer {
     position: relative;
-    height: 100%;
 
-    &--animating {
-      overflow: hidden;
+    &--disabled {
+      opacity: 0.5;
+      .CmsSlotEditor {
+        pointer-events: none;
+        &__footer {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &__header {
+    border-bottom: 1px dashed #525659;
+  }
+  &__footer {
+    border-top: 1px dashed #525659;
+  }
+
+  &__separator {
+    font-size: 9pt;
+    font-weight: 600;
+    text-align: right;
+
+    label {
+      user-select: none;
+
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+
+      padding: 3px;
+      cursor: pointer;
+      input {
+        cursor: pointer;
+      }
+      &:hover {
+        background-color: var(--ui-color-hover);
+      }
     }
   }
 }
+
 </style>

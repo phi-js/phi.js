@@ -34,6 +34,12 @@ export default {
       ],
     },
     {
+      title: 'Navigation',
+      children: [
+        MediaLink,
+      ],
+    },
+    {
       title: 'Layout',
       children: [
         MediaDialog,

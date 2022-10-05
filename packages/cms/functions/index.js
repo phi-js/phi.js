@@ -1,4 +1,5 @@
 export { default as forEachBlock } from './forEachBlock.js'
+export { default as getBlockActions } from './getBlockActions.js'
 export { default as getBlockDefinition } from './getBlockDefinition.js'
 export { default as getBlockEditors } from './getBlockEditors.js'
 export { default as getBlockSchema } from './getBlockSchema.js'

@@ -16,6 +16,15 @@ export default function sanitizeStory(story) {
     story.pages = [emptyPage]
   }
 
+  // Every story has a HEADER and FOOTER array (slot)
+  if (!Array.isArray(story.header)) {
+    story.header = []
+  }
+
+  if (!Array.isArray(story.footer)) {
+    story.footer = []
+  }
+
   // Every story has an ARRAY of paths
   if (!Array.isArray(story.paths)) {
     story.paths = []
@@ -28,9 +37,19 @@ export default function sanitizeStory(story) {
 
   // Required attributes for PAGES
   story.pages.forEach((page, index) => {
+    // every page has a slots object with a "default" property (array)
+    // where page.slot is a shortcut of page.slots.default
+
+    if (!page.slots) {
+      page.slots = {}
+    }
+    if (!page.slots.default) {
+      page.slots.default = Array.isArray(page.slot) ? page.slot : []
+    }
+
     // every page has a unique ID
     if (!page.id) {
-      page.id = index === 0 ? 'start' : `page-${index + 1}`
+      page.id = `page-${index + 1}`
     }
 
     // every page has a title

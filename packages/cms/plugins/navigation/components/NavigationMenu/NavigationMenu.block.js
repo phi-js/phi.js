@@ -1,4 +1,5 @@
 import NavigationMenu from './NavigationMenu.vue'
+import NavigationMenuEditor from './NavigationMenuEditor.vue'
 
 export default {
   tags: ['navigation'],
@@ -10,5 +11,15 @@ export default {
   block: {
     component: NavigationMenu,
     props: { items: [] },
+  },
+
+  editor: {
+    actions: [
+      {
+        id: 'items',
+        title: 'Menu items',
+        component: NavigationMenuEditor,
+      },
+    ],
   },
 }

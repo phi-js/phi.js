@@ -21,8 +21,8 @@ const props = defineProps({
 
 const emit = defineEmits(['update:block'])
 
-const injectedStoryEditor = inject('$_cms_story_builder', {})
-const injectedStory = shallowRef(injectedStoryEditor.story)
+const CmsStoryEditor = inject('_cms_CmsStoryEditor', {})
+const injectedStory = CmsStoryEditor.story
 
 /*
 The "class" prop of the block may contain VM statements.

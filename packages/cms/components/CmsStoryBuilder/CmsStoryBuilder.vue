@@ -1,7 +1,8 @@
 <script setup>
-import { provide, ref, watchEffect, computed, watch, useSlots } from 'vue'
+import { provide, ref, computed, watch, useSlots } from 'vue'
 import { CmsStory } from '../CmsStory'
-import { CmsStoryEditor } from '../CmsStoryEditor'
+import CmsStoryEditor from '../CmsStoryEditor/CmsStoryEditor.vue'
+
 import StoryPageList from './StoryPageList.vue'
 import StoryEditorWindow from '../CmsStoryEditor/StoryEditorWindow.vue'
 import { getStorySchema } from '../../functions'
@@ -110,44 +111,24 @@ const i18n = useI18n({
   },
 })
 
-const currentPageId = ref()
+// inner story value
+const innerStory = ref()
 watch(
-  () => props.currentPageId,
-  (newPageId) => currentPageId.value = newPageId,
+  () => props.story,
+  (newValue) => innerStory.value = JSON.parse(JSON.stringify(newValue)),
   { immediate: true },
 )
 
-function updatePageId($event) {
-  /*
-  Vue bug(?)  Combining
-  v-model:current-page-id="currentPageId"
-  @update:current-page-id="updatePageId($event)"
 
-  will NOT TRIGGER the v-model update on the variable.
-  So, do it here :(
-
-
-  Note: It works when NOT using dashes in the prop names, i.e:
-  v-model:currentPageId="currentPageId"
-  @update:currentPageId="updatePageId($event)"
-  */
-  if (currentPageId.value != $event) {
-    currentPageId.value = $event
-  }
-  emit('update:currentPageId', currentPageId.value)
-}
-
-
-// inner story value
-const innerStory = ref()
-watchEffect(() => {
-  innerStory.value = JSON.parse(JSON.stringify(props.story))
-
-  if (!currentPageId.value) {
-    currentPageId.value = props.story?.pages?.[0]?.id
-    updatePageId(currentPageId.value)
-  }
+const currentPageId = computed({
+  get() {
+    return props.currentPageId
+  },
+  set(newPageId) {
+    emit('update:currentPageId', newPageId)
+  },
 })
+
 
 // Used by VmExpressionPicker
 provide('$_vm_functions', computed(() => {
@@ -442,7 +423,6 @@ const contentSlot = computed(() => {
           v-show="currentTab == 'editor'"
           v-model:current-page-id="currentPageId"
           v-model:story="innerStory"
-          @update:current-page-id="updatePageId($event)"
           @update:story="onUpdateStory()"
         />
 
@@ -451,7 +431,6 @@ const contentSlot = computed(() => {
           v-model:current-page-id="currentPageId"
           :model-value="props.modelValue"
           :story="innerStory"
-          @update:current-page-id="updatePageId($event)"
           @update:model-value="emit('update:modelValue', $event)"
           @story-emit="emit('story-emit', $event)"
         />

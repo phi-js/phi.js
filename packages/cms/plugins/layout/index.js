@@ -1,5 +1,4 @@
 import LayoutPage from './components/LayoutPage/LayoutPage.vue'
-import LayoutPageEditor from './components/LayoutPage/LayoutPageEditor.vue'
 import LayoutPageSettings from './components/LayoutPage/LayoutPageSettings.vue'
 
 import LayoutGroup from './components/LayoutGroup/LayoutGroup.vue'
@@ -31,7 +30,6 @@ export default {
           ],
 
           editor: {
-            component: LayoutPageEditor,
             actions: [
               {
                 id: 'settings',

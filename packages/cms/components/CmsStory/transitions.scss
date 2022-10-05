@@ -1,86 +1,64 @@
-// Transiciones.
-// Toda transicion tiene un nombre, seguido de un modificador --fw o --bw  (adelante/atras)
-// ej: slideX--fw, slideX--bw
-.slideX {
-  &--bw,
-  &--fw {
-    &-leave-active {
-      position: absolute !important;
-      top: 0;
-      left: 0;
-      right: 0;
-    }
-
-    &-enter-active,
-    &-leave-active {
-      transition: all var(--cms-story-transition-duration) ease;
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    &-enter-from,
-    &-leave-to {
-      opacity: 0;
-    }
-
-    &-enter-from {
-      transform: translateX(64px);
-    }
-
-    &-leave-to {
-      transform: translateX(-64px);
-    }
+.phi-navigation {
+  &-enter-active,
+  &-leave-active {
+    transition-duration: var(--cms-story-transition-duration);
+    // overflow: hidden;
   }
 
-  &--bw {
-    &-enter-from {
-      transform: translateX(-64px);
-    }
+  // The leaving container will be absolutely positioned over the standing element
+  &-leave-active {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
 
-    &-leave-to {
-      transform: translateX(64px);
-    }
+  // Animate the container's opacity
+  &-enter-from,
+  &-leave-to {
+    opacity: 0;
   }
 }
 
-.slideY {
-  &--bw,
-  &--fw {
-    &-leave-active {
-      position: absolute !important;
-      top: 0;
-      left: 0;
-      right: 0;
+// Block defined transitions
+:root {
+  --transition-displacement-left: -128px;
+  --transition-displacement-right: 128px;
+}
+
+@import './transitions/bounceInRight.scss';
+@import './transitions/bounceOutRight.scss';
+@import './transitions/fadeInLeft.scss';
+@import './transitions/fadeInRight.scss';
+@import './transitions/fadeOutLeft.scss';
+@import './transitions/fadeOutRight.scss';
+
+.phi-navigation {
+  &-enter-active,
+  &-leave-active {
+    [class*="_phi_transition_"] {
+      animation-duration: var(--cms-story-transition-duration);
     }
 
-    &-enter-active,
-    &-leave-active {
-      transition: all var(--cms-story-transition-duration) ease;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    &-enter-from,
-    &-leave-to {
-      opacity: 0;
-    }
-
-    &-enter-from {
-      transform: translateY(64px);
-    }
-
-    &-leave-to {
-      transform: translateY(-64px);
+    &[class*="_phi_transition_"] {
+      animation-duration: var(--cms-story-transition-duration);
     }
   }
 
-  &--bw {
-    &-enter-from {
-      transform: translateY(-64px);
-    }
+  &-forward-enter-active._phi_transition_navigation-forward-enter,
+  &-forward-leave-active._phi_transition_navigation-forward-leave,
+  &-back-enter-active._phi_transition_navigation-back-enter,
+  &-back-leave-active._phi_transition_navigation-back-leave,
 
-    &-leave-to {
-      transform: translateY(64px);
-    }
+  &-forward-enter-active ._phi_transition_navigation-forward-enter,
+  &-forward-leave-active ._phi_transition_navigation-forward-leave,
+  &-back-enter-active ._phi_transition_navigation-back-enter,
+  &-back-leave-active ._phi_transition_navigation-back-leave {
+    &_bounceInRight { @extend .bounceInRight; }
+    &_bounceOutRight { @extend .bounceOutRight; }
+    &_fadeInLeft { @extend .fadeInLeft; }
+    &_fadeInRight { @extend .fadeInRight; }
+    &_fadeOutLeft { @extend .fadeOutLeft; }
+    &_fadeOutRight { @extend .fadeOutRight; }
   }
 }

@@ -1,19 +1,18 @@
-<script>
-export default { inheritAttrs: false }
-</script>
-
 <script setup>
 import { computed } from 'vue'
 import MediaImage from './MediaImage.vue'
 import { UiResizable } from '../../../../../ui'
 
 const props = defineProps({
-  /* objeto PROPS para MediaImage:
+  /*
+    objeto PROPS del bloque MediaImage:
     src: 'https://s3.amazonaws.com/phidias-api-1/desarrollodev/cms/pages/test/Best-Cheesecake-Recipe-2-1-of-1-4.jpg',
-    align: 'center',
-    width: 'auto',
-    href: 'https://phidias.co',
     height: '130px'
+    align: 'center',
+    href: 'https://phidias.co',
+    target: '',
+    width: 'auto',
+    ... all block props
   */
   modelValue: {
     type: Object,
@@ -21,6 +20,7 @@ const props = defineProps({
     default: () => ({}),
   },
 })
+
 const emit = defineEmits(['update:modelValue'])
 const isEmpty = computed(() => !props.modelValue?.src?.trim?.())
 
@@ -61,7 +61,7 @@ function onImageResize(coords) {
     >
       <MediaImage
         class="MediaImageFace__image"
-        v-bind="{ ...$attrs, ...modelValue }"
+        v-bind="{ ...modelValue, 'class': undefined, 'style': undefined }"
         :height="coords?.height ? coords.height + 'px' : modelValue.height"
       />
 
@@ -97,19 +97,6 @@ function onImageResize(coords) {
 </template>
 
 <style lang="scss">
-
-// &--empty,
-// &:hover {
-.SlotItem--active > .BlockScaffold > .BlockScaffold__face > .MediaImageFace {
-  .MediaImageFace__infobox {
-    opacity: 1;
-  }
-
-  .UiResizable__hotzone {
-    display: block;
-  }
-}
-
 .MediaImageFace {
   position: relative;
   --imageface-resizer-size: 30px;
@@ -122,13 +109,9 @@ function onImageResize(coords) {
     right: 0;
     bottom: 0;
     left: 0;
-
-    opacity: 0;
   }
 
   .UiResizable__hotzone {
-    display: none;
-
     min-width: 0;
     min-height: 0;
     width: var(--imageface-resizer-size);

@@ -45,25 +45,13 @@
     padding-right: 12px;
   }
 
-  // Chain of height
-  .CmsStory,
-  .CmsStory > .CmsStory__container,
-  .CmsStory > .CmsStory__container > div,
-  .CmsStory > .CmsStory__container > div > .LayoutPage {
-    height: 100%;
-  }
-
-  .CmsStoryEditor,
-  .CmsStoryEditor > div,
-  .CmsStoryEditor > div > * {
-    height: 100%;
-  }
-
-  .CmsStoryEditor .LayoutPageEditor {
-    // flex-direction: column;  // centers content vertically when it shouldnt
-    // display: flex;
-    height: 100%;
-  }
+  // // Chain of height
+  // .CmsStory,
+  // .CmsStory > .CmsStory__container,
+  // .CmsStory > .CmsStory__container > div,
+  // .CmsStory > .CmsStory__container > div > .LayoutPage {
+  //   height: 100%;
+  // }
 
   &__expander {
     @extend .ui--clickable;
@@ -115,6 +103,7 @@
     border-radius: 4px;
 
     align-self: stretch;
+    height: 100%;
     min-width: 40px;
 
     &[disabled=true] {

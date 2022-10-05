@@ -2,7 +2,8 @@
 import { ref, computed, onBeforeUnmount, watchEffect } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { UiIcon, UiPopover, UiTabs, UiTab, UiButton } from '@/packages/ui'
-import BlockScaffold from '../../../../components/CmsBlockEditor/BlockScaffold.vue'
+
+import BlockScaffold from '../../../../components/CmsSlotEditor/Bloh.vue'
 
 import googleTranslate from '../../../../components/CmsPropInput/types/googleTranslate'
 
@@ -13,7 +14,6 @@ import Underline from '@tiptap/extension-underline'
 import TextAlign from '@tiptap/extension-text-align'
 import Link from '@tiptap/extension-link'
 
-
 import EditorContentWrapper from './EditorContentWrapper.vue'
 
 const props = defineProps({
@@ -22,7 +22,7 @@ const props = defineProps({
     required: true,
   },
 })
-const emit = defineEmits(['update:block'])
+const emit = defineEmits(['update:block', 'select', 'focus', 'blur'])
 
 const i18n = useI18n()
 const curLanguage = ref(i18n.locale)
@@ -43,8 +43,16 @@ const editor = new Editor({
     }),
   ],
   content: '',
-  onFocus: () => isFocused.value = true,
-  onBlur: () => isFocused.value = false,
+  onFocus: ({ event }) => {
+    emit('select')
+
+    isFocused.value = true
+    emit('focus', event)
+  },
+  onBlur: ({ event }) => {
+    isFocused.value = false
+    emit('blur', event)
+  },
   onUpdate: () => {
     innerValue.value = editor.getHTML()
     emitUpdate()
@@ -275,18 +283,13 @@ async function doTranslation() {
     innerValue.value = results?.[0]
     emitUpdate()
   }
-
 }
-
 </script>
 
 <template>
   <BlockScaffold
     class="MediaHtmlBlockEditor"
-    v-bind="$attrs"
     :block="props.block"
-    :focused="isFocused"
-    @update:block="$emit('update:block', $event)"
   >
     <template #toolbar>
       <UiPopover>
@@ -364,38 +367,43 @@ async function doTranslation() {
       />
     </template>
 
-    <template #default="{ innerBlock }">
-      <UiTabs
-        v-if="isLanguageOpen"
-        class="MediaHtmlBlockEditor__tabs"
-        :model-value="curLanguage"
-        @update:model-value="setLanguage($event)"
+    <template #default>
+      <div
+        class="MediaHtmlBlockEditor"
+        :class="props.block?.props?.class"
+        :style="props.block?.props?.style"
       >
-        <template #default>
-          <UiTab
-            v-for="(locale) in i18n.availableLocales.value"
-            :key="locale.value"
-            :text="locale.text"
-            :value="locale.value"
-          />
-        </template>
+        <UiTabs
+          v-if="isLanguageOpen"
+          class="MediaHtmlBlockEditor__tabs"
+          :model-value="curLanguage"
+          @update:model-value="setLanguage($event)"
+        >
+          <template #default>
+            <UiTab
+              v-for="(locale) in i18n.availableLocales.value"
+              :key="locale.value"
+              :text="locale.text"
+              :value="locale.value"
+            />
+          </template>
 
-        <template #right>
-          <UiButton
-            v-show="curLanguage != 'en'"
-            label="Translate"
-            icon="mdi:translate"
-            class="UiButton--cancel"
-            @click="doTranslation()"
-          />
-        </template>
-      </UiTabs>
-      <EditorContentWrapper
-        :value="innerValue"
-        :editor="editor"
-        :class="innerBlock?.props?.class"
-        :style="innerBlock?.props?.style"
-      />
+          <template #right>
+            <UiButton
+              v-show="curLanguage != 'en'"
+              label="Translate"
+              icon="mdi:translate"
+              class="UiButton--cancel"
+              @click="doTranslation()"
+            />
+          </template>
+        </UiTabs>
+
+        <EditorContentWrapper
+          :value="innerValue"
+          :editor="editor"
+        />
+      </div>
     </template>
   </BlockScaffold>
 </template>
@@ -426,14 +434,6 @@ async function doTranslation() {
   &__tabs {
     background-color: #333;
     color: #eee;
-
-    display: none; // only show under focused editor (.SlotItem--active)
-  }
-}
-
-.SlotItem--active {
-  .MediaHtmlBlockEditor__tabs {
-    display: block;
   }
 }
 </style>

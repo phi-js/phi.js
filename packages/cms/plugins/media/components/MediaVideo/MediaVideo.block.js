@@ -1,5 +1,6 @@
 import UiVideo from '@/packages/ui/components/UiVideo/UiVideo.vue'
 import MediaVideoSettings from './MediaVideoSettings.vue'
+import MediaVideoChapters from './MediaVideoChapters.vue'
 
 export default {
   name: 'MediaVideo',
@@ -21,6 +22,12 @@ export default {
         title: 'Video settings',
         component: MediaVideoSettings,
         props: { endpoint: '{{ $settings.uploads.assets }}' },
+      },
+
+      {
+        id: 'video-chapters',
+        title: 'Chapters',
+        component: MediaVideoChapters,
       },
     ],
   },

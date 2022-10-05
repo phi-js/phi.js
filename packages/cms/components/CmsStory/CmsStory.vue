@@ -1,3 +1,4 @@
+<!-- eslint-disable max-len -->
 <script>
 import {
   ref,
@@ -20,8 +21,8 @@ import {
   setProperty,
   useStylesheets,
 } from '../../functions'
-import { useI18n } from '../../../i18n'
-import { VM } from '../../../vm'
+import { useI18n, locale } from '@/packages/i18n'
+import { VM } from '@/packages/vm'
 
 export default {
   props: {
@@ -96,13 +97,13 @@ export default {
       const pageClone = JSON.parse(JSON.stringify(currentPage.value))
       forEachBlock(pageClone, (block) => {
         if (block.props) {
-          block.props = parseTranslations(block.props, i18n.locale, block.i18n)
+          block.props = parseTranslations(block.props, locale.value, block.i18n)
         }
         if (block.rules) {
-          block.rules = parseTranslations(block.rules, i18n.locale, block.i18n)
+          block.rules = parseTranslations(block.rules, locale.value, block.i18n)
         }
         if (block['v-on']) {
-          block['v-on'] = parseTranslations(block['v-on'], i18n.locale, block.i18n)
+          block['v-on'] = parseTranslations(block['v-on'], locale.value, block.i18n)
         }
       })
 
@@ -150,7 +151,8 @@ export default {
         return
       }
 
-      storyVM.eval(sanitizedStory.value.setup, innerModel.value)
+      const evaluableSetup = parseTranslations(sanitizedStory.value.setup, locale.value)
+      storyVM.eval(evaluableSetup, innerModel.value)
       isMounted.value = true
     })
 
@@ -194,8 +196,7 @@ export default {
     // Navigation history and direction
     const navigationHistory = ref([]) // array of page IDs
     const loadedPages = {} // loadedPages[page-id] = true | false
-    const transitionName = ref('slideX')
-    const transitionDirection = ref('fw') // fw, bw
+    const transitionDirection = ref('forward') // 'forward' | 'back'
 
     // Hash of window.scrollY positions when leaving a page
     // previousY[page name] = n
@@ -218,7 +219,7 @@ export default {
       if (previousId) {
         const previousIndex = sanitizedStory.value.pages.findIndex((p) => p.id == previousId)
         const nextIndex = sanitizedStory.value.pages.findIndex((p) => p.id == currentPage.value.id)
-        transitionDirection.value = nextIndex > previousIndex ? 'fw' : 'bw'
+        transitionDirection.value = nextIndex > previousIndex ? 'forward' : 'back'
       }
 
       if (navigationHistory.value[navigationHistory.value.length - 1]?.id == pageId) {
@@ -386,57 +387,51 @@ export default {
       : h(
         'div',
         { class: 'CmsStory' },
-        [
-          h(
-            'div',
-            { class: 'CmsStory__viewport' },
-            h(
-              Transition,
-              {
-                'name': `${transitionName.value}--${transitionDirection.value}`,
-                'enter-active-class': `animating ${transitionName.value}--${transitionDirection.value}-enter-active`,
-                'leave-active-class': `animating ${transitionName.value}--${transitionDirection.value}-leave-active`,
-                'onEnter': onTransitionEnter,
-              },
-              () => h(
-                KeepAlive,
-                null,
-                currentPage.value
-                  ? h(CmsBlock, {
-                    'key': currentPage.value.id,
-                    'class': 'CmsStory__page',
-                    'block': translatedPage.value,
-                    'modelValue': {
-                      ...innerModel.value,
-                      $i18n: i18n,
-                      $pages: visiblePages.value,
-                      $nav: pageNav.value,
-                      $page: pageNav.value.current,
-                    },
-                    'onUpdate:modelValue': onUpdateModelValue,
-                  })
-                  : null,
-              ),
-            ),
+        h(
+          Transition,
+          {
+            'name': 'phi-navigation',
+            'enter-from-class': `phi-navigation-enter-from phi-navigation-${transitionDirection.value}-enter-from`,
+            'enter-active-class': `phi-navigation-enter-active phi-navigation-${transitionDirection.value}-enter-active`,
+            'enter-to-class': `phi-navigation-enter-to phi-navigation-${transitionDirection.value}-enter-to`,
+            'leave-from-class': `phi-navigation-leave-from phi-navigation-${transitionDirection.value}-leave-from`,
+            'leave-active-class': `phi-navigation-leave-active phi-navigation-${transitionDirection.value}-leave-active`,
+            'leave-to-class': `phi-navigation-leave-to phi-navigation-${transitionDirection.value}-leave-to`,
+            'onEnter': onTransitionEnter,
+          },
+          () => h(
+            KeepAlive,
+            null,
+            currentPage.value
+              ? h(CmsBlock, {
+                'key': currentPage.value.id,
+                'class': 'CmsStory__page',
+                'block': translatedPage.value,
+                'modelValue': {
+                  ...innerModel.value,
+                  $i18n: i18n,
+                  $pages: visiblePages.value,
+                  $nav: pageNav.value,
+                  $page: pageNav.value.current,
+                },
+                'onUpdate:modelValue': onUpdateModelValue,
+              })
+              : null,
           ),
-        ],
+        ),
       )
   },
 }
 </script>
 
 <style lang="scss">
+@import "./transitions.scss";
+
 .CmsStory {
-  @import "./transitions.scss";
   --cms-story-transition-duration: var(--ui-duration-quick);
-  // --cms-story-transition-duration: 5s;
+  --cms-story-transition-duration: 0.3s;
 
-  &__viewport {
-    position: relative;
-
-    // o height 100%, o overflow:hidden.  Pero tener AMBOS causa que no se haga scroll en la vista final del story
-    // height: 100%;
-    overflow: hidden;
-  }
+  position: relative;
+  border: 1px solid transparent; // prevent margin collapses
 }
 </style>

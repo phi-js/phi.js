@@ -35,6 +35,9 @@ import { colorScheme } from '@/packages/ui'
 const createdElements = {}
 
 export default function useStylesheets(arrSheets, containerSelector = 'body') {
+  if (!Array.isArray(arrSheets)) {
+    return
+  }
 
   const containerElement = document.querySelector(containerSelector)
 

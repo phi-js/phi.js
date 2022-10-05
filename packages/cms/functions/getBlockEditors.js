@@ -33,13 +33,14 @@ import BlockVisibilityEditor from '../components/CmsBlockEditor/BlockVisibilityE
 import BlockCssEditor from '../components/CmsBlockEditor/BlockCssEditor.vue'
 import BlockValidationEditor from '../components/CmsBlockEditor/BlockValidationEditor.vue'
 import BlockRepeatEditor from '../components/CmsBlockEditor/BlockRepeatEditor.vue'
+import BlockTransitionsEditor from '../components/CmsBlockEditor/BlockTransitionsEditor.vue'
 
 /*
 CmsStoryBuilderSettings as defined in prop "settings" of:
 components\CmsStoryBuilder\CmsStoryBuilder.vue
 */
 
-export default async function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
+export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
   const definition = getBlockDefinition(block)
 
   const retval = {
@@ -125,6 +126,15 @@ export default async function getBlockEditors(block, CmsStoryBuidlerSettings = n
     })
   }
 
+  // Visibility: v-if
+  retval.actions.push({
+    'id': 'visibility',
+    'title': 'Visibility',
+    'icon': block['v-if'] ? 'mdi:eye' : 'mdi:eye-outline',
+    'component': BlockVisibilityEditor,
+    'v-model': 'block',
+  })
+
   // Block CSS property
   retval.actions.push({
     'id': 'css',
@@ -134,12 +144,12 @@ export default async function getBlockEditors(block, CmsStoryBuidlerSettings = n
     'v-model': 'block',
   })
 
-  // Visibility: v-if
+  // Transitions
   retval.actions.push({
-    'id': 'visibility',
-    'title': 'Visibility',
-    'icon': block['v-if'] ? 'mdi:eye' : 'mdi:eye-outline',
-    'component': BlockVisibilityEditor,
+    'id': 'transitions',
+    'title': 'Transitions',
+    'icon': 'mdi:transition',
+    'component': BlockTransitionsEditor,
     'v-model': 'block',
   })
 

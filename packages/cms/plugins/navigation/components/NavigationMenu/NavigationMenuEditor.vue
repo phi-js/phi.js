@@ -1,0 +1,86 @@
+<script setup>
+import { ref, watchEffect, computed, inject } from 'vue'
+import { UiInput } from '@/packages/ui'
+
+const injectedStoryData = inject('$_cms_story_builder', null)
+const availablePages = computed(() => injectedStoryData?.story?.value?.pages || [])
+
+const props = defineProps({
+  /**
+   BLOCK object
+   {
+     "component": "NavigationMenu",
+     "props": {
+       "items": [
+          {
+            href: '', (required)
+            text: '',
+
+            ... all attributes to be bound to <a>
+            target: '',
+            title: '',
+            ...
+          }
+       ]
+     }
+   }
+  */
+  modelValue: {
+    type: Object,
+    required: true,
+  },
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+const block = ref({})
+const selectedPageIds = ref([])
+
+watchEffect(() => {
+  block.value = {
+    component: 'NavigationMenu',
+    ...props.modelValue,
+    props: {
+      items: [],
+      ...props.modelValue?.props,
+    },
+  }
+
+  selectedPageIds.value = block.value.props.items.map((item) => {
+    return item.href.replace('#/', '')
+  })
+})
+
+function emitInput() {
+  const items = availablePages.value
+    .filter((page) => selectedPageIds.value.includes(page.id))
+    .map((page) => {
+      return {
+        href: `#/${page.id}`,
+        text: page.title,
+      }
+    })
+
+  emit('update:modelValue', {
+    ...block.value,
+    props: {
+      ...block.value.props,
+      items,
+    },
+  })
+}
+</script>
+
+<template>
+  <div class="NavigationMenuEditor">
+    <UiInput
+      v-model="selectedPageIds"
+      multiple
+      type="select-list"
+      :options="availablePages"
+      option-text="$.title"
+      option-value="$.id"
+      @update:model-value="emitInput"
+    />
+  </div>
+</template>

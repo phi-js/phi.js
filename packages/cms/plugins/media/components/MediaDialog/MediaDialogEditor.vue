@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import BlockScaffold from '../../../../components/CmsBlockEditor/BlockScaffold.vue'
+import BlockScaffold from '../../../../components/CmsSlotEditor/Bloh.vue'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
 import { UiIcon } from '../../../../../ui'
 

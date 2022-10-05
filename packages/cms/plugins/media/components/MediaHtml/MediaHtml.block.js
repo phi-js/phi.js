@@ -1,6 +1,5 @@
 import { defineAsyncComponent } from 'vue'
 import MediaHtml from './MediaHtml.vue'
-// import MediaHtmlBlockEditor from './MediaHtmlBlockEditor.vue'
 const MediaHtmlBlockEditor = defineAsyncComponent(() => import('./MediaHtmlBlockEditor.vue'))
 
 export default {

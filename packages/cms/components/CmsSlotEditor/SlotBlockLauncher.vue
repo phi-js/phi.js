@@ -1,10 +1,12 @@
 <script setup>
-import { nextTick, ref } from 'vue'
+import { ref } from 'vue'
 
 import { UiItem } from '@/packages/ui'
 import CmsBlockPicker from '../CmsBlockPicker/CmsBlockPicker.vue'
-import { CmsBlockEditor } from '../CmsBlockEditor'
 import { getPluginData } from '../../functions'
+import { CmsBlock } from '../CmsBlock'
+import BlockWindow from '../CmsBlockEditor/BlockWindow.vue'
+
 
 const pluginData = getPluginData()
 
@@ -54,8 +56,6 @@ function onTriggerClick() {
   isPopupOpen.value = isOpen.value || props.open
 }
 
-const elStaging = ref()
-
 function onBlockPickerInput(blockDefinition) {
   const candidateBlock = JSON.parse(JSON.stringify({
     ...blockDefinition.block,
@@ -75,7 +75,6 @@ function onBlockPickerInput(blockDefinition) {
   }
 
   stagingBlock.value = newBlock
-  nextTick(() => elStaging.value.openAction(0))
 }
 
 function onSlotComponentInput(block) {
@@ -161,14 +160,15 @@ function onPickerUpdateOpen($event) {
       />
     </div>
 
-    <CmsBlockEditor
-      v-if="stagingBlock"
-      ref="elStaging"
-      v-model:block="stagingBlock"
-      class="SlotBlockLauncher__stagedEditor"
-      @update:block="onStagingAccept"
-      @cancel="onStagingCancel"
-    />
+    <template v-if="stagingBlock">
+      <CmsBlock :block="stagingBlock" />
+      <BlockWindow
+        v-model:block="stagingBlock"
+        open
+        @accept="onStagingAccept"
+        @cancel="onStagingCancel"
+      />
+    </template>
 
     <CmsBlockPicker
       v-model:open="isPopupOpen"
@@ -266,10 +266,6 @@ function onPickerUpdateOpen($event) {
 
       border-radius: 5px;
       border: 2px dashed var(--ui-color-primary);
-    }
-
-    .BlockScaffold__toolbar-container {
-      display: none;
     }
   }
 }

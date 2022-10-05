@@ -39,7 +39,7 @@ const isError = ref(false)
 const containerStyle = computed(() => ({
   height: props.height || undefined,
   boxSizing: 'border-box',
-  overflowX: 'clip',
+  // overflowX: 'clip', // Uhh, no.  why?!
   display: 'flex',
   justifyContent: props.align,
   // textAlign: props.align,
