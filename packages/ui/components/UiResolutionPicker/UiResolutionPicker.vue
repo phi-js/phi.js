@@ -8,7 +8,7 @@ import { UiItem, UiIcon, UiDropdown } from '@/packages/ui'
 
 const availablePresets = [
   {
-    text: 'Fit contents',
+    text: 'Full width',
     icon: 'mdi:overscan',
     width: null,
     height: null,
@@ -72,6 +72,8 @@ watch(
       }
     }
 
+    resolution.value.intWidth = parseInt(resolution.value.width) || ''
+    resolution.value.intHeight = parseInt(resolution.value.height) || ''
   },
   { immediate: true },
 )
@@ -84,20 +86,12 @@ function setPreset(newValue) {
 }
 
 function onCustomValue() {
-  // const matched = availablePresets.find((res) => res.width == resolution.value.width
-  //   && res.height == resolution.value.height)
-  // if (matched) {
-  //   resolution.value.text = matched.text
-  //   resolution.value.icon = matched.icon
-  // } else {
-  //   resolution.value.text = 'Custom'
-  //   resolution.value.icon = 'mdi:monitor-screenshot'
-  // }
-
   // Prevent emiting temporary or small values
-  if (resolution.value.width >= 150 && resolution.value.height >= 200) {
+  if (resolution.value.intWidth >= 150 && resolution.value.intHeight >= 200) {
     emit('update:modelValue', {
       ...resolution.value,
+      width: resolution.value.intWidth || resolution.value.width,
+      height: resolution.value.intHeight || resolution.value.height,
       text: 'Custom',
       icon: 'mdi:monitor-screenshot',
     })
@@ -152,26 +146,26 @@ function rotate() {
 
       <div class="DimensionPicker">
         <input
-          v-model="resolution.width"
+          v-model="resolution.intWidth"
           type="number"
           min="100"
           max="8000"
           step="50"
           title="Width (px)"
           placeholder="auto"
-          @update:modelValue="onCustomValue()"
+          @update:model-value="onCustomValue()"
           @keypress.enter="close()"
         >
         <span>&times;</span>
         <input
-          v-model="resolution.height"
+          v-model="resolution.intHeight"
           type="number"
           min="100"
           max="8000"
           step="50"
           title="Height (px)"
           placeholder="auto"
-          @update:modelValue="onCustomValue()"
+          @update:model-value="onCustomValue()"
           @keypress.enter="close()"
         >
 
