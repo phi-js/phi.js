@@ -1,0 +1,1 @@
+export { default as UiScaffold } from './UiScaffold.vue'
