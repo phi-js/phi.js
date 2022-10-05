@@ -44,7 +44,7 @@ function translateItem(fxItem) {
 }
 
 const items = computed(() => translateItem([
-  ...injectedFunctions.value,
+  ...(injectedFunctions.value || []),
   ...availableFunctions,
 ]))
 </script>
