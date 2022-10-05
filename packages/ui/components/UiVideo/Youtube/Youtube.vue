@@ -33,6 +33,12 @@ export default {
       required: false,
       default: true,
     },
+
+    mute: {
+      type: [Boolean, String, Number],
+      required: false,
+      default: false,
+    },
   },
 
   emits: [
@@ -63,7 +69,7 @@ export default {
       if (!videoId) {
         return null
       }
-      return `https://www.youtube.com/embed/${videoId}?controls=${this.controls ? '1' : '0'}&enablejsapi=1&mute=1&playsinline=1${this.autoplay ? '&autoplay=1' : ''}`
+      return `https://www.youtube.com/embed/${videoId}?controls=${this.controls ? '1' : '0'}&enablejsapi=1&mute=${this.mute ? '1' : '0'}&playsinline=1${this.autoplay ? '&autoplay=1' : ''}`
     },
   },
 
@@ -129,7 +135,7 @@ export default {
     initializePlayer() {
       this.loadApi().then(() => {
         //eslint-disable-next-line
-        this.player = new YT.Player(this.$el.querySelector('iframe'), {
+        this.player = new YT.Player(this.$el, {
           events: {
             // onReady: this.onPlayerReady,
             onStateChange: this.onPlayerStateChange,
