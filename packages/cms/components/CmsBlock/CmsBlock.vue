@@ -1,3 +1,4 @@
+<!-- eslint-disable max-len -->
 <script>
 import { h, ref, shallowRef, watchEffect, Transition, inject, computed, watch } from 'vue'
 import { VM } from '@/packages/vm'
@@ -131,11 +132,17 @@ const CmsBlock = {
     /* Block event listeners */
     const blockListeners = ref({})
 
-    function pushListener(eventName, callback) {
+    function pushListener(eventName, callback, override = false) {
       if (!blockListeners.value[eventName]) {
         blockListeners.value[eventName] = callback
         return
       }
+
+      if (override) {
+        blockListeners.value[eventName] = callback
+        return
+      }
+
       if (Array.isArray(blockListeners.value[eventName])) {
         blockListeners.value[eventName].push(callback)
         return
@@ -170,24 +177,29 @@ const CmsBlock = {
     Para esto se usa tmpInnerModel, cuyo valor se establece cuando ha ocurrido el onUpdate:modelValue creado por la propiedad v-model
     */
     if (props.block?.['v-on']) {
-      const listeners = props.block['v-on']
-      for (let eventName in listeners) {
-        const eventCallback = ($event) => {
-          blockVM.eval(
-            listeners[eventName],
-            {
+
+      watchEffect(() => {
+
+        const listeners = props.block['v-on']
+        for (let eventName in listeners) {
+          const eventCallback = ($event) => {
+            blockVM.eval(
+              listeners[eventName],
+              {
               // ...evaluableModel.value,  // evaluableModel is not reacting to outer chages of innerModel., so use innerModel directly instead
-              ...innerModel,
-              ...tmpInnerModel,
-              $event,
-              $block: props.block,
-            },
-          )
+                ...innerModel,
+                ...tmpInnerModel,
+                $event,
+                $block: props.block,
+              },
+            )
+          }
+
+          const propName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
+          pushListener(propName, eventCallback, true)
         }
 
-        const propName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
-        pushListener(propName, eventCallback)
-      }
+      })
     }
 
 
@@ -273,9 +285,10 @@ const CmsBlock = {
 
         blockSlots.value[slotName] = (slotBindings) => {
           return arrChildren
-            .map((child) => h(
+            .map((child, i) => h(
               CmsBlock,
               {
+                'key': child._key || i,
                 'block': child,
                 'modelValue': props.modelValue,
                 'slotBindings': slotBindings,
@@ -317,6 +330,28 @@ const CmsBlock = {
     }
 
 
+    /* Block transition classnames */
+    const transitionClassNames = computed(() => {
+      const blockTransitions = props.block?.transitions || {}
+      const objTransitions = {
+        'navigation-forward-enter': blockTransitions['navigation-forward-enter'] || blockTransitions['navigation-enter'],
+        'navigation-forward-leave': blockTransitions['navigation-forward-leave'] || blockTransitions['navigation-leave'],
+        'navigation-back-enter': blockTransitions['navigation-back-enter'] || blockTransitions['navigation-enter'],
+        'navigation-back-leave': blockTransitions['navigation-back-leave'] || blockTransitions['navigation-leave'],
+        'show': blockTransitions.show,
+        'hide': blockTransitions.hide,
+      }
+
+      const retval = []
+      for (const [key, value] of Object.entries(objTransitions)) {
+        if (value) {
+          retval.push(`_phi_transition_${key}_${value}`)
+        }
+      }
+      return retval
+    })
+
+
     return {
       attrs,
       isVisible,
@@ -328,6 +363,7 @@ const CmsBlock = {
       emitUpdate,
       iterable,
       iterations,
+      transitionClassNames,
 
       getModelProperty,
     }
@@ -348,7 +384,13 @@ const CmsBlock = {
         ...this.attrs,
         ...this.blockProps,
         ...this.blockListeners,
-        class: [this.attrs?.class, 'CmsBlock', this.blockDefinition.name, this.blockProps.class],
+        class: [
+          'CmsBlock',
+          this.attrs?.class,
+          this.blockDefinition.name,
+          this.blockProps.class,
+          this.transitionClassNames,
+        ],
       },
       this.blockSlots,
     )
