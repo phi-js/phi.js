@@ -12,7 +12,7 @@ import UiButton from '../UiButton/UiButton.vue'
 const attrs = useAttrs()
 const injectedTypes = inject('_ui_input_types', {})
 
-const emit = defineEmits(['update:modelValue', 'focus', 'blur', 'invalid'])
+const emit = defineEmits(['update:modelValue', 'focus', 'blur', 'invalid', 'click', 'click-label'])
 
 const props = defineProps({
   type: {
@@ -313,6 +313,7 @@ const uid = ref('UiInput' + (++_UiInput_counter))
 
       v-bind="attrs"
       style="display:block"
+      @click="emit('click', $event)"
     />
     <div
       v-if="$slots.subtext || props.subtext"
@@ -327,11 +328,13 @@ const uid = ref('UiInput' + (++_UiInput_counter))
     v-else
     :class="classNames"
     :style="attrs.style"
+    @click="emit('click', $event)"
   >
     <label
       v-if="showLabel"
       class="UiInput__label"
       :for="uid"
+      @click="emit('click-label', $event)"
       v-text="props.label"
     />
 
