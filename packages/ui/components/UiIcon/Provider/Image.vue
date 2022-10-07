@@ -29,7 +29,8 @@ export default {
         height: '100%',
 
         backgroundImage: `url('${src}')`,
-        backgroundSize: 'cover',
+        backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
       }
     },
   },

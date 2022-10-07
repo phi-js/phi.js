@@ -170,7 +170,8 @@ async function onDialogClose($event) {
   }
 
   &__contents {
-    max-height: 75vh;
+    // max-height: 75vh;
+    max-height: 50vh;
     overflow: auto;
     &::-webkit-scrollbar {
       width: 7px;
