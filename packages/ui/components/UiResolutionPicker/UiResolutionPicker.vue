@@ -8,17 +8,19 @@ import { UiItem, UiIcon, UiDropdown } from '@/packages/ui'
 
 const availablePresets = [
   {
-    text: 'Full width',
-    icon: 'mdi:overscan',
+    // text: 'Full width',
+    // icon: 'mdi:overscan',
+    text: 'Desktop',
+    icon: 'mdi:monitor',
     width: null,
     height: null,
   },
-  {
-    text: 'Desktop',
-    icon: 'mdi:monitor',
-    width: 'auto',
-    height: 'auto',
-  },
+  // {
+  //   text: 'Desktop',
+  //   icon: 'mdi:monitor',
+  //   width: 'auto',
+  //   height: 'auto',
+  // },
   {
     text: 'Mobile',
     icon: 'mdi:cellphone',
@@ -121,7 +123,7 @@ function rotate() {
       <UiIcon
         :class="attrs.class"
         :src="resolution.icon"
-        :title="resolution.width ? `${resolution.text}\n${resolution.width}x${resolution.height} px` : 'Auto'"
+        :title="resolution.width ? `${resolution.text}\n${resolution.width}x${resolution.height} px` : resolution.text"
       />
     </template>
     <template #default="{ close }">
