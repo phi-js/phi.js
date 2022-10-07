@@ -36,6 +36,16 @@ export default {
       required: false,
       default: null,
     },
+
+    /*
+    Additional base BEM name
+    will add classes FOO__icon, FOO__body, FOO__text, etc,
+    */
+    bem: {
+      type: String,
+      required: false,
+      default: null,
+    },
   },
   emits: ['click', 'click-icon', 'click-body', 'click-actions'],
 
@@ -56,43 +66,43 @@ export default {
   >
     <div
       v-if="hasSlot('icon')"
-      class="UiItem__icon"
+      :class="'UiItem__icon' + (bem ? ` ${bem}__icon` : '')"
       @click="$emit('click-icon', $event)"
     >
       <slot name="icon" />
     </div>
     <UiIcon
       v-else-if="icon"
-      class="UiItem__icon"
+      :class="'UiItem__icon' + (bem ? ` ${bem}__icon` : '')"
       :src="icon"
       @click="$emit('click-icon', $event)"
     />
 
     <div
       v-if="hasSlot('default') || text || subtext"
-      class="UiItem__body"
+      :class="'UiItem__body' + (bem ? ` ${bem}__body` : '')"
       @click="$emit('click-body', $event)"
     >
       <h1
         v-if="text"
-        class="UiItem__text"
+        :class="'UiItem__text' + (bem ? ` ${bem}__text` : '')"
         v-text="text"
       />
       <p
         v-if="subtext"
-        class="UiItem__subtext"
+        :class="'UiItem__subtext' + (bem ? ` ${bem}__subtext` : '')"
         v-text="subtext"
       />
       <div
         v-if="hasSlot('default')"
-        class="UiItem__slot"
+        :class="'UiItem__slot' + (bem ? ` ${bem}__slot` : '')"
       >
         <slot name="default" />
       </div>
     </div>
     <div
       v-if="hasSlot('actions')"
-      class="UiItem__actions"
+      :class="'UiItem__actions' + (bem ? ` ${bem}__actions` : '')"
       @click.stop.prevent="$emit('click-actions', $event)"
     >
       <slot name="actions" />
@@ -100,7 +110,7 @@ export default {
 
     <div
       v-if="badge"
-      class="UiItem__badge"
+      :class="'UiItem__badge' + (bem ? ` ${bem}__badge` : '')"
       v-text="badge"
     />
   </Component>
@@ -118,6 +128,8 @@ export default {
 
   padding: var(--ui-item-padding);
   gap: var(--ui-item-padding);
+
+  color: inherit;
 
   &__icon,
   &__body,
