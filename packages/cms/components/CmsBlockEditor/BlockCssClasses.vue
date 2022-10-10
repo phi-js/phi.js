@@ -5,7 +5,7 @@ This component receives a modelValue prop with an ARRAY of selected class names 
 It wraps a CssClassManager object, and links its value to the globally provided story class list
 
 */
-import { ref, inject, shallowRef, watch } from 'vue'
+import { ref, inject, watch } from 'vue'
 
 import { UiIcon, UiDialog, UiButton } from '@/packages/ui'
 import { VmStatement } from '@/packages/vm'
@@ -21,8 +21,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:block'])
 
-const CmsStoryEditor = inject('_cms_CmsStoryEditor', {})
-const injectedStory = CmsStoryEditor.story
+const injectedStory = inject('_cms_currentStory', {})
 
 /*
 The "class" prop of the block may contain VM statements.

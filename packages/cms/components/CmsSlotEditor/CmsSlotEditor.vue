@@ -7,24 +7,29 @@ export default { inheritAttrs: false }
 </script>
 
 <script setup>
-import { inject, watch, shallowRef, nextTick } from 'vue'
+import { watch, nextTick } from 'vue'
 
 import draggable from 'vuedraggable'
-
 import { useI18n } from '@/packages/i18n'
-import { UiScaffold } from '@/packages/ui'
 
 import SlotItem from './SlotItem.vue'
 import SlotBlockLauncher from './SlotBlockLauncher.vue'
 import { getBlockDefinition } from '../../functions'
-
 import * as sel from '../CmsStoryEditor/selectedBlock'
+
+const localCounter = _CmsSlotEditor_counter++
 
 const props = defineProps({
   slot: {
     type: Array,
     required: false,
     default: () => [],
+  },
+
+  direction: {
+    type: String,
+    required: false,
+    default: 'vertical', // 'vertical' | 'horizontal'
   },
 
   label: {
@@ -48,7 +53,10 @@ watch(
   () => props.slot,
   (newValue) => {
     innerSlot.value = Array.isArray(newValue)
-      ? newValue.map((item) => ({ ...item, _key: item._key || `itm_${_CmsSlotEditor_counter++}` }))
+      ? newValue.map((item, index) => ({
+        ...item,
+        _key: item._key || `itm_${localCounter}_${index}`,
+      }))
       : []
   },
   { immediate: true },
@@ -60,15 +68,6 @@ function emitUpdate() {
 }
 
 
-
-// The parent CmsStoryEditor
-const CmsStoryEditor = inject('_cms_CmsStoryEditor', null)
-
-function openBlockWindow(index, actionId = null) {
-  CmsStoryEditor?.openBlockWindow?.(blockRefs.value[index], actionId)
-}
-
-
 function launchBlock(block, targetIndex = null) {
   if (targetIndex === null) {
     targetIndex = innerSlot.value.length
@@ -76,15 +75,18 @@ function launchBlock(block, targetIndex = null) {
 
   const arrBlocks = Array.isArray(block) ? JSON.parse(JSON.stringify(block)) : [JSON.parse(JSON.stringify(block))]
 
-  // Run block's defined "onCreated" function
-  arrBlocks.forEach((newBlock) => {
-    const definition = getBlockDefinition(newBlock)
-    definition?.onCreated?.(newBlock)
-  })
-
   innerSlot.value.splice(targetIndex, 0, ...arrBlocks)
   innerSlot.value = innerSlot.value.filter((block) => !block._placeholder)
+
   emitUpdate()
+
+  nextTick(() => {
+  // Run block's defined "onCreated" function
+    arrBlocks.forEach((newBlock) => {
+      const definition = getBlockDefinition(newBlock)
+      definition?.onCreated?.(newBlock, blockRefs.value?.[targetIndex]?.innerRef)
+    })
+  })
 }
 
 function onEditorUpdate(slotIndex, newBlock) {
@@ -120,25 +122,6 @@ function isSelected(index) {
 
 
 
-// hovered SlotItem instance
-const hoveredInstance = shallowRef()
-let deselectTimeout = null
-
-function hoverBlock(blockIndex) {
-  if (isDragging.value) {
-    return
-  }
-
-  clearTimeout(deselectTimeout)
-  hoveredInstance.value = blockRefs.value[blockIndex]
-}
-
-function clearHovered() {
-  clearTimeout(deselectTimeout)
-  deselectTimeout = setTimeout(() => hoveredInstance.value = null, 99)
-}
-
-
 async function removeBlockAt(index) {
   innerSlot.value.splice(index, 1)
   await nextTick() // fixes bug when dragging block from/to nested CmsSlotEditors
@@ -153,106 +136,80 @@ function onInsertSibling(index, position = null) {
 
   innerSlot.value.splice(targetIndex, 0, { _placeholder: true })
 }
-
 </script>
 
 <template>
-  <div
+  <draggable
+    v-bind="$attrs"
+    v-model="innerSlot"
     class="CmsSlotEditor"
     :class="{'CmsSlotEditor--dragging': isDragging}"
+    item-key="_key"
+    handle=".Bloh__headerItem"
+    group="SlotEditor-drag"
+    :direction="direction"
+    :animation="111"
+    :empty-insert-threshold="0"
+    :swap-threshold="0.5"
+    :inverted-swap-threshold="1"
+    @update:model-value="onDraggableUpdate"
+    @start="onDraggableStart()"
+    @end="onDraggableEnd()"
   >
-    <draggable
-      v-bind="$attrs"
-      v-model="innerSlot"
-      class="CmsSlotEditor__draggable"
-      item-key="_key"
-      handle=".Bloh__headerItem"
-      group="SlotEditor-drag"
-      direction="vertical"
-      :animation="111"
-      :empty-insert-threshold="0"
-      :swap-threshold="0.5"
-      :inverted-swap-threshold="1"
-      @update:model-value="onDraggableUpdate"
-      @start="onDraggableStart()"
-      @end="onDraggableEnd()"
-    >
-      <template #item="{ element, index }">
-        <div v-if="element._placeholder">
-          <SlotBlockLauncher
-            :text="i18n.t('CmsSlotEditor.AddContent')"
-            :title="props.label"
-            :label="props.label || i18n.t('CmsSlotEditor.AddContent')"
-            :open="true"
-            @input="launchBlock($event, index)"
-          />
-        </div>
-        <SlotItem
-          v-else
-          :ref="e => blockRefs[index] = e"
-
-          :block="element"
-          :selected="isSelected(index)"
-          @update:block="onEditorUpdate(index, $event)"
-          @select="selectBlock(index)"
-          @deselect="deselectBlock(index)"
-
-          @delete="removeBlockAt(index)"
-          @open-editor="openBlockWindow(index, $event)"
-          @insert-sibling="onInsertSibling(index, $event)"
-
-          @mouseenter="hoverBlock(index)"
-          @mouseleave="clearHovered()"
+    <template #item="{ element, index }">
+      <div v-if="element._placeholder">
+        <SlotBlockLauncher
+          :text="i18n.t('CmsSlotEditor.AddContent')"
+          :title="props.label"
+          :label="props.label || i18n.t('CmsSlotEditor.AddContent')"
+          :open="true"
+          @input="launchBlock($event, index)"
         />
-      </template>
-    </draggable>
+      </div>
+      <SlotItem
+        v-else
+        :ref="e => blockRefs[index] = e"
+        :block="element"
+        :selected="isSelected(index)"
+        :direction="direction"
 
-    <!-- block launcher at bottom -->
-    <div
-      class="CmsSlotEditor__footer"
-      :class="{'CmsSlotEditor__footer--not-empty': innerSlot.length > 0}"
-    >
-      <SlotBlockLauncher
-        :text="i18n.t('CmsSlotEditor.AddContent')"
-        :title="props.label"
-        :label="props.label || i18n.t('CmsSlotEditor.AddContent')"
-        :open="false"
-        @input="launchBlock($event)"
+        @update:block="onEditorUpdate(index, $event)"
+        @select="selectBlock(index)"
+        @deselect="deselectBlock(index)"
+        @delete="removeBlockAt(index)"
+        @insert-sibling="onInsertSibling(index, $event)"
       />
-    </div>
+    </template>
 
-    <!-- scaffold around hovered element -->
-    <UiScaffold
-      v-if="hoveredInstance"
-      :element="hoveredInstance.$el"
-      class="CmsSlotEditor__hoverScaffold"
-    >
-      <label
-        v-text="hoveredInstance.block.title
-          || hoveredInstance.definition.title
-          || hoveredInstance.block.component"
-      />
-    </UiScaffold>
-  </div>
+    <template #footer>
+      <!-- block launcher at bottom -->
+      <div
+        class="CmsSlotEditor__footer"
+        :class="{'CmsSlotEditor__footer--not-empty': innerSlot.length > 0}"
+      >
+        <SlotBlockLauncher
+          :text="i18n.t('CmsSlotEditor.AddContent')"
+          :title="props.label"
+          :label="props.label || i18n.t('CmsSlotEditor.AddContent')"
+          :open="false"
+          @input="launchBlock($event)"
+        />
+      </div>
+    </template>
+  </draggable>
 </template>
 
 <style lang="scss">
 .CmsSlotEditor {
   &--dragging {
+    min-height: 20px;
+
     // prevent dragging blocks into droppable elements (like editable texts or file uploads) present in the block
     .tiptap-editor-contents {
       pointer-events: none;
     }
-
-    .Bloh__toolbar-container {
-      display: none;
-    }
   }
 
-  // vuedraggable instance
-  & > .CmsSlotEditor__draggable {
-    min-height: 10px;
-  }
 
   &__footer {
     padding: 18px 0;
@@ -264,16 +221,6 @@ function onInsertSibling(index, position = null) {
           --ui-item-padding: 6px 12px;
         }
       }
-    }
-  }
-
-  &__hoverScaffold {
-    --scaffold-transition-duration: 111ms;
-    pointer-events: none;
-    label {
-      white-space: nowrap;
-      font-size: 0.8rem;
-      font-weight: bold;
     }
   }
 }

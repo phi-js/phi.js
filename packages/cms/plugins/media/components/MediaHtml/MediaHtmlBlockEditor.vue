@@ -368,11 +368,7 @@ async function doTranslation() {
     </template>
 
     <template #default>
-      <div
-        class="MediaHtmlBlockEditor"
-        :class="props.block?.props?.class"
-        :style="props.block?.props?.style"
-      >
+      <div class="MediaHtmlBlockEditor">
         <UiTabs
           v-if="isLanguageOpen"
           class="MediaHtmlBlockEditor__tabs"

@@ -1,9 +1,8 @@
 <script setup>
-import { computed, provide, ref, shallowRef, watch, watchEffect } from 'vue'
+import { computed, ref, shallowRef, watch, watchEffect } from 'vue'
 
-import { useStylesheets, sanitizeStory } from '../../functions'
+import { useStylesheets } from '../../functions'
 import CmsSlotEditor from '../CmsSlotEditor/CmsSlotEditor.vue'
-import BlockWindow from '../CmsBlockEditor/BlockWindow.vue'
 
 const props = defineProps({
   story: {
@@ -33,10 +32,10 @@ const currentPage = shallowRef()
 watch(
   () => props.story,
   () => {
-    innerStory.value = sanitizeStory(JSON.parse(JSON.stringify(props.story)))
+    innerStory.value = props.story
     currentPage.value = innerStory.value.pages.find((p) => p.id == props.currentPageId) || innerStory.value.pages?.[0]
   },
-  { immediate: true },
+  { immediate: true, deep: true },
 )
 
 const transitionDirection = ref('forward') // 'forward' | 'back'
@@ -57,25 +56,6 @@ watchEffect(() => useStylesheets(props.story.stylesheets))
 function emitUpdate() {
   emit('update:story', { ...innerStory.value })
 }
-
-// Block editor window (singleton in the story editor)
-const editingBlock = shallowRef() // Instance of SlotItem
-const currentActionId = ref()
-
-function openBlockWindow(SlotBlock, actionId = null) {
-  editingBlock.value = SlotBlock
-  currentActionId.value = actionId
-}
-
-function closeBlockWindow() {
-  editingBlock.value = null
-}
-
-/* Provided context/utilities for child blocks */
-provide('_cms_CmsStoryEditor', {
-  story: innerStory,
-  openBlockWindow,
-})
 
 const isHeaderEnabled = computed({
   get() {
@@ -112,7 +92,9 @@ const isFooterEnabled = computed({
     >
       <div
         :key="currentPage.id"
-        class="CmsStory__page"
+        class="CmsStory__page LayoutPage"
+        :class="currentPage?.props?.class"
+        :style="currentPage?.props?.style"
       >
         <div
           class="CmsStoryEditor__header"
@@ -171,15 +153,6 @@ const isFooterEnabled = computed({
         </div>
       </div>
     </Transition>
-
-    <BlockWindow
-      v-if="editingBlock"
-      v-model:action-id="currentActionId"
-      v-model:block="editingBlock.innerBlock"
-      open
-      @accept="editingBlock.updateBlock($event); closeBlockWindow()"
-      @cancel="closeBlockWindow()"
-    />
   </div>
 </template>
 

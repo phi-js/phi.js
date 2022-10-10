@@ -1,9 +1,10 @@
 <script setup>
 import { ref, watch } from 'vue'
+
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
 
 const props = defineProps({
-  /* BLOCK object */
+  /* modelValue object */
   modelValue: {
     type: Object,
     required: true,
@@ -30,8 +31,9 @@ function onSlotUpdate() {
 <template>
   <CmsSlotEditor
     v-model:slot="pageSlot"
-    class="LayoutGroupEditor"
     :label="`Add content to ${props.modelValue?.title || 'group'}`"
+
+    class="LayoutGroupEditor LayoutGroup"
     :style="{
       display: modelValue.props.direction == 'row' ? 'flex' : 'block',
       flexDirection: modelValue.props.direction,
@@ -39,6 +41,8 @@ function onSlotUpdate() {
       alignItems: modelValue.props.alignItems,
       justifyContent: modelValue.props.justifyContent,
     }"
+    :direction="modelValue.props.direction == 'row' ? 'horizontal' : 'vertical'"
+
     @update:slot="onSlotUpdate"
   />
 </template>

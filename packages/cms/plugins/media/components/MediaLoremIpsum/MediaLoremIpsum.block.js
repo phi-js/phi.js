@@ -26,12 +26,12 @@ export default {
           {
             type: 'number',
             model: 'props.nParagraphs',
-            size: 2,
+            min: 1,
           },
           {
             type: 'number',
             model: 'props.nWords',
-            size: 2,
+            min: 1,
           },
         ],
       },
@@ -49,11 +49,13 @@ export default {
               type: 'number',
               label: 'Cantidad de parrafos',
               model: 'props.nParagraphs',
+              min: 1,
             },
             {
               type: 'number',
               label: 'Cantidad de palabras',
               model: 'props.nWords',
+              min: 1,
             },
           ],
         },

@@ -35,8 +35,8 @@ function emitUpdate() {
   })
 }
 
-const injectedStoryData = inject('$_cms_story_builder', null)
-const availableMethods = computed(() => injectedStoryData?.story?.value?.methods || [])
+const injectedStory = inject('_cms_currentStory', null)
+const availableMethods = computed(() => injectedStory?.value?.methods || [])
 </script>
 
 <template>

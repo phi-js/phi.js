@@ -20,6 +20,18 @@ export default {
 
           emits: [
             {
+              event: 'load',
+              text: 'The page is loaded',
+            },
+            {
+              event: 'enter',
+              text: 'Enter page',
+            },
+            {
+              event: 'leave',
+              text: 'Leave page',
+            },
+            {
               event: 'submit',
               text: 'Form is submitted',
             },

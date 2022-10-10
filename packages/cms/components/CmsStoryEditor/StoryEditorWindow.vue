@@ -3,12 +3,12 @@
 Takes the same props as CmsStoryEditor
 Presents a window with options for the current page and the story (style, dictionary, etc)
 */
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { UiWindow, UiTabs, UiTab, UiInput, UiItem } from '@/packages/ui'
 
 import CmsStoryStyle from '../CmsStoryStyle/CmsStoryStyle.vue'
-import ListenersEditor from '../ListenersEditor/ListenersEditor.vue'
+import { VmStatement } from '@/packages/vm'
 import StoryDictionaryEditor from './StoryDictionaryEditor.vue'
 import StoryMethodsEditor from './StoryMethodsEditor.vue'
 import StoryComputedEditor from './StoryComputedEditor.vue'
@@ -68,16 +68,9 @@ function emitStoryUpdate() {
   emit('update:story', { ...innerStory.value })
 }
 
-function emitCurrentPageUpdate() {
-  emit('update:story', {
-    ...innerStory.value,
-    pages: innerStory.value.pages.map((page) => page.id == currentPage.value?.id ? currentPage.value : page),
-  })
-}
-
 const i18n = useI18n({
   en: {
-    'StoryEditorWindow.events': 'Events',
+    'StoryEditorWindow.setup': 'Setup',
     'StoryEditorWindow.code': 'Code',
     'StoryEditorWindow.global': 'Global',
     'StoryEditorWindow.i18n': 'Languages',
@@ -87,14 +80,9 @@ const i18n = useI18n({
     'StoryEditorWindow.style': 'Style',
     'StoryEditorWindow.sitemap': 'Pages',
     'StoryEditorWindow.thisPage': 'This Page',
-
-    'StoryEditorWindow.events.storySetup': 'The document is loaded',
-    'StoryEditorWindow.events.pageSetup': 'The page is loaded',
-    'StoryEditorWindow.events.pageEnter': 'User enters the page',
-    'StoryEditorWindow.events.pageLeave': 'User leaves the page',
   },
   es: {
-    'StoryEditorWindow.events': 'Eventos',
+    'StoryEditorWindow.setup': 'Setup',
     'StoryEditorWindow.code': 'Código',
     'StoryEditorWindow.global': 'Global',
     'StoryEditorWindow.i18n': 'Idiomas',
@@ -104,116 +92,8 @@ const i18n = useI18n({
     'StoryEditorWindow.style': 'Estilos',
     'StoryEditorWindow.sitemap': 'Páginas',
     'StoryEditorWindow.thisPage': 'Esta Página',
-
-    'StoryEditorWindow.events.storySetup': 'Inicializar documento',
-    'StoryEditorWindow.events.pageSetup': 'Inicializar página',
-    'StoryEditorWindow.events.pageEnter': 'Al entrar a ésta página',
-    'StoryEditorWindow.events.pageLeave': 'Al salir de ésta página',
   },
 })
-
-// Pseudo events (?)
-const storyEvents = computed({
-  get() {
-    return [
-      {
-        name: 'story.setup',
-        stmt: innerStory.value.setup,
-      },
-      {
-        name: 'page.setup',
-        stmt: currentPage.value.setup,
-      },
-      {
-        name: 'page.onEnter',
-        stmt: currentPage.value.onEnter,
-      },
-      {
-        name: 'page.onLeave',
-        stmt: currentPage.value.onLeave,
-      },
-      {
-        name: 'page.onSubmit',
-        stmt: currentPage.value['v-on']?.submit,
-      },
-      {
-        name: 'page.onChange',
-        stmt: currentPage.value['v-on']?.change,
-      },
-    ].filter((evt) => !!evt.stmt)
-  },
-
-  set(newValue) {
-    innerStory.value.setup = null
-    currentPage.value.setup = null
-    currentPage.value.onEnter = null
-    currentPage.value.onLeave = null
-
-    newValue.forEach((evt) => {
-      switch (evt.name) {
-      case 'story.setup':
-        innerStory.value.setup = evt.stmt
-        break
-
-      case 'page.setup':
-        currentPage.value.setup = evt.stmt
-        break
-
-      case 'page.onEnter':
-        currentPage.value.onEnter = evt.stmt
-        break
-
-      case 'page.onLeave':
-        currentPage.value.onLeave = evt.stmt
-        break
-
-      case 'page.onSubmit':
-        if (typeof currentPage.value['v-on'] == 'undefined') {
-          currentPage.value['v-on'] = {}
-        }
-        currentPage.value['v-on'].submit = evt.stmt
-        break
-
-      case 'page.onChange':
-        if (typeof currentPage.value['v-on'] == 'undefined') {
-          currentPage.value['v-on'] = {}
-        }
-        currentPage.value['v-on'].change = evt.stmt
-        break
-      }
-    })
-
-    emitCurrentPageUpdate()
-  },
-})
-
-const availableEvents = computed(() => [
-  {
-    event: 'story.setup',
-    text: i18n.t('StoryEditorWindow.events.storySetup'),
-  },
-  {
-    event: 'page.setup',
-    text: i18n.t('StoryEditorWindow.events.pageSetup'),
-  },
-  {
-    event: 'page.onEnter',
-    text: i18n.t('StoryEditorWindow.events.pageEnter'),
-  },
-  {
-    event: 'page.onLeave',
-    text: i18n.t('StoryEditorWindow.events.pageLeave'),
-  },
-  {
-    event: 'page.onSubmit',
-    text: 'onSubmit',
-  },
-  {
-    event: 'page.onChange',
-    text: 'onChange',
-  },
-])
-
 </script>
 
 <template>
@@ -246,18 +126,6 @@ const availableEvents = computed(() => [
       >
         <UiTabs>
           <UiTab
-            value="events"
-            icon="mdi:gesture-tap"
-            :text="i18n.t('StoryEditorWindow.events')"
-          >
-            <ListenersEditor
-              v-model="storyEvents"
-              class="StoryEditorWindow__events"
-              :available-events="availableEvents"
-            />
-          </UiTab>
-
-          <UiTab
             value="methods"
             icon="mdi:variable"
             :text="i18n.t('StoryEditorWindow.methods')"
@@ -277,6 +145,19 @@ const availableEvents = computed(() => [
             <StoryComputedEditor
               v-model="innerStory.computed"
               class="StoryEditorWindow__computed"
+              @update:model-value="emitStoryUpdate"
+            />
+          </UiTab>
+
+          <UiTab
+            value="setup"
+            icon="mdi:gesture-tap"
+            :text="i18n.t('StoryEditorWindow.setup')"
+          >
+            <VmStatement
+              v-model="innerStory.setup"
+              class="StoryEditorWindow__setup"
+              :default="{chain:[]}"
               @update:model-value="emitStoryUpdate"
             />
           </UiTab>

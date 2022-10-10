@@ -28,6 +28,15 @@ defining CSS styles to be loaded to the document (via <link> or <style>)
     type: optional. A descriptive indicator of the type of stylesheet (font, class, palette, ...any custom string)
     thumbnail: optional. Thumbnail image URL
   }
+
+
+  // Special type:  "google-font"
+
+  {
+    id: 'Gemunu Libre',  // Google font name
+    type: 'google-font,
+  }
+
 ]
 */
 import { colorScheme } from '@/packages/ui'
@@ -46,10 +55,19 @@ export default function useStylesheets(arrSheets, containerSelector = 'body') {
     deletionTargets[elUid] = elTarget
   }
 
+
+  const foundGoogleFonts = []
+
   arrSheets.forEach((sheet) => {
     if (sheet['prefers-color-scheme'] && sheet['prefers-color-scheme'] != colorScheme.value) {
       return
     }
+
+    if (sheet.type == 'google-font') {
+      foundGoogleFonts.push(sheet)
+      return
+    }
+
 
     deletionTargets[sheet.id] = undefined
 
@@ -99,6 +117,40 @@ export default function useStylesheets(arrSheets, containerSelector = 'body') {
       }
     }
   })
+
+  /*
+  Import a single stylesheet (id=_cms_sheet_google_fonts) with all found google forms
+
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Dancing+Script&family=Gemunu+Libre&display=swap');
+  .foo {
+    font-family: 'Dancing Script', cursive;
+    font-family: 'Gemunu Libre', sans-serif;
+  }
+  </style>
+  */
+  if (foundGoogleFonts.length) {
+    const stylesheetId = '_cms_sheet_google_fonts'
+
+    deletionTargets[stylesheetId] = undefined
+
+    const names = foundGoogleFonts.map((s) => s.id.replace(' ', '+'))
+    const importUrl = 'https://fonts.googleapis.com/css2?family=' + names.join('&family=') + '&display=swap'
+
+    if (!createdElements[stylesheetId]) {
+      const style = document.createElement('style')
+      style.id = stylesheetId
+
+      document.getElementsByTagName('head')[0].appendChild(style)
+      createdElements[stylesheetId] = style
+    }
+
+    const sheetSrc = `@import url('${importUrl}');`
+    if (createdElements[stylesheetId].innerHTML != sheetSrc) {
+      createdElements[stylesheetId].innerHTML = sheetSrc
+    }
+  }
+
 
   for (const [sheetId, doomedEl] of Object.entries(deletionTargets)) {
     if (!doomedEl) {

@@ -53,7 +53,7 @@ const actionProps = computed(() => {
     :is="action.component"
     v-if="action.component"
     v-model="internalModel"
-    v-bind="{ ...$attrs, ...actionProps }"
+    v-bind="actionProps"
     @update:model-value="emitUpdate"
   />
 </template>

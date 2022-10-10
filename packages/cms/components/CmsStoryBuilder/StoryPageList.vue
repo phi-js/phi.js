@@ -1,10 +1,11 @@
 <script setup>
-import { ref, shallowRef, watch, nextTick } from 'vue'
+import { ref, shallowRef, watch, inject } from 'vue'
 import draggable from 'vuedraggable'
 
-import { UiInput, UiItem, UiIcon, UiPopover, UiTabs, UiTab } from '@/packages/ui/components'
+import { UiInput } from '@/packages/ui/components'
+import StoryPageItem from './StoryPageItem.vue'
+
 import { getBlockEditors } from '../../functions'
-import EditorAction from '../CmsBlockEditor/EditorAction.vue'
 
 const props = defineProps({
   story: {
@@ -22,16 +23,9 @@ const props = defineProps({
 const emit = defineEmits([
   'update:story',
   'update:currentPageId',
+  'open-editor',
 ])
 
-const availableActions = shallowRef([])
-
-const editors = getBlockEditors({ component: 'LayoutPage' })
-availableActions.value = editors?.actions || []
-
-function onPageClick(page) {
-  emit('update:currentPageId', page.id)
-}
 
 const innerPages = ref()
 watch(
@@ -47,132 +41,58 @@ function emitUpdate() {
   })
 }
 
-
-const editingPage = ref()
-const editorTab = ref()
-
-function openPageEditor(page, tab = null) {
-  if (tab) {
-    editorTab.value = tab
-  }
-
-  editingPage.value = page
-
-  nextTick(() => refDialog.value.showModal())
-  // refDialog.value.showModal()
-
-}
-
-function openPageCreator() {
-  editingPage.value = {
-    id: '',
-    hash: '',
-    title: '',
-
-    // default page contents
-    component: 'LayoutPage',
-    slot: [],
-  }
-
-  nextTick(() => refDialog.value.showModal())
-  // refDialog.value.showModal()
-}
-
-function resetForm() {
-  editingPage.value = null
-}
-
 function deletePageAt(index) {
   if (!confirm('Delete this page?')) {
     return
   }
 
-  const story = { ...props.story }
-  const deletedPageId = story.pages[index].id
-
-  story.pages.splice(index, 1)
-  emit('update:story', story)
-
-  if (deletedPageId == props.currentPageId) {
-    const newActiveId = story.pages?.[index]?.id || story.pages[story.pages.length - 1]?.id
-    if (newActiveId) {
-      emit('update:currentPageId', newActiveId)
-    }
-  }
+  innerPages.value.splice(index, 1)
+  emitUpdate()
 }
 
-const refDialog = ref()
+const availableActions = shallowRef([])
 
-function onDialogClose($event) {
-  if ($event.target.returnValue == 'ok') {
-    const story = { ...props.story }
+const editors = getBlockEditors({ component: 'LayoutPage' })
+availableActions.value = editors?.actions || []
 
-    if (!editingPage.value.id) {
-      editingPage.value.id = editingPage.value.hash
-      story.pages.push({ ...editingPage.value })
-      emit('update:story', story)
-      emit('update:currentPageId', editingPage.value.id)
-    } else {
-      const foundPageIndex = story.pages.findIndex((p) => p.id == editingPage.value.id)
-      if (foundPageIndex == -1) {
-        // ????
-        return
-      }
+function onPageClick(page) {
+  emit('update:currentPageId', page.id)
+}
 
-      Object.assign(story.pages[foundPageIndex], editingPage.value)
-      emit('update:story', story)
-    }
+const openBlockWindow = inject('$_cms_openBlockWindow')
+const newPage = ref()
+
+function openPageCreator() {
+  newPage.value = {
+    id: `p${innerPages.value.length + 1}`,
+    component: 'LayoutPage',
   }
 
-  resetForm()
+  openBlockWindow(
+    {
+      innerBlock: newPage,
+      updateBlock: (newValue) => {
+        innerPages.value.push(newValue)
+        newPage.value = null
+        emitUpdate()
+        emit('update:currentPageId', newValue.id)
+      },
+      cancel: () => newPage.value = null,
+    },
+    'settings',
+  )
+}
+
+function onOpenEditor(index, actionId = null) {
+  emit('open-editor', {
+    index,
+    actionId,
+  })
 }
 </script>
 
 <template>
   <div class="StoryPageList">
-    <!-- Page creator dialog -->
-    <dialog
-      ref="refDialog"
-      class="StoryPageList__dialog"
-      @close="onDialogClose"
-    >
-      <form
-        v-if="editingPage"
-        method="dialog"
-      >
-        <UiTabs :model-value="editorTab">
-          <UiTab
-            v-for="action in availableActions"
-            :key="action.id"
-            :value="action.id"
-            :text="action.title"
-          >
-            <EditorAction
-              v-model:block="editingPage"
-              :action="action"
-            />
-          </UiTab>
-        </UiTabs>
-
-        <footer>
-          <button
-            type="submit"
-            class="UiButton"
-            value="ok"
-          >
-            OK
-          </button>
-          <button
-            type="submit"
-            class="UiButton UiButton--cancel"
-            value="cancel"
-          >
-            Cancel
-          </button>
-        </footer>
-      </form>
-    </dialog>
-
     <draggable
       v-model="innerPages"
       class="StoryPageList__draggable"
@@ -187,47 +107,21 @@ function onDialogClose($event) {
       @update:model-value="emitUpdate"
     >
       <template #item="{ element, index }">
-        <div
-          class="StoryPage"
-          :class="{'StoryPage--selected': element.id == props.currentPageId}"
+        <StoryPageItem
+          :model-value="element"
+          :selected="element.id == currentPageId"
+          @update:model-value="innerPages[index] = $event; emitUpdate();"
+          @delete="deletePageAt(index)"
           @click="onPageClick(element)"
-        >
-          <UiItem
-            class="StoryPage__item"
-            icon="mdi:drag-vertical"
-            :text="element.title || element.hash"
-            :subtext="`#${element.hash}`"
-          >
-            <template #actions>
-              <UiPopover>
-                <template #trigger>
-                  <UiIcon src="mdi:dots-vertical" />
-                </template>
-                <template #contents>
-                  <div class="StoryPage__menuItems">
-                    <UiItem
-                      v-for="action in availableActions"
-                      :key="action.id"
-                      class="BlockPopover__item"
-                      :text="action.title"
-                      :icon="action.icon"
-                      @click="openPageEditor(element, action.id)"
-                    />
-                    <UiItem
-                      class="BlockPopover__item BlockPopover__item--delete"
-                      :style="props.story.pages.length == 1 ? 'opacity:0.5; pointer-events:none' : null"
-                      icon="mdi:close"
-                      text="Delete"
-                      @click="deletePageAt(index)"
-                    />
-                  </div>
-                </template>
-              </UiPopover>
-            </template>
-          </UiItem>
-        </div>
+          @open-editor="onOpenEditor(index, $event)"
+        />
       </template>
     </draggable>
+
+    <StoryPageItem
+      v-if="newPage"
+      v-model="newPage"
+    />
 
     <UiInput
       type="button"

@@ -230,21 +230,21 @@ export default {
       const pageTo = currentPage.value
 
       // Evaluate page setup() (once)
-      if (pageTo?.setup && !loadedPages[pageTo.id]) {
-        storyVM.eval(pageTo.setup, innerModel.value)
+      if (pageTo?.['v-on']?.load && !loadedPages[pageTo.id]) {
+        storyVM.eval(pageTo['v-on'].load, innerModel.value)
         loadedPages[pageTo.id] = true
       }
 
-      // Evaluate page onEnter()
-      if (pageTo?.onEnter) {
-        storyVM.eval(pageTo.onEnter, innerModel.value)
+      // Evaluate page enter event
+      if (pageTo?.['v-on']?.enter) {
+        storyVM.eval(pageTo['v-on'].enter, innerModel.value)
       }
 
-      // Evaluate page onLeave()
+      // Evaluate page leave event
       if (previousId) {
         const pageFrom = sanitizedStory.value.pages.find((page) => page.id == previousId)
-        if (pageFrom?.onLeave) {
-          storyVM.eval(pageFrom.onLeave, innerModel.value)
+        if (pageFrom?.['v-on']?.leave) {
+          storyVM.eval(pageFrom['v-on'].leave, innerModel.value)
         }
       }
     }

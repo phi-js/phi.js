@@ -18,7 +18,15 @@ const props = defineProps({
 
 const i18n = useI18n()
 const translatedProps = computed(() => {
-  return parseTranslations({ ...props.modelValue?.props }, i18n.locale, props.modelValue.i18n)
+  return parseTranslations(
+    {
+      ...props.modelValue?.props,
+      class: undefined,
+      style: undefined,
+    },
+    i18n.locale,
+    props.modelValue.i18n,
+  )
 })
 
 </script>
@@ -28,6 +36,6 @@ const translatedProps = computed(() => {
     v-bind="translatedProps"
     :icon="translatedProps?.icon || 'mdi:help-rhombus'"
     :text="translatedProps?.text || 'Empty item'"
-    href=""
+    @click.prevent="() => 0"
   />
 </template>

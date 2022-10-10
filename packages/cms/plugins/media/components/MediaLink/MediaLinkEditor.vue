@@ -43,8 +43,8 @@ function emitUpdate(varName) {
   emit('update:modelValue', { ...innerValue.value })
 }
 
-const injectedStoryData = inject('$_cms_story_builder', null)
-const availablePages = computed(() => injectedStoryData?.story?.value?.pages || [])
+const injectedStory = inject('_cms_currentStory', null)
+const availablePages = computed(() => injectedStory?.value?.pages || [])
 const optionsPages = computed(() => availablePages.value.map((p) => ({
   value: p.hash || p.id,
   text: p.title || p.info?.text || p.id,

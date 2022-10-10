@@ -2,8 +2,8 @@
 import { ref, watchEffect, computed, inject } from 'vue'
 import { UiInput } from '@/packages/ui'
 
-const injectedStoryData = inject('$_cms_story_builder', null)
-const availablePages = computed(() => injectedStoryData?.story?.value?.pages || [])
+const injectedStory = inject('_cms_currentStory', null)
+const availablePages = computed(() => injectedStory?.value?.pages || [])
 
 const props = defineProps({
   /**

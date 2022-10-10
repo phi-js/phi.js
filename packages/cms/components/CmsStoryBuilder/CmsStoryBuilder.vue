@@ -1,11 +1,12 @@
 <script setup>
-import { provide, ref, computed, watch, useSlots } from 'vue'
+import { provide, ref, computed, watch, shallowRef } from 'vue'
 import { CmsStory } from '../CmsStory'
 import CmsStoryEditor from '../CmsStoryEditor/CmsStoryEditor.vue'
 
-import StoryPageList from './StoryPageList.vue'
 import StoryEditorWindow from '../CmsStoryEditor/StoryEditorWindow.vue'
-import { getStorySchema } from '../../functions'
+import BlockWindow from '../CmsBlockEditor/BlockWindow.vue'
+import StoryPageList from './StoryPageList.vue'
+import { getStorySchema, sanitizeStory } from '../../functions'
 
 import { useI18n } from '../../../i18n'
 import {
@@ -44,8 +45,8 @@ const props = defineProps({
     type: Object,
     required: false,
     default: () => ({
-      width: 'auto',
-      height: 'auto',
+      width: null,
+      height: null,
     }),
   },
 
@@ -115,9 +116,12 @@ const i18n = useI18n({
 const innerStory = ref()
 watch(
   () => props.story,
-  (newValue) => innerStory.value = JSON.parse(JSON.stringify(newValue)),
+  (newValue) => {
+    innerStory.value = sanitizeStory(JSON.parse(JSON.stringify(newValue)))
+  },
   { immediate: true },
 )
+provide('_cms_currentStory', innerStory)
 
 
 const currentPageId = computed({
@@ -204,14 +208,57 @@ function onWindowCancel() {
 }
 
 
-// Propvide global object to be used in child editor components
-// e.g. BlockCssClasses, NavigationPagePicker
-provide('$_cms_story_builder', {
-  story: innerStory,
-  settings: props.settings,
-  accept: onWindowAccept,
-  cancel: onWindowCancel,
+// Block editor window (singleton in the story builder)
+const editingBlock = shallowRef() // Instance of SlotItem
+const currentActionId = ref()
+
+function openBlockWindow(SlotBlock, actionId = null) {
+  editingBlock.value = SlotBlock
+  currentActionId.value = actionId
+}
+
+function closeBlockWindow() {
+  editingBlock.value = null
+}
+
+provide('$_cms_openBlockWindow', openBlockWindow)
+
+
+const editingPageIndex = ref(-1)
+const editingPage = computed({
+  get() {
+    if (editingPageIndex.value == -1) {
+      return null
+    }
+
+    return innerStory.value.pages[editingPageIndex.value]
+  },
+  set(newPage) {
+    if (editingPageIndex.value == -1) {
+      return
+    }
+    innerStory.value.pages[editingPageIndex.value] = newPage
+  },
 })
+
+
+function onOpenEditor({ index, actionId }) {
+  editingPageIndex.value = index
+  openBlockWindow(
+    {
+      innerBlock: editingPage,
+      updateBlock: () => {
+        onUpdateStory()
+        editingPageIndex.value = -1
+      },
+      cancel: () => {
+        editingPageIndex.value = -1
+      },
+    },
+    actionId,
+  )
+}
+
 
 /* Provide VM schema */
 const storySchema = computed(() => {
@@ -240,8 +287,6 @@ const storySchema = computed(() => {
 
 provide('$_vm_modelSchema', storySchema)
 
-
-
 // undo/redo functionality
 const { push, undo, redo, hasUndo, hasRedo } = useUndo(innerStory.value, (newValue) => {
   innerStory.value = newValue
@@ -249,11 +294,6 @@ const { push, undo, redo, hasUndo, hasRedo } = useUndo(innerStory.value, (newVal
 })
 
 const isModelExplorerOpen = ref(false)
-
-const slots = useSlots()
-const contentSlot = computed(() => {
-  return slots?.[`contents-${currentTab.value}`]
-})
 </script>
 
 <template>
@@ -268,10 +308,7 @@ const contentSlot = computed(() => {
         </template>
 
         <template #right>
-          <div
-            class="CmsStoryBuilder__controls"
-            :class="{'CmsStoryBuilder__controls--hidden': !!contentSlot}"
-          >
+          <div class="CmsStoryBuilder__controls">
             <UiIcon
               class="CmsStoryBuilder__controlItem"
               src="mdi:arrow-u-left-top"
@@ -385,19 +422,7 @@ const contentSlot = computed(() => {
       </UiTabs>
     </div>
 
-
-    <div
-      v-if="contentSlot"
-      class="CmsStoryBuilder__body"
-    >
-      <div class="CmsStoryBuilder__content">
-        <Component :is="contentSlot" />
-      </div>
-    </div>
-    <div
-      v-if="!contentSlot"
-      class="CmsStoryBuilder__body"
-    >
+    <div class="CmsStoryBuilder__body">
       <div
         class="CmsStoryBuilder__sidebar"
         :class="{
@@ -409,8 +434,8 @@ const contentSlot = computed(() => {
           v-model:current-page-id="currentPageId"
           v-model:story="innerStory"
           class="CmsStoryBuilder__pageList"
-          @update:current-page-id="updatePageId($event)"
           @update:story="onUpdateStory()"
+          @open-editor="onOpenEditor"
         />
       </div>
 
@@ -444,6 +469,17 @@ const contentSlot = computed(() => {
       @accept="onWindowAccept"
       @cancel="onWindowCancel"
     />
+
+    <!-- current block window -->
+    <BlockWindow
+      v-if="editingBlock"
+      v-model:action-id="currentActionId"
+      v-model:block="editingBlock.innerBlock.value"
+      open
+      @accept="editingBlock.updateBlock($event); closeBlockWindow()"
+      @cancel="editingBlock?.cancel?.(); closeBlockWindow()"
+    />
+
 
     <!-- modelValue explorer -->
     <UiWindow

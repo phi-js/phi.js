@@ -86,10 +86,6 @@
 
     opacity: 1;
     transition: opacity var(--ui-duration-snap);
-    &--hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
 
     .UiPopover__trigger {
       height: 100%;

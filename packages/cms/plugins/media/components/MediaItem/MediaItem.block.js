@@ -7,7 +7,10 @@ export default {
   title: 'Item',
   icon: 'mdi:card-account-details',
 
-  block: { component: UiItem },
+  block: {
+    component: UiItem,
+    props: { bem: 'MediaItem' },
+  },
 
   editor: {
     face: { component: MediaItemFace },

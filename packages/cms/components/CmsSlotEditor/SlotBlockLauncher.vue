@@ -194,7 +194,6 @@ function onPickerUpdateOpen($event) {
     position: absolute;
     display: flex;
     flex-wrap: nowrap;
-    justify-content: center;
 
     .UiItem {
       --ui-item-padding: 0 6px;

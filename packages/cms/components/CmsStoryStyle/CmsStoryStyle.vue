@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref, watch, reactive, nextTick, computed } from 'vue'
 
-import { colorScheme, UiTabs, UiTab } from '@/packages/ui'
+import { colorScheme, UiTabs, UiTab, UiInput } from '@/packages/ui'
 import CssStyleEditor from '@/packages/ui/components/CssStyleEditor/CssStyleEditor.vue'
 
 import { useStorySettings } from '../../functions'
@@ -54,7 +54,7 @@ const fontCss = {
   type: 'object',
   properties: {
     '--ui-font-size': {
-      title: 'Base font size',
+      title: 'Base size',
       format: {
         type: 'css-unit',
         props: {
@@ -84,7 +84,7 @@ const marginCss = {
     },
 
     '--ui-content-margin': {
-      title: 'Page margin',
+      title: 'Document margin',
       format: 'css-spacing',
     },
   },
@@ -160,6 +160,60 @@ const innerStoryVariablesDark = computed({
   get: () => getSheetSrc('story-style-dark') || {},
   set: (newValue) => setSheetSrc('story-style-dark', newValue),
 })
+
+const availableFonts = computed(() => [
+  {
+    value: null,
+    text: 'Default',
+  },
+
+  ...innerStory.value.stylesheets
+    .filter((sh) => sh.type == 'google-font')
+    .map((sh) => ({
+      value: sh.id,
+      text: sh.id,
+    })),
+
+  {
+    value: '-import-',
+    text: '... load Google Font',
+  },
+])
+
+function setFontVariable(varName, varValue) {
+  if (varValue == '-import-') {
+    return importGoogleFont(varName)
+  }
+
+  innerStoryVariables.value = {
+    ...innerStoryVariables.value,
+    [varName]: varValue,
+  }
+  emitUpdate()
+}
+
+function importGoogleFont(varName) {
+  const fontName = prompt('Google font name')
+  if (!fontName?.trim?.()) {
+    return
+  }
+
+  if (innerStory.value.stylesheets.find((sh) => sh.type == 'google-font' && sh.id == fontName)) {
+    alert(`Font '${fontName}' id already loaded`)
+    return
+  }
+
+  innerStory.value.stylesheets.push({
+    id: fontName,
+    type: 'google-font',
+  })
+
+  innerStoryVariables.value = {
+    ...innerStoryVariables.value,
+    [varName]: fontName,
+  }
+  emitUpdate()
+}
 </script>
 
 <template>
@@ -172,13 +226,32 @@ const innerStoryVariablesDark = computed({
     </UiTab>
 
     <UiTab text="Font">
-      <CssStyleEditor
-        v-model="innerStoryVariables"
+      <div
         class="CmsStoryStyle__properties"
-        :schema="fontCss"
-        :endpoint="uploadsEndpoint"
-        @update:model-value="emitUpdate"
-      />
+      >
+        <UiInput
+          label="Titles"
+          :model-value="innerStoryVariables['--ui-font-titles']"
+          type="select-native"
+          :options="availableFonts"
+          @update:model-value="setFontVariable('--ui-font-titles', $event)"
+        />
+
+        <UiInput
+          label="Texts"
+          :model-value="innerStoryVariables['--ui-font-texts']"
+          type="select-native"
+          :options="availableFonts"
+          @update:model-value="setFontVariable('--ui-font-texts', $event)"
+        />
+
+        <CssStyleEditor
+          v-model="innerStoryVariables"
+          :schema="fontCss"
+          :endpoint="uploadsEndpoint"
+          @update:model-value="emitUpdate"
+        />
+      </div>
     </UiTab>
 
     <UiTab text="Colors">

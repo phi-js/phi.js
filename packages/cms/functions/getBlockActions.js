@@ -76,6 +76,7 @@ export default function getBlockActions(block, CmsStoryBuidlerSettings = null) {
     id: 'css',
     title: 'Style',
     icon: 'mdi:water',
+    hasData: block.props?.style || block.props?.class?.length,
   })
 
   // Transitions
@@ -83,6 +84,7 @@ export default function getBlockActions(block, CmsStoryBuidlerSettings = null) {
     id: 'transitions',
     title: 'Transitions',
     icon: 'mdi:transition',
+    hasData: !!block.transitions,
   })
 
   // v-on
@@ -90,6 +92,7 @@ export default function getBlockActions(block, CmsStoryBuidlerSettings = null) {
     id: 'events',
     title: 'Events',
     icon: 'mdi:gesture-tap',
+    hasData: !!block['v-on'],
   })
 
   // v-for
@@ -97,6 +100,7 @@ export default function getBlockActions(block, CmsStoryBuidlerSettings = null) {
     id: 'repeat',
     title: 'Repeat',
     icon: 'mdi:repeat-variant',
+    hasData: !!block['v-for'],
   })
 
   // Raw block source editor

@@ -20,17 +20,25 @@ export default {
     },
   },
 
-  emits: ['update:block', 'delete', 'select', 'deselect', 'open-editor', 'insert-sibling'],
+  emits: ['update:block', 'delete', 'select', 'deselect', 'insert-sibling'],
 
   setup(props, { emit }) {
+    const definition = getBlockDefinition(props.block)
+
     const innerBlock = ref()
     watch(
       () => props.block,
-      (newValue) => innerBlock.value = { ...newValue },
+      (newValue) => {
+        innerBlock.value = {
+          ...newValue,
+          props: {
+            ...definition.block.props,
+            ...newValue?.props,
+          },
+        }
+      },
       { immediate: true },
     )
-
-    const definition = getBlockDefinition(props.block)
 
     function deleteBlock() {
       emit('delete')
@@ -40,8 +48,12 @@ export default {
       emit('select', evt)
     }
 
+    const openBlockWindow = inject('$_cms_openBlockWindow')
     function openEditor(actionId = null) {
-      emit('open-editor', actionId)
+      openBlockWindow({
+        innerBlock,
+        updateBlock: (newValue) => emit('update:block', newValue),
+      }, actionId)
     }
 
     function insertSibling(position = null) {
@@ -49,7 +61,6 @@ export default {
     }
 
 
-    /* Block transition classnames */
     const transitionClassNames = computed(() => {
       const blockTransitions = props.block?.transitions || {}
       const objTransitions = {
@@ -71,22 +82,25 @@ export default {
     })
 
 
-    const SlotItemInstance = {
+    provide('_cms_SlotItem', {
       parent: inject('_cms_SlotItem', null),
-      isSlotItem: true,
       innerBlock,
       definition,
+      selectBlock,
+    })
+
+    const innerRef = ref()
+
+    return {
+      innerBlock,
+      definition,
+      transitionClassNames,
       deleteBlock,
-      updateBlock: (newValue) => emit('update:block', newValue),
       openEditor,
       selectBlock,
       insertSibling,
-
-      transitionClassNames,
+      innerRef,
     }
-    provide('_cms_SlotItem', SlotItemInstance)
-
-    return SlotItemInstance
   },
 
   render() {
@@ -95,41 +109,34 @@ export default {
     }
 
     if (this.definition?.editor?.component) {
-      // if the custom editor is not wrapped in a DIV,
-      // the drag/drop attributes/listeners (incoming $attrs) don't work properly
       return h(
-        'div',
-        h(
-          this.definition.editor.component,
-          {
-            'block': this.innerBlock,
-            'onUpdate:block': (evt) => this.$emit('update:block', evt),
+        this.definition.editor.component,
+        {
+          'ref': 'innerRef',
+          'block': this.innerBlock,
+          'onUpdate:block': (evt) => this.$emit('update:block', evt),
 
-            'selected': this.selected,
-            'onSelect': this.selectBlock,
-            'onDelete': this.deleteBlock,
+          'selected': this.selected,
+          'onSelect': this.selectBlock,
+          'onDelete': this.deleteBlock,
 
-            'onOpenEditor': this.openEditor,
-            'onInsertSibling': this.insertSibling,
+          'onOpenEditor': this.openEditor,
+          'onInsertSibling': this.insertSibling,
 
-            // prevent clicks from bubbling up to parent Bloh (if there is one)
-            // so that select is not triggered (line 94)
-            'onClick': (evt) => {
-              evt.stopPropagation()
-            },
+          'class': this.transitionClassNames,
 
-            'class': this.transitionClassNames,
-          },
-        ),
+          // prevent clicks from bubbling up to parent Bloh (if there is one)
+          'onClick': (evt) => evt.stopPropagation(),
+        },
       )
     }
 
     return h(
       Bloh,
       {
+        ref: 'innerRef',
         block: this.innerBlock,
-        class: [this.innerBlock?.props?.class, ...this.transitionClassNames],
-        style: this.innerBlock?.props?.style,
+        class: this.transitionClassNames,
         selected: this.selected,
         onSelect: this.selectBlock,
         onDelete: this.deleteBlock,
@@ -148,7 +155,11 @@ export default {
           )
           : () => h(
             this.definition.block.component,
-            this.innerBlock.props,
+            {
+              ...this.innerBlock.props,
+              class: undefined,
+              style: undefined,
+            },
           ),
 
         toolbar: this.definition?.editor?.toolbar

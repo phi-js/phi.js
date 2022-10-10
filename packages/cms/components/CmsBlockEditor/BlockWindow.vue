@@ -45,10 +45,14 @@ watch(
     }
 
     initialValue.value = JSON.parse(JSON.stringify(newBlock))
-    innerBlock.value = JSON.parse(JSON.stringify(newBlock))
+    innerBlock.value = { ...initialValue.value }
 
     definition.value = getBlockDefinition(newBlock)
     availableEditors.value = getBlockEditors(newBlock, { allowSource: true })
+
+    if (!currentActionId.value) {
+      currentActionId.value = availableEditors.value?.actions?.[0]?.id
+    }
   },
   { immediate: true },
 )
@@ -74,6 +78,7 @@ function cancel() {
 
 <template>
   <UiWindow
+    name="phi_block"
     class="BlockWindow"
     @cancel="cancel"
   >
