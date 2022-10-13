@@ -1,5 +1,6 @@
 // import MediaFile from './components/MediaFile/MediaFile.block.js'
 // import MediaMath from './components/MediaMath/MediaMath.block.js'
+import i18n from './i18n'
 
 import MediaCalendar from './components/MediaCalendar/MediaCalendar.block.js'
 import MediaDialog from './components/MediaDialog/MediaDialog.block.js'
@@ -15,11 +16,27 @@ import MediaLoremIpsum from './components/MediaLoremIpsum/MediaLoremIpsum.block.
 import MediaMap from './components/MediaMap/MediaMap.block.js'
 import MediaPdf from './components/MediaPdf/MediaPdf.block.js'
 import MediaVideo from './components/MediaVideo/MediaVideo.block.js'
+import MediaVideoContainer from './components/MediaVideo/MediaVideoContainer.block.js'
 
-import i18n from './i18n'
+import fnPlay from './functions/MediaVideo/play.js'
+import fnPause from './functions/MediaVideo/pause.js'
+import fnStop from './functions/MediaVideo/stop.js'
+import fnGoToChapter from './functions/MediaVideo/goToChapter.js'
 
 export default {
   i18n,
+
+  functions: [
+    {
+      title: 'Video',
+      children: [
+        fnPlay,
+        fnPause,
+        fnStop,
+        fnGoToChapter,
+      ],
+    },
+  ],
 
   // ORDER MATTERS (block picker shows blocks in this order)
   blocks: [
@@ -49,6 +66,7 @@ export default {
       title: 'Video',
       children: [
         MediaVideo,
+        MediaVideoContainer,
       ],
     },
     {

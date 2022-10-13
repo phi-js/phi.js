@@ -68,7 +68,7 @@ export default function getBlockFields(block) {
     return retval
   }
 
-  if (block.component == 'MediaVideo') {
+  if (block.component == 'MediaVideo' || block.component == 'MediaVideoContainer') {
     if (block['v-model:isPlaying']) {
       retval.push({
         name: block['v-model:isPlaying'],
