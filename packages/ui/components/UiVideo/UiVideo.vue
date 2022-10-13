@@ -53,7 +53,7 @@ const emit = defineEmits([
   'update:isPlaying',
   'update:currentTime',
 
-  'update:activeChapters',
+  'update:activeChapters', // Emits an ARRAY of chapter names ['Capitulo 1', ...]
   'chapter-enter',
   'chapter-leave',
 ])
@@ -65,10 +65,14 @@ watch(
   { immediate: true },
 )
 
+let oldValue = 0
 const innerCurrentTime = ref(0)
 watch(
   () => props.currentTime,
-  (newValue) => innerCurrentTime.value = newValue,
+  (newValue) => {
+    innerCurrentTime.value = newValue
+    oldValue = newValue
+  },
   { immediate: true },
 )
 
@@ -102,6 +106,7 @@ watch(
     innerChapters.value = incoming
       .filter((chapter) => !!chapter && typeof chapter == 'object')
       .map((chapter, i) => ({
+        ...chapter,
         name: chapter.name || i,
         start: chapter.start || 0,
         end: chapter.end || Infinity,
@@ -112,17 +117,59 @@ watch(
   { immediate: true },
 )
 
+const jumpPoints = computed(() => {
+  return innerChapters.value
+    .filter((c) => !!c.jumpTo)
+    .map((c) => ({
+      from: c.end,
+      to: c.jumpTo,
+    }))
+})
+
+function goToChapter(chapterName) {
+  const foundChapter = innerChapters.value.find((c) => c.name == chapterName)
+  if (!foundChapter) {
+    console.warn(`UiVideo: Chapter '${chapterName}' not found`)
+    return
+  }
+
+  oldValue = foundChapter.start
+  setTimeout(() => innerCurrentTime.value = foundChapter.start, 0)
+}
+
+defineExpose({
+  goToChapter,
+  play: () => innerIsPlaying.value = true,
+  pause: () => innerIsPlaying.value = false,
+  stop: () => {
+    innerIsPlaying.value = false
+    innerCurrentTime.value = 0
+  },
+})
+
+
 function onUpdateCurrentTime(msTime) {
+  innerCurrentTime.value = msTime
   emit('update:currentTime', msTime)
 
+  // Trigger jump points
+  jumpPoints.value.forEach((point) => {
+    if (oldValue <= point.from && point.from < msTime) {
+      // Hit point! jump to target time
+      setTimeout(() => innerCurrentTime.value = point.to, 0)
+    }
+  })
+  oldValue = msTime
+
+
   let activeChapters = []
-  let hasChanged = false
+  let chapterChanged = false
   for (let i = 0; i < innerChapters.value.length; i++) {
     let c = innerChapters.value[i]
     let isActive = c.start <= msTime && msTime < c.end
     if (isActive != c.isActive) {
       c.isActive = isActive
-      hasChanged = true
+      chapterChanged = true
       emit(isActive ? 'chapter-enter' : 'chapter-leave', c.name)
 
       // "pauseOnEnter" prop in chapter
@@ -137,7 +184,7 @@ function onUpdateCurrentTime(msTime) {
     }
   }
 
-  if (hasChanged) {
+  if (chapterChanged) {
     emit('update:activeChapters', activeChapters)
   }
 }
@@ -147,12 +194,12 @@ function onUpdateCurrentTime(msTime) {
   <component
     :is="videoComponent"
     v-if="videoComponent"
-    v-model:is-playing="innerIsPlaying"
-    v-model:current-time="innerCurrentTime"
+    :is-playing="innerIsPlaying"
+    :current-time="innerCurrentTime"
     class="UiVideo"
     :url="url"
     @update:current-time="onUpdateCurrentTime"
-    @update:is-playing="$emit('update:isPlaying', $event)"
+    @update:is-playing="innerIsPlaying = $event; $emit('update:isPlaying', $event)"
   />
   <div
     v-else

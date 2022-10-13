@@ -92,11 +92,8 @@ export default {
         return
       }
 
-      if (val == 0) {
-        this.player.stopVideo()
-      } else if (val > 0) {
-        this.player.seekTo(Math.floor(val / 1000))
-      }
+      this.player.seekTo(Math.floor(val / 1000))
+      this.$emit('update:currentTime', val)
     },
 
     url() {
