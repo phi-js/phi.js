@@ -1,6 +1,6 @@
 <!-- eslint-disable max-len -->
 <script>
-import { h, ref, shallowRef, watchEffect, Transition, inject, computed, watch } from 'vue'
+import { h, ref, shallowRef, watchEffect, Transition, inject, computed, watch, onMounted } from 'vue'
 import { VM } from '@/packages/vm'
 import { getBlockDefinition } from '../../functions'
 
@@ -352,6 +352,14 @@ const CmsBlock = {
     })
 
 
+    /* REF to block component */
+    const blockRef = ref()
+    onMounted(() => {
+      if (props.block.ref && blockRef.value) {
+        injectedStory.defineBlockRef(props.block.ref, blockRef.value)
+      }
+    })
+
     return {
       attrs,
       isVisible,
@@ -366,6 +374,7 @@ const CmsBlock = {
       transitionClassNames,
 
       getModelProperty,
+      blockRef,
     }
   },
 
@@ -391,6 +400,7 @@ const CmsBlock = {
           this.blockProps.class,
           this.transitionClassNames,
         ],
+        ref: this.block.ref ? 'blockRef' : undefined,
       },
       this.blockSlots,
     )

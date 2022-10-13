@@ -339,6 +339,12 @@ export default {
       emit('story-emit', storyEvent)
     }
 
+
+    const blockRefs = {}
+    function defineBlockRef(refName, vueInstance) {
+      blockRefs[refName] = vueInstance
+    }
+
     // Provide global story methods (used by CmsBlock)
     const providedData = {
       goNext,
@@ -348,6 +354,8 @@ export default {
       emitStoryEvent,
       visiblePages,
       nav: pageNav,
+      refs: blockRefs,
+      defineBlockRef,
     }
     provide('$_cms_story', providedData)
     storyVM.custom = { story: providedData }
@@ -432,6 +440,6 @@ export default {
   --cms-story-transition-duration: 0.3s;
 
   position: relative;
-  border: 1px solid transparent; // prevent margin collapses
+  // border: 1px solid transparent; // prevent margin collapses // BUT it fucks up elements with 100vh or 100vw
 }
 </style>
