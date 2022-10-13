@@ -256,8 +256,8 @@ function startMove(evt) {
   >
     <slot
       :coords="currentCoords"
-      :startMove="startMove"
-      :isDragging="isDragging"
+      :start-move="startMove"
+      :is-dragging="isDragging"
       :reset="reset"
     />
     <div
