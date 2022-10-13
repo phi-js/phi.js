@@ -32,7 +32,7 @@ export default {
         innerBlock.value = {
           ...newValue,
           props: {
-            ...definition.block.props,
+            ...definition?.block?.props,
             ...newValue?.props,
           },
         }
@@ -105,7 +105,21 @@ export default {
 
   render() {
     if (!this.definition) {
-      return
+      return h(
+        Bloh,
+        {
+          block: this.innerBlock,
+          selected: this.selected,
+          onSelect: this.selectBlock,
+          onDelete: this.deleteBlock,
+        },
+        {
+          default: () => h(
+            'div',
+            `Uknkown block '${this.innerBlock.component}'`,
+          ),
+        },
+      )
     }
 
     if (this.definition?.editor?.component) {
