@@ -43,7 +43,7 @@ const injectedStory = inject('$_cms_story', null)
   injectedStory.nav, which disables/hides the button.  Since the button is disabled/destroyed, onSubmit is NOT called
   --->
   <UiButton
-    v-show="!injectedStory.nav?.value || injectedStory.nav.value.next"
+    v-show="!injectedStory?.nav?.value || injectedStory?.nav?.value?.next"
     xxx-v-if="!injectedStory.nav?.value || injectedStory.nav.value.next"
     xxx-disabled="injectedStory.nav?.value && !injectedStory.nav.value.next"
     type="submit"

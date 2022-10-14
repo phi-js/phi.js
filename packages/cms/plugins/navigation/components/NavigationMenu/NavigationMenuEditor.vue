@@ -13,10 +13,11 @@ const props = defineProps({
      "props": {
        "items": [
           {
-            href: '', (required)
+            pageId: '',
             text: '',
 
             ... all attributes to be bound to <a>
+            href: '' (required if pageId is null)
             target: '',
             title: '',
             ...
@@ -46,9 +47,9 @@ watchEffect(() => {
     },
   }
 
-  selectedPageIds.value = block.value.props.items.map((item) => {
-    return item.href.replace('#/', '')
-  })
+  selectedPageIds.value = block.value.props.items
+    .filter((item) => !!item.pageId)
+    .map((item) => item.pageId)
 })
 
 function emitInput() {
@@ -56,7 +57,7 @@ function emitInput() {
     .filter((page) => selectedPageIds.value.includes(page.id))
     .map((page) => {
       return {
-        href: `#/${page.id}`,
+        pageId: page.id,
         text: page.title,
       }
     })

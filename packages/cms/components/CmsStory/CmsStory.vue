@@ -345,8 +345,19 @@ export default {
       blockRefs[refName] = vueInstance
     }
 
+    function getPageHref(pageId) {
+      const useHashes = false
+      return useHashes ? `#/${pageId}` : null
+    }
+
+    function isPageActive(pageId) {
+      return currentPage.value?.id == pageId
+    }
+
     // Provide global story methods (used by CmsBlock)
     const providedData = {
+      getPageHref,
+      isPageActive,
       goNext,
       goTo,
       goBack,

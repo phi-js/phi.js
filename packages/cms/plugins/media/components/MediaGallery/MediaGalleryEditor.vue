@@ -63,8 +63,7 @@ function emitInput() {
     <UiUpload
       v-model="innerValue.files"
       multiple
-      xxx-endpoint="props.endpoint"
-      endpoint="http://phi.local/api/1/stories/tojcpfpis2a/files"
+      :endpoint="props.endpoint"
       :allowed-file-types="['image/*']"
       @update:model-value="emitInput"
     />

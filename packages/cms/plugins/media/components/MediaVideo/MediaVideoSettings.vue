@@ -83,6 +83,12 @@ function emitInput() {
     <fieldset>
       <legend>Variables</legend>
       <UiInput
+        v-model="block.ref"
+        type="text"
+        label="Referencia"
+        @update:model-value="emitInput"
+      />
+      <UiInput
         v-model="block['v-model:isPlaying']"
         type="text"
         placeholder="Variable name"

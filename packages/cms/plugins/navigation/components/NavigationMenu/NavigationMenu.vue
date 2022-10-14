@@ -1,5 +1,7 @@
 <script setup>
-import { computed } from 'vue'
+import { inject, computed } from 'vue'
+
+const parentStory = inject('$_cms_story', null)
 
 const props = defineProps({
   /*
@@ -25,7 +27,9 @@ const sanitizedItems = computed(() => {
   const retval = props.items?.length ? props.items : []
   return retval.map((item) => ({
     ...item,
-    isActive: window.location.toString().includes(item.href),
+    href: parentStory?.getPageHref?.(item.pageId),
+    // isActive: window.location.toString().includes(item.href),
+    isActive: parentStory?.isPageActive?.(item.pageId),
   }))
 })
 </script>
@@ -35,14 +39,26 @@ const sanitizedItems = computed(() => {
     <div v-if="!sanitizedItems.length">
       No hay items
     </div>
-    <a
-      v-for="(item) in sanitizedItems"
-      :key="item.href"
-      class="NavigationMenu__item"
-      :class="{'NavigationMenu__item--active': item.isActive}"
-      v-bind="item"
-      v-text="item.text"
-    />
+    <template
+      v-for="(item, k) in sanitizedItems"
+      :key="k"
+    >
+      <a
+        v-if="item.href"
+        class="NavigationMenu__item"
+        :class="{'NavigationMenu__item--active': item.isActive}"
+        v-bind="item"
+        v-text="item.text"
+      />
+      <a
+        v-else
+        :href="`#/${item.pageId}`"
+        class="NavigationMenu__item"
+        :class="{'NavigationMenu__item--active': item.isActive}"
+        @click.prevent="parentStory?.goTo?.(item.pageId)"
+        v-text="item.text"
+      />
+    </template>
   </nav>
 </template>
 

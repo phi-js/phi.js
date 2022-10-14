@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, shallowRef, watch, watchEffect } from 'vue'
+import { computed, provide, ref, shallowRef, watch, watchEffect } from 'vue'
 
 import { useStylesheets } from '../../functions'
 import CmsSlotEditor from '../CmsSlotEditor/CmsSlotEditor.vue'
@@ -59,7 +59,9 @@ function emitUpdate() {
 
 const isHeaderEnabled = computed({
   get() {
-    return currentPage.value?.omitHeader !== true
+    return currentPage.value?.omitHeader === undefined
+      ? innerStory.value.header?.length > 0
+      : !currentPage.value.omitHeader
   },
   set(isEnabled) {
     currentPage.value.omitHeader = !isEnabled
@@ -69,7 +71,9 @@ const isHeaderEnabled = computed({
 
 const isFooterEnabled = computed({
   get() {
-    return currentPage.value?.omitFooter !== true
+    return currentPage.value?.omitFooter === undefined
+      ? innerStory.value.footer?.length > 0
+      : !currentPage.value.omitFooter
   },
   set(isEnabled) {
     currentPage.value.omitFooter = !isEnabled
@@ -77,6 +81,12 @@ const isFooterEnabled = computed({
   },
 })
 
+// Provide navigation controls
+provide('$_cms_story', {
+  getPageHref: (pageId) => null,
+  isPageActive: (pageId) => props.currentPageId == pageId,
+  goTo: (pageId) => emit('update:current-page-id', pageId),
+})
 </script>
 
 <template>

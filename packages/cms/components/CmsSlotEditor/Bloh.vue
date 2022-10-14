@@ -61,7 +61,7 @@ const parent = curSlotItem?.parent
   >
     <div class="Bloh__toolbar-container">
       <div class="Bloh__label">
-        {{ props.block.title || definition.title || props.block.component }}
+        {{ props.block.title || definition?.title || props.block.component }}
       </div>
 
       <template v-if="selected">
@@ -77,7 +77,7 @@ const parent = curSlotItem?.parent
           <UiItem
             class="Bloh__headerItem"
             icon="mdi:drag"
-            :text="$slots.toolbar ? '' : props.block.title || definition.title || props.block.component"
+            :text="$slots.toolbar ? '' : props.block.title || definition?.title || props.block.component"
           />
           <!-- custom toolbar component -->
           <slot name="toolbar" />
@@ -158,7 +158,9 @@ const parent = curSlotItem?.parent
   position: relative;
   outline: none;
 
-  --outline-offset: -5px;
+  // --outline-offset: -5px; // causes body horizontal scroll
+
+  --outline-offset: 0;
   z-index: 1; // messes up dragstart from toolbar (in html blocks only ???)
 
   // "outline"
@@ -399,7 +401,7 @@ const parent = curSlotItem?.parent
 // Block-specific stylings
 .Bloh--LayoutGroup {
   padding: 6px;
-  margin: 0 -3px;
+  // margin: 0 -3px; // causes horizontal overscroll on body
   margin-bottom: 6px;
 
   .Bloh--LayoutGroup {
@@ -428,6 +430,7 @@ const parent = curSlotItem?.parent
     display: none;
   }
 
+  & > .LayoutGroupEditor.CmsSlotEditor--empty > .CmsSlotEditor__footer,
   &.Bloh--selected > .LayoutGroupEditor > .CmsSlotEditor__footer {
     display: block;
   }

@@ -143,7 +143,10 @@ function onInsertSibling(index, position = null) {
     v-bind="$attrs"
     v-model="innerSlot"
     class="CmsSlotEditor"
-    :class="{'CmsSlotEditor--dragging': isDragging}"
+    :class="{
+      'CmsSlotEditor--dragging': isDragging,
+      'CmsSlotEditor--empty': !innerSlot.length,
+    }"
     item-key="_key"
     handle=".Bloh__headerItem"
     group="SlotEditor-drag"
@@ -183,15 +186,11 @@ function onInsertSibling(index, position = null) {
 
     <template #footer>
       <!-- block launcher at bottom -->
-      <div
-        class="CmsSlotEditor__footer"
-        :class="{'CmsSlotEditor__footer--not-empty': innerSlot.length > 0}"
-      >
+      <div class="CmsSlotEditor__footer">
         <SlotBlockLauncher
           :text="i18n.t('CmsSlotEditor.AddContent')"
           :title="props.label"
           :label="props.label || i18n.t('CmsSlotEditor.AddContent')"
-          :open="false"
           @input="launchBlock($event)"
         />
       </div>

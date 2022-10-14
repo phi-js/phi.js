@@ -124,11 +124,14 @@ watch(
 provide('_cms_currentStory', innerStory)
 
 
+const innerCurrentPageId = ref()
+
 const currentPageId = computed({
   get() {
-    return props.currentPageId
+    return props.currentPageId || innerCurrentPageId.value || innerStory.value?.pages?.[0]?.id
   },
   set(newPageId) {
+    innerCurrentPageId.value = newPageId
     emit('update:currentPageId', newPageId)
   },
 })
