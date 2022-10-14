@@ -64,7 +64,7 @@ const filteredTree = computed(() => {
 })
 
 // currentPage se inicializa segun el hash actual
-const currentPage = ref(window.location.hash.split('#/')[1] || '1.home')
+const currentPage = ref(window.location.hash.split('#/')[1] || 'home')
 const component = shallowRef()
 const error = ref()
 
@@ -204,6 +204,12 @@ function loadPageComponent(href) {
 .App {
   &__logo {
     font-weight: bold;
+    --ui-item-padding: 0 12px;
+
+    .UiIcon {
+      width: 24px;
+      height: 24px;
+    }
   }
 
   &__top-bar {
@@ -228,13 +234,13 @@ function loadPageComponent(href) {
     overflow-y: auto;
     width: 240px;
     padding: 12px;
-    margin-right: 50px;
   }
 
   &__body {
     position: relative;
     flex: 1;
     min-width: 0; // prevents child overflow from stretching this div
+    padding: 0 25px;
   }
 
   // Transitions
