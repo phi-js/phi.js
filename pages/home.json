@@ -1,0 +1,209 @@
+{
+  "id": "uru8swt97gj",
+  "url": "video-loop",
+  "owner": null,
+  "pages": [
+    {
+      "id": "p1",
+      "hash": "p1",
+      "slots": {
+        "default": [
+          {
+            "component": "MediaVideoContainer",
+            "ref": "micontainer",
+            "v-model:isPlaying": "",
+            "v-model:currentTime": "tVideo",
+            "_key": "itm_1_1",
+            "slot": [
+              {
+                "_key": "itm_3_1",
+                "slot": [
+                  {
+                    "_key": "itm_4_1",
+                    "v-on": {
+                      "click": {
+                        "chain": [
+                          {
+                            "info": {
+                              "text": "Go to chapter",
+                              "icon": "mdi:fast-forward",
+                              "secondary": ""
+                            },
+                            "do": {
+                              "call": "MediaVideo.goToChapter",
+                              "args": {
+                                "ref": "micontainer",
+                                "chapter": "Cosa 1"
+                              }
+                            },
+                            "assign": null
+                          }
+                        ]
+                      }
+                    },
+                    "props": {
+                      "type": "button",
+                      "label": "Cosa 1"
+                    },
+                    "component": "InputButton"
+                  },
+                  {
+                    "_key": "itm_4_2",
+                    "v-on": {
+                      "click": {
+                        "chain": [
+                          {
+                            "info": {
+                              "text": "Go to chapter",
+                              "icon": "mdi:fast-forward",
+                              "secondary": ""
+                            },
+                            "do": {
+                              "call": "MediaVideo.goToChapter",
+                              "args": {
+                                "ref": "micontainer",
+                                "chapter": "Cosa 2"
+                              }
+                            },
+                            "assign": null
+                          }
+                        ]
+                      }
+                    },
+                    "props": {
+                      "type": "button",
+                      "label": "Cosa 2"
+                    },
+                    "component": "InputButton"
+                  },
+                  {
+                    "_placeholder": true,
+                    "_key": "itm_3_2"
+                  },
+                  {
+                    "_key": "itm_4_3",
+                    "v-on": {
+                      "click": {
+                        "chain": [
+                          {
+                            "info": {
+                              "text": "Go to chapter",
+                              "icon": "mdi:fast-forward",
+                              "secondary": ""
+                            },
+                            "do": {
+                              "call": "MediaVideo.goToChapter",
+                              "args": {
+                                "ref": "micontainer",
+                                "chapter": "Cosa 3"
+                              }
+                            },
+                            "assign": null
+                          }
+                        ]
+                      }
+                    },
+                    "props": {
+                      "type": "button",
+                      "label": "Cosa 3"
+                    },
+                    "component": "InputButton"
+                  }
+                ],
+                "v-if": {
+                  "and": [
+                    {
+                      "op": "array.hasAny",
+                      "args": [
+                        "menu"
+                      ],
+                      "field": "capitulos"
+                    }
+                  ]
+                },
+                "props": {
+                  "direction": "column",
+                  "class": [
+                    "video-box"
+                  ]
+                },
+                "title": "Overlay del video",
+                "component": "LayoutGroup"
+              }
+            ],
+            "props": {
+              "url": "https://www.youtube.com/watch?v=BmGu4yNiet0",
+              "chapters": [
+                {
+                  "end": 9000,
+                  "name": "intro",
+                  "start": 0
+                },
+                {
+                  "end": 35000,
+                  "name": "menu",
+                  "start": 7000
+                },
+                {
+                  "end": 34000,
+                  "name": "waiting",
+                  "start": 17000,
+                  "jumpTo": 17000
+                },
+                {
+                  "end": 41000,
+                  "name": "Cosa 1",
+                  "start": 36000,
+                  "jumpTo": 17000
+                },
+                {
+                  "end": 48000,
+                  "name": "Cosa 2",
+                  "start": 42000,
+                  "jumpTo": 17000
+                },
+                {
+                  "end": 54000,
+                  "name": "Cosa 3",
+                  "start": 49000,
+                  "jumpTo": 17000
+                }
+              ],
+              "controls": false,
+              "autoplay": false,
+              "mute": false,
+              "class": [
+                "my-video"
+              ]
+            },
+            "v-model:activeChapters": "capitulos"
+          }
+        ]
+      },
+      "title": "p1",
+      "component": "LayoutPage",
+      "omitFooter": true,
+      "omitHeader": true
+    }
+  ],
+  "paths": [],
+  "title": "Video Loop",
+  "footer": [],
+  "header": [],
+  "workspace": "sdqadxkx64l",
+  "dateCreated": "1665598151",
+  "stylesheets": [
+    {
+      "id": "video-box",
+      "src": ".video-box {\n  display: flex !important;\n  flex-direction: column !important;\n  flex-wrap: nowrap !important;\n  gap: 12px !important;\n\n  width: 340px;\n  margin: 24px auto;\n  padding: 12px;\n  align-items: flex-end;\n\n  font-size: 2rem;\n}",
+      "type": "class"
+    },
+    {
+      "id": "my-video",
+      "src": ".my-video {\n  height: 720px;\n}",
+      "type": "class"
+    }
+  ],
+  "dateModified": "1665598332",
+  "datePublished": "1665598332"
+}

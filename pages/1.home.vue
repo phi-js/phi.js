@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 import { CmsStoryBuilder } from '@/packages/cms'
+// import { CmsStory as CmsStoryBuilder } from '@/packages/cms'
+// import savedStory from './home.json'
 
 const defaultStory = {
   id: 'story-test-1',
@@ -8,37 +10,43 @@ const defaultStory = {
     {
       id: 'p1',
       component: 'LayoutPage',
-      slot: [
-        {
-          component: 'MediaImage',
-          props: {
-            alt: 'Phi.js',
-            title: 'Hello world!',
-            src: '/phi.svg',
-            align: 'center',
+      slots: {
+        default: [
+          {
+            component: 'MediaImage',
+            props: {
+              alt: 'Phi.js',
+              title: 'Hello world!',
+              src: '/phi.svg',
+              align: 'center',
+            },
           },
-        },
-        {
-          component: 'MediaHtml',
-          props: { value: '<h1 style="text-align: center">Phi<em>.js</em></h1>' },
-        },
-        {
-          component: 'MediaLoremIpsum',
-          props: { nParagraphs: 3 },
-        },
-      ],
+          {
+            component: 'MediaHtml',
+            props: { value: '<h1 style="text-align: center">Phi<em>.js</em></h1>' },
+          },
+          {
+            component: 'MediaLoremIpsum',
+            props: { nParagraphs: 3 },
+          },
+        ],
+      },
     },
   ],
 }
 
 const savedStory = JSON.parse(localStorage.getItem('phijs:home'))
+
 const story = ref(savedStory || defaultStory)
 
 function saveStory() {
   localStorage.setItem('phijs:home', JSON.stringify(story.value))
 }
 
-const settings = ref({ uploads: { endpoint: 'http://v4.local/1/cms/pages/test/files' } })
+const settings = ref({
+  allowSource: true,
+  uploads: { endpoint: 'http://v4.local/1/cms/pages/test/files' },
+})
 
 function reset() {
   if (!confirm('Reset story?')) {
