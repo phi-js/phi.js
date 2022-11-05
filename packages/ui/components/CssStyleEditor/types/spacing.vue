@@ -142,12 +142,6 @@ function toggleLinked(position) {
       class="SpacingEditor__group"
       :class="{'SpacingEditor__group--linked': linked.vertical}"
     >
-      <div class="SpacingEditor__linker">
-        <UiIcon
-          :src="linked.vertical ? 'mdi:link-variant' : 'mdi:link-variant-off'"
-          @click="toggleLinked('vertical')"
-        />
-      </div>
       <div class="SpacingEditor__inputs">
         <UiInput
           v-model="innerValue.top"
@@ -166,18 +160,18 @@ function toggleLinked(position) {
           @update:model-value="emitUpdate('bottom')"
         />
       </div>
+      <div class="SpacingEditor__linker">
+        <UiIcon
+          :src="linked.vertical ? 'mdi:link-variant' : 'mdi:link-variant-off'"
+          @click="toggleLinked('vertical')"
+        />
+      </div>
     </div>
 
     <div
       class="SpacingEditor__group"
       :class="{'SpacingEditor__group--linked': linked.horizontal}"
     >
-      <div class="SpacingEditor__linker">
-        <UiIcon
-          :src="linked.horizontal ? 'mdi:link-variant' : 'mdi:link-variant-off'"
-          @click="toggleLinked('horizontal')"
-        />
-      </div>
       <div class="SpacingEditor__inputs">
         <UiInput
           v-model="innerValue.left"
@@ -194,6 +188,12 @@ function toggleLinked(position) {
           max="300"
           label="Right"
           @update:model-value="emitUpdate('right')"
+        />
+      </div>
+      <div class="SpacingEditor__linker">
+        <UiIcon
+          :src="linked.horizontal ? 'mdi:link-variant' : 'mdi:link-variant-off'"
+          @click="toggleLinked('horizontal')"
         />
       </div>
     </div>
@@ -230,8 +230,8 @@ function toggleLinked(position) {
     align-items: center;
 
     position: relative;
-    padding-right: 6px;
-    margin-right: 12px;
+    padding-left: 6px;
+    margin-left: 12px;
 
     &:after {
       content: '';
@@ -239,14 +239,14 @@ function toggleLinked(position) {
       position: absolute;
       top: 0;
       bottom: 0;
-      right: 0;
+      left: 0;
       width: 4px;
 
       border-radius: 8px;
       border: 1px solid rgba(255,255,255, 0.3);
-      border-right: 0;
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
+      border-left: 0;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
     }
 
     .UiIcon {

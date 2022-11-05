@@ -1,0 +1,1 @@
+export { default as UiInputTimer } from './UiInputTimer.vue'
