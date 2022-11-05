@@ -1,5 +1,6 @@
 import UiVideo from '@/packages/ui/components/UiVideo/UiVideo.vue'
 import MediaVideoSettings from './MediaVideoSettings.vue'
+import MediaVideoData from './MediaVideoData.vue'
 import MediaVideoChapters from './MediaVideoChapters.vue'
 
 export default {
@@ -28,6 +29,13 @@ export default {
         id: 'video-chapters',
         title: 'Chapters',
         component: MediaVideoChapters,
+      },
+
+      {
+        id: 'video-data',
+        title: 'Data',
+        icon: 'mdi:code-json',
+        component: MediaVideoData,
       },
     ],
   },

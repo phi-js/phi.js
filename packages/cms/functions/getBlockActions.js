@@ -49,7 +49,8 @@ export default function getBlockActions(block, CmsStoryBuidlerSettings = null) {
       id: 'data',
       title: 'Data',
       icon: 'mdi:code-json',
-      hasData: !!definition.block['v-model'],
+      hasData: definition.block['v-model'] !== undefined,
+      description: block['v-model'],
     })
   }
 
@@ -60,6 +61,7 @@ export default function getBlockActions(block, CmsStoryBuidlerSettings = null) {
       title: 'Validation',
       icon: 'mdi:message-alert',
       hasData: Array.isArray(block.rules) && block.rules.length,
+      description: 'This block has validation rules',
     })
   }
 
@@ -69,6 +71,7 @@ export default function getBlockActions(block, CmsStoryBuidlerSettings = null) {
     title: 'Visibility',
     icon: block['v-if'] ? 'mdi:eye' : 'mdi:eye-outline',
     hasData: !!block['v-if'],
+    description: 'This block has conditional visibility',
   })
 
   // Block CSS property
@@ -77,6 +80,7 @@ export default function getBlockActions(block, CmsStoryBuidlerSettings = null) {
     title: 'Style',
     icon: 'mdi:water',
     hasData: block.props?.style || block.props?.class?.length,
+    description: 'This block has CSS styles',
   })
 
   // Transitions
@@ -85,6 +89,7 @@ export default function getBlockActions(block, CmsStoryBuidlerSettings = null) {
     title: 'Transitions',
     icon: 'mdi:transition',
     hasData: !!block.transitions,
+    description: 'This block has transitions',
   })
 
   // v-on
@@ -93,6 +98,7 @@ export default function getBlockActions(block, CmsStoryBuidlerSettings = null) {
     title: 'Events',
     icon: 'mdi:gesture-tap',
     hasData: !!block['v-on'],
+    description: 'This block reacts to events',
   })
 
   // v-for
@@ -101,6 +107,7 @@ export default function getBlockActions(block, CmsStoryBuidlerSettings = null) {
     title: 'Repeat',
     icon: 'mdi:repeat-variant',
     hasData: !!block['v-for'],
+    description: 'This block repeats',
   })
 
   // Raw block source editor

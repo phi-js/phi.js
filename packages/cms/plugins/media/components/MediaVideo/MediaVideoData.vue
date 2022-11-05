@@ -47,30 +47,32 @@ function emitInput() {
 </script>
 
 <template>
-  <div class="MediaVideoSettings UiForm UiForm--wide">
+  <div class="MediaVideoData UiForm UiForm--wide">
     <UiInput
-      v-model="block.props.url"
-      type="url"
-      label="URL"
-      :endpoint="$attrs.endpoint"
+      v-model="block.ref"
+      type="text"
+      label="Referencia"
       @update:model-value="emitInput"
     />
     <UiInput
-      v-model="block.props.controls"
-      type="checkbox"
-      label="Show controls"
+      v-model="block['v-model:isPlaying']"
+      type="text"
+      placeholder="Variable name"
+      label="isPlaying"
       @update:model-value="emitInput"
     />
     <UiInput
-      v-model="block.props.autoplay"
-      type="checkbox"
-      label="Auto-play"
+      v-model="block['v-model:currentTime']"
+      type="text"
+      placeholder="Variable name"
+      label="currentTime"
       @update:model-value="emitInput"
     />
     <UiInput
-      v-model="block.props.mute"
-      type="checkbox"
-      label="Mute audio"
+      v-model="block['v-model:activeChapters']"
+      type="text"
+      placeholder="Variable name"
+      label="activeChapters"
       @update:model-value="emitInput"
     />
   </div>

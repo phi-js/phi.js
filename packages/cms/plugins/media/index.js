@@ -48,6 +48,8 @@ export default {
         MediaLink,
         MediaFileList,
         MediaGallery,
+        MediaItem,
+        MediaLoremIpsum,
       ],
     },
     {
@@ -77,13 +79,6 @@ export default {
         MediaCalendar,
         MediaIframe,
         MediaPdf,
-      ],
-    },
-    {
-      title: 'Placeholder',
-      children: [
-        MediaItem,
-        MediaLoremIpsum,
       ],
     },
   ],

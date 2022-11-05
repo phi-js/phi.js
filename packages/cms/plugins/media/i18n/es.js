@@ -24,6 +24,6 @@ export default {
 
   'plugin.component.MediaItem.title': 'Item',
 
-  'plugin.component.MediaLoremIptum.title': 'Lorem Ipsum',
-  'plugin.component.MediaLoremIptum.description': 'Lorem ipsum dolor sit amet',
+  'plugin.component.MediaLoremIpsum.title': 'Lorem Ipsum',
+  'plugin.component.MediaLoremIpsum.description': 'Lorem ipsum dolor sit amet',
 }

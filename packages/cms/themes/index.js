@@ -33,24 +33,3 @@ export async function getAvailableThemes() {
 
   return retval
 }
-
-export function getAvailableStoryClasses(objStory) {
-  const retval = []
-
-  // Classes declared in stylesheets
-  if (Array.isArray(objStory?.stylesheets)) {
-    objStory.stylesheets.forEach((sheet) => {
-      if (sheet.type == 'class') {
-        retval.push(sheet)
-      }
-    })
-
-    objStory.stylesheets.forEach((sheet) => {
-      if (Array.isArray(sheet?.classes)) {
-        retval.push(...sheet.classes)
-      }
-    })
-  }
-
-  return retval
-}

@@ -229,6 +229,20 @@ const allCommands = computed(() => {
       },
       isActive: editor.isActive('link'),
     },
+
+    bulletList: {
+      icon: 'mdi:format-list-bulleted',
+      text: 'ul',
+      callback: () => editor.chain().focus().toggleBulletList().run(),
+      isActive: editor.isActive('bulletList'),
+    },
+
+    orderedList: {
+      icon: 'mdi:format-list-numbered',
+      text: 'ol',
+      callback: () => editor.chain().focus().toggleOrderedList().run(),
+      isActive: editor.isActive('orderedList'),
+    },
   }
 })
 
@@ -353,10 +367,24 @@ async function doTranslation() {
       />
 
       <UiIcon
-        src="mdi:link"
+        :src="allCommands.link.icon"
         class="BlockScaffold__toolbar-icon"
         :class="{ 'BlockScaffold__toolbar-icon--active': allCommands.link.isActive }"
         @click="allCommands.link.callback()"
+      />
+
+      <UiIcon
+        :src="allCommands.bulletList.icon"
+        class="BlockScaffold__toolbar-icon"
+        :class="{ 'BlockScaffold__toolbar-icon--active': allCommands.bulletList.isActive }"
+        @click="allCommands.bulletList.callback()"
+      />
+
+      <UiIcon
+        :src="allCommands.orderedList.icon"
+        class="BlockScaffold__toolbar-icon"
+        :class="{ 'BlockScaffold__toolbar-icon--active': allCommands.orderedList.isActive }"
+        @click="allCommands.orderedList.callback()"
       />
 
       <UiIcon

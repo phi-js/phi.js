@@ -45,7 +45,7 @@ watch(
     }
 
     initialValue.value = JSON.parse(JSON.stringify(newBlock))
-    innerBlock.value = { ...initialValue.value }
+    innerBlock.value = JSON.parse(JSON.stringify(newBlock))
 
     definition.value = getBlockDefinition(newBlock)
     availableEditors.value = getBlockEditors(newBlock, { allowSource: true })
@@ -69,7 +69,7 @@ function accept() {
 }
 
 function cancel() {
-  innerBlock.value = initialValue.value
+  innerBlock.value = { ...initialValue.value }
   emit('update:block', initialValue.value)
   emit('cancel', initialValue.value)
   return true
@@ -78,7 +78,7 @@ function cancel() {
 
 <template>
   <UiWindow
-    name="phi_block"
+    name="phi"
     class="BlockWindow"
     @cancel="cancel"
   >
@@ -131,3 +131,14 @@ function cancel() {
     </template>
   </UiWindow>
 </template>
+
+<style lang="scss">
+.BlockWindow {
+  --ui-color-primary: #41b883;
+
+  &__header {
+    --ui-item-padding: 6px 11px;
+    font-size: 0.9rem;
+  }
+}
+</style>

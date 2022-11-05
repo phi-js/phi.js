@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watchEffect } from 'vue'
+import { ref, watch } from 'vue'
 import UiVideoChaptersEditor from '@/packages/ui/components/UiVideo/UiVideoChaptersEditor.vue'
 
 const props = defineProps({
@@ -23,15 +23,17 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const block = ref({})
-watchEffect(() => block.value = Object.assign({
-  'component': 'MediaVideo',
-  'props': {
-    url: '',
-    chapters: null,
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    block.value = {
+      props: { chapters: null },
+      ...newValue,
+    }
   },
-  'v-model:isPlaying': '',
-  'v-model:currentTime': '',
-}, props.modelValue))
+  { immediate: true },
+)
 
 function emitInput() {
   emit('update:modelValue', { ...block.value })

@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref, watch, reactive, nextTick, computed } from 'vue'
 
+import { useI18n } from '@/packages/i18n'
 import { colorScheme, UiTabs, UiTab, UiInput } from '@/packages/ui'
 import CssStyleEditor from '@/packages/ui/components/CssStyleEditor/CssStyleEditor.vue'
 
@@ -8,6 +9,34 @@ import { useStorySettings } from '../../functions'
 import CmsThemePicker from '../CmsThemePicker/CmsThemePicker.vue'
 import CssClassManager from '../CssClassManager/CssClassManager.vue'
 // import CssPalettePicker from '../CssPalettePicker/CssPalettePicker.vue'
+
+const i18n = useI18n({
+  en: {
+    'CmsStoryStyle.theme': 'Theme',
+    'CmsStoryStyle.font': 'Font',
+    'CmsStoryStyle.colors': 'Colors',
+    'CmsStoryStyle.margins': 'Margins',
+    'CmsStoryStyle.css': 'CSS',
+    'CmsStoryStyle.fontTitles': 'Titles',
+    'CmsStoryStyle.fontTexts': 'Texts',
+    'CmsStoryStyle.light': 'Light',
+    'CmsStoryStyle.dark': 'Dark',
+    'CmsStoryStyle.fontSize': 'Size',
+  },
+  es: {
+    'CmsStoryStyle.theme': 'Temas',
+    'CmsStoryStyle.font': 'Fuente',
+    'CmsStoryStyle.colors': 'Colores',
+    'CmsStoryStyle.margins': 'Márgen',
+    'CmsStoryStyle.css': 'CSS',
+    'CmsStoryStyle.fontTitles': 'Títulos',
+    'CmsStoryStyle.fontTexts': 'Textos',
+    'CmsStoryStyle.light': 'Claro',
+    'CmsStoryStyle.dark': 'Oscuro',
+    'CmsStoryStyle.fontSize': 'Tamaño',
+  },
+})
+
 
 const settings = useStorySettings()
 const uploadsEndpoint = settings.uploads.assets
@@ -54,7 +83,7 @@ const fontCss = {
   type: 'object',
   properties: {
     '--ui-font-size': {
-      title: 'Base size',
+      title: i18n.t('CmsStoryStyle.fontSize'),
       format: {
         type: 'css-unit',
         props: {
@@ -218,19 +247,19 @@ function importGoogleFont(varName) {
 
 <template>
   <UiTabs class="CmsStoryStyle">
-    <UiTab text="Theme">
+    <UiTab :text="i18n.t('CmsStoryStyle.theme')">
       <CmsThemePicker
         v-model="innerStory.stylesheets"
         @update:model-value="emitUpdate"
       />
     </UiTab>
 
-    <UiTab text="Font">
+    <UiTab :text="i18n.t('CmsStoryStyle.font')">
       <div
         class="CmsStoryStyle__properties"
       >
         <UiInput
-          label="Titles"
+          :label="i18n.t('CmsStoryStyle.fontTitles')"
           :model-value="innerStoryVariables['--ui-font-titles']"
           type="select-native"
           :options="availableFonts"
@@ -238,7 +267,7 @@ function importGoogleFont(varName) {
         />
 
         <UiInput
-          label="Texts"
+          :label="i18n.t('CmsStoryStyle.fontTexts')"
           :model-value="innerStoryVariables['--ui-font-texts']"
           type="select-native"
           :options="availableFonts"
@@ -254,13 +283,13 @@ function importGoogleFont(varName) {
       </div>
     </UiTab>
 
-    <UiTab text="Colors">
+    <UiTab :text="i18n.t('CmsStoryStyle.colors')">
       <UiTabs
         v-model="colorScheme"
         @update:model-value="getCurrentCssValues()"
       >
         <UiTab
-          text="Light"
+          :text="i18n.t('CmsStoryStyle.light')"
           value="light"
         >
           <CssStyleEditor
@@ -271,7 +300,7 @@ function importGoogleFont(varName) {
           />
         </UiTab>
         <UiTab
-          text="Dark"
+          :text="i18n.t('CmsStoryStyle.dark')"
           value="dark"
         >
           <CssStyleEditor
@@ -291,7 +320,7 @@ function importGoogleFont(varName) {
       /> -->
     </UiTab>
 
-    <UiTab text="Margins">
+    <UiTab :text="i18n.t('CmsStoryStyle.margins')">
       <CssStyleEditor
         v-model="innerStoryVariables"
         class="CmsStoryStyle__properties"
@@ -301,7 +330,7 @@ function importGoogleFont(varName) {
       />
     </UiTab>
 
-    <UiTab text="CSS">
+    <UiTab :text="i18n.t('CmsStoryStyle.css')">
       <CssClassManager
         v-model="innerStory.stylesheets"
         class="CmsStoryStyle__classes"

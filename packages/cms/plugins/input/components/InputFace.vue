@@ -1,14 +1,8 @@
-<script>
-export default { inheritAttrs: false }
-</script>
-
 <script setup>
-import { useAttrs, computed } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from '../../../../i18n'
 import { parseTranslations } from '../../../functions'
 import { UiInput } from '@/packages/ui/components'
-
-const attrs = useAttrs()
 
 const props = defineProps({
   /*
@@ -45,7 +39,15 @@ const isButton = computed(() =>
 
 const i18n = useI18n()
 const translatedProps = computed(() => {
-  return parseTranslations({ ...props.modelValue?.props }, i18n.locale, props.modelValue.i18n)
+  return parseTranslations(
+    {
+      ...props.modelValue?.props,
+      class: undefined,
+      style: undefined,
+    },
+    i18n.locale,
+    props.modelValue.i18n,
+  )
 })
 
 function onClickFace() {
@@ -66,8 +68,6 @@ function onClickFace() {
     <div
       v-if="isSelect && !Array.isArray(translatedProps?.options)"
       class="InputFace__dummy"
-      :class="[modelValue?.component, attrs?.class]"
-      :style="attrs?.style"
     >
       <span>Click to add options</span>
       <UiInput
@@ -78,11 +78,7 @@ function onClickFace() {
     </div>
     <UiInput
       v-else
-      :class="[modelValue?.component, attrs?.class]"
-      :style="[
-        attrs?.style,
-        !isButton ? 'pointer-events: none;' : null
-      ]"
+      :style="!isButton ? 'pointer-events: none;' : null"
       v-bind="translatedProps"
     />
   </div>

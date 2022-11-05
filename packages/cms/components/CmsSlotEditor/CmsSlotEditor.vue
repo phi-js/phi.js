@@ -63,8 +63,7 @@ watch(
 )
 
 function emitUpdate() {
-  // emit('update:slot', innerSlot.value)
-  emit('update:slot', innerSlot.value.concat()) //shallow clone
+  emit('update:slot', innerSlot.value.filter((block) => !block._placeholder))
 }
 
 
@@ -75,18 +74,19 @@ function launchBlock(block, targetIndex = null) {
 
   const arrBlocks = Array.isArray(block) ? JSON.parse(JSON.stringify(block)) : [JSON.parse(JSON.stringify(block))]
 
-  innerSlot.value.splice(targetIndex, 0, ...arrBlocks)
-  innerSlot.value = innerSlot.value.filter((block) => !block._placeholder)
+  let blockCounter = innerSlot.value.length
+  arrBlocks.forEach((bl) => bl._key = `itm_${localCounter}_${blockCounter++}`)
 
+  innerSlot.value.splice(targetIndex, 0, ...arrBlocks)
   emitUpdate()
 
-  nextTick(() => {
   // Run block's defined "onCreated" function
+  setTimeout(() => {
     arrBlocks.forEach((newBlock) => {
       const definition = getBlockDefinition(newBlock)
       definition?.onCreated?.(newBlock, blockRefs.value?.[targetIndex]?.innerRef)
     })
-  })
+  }, 111)
 }
 
 function onEditorUpdate(slotIndex, newBlock) {

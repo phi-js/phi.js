@@ -1,6 +1,7 @@
 <script setup>
+import { computed, inject } from 'vue'
+
 import { UiItem, UiIcon, UiPopover } from '@/packages/ui'
-import { inject } from 'vue'
 import { getBlockDefinition, getBlockActions } from '../../functions'
 
 const props = defineProps({
@@ -25,9 +26,8 @@ const props = defineProps({
 const emit = defineEmits(['select', 'delete', 'open-editor', 'insert-sibling'])
 
 const definition = getBlockDefinition(props.block)
-const availableActions = getBlockActions(props.block, { allowSource: true })
-
-const shortcuts = availableActions.filter((a) => a.hasData)
+const availableActions = computed(() => getBlockActions(props.block, { allowSource: true }))
+const shortcuts = computed(() => availableActions.value.filter((a) => a.hasData))
 
 function emitSelect(evt) {
   evt.stopPropagation()
@@ -89,6 +89,7 @@ const parent = curSlotItem?.parent
             v-for="action in shortcuts"
             :key="action.id"
             :src="action.icon"
+            :title="action.description"
             class="Bloh__shortcut"
             @click.stop="emit('open-editor', action.id)"
           />
@@ -119,22 +120,22 @@ const parent = curSlotItem?.parent
             </template>
           </UiPopover>
         </div>
-
-        <div
-          v-if="direction == 'vertical'"
-          class="Bloh__launcher Bloh__launcher--before"
-          title="Insert block before"
-          @click="emit('insert-sibling', 'before')"
-        >
-          +
-        </div>
       </template>
+
+      <div
+        v-if="direction == 'vertical'"
+        class="Bloh__launcher Bloh__launcher--before"
+        title="Insert block before"
+        @click="emit('insert-sibling', 'before')"
+      >
+        +
+      </div>
     </div>
 
     <slot />
 
     <div
-      v-if="selected && direction == 'horizontal'"
+      v-if="direction == 'horizontal'"
       class="Bloh__launcher Bloh__launcher--before"
       title="Insert block before"
       @click="emit('insert-sibling', 'before')"
@@ -143,7 +144,6 @@ const parent = curSlotItem?.parent
     </div>
 
     <div
-      v-if="selected"
       class="Bloh__launcher Bloh__launcher--after"
       title="Insert block after"
       @click="emit('insert-sibling', 'after')"
@@ -162,6 +162,21 @@ const parent = curSlotItem?.parent
 
   --outline-offset: 0;
   z-index: 1; // messes up dragstart from toolbar (in html blocks only ???)
+
+
+  // Launchers visible on hover only
+  & > &__toolbar-container > &__launcher,
+  & > &__launcher {
+    visibility: hidden;
+  }
+
+  // &:hover > &__toolbar-container > &__launcher,
+  &:hover > &__launcher,
+  &--selected > &__toolbar-container > &__launcher,
+  &--selected > &__launcher {
+    visibility: visible;
+  }
+
 
   // "outline"
   &::after {
@@ -222,6 +237,7 @@ const parent = curSlotItem?.parent
   &__label {
     user-select: none;
     pointer-events: none;
+    white-space: nowrap;
 
     transition: all 222ms;
     opacity: 0;
@@ -434,5 +450,10 @@ const parent = curSlotItem?.parent
   &.Bloh--selected > .LayoutGroupEditor > .CmsSlotEditor__footer {
     display: block;
   }
+}
+
+.Bloh--NavigationNext,
+.Bloh--NavigationBack {
+  display: inline-block;
 }
 </style>

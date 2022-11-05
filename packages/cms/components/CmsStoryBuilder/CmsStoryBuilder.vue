@@ -1,5 +1,5 @@
 <script setup>
-import { provide, ref, computed, watch, shallowRef } from 'vue'
+import { provide, ref, computed, watch, shallowRef, onMounted, onUnmounted } from 'vue'
 import { CmsStory } from '../CmsStory'
 import CmsStoryEditor from '../CmsStoryEditor/CmsStoryEditor.vue'
 
@@ -187,6 +187,26 @@ watch(
   },
   { immediate: true },
 )
+
+// CTRL+Space to toggle between editor and preview tabs
+function onKeyDown(event) {
+  if (event.code == 'Space' && event.ctrlKey) {
+    if (currentTab.value == 'editor') {
+      currentTab.value = 'preview'
+    } else {
+      currentTab.value = 'editor'
+    }
+    emit('update:tab', currentTab.value)
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', onKeyDown)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', onKeyDown)
+})
 
 
 const windowTab = ref()
