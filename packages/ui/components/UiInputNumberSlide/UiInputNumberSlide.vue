@@ -83,5 +83,5 @@ function onDragEnd() {
     @input="emit('update:modelValue', innerValue)"
     @mousedown="onDragStart($event)"
     @touchstart="onDragStart($event)"
-  />
+  >
 </template>

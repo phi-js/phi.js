@@ -20,7 +20,7 @@
 
 .UiInputNativeElement {
   box-sizing: border-box;
-  min-width: max-content;
+  // min-width: max-content; // no idea why I added this in the first place
   outline-color: var(--ui-color-primary);
   padding: 7px;
 
