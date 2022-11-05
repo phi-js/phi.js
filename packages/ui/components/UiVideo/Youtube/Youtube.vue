@@ -185,7 +185,7 @@ export default {
         this.interval = setInterval(() => {
           this.ignoreChanges = true
           this.$emit('update:currentTime', Math.floor(this.player.getCurrentTime() * 1000))
-        }, 200)
+        }, 100)
 
         break
 

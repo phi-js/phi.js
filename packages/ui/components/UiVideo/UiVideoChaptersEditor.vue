@@ -1,11 +1,14 @@
 <script>
+import draggable from 'vuedraggable'
+
 import UiVideo from './UiVideo.vue'
 import UiIcon from '../UiIcon/UiIcon.vue'
+import UiInput from '../UiInput/UiInput.vue'
 import UiButton from '../UiButton/UiButton.vue'
 
 export default {
   name: 'UiVideoChaptersEditor',
-  components: { UiVideo, UiIcon, UiButton },
+  components: { UiVideo, UiIcon, UiButton, UiInput, draggable },
 
   props: {
     url: {
@@ -26,15 +29,26 @@ export default {
     return {
       pointer: 0,
       innerModel: null,
+      isPlaying: false,
     }
   },
 
   computed: {
-    sanitizedChapters() {
-      return this.innerModel.map((chapter) => ({
-        ...chapter,
-        isActive: chapter.start <= this.pointer && this.pointer < (chapter.end || Infinity),
-      }))
+    activeChapterIndexes() {
+      return this.innerModel.map((chapter) => chapter.start <= this.pointer && this.pointer < (chapter.end || Infinity))
+    },
+
+    strPointer() {
+      const intValue = parseInt(this.pointer) || 0
+
+      const parts = {
+        hour: Math.floor(intValue / 3.6e+6),
+        minute: Math.floor(intValue / 60000) % 60,
+        second: Math.floor(intValue / 1000) % 60,
+        millisecond: intValue % 1000,
+      }
+
+      return `${parts.minute}:${parts.second}:${parts.millisecond}`
     },
   },
 
@@ -45,6 +59,8 @@ export default {
         this.innerModel = Array.isArray(newValue)
           ? JSON.parse(JSON.stringify(newValue))
           : []
+
+        this.innerModel.forEach((c, i) => c._index = i)
       },
     },
   },
@@ -73,100 +89,213 @@ export default {
       this.innerModel.splice(index, 1)
       this.emitInput()
     },
+
+    onKeyUp(index) {
+      const targetIndex = Math.max(index - 1, 0)
+      if (targetIndex == index) {
+        return
+      }
+
+      const item = this.innerModel[index]
+      this.innerModel.splice(index, 1)
+      this.innerModel.splice(targetIndex, 0, item)
+
+      this.emitInput()
+
+      this.$nextTick(() => {
+        const elems = this.$el.querySelectorAll('.UiVideoChaptersEditor__chapterName')
+        elems[targetIndex].querySelector('input').focus()
+      })
+    },
+
+    onKeyDown(index) {
+      const targetIndex = Math.min(index + 1, this.innerModel.length - 1)
+      if (targetIndex == index) {
+        return
+      }
+
+      const item = this.innerModel[index]
+      this.innerModel.splice(index, 1)
+      this.innerModel.splice(targetIndex, 0, item)
+
+      this.emitInput()
+
+      this.$nextTick(() => {
+        const elems = this.$el.querySelectorAll('.UiVideoChaptersEditor__chapterName')
+        elems[targetIndex].querySelector('input').focus()
+      })
+    },
   },
 }
 </script>
 
 <template>
   <div class="UiVideoChaptersEditor">
-    <div
+    <UiVideo
       v-if="url"
+      v-model:current-time="pointer"
+      v-model:is-playing="isPlaying"
       class="UiVideoChaptersEditor__video"
-    >
-      <UiVideo
-        v-model:current-time="pointer"
-        :url="url"
-        style="width: 300px"
-      />
-    </div>
+      :url="url"
+    />
 
-    <div class="UiVideoChaptersEditor__chapters">
-      <div
-        v-for="(chapter, i) in sanitizedChapters"
-        :key="i"
-        class="UiVideoChaptersEditor__chapter UiGroup"
-        :class="{'UiVideoChaptersEditor__chapter--active': chapter.isActive}"
+    <table class="UiVideoChaptersEditor__table">
+      <thead>
+        <tr>
+          <th />
+          <th width="100%">
+            Chapter name
+          </th>
+          <th align="right">
+            Start
+          </th>
+          <th align="right">
+            End
+          </th>
+          <th />
+        </tr>
+      </thead>
+
+      <draggable
+        v-model="innerModel"
+        tag="tbody"
+        handle=".UiVideoChaptersEditor__chapterName"
+        item-key="_index"
+        @update:model-value="emitInput"
       >
-        <input
-          v-model="innerModel[i].name"
-          type="text"
-          class="UiInput"
-          placeholder="Nombre del capítulo"
-          @input="emitInput"
-        >
-        <input
-          v-model="innerModel[i].start"
-          type="number"
-          class="UiInput"
-          placeholder="inicio (ms.)"
-          style="width: 6em"
-          @input="emitInput"
-        >
-        <input
-          v-model="innerModel[i].end"
-          type="number"
-          class="UiInput"
-          placeholder="fin (ms.)"
-          style="width: 6em"
-          @input="emitInput"
-        >
-        <UiIcon
-          :src="innerModel[i].pauseOnEnter ? 'mdi:pause' : 'mdi:play'"
-          style="width: 40px;"
-          class="ui--clickable"
-          @click="innerModel[i].pauseOnEnter = !innerModel[i].pauseOnEnter; emitInput();"
-        />
+        <template #item="{ element, index }">
+          <tr
+            class="UiVideoChaptersEditor__chapter"
+            :class="{'UiVideoChaptersEditor__chapter--active': activeChapterIndexes[index]}"
+          >
+            <td>
+              <UiIcon
+                src="mdi:pan-right"
+                class="ui--clickable"
+                title="Go to chapter start"
+                @click="pointer = element.start"
+              />
+            </td>
+            <td nowrap>
+              <UiInput
+                v-model="innerModel[index].name"
+                type="text"
+                class="UiVideoChaptersEditor__chapterName"
+                placeholder="Nombre del capítulo"
+                @update:model-value="emitInput"
+                @keyup.up="onKeyUp(index)"
+                @keyup.down="onKeyDown(index)"
+              />
+            </td>
+            <td
+              align="right"
+              nowrap
+            >
+              <UiInput
+                v-model="innerModel[index].start"
+                type="timer"
+                placeholder="inicio (ms.)"
+                @update:model-value="emitInput"
+              />
+            </td>
+            <td
+              align="right"
+              nowrap
+            >
+              <UiInput
+                v-model="innerModel[index].end"
+                type="timer"
+                placeholder="fin (ms.)"
+                @update:model-value="emitInput"
+              />
+            </td>
+            <td
+              align="right"
+              nowrap
+            >
+              <UiIcon
+                :src="innerModel[index].pauseOnEnter ? 'mdi:pause' : 'mdi:play'"
+                style="width: 40px;"
+                class="ui--clickable"
+                @click="innerModel[index].pauseOnEnter = !innerModel[index].pauseOnEnter; emitInput();"
+              />
 
-        <UiIcon
-          class="ui--clickable"
-          src="mdi:close"
-          style="width: 40px; height: 40px; margin-left: 1rem;"
-          @click="removeChapter(i)"
-        />
-      </div>
+              <UiIcon
+                class="ui--clickable"
+                src="mdi:close"
+                style="width: 40px; margin-left: 1rem;"
+                @click="removeChapter(index)"
+              />
+            </td>
+          </tr>
+        </template>
+      </draggable>
 
-      <div class="UiVideoChaptersEditor__adder">
-        <UiButton
-          :label="`Create chapter (${pointer} ms)`"
-          style="margin: 12px"
-          @click="pushChapter(pointer)"
-        />
-      </div>
-    </div>
+      <tfoot>
+        <tr>
+          <td />
+          <td>
+            <UiButton
+              label="Create chapter"
+              style="margin-right: 1rem"
+              @click="pushChapter(pointer)"
+            />
+            {{ strPointer }}
+          </td>
+          <td />
+          <td />
+          <td />
+        </tr>
+      </tfoot>
+    </table>
   </div>
 </template>
 
 <style lang="scss">
 .UiVideoChaptersEditor {
-  display: flex;
-  flex-wrap: wrap;
+  &__video {
+    width: 100%;
+    min-height: 0;
+    height: 180px;
 
-  &__chapters {
-    flex: 1;
+    position: sticky;
+    top: 0;
+  }
+
+  &__table {
+    width: 100%;
+
+    thead {
+      position: sticky;
+      top: 180px;
+      background-color: var(--ui-color-background);
+    }
+
+    th {
+      padding-left: 6px;
+      padding-right: 18px;
+    }
+    td {
+      padding-right: 12px;
+    }
+
+    th,td {
+      font-size: 0.85rem;
+    }
+  }
+
+  &__chapterName input {
+    width: 100%;
   }
 
   &__chapter {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-
-    &--active {
-      border: 1px solid var(--ui-color-primary);
-      border-radius: 5px;
+    input {
+      padding: 3px 5px !important;
     }
 
-    & > :first-child {
-      flex: 1;
+    &--active {
+      outline: 2px solid #ff8;
+      border-radius: 4px;
     }
   }
 }
