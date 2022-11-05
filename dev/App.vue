@@ -117,7 +117,10 @@ function loadPageComponent(href) {
         icon="/phi.svg"
       />
 
-      <UiItem icon="mdi:web">
+      <UiItem
+        icon="mdi:web"
+        class="App__langPicker"
+      >
         <select v-model="i18n.locale">
           <option value="en">
             en
@@ -212,6 +215,13 @@ function loadPageComponent(href) {
     }
   }
 
+  &__langPicker {
+    select {
+      border: 0;
+      background: transparent;
+    }
+  }
+
   &__top-bar {
     display: flex;
     align-items: center;
@@ -240,7 +250,6 @@ function loadPageComponent(href) {
     position: relative;
     flex: 1;
     min-width: 0; // prevents child overflow from stretching this div
-    padding: 0 25px;
   }
 
   // Transitions
@@ -296,5 +305,18 @@ function loadPageComponent(href) {
   .UiTree__children {
     margin-left: 12px;
   }
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .App {
+    &__sidebar {
+      display: none;
+    }
+
+    &__body {
+      padding: 0;
+    }
+  }
+
 }
 </style>
