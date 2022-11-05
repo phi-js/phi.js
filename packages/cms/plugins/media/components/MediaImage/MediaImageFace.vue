@@ -57,6 +57,7 @@ function onImageResize(coords) {
       v-slot="{ coords, reset }"
       :enabled="['s']"
       :min-height="100"
+      style="width: auto;"
       @end="onImageResize"
     >
       <MediaImage
