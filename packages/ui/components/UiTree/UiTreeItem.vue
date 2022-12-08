@@ -101,7 +101,7 @@ function collapse() {
         name="default"
         :item="props.value"
         :children="children"
-        :isOpen="isOpen"
+        :is-open="isOpen"
         :toggle="toggle"
         :expand="expand"
         :collapse="collapse"
