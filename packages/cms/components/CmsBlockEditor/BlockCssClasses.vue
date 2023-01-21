@@ -1,15 +1,19 @@
 <script setup>
 /*
-This component receives a modelValue prop with an ARRAY of selected class names (String)
+This component receives a Block object and manages its "class" property,
+which is an ARRAY of CLASS items
+
+a CLASS item may be:
+- string representing a classname.  e.g. "some-header"
+- An object, with a VM expression.  e.g. { "if": { ... }, "then": "my-class" }
 
 It wraps a CssClassManager object, and links its value to the globally provided story class list
-
 */
-import { ref, inject, watch } from 'vue'
+import { ref, inject, watch, computed } from 'vue'
 
-import { UiIcon, UiDialog, UiButton } from '@/packages/ui'
+import { UiIcon, UiDialog, UiButton, UiDetails, UiInput } from '@/packages/ui'
 import { VmStatement } from '@/packages/vm'
-import CssClassManager from '../CssClassManager/CssClassManager.vue'
+import CssClassEditor from '../CssClassManager/CssClassEditor.vue'
 
 const props = defineProps({
   block: {
@@ -22,24 +26,25 @@ const props = defineProps({
 const emit = defineEmits(['update:block'])
 
 const injectedStory = inject('_cms_currentStory', {})
+const availableClasses = ref(injectedStory.value.stylesheets.filter((sheet) => sheet.type == 'class'))
+
 
 /*
-The "class" prop of the block may contain VM statements.
-e.g.
+classList is an array of NORMALIZED array of class objects
+as objects with "name" and "condition"
+
+Given an incoming block.props.class:
 [
-  "some-class",
-  {
-    "if": "... some condition ..."
-    "then": "my-conditional-class"
-  }
+  "my-class",
+  {"if": "... some condition ...", "then": "my-conditional-class"} // This implementation doesn't support "else"
 ]
 
-classList is an array of NORMALIZED class objects:
+it's normalized as
 
 classList: [
   {
-    "name": "some-class",
-    "condition": "null"
+    "name": "my-class",
+    "condition": null
   },
   {
     "name": "my-conditional-class",
@@ -76,6 +81,38 @@ watch(
   { immediate: true },
 )
 
+const appenderOptions = computed(() => {
+  const unused = availableClasses.value.filter((classObj) => !isClassSelected(classObj.id))
+  const retval = unused.map((unusedClass) => ({ value: unusedClass.id, text: unusedClass.id }))
+  retval.push({ value: 'new', text: 'Create new class ...' })
+  return retval
+})
+
+function onAppenderChange(selectedValue) {
+  if (selectedValue == 'new') {
+    return promptNewClassName()
+  } else if (selectedValue) {
+    appendClass(selectedValue)
+  }
+
+}
+
+function promptNewClassName() {
+  const className = window.prompt('Type a class name')
+  if (!className || !className.trim()) {
+    return
+  }
+
+  appendClass(className)
+
+  const newSheet = { id: className, type: 'sheet', src: `.${className } {\n\n}` }
+  injectedStory.value.stylesheets.push(newSheet)
+  availableClasses.value.push(newSheet)
+}
+
+
+
+
 function emitUpdate() {
   const classArray = classList.value.map((objClass) => {
     if (objClass.condition?.and?.length || objClass.condition?.or?.length) {
@@ -106,11 +143,12 @@ function hasCondition(className) {
   return !!found?.condition
 }
 
-function addClass(className) {
+function appendClass(className) {
   if (isClassSelected(className)) {
     return
   }
   classList.value.push({ name: className })
+  emitUpdate()
 }
 
 function removeClass(className) {
@@ -118,13 +156,8 @@ function removeClass(className) {
   if (foundIndex >= 0) {
     classList.value.splice(foundIndex, 1)
   }
-}
-
-function toggleClass(className) {
-  isClassSelected(className) ? removeClass(className) : addClass(className)
   emitUpdate()
 }
-
 
 
 /* Edit a class condition */
@@ -154,29 +187,52 @@ function onEditorSubmit() {
 function onEditorClose() {
   editingClass.value = null
 }
+
+/* Class Editor which changes the injected story's "stylesheets" props */
+
+const injectedStoryDeclarations = computed(() => classList.value.map((objClass) => {
+  return availableClasses.value.find((c) => c.id == objClass.name)
+}))
+
+function updateStoryDeclaration(sheetDeclaration) {
+  const matchingDeclaration = injectedStory.value.stylesheets.find((sheet) => sheet.id == sheetDeclaration.id)
+  if (matchingDeclaration) {
+    Object.assign(matchingDeclaration, sheetDeclaration)
+  }
+}
 </script>
 
 <template>
   <div class="BlockCssClasses">
-    <CssClassManager
-      v-model="injectedStory.stylesheets"
-      @created="toggleClass($event.id)"
+    <UiDetails
+      v-for="(blockClass, i) in classList"
+      :key="blockClass.name"
+      :text="blockClass.name"
+      @delete="removeClass(blockClass.name)"
     >
-      <template #left="{ className }">
+      <!-- Class declaration editor (changes injected story's "stylesheets") if a matching declaration exists -->
+      <CssClassEditor
+        v-if="injectedStoryDeclarations[i]"
+        :model-value="injectedStoryDeclarations[i]"
+        @update:model-value="updateStoryDeclaration($event)"
+      />
+
+      <template #actions>
         <UiIcon
-          class="BlockCssClasses__checkbox"
-          :src="isClassSelected(className) ? 'mdi:checkbox-marked' : 'mdi:checkbox-blank-outline'"
-          @click.stop.prevent="toggleClass(className)"
+          v-if="isClassSelected(blockClass.name)"
+          :src="hasCondition(blockClass.name) ? 'mdi:eye' : 'mdi:eye-outline'"
+          @click="openVisibilityEditor(blockClass.name)"
         />
       </template>
-      <template #right="{ className }">
-        <UiIcon
-          v-if="isClassSelected(className)"
-          :src="hasCondition(className) ? 'mdi:eye' : 'mdi:eye-outline'"
-          @click="openVisibilityEditor(className)"
-        />
-      </template>
-    </CssClassManager>
+    </UiDetails>
+
+    <!-- Class appender -->
+    <UiInput
+      type="select-native"
+      placeholder="Add class"
+      :options="appenderOptions"
+      @update:model-value="onAppenderChange($event)"
+    />
 
     <!-- class visibility conditions editor -->
     <UiDialog
@@ -209,13 +265,3 @@ function onEditorClose() {
     </UiDialog>
   </div>
 </template>
-
-<style lang="scss">
-.BlockCssClasses {
-  &__checkbox {
-    margin-right: 0.5rem;
-    width: 36px;
-    height: 36px;
-  }
-}
-</style>

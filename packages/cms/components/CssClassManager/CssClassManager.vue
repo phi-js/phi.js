@@ -93,7 +93,7 @@ function resetCreator() {
           <div class="CssClassManager__summary">
             <slot
               name="left"
-              :className="cssClass.id"
+              :class-name="cssClass.id"
             />
             <div class="CssClassManager__info">
               <h3
@@ -122,7 +122,7 @@ function resetCreator() {
         <template #actions>
           <slot
             name="right"
-            :className="cssClass.id"
+            :class-name="cssClass.id"
           />
         </template>
       </UiDetails>
