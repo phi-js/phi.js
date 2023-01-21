@@ -67,6 +67,7 @@ export default [
   },
   {
     text: 'Academia',
+    icon: 'mdi:book',
     children: [
       {
         text: 'Reportes',
@@ -105,6 +106,7 @@ export default [
   },
   {
     text: 'Tesoreria',
+    icon: 'mdi:book',
     children: [
       {
         text: 'Cobros',
@@ -150,6 +152,7 @@ export default [
   },
   {
     text: 'Empleados',
+    icon: 'mdi:book',
     children: [
       {
         text: 'Reportes',

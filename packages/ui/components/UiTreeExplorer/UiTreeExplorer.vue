@@ -82,21 +82,31 @@ function onItemClick(itemIndex) {
         />
 
         <div class="UiTreeExplorer__list">
-          <UiItem
+          <template
             v-for="(item, i) in page.items"
             :key="i"
-            :icon="item.icon"
-            :text="item.text"
-            :subtext="item.subtext"
-            @click="item.children?.length && onItemClick(i)"
           >
-            <template
-              v-if="item.children?.length"
-              #actions
+            <slot
+              name="item"
+              :item="item"
+              :has-children="item.children?.length"
+              :navigate="() => onItemClick(i)"
             >
-              <UiIcon src="mdi:chevron-right" />
-            </template>
-          </UiItem>
+              <UiItem
+                :icon="item.icon"
+                :text="item.text"
+                :subtext="item.subtext"
+                @click="item.children?.length && onItemClick(i)"
+              >
+                <template
+                  v-if="item.children?.length"
+                  #actions
+                >
+                  <UiIcon src="mdi:chevron-right" />
+                </template>
+              </UiItem>
+            </slot>
+          </template>
         </div>
       </div>
     </Transition>
@@ -108,17 +118,6 @@ function onItemClick(itemIndex) {
   position: relative;
   user-select: none;
 
-  &__parent {
-    border-bottom: 1px solid #ddd;
-  }
-
-  .UiItem {
-    --ui-item-padding: 3px 8px;
-    cursor: pointer;
-    &:hover {
-      background-color: var(--ui-color-hover);
-    }
-  }
 
   /* Transitions */
   .forward-enter-active,

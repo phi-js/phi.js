@@ -21,6 +21,22 @@ import tree from '../UiTree/sample.js'
     />
     <hr>
 
+    <UiTreeExplorer :value="tree">
+      <template #item="{ item, hasChildren, navigate }">
+        <li>
+          <span>Hola soy {{ item.text }}</span>
+          <button
+            v-if="hasChildren"
+            type="button"
+            @click="navigate()"
+          >
+            ENTER
+          </button>
+        </li>
+      </template>
+    </UiTreeExplorer>
+    <hr>
+
     More content
   </div>
 </template>
