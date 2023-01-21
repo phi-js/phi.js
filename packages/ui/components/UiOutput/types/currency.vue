@@ -8,9 +8,15 @@ const props = defineProps({
     required: false,
     default: null,
   },
+
+  currency: {
+    type: String,
+    required: false,
+    default: null,
+  },
 })
 </script>
 
 <template>
-  <span v-text="i18n.$(props.value, $attrs.format)" />
+  <span v-text="i18n.$(props.value, props.currency)" />
 </template>

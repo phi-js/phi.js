@@ -21,6 +21,6 @@ const props = defineProps({
 <template>
   <UiItem
     icon="mdi:calendar"
-    :text="i18n.date(props.value, props.format)"
+    :text="i18n.datetime(props.value, props.format)"
   />
 </template>
