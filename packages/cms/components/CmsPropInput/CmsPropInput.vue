@@ -70,7 +70,7 @@ function findType(incomingValue) {
   }
 
   // Expression "{{a ? 'foo' : 'bar'}}"
-  if (/{{([^}]*?)}}/.test(incomingValue)) {
+  if (/^{{([^}]*?)}}$/.test(incomingValue)) {
     return 'expression'
   }
 

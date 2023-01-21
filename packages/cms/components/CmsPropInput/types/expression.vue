@@ -1,10 +1,12 @@
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, inject } from 'vue'
 
 import { useI18n } from '@/packages/i18n'
 import { UiInput } from '@/packages/ui'
-import useModelSchema from '@/packages/vm/components/VmStatement/useModelSchema.js'
-import getSchemaVariables from '@/packages/vm/helpers/getSchemaVariables.js'
+
+const injectedFields = inject('$_vm_fields', null)
+
+console.log('injectedFields', injectedFields.value)
 
 const props = defineProps({
   /*
@@ -29,8 +31,39 @@ const emit = defineEmits(['update:modelValue'])
 const strExpression = ref('')
 const showExpressionInput = ref(false)
 
-const modelSchema = useModelSchema()
-const schemaVariables = computed(() => getSchemaVariables(modelSchema.value))
+const allFields = computed(() => injectedFields?.value || [])
+
+function findField(targetValue, availableFields) {
+  if (!availableFields || !availableFields.length) {
+    return null
+  }
+
+  for (let field of availableFields) {
+    if (field.value == targetValue) {
+      return field
+    }
+
+    if (field?.children?.length) {
+      const foundChild = findField(targetValue, field.children)
+      if (foundChild) {
+        return foundChild
+      }
+    }
+  }
+  return null
+}
+
+
+const selectOptions = computed(() => {
+  return [
+    ...allFields.value,
+    {
+      text: i18n.t('CmsPropInput.CustomExpression'),
+      value: 'custom',
+    },
+  ]
+})
+
 
 const variableName = computed(() => {
   if (showExpressionInput.value) {
@@ -41,7 +74,7 @@ const variableName = computed(() => {
     return ''
   }
 
-  const found = schemaVariables.value.find((schemaVar) => schemaVar.name == strExpression.value)
+  const found = findField(strExpression.value, allFields.value)
   return found ? strExpression.value : 'custom'
 })
 
@@ -66,12 +99,6 @@ watch(
 function emitUpdate() {
   emit('update:modelValue', `{{${strExpression.value}}}`)
 }
-
-const variableSelectorOptions = computed(() => schemaVariables.value.map((schemaVar) => ({
-  value: schemaVar.name,
-  text: schemaVar.name,
-})))
-
 
 function onVariablePickerChange($event) {
   if ($event == 'custom') {
@@ -105,31 +132,14 @@ const i18n = useI18n({
 
 <template>
   <div>
-    <select
+    <UiInput
+      type="select-native"
       class="PropInputExpression__varPicker UiInput"
-      :value="variableName"
-      @change="onVariablePickerChange($event.target.value)"
-    >
-      <option
-        :value="''"
-        v-text="i18n.t('CmsPropInput.SelectVariable')"
-      />
-
-      <optgroup :label="i18n.t('CmsPropInput.DocumentVariables')">
-        <option
-          v-for="opt in variableSelectorOptions"
-          :key="opt.value"
-          :value="opt.value"
-          v-text="opt.text"
-        />
-      </optgroup>
-      <optgroup :label="i18n.t('CmsPropInput.Other')">
-        <option
-          value="custom"
-          v-text="i18n.t('CmsPropInput.CustomExpression')"
-        />
-      </optgroup>
-    </select>
+      :model-value="variableName"
+      :options="selectOptions"
+      :placeholder="i18n.t('CmsPropInput.SelectVariable')"
+      @update:model-value="onVariablePickerChange"
+    />
 
     <UiInput
       v-show="showExpressionInput"
