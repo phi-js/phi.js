@@ -71,6 +71,36 @@ export default function useI18n(componentDictionary = null) {
       return objDate.toLocaleString(targetLocale, options)
     },
 
+    date(date, options = undefined) {
+      let targetLocale = attrs?.['i18n-language'] || locale.value
+      targetLocale = targetLocale.replace('_', '-')
+      let objDate = toDate(date)
+      if (!objDate) {
+        return date + '(?)'
+      }
+      return objDate.toLocaleDateString(targetLocale, options)
+    },
+
+    time(date, options = undefined) {
+      let targetLocale = attrs?.['i18n-language'] || locale.value
+      targetLocale = targetLocale.replace('_', '-')
+      let objDate = toDate(date)
+      if (!objDate) {
+        return date + '(?)'
+      }
+      return objDate.toLocaleTimeString(targetLocale, options)
+    },
+
+    datetime(date, options = undefined) {
+      let targetLocale = attrs?.['i18n-language'] || locale.value
+      targetLocale = targetLocale.replace('_', '-')
+      let objDate = toDate(date)
+      if (!objDate) {
+        return date + '(?)'
+      }
+      return objDate.toLocaleString(targetLocale, options)
+    },
+
     // "Pretty date" for past dates (1 minute ago, yesterday, etc)
     // https://stackoverflow.com/questions/7641791/javascript-library-for-human-friendly-relative-date-formatting
     ago(time) {
