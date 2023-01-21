@@ -187,7 +187,8 @@ function rotate() {
 .UiResolutionPicker {
   .UiDropdown {
     &__container {
-      right: -20px;
+      right: 0;
+      top: 90%;
     }
 
     &__trigger {

@@ -1,6 +1,23 @@
 import { ref, unref, computed } from 'vue'
 import { getProperty, normalize } from '../../../helpers'
 
+
+function sanitizeItem(item, settings = null) {
+  const retval = {
+    ...item,
+    text: getProperty(item, settings?.optionText || '$.text'),
+    value: getProperty(item, settings?.optionValue || '$.value'),
+    keywords: getKeywords(item, settings?.optionSearch).join(' '),
+  }
+
+  if (retval.children?.length) {
+    retval.children = retval.children.map((child) => sanitizeItem(child, settings))
+  }
+
+  return retval
+}
+
+
 export default function useOptionsManager(arr, settings = null) {
 
   const options = computed(() => {
@@ -13,12 +30,7 @@ export default function useOptionsManager(arr, settings = null) {
       .filter((item) => item !== null)
       .map((item) => {
         if (item && typeof item === 'object') {
-          return {
-            ...item,
-            text: getProperty(item, settings?.optionText || '$.text'),
-            value: getProperty(item, settings?.optionValue || '$.value'),
-            keywords: getKeywords(item, settings?.optionSearch).join(' '),
-          }
+          return sanitizeItem(item, settings)
         }
 
         return {

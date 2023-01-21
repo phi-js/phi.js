@@ -2,27 +2,13 @@
 .UiTabs {
   &__header {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: stretch;
-
-    overflow-x: auto;
-
-    /*firefox only*/
-    scrollbar-width: thin;
-
-    /*webkit based browsers only*/
-    &::-webkit-scrollbar {
-      height: 8px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border-radius: 5px;
-      background-color: rgba(0, 0, 0, 0.2);
-    }
   }
 
   &__tabList {
     flex: 1;
+    min-width: 350px;
 
     display: flex;
     flex-wrap: nowrap;
@@ -45,6 +31,24 @@
     }
   }
 }
+
+/* Mobile displays */
+@media only screen and (max-width: 768px) {
+  .UiTabs {
+    &__tabList {
+      order: 2;
+
+      .UiTab {
+        flex: 1;
+      }
+    }
+
+    &__right {
+      margin-left: auto;
+    }
+  }
+}
+
 
 // Tab bottom border + animations
 .UiTabs {

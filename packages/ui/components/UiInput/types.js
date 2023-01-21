@@ -14,6 +14,8 @@ import { UiUpload } from '../UiUpload'
 
 export default {
   'code': UiInputCode,
+  'color-css': UiInputColorCss,
+  'date-range': UiInputDateRange,
   'html': UiInputHtml,
   'json': UiInputJson,
   'number-slide': UiInputNumberSlide,
@@ -24,6 +26,4 @@ export default {
   'timer': UiInputTimer,
   'upload': UiUpload,
   'url': UiInputUrl,
-  'color-css': UiInputColorCss,
-  'date-range': UiInputDateRange,
 }

@@ -89,15 +89,31 @@ const proxyValue = computed({
     <option
       v-if="props.placeholder && !props.multiple"
       :value="null"
+      class="UiSelectNative__placeholder"
     >
       {{ props.placeholder }}
     </option>
 
-    <option
+    <template
       v-for="option in options"
       :key="option.value"
-      :text="option.text"
-      :value="option.value"
-    />
+    >
+      <optgroup
+        v-if="option.children?.length"
+        :label="option.text"
+      >
+        <option
+          v-for="child in option.children"
+          :key="child.value"
+          :value="child.value"
+          v-text="child.text"
+        />
+      </optgroup>
+      <option
+        v-else
+        :value="option.value"
+        v-text="option.text"
+      />
+    </template>
   </select>
 </template>

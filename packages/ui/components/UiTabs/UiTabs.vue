@@ -141,7 +141,9 @@ function selectTab(incomingTab, scrollIntoView = true) {
     :class="`UiTabs--direction-${direction}`"
   >
     <div class="UiTabs__header">
-      <slot name="left" />
+      <div class="UiTabs__left">
+        <slot name="left" />
+      </div>
       <div class="UiTabs__tabList">
         <component
           :is="tab.props.href ? 'a' : 'div'"
@@ -172,7 +174,9 @@ function selectTab(incomingTab, scrollIntoView = true) {
           />
         </component>
       </div>
-      <slot name="right" />
+      <div class="UiTabs__right">
+        <slot name="right" />
+      </div>
     </div>
     <div class="UiTabs__contents">
       <component

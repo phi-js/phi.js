@@ -22,7 +22,7 @@ const endDate = computed({
 })
 
 function sanitizeRange(strStartDate, strEndDate, priority = 'start') {
-  if (strStartDate > strEndDate) {
+  if (strStartDate > strEndDate || !strEndDate) {
     if (priority == 'start') {
       strEndDate = strStartDate
     } else {

@@ -9,7 +9,9 @@ const msg = ref('Hola mundo')
 </script>
 
 <template>
-  <button @click="isOpen = !isOpen">Toggle window ({{ isOpen }}) - {{ msg }}</button>
+  <button @click="isOpen = !isOpen">
+    Toggle window ({{ isOpen }}) - {{ msg }}
+  </button>
 
   <UiWindow v-model:open="isOpen">
     <template #default>
@@ -17,17 +19,33 @@ const msg = ref('Hola mundo')
         <UiTab text="tab1">
           Contenido del tab 1
           <p>{{ msg }}</p>
-          <input v-model="msg" type="text" class="UiInput" />
+          <input
+            v-model="msg"
+            type="text"
+            class="UiInput"
+          >
         </UiTab>
-        <UiTab text="tab2">Contenido del tab 2</UiTab>
+        <UiTab text="tab2">
+          Contenido del tab 2
+        </UiTab>
         <UiTab text="tab3">
           <LoremIpsum />
         </UiTab>
       </UiTabs>
     </template>
     <template #footer="{ close }">
-      <button class="UiButton" @click="close()">Aceptar</button>
-      <button class="UiButton UiButton--cancel" @click="close()">Cancelar</button>
+      <button
+        class="UiButton"
+        @click="close()"
+      >
+        Aceptar
+      </button>
+      <button
+        class="UiButton UiButton--cancel"
+        @click="close()"
+      >
+        Cancelar
+      </button>
     </template>
   </UiWindow>
 </template>

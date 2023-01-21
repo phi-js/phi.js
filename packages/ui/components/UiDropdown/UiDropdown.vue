@@ -67,7 +67,7 @@ function onTriggerClick() {
     >
       <slot
         name="trigger"
-        :isOpen="isOpen"
+        :is-open="isOpen"
         :open="open"
         :close="close"
         :toggle="toggle"

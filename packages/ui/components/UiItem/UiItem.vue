@@ -119,7 +119,7 @@ export default {
 <style lang="scss">
 .UiItem {
   min-width: 0; // Allows correct cropping of overflown texts (see https://css-tricks.com/flexbox-truncated-text/)
-  --ui-item-padding: inherit;
+  // --ui-item-padding: inherit; // why?  this is messing up styles, as it takes priority
   --ui-item-badge-color: #ea5455;
 
   position: relative;
