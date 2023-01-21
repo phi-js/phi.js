@@ -208,19 +208,5 @@ function onInsertSibling(index, position = null) {
       pointer-events: none;
     }
   }
-
-
-  &__footer {
-    padding: 18px 0;
-
-    .SlotBlockLauncher {
-      &__trigger {
-        // justify-content: flex-start;
-        .UiItem {
-          --ui-item-padding: 6px 12px;
-        }
-      }
-    }
-  }
 }
 </style>

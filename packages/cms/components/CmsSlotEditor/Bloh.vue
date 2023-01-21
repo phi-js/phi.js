@@ -170,8 +170,6 @@ const parent = curSlotItem?.parent
     visibility: hidden;
   }
 
-  // &:hover > &__toolbar-container > &__launcher,
-  &:hover > &__launcher,
   &--selected > &__toolbar-container > &__launcher,
   &--selected > &__launcher {
     visibility: visible;
@@ -364,8 +362,9 @@ const parent = curSlotItem?.parent
 
     &--after {
       position: absolute;
-      bottom: -15px;
+      top: 100%;
       left: 50%;
+      margin-top: 2px;
       margin-left: -14px;
       z-index: 1;
     }
@@ -376,16 +375,19 @@ const parent = curSlotItem?.parent
     user-select: none;
 
     width: 28px;
-    height: 20px;
+    height: 26px;
 
     border-radius: 4px;
-    background-color: #333;
-    color: #eee;
+    border: 2px dashed #999;
+    // background-color: #333;
+    // color: #eee;
     font-weight: bold;
 
     cursor: pointer;
     opacity: 0.5;
     &:hover {
+      border: 2px solid var(--ui-color-primary);
+      color: var(--ui-color-primary);
       opacity: 1;
     }
   }
@@ -442,14 +444,14 @@ const parent = curSlotItem?.parent
     margin-top: 18px;
   }
 
-  & > .LayoutGroupEditor > .CmsSlotEditor__footer {
-    display: none;
-  }
+  // & > .LayoutGroupEditor > .CmsSlotEditor__footer {
+  //   display: none;
+  // }
 
-  & > .LayoutGroupEditor.CmsSlotEditor--empty > .CmsSlotEditor__footer,
-  &.Bloh--selected > .LayoutGroupEditor > .CmsSlotEditor__footer {
-    display: block;
-  }
+  // & > .LayoutGroupEditor.CmsSlotEditor--empty > .CmsSlotEditor__footer,
+  // &.Bloh--selected > .LayoutGroupEditor > .CmsSlotEditor__footer {
+  //   display: block;
+  // }
 }
 
 .Bloh--NavigationNext,

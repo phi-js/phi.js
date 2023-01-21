@@ -7,7 +7,6 @@ import { getPluginData } from '../../functions'
 import { CmsBlock } from '../CmsBlock'
 import BlockWindow from '../CmsBlockEditor/BlockWindow.vue'
 
-
 const pluginData = getPluginData()
 
 const props = defineProps({
@@ -47,7 +46,6 @@ const emit = defineEmits(['input'])
 
 const isOpen = ref(props.open)
 const isPopupOpen = ref(props.open)
-const isTriggerHovered = ref(false)
 
 const stagingBlock = ref()
 
@@ -142,7 +140,6 @@ function onPickerUpdateOpen($event) {
       `SlotBlockLauncher--${props.direction}`,
       {
         'SlotBlockLauncher--open': isOpen,
-        'SlotBlockLauncher--teasing': isTriggerHovered,
       }
     ]"
   >
@@ -151,12 +148,11 @@ function onPickerUpdateOpen($event) {
       class="SlotBlockLauncher__trigger"
       :title="props.title"
       @click="onTriggerClick"
-      @mouseenter="isTriggerHovered = true"
-      @mouseleave="isTriggerHovered = false"
     >
       <UiItem
         icon="mdi:plus"
         :text="props.text"
+        :subtext="props.title"
       />
     </div>
 
@@ -191,26 +187,28 @@ function onPickerUpdateOpen($event) {
 
   &__trigger {
     cursor: pointer;
-    position: absolute;
     display: flex;
     flex-wrap: nowrap;
+    justify-content: center;
 
     .UiItem {
-      --ui-item-padding: 0 6px;
+      flex: 1;
+      --ui-item-padding: 12px 16px;
 
       user-select: none;
-      font-size: 12px;
+      font-size: 0.8rem;
       font-weight: bold;
 
-      background-color: #525659;
-      color: #fff;
-
       border-radius: 5px;
+      border: 2px dashed #99999988;
+      opacity: 0.5;
     }
 
     &:hover .UiItem {
-      background-color: var(--ui-color-primary);
-      color: #eee;
+      // background-color: var(--ui-color-hover);
+      border: 2px solid var(--ui-color-primary);
+      color: var(--ui-color-primary);
+      opacity: 1;
     }
   }
 
@@ -238,12 +236,6 @@ function onPickerUpdateOpen($event) {
       font-size: 1em;
 
       background-color: var(--ui-color-hover);
-      // border: 2px dashed var(--ui-color-primary);
-      // border-radius: 3px;
-      // cursor: pointer;
-      // &:hover {
-      //   background-color: rgba(255,255,255, 0.1);
-      // }
     }
   }
 }
@@ -273,13 +265,6 @@ function onPickerUpdateOpen($event) {
 
 
 .SlotBlockLauncher--column {
-  .SlotBlockLauncher__trigger {
-    top: -12px;
-    bottom: auto;
-    left: 0;
-    right: 0;
-  }
-
   .SlotBlockLauncher__box {
     height: 0;
   }
@@ -288,17 +273,12 @@ function onPickerUpdateOpen($event) {
     height: 60px;
   }
 
-  &.SlotBlockLauncher--teasing {
-    margin-top: -2px;
-    margin-bottom: -2px;
-    border-top: 2px dashed var(--ui-color-primary);
-    border-bottom: 2px dashed var(--ui-color-primary);
-  }
 }
 
 
 .SlotBlockLauncher--row {
   .SlotBlockLauncher__trigger {
+    position: absolute;
     flex-direction: column;
     top: 0;
     bottom: 0;
@@ -317,11 +297,6 @@ function onPickerUpdateOpen($event) {
 
   &.SlotBlockLauncher--open .SlotBlockLauncher__box {
     width: auto;
-  }
-
-  &.SlotBlockLauncher--teasing {
-    margin-left: -3px;
-    border-left: 3px dashed var(--ui-color-primary);
   }
 
   ///damn
