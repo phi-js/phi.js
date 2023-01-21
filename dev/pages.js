@@ -1,79 +1,107 @@
-// See https://vitejs.dev/guide/features.html#glob-import
-const pageFiles = import.meta.glob('../pages/**/*.vue')
+import { defineAsyncComponent } from 'vue'
 
-const pages = []
-for (const path in pageFiles) {
-  let name = path.slice(9, -4) // remove .vue
-  name = name.replace(/^\d+\./, '') // remove trailing numbers
+/*
+allPages
+[
+  {
+    "text": "UiIcon",
+    "file": "./packages/ui/components/UiIcon/UiIcon.docs.vue",
+    "url": "/packages/ui/components/UiIcon"
+  },
+  ...
+]
 
-  let isLocal = name.includes('.local')
-  if (isLocal) {
-    name = name.replace('.local', '')
+*/
+const allPages = []
+
+/*
+addPages takes in a files list (the result from calling import.meta.glob)
+
+{
+  text: 'UiIcon',
+  file: '../packages/ui/UiIcon/UiIcon.docs.vue'
+}
+*/
+export function addPages(modules) {
+  // for (const path in modules) {
+  for (const [filename, component] of Object.entries(modules)) {
+    const parts = filename.split('/')
+    const lastPart = parts[parts.length - 1]
+
+    allPages.push({
+      text: lastPart,
+      file: filename,
+      url: toUrl(filename),
+      component: defineAsyncComponent(component),
+    })
   }
-
-  pages.push({
-    href: name,
-    name,
-    text: name,
-    path,
-    dir: path.replace('../', '').split('/').slice(0, -1).join('/'),
-    import: pageFiles[path],
-    isLocal,
-  })
 }
 
-const modules = import.meta.glob('../packages/**/*.docs.vue')
-const componentDocs = []
-for (const path in modules) {
-  let parts = path.split('/')
-  let name = parts[parts.length - 1].slice(0, -9) // remove .docs.vue
-  let isLocal = name.includes('.local')
-  if (isLocal) {
-    name = name.replace('.local', '')
-  }
-
-  componentDocs.push({
-    href: 'component/' + name,
-    name,
-    path,
-    dir: path.replace('../packages', '').split('/').slice(0, -1).join('/'),
-    import: modules[path],
-    isLocal,
-  })
+function toUrl(path) {
+  return path
+    .replace('../', '/')
+    .replace('./', '/')
 }
 
-export default [...pages, ...componentDocs]
 
-export const pageTree = toTree(pages, '../pages/')
-export const packageTree = toTree(componentDocs, '../packages/')
-export const docsTree = [...pageTree, ...packageTree]
+
+/* Add phi.js core pages */
+addPages(import.meta.glob('../pages/**/*.vue'))
+addPages(import.meta.glob('../packages/**/*.docs.vue'))
+
+
+
+
+export function getComponent(url) {
+  const foundPage = allPages.find((page) => page.url == url)
+  if (!foundPage?.component) {
+    console.warn(`Cannot find component for url '${url}'`)
+    return null
+  }
+
+  return foundPage.component
+
+  // const importCallback = () => import('/' + foundPage.file)
+  // return importCallback().then((mod) => mod.default)
+}
+
+
+
+
 
 /*
 Organizar las paginas en un arbol segun su estructura de directorios:
 
 pages:
 [
-  { path: '../packages/ui/components/UiIcon/UiIcon.docs.vue', ...},
-  { path: '../packages/ui/components/UiItem/UiItem.docs.vue', ...},
+  {
+    "text": "UiIcon",
+    "file": "./packages/ui/components/UiIcon/UiIcon.docs.vue",
+    "url": "/ui/components/UiIcon"
+  },
   ...
 ]
 ------------>
 [
   {
     text: 'ui',
+    url: '/ui',
     children: [
       {
         text: 'components',
+        url: '/ui/components',
         children: [
           {
             text: 'UiIcon',
             children: [],
-            payload: {}  // <---  objeto PAGE
+            file: '...',
+            url: '/foo/shoo
           },
           {
             text: 'UiItem',
             children: [],
-            payload: {}  // <---  objeto PAGE
+            file: '...',
+            url: '/foo/shoo
           },
           ...
         ]
@@ -82,37 +110,37 @@ pages:
   }
 ]
 */
-function toTree(arrPages, prefix = '') {
-  let retval = []
-  arrPages.forEach((page) => {
-    let path = page.path.replace(prefix, '')
-    let parts = path.split('/').slice(0, -1)
-
+export function getTree() {
+  const retval = []
+  allPages.forEach((page) => {
+    let parts = page.url.split('/').filter((part) => !!part)
     if (!parts.length) {
-      parts = [path]
+      return
     }
 
-    retval = spliceItem(retval, parts, page)
+    spliceItem(retval, parts, page)
   })
+
   return retval
 }
 
-function spliceItem(arrTree, arrPath, payload) {
-  let rootId = arrPath.shift()
-  let node = arrTree.find((n) => n.id == rootId)
+function spliceItem(arrTree, arrPath, page, prefix = '/') {
+  let root = arrPath.shift()
+  let node = arrTree.find((n) => n.url == prefix + root)
   if (!node) {
     node = {
-      id: rootId,
-      text: payload?.text || rootId,
-      children: [],
+      url: prefix + root,
+      text: root,
+      page: null,
     }
     arrTree.push(node)
   }
 
   if (!arrPath.length) {
-    node.payload = payload
+    node.page = page
   } else {
-    node.children = spliceItem(node?.children || [], arrPath, payload)
+    node.children = spliceItem(node.children || [], arrPath, page, prefix + root + '/')
   }
+
   return arrTree
 }

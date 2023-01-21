@@ -12,7 +12,7 @@ import { UiIcon, UiInput, UiItem, UiTree } from '@/packages/ui/components'
 
 // Lista de paginas
 import { normalize } from '@/packages/ui/helpers'
-import { default as pages, docsTree } from './pages.js'
+import { getTree, getComponent } from './pages.js'
 
 import { provideI18n } from '@/packages/i18n'
 const i18n = provideI18n({
@@ -50,40 +50,44 @@ function filterTree(arrTree, strFilter) {
     } else {
       retval.push({
         ...node,
-        isActive: currentPage.value == node?.payload.href,
+        isActive: currentUrl.value == node?.url,
       })
     }
   })
   return retval
 }
 
+const pagesTree = getTree()
+
 const searchString = ref('')
 const filteredTree = computed(() => {
   let search = normalize(searchString.value.trim())
-  return filterTree(docsTree, search)
+  return filterTree(pagesTree, search)
 })
 
-// currentPage se inicializa segun el hash actual
-const currentPage = ref(window.location.hash.split('#/')[1] || 'home')
-const component = shallowRef()
-const error = ref()
 
-// Escuchar cambios en el hash de la URL y actualizar currentPage
+// currentUrl se inicializa segun el hash actual
+const currentUrl = ref(window.location.hash.split('#')[1])
+
+// Escuchar cambios en el hash de la URL y actualizar currentUrl
 const onHashChange = () => {
-  currentPage.value = window.location.hash.split('#/')[1] || window.location.hash.substr(1)
+  currentUrl.value = window.location.hash.split('#')[1] || window.location.hash.substr(1)
 }
 
 onMounted(() => window.addEventListener('hashchange', onHashChange))
 onBeforeUnmount(() => window.removeEventListener('hashchange', onHashChange))
 
-// cuando cambie currentPage, cargamos dinamicamente la pagina /pages/hashname.vue
+const component = shallowRef()
+const error = ref()
+
+// cuando cambie currentUrl, cargamos dinamicamente la pagina /pages/hashname.vue
 watch(
-  currentPage,
+  currentUrl,
   async () => {
     searchString.value = ''
     error.value = null
     try {
-      component.value = await loadPageComponent(currentPage.value)
+      component.value = await getComponent(currentUrl.value)
     } catch (e) {
       component.value = null
       error.value = e
@@ -92,20 +96,6 @@ watch(
   },
   { immediate: true },
 )
-
-// Importar el componente asociado a un nombre de pagina
-function loadPageComponent(href) {
-  let objPage = pages.find((p) => p.href == href)
-  let importCallback
-  if (objPage?.import) {
-    importCallback = objPage.import
-  } else {
-    let baseName = 'pages/' + href
-    importCallback = () => import(`../${baseName}.vue`)
-  }
-
-  return importCallback().then((mod) => mod.default)
-}
 </script>
 
 <template>
@@ -155,15 +145,12 @@ function loadPageComponent(href) {
           :initial-open="(item) => item.isActive"
         >
           <a
-            v-if="item?.payload?.href"
+            v-if="!item.children"
             class="NavTree__link"
-            :class="{ 'NavTree__link--active': currentPage == item.payload.href }"
-            :href="`#/${item.payload.href}`"
+            :class="{ 'NavTree__link--active': currentUrl == item.url }"
+            :href="`#${item.url}`"
           >
-            <UiItem
-              :text="item.text"
-              :subtext="item.payload.isLocal ? '.local' : ''"
-            />
+            <UiItem :text="item.text" />
           </a>
           <div v-else>
             <UiItem
@@ -188,7 +175,7 @@ function loadPageComponent(href) {
         <Transition name="fade">
           <div
             v-if="component"
-            :key="currentPage"
+            :key="currentUrl"
           >
             <component :is="component" />
           </div>
@@ -196,7 +183,7 @@ function loadPageComponent(href) {
 
         <div v-if="error">
           <h1>404</h1>
-          <p>'{{ currentPage }}' no encontrado</p>
+          <p>'{{ currentUrl }}' no encontrado</p>
         </div>
       </div>
     </div>
@@ -242,8 +229,8 @@ function loadPageComponent(href) {
     display: block;
     overflow: hidden;
     overflow-y: auto;
-    width: 240px;
-    padding: 12px;
+    width: 300px;
+    padding: 10px;
   }
 
   &__body {
