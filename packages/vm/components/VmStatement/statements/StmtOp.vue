@@ -1,20 +1,27 @@
 <script setup>
-import { ref, computed, reactive, watch, nextTick, onBeforeMount, inject } from 'vue'
+import { ref, computed, watch, nextTick, onBeforeMount, inject } from 'vue'
 
 import { UiDetails } from '@/packages/ui'
 import VmStatement from '../VmStatement.vue'
 import baseOperators from '../operators'
-import useModelSchema from '../useModelSchema'
 
 import useVmI18n from '../../../i18n'
 const i18n = useVmI18n()
 
-const modelSchema = useModelSchema()
-
+const availableFields = inject('$_vm_fields')
 const injectedOperators = inject('$_vm_operators', [])
 const allOperators = baseOperators.concat(injectedOperators)
 
 const props = defineProps({
+
+  /*
+  OP Object
+  {
+    "fiels": "some.field.name",
+    "op": "string.eq",
+    "args": "Hello"
+  }
+  */
   modelValue: {
     type: Object,
     required: false,
@@ -23,59 +30,60 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:modelValue'])
 
-const innerModel = reactive({})
-const detailsIsOpen = ref(false)
-
-onBeforeMount(() => {
-  if (!innerModel.field || !innerModel.op) {
-    detailsIsOpen.value = true
-  }
-
-  if (innerModel.op === null) {
-    innerModel.op = availableOperators.value?.[0]?.operator
-    emitInput()
-  }
-})
+const innerModel = ref({})
 
 watch(
   () => props.modelValue,
   (newValue) => {
     let clone = newValue ? JSON.parse(JSON.stringify(newValue)) : newValue
 
-    Object.assign(
-      innerModel,
-      {
-        op: null,
-        field: null,
-        args: clone.args,
-      },
-      innerModel,
-      clone,
-    )
+    innerModel.value = {
+      op: null,
+      field: null,
+      args: clone?.args,
+      ...clone,
+    }
   },
   { immediate: true },
 )
 
-const fieldSchema = computed(() => {
-  if (!innerModel.field) {
+
+const detailsIsOpen = ref(false)
+onBeforeMount(() => {
+  if (!innerModel.value.field || !innerModel.value.op) {
+    detailsIsOpen.value = true
+  }
+
+  if (innerModel.value.op === null) {
+    innerModel.value.op = availableOperators.value?.[0]?.operator
+    emitInput()
+  }
+})
+
+
+
+function findField(targetValue, availableFields) {
+  if (!availableFields || !availableFields.length) {
     return null
   }
 
-  let targetSchema = modelSchema.value
+  for (let field of availableFields) {
+    if (field.value == targetValue) {
+      return field
+    }
 
-  const fieldName = innerModel.field.substring(0, 2) == '$.'
-    ? innerModel.field.substring(2)
-    : innerModel.field
-
-  const parts = fieldName.split('.')
-  const lastPart = parts[parts.length - 1]
-
-  for (let i = 0; i < parts.length - 1; i++) {
-    const part = parts[i]
-    targetSchema = targetSchema?.properties?.[part]
+    if (field?.children?.length) {
+      const foundChild = findField(targetValue, field.children)
+      if (foundChild) {
+        return foundChild
+      }
+    }
   }
+  return null
+}
 
-  return targetSchema?.properties?.[lastPart]
+const currentField = computed(() => {
+  return findField(innerModel.value.field, availableFields?.value)
 })
 
 const translatedOperators = computed(() => {
@@ -87,14 +95,15 @@ const translatedOperators = computed(() => {
 })
 
 const availableOperators = computed(() => {
-  let fieldType = fieldSchema.value?.type || 'string'
+  let fieldType = currentField.value?.type || 'string'
+
   return translatedOperators.value.filter((op) => {
     return op.type == fieldType
     || (
       op.operator.substring(0, 5) === 'enum.'
       && (
-        fieldSchema.value?.enum?.length
-        || fieldSchema.value?.oneOf?.length
+        currentField.value?.enum?.length
+        || currentField.value?.oneOf?.length
       )
     )
   })
@@ -102,12 +111,12 @@ const availableOperators = computed(() => {
 
 const isKnownOperator = computed(() => {
   return (
-    availableOperators.value.findIndex((opDef) => opDef.operator == innerModel?.op) >= 0
+    availableOperators.value.findIndex((opDef) => opDef.operator == innerModel.value?.op) >= 0
   )
 })
 
 const customArgsComponent = computed(() => {
-  let operatorDefinition = availableOperators.value.find((opDef) => opDef.operator == innerModel.op)
+  let operatorDefinition = availableOperators.value.find((opDef) => opDef.operator == innerModel.value.op)
   if (!operatorDefinition) {
     return null
   }
@@ -119,14 +128,14 @@ const customArgsComponent = computed(() => {
 const optionOther = ref()
 
 function emitInput() {
-  emit('update:modelValue', JSON.parse(JSON.stringify(innerModel)))
+  emit('update:modelValue', JSON.parse(JSON.stringify(innerModel.value)))
 }
 
 function onChangeOp() {
   emitInput()
 
   // Focus "custom" textarea
-  if (!innerModel.op) {
+  if (!innerModel.value.op) {
     try {
       nextTick(() => optionOther.value.focus())
     } catch (e) {
@@ -135,12 +144,12 @@ function onChangeOp() {
   }
 }
 
-const currentOperator = computed(() => availableOperators.value.find((opDef) => opDef.operator == innerModel?.op))
+const currentOperator = computed(() => availableOperators.value.find((opDef) => opDef.operator == innerModel.value?.op))
 
 const operationRedaction = computed(() => {
-  const fieldName = fieldSchema.value?.title || innerModel.field
+  const fieldName = currentField.value?.text || innerModel.value.field
   const opName = currentOperator.value?.text ? currentOperator.value?.text + ' ' : ''
-  const stringArgs = argsToString(innerModel.args)
+  const stringArgs = argsToString(innerModel.value.args)
   return {
     text: fieldName,
     subtext: `${opName} ${stringArgs}`,
@@ -171,7 +180,7 @@ function argsToString(strArgs) {
   >
     <div class="StmtOp__body">
       <div
-        v-if="!fieldSchema"
+        v-if="!currentField"
         class="StmtOp__field"
       >
         <input
@@ -229,7 +238,8 @@ function argsToString(strArgs) {
           v-if="customArgsComponent?.component"
           v-model="innerModel.args"
           v-bind="customArgsComponent.props"
-          :field-schema="fieldSchema"
+          xxxxfield-schema="fieldSchema"
+          :field="currentField"
           @update:model-value="emitInput"
         />
         <VmStatement

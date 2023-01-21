@@ -17,28 +17,66 @@ const stmt = ref(null)
 const schema = {
   type: 'object',
   properties: {
-    one: {
+    yousuck: {
       type: 'string',
       text: 'Propiedad I',
     },
-
     two: { type: 'string' },
-
     personId: {
       type: 'person',
       text: 'Estudiante',
     },
-
     date: { type: 'date' },
-
     color: {
       type: 'string',
       text: 'Color favorito',
       enum: [
-        { value: 'am', text: 'Amarillo' },
-        { value: 'az', text: 'Azul' },
-        { value: 'ro', text: 'Rojo' },
+        {
+          value: 'am',
+          text: 'Amarillo',
+        },
+        {
+          value: 'az',
+          text: 'Azul',
+        },
+        {
+          value: 'ro',
+          text: 'Rojo',
+        },
       ],
+    },
+    child: {
+      type: 'object',
+      properties: {
+        one: {
+          type: 'string',
+          text: 'Propiedad I',
+        },
+        two: { type: 'string' },
+        personId: {
+          type: 'person',
+          text: 'Estudiante',
+        },
+        date: { type: 'date' },
+        color: {
+          type: 'string',
+          text: 'Color favorito',
+          enum: [
+            {
+              value: 'am',
+              text: 'Amarillo',
+            },
+            {
+              value: 'az',
+              text: 'Azul',
+            },
+            {
+              value: 'ro',
+              text: 'Rojo',
+            },
+          ],
+        },
+      },
     },
   },
 }

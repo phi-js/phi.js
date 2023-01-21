@@ -8,6 +8,8 @@ import StmtCall from './statements/StmtCall.vue'
 import StmtChain from './statements/StmtChain/StmtChain.vue'
 import StmtEval from './statements/StmtEval.vue'
 
+import { definedEditors } from './defineStatementEditor.js'
+
 // const StmtAndOr = defineAsyncComponent(() => import('./statements/StmtAndOr.vue'))
 // const StmtOp = defineAsyncComponent(() => import('./statements/StmtOp.vue'))
 // const StmtCall = defineAsyncComponent(() => import('./statements/StmtCall.vue'))
@@ -27,6 +29,18 @@ const props = defineProps({
     default: null,
   },
 
+  fields: {
+    type: Array,
+    required: false,
+    default: null,
+  },
+
+  availableStatements: {
+    type: Array,
+    required: false,
+    default: null,
+  },
+
   default: {
     validator: () => true,
     required: false,
@@ -35,10 +49,17 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:modelValue'])
 
-// Provides "modelSchema" to be used by descendant components
-const injectedSchema = inject('$_vm_modelSchema', null)
-if (!injectedSchema) {
-  provide('$_vm_modelSchema', computed(() => props.modelSchema))
+
+// Provides "fields" to be used by descendant components
+const injectedFields = inject('$_vm_fields', null)
+if (!injectedFields) {
+  provide('$_vm_fields', computed(() => props.fields))
+}
+
+// Provides "availableStatements" to be used by descendant components
+const availableStatements = inject('$_vm_available_statements', null)
+if (!availableStatements) {
+  provide('$_vm_available_statements', computed(() => props.availableStatements))
 }
 
 //
@@ -100,6 +121,13 @@ const editor = computed(() => {
 
   if (Array.isArray(_modelValue.value.and) || Array.isArray(_modelValue.value.or)) {
     return { component: StmtAndOr }
+  }
+
+  /* Look for a component specified via defineStatementEditor */
+  for (let i = 0; i < definedEditors.length; i++) {
+    if (definedEditors[i].fnCheck(_modelValue.value)) {
+      return definedEditors[i].objEditor
+    }
   }
 
   return { component: UiInputJson }

@@ -1,108 +1,72 @@
 <script setup>
-import { computed } from 'vue'
-
+import { computed, inject } from 'vue'
 import useVmI18n from '../../i18n'
-const i18n = useVmI18n()
-
-import useModelSchema from './useModelSchema.js'
-const modelSchema = useModelSchema()
+import { UiInput } from '@/packages/ui'
 
 const emit = defineEmits(['input'])
 
-function onSelectChange($evt) {
-  let val = $evt.target.value
-  $evt.target.value = ''
+const i18n = useVmI18n()
+// const availableFields = inject('$_vm_fields')
+const availableStatements = inject('$_vm_available_statements')
 
-  if (val == 'and') {
-    return emit('input', { and: [] })
-  }
+/*
+A list of available statements.  It can have a 1 level "children" array
+*/
+const allStatements = computed(() => {
 
-  if (val == 'or') {
-    return emit('input', { or: [] })
-  }
+  const retval = [
+    // ...(availableFields?.value || []),
+    ...(availableStatements?.value || []),
+    {
+      text: i18n.t('VmOperatorPicker.Conditions'),
+      children: [
+        {
+          text: i18n.t('VmOperatorPicker.allOf'),
+          stmt: { and: [] },
+        },
+        {
+          text: i18n.t('VmOperatorPicker.anyOf'),
+          stmt: { or: [] },
+        },
+      ],
+    },
+  ]
 
-  if (val == 'prop:custom') {
-    return emit('input', { op: null, field: null, args: null })
-  }
-
-  if (val == 'function:custom') {
-    return emit('input', { call: null, args: null })
-  }
-
-  let parts = val.split(':', 2)
-  if (parts[0] == 'function') {
-    return emit('input', { call: parts[1], args: null })
-  }
-
-  if (parts[0] == 'prop') {
-    return emit('input', { field: parts[1], op: null, args: null })
-  }
-
-  emit('input', {})
-}
-
-function getPropertiesArray(schema, retval = [], prefix = '') {
-  if (!schema?.type) {
-    return []
-  }
-
-  if (schema.type == 'object' && typeof schema.properties == 'object') {
-    for (const [propertyName, propertySchema] of Object.entries(schema.properties)) {
-      getPropertiesArray(propertySchema, retval, (prefix ? prefix + '.' : '') + propertyName)
-    }
-    return retval
-  }
-
-  retval.push({
-    ...schema,
-    name: prefix,
-  })
-
+  setId(retval)
   return retval
+})
+
+let _uid = 1
+const stmtIndex = {}
+
+function setId(arrStatements) {
+  arrStatements.forEach((stmt) => {
+    if (stmt.children?.length) {
+      setId(stmt.children)
+    } else {
+      stmt.id = _uid++
+      stmtIndex[stmt.id] = stmt
+    }
+  })
 }
 
-const schemaPropertiesList = computed(() => {
-  return getPropertiesArray(modelSchema.value)
-})
+function onSelectChange(val) {
+  if (stmtIndex?.[val]?.stmt) {
+    emit('input', { ...stmtIndex[val].stmt })
+  }
+}
 </script>
 
 <template>
-  <select
-    class="VmOperatorPicker"
-    @change="onSelectChange"
-  >
-    <option
-      value=""
-      v-text="' + &nbsp;&nbsp;' + i18n.t('VmOperatorPicker.AddContition')"
+  <div>
+    <!-- <pre>allStatements: {{ allStatements }}</pre> -->
+    <UiInput
+      type="select-native"
+      :options="allStatements"
+      option-value="$.id"
+      class="VmOperatorPicker"
+      :placeholder="i18n.t('VmOperatorPicker.AddContition')"
+      @update:model-value="onSelectChange"
     />
-    <optgroup
-      :label="i18n.t('VmOperatorPicker.Variables')"
-    >
-      <template v-if="modelSchema">
-        <option
-          v-for="prop in schemaPropertiesList"
-          :key="prop.name"
-          :value="'prop:' + prop.name"
-        >
-          {{ prop.title || prop.name }}
-        </option>
-      </template>
-
-      <!-- <option
-        value="prop:custom"
-        v-text="i18n.t('VmOperatorPicker.Other')"
-      /> -->
-    </optgroup>
-
-    <optgroup :label="i18n.t('VmOperatorPicker.Conditions')">
-      <option
-        value="and"
-        v-text="i18n.t('VmOperatorPicker.allOf')"
-      />
-      <option
-        value="or"
-        v-text="i18n.t('VmOperatorPicker.anyOf')"
-      />
-    </optgroup>
-  </select>
+  </div>
 </template>

@@ -41,7 +41,7 @@ export default {
       default: null,
     },
 
-    fieldSchema: {
+    field: {
       type: Object,
       required: false,
       default: null,
@@ -62,7 +62,7 @@ export default {
 
   computed: {
     fieldFormat() {
-      return this.fieldSchema?.format || 'timestamp'
+      return this.field?.format || 'timestamp'
     },
 
     rangeValue() {

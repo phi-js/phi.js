@@ -9,7 +9,19 @@ const props = defineProps({
     default: () => [],
   },
 
-  fieldSchema: {
+  /*
+  Field definition Object
+  {
+    value: 'some.field.name',
+    text: 'Field Name',
+    type: 'number'
+    enum: [
+      { value: 0, text: 'Female' },
+      { value: 1, text: 'Male' },
+    ]
+  }
+  */
+  field: {
     type: Object,
     required: false,
     default: null,
@@ -54,7 +66,7 @@ function getOptions(schema) {
   return []
 }
 
-const enumOptions = computed(() => getOptions(props.fieldSchema))
+const enumOptions = computed(() => getOptions(props.field))
 </script>
 
 <template>

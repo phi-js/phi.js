@@ -65,6 +65,15 @@ export default {
         this.innerModel.list.push({ op: null })
       }
       this.emitInput()
+
+      // Focus the first found input field
+      setTimeout(() => {
+        const childItems = this.$el.querySelectorAll('.StmtAndOr__item')
+        const newlyCreatedChild = childItems?.[childItems.length - 1]
+        if (newlyCreatedChild?.querySelector) {
+          newlyCreatedChild.querySelector('input')?.focus?.()
+        }
+      }, 77)
     },
 
     emitInput() {
