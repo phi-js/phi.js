@@ -1,0 +1,1 @@
+export { default as UiDataRecord } from './UiDataRecord.vue'
