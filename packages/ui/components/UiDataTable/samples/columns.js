@@ -1,81 +1,87 @@
 export default [
   {
-    value: '$.id',
     title: 'User ID',
+    value: '$.id',
+    sortable: '$.id',
   },
   {
-    value: '$.name',
     title: 'Full name',
+    value: '$.name',
+    sortable: '$.name',
   },
   {
-    value: '$.gender',
     title: 'Gender',
-    oneOf: [
-      { const: '0', title: 'Chica' },
-      { const: '1', title: 'Chico' },
+    value: '$.gender',
+    sortable: '$.gender',
+    type: 'enum',
+    options: [
+      { value: 0, text: 'Chica' },
+      { value: 1, text: 'Chico' },
     ],
   },
   {
-    value: '$.picks',
     title: 'A pick',
+    value: '$.picks',
     type: 'array',
     items: {
-      oneOf: [
-        { const: 'a', title: 'Pick A' },
-        { const: 'b', title: 'Pick B' },
-        { const: 'c', title: 'Pick C' },
+      type: 'enum',
+      options: [
+        { value: 'a', text: 'Pick A' },
+        { value: 'b', text: 'Pick B' },
+        { value: 'c', text: 'Pick C' },
       ],
     },
   },
   {
-    value: '$.username',
     title: 'Username',
+    value: '$.username',
   },
   {
-    value: '$.email',
     title: 'eMail',
+    value: '$.email',
     type: 'email',
+    sortable: '$.email',
   },
   {
-    value: '$.address.street',
     title: 'Street',
+    value: '$.address.street',
   },
   {
-    value: '$.address.suite',
     title: 'suite',
+    value: '$.address.suite',
   },
   {
-    value: '$.address.city',
     title: 'city',
+    value: '$.address.city',
   },
   {
-    value: '$.address.zipcode',
     title: 'zipcode',
+    value: '$.address.zipcode',
   },
   {
-    value: '$.address.geo',
     title: 'Location',
+    value: '$.address.geo',
     type: 'geo',
   },
   {
-    value: '$.phone',
     title: 'Phone',
+    value: '$.phone',
   },
   {
-    value: '$.website',
     title: 'Website',
+    value: '$.website',
     type: 'url',
   },
   {
-    value: '$.company.name',
     title: 'Name',
+    value: '$.company.name',
   },
   {
-    value: '$.company.catchPhrase',
     title: 'Catch phrase',
+    value: '$.company.catchPhrase',
   },
   {
-    value: '$.company.bs',
     title: 'BS',
+    value: '$.company.bs',
   },
 ]

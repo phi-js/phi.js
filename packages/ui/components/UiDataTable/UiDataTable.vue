@@ -2,12 +2,10 @@
 import { reactive, watch, computed, ref } from 'vue'
 import { useI18n } from '@/packages/i18n'
 
-import { UiInput, UiOutput, UiPopover, UiItem, UiDialog, UiIntersectionObserver } from '../'
+import { UiOutput, UiPopover, UiItem, UiIntersectionObserver } from '../'
 import { getProperty } from '../../helpers'
 
 import deduceColumns from './deduceColumns'
-import ColumnManager from './ColumnManager.vue'
-import TempValue from '../TempValue/TempValue.vue'
 
 const props = defineProps({
   /* Array of arbitrary JSON objects */
@@ -41,60 +39,27 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['click-record', 'update:columns', 'update:order', 'scroll-bottom'])
+const emit = defineEmits(['click-record', 'update:order', 'scroll-bottom'])
 
 const i18n = useI18n({
   en: {
     'UiDataTable.HideColumn': 'Hide',
     'UiDataTable.Expand': 'Expand',
     'UiDataTable.Collapse': 'Collapse',
-    'UiDataTable.OpenSettings': 'Manage columns',
   },
   es: {
     'UiDataTable.HideColumn': 'Ocultar',
     'UiDataTable.Expand': 'Expandir',
     'UiDataTable.Collapse': 'Colapsar',
-    'UiDataTable.OpenSettings': 'Administrar columnas',
   },
   de: {
     'UiDataTable.HideColumn': 'Ausblenden',
     'UiDataTable.Expand': 'Erweitern Sie',
     'UiDataTable.Collapse': 'Kollabieren',
-    'UiDataTable.OpenSettings': 'Spalten verwalten',
   },
 })
 
-const inner = reactive({
-  columns: props.columns,
-  order: props.order,
-})
-
-watch(
-  () => props.columns,
-  (newValue) => {
-    inner.columns = newValue
-  },
-  { immediate: true },
-)
-
-watch(
-  () => props.records,
-  () => {
-    if (!inner.columns?.length) {
-      inner.columns = deduceColumns(props.records)
-        .map((c) => ({ ...c, enabled: true }))
-
-      emitUpdate()
-    }
-  },
-  { immediate: true },
-)
-
-const visibleColumns = computed(() => {
-  return inner.columns
-    .map((c, index) => ({ ...c, _i: index }))
-    .filter((c) => typeof c.enabled === 'undefined' || c.enabled)
-})
+const inner = reactive({ order: props.order })
 
 watch(
   () => props.order,
@@ -108,6 +73,36 @@ watch(
   { immediate: true },
 )
 
+const allColumns = computed(() => {
+  const retval = (!props.columns?.length && props.records?.length)
+    ? deduceColumns(props.records)
+    : props.columns
+
+  return retval.map((col, index) => ({
+    ...col,
+    _index: index,
+  }))
+})
+
+
+/*
+The list, and order, in which columns are to be shown.
+Items in the array correspond to the column's _index.
+
+e.g. only columns 1, 3 and 4 are shown, in the order: 4,3,1
+columnLayout = [3,2,0]
+*/
+const columnLayout = reactive([])
+
+const visibleColumns = computed(() => {
+  if (!columnLayout.length) {
+    return allColumns.value
+  }
+
+  return columnLayout.map((colIndex) => allColumns.value[colIndex])
+})
+
+
 /*
 A hashed object of cell values:
 columnValues[record index][column index] = the record's value for the column's property
@@ -119,7 +114,7 @@ const columnValues = computed(() => {
       retval[recordIndex] = {}
     }
 
-    inner.columns.forEach((column, columnIndex) => {
+    allColumns.value.forEach((column, columnIndex) => {
       retval[recordIndex][columnIndex] = getProperty(record, column.value)
     })
   })
@@ -129,12 +124,12 @@ const columnValues = computed(() => {
 
 /*
 A hashed object of column order
-columnOrder[columnIndex] = 'asc' | 'desc' | null
+columnSort[columnIndex] = 'asc' | 'desc' | null
 */
-const columnOrder = computed(() => {
+const columnSort = computed(() => {
   const retval = {}
-  inner.columns.forEach((column, columnIndex) => {
-    const foundOrder = inner.order.find((o) => o.value == column.value)
+  allColumns.value.forEach((column, columnIndex) => {
+    const foundOrder = inner.order.find((o) => o.field == column.sortable)
     if (foundOrder) {
       retval[columnIndex] = foundOrder.desc ? 'desc' : 'asc'
     } else {
@@ -146,14 +141,18 @@ const columnOrder = computed(() => {
 })
 
 function onClickHeader($event, column) {
-  const foundOrder = inner.order.find((o) => o.value == column.value)
+  if (!column.sortable) {
+    return
+  }
+
+  const foundOrder = inner.order.find((o) => o.field == column.sortable)
   if (!foundOrder) {
     if (!$event.ctrlKey) {
       inner.order = []
     }
 
     inner.order.push({
-      value: column.value,
+      field: column.sortable,
       desc: false,
     })
   } else {
@@ -167,62 +166,54 @@ function onClickHeader($event, column) {
   emit('update:order', inner.order.concat([]))
 }
 
-function emitUpdate() {
-  emit('update:columns', inner.columns)
-  return true
-}
-
-
-function hideColumn(column) {
-  column.enabled = false
-  emitUpdate()
-}
-
 
 /* Reorder columns with drag and drop */
 
 const dropData = reactive({
-  source: null, // source column index (column being dragged)
-  target: null, // target column index (drop target)
+  source: null, // source column _index (column being dragged)
+  target: null, // target column _index (drop target)
   position: null, // before || after
 })
 
-function onHeaderDragStart(ev, columnIndex) {
-  dropData.source = columnIndex
+function onHeaderDragStart(ev, visibleColumnIndex) {
+  dropData.source = visibleColumnIndex
 }
 
-function onHeaderDragOver(ev, columnIndex) {
+function onHeaderDragOver(ev, visibleColumnIndex) {
   ev.preventDefault()
   ev.dataTransfer.dropEffect = 'move'
 
-  if (columnIndex === dropData.source) {
+  if (visibleColumnIndex === dropData.source) {
     dropData.target = null
     return
   }
 
-  if (dropData.target != columnIndex) {
-    dropData.target = columnIndex
+  if (dropData.target != visibleColumnIndex) {
+    dropData.target = visibleColumnIndex
   }
   dropData.position = ev.offsetX < ev.target.offsetWidth / 2 ? 'before' : 'after'
 }
 
 function onHeaderDrop(ev) {
   ev.preventDefault()
+
   if (dropData.target == null) {
     return
   }
 
+  if (!columnLayout.length) {
+    allColumns.value.forEach((column) => columnLayout.push(column._index))
+  }
+
+  let sourceIndex = dropData.source
   let targetIndex = dropData.target + (dropData.position == 'after' ? 1 : 0)
 
   // compensate displacement
   if (dropData.source < targetIndex) {
     targetIndex--
   }
-
   // move element from source index to target index
-  inner.columns.splice(targetIndex, 0, inner.columns.splice(dropData.source, 1)[0])
-
-  emitUpdate()
+  columnLayout.splice(targetIndex, 0, columnLayout.splice(sourceIndex, 1)[0])
 }
 
 function onHeaderDragEnd() {
@@ -231,7 +222,20 @@ function onHeaderDragEnd() {
   dropData.position = null
 }
 
-const isSettingsOpen = ref(false)
+function hideColumn(visibleColumnIndex) {
+  if (!columnLayout.length) {
+    allColumns.value.forEach((column) => columnLayout.push(column._index))
+  }
+  columnLayout.splice(visibleColumnIndex, 1)
+}
+
+const hiddenColumns = computed(() => {
+  if (!columnLayout.length) {
+    return []
+  }
+
+  return allColumns.value.filter((column) => !columnLayout.includes(column._index))
+})
 
 const isFullscreen = ref(false)
 watch(
@@ -258,13 +262,32 @@ watch(
       <slot name="toolbar" />
 
       <div class="UiDataTable__toolbar-right">
-        <UiItem
-          class="UiDataTable__toolbarItem UiDataTable__toolbarItem--settings"
-          icon="mdi:cog"
-          :title="i18n.t('UiDataTable.OpenSettings')"
-          @click="isSettingsOpen = true"
-        />
+        <!-- Hidden column explorer -->
+        <UiPopover v-if="hiddenColumns.length">
+          <template #trigger>
+            <UiItem
+              :badge="hiddenColumns.length"
+              class="UiDataTable__toolbarItem"
+              icon="mdi:view-column"
+              :title="hiddenColumns.length + ' hidden columns'"
+            />
+          </template>
+          <template #contents>
+            <div class="UiDataTable__menuOptions">
+              <UiItem
+                v-for="hiddenColumn in hiddenColumns"
+                :key="hiddenColumn._index"
+                icon="mdi:eye"
+                :text="hiddenColumn.title"
+                :title="`Show ${hiddenColumn.title}`"
+                @click.stop="columnLayout.push(hiddenColumn._index)"
+              />
+            </div>
+          </template>
+        </UiPopover>
 
+
+        <!-- Toggle "fullscreen" -->
         <UiItem
           class="UiDataTable__toolbarItem UiDataTable__toolbarItem--fullscreen"
           :icon="isFullscreen ? 'mdi:fullscreen-exit' : 'mdi:fullscreen'"
@@ -279,31 +302,32 @@ watch(
         <thead>
           <tr>
             <th
-              v-for="(column) in visibleColumns"
-              :key="column._i"
+              v-for="(column, vci) in visibleColumns"
+              :key="column._index"
               :title="column.title"
-              @dragover="onHeaderDragOver($event, column._i)"
+              :class="column.class"
+              @dragover="onHeaderDragOver($event, vci)"
               @drop="onHeaderDrop($event)"
             >
               <div
                 :style="{pointerEvents: dropData.target == column ? 'none' : 'initial'}"
                 class="UiDataTable__header"
                 :class="{
-                  'UiDataTable__header--ordered': columnOrder[column._i],
-                  'UiDataTable__header--ordered-asc': columnOrder[column._i] == 'asc',
-                  'UiDataTable__header--ordered-desc': columnOrder[column._i] == 'desc',
+                  'UiDataTable__header--ordered': columnSort[column._index],
+                  'UiDataTable__header--ordered-asc': columnSort[column._index] == 'asc',
+                  'UiDataTable__header--ordered-desc': columnSort[column._index] == 'desc',
 
-                  'UiDataTable__header--dropping': dropData.target == column._i,
-                  'UiDataTable__header--dropping-before': dropData.target == column._i && dropData.position == 'before',
-                  'UiDataTable__header--dropping-after': dropData.target == column._i && dropData.position == 'after',
+                  'UiDataTable__header--dropping': dropData.target == vci,
+                  'UiDataTable__header--dropping-before': dropData.target == vci && dropData.position == 'before',
+                  'UiDataTable__header--dropping-after': dropData.target == vci && dropData.position == 'after',
                 }"
                 draggable="true"
-                @dragstart="onHeaderDragStart($event, column._i)"
+                @dragstart="onHeaderDragStart($event, vci)"
                 @dragend="onHeaderDragEnd()"
               >
                 <div
                   class="UiDataTable__header-title"
-                  @click="onClickHeader($event, inner.columns[column._i])"
+                  @click="onClickHeader($event, column)"
                 >
                   {{ column.title }}
                 </div>
@@ -318,13 +342,13 @@ watch(
                     <div class="UiDataTable__menuOptions">
                       <slot
                         name="column-popup"
-                        :column="inner.columns[column._i]"
+                        :column="column"
                         :close="close"
                       />
                       <UiItem
                         icon="mdi:close"
                         :text="i18n.t('UiDataTable.HideColumn')"
-                        @click="hideColumn(inner.columns[column._i]); close()"
+                        @click="hideColumn(vci); close()"
                       />
                     </div>
                   </template>
@@ -341,21 +365,15 @@ watch(
             @click="emit('click-record', record)"
           >
             <td
-              v-for="(column) in visibleColumns"
-              :key="column._i"
+              v-for="column in visibleColumns"
+              :key="column._index"
               :style="{'--ui-table-title': `'${column.title}'`}"
+              :class="column.class"
             >
-              <slot
-                v-if="$slots[`type-${column.type}`]"
-                :name="`type-${column.type}`"
-                :value="columnValues[ri][column._i]"
-                :column="column"
-              />
               <UiOutput
-                v-else
                 class="UiDataTable__output"
                 v-bind="column"
-                :value="columnValues[ri][column._i]"
+                :value="columnValues[ri][column._index]"
               />
             </td>
           </tr>
@@ -370,41 +388,5 @@ watch(
         </tbody>
       </table>
     </div>
-
-    <TempValue
-      v-slot="{ tmp, accept, cancel }"
-      v-model="inner.columns"
-      @update:model-value="emitUpdate"
-    >
-      <UiDialog
-        v-model:open="isSettingsOpen"
-        @close="cancel"
-      >
-        <form
-          method="dialog"
-          class="UiDataTable__settings"
-          @submit="accept"
-        >
-          <section>
-            <ColumnManager
-              v-if="isSettingsOpen"
-              v-model="tmp.value"
-            />
-          </section>
-          <footer>
-            <UiInput
-              type="submit"
-              label="Accept"
-            />
-            <UiInput
-              type="button"
-              label="Cancel"
-              class="UiButton--cancel"
-              @click="isSettingsOpen = false"
-            />
-          </footer>
-        </form>
-      </UiDialog>
-    </TempValue>
   </div>
 </template>

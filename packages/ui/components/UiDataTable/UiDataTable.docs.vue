@@ -5,12 +5,10 @@ import { columns as sampleColumns, records } from './samples'
 
 import UiDataTable from './UiDataTable.vue'
 
-// import getSchemaColumns from './getSchemaColumns.js'
-// const columns = ref(getSchemaColumns(schema))
 const columns = ref(sampleColumns)
 
 const order = ref([
-  { value: '$.id', desc: false },
+  { field: '$.id', desc: false },
 ])
 
 const sortedRecords = computed(() => {
@@ -21,8 +19,8 @@ const sortedRecords = computed(() => {
   return records.concat().sort((a, b) => {
     for (let i = 0; i < order.value.length; i++) {
       const curOrder = order.value[i]
-      const valueA = getProperty(a, curOrder.value)
-      const valueB = getProperty(b, curOrder.value)
+      const valueA = getProperty(a, curOrder.field)
+      const valueB = getProperty(b, curOrder.field)
 
       if (valueA > valueB) {
         return curOrder.desc ? -1 : 1
@@ -40,30 +38,78 @@ const sortedRecords = computed(() => {
   <div class="UiDataTable-docs">
     <h1>UiDataTable</h1>
 
-    <p>Este componente es una tabla -bruta- que recibe:</p>
+    <p>Este componente muestra un arreglo de objetos JSON arbitrarios en una tabla</p>
+    <p>Permitiendo especificar una lista de columnas a mostrar, y un componente asociado para mostrar el valor de la columna</p>
 
-    <ul>
-      <li>
-        <strong>records:</strong>
-        An arreglo de objetos JSON arbitrarios
-      </li>
 
-      <li>
-        <strong>columns:</strong>
-        Un arreglo describiendo las columnas a mostrar
-        <pre>
+    <section>
+      <h2>Props</h2>
+      <ul>
+        <li>
+          <strong>records:</strong>
+          An arreglo de objetos JSON arbitrarios
+        </li>
+
+        <li>
+          <strong>columns:</strong>
+          Un arreglo describiendo las columnas a mostrar
+          <pre>
 columns: [
+
+  // Caso general: mostrar un dato con UiOutput
   {
-    value: '$.person.bday', // JSONPath hacia el valor del RECORD a mostrar en la columna
     title: 'User ID',       // Titulo a mostrar en el encabezado
+    value: '$.person.bday', // JSONPath hacia el valor del RECORD a mostrar en la columna
     type: 'date',           // Tipo de output (propiedad enviada a &lt;UiOutput type="...")
     format: 'day'           // Opcional. Propiedad "format" de &lt;UiOutput
   },
+
+  // Componente custom
+  {
+    title: 'User',
+    component: 'MyPerson',
+    props: {
+      formal: false,
+      firstName: '$.person.firstName',
+      lastName: '$.person.lastName',
+      gender: '$.person.gender',
+      avatar: '$.person.avatar',
+    }
+  }
+
+  // Arrays de datos
+  {
+    title: 'Opciones',
+    value: '$.listaDeEmails'
+    type: 'array',
+    items: {
+      type: 'email'
+    }
+  }
+
+  // Componente custom en array de datos
+  {
+    title: 'Sesiones',
+    value: '$.listaDeSesiones',
+    type: 'array',
+    items: {
+      component: 'MySession',
+      props: (item, record) => ({
+        long: true,
+        start: item.start,
+        end: item.end,
+        name: item.name
+      })
+    }
+  }
   ...
 ]
         </pre>
-      </li>
+        </li>
+      </ul>
+    </section>
 
+    <ul>
       <li>
         <strong>order:</strong>
         ARRAY indicando el orden actual de las columnas.  El orden de los elementos del arreglo determina la prioridad
