@@ -153,7 +153,7 @@ const CmsBlock = {
 
 
     // v-models listeners
-    const tmpInnerModel = {}
+    // const tmpInnerModel = {}
 
     for (const p in props.block) {
       if (p.substring(0, 7) === 'v-model' && props.block[p]) {
@@ -163,7 +163,7 @@ const CmsBlock = {
 
         const callback = (newValue) => {
           setModelProperty(variableName, newValue)
-          setProperty(tmpInnerModel, variableName, newValue)
+          // setProperty(tmpInnerModel, variableName, newValue)
         }
 
         pushListener(eventName, callback)
@@ -187,8 +187,14 @@ const CmsBlock = {
               listeners[eventName],
               {
               // ...evaluableModel.value,  // evaluableModel is not reacting to outer chages of innerModel., so use innerModel directly instead
+                // ...tmpInnerModel,
                 ...innerModel,
-                ...tmpInnerModel,
+
+                // $item: {
+                //   ...innerModel?.$item,
+                //   ...tmpInnerModel?.$item,
+                // },
+
                 $event,
                 $block: props.block,
               },
@@ -196,7 +202,11 @@ const CmsBlock = {
           }
 
           const propName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
-          pushListener(propName, eventCallback, true)
+
+          // No usar la opcion de "override" (el tercer argumento en "true")
+          // Porque sobreescribe lo que el bloque haya definido en "v-on": { "update:modelValue": "... important things ..."}
+          // pushListener(propName, eventCallback, true)
+          pushListener(propName, eventCallback)
         }
 
       })
