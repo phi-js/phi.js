@@ -68,6 +68,7 @@ const sanitizedItems = computed(() => {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
+  justify-content: inherit;
 
   overflow-x: auto;
   padding-bottom: 4px;

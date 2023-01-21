@@ -31,7 +31,7 @@ function onSlotUpdate() {
 <template>
   <CmsSlotEditor
     v-model:slot="pageSlot"
-    :label="`Add content to ${props.modelValue?.title || 'group'}`"
+    :label="`to ${props.modelValue?.title || 'group'}`"
 
     class="LayoutGroupEditor LayoutGroup"
     :style="{

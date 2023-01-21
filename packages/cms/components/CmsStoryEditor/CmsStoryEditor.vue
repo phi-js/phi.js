@@ -116,7 +116,7 @@ provide('$_cms_story', {
           <CmsSlotEditor
             v-model:slot="innerStory.header"
             class="LayoutPage__header"
-            label="TO HEADER"
+            label="to header"
             @update:slot="emitUpdate"
           />
           <div class="CmsStoryEditor__separator">
@@ -133,7 +133,6 @@ provide('$_cms_story', {
         <CmsSlotEditor
           v-model:slot="currentPage.slots.default"
           class="CmsStoryEditor__contents LayoutPage__contents"
-          label="TO PAGE"
           @update:slot="emitUpdate"
         />
 
@@ -157,7 +156,7 @@ provide('$_cms_story', {
           <CmsSlotEditor
             v-model:slot="innerStory.footer"
             class="LayoutPage__footer"
-            label="TO FOOTER"
+            label="to footer"
             @update:slot="emitUpdate"
           />
         </div>
@@ -181,13 +180,6 @@ provide('$_cms_story', {
         }
       }
     }
-  }
-
-  &__header {
-    border-bottom: 1px dashed #525659;
-  }
-  &__footer {
-    border-top: 1px dashed #525659;
   }
 
   &__separator {

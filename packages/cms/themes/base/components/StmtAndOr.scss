@@ -30,28 +30,26 @@
     margin: 0;
 
     font-size: 0.9em;
+    width: 100%;
   }
 
   &__adder {
     align-self: flex-start;
+    margin: 10px auto;
+    width: 100%;
 
-    color: inherit;
-    border: 0;
-    cursor: pointer;
-    
-    padding: 10px 8px;
-    margin: 0;
+    select.UiSelectNative {
+      width: 100%;
+      border: 2px dashed #ccc;
+      border-radius: 4px;
 
-    background: rgba(255,255,255, 0);
-    border-radius: 4px;
-
-    &:hover {
-      background: var(--ui-color-hover);
-      opacity: 1;
+      background-color: transparent;
+      color: inherit;
+      
+      cursor: pointer;
+      &:hover {
+        background-color: var(--ui-color-hover);
+      }
     }
-  }
-
-  select * {
-    color: #222;
   }
 }

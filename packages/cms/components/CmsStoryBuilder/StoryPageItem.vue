@@ -75,9 +75,8 @@ function onClickAction(action) {
 <style lang="scss">
 .StoryPageItem {
   --ui-item-padding: 4px 12px;
-
   user-select: none;
-  width: 128px;
+
   margin-bottom: 2rem;
   padding: 8px;
   border-radius: 6px;

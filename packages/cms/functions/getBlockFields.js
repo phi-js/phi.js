@@ -2,6 +2,9 @@ export default function getBlockFields(block) {
   let retval = []
 
   let field = {
+    value: block['v-model'],
+    text: block['v-model'],
+
     name: block['v-model'],
     type: null,
     props: null,

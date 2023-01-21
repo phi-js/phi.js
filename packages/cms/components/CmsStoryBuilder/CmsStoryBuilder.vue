@@ -6,7 +6,7 @@ import CmsStoryEditor from '../CmsStoryEditor/CmsStoryEditor.vue'
 import StoryEditorWindow from '../CmsStoryEditor/StoryEditorWindow.vue'
 import BlockWindow from '../CmsBlockEditor/BlockWindow.vue'
 import StoryPageList from './StoryPageList.vue'
-import { getStorySchema, sanitizeStory } from '../../functions'
+import { getStoryFields, sanitizeStory } from '../../functions'
 
 import { useI18n } from '../../../i18n'
 import {
@@ -283,32 +283,16 @@ function onOpenEditor({ index, actionId }) {
 }
 
 
-/* Provide VM schema */
-const storySchema = computed(() => {
-  const storySchema = getStorySchema(innerStory.value)
 
-  if (!storySchema.properties?.$i18n) {
-    storySchema.properties.$i18n = {
-      type: 'object',
-      properties: {
-        locale: {
-          type: 'string',
-          title: 'Language',
-          enum: [
-            { value: 'en' },
-            { value: 'es' },
-            { value: 'fr' },
-            { value: 'de' },
-          ],
-        },
-      },
-    }
-  }
 
-  return storySchema
+const storyFields = computed(() => {
+  return [{
+    text: 'Variables',
+    children: getStoryFields(innerStory.value),
+  }]
 })
+provide('$_vm_fields', storyFields)
 
-provide('$_vm_modelSchema', storySchema)
 
 // undo/redo functionality
 const { push, undo, redo, hasUndo, hasRedo } = useUndo(innerStory.value, (newValue) => {
@@ -321,13 +305,26 @@ const isModelExplorerOpen = ref(false)
 
 <template>
   <div class="CmsStoryBuilder">
-    <div class="CmsStoryBuilder__toolbar">
+    <div class="CmsStoryBuilder__header">
       <UiTabs
         v-model="currentTab"
+        class="CmsStoryBuilder__tabs"
         @update:model-value="emit('update:tab', $event)"
       >
         <template #left>
           <slot name="header" />
+        </template>
+
+        <template #default>
+          <UiTab
+            :text="i18n.t('CmsStoryBuilder.Editor')"
+            value="editor"
+          />
+          <UiTab
+            :text="i18n.t('CmsStoryBuilder.Preview')"
+            value="preview"
+          />
+          <slot name="tabs" />
         </template>
 
         <template #right>
@@ -346,117 +343,106 @@ const isModelExplorerOpen = ref(false)
               :disabled="!hasRedo"
               @click="redo()"
             />
-
             <UiResolutionPicker
               v-model="contentSize"
               class="CmsStoryBuilder__controlItem"
               @update:model-value="emit('update:contentSize', $event)"
             />
+
+            <slot name="controls" />
           </div>
-          <slot name="right" />
         </template>
-
-        <UiTab
-          :text="i18n.t('CmsStoryBuilder.Editor')"
-          value="editor"
-        >
-          <!-- EDITOR SUBTABS-->
-          <div class="CmsStoryBuilder__tabOptions">
-            <UiItem
-              class="CmsStoryBuilder__tabItem CmsStoryBuilder__tabItem--sitemap"
-              :class="{'CmsStoryBuilder__tabItem--sitemap-open': isSitemapOpen}"
-              @click="isSitemapOpen = !isSitemapOpen"
-              @click-actions="isSitemapOpen = !isSitemapOpen"
-            >
-              <template #default>
-                <strong>#</strong><span>{{ currentPage?.hash }}</span>
-              </template>
-              <template #actions>
-                <UiIcon :src="isSitemapOpen ? 'mdi:close' : 'mdi:menu-down'" />
-              </template>
-            </UiItem>
-
-            <UiItem
-              class="CmsStoryBuilder__tabItem"
-              :text="i18n.t('CmsStoryBuilder.Style')"
-              icon="mdi:water"
-              :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'style'}"
-              @click="windowTab = 'style'"
-            />
-            <UiItem
-              :text="i18n.t('CmsStoryBuilder.Code')"
-              icon="mdi:gesture-tap"
-              class="CmsStoryBuilder__tabItem"
-              :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'events'}"
-              @click="windowTab = 'code'"
-            />
-            <!-- <UiItem
-              :text="i18n.t('CmsStoryBuilder.Languages')"
-              icon="mdi:translate"
-              class="CmsStoryBuilder__tabItem"
-              :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'i18n'}"
-              @click="windowTab = 'i18n'"
-            /> -->
-            <UiItem
-              v-if="settings?.allowSource"
-              :text="i18n.t('CmsStoryBuilder.Source')"
-              icon="mdi:code-json"
-              class="CmsStoryBuilder__tabItem"
-              :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'source'}"
-              @click="windowTab = 'source'"
-            />
-
-            <slot name="corner" />
-          </div>
-        </UiTab>
-
-        <UiTab
-          :text="i18n.t('CmsStoryBuilder.Preview')"
-          value="preview"
-        >
-          <!-- PREVIEW SUBTABS-->
-          <div class="CmsStoryBuilder__tabOptions">
-            <UiItem
-              class="CmsStoryBuilder__tabItem CmsStoryBuilder__tabItem--sitemap"
-              :class="{'CmsStoryBuilder__tabItem--sitemap-open': isSitemapOpen}"
-              @click="isSitemapOpen = !isSitemapOpen"
-              @click-actions="isSitemapOpen = !isSitemapOpen"
-            >
-              <template #default>
-                <strong>#</strong><span>{{ currentPage?.hash }}</span>
-              </template>
-              <template #actions>
-                <UiIcon :src="isSitemapOpen ? 'mdi:close' : 'mdi:menu-down'" />
-              </template>
-            </UiItem>
-
-            <UiItem
-              class="CmsStoryBuilder__tabItem"
-              :text="i18n.t('CmsStoryBuilder.DataExplorer')"
-              icon="mdi:code-json"
-              @click="isModelExplorerOpen = true"
-            />
-
-            <slot name="preview-options" />
-            <slot name="corner" />
-          </div>
-        </UiTab>
-        <slot name="default" />
       </UiTabs>
+
+      <!-- EDITOR SUBTABS-->
+      <div
+        v-if="currentTab == 'editor'"
+        class="CmsStoryBuilder__tabOptions"
+      >
+        <UiItem
+          class="CmsStoryBuilder__tabItem CmsStoryBuilder__tabItem--sitemap"
+          :class="{'CmsStoryBuilder__tabItem--sitemap-open': isSitemapOpen}"
+          @click="isSitemapOpen = !isSitemapOpen"
+          @click-actions="isSitemapOpen = !isSitemapOpen"
+        >
+          <template #default>
+            <strong>#</strong><span>{{ currentPage?.hash }}</span>
+          </template>
+          <template #actions>
+            <UiIcon :src="isSitemapOpen ? 'mdi:close' : 'mdi:menu-down'" />
+          </template>
+        </UiItem>
+
+        <UiItem
+          class="CmsStoryBuilder__tabItem"
+          :text="i18n.t('CmsStoryBuilder.Style')"
+          icon="mdi:water"
+          :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'style'}"
+          @click="windowTab = 'style'"
+        />
+        <UiItem
+          :text="i18n.t('CmsStoryBuilder.Code')"
+          icon="mdi:gesture-tap"
+          class="CmsStoryBuilder__tabItem"
+          :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'events'}"
+          @click="windowTab = 'code'"
+        />
+        <!-- <UiItem
+        :text="i18n.t('CmsStoryBuilder.Languages')"
+        icon="mdi:translate"
+        class="CmsStoryBuilder__tabItem"
+        :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'i18n'}"
+        @click="windowTab = 'i18n'"
+      /> -->
+        <UiItem
+          v-if="settings?.allowSource"
+          :text="i18n.t('CmsStoryBuilder.Source')"
+          icon="mdi:code-json"
+          class="CmsStoryBuilder__tabItem"
+          :class="{'CmsStoryBuilder__tabItem--active': windowTab == 'source'}"
+          @click="windowTab = 'source'"
+        />
+      </div>
+
+      <!-- PREVIEW SUBTABS-->
+      <div
+        v-else-if="currentTab == 'preview'"
+        class="CmsStoryBuilder__tabOptions"
+      >
+        <UiItem
+          class="CmsStoryBuilder__tabItem CmsStoryBuilder__tabItem--sitemap"
+          :class="{'CmsStoryBuilder__tabItem--sitemap-open': isSitemapOpen}"
+          @click="isSitemapOpen = !isSitemapOpen"
+          @click-actions="isSitemapOpen = !isSitemapOpen"
+        >
+          <template #default>
+            <strong>#</strong><span>{{ currentPage?.hash }}</span>
+          </template>
+          <template #actions>
+            <UiIcon :src="isSitemapOpen ? 'mdi:close' : 'mdi:menu-down'" />
+          </template>
+        </UiItem>
+
+        <UiItem
+          class="CmsStoryBuilder__tabItem"
+          :text="i18n.t('CmsStoryBuilder.DataExplorer')"
+          icon="mdi:code-json"
+          @click="isModelExplorerOpen = true"
+        />
+      </div>
     </div>
 
+
     <div class="CmsStoryBuilder__body">
-      <div
-        class="CmsStoryBuilder__sidebar"
-        :class="{
-          'CmsStoryBuilder__sidebar--visible': isSitemapOpen,
-          'CmsStoryBuilder__sidebar--hidden': !isSitemapOpen,
-        }"
-      >
+      <div>
         <StoryPageList
           v-model:current-page-id="currentPageId"
           v-model:story="innerStory"
-          class="CmsStoryBuilder__pageList"
+          class="CmsStoryBuilder__sitemap"
+          :class="{
+            'CmsStoryBuilder__sitemap--visible': isSitemapOpen,
+            'CmsStoryBuilder__sitemap--hidden': !isSitemapOpen,
+          }"
           @update:story="onUpdateStory()"
           @open-editor="onOpenEditor"
         />
@@ -475,7 +461,7 @@ const isModelExplorerOpen = ref(false)
         />
 
         <CmsStory
-          v-if="currentTab != 'editor'"
+          v-if="currentTab == 'preview'"
           v-model:current-page-id="currentPageId"
           :model-value="props.modelValue"
           :story="innerStory"
@@ -502,7 +488,6 @@ const isModelExplorerOpen = ref(false)
       @accept="editingBlock.updateBlock($event); closeBlockWindow()"
       @cancel="editingBlock?.cancel?.(); closeBlockWindow()"
     />
-
 
     <!-- modelValue explorer -->
     <UiWindow
