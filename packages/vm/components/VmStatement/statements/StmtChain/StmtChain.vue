@@ -5,7 +5,7 @@ import { UiIcon } from '@/packages/ui'
 
 import useVmI18n from '../../../../i18n'
 import StmtChainItem from './StmtChainItem.vue'
-import VmExpressionPicker from '../../VmExpressionPicker.vue'
+import VmStatementPicker from '../../VmStatementPicker.vue'
 
 const i18n = useVmI18n()
 
@@ -21,7 +21,7 @@ const innerValue = ref({})
 watch(
   () => props.modelValue,
   (newValue) => innerValue.value = newValue ? JSON.parse(JSON.stringify(newValue)) : { chain: [] },
-  { immediate: true },
+  { immediate: true, deep: true },
 )
 
 function emitUpdate() {
@@ -34,43 +34,29 @@ function removeItem(index) {
   endangeredIndex.value = -1
 }
 
-
-const latestAddedIndexes = ref([]) // used to open drawers of newly created items
-
-function onPickerInput({ expression, definition }) {
-  if (expression.if) {
-    expression.then = { chain: [] }
-    expression.else = { chain: [] }
+function onPickerInput(expression) {
+  let newStmt = null
+  if (typeof expression.if !== 'undefined') {
+    newStmt = expression
+  } else if (typeof expression.assign !== 'undefined') {
+    newStmt = { ...expression }
+  } else {
+    // Wrap everything else inside an ASSIGN statement
+    newStmt = {
+      assign: '',
+      stmt: expression,
+    }
   }
 
-  let newItem = {
-    info: {
-      text: definition.text || definition.title,
-      icon: definition.icon,
-      secondary: definition.secondary || definition.description,
-    },
-    do: expression,
-    assign: null,
-    template: definition.template,
-  }
-
-  innerValue.value.chain.push(newItem)
-  latestAddedIndexes.value.push(innerValue.value.chain.length - 1)
+  innerValue.value.chain.push(newStmt)
   emitUpdate()
 }
 
 function ifify(item, i) {
   const ifItem = {
-    info: {
-      text: 'IF ...',
-      icon: 'mdi:directions-fork',
-    },
-    do: {
-      if: { and: [] },
-      then: { chain: [item] },
-      else: { chain: [] },
-    },
-    assign: null,
+    if: { and: [] },
+    then: { chain: [item] },
+    else: { chain: [] },
   }
 
   innerValue.value.chain.splice(i, 1, ifItem)
@@ -78,7 +64,7 @@ function ifify(item, i) {
 }
 
 function deifify(item, i) {
-  innerValue.value.chain.splice(i, 1, ...item.do.then.chain)
+  innerValue.value.chain.splice(i, 1, ...item.then.chain)
   emitUpdate()
 }
 
@@ -91,7 +77,7 @@ const endangeredIndex = ref(-1)
       v-model="innerValue.chain"
       class="StmtChain__items"
       item-key="nun"
-      handle=".StmtChainItem__face"
+      handle=".StmtChainItem__handle"
       group="StmtChain__items"
       @update:model-value="emitUpdate()"
     >
@@ -99,12 +85,11 @@ const endangeredIndex = ref(-1)
         <StmtChainItem
           v-model="innerValue.chain[index]"
           :class="{'StmtChainItem--endangered': endangeredIndex == index}"
-          :open="latestAddedIndexes.includes(index)"
           @update:model-value="emitUpdate()"
         >
           <template #actions>
             <UiIcon
-              v-if="!element?.do?.if"
+              v-if="!element?.if"
               class="StmtChainItem__actionIcon"
               src="mdi:directions-fork"
               :title="i18n.t('StmtChain.ifify')"
@@ -130,8 +115,8 @@ const endangeredIndex = ref(-1)
       </template>
     </draggable>
 
-    <VmExpressionPicker
-      class="StmtChain__adder"
+    <VmStatementPicker
+      label="Add action"
       @input="onPickerInput"
     />
   </div>

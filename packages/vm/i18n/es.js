@@ -1,4 +1,10 @@
 export default {
+  'StmtIf.if': 'if',
+  'StmtIf.then': 'then',
+  'StmtIf.else': 'else',
+
+  'StmtAssign.assign': 'Asignar en',
+
   'StmtOp.operator.array.hasAny.title': 'contiene cualquiera',
   'StmtOp.operator.array.hasAll.title': 'contiene todos',
   'StmtOp.operator.array.eq.title': 'contiene exactamente',

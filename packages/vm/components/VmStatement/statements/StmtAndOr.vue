@@ -3,14 +3,14 @@ import { defineAsyncComponent } from 'vue'
 const VmStatement = defineAsyncComponent(() => import('../VmStatement.vue'))
 
 import { UiDetails } from '@/packages/ui'
-import VmOperatorPicker from '../VmOperatorPicker.vue'
+import VmStatementPicker from '../VmStatementPicker.vue'
 import useVmI18n from '../../../i18n'
 
 let globalCounter = 0
 
 export default {
   name: 'StmtAndOr',
-  components: { VmStatement, VmOperatorPicker, UiDetails },
+  components: { VmStatement, VmStatementPicker, UiDetails },
 
   props: {
     modelValue: {
@@ -124,8 +124,9 @@ export default {
           />
         </div>
 
-        <VmOperatorPicker
-          class="StmtAndOr__adder"
+        <VmStatementPicker
+          type="operator"
+          label="Add condition"
           @input="pushOperator"
         />
       </div>

@@ -6,7 +6,7 @@ const props = defineProps({
   modelValue: {
     validator: () => true,
     required: false,
-    default: () => [],
+    default: null,
   },
 
   /*
@@ -32,7 +32,7 @@ const emit = defineEmits(['update:modelValue'])
 
 const arrValue = computed({
   get() {
-    return Array.isArray(props.modelValue) ? props.modelValue : (props.modelValue !== null ? [props.modelValue] : [])
+    return Array.isArray(props.modelValue) ? props.modelValue : (props.modelValue ? [props.modelValue] : [])
   },
   set(newValue) {
     emit('update:modelValue', newValue)

@@ -9,7 +9,20 @@ export default class VM {
     this.onModelSet = null
   }
 
+  debug() {
+    return
+    // console.log('VM.debug:', ...arguments)
+  }
+
+  setModelProperty(propertyName, propertyValue, localScope) {
+    this.debug('setModelProperty', localScope, propertyName, propertyValue)
+    localScope && setProperty(localScope, propertyName, propertyValue)
+    this.onModelSet && this.onModelSet(propertyName, propertyValue, localScope)
+  }
+
   eval(expr, localScope = null) {
+    this.debug('eval', expr, localScope)
+
     if (!expr || (typeof expr != 'string' && typeof expr != 'object')) {
       return expr
     }
@@ -26,8 +39,20 @@ export default class VM {
       return retval
     }
 
+    // Backwards compatibility
+    if (typeof expr.do !== 'undefined') {
+      return this.stmtAssign({
+        assign: expr.assign,
+        stmt: expr.do,
+      }, localScope)
+    }
+
+    if (typeof expr.assign !== 'undefined') {
+      return this.stmtAssign(expr, localScope)
+    }
+
     if (typeof expr.call !== 'undefined') {
-      return this.stmtCall(expr.call, expr.args, expr.then, localScope)
+      return this.stmtCall(expr.call, expr.args, localScope)
     }
 
     if (Array.isArray(expr.chain)) {
@@ -110,6 +135,22 @@ export default class VM {
     return retval
   }
 
+  // Assign a statement execution result to a modelValue property
+  // {assign: [empty thing], stmt: some statement} will still run stmt, without assigning anything
+  stmtAssign(expr, localScope) {
+    const result = this.eval(expr.stmt, localScope)
+
+    if (expr.assign) {
+      if (typeof result?.then == 'function') {
+        result.then((resolved) => this.setModelProperty(expr.assign, resolved, localScope))
+      } else {
+        this.setModelProperty(expr.assign, result, localScope)
+      }
+    }
+
+    return result
+  }
+
 
   /**
    * Operators
@@ -147,20 +188,15 @@ export default class VM {
    * }
    *
    */
-  async stmtCall(functionName, functionArgs = null, functionThen = null, localScope = null) {
+  stmtCall(functionName, functionArgs = null, localScope = null) {
     if (typeof registeredFunctions[functionName]?.callback == 'undefined') {
       throw `undefined function '${functionName}'`
     }
 
     const callback = registeredFunctions[functionName].callback
     const args = functionArgs ? this.eval(functionArgs, localScope) : null
-    const result = await callback.bind(this)(args, localScope, this)
 
-    if (functionThen) {
-      return this.eval(functionThen, localScope)
-    } else {
-      return result
-    }
+    return callback.bind(this)(args, localScope, this)
   }
 
   /**
@@ -209,41 +245,29 @@ export default class VM {
 
   /**
    * Chain statement
+   *
+   * Runs the statements, one at a time, awaiting each one
+   *
    * {
    *   "chain": [
-   *     {
-   *       "info": {..item...},
-   *       "do": {...expr...},
-   *       "assign": "name of model variable to store results"
-   *     },
-   *     {
-   *       "info": {..item...},
-   *       "do": {...expr...},
-   *       "assign": "name of model variable to store results"
-   *     }
+   *     { ...stmt1 },
+   *     { ...stmt2 },
+   *     { ...stmt3 },
    *   ]
    * }
    *
    */
   async stmtChain(arrChain = [], localScope = null) {
     if (!arrChain.length) {
-      return
+      return []
     }
 
-    let res
+    const retval = []
     for (let i = 0; i < arrChain.length; i++) {
-      let link = arrChain[i]
-      if (typeof link?.do === 'undefined') {
-        continue
-      }
-
-      res = await this.eval(link.do, localScope)
-      if (link.assign) {
-        localScope && setProperty(localScope, link.assign, res)
-        this.onModelSet && this.onModelSet(link.assign, res, localScope)
-      }
+      const result = await this.eval(arrChain[i], localScope)
+      retval.push(result)
     }
 
-    return res
+    return retval
   }
 }

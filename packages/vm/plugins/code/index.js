@@ -8,8 +8,7 @@ export default {
           name: 'assign',
           icon: 'mdi:variable',
           title: 'Assign variable',
-          expression: {},
-          template: 'assign',
+          expression: { assign: '', stmt: null },
         },
 
         {
@@ -24,9 +23,9 @@ export default {
           icon: 'mdi:directions-fork',
           title: 'IF',
           expression: {
-            if: { and: [] },
-            then: { do: null },
-            else: { do: null },
+            if: null,
+            then: null,
+            else: null,
           },
         },
       ],

@@ -3,18 +3,14 @@ import { computed, provide, inject } from 'vue'
 import { UiInputJson } from '@/packages/ui/components'
 
 import StmtAndOr from './statements/StmtAndOr.vue'
-import StmtOp from './statements/StmtOp.vue'
+import StmtAssign from './statements/StmtAssign.vue'
 import StmtCall from './statements/StmtCall.vue'
 import StmtChain from './statements/StmtChain/StmtChain.vue'
 import StmtEval from './statements/StmtEval.vue'
+import StmtIf from './statements/StmtIf.vue'
+import StmtOp from './statements/StmtOp.vue'
 
 import { definedEditors } from './defineStatementEditor.js'
-
-// const StmtAndOr = defineAsyncComponent(() => import('./statements/StmtAndOr.vue'))
-// const StmtOp = defineAsyncComponent(() => import('./statements/StmtOp.vue'))
-// const StmtCall = defineAsyncComponent(() => import('./statements/StmtCall.vue'))
-// const StmtChain = defineAsyncComponent(() => import('./statements/StmtChain/StmtChain.vue'))
-// const StmtEval = defineAsyncComponent(() => import('./statements/StmtEval.vue'))
 
 const props = defineProps({
   modelValue: {
@@ -95,13 +91,17 @@ const editor = computed(() => {
   //   return { component: StmtSwitch }
   // }
 
-  // if (typeof _modelValue.value.if != 'undefined') {
-  //   return { component: StmtIf }
-  // }
-
   // if (typeof _modelValue.value.not != 'undefined') {
   //   return { component: StmtNot }
   // }
+
+  if (typeof _modelValue.value.if != 'undefined') {
+    return { component: StmtIf }
+  }
+
+  if (typeof _modelValue.value.assign != 'undefined') {
+    return { component: StmtAssign }
+  }
 
   if (typeof _modelValue.value.call != 'undefined') {
     return { component: StmtCall }

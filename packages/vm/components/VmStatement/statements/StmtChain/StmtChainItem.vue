@@ -1,25 +1,16 @@
 <script setup>
-import { defineAsyncComponent, ref, shallowRef, watch } from 'vue'
-import { UiIcon, UiItem, UiInput, UiDetails } from '@/packages/ui'
+import { ref, watch } from 'vue'
+import { UiIcon } from '@/packages/ui'
 import VmStatement from '../../VmStatement.vue'
-import useVmI18n from '../../../../i18n'
-const i18n = useVmI18n()
 
 const props = defineProps({
   modelValue: {
     type: Object,
     required: true,
   },
-
-  open: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
 })
 const emit = defineEmits(['update:modelValue'])
 
-const isOpen = ref(props.open)
 const innerValue = ref({})
 const isIfStatement = ref(false)
 
@@ -35,115 +26,23 @@ watch(
 function accept() {
   emit('update:modelValue', JSON.parse(JSON.stringify(innerValue.value)))
 }
-
-function rename() {
-  const newName = window.prompt(i18n.t('StmtChainItem.chooseName'), innerValue.value.info?.text)
-  if (newName && newName.trim()) {
-    innerValue.value.info.text = newName
-    accept()
-  }
-}
-
-const customComponent = shallowRef()
-watch(
-  () => innerValue.value.template,
-  (newValue) => {
-    if (!newValue) {
-      return
-    }
-
-    customComponent.value = defineAsyncComponent(() => import(`./templates/${newValue}.vue`))
-  },
-  { immediate: true },
-)
-
-
 </script>
 
 <template>
   <div class="StmtChainItem">
-    <UiDetails v-model:open="isOpen">
-      <template #summary>
-        <div class="StmtChainItem__trigger">
-          <UiItem
-            class="StmtChainItem__face"
-            v-bind="props.modelValue.info"
-            :subtext="props.modelValue.assign"
-            :icon="isIfStatement ? isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right' : props.modelValue?.info?.icon"
-          >
-            <template #actions>
-              <UiIcon
-                class="StmtChainItem__actionIcon"
-                src="mdi:pencil"
-                :title="i18n.t('StmtChainItem.renameAction')"
-                @click.stop="rename()"
-              />
-              <slot name="actions" />
-            </template>
-          </UiItem>
-        </div>
-      </template>
+    <UiIcon
+      class="StmtChainItem__handle"
+      src="mdi:drag"
+    />
 
-      <template #contents>
-        <div class="StmtChainItem__contents">
-          <Component
-            :is="customComponent"
-            v-if="customComponent"
-            v-model="innerValue"
-            @update:model-value="accept()"
-          />
-          <VmStatement
-            v-else-if="isIfStatement"
-            v-model="innerValue.do.if"
-            @update:model-value="accept()"
-          />
-          <template v-else>
-            <VmStatement
-              v-model="innerValue.do"
-              @update:model-value="accept()"
-            />
+    <VmStatement
+      v-model="innerValue"
+      class="StmtChainItem__statement"
+      @update:model-value="accept()"
+    />
 
-            <UiDetails class="StmtChainItem__assign">
-              <template #summary>
-                <span v-text="i18n.t('StmtChainItem.assignResult')" />
-                <em v-text="innerValue.assign" />
-              </template>
-              <template #default>
-                <UiInput
-                  v-model="innerValue.assign"
-                  type="text"
-                  :placeholder="i18n.t('StmtChainItem.variableName')"
-                  @update:model-value="accept()"
-                />
-              </template>
-            </UiDetails>
-          </template>
-        </div>
-      </template>
-    </UiDetails>
-
-    <div
-      v-if="isIfStatement"
-      class="StmtChainItem__paths"
-    >
-      <div class="StmtChainItem__path StmtChainItem__path--then">
-        <label>{{ i18n.t('StmtChainItem.then') }}</label>
-        <div class="StmtChainItem__pathBody">
-          <VmStatement
-            v-model="innerValue.do.then"
-            @update:model-value="accept()"
-          />
-        </div>
-      </div>
-      <div class="StmtChainItem__path StmtChainItem__path--else">
-        <label>{{ i18n.t('StmtChainItem.else') }}</label>
-        <div class="StmtChainItem__pathBody">
-          <VmStatement
-            v-model="innerValue.do.else"
-            @update:model-value="accept()"
-          />
-        </div>
-      </div>
+    <div class="StmtChainItem__actions">
+      <slot name="actions" />
     </div>
   </div>
 </template>
