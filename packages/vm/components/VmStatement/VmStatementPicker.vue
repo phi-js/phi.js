@@ -54,10 +54,13 @@ const fieldStatements = computed(() => {
   return [
     ...fieldOperators,
     {
+      text: i18n.t('VmOperatorPicker.Other'),
+      stmt: 'customField',
+    },
+    {
       text: i18n.t('VmOperatorPicker.allOf'),
       stmt: { and: [] },
     },
-
     {
       text: i18n.t('VmOperatorPicker.anyOf'),
       stmt: { or: [] },
@@ -69,6 +72,19 @@ const definedStatements = getDefinedStatements()
 const availableStatements = computed(() => props.type == 'operator' ? fieldStatements.value : definedStatements.value)
 
 function onSelectItem($event) {
+  if ($event.stmt == 'customField') {
+    let fieldName = prompt(i18n.t('StmtChainItem.variableName'))
+    if (!fieldName) {
+      return
+    }
+
+    $event.stmt = {
+      field: fieldName,
+      op: null,
+      args: null,
+    }
+  }
+
   emit('input', $event.stmt)
 }
 </script>
