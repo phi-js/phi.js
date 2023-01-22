@@ -10,21 +10,86 @@
   }
 }
 
-.StmtChain {
+// .StmtChain {
+//   position: relative;
+
+//   &__adder {
+//     .VmExpressionPicker__item {
+//       @extend .ui--clickable;
+
+//       border-radius: 4px;
+//       --ui-item-padding: 8px 12px;
+//     }
+//   }
+// }
+
+.StmtChainItem {
   position: relative;
 
-  &__adder {
-    .VmExpressionPicker__item {
-      @extend .ui--clickable;
+  padding-left: 32px;
 
-      border-radius: 4px;
-      --ui-item-padding: 8px 12px;
+  &__handle {
+    cursor: move;
+    width: 32px;
+    height: 32px;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  &__actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+  }
+
+  &__actionIcon {
+    @extend .ui--clickable;
+    width: 32px;
+    height: 32px;
+  }
+
+  &--endangered {
+    background-color: rgba(255, 0, 0, 0.2);
+  }
+}
+
+
+
+.StmtAssign {
+  @extend .outset;
+  margin-bottom: 6px;
+
+  .UiDetails__contents {
+    padding: 0;
+  }
+
+  &__item {
+    --ui-item-padding: 4px 12px;
+  }
+
+  &__statement {
+    padding: 8px;
+  }
+
+  &__footer {
+    padding: 12px 16px;
+    background-color:rgba(0, 0, 0, 0.02);
+    font-size: 0.9em;
+
+    .UiInput {
+      display: flex;
+      align-items: center;
+      gap: 1em;
     }
   }
 }
 
 
-.StmtChainItem {
+
+.xxxxxxxx-StmtChainItem {
   @extend .outset;
   margin-bottom: 6px;
 
