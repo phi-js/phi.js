@@ -1,22 +1,40 @@
-import { provide, reactive } from 'vue'
-import { locale } from './locale'
+import singleton from './singleton.js'
 
-export default function provideI18n(options) {
-  const provided = reactive(options)
-  provide('$_phi_i18n', provided)
+/*
+provideI18n({
+  languages: {
+    en: 'English',
+    es: 'Español'
+  }
+})
 
-  if (options?.locale != locale.value) {
-    locale.value = options.locale
+*/
+export default function provideI18n(options = null) {
+
+  if (options?.languages) {
+    for (let languageCode in options.languages) {
+      singleton.addLanguage(languageCode, { title: options.languages[languageCode] })
+    }
   }
 
-  return {
-    ...provided,
 
-    get locale() {
-      return locale.value
-    },
-    set locale(newValue) {
-      locale.value = newValue
-    },
-  }
+  return singleton
+
+  // const provided = reactive(options)
+  // provide('$_phi_i18n', provided)
+
+  // if (options?.locale != locale.value) {
+  //   locale.value = options.locale
+  // }
+
+  // return {
+  //   ...provided,
+
+  //   get locale() {
+  //     return locale.value
+  //   },
+  //   set locale(newValue) {
+  //     locale.value = newValue
+  //   },
+  // }
 }

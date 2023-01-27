@@ -7,4 +7,17 @@ export default {
   'i18n.yesterday': 'yesterday',
   'i18n.nDaysAgo': '{{n}} days ago',
   'i18n.nWeeksAgo': '{{n}} weeks ago',
+
+  'Accept': 'Accept',
+  'Cancel': 'Cancel',
+  'Delete': 'Delete',
+  'Search': 'Search',
+  'Create': 'Create',
+  'Creating': 'Creating',
+  'Close': 'Close',
+  'Edit': 'Edit',
+  'Rename': 'Rename',
+
+  'close': 'close',
+  'edit': 'edit',
 }
