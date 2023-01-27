@@ -115,7 +115,15 @@ const columnValues = computed(() => {
     }
 
     allColumns.value.forEach((column, columnIndex) => {
-      retval[recordIndex][columnIndex] = getProperty(record, column.value)
+      // support callbacks as column values
+      let targetValue = null
+      if (typeof column.value == 'function') {
+        targetValue = column.value(record)
+      } else {
+        targetValue = getProperty(record, column.value)
+      }
+
+      retval[recordIndex][columnIndex] = targetValue
     })
   })
 
