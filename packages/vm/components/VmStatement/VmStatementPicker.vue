@@ -85,7 +85,13 @@ function onSelectItem($event) {
     }
   }
 
-  emit('input', $event.stmt)
+  emit('input', {
+    ...$event.stmt,
+    info: {
+      text: $event.title || '',
+      icon: $event.icon || '',
+    },
+  })
 }
 </script>
 

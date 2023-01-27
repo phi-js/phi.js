@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { UiInput, UiDetails, UiItem } from '@/packages/ui/components'
 import { VmStatement } from '..'
 
@@ -19,7 +19,7 @@ function emitUpdate() {
   emit('update:modelValue', JSON.parse(JSON.stringify(statement.value)))
 }
 
-const statement = ref(null)
+const statement = ref({})
 watch(
   () => props.modelValue,
   (newValue) => {
@@ -34,6 +34,15 @@ watch(
   },
   { immediate: true },
 )
+
+const faceItemProps = computed(() => {
+  const stmtInfo = statement.value.info || statement.value.stmt?.info
+  return {
+    text: i18n.t('StmtAssign.assign'),
+    ...stmtInfo,
+    subtext: statement.value.assign,
+  }
+})
 </script>
 
 <template>
@@ -41,8 +50,7 @@ watch(
     <template #summary>
       <UiItem
         class="StmtAssign__item"
-        v-bind="statement"
-        :subtext="statement.assign"
+        v-bind="faceItemProps"
       />
     </template>
     <template #contents>
