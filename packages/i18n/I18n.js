@@ -72,12 +72,25 @@ export default class I18n {
     this.fallbackLanguage = sanitizedOptions.fallbackLanguage
     this.currency = sanitizedOptions.currency
     this.languages = sanitizedOptions.languages
+
+    // BASE language.  i.e. "es_CO" => "es"
+    const match = /^([a-zA-Z]+)[_-]?.*/.exec(this.language.value)
+    this.baseLanguage = match?.[1]
   }
 
 
   t(word, params = null, defaultValue = null) {
     let translated = this.languages[this.language.value]?.dictionary?.[word]
-      || this.languages[this.fallbackLanguage]?.dictionary?.[word]
+
+    // Not found. Look in base language
+    if (!translated) {
+      translated = this.languages[this.baseLanguage]?.dictionary?.[word]
+    }
+
+    // Look in fallback language
+    if (!translated) {
+      translated = this.languages[this.fallbackLanguage]?.dictionary?.[word]
+    }
 
     if (!translated) {
       return defaultValue === null

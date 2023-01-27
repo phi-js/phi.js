@@ -2,14 +2,28 @@ import singleton from './singleton.js'
 
 /*
 provideI18n({
+  language: 'es',
+  fallbackLanguage: 'en',
+  currency: 'COP',
   languages: {
     en: 'English',
     es: 'Español'
   }
 })
-
 */
 export default function provideI18n(options = null) {
+
+  if (options?.language) {
+    singleton.language.value = options.language
+  }
+
+  if (options?.fallbackLanguage) {
+    singleton.fallbackLanguage = options.fallbackLanguage
+  }
+
+  if (options?.currency) {
+    singleton.currency = options.currency
+  }
 
   if (options?.languages) {
     for (let languageCode in options.languages) {
@@ -17,24 +31,5 @@ export default function provideI18n(options = null) {
     }
   }
 
-
   return singleton
-
-  // const provided = reactive(options)
-  // provide('$_phi_i18n', provided)
-
-  // if (options?.locale != locale.value) {
-  //   locale.value = options.locale
-  // }
-
-  // return {
-  //   ...provided,
-
-  //   get locale() {
-  //     return locale.value
-  //   },
-  //   set locale(newValue) {
-  //     locale.value = newValue
-  //   },
-  // }
 }
