@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { toDate } from '@/packages/ui/helpers'
 
 export default class I18n {
@@ -74,8 +74,10 @@ export default class I18n {
     this.languages = sanitizedOptions.languages
 
     // BASE language.  i.e. "es_CO" => "es"
-    const match = /^([a-zA-Z]+)[_-]?.*/.exec(this.language.value)
-    this.baseLanguage = match?.[1]
+    this.baseLanguage = computed(() => {
+      const match = /^([a-zA-Z]+)[_-]?.*/.exec(this.language.value)
+      return match?.[1]
+    })
   }
 
 
@@ -84,7 +86,7 @@ export default class I18n {
 
     // Not found. Look in base language
     if (!translated) {
-      translated = this.languages[this.baseLanguage]?.dictionary?.[word]
+      translated = this.languages[this.baseLanguage.value]?.dictionary?.[word]
     }
 
     // Look in fallback language
@@ -179,12 +181,10 @@ export default class I18n {
   }
 
   obj(objValue) {
-    return parseTranslationObject(objValue, this.language.value)
+    return parseTranslationObject(objValue, this.language.value, this.baseLanguage.value)
   }
 
   /* /utility functions */
-
-
 
 
   addLanguage(languageCode, languageObject) {
@@ -268,9 +268,9 @@ const myThing = {
 }
 */
 
-function parseTranslationObject(obj, language) {
+function parseTranslationObject(obj, language, baseLanguage) {
   if (Array.isArray(obj)) {
-    return obj.map((i) => parseTranslationObject(i, language))
+    return obj.map((i) => parseTranslationObject(i, language, baseLanguage))
   }
 
   if (!obj || typeof obj !== 'object') {
@@ -278,12 +278,14 @@ function parseTranslationObject(obj, language) {
   }
 
   if (typeof obj['$i18n'] === 'object') {
-    return obj['$i18n']?.[language] || obj['$i18n'][Object.keys(obj['$i18n'])[0]]
+    return obj['$i18n']?.[language]
+      || obj['$i18n']?.[baseLanguage]
+      || obj['$i18n']?.[Object.keys(obj['$i18n'])[0]]
   }
 
   const retval = {}
   for (let [property, value] of Object.entries(obj)) {
-    retval[property] = parseTranslationObject(value, language)
+    retval[property] = parseTranslationObject(value, language, baseLanguage)
   }
   return retval
 }
