@@ -1,7 +1,13 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useI18n } from '@/packages/i18n'
 import { UiItem, UiIcon, UiPopover } from '@/packages/ui'
-import { getBlockActions } from '../../functions'
+import { getBlockEditors } from '../../functions'
+
+const i18n = useI18n({
+  en: { 'StoryPageItem.Delete': 'Delete' },
+  es: { 'StoryPageItem.Delete': 'Eliminar' },
+})
 
 const props = defineProps({
   /*
@@ -11,17 +17,11 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-
-  selected: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
 })
 
-const emit = defineEmits(['update:modelValue', 'delete', 'open-editor'])
+const emit = defineEmits(['click', 'delete', 'click-action'])
 
-const availableActions = getBlockActions(props.modelValue, { allowSource: true })
+const blockEditors = computed(() => getBlockEditors(props.modelValue, { allowSource: true }))
 
 const innerBlock = ref()
 watch(
@@ -31,89 +31,62 @@ watch(
 )
 
 function onClickAction(action) {
-  emit('open-editor', action.id)
+  emit('click-action', action.id)
 }
 </script>
 
 <template>
-  <UiItem
-    class="StoryPageItem"
-    :class="{'StoryPageItem--selected': props.selected}"
-    icon="mdi:drag-vertical"
-    :text="innerBlock.title || innerBlock.hash || innerBlock.id"
-    :subtext="`#${innerBlock.hash}`"
-  >
-    <template #actions>
-      <UiPopover>
-        <template #trigger>
-          <UiIcon src="mdi:dots-vertical" />
-        </template>
-        <template #contents="{ close }">
-          <div class="StoryPageItem__popover">
-            <UiItem
-              v-for="action in availableActions"
-              :key="action.id"
-              class="StoryPageItem__menuItem"
-              :text="action.title"
-              :icon="action.icon"
-              @click="close(); onClickAction(action);"
-            />
-            <UiItem
-              class="StoryPageItem__menuItem StoryPageItem__menuItem--delete"
-              icon="mdi:close"
-              text="Delete"
-              @click="close(); emit('delete');"
-            />
-          </div>
-        </template>
-      </UiPopover>
-    </template>
-  </UiItem>
-</template>
+  <div class="StoryPageItem">
+    <UiItem
+      class="CmsStoryBuilder__clickable"
+      icon="mdi:file"
+      :text="innerBlock.title || innerBlock.hash || innerBlock.id"
+      @click="emit('click', $event)"
+    >
+      <template #actions>
+        <UiIcon
+          src="mdi:chevron-down"
+          @click="emit('click', $event)"
+        />
+      </template>
+    </UiItem>
 
+    <UiPopover>
+      <template #trigger>
+        <UiIcon
+          src="mdi:dots-vertical"
+          class="CmsStoryBuilder__controlItem"
+        />
+      </template>
+      <template #contents="{ close }">
+        <div class="BlockScaffold__popover">
+          <UiItem
+            v-for="action in blockEditors.actions"
+            :key="action.id"
+            :text="action.title"
+            :icon="action.icon"
+            @click="close(); onClickAction(action);"
+          />
+          <UiItem
+            icon="mdi:close"
+            :text="i18n.t('StoryPageItem.Delete')"
+            @click="close(); emit('delete');"
+          />
+        </div>
+      </template>
+    </UiPopover>
+  </div>
+</template>
 
 <style lang="scss">
 .StoryPageItem {
-  --ui-item-padding: 4px 12px;
-  user-select: none;
+  display: inline-flex;
+  align-items: stretch;
 
-  margin-bottom: 2rem;
-  padding: 8px;
-  border-radius: 6px;
-
-  color: var(--ui-color-foreground);
-  background-color: var(--ui-color-background);
-
-  opacity: 0.5;
-
-  border: 2px solid transparent;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-  transition: all var(--ui-duration-snap);
-
-  cursor: pointer;
-  &:hover {
-    opacity: 0.9;
-  }
-
-  &--selected {
-    border: 2px solid var(--ui-color-primary);
-    opacity: 1;
-  }
-
-  & > .UiItem__icon {
-    cursor: move;
-    padding: 0 4px;
-  }
-
-  &__popover {
-    --ui-item-padding: 8px 12px;
-    user-select: none;
-    .UiItem {
-      cursor: pointer;
-      &:hover {
-        background-color: var(--ui-color-hover);
-      }
-    }
+  .UiPopover__trigger {
+    border-left: 1px solid #cccccc77;
+    border-right: 1px solid #ccc;
+    height: 100%;
   }
 }
 </style>

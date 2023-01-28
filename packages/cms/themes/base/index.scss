@@ -1,24 +1,22 @@
 /* This stylesheet declares the base CSS for all block / block editor components */
-.cms-theme-base {
-  @import '@/packages/ui/themes/base/modifiers/clickable.scss';
+@import '@/packages/ui/themes/base/modifiers/clickable.scss';
 
-  @import './classes/outset.scss';
+@import './classes/outset.scss';
 
-  @import './components/BlockCssStyle.scss';
-  @import './components/BlockScaffold.scss';
-  @import './components/BlockValidationEditor.scss';
-  @import './components/CmsBlock.scss';
-  @import './components/CmsStoryBuilder.scss';
-  @import './components/CssClassManager.scss';
-  @import './components/LayoutPage.scss';
-  @import './components/ListenersEditor.scss';
-  @import './components/StmtAndOr.scss';
-  @import './components/StmtChainItem.scss';
-  @import './components/StmtOp.scss';
-  @import './components/StoryComputedEditor.scss';
-  @import './components/StoryMethodsEditor.scss';
-  @import './components/UiItemFinder.scss';
-  @import './components/UiWindow.scss';
+@import './components/BlockCssStyle.scss';
+@import './components/BlockScaffold.scss';
+@import './components/BlockValidationEditor.scss';
+@import './components/CmsBlock.scss';
+@import './components/CmsStoryBuilder.scss';
+@import './components/CssClassManager.scss';
+@import './components/LayoutPage.scss';
+@import './components/ListenersEditor.scss';
+@import './components/StmtAndOr.scss';
+@import './components/StmtChainItem.scss';
+@import './components/StmtOp.scss';
+@import './components/StoryComputedEditor.scss';
+@import './components/StoryMethodsEditor.scss';
+@import './components/UiItemFinder.scss';
+@import './components/UiWindow.scss';
 
-  @import './testing.scss'; //!!! testing
-}
+@import './testing.scss'; //!!! testing

@@ -3,7 +3,7 @@ import { ref, computed, onBeforeUnmount, watchEffect } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { UiIcon, UiPopover, UiTabs, UiTab, UiButton } from '@/packages/ui'
 
-import BlockScaffold from '../../../../components/CmsSlotEditor/Bloh.vue'
+import BlockScaffold from '../../../../components/BlockScaffold/BlockScaffold.vue'
 
 import googleTranslate from '../../../../components/CmsPropInput/types/googleTranslate'
 
@@ -25,7 +25,7 @@ const props = defineProps({
 const emit = defineEmits(['update:block', 'select', 'focus', 'blur'])
 
 const i18n = useI18n()
-const curLanguage = ref(i18n.locale)
+const curLanguage = i18n.language
 const isLanguageOpen = ref(false)
 
 const innerValue = ref('')
@@ -310,7 +310,7 @@ async function doTranslation() {
         <template #trigger>
           <button
             type="button"
-            class="BlockScaffold__toolbar-icon expansible"
+            class="BlockScaffold__button BlockScaffold__button--expansible"
             v-text="heading.current.text"
           />
         </template>
@@ -323,8 +323,8 @@ async function doTranslation() {
               v-for="(cmd, i) in heading.available"
               :key="i"
               type="button"
-              class="BlockScaffold__toolbar-icon"
-              :class="{ 'BlockScaffold__toolbar-icon--active': cmd.isActive }"
+              class="BlockScaffold__button"
+              :class="{ 'BlockScaffold__button--active': cmd.isActive }"
               @click="cmd.callback"
               v-text="cmd.text"
             />
@@ -336,7 +336,7 @@ async function doTranslation() {
         <template #trigger>
           <UiIcon
             :src="alignment.current.icon"
-            class="BlockScaffold__toolbar-icon expansible"
+            class="BlockScaffold__button BlockScaffold__button--expansible"
           />
         </template>
         <template #contents="{ close }">
@@ -348,8 +348,8 @@ async function doTranslation() {
               v-for="(cmd, i) in alignment.available"
               :key="i"
               :src="cmd.icon"
-              class="BlockScaffold__toolbar-icon"
-              :class="{ 'BlockScaffold__toolbar-icon--active': cmd.isActive }"
+              class="BlockScaffold__button"
+              :class="{ 'BlockScaffold__button--active': cmd.isActive }"
               @click="cmd.callback"
             />
           </div>
@@ -360,37 +360,37 @@ async function doTranslation() {
         v-for="(option, i) in formatButtons"
         :key="i"
         type="button"
-        class="BlockScaffold__toolbar-icon"
-        :class="{ 'BlockScaffold__toolbar-icon--active': option.isActive }"
+        class="BlockScaffold__button"
+        :class="{ 'BlockScaffold__button--active': option.isActive }"
         @click="option.callback"
         v-text="option.text"
       />
 
       <UiIcon
         :src="allCommands.link.icon"
-        class="BlockScaffold__toolbar-icon"
-        :class="{ 'BlockScaffold__toolbar-icon--active': allCommands.link.isActive }"
+        class="BlockScaffold__button"
+        :class="{ 'BlockScaffold__button--active': allCommands.link.isActive }"
         @click="allCommands.link.callback()"
       />
 
       <UiIcon
         :src="allCommands.bulletList.icon"
-        class="BlockScaffold__toolbar-icon"
-        :class="{ 'BlockScaffold__toolbar-icon--active': allCommands.bulletList.isActive }"
+        class="BlockScaffold__button"
+        :class="{ 'BlockScaffold__button--active': allCommands.bulletList.isActive }"
         @click="allCommands.bulletList.callback()"
       />
 
       <UiIcon
         :src="allCommands.orderedList.icon"
-        class="BlockScaffold__toolbar-icon"
-        :class="{ 'BlockScaffold__toolbar-icon--active': allCommands.orderedList.isActive }"
+        class="BlockScaffold__button"
+        :class="{ 'BlockScaffold__button--active': allCommands.orderedList.isActive }"
         @click="allCommands.orderedList.callback()"
       />
 
       <UiIcon
         src="mdi:translate"
-        class="BlockScaffold__toolbar-icon expansible"
-        :class="{ 'BlockScaffold__toolbar-icon--active': isLanguageOpen }"
+        class="BlockScaffold__button BlockScaffold__button--expansible"
+        :class="{ 'BlockScaffold__button--active': isLanguageOpen }"
         @click="isLanguageOpen = !isLanguageOpen"
       />
     </template>
@@ -405,7 +405,7 @@ async function doTranslation() {
         >
           <template #default>
             <UiTab
-              v-for="(locale) in i18n.availableLocales.value"
+              v-for="(locale) in i18n.availableLanguages"
               :key="locale.value"
               :text="locale.text"
               :value="locale.value"
@@ -449,12 +449,6 @@ async function doTranslation() {
 }
 
 .MediaHtmlBlockEditor {
-  .expansible {
-    &::after {
-      content: "▾";
-    }
-  }
-
   &__tabs {
     background-color: #333;
     color: #eee;

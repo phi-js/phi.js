@@ -1,92 +1,172 @@
-.Block__drag-handle {
-  cursor: move;
-}
-
-.BlockScaffold__window-header {
-  --ui-item-padding: 6px 16px;
-}
-
-/* Make BlockScaffold__defaultFace clickable only if parent SlotItem is FOCUSED */
-.BlockScaffold__defaultFace {
-  pointer-events: none;
-}
-
-.SlotItem--active .BlockScaffold__defaultFace {
-  pointer-events: initial;
-}
-
-
 .BlockScaffold {
   position: relative;
+  outline: none;
 
-  &__toolbar {
-    display: inline-flex;
-    align-items: stretch;
-    background-color: #313131;
-    color: rgba(255, 255, 255, 0.5);
-    border-radius: 5px;
+  // --outline-offset: -5px; // causes body horizontal scroll
+
+  --outline-offset: 0;
+  z-index: 1; // messes up dragstart from toolbar (in html blocks only ???)
+
+
+  // Launchers visible on selected only
+  & > &__toolbar-container > &__launcher,
+  & > &__launcher {
+    visibility: hidden;
   }
 
-  &__toolbar-title {
-    --ui-item-padding: 6px 12px;
-    .UiItem__text {
-      font-size: 14px;
-      font-weight: 600;
+  &--selected > &__toolbar-container > &__launcher,
+  &--selected > &__launcher {
+    visibility: visible;
+  }
+
+
+  // "outline"
+  &::after {
+    content: '';
+    pointer-events: none;
+
+    border-radius: 4px;
+    border: 1px solid #999;
+
+    position: absolute;
+    display: block;
+    top: var(--outline-offset);
+    left: var(--outline-offset);
+    right: var(--outline-offset);
+    bottom: var(--outline-offset);
+
+    transition: all 222ms;
+    opacity: 0;
+
+    //reset
+    text-decoration: none;
+    text-shadow: none;
+    color: inherit;
+  }
+
+  &--selected {
+    z-index: 2; // messes up dragstart from toolbar (in html blocks only ???)
+
+    .BlockScaffold__label {
+      display: none;
+    }
+
+    &::after {
+      border-color: var(--ui-color-primary);
     }
   }
 
-  // Border on the left of block's menu button
-  &__toolbar-spacer {
-    border-left: 1px solid rgba(255, 255, 255, 0.08);
+  &--selected::after,
+  &:hover::after {
+    opacity: 1;
+    border-color: var(--ui-color-primary);
   }
 
-  &__defaultFace {
-    cursor: pointer;
-  }
 
-  // Position toolbar above the block
   &__toolbar-container {
-    position: sticky;
-    top: 48px;
-    width: max-content;
-
-    // position: absolute;
-    // bottom: 100%;
-    // z-index: 1; // messes up nested + overlapping toolbar containers inside groups. Breaks the block dragging.
-
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: flex-start;
-  }
-
-  &__toolbar-stick {
     position: absolute;
+    left: 0;
     bottom: 100%;
-    left: 16px;
-  }
+    z-index: 1;
 
-  // Toolbar width
-  &__toolbar {
-    position: relative; // allows z-index above .ancestry and .descendants
-    flex-wrap: nowrap;
-    width: max-content; // No soportado en IE ni EDGE !!!
-    max-width: 80vw;
-
-  }
-
-  &__toolbar-scrollcontent {
-    flex: 1;
     display: flex;
     flex-wrap: nowrap;
-    overflow: auto;
+    align-items: center;
+
+    font-size: 1rem;
   }
 
-  &__toolbar-icon {
+  &__label {
+    user-select: none;
+    pointer-events: none;
+    white-space: nowrap;
+
+    transition: all 222ms;
+    opacity: 0;
+
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+
+    position: relative;
+    left: 2px;
+    background-color: var(--ui-color-background);
+    // color: var(--ui-color-foreground, #fff);
+    color: var(--ui-color-primary, #fff);
+
+    //reset
+    text-decoration: none;
+    text-shadow: none;
+  }
+
+  &:hover > &__toolbar-container > &__label {
+    opacity: 1;
+  }
+
+  &__toolbar {
+    --ui-item-padding: 8px 12px;
+
+    background: #333;
+    color: #eee;
+    border-radius: 4px;
+
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    user-select: none;
+    z-index: 1;
+
+    overflow-x: auto;
+    max-width: calc(100vw - 72px);
+
+    .UiForm {
+      .UiInput {
+        &__element {
+          background: rgba(255,255,255,0.08);
+          min-width: 0 !important;
+          max-width: 5rem;
+        }
+      }
+    }
+  }
+
+  &__dragHandle {
+    cursor: move;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #ffffffcc;
+
+    &:hover {
+      background-color: rgba(255,255,255, 0.1);
+    }
+  }
+
+  &__separator {
+    align-self: stretch;
+    border-right: 1px solid #ffffff22;
+    border-left: 1px solid #00000055;
+  }
+
+  &__shortcut {
+    align-self: stretch;
+    width: 36px;
+
+    color: rgba(255,255,255, 0.7);
+
+    cursor: pointer;
+    &:hover {
+      color: #fff;
+      background-color: var(--ui-color-hover);
+    }
+  }
+
+  &__button {
     @extend .ui--clickable;
     min-width: 40px;
     min-height: 40px;
 
-    // color: rgba(255, 255, 255, 0.5);
     color: inherit;
     flex: none;
     padding: 0 10px;
@@ -94,131 +174,145 @@
     background: transparent;
 
     &--active {
-      // color: #fff;
       color: var(--ui-color-primary);
     }
 
-    &--variable,
-    &--validation,
-    &--css,
-    &--visibility,
-    &--repeat,
-    &--events {
-      color: var(--ui-color-primary);
-    }
-  }
-}
-
-
-/* Ancestor & Descendant blocks */
-.BlockScaffold {
-  &__toolbar {
-    margin-left: 8px;
-    z-index: 1;
-  }
-
-  &__ancestry {
-    position: absolute;
-    margin-left: 15px;
-    margin-right: -4px;
-
-    display: flex;
-    flex-wrap: nowrap;
-  }
-
-  &__descendants {
-    position: absolute;
-    right: -36px;
-    bottom: 0;
-  }
-
-  &__ancestryIcon--down {
-    padding: 5px 10px 5px 20px;
-    background-color: #777;
-    color: rgba(255, 255, 255, 0.7);
-    border-radius: 5px;
-
-    cursor: pointer;
-    &:hover {
-      background-color: #999;
-    }
-
-  }
-
-  &__ancestryIcon--up {
-    width: 8px;
-
-    opacity: 0;
-    pointer-events: none;
-
-    &:last-child {
-      position: absolute;
-      top: 0;
-      left: -40px;
-
-      pointer-events: all;
-      opacity: 1;
-
-      width: auto;
-      padding: 5px 20px 5px 10px;
-
-      // background-color: #313131;
-      background-color: #777;
-      color: rgba(255, 255, 255, 0.7);
-      border-radius: 5px;
-
-      cursor: pointer;
-      &:hover {
-        // opacity: 1;
-        background-color: #999;
+    &--expansible {
+      &::after {
+        content: "▾";
       }
     }
   }
-}
 
 
-
-
-
-// /* Prevent toolbar from being "hoverable" white outside the element */
-// .BlockScaffold {
-//   & > .BlockScaffold__toolbar-container {
-//     pointer-events: none;
-//   }
-
-//   &:hover {
-//     & > .BlockScaffold__toolbar-container {
-//       pointer-events: initial;
-//     }
-//   }
-// }
-
-
-// Block's option menu contents
-.BlockPopover {
-  user-select: none;
-
-  .tippy-content {
-    padding: 0;
+  &__menuBtn {
+    @extend .ui--clickable;
   }
 
-  &__item {
-    min-width: 200px;
-    color: #ccc;
-    --ui-item-padding: 8px 14px;
-    font-size: 0.9em;
-
+  &__popover {
+    --ui-item-padding: 8px 12px;
     user-select: none;
-    cursor: pointer;
 
-    &:hover {
-      color: #fff;
-      background-color: var(--ui-color-hover);
+    .UiItem {
+      @extend .ui--clickable;
     }
   }
 
-  &__item--delete:hover {
+  &__parent {
+    align-self: flex-start;
+
+    --ui-item-padding: 4px 8px;
+    background-color: #999;
+    color: #eee;
     border-radius: 4px;
-    background-color: var(--ui-color-danger);
+    left: 4px;
+    margin-left: -15px;
+    cursor: pointer;
+    &:hover {
+      background-color: #888;
+    }
   }
+
+  &__launcher {
+    &--before {
+      margin-left: 3px;
+    }
+
+    &--after {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-top: 2px;
+      margin-left: -14px;
+      z-index: 1;
+    }
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+
+    width: 28px;
+    height: 26px;
+
+    border-radius: 4px;
+    border: 2px dashed #999;
+    // background-color: #333;
+    // color: #eee;
+    font-weight: bold;
+
+    cursor: pointer;
+    opacity: 0.5;
+    &:hover {
+      border: 2px solid var(--ui-color-primary);
+      color: var(--ui-color-primary);
+      opacity: 1;
+    }
+  }
+}
+
+
+// Sibling launcher positions depending on block "direction" props
+.BlockScaffold--horizontal {
+
+  & > .BlockScaffold__launcher--before {
+    position: absolute;
+    top: 50%;
+    left: -18px;
+    margin-top: -10px;
+    z-index: 1;
+  }
+
+  & > .BlockScaffold__launcher--after {
+    top: 50%;
+    right: -13px;
+    bottom: auto;
+    left: auto;
+    margin-left: auto;
+    margin-top: -10px;
+  }
+}
+
+
+// Block-specific stylings
+.BlockScaffold--LayoutGroup {
+  padding: 6px;
+  // margin: 0 -3px; // causes horizontal overscroll on body
+  margin-bottom: 6px;
+
+  .BlockScaffold--LayoutGroup {
+    margin-top: 16px;
+  }
+
+  &:hover > .BlockScaffold__toolbar-container > .BlockScaffold__label {
+    color: var(--ui-color-primary);
+  }
+
+  & > .BlockScaffold__toolbar-container > .BlockScaffold__label {
+    opacity: 1;
+    top: 3px;
+    color: #999;
+  }
+
+  &::after {
+    opacity: 0.3;
+  }
+
+  & + .BlockScaffold--LayoutGroup {
+    margin-top: 18px;
+  }
+
+  // & > .LayoutGroupEditor > .CmsSlotEditor__footer {
+  //   display: none;
+  // }
+
+  // & > .LayoutGroupEditor.CmsSlotEditor--empty > .CmsSlotEditor__footer,
+  // &.BlockScaffold--selected > .LayoutGroupEditor > .CmsSlotEditor__footer {
+  //   display: block;
+  // }
+}
+
+.BlockScaffold--NavigationNext,
+.BlockScaffold--NavigationBack {
+  display: inline-block;
 }

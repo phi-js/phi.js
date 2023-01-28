@@ -44,7 +44,7 @@ export default {
           editor: {
             actions: [
               {
-                id: 'settings',
+                id: 'LayoutPageSettings',
                 title: 'Page settings',
                 component: LayoutPageSettings,
               },

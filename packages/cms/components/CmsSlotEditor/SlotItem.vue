@@ -1,10 +1,11 @@
 <!-- eslint-disable max-len -->
 <script>
 import { h, ref, watch, inject, provide, computed } from 'vue'
+import { useI18n } from '@/packages/i18n'
 
 import { getBlockDefinition } from '../../functions'
 import EditorAction from '../CmsBlockEditor/EditorAction.vue'
-import Bloh from './Bloh.vue'
+import BlockScaffold from '../BlockScaffold/BlockScaffold.vue'
 
 export default {
   props: {
@@ -91,6 +92,8 @@ export default {
 
     const innerRef = ref()
 
+    const i18n = useI18n()
+
     return {
       innerBlock,
       definition,
@@ -100,13 +103,14 @@ export default {
       selectBlock,
       insertSibling,
       innerRef,
+      i18n,
     }
   },
 
   render() {
     if (!this.definition) {
       return h(
-        Bloh,
+        BlockScaffold,
         {
           block: this.innerBlock,
           selected: this.selected,
@@ -139,14 +143,14 @@ export default {
 
           'class': this.transitionClassNames,
 
-          // prevent clicks from bubbling up to parent Bloh (if there is one)
+          // prevent clicks from bubbling up to parent BlockScaffold (if there is one)
           'onClick': (evt) => evt.stopPropagation(),
         },
       )
     }
 
     return h(
-      Bloh,
+      BlockScaffold,
       {
         ref: 'innerRef',
         block: this.innerBlock,
@@ -167,13 +171,13 @@ export default {
               'onUpdate:block': (evt) => this.$emit('update:block', evt),
             },
           )
-          : () => h(
+          : () => h( // Use block component as editor face.  Pa
             this.definition.block.component,
-            {
+            this.i18n.obj({
               ...this.innerBlock.props,
               class: undefined,
               style: undefined,
-            },
+            }),
           ),
 
         toolbar: this.definition?.editor?.toolbar

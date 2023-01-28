@@ -3,7 +3,6 @@ import { computed } from 'vue'
 import { useI18n } from '../../../../../i18n'
 import { UiInput } from '../../../../../ui/components'
 
-import { parseTranslations } from '../../../../functions'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
 
 
@@ -20,9 +19,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const i18n = useI18n()
-const translatedProps = computed(() => {
-  return parseTranslations({ ...props.modelValue?.props }, i18n.locale, props.modelValue.i18n)
-})
+const translatedProps = computed(() => i18n.obj({ ...props.modelValue?.props }))
 
 const defaultSlot = computed({
   get() {

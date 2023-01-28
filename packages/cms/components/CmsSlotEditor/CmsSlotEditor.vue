@@ -148,7 +148,7 @@ function onInsertSibling(index, position = null) {
       'CmsSlotEditor--empty': !innerSlot.length,
     }"
     item-key="_key"
-    handle=".Bloh__headerItem"
+    handle=".BlockScaffold__dragHandle"
     group="SlotEditor-drag"
     :direction="direction"
     :animation="111"

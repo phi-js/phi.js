@@ -101,8 +101,8 @@ function cancel() {
             v-for="(action) in availableEditors.actions"
             :key="action.id"
             :value="action.id"
-            :text="i18n.t(`BlockScaffold.action.${action.id}`, null, action.title)"
-            :icon="action.icon || 'mdi:star'"
+            :text="action.title"
+            :icon="action.icon"
           >
             <EditorAction
               v-model:block="innerBlock"

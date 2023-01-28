@@ -1,6 +1,5 @@
 import { UiItem } from '@/packages/ui/components'
 import MediaItemSettings from './MediaItemSettings.vue'
-import MediaItemFace from './MediaItemFace.vue'
 
 export default {
   name: 'MediaItem',
@@ -13,8 +12,6 @@ export default {
   },
 
   editor: {
-    face: { component: MediaItemFace },
-
     actions: [
       {
         id: 'MediaItem',

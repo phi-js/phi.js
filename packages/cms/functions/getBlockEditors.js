@@ -23,10 +23,10 @@ Retorna todos los editores (listos para usar en <component>) relacionados al blo
 }
 */
 import { defineAsyncComponent } from 'vue'
+import { useI18n } from '@/packages/i18n'
 import { UiInputJson } from '@/packages/ui/components'
+
 import getBlockDefinition from './getBlockDefinition.js'
-
-
 import BlockDataEditor from '../components/CmsBlockEditor/BlockDataEditor.vue'
 import BlockListenersEditor from '../components/CmsBlockEditor/BlockListenersEditor.vue'
 import BlockVisibilityEditor from '../components/CmsBlockEditor/BlockVisibilityEditor.vue'
@@ -34,6 +34,9 @@ import BlockCssEditor from '../components/CmsBlockEditor/BlockCssEditor.vue'
 import BlockValidationEditor from '../components/CmsBlockEditor/BlockValidationEditor.vue'
 import BlockRepeatEditor from '../components/CmsBlockEditor/BlockRepeatEditor.vue'
 import BlockTransitionsEditor from '../components/CmsBlockEditor/BlockTransitionsEditor.vue'
+
+import dictionary from '../i18n/index.js'
+const i18n = useI18n(dictionary)
 
 /*
 CmsStoryBuilderSettings as defined in prop "settings" of:
@@ -108,10 +111,12 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
     retval.actions.push({
       'id': 'data',
       'title': 'Data',
-      // 'icon': 'mdi:code-braces',
       'icon': 'mdi:code-json',
       'component': BlockDataEditor,
       'v-model': 'block',
+
+      'hasData': true,
+      'description': block['v-model'],
     })
   }
 
@@ -123,6 +128,9 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
       'icon': 'mdi:message-alert',
       'component': BlockValidationEditor,
       'v-model': 'block',
+
+      'hasData': Array.isArray(block.rules) && block.rules.length,
+      'description': 'This block has validation rules',
     })
   }
 
@@ -133,6 +141,9 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
     'icon': block['v-if'] ? 'mdi:eye' : 'mdi:eye-outline',
     'component': BlockVisibilityEditor,
     'v-model': 'block',
+
+    'hasData': !!block['v-if'],
+    'description': 'This block has conditional visibility',
   })
 
   // Block CSS property
@@ -142,6 +153,9 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
     'icon': 'mdi:water',
     'component': BlockCssEditor,
     'v-model': 'block',
+
+    'hasData': block.props?.style || block.props?.class?.length,
+    'description': 'This block has CSS styles',
   })
 
   // Transitions
@@ -151,6 +165,9 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
     'icon': 'mdi:transition',
     'component': BlockTransitionsEditor,
     'v-model': 'block',
+
+    'hasData': !!block.transitions,
+    'description': 'This block has transitions',
   })
 
   // v-on
@@ -160,6 +177,9 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
     'icon': 'mdi:gesture-tap',
     'component': BlockListenersEditor,
     'v-model': 'block',
+
+    'hasData': !!block['v-on'],
+    'description': 'This block reacts to events',
   })
 
   // v-for
@@ -169,6 +189,9 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
     'icon': 'mdi:repeat-variant',
     'component': BlockRepeatEditor,
     'v-model': 'block',
+
+    'hasData': !!block['v-for'],
+    'description': 'This block repeats',
   })
 
   // Raw block source editor
@@ -180,6 +203,19 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
       component: UiInputJson,
     })
   }
+
+  // Translate titles
+  retval.actions = retval.actions.map((action) => {
+    if (!action.id) {
+      console.warn('getBlockEditors: no action.id for', action)
+    }
+
+    return {
+      ...action,
+      title: i18n.t(`BlockEditors.actions.${action.id}.title`, null, action.title),
+      description: i18n.t(`BlockEditors.actions.${action.id}.description`, null, action.description),
+    }
+  })
 
   return retval
 }

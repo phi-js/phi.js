@@ -28,7 +28,6 @@ const injectedStory = inject('$_cms_story', null)
 //     console.warn('No $_cms_story injection found')
 //     return
 //   }
-
 //   injectedStory.goNext()
 // }
 </script>

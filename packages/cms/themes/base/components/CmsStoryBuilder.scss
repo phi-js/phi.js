@@ -6,10 +6,52 @@
     flex: 1;
   }
 
-  &__tabs {
-    .UiTabs__tabList {
-      justify-content: center;
+  &__header {
+    background-color: var(--ui-color-z1);
+    color: var(--ui-color-foreground);
+    user-select: none;
+  }
+
+  &__headerStory {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+    padding: 4px;
+    overflow-x: auto;
+  }
+
+  &__headerPage {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+    border-top: 1px solid #ccc;
+
+    .CmsStoryBuilder__clickable,
+    .CmsStoryBuilder__controlItem {
+      border-radius: 0;
     }
+  }
+
+  &__tabItem {
+    @extend .ui--clickable;
+    font-weight: 600;
+    border-radius: 4px;
+    --ui-item-padding: 8px 14px;
+
+    font-size: 11pt;
+
+    min-width: auto; // do not let tabItems be squeezed too narrow
+
+    // Hide icons
+    .UiItem__icon {
+      display: none;
+    }
+  }
+
+  &__runButton {
+    @extend .outset;
+    min-width: 100px;
+    // margin-right: 1rem;
   }
 
   &__controls {
@@ -18,14 +60,13 @@
     align-items: stretch;
   }
 
-
   &__controlItem {
     @extend .ui--clickable;
     user-select: none;
     border-radius: 4px;
 
-    height: 40px;
-    min-width: 45px;
+    height: 100%;
+    min-width: 42px;
 
     &[disabled=true] {
       cursor: default;
@@ -36,48 +77,12 @@
     }
   }
 
-  // Hide icons from tab items
-  &__tabItem .UiItem__icon {
-    display: none;
-  }
-
-  &__header {
-    background-color: var(--ui-color-z1);
-    color: var(--ui-color-foreground);
-    user-select: none;
-  }
-
-  &__tabOptions {
-    white-space: nowrap;
-    overflow-x: auto;
-    padding: 4px;
-
-    font-size: 0.85em;
+  &__clickable {
+    @extend .ui--clickable;
+    font-weight: 600;
+    border-radius: 4px;
     --ui-item-padding: 8px 14px;
-
-    & > a,
-    & > .UiItem {
-      display: inline-flex;
-      margin-right: 4px;
-
-      @extend .ui--clickable;
-
-      font-weight: 600;
-      font-size: 14px;
-      border-radius: 4px;
-
-      .UiItem {
-        &__icon {
-          // order: 2; place item icons to the right
-          opacity: 0.4;
-          font-size: 0.9em;
-        }
-
-        &:hover .UiItem__icon {
-          opacity: 1;
-        }
-      }
-    }
+    font-size: 0.85em;
   }
 
 

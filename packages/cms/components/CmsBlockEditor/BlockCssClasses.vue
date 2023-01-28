@@ -105,7 +105,7 @@ function promptNewClassName() {
 
   appendClass(className)
 
-  const newSheet = { id: className, type: 'sheet', src: `.${className } {\n\n}` }
+  const newSheet = { id: className, type: 'class', src: `.${className } {\n\n}` }
   injectedStory.value.stylesheets.push(newSheet)
   availableClasses.value.push(newSheet)
 }

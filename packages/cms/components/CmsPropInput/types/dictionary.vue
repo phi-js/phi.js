@@ -75,10 +75,11 @@ watch(
 */
 const arrEntries = computed(() => {
   const retval = []
-  i18n.availableLocales.value.forEach((existingLocale) => {
+  i18n.availableLanguages.forEach((languageInfo) => {
     retval.push({
-      language: existingLocale.value,
-      value: innerValue.value?.[existingLocale.value] || '',
+      language: languageInfo.value,
+      value: innerValue.value?.[languageInfo.value] || '',
+      label: languageInfo.text,
     })
   })
 
@@ -110,7 +111,7 @@ const hasMissingEntries = computed(() => arrEntries.value.some((e) => !e.value |
       :key="entry.language"
       :model-value="entry.value"
       type="text"
-      :label="entry.language"
+      :label="entry.label"
       @update:model-value="onUpdateEntry(entry, $event)"
     />
 
@@ -127,21 +128,21 @@ const hasMissingEntries = computed(() => arrEntries.value.some((e) => !e.value |
 .DictionaryEditor {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 8px;
   padding: 5px;
+  padding-left: 1rem;
 
   .UiInput {
-    width: 100%;
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
 
     &__label {
-      width: 30px;
+      min-width: 80px;
     }
 
     &__body {
+      min-width: 300px;
       flex: 1;
     }
   }

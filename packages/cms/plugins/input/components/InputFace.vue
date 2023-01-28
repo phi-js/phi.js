@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from '../../../../i18n'
-import { parseTranslations } from '../../../functions'
 import { UiInput } from '@/packages/ui/components'
 
 const props = defineProps({
@@ -39,15 +38,11 @@ const isButton = computed(() =>
 
 const i18n = useI18n()
 const translatedProps = computed(() => {
-  return parseTranslations(
-    {
-      ...props.modelValue?.props,
-      class: undefined,
-      style: undefined,
-    },
-    i18n.locale,
-    props.modelValue.i18n,
-  )
+  return i18n.obj({
+    ...props.modelValue?.props,
+    class: undefined,
+    style: undefined,
+  })
 })
 
 function onClickFace() {

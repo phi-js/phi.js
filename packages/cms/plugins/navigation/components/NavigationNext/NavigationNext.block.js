@@ -20,6 +20,7 @@ export default {
   editor: {
     actions: [
       {
+        'id': 'NavigationLinkEditor',
         'title': 'Link options',
         'component': NavigationLinkEditor,
         'v-model': 'block',

@@ -16,12 +16,11 @@ import { CmsBlock } from '../CmsBlock'
 import {
   getPluginData,
   sanitizeStory,
-  parseTranslations,
   forEachBlock,
   setProperty,
   useStylesheets,
 } from '../../functions'
-import { useI18n, locale } from '@/packages/i18n'
+import { useI18n } from '@/packages/i18n'
 import { VM } from '@/packages/vm'
 
 export default {
@@ -97,13 +96,13 @@ export default {
       const pageClone = JSON.parse(JSON.stringify(currentPage.value))
       forEachBlock(pageClone, (block) => {
         if (block.props) {
-          block.props = parseTranslations(block.props, locale.value, block.i18n)
+          block.props = i18n.obj(block.props)
         }
         if (block.rules) {
-          block.rules = parseTranslations(block.rules, locale.value, block.i18n)
+          block.rules = i18n.obj(block.rules)
         }
         if (block['v-on']) {
-          block['v-on'] = parseTranslations(block['v-on'], locale.value, block.i18n)
+          block['v-on'] = i18n.obj(block['v-on'])
         }
       })
 
@@ -151,7 +150,7 @@ export default {
         return
       }
 
-      const evaluableSetup = parseTranslations(sanitizedStory.value.setup, locale.value)
+      const evaluableSetup = i18n.obj(sanitizedStory.value.setup)
       storyVM.eval(evaluableSetup, innerModel.value)
       isMounted.value = true
     })

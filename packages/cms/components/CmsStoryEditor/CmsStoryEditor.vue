@@ -116,7 +116,7 @@ provide('$_cms_story', {
           <CmsSlotEditor
             v-model:slot="innerStory.header"
             class="LayoutPage__header"
-            label="to header"
+            label="Header"
             @update:slot="emitUpdate"
           />
           <div class="CmsStoryEditor__separator">
@@ -156,7 +156,7 @@ provide('$_cms_story', {
           <CmsSlotEditor
             v-model:slot="innerStory.footer"
             class="LayoutPage__footer"
-            label="to footer"
+            label="Footer"
             @update:slot="emitUpdate"
           />
         </div>

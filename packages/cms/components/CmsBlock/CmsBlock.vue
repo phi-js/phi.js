@@ -130,71 +130,47 @@ const CmsBlock = {
     })
 
     /* Block event listeners */
-    const blockListeners = ref({})
-
-    function pushListener(eventName, callback, override = false) {
-      if (!blockListeners.value[eventName]) {
-        blockListeners.value[eventName] = callback
+    function pushListener(objListeners, eventName, callback) {
+      if (!objListeners[eventName]) {
+        objListeners[eventName] = callback
         return
       }
 
-      if (override) {
-        blockListeners.value[eventName] = callback
+      if (Array.isArray(objListeners[eventName])) {
+        objListeners[eventName].push(callback)
         return
       }
 
-      if (Array.isArray(blockListeners.value[eventName])) {
-        blockListeners.value[eventName].push(callback)
-        return
-      }
-
-      blockListeners.value[eventName] = [blockListeners.value[eventName], callback]
+      objListeners[eventName] = [objListeners[eventName], callback]
     }
 
+    const pluginData = getPluginData()
 
-    // v-models listeners
-    // const tmpInnerModel = {}
+    const blockListeners = computed(() => {
+      const retval = {}
 
-    for (const p in props.block) {
-      if (p.substring(0, 7) === 'v-model' && props.block[p]) {
-        const variableName = props.block[p]
-        const propName = p.substring(8) || 'modelValue'
-        const eventName = 'onUpdate:' + propName
+      // v-models listeners
+      for (const p in props.block) {
+        if (p.substring(0, 7) === 'v-model' && props.block[p]) {
+          const variableName = props.block[p]
+          const propName = p.substring(8) || 'modelValue'
+          const eventName = 'onUpdate:' + propName
 
-        const callback = (newValue) => {
-          setModelProperty(variableName, newValue)
-          // setProperty(tmpInnerModel, variableName, newValue)
+          const callback = (newValue) => setModelProperty(variableName, newValue)
+
+          pushListener(retval, eventName, callback)
         }
-
-        pushListener(eventName, callback)
       }
-    }
 
-    // v-on listeners
-    /*
-    Edge case:   block['v-on']['update:modelValue']
-    Se espera que en el modelo a evaluar venga el valor actualizado del v-model.
-    Para esto se usa tmpInnerModel, cuyo valor se establece cuando ha ocurrido el onUpdate:modelValue creado por la propiedad v-model
-    */
-    if (props.block?.['v-on']) {
-
-      watchEffect(() => {
-
+      // v-on listeners
+      if (props.block?.['v-on']) {
         const listeners = props.block['v-on']
         for (let eventName in listeners) {
           const eventCallback = ($event) => {
             blockVM.eval(
               listeners[eventName],
               {
-              // ...evaluableModel.value,  // evaluableModel is not reacting to outer chages of innerModel., so use innerModel directly instead
-                // ...tmpInnerModel,
                 ...innerModel,
-
-                // $item: {
-                //   ...innerModel?.$item,
-                //   ...tmpInnerModel?.$item,
-                // },
-
                 $event,
                 $block: props.block,
               },
@@ -202,18 +178,31 @@ const CmsBlock = {
           }
 
           const propName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
-
-          // No usar la opcion de "override" (el tercer argumento en "true")
-          // Porque sobreescribe lo que el bloque haya definido en "v-on": { "update:modelValue": "... important things ..."}
-          // pushListener(propName, eventCallback, true)
-          pushListener(propName, eventCallback)
+          pushListener(retval, propName, eventCallback)
         }
+      }
 
-      })
-    }
+
+      // Block listeners defined via plugins
+      if (Array.isArray(pluginData?.blockListeners)) {
+        pluginData.blockListeners.forEach((listener) => {
+          const propName = 'on' + listener.event.charAt(0).toUpperCase() + listener.event.slice(1)
+          pushListener(
+            retval,
+            propName,
+            ($event) => {
+              return listener.callback($event, props.block, innerModel)
+            },
+          )
+        })
+      }
+
+      return retval
+    })
 
 
     /*
+    DEPRECATED
     "bubble" property in block indicates which block events should be bubbled
     i.e. the CmsStory object will EMIT them in a 'story-emit' event: <CmsStory @story-emit="..." />
 
@@ -240,34 +229,18 @@ const CmsBlock = {
       }
     }
     */
-    if (Array.isArray(props.block.bubble)) {
-      props.block.bubble.forEach((eventName) => {
-        const propName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
-        pushListener(propName, ($event) => injectedStory?.emitStoryEvent?.({
-          name: eventName,
-          data: $event,
-          block: props.block,
-          bubbled: true,
-        }))
-      })
-    }
+    // if (Array.isArray(props.block.bubble)) {
+    //   props.block.bubble.forEach((eventName) => {
+    //     const propName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)
+    //     pushListener(propName, ($event) => injectedStory?.emitStoryEvent?.({
+    //       name: eventName,
+    //       data: $event,
+    //       block: props.block,
+    //       bubbled: true,
+    //     }))
+    //   })
+    // }
 
-
-    /*
-    Block listeners defined via plugins
-    */
-    const pluginData = getPluginData()
-    if (Array.isArray(pluginData?.blockListeners)) {
-      pluginData.blockListeners.forEach((listener) => {
-        const propName = 'on' + listener.event.charAt(0).toUpperCase() + listener.event.slice(1)
-        pushListener(
-          propName,
-          ($event) => {
-            return listener.callback($event, props.block, innerModel)
-          },
-        )
-      })
-    }
 
     /* Determine slot nodes */
     const blockSlots = ref({})

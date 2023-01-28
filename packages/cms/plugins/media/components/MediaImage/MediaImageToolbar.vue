@@ -51,7 +51,7 @@ const alignment = computed(() => {
       <template #trigger>
         <UiIcon
           :src="alignment.current.icon"
-          class="BlockScaffold__toolbar-icon expansible"
+          class="BlockScaffold__button BlockScaffold__button--expansible"
         />
       </template>
       <template #contents="{ close }">
@@ -64,8 +64,8 @@ const alignment = computed(() => {
             :key="i"
             :title="align.title"
             :src="align.icon"
-            class="BlockScaffold__toolbar-icon"
-            :class="{ 'BlockScaffold__toolbar-icon--active': align.value == alignment.current.value }"
+            class="BlockScaffold__button"
+            :class="{ 'BlockScaffold__button--active': align.value == alignment.current.value }"
             @click="emit('update:modelValue', { ...props.modelValue, align: align.value })"
           />
         </div>
@@ -81,13 +81,3 @@ const alignment = computed(() => {
     />-->
   </div>
 </template>
-
-<style lang="scss">
-.MediaImageToolbar {
-  .expansible {
-    &::after {
-      content: "▾";
-    }
-  }
-}
-</style>

@@ -119,13 +119,3 @@ function onPopState() {
     </UiDialog>
   </div>
 </template>
-
-<style lang="scss">
-.CmsBlockPicker {
-  dialog {
-    height: 800px;
-    max-height: 80vh;
-    margin: 5vh auto;
-  }
-}
-</style>
