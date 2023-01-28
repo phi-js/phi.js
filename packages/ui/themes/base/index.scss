@@ -1,24 +1,22 @@
-.ui-theme-base {
-  @import './variables.scss';
+@import './variables.scss';
 
-  @import './components/UiButton.scss';
-  @import './components/UiDataTable.scss';
-  @import './components/UiDetails.scss';
-  @import './components/UiDrawerStack.scss';
-  @import './components/UiDropdown.scss';
-  @import './components/UiFileList.scss';
-  @import './components/UiForm--wide.scss';
-  @import './components/UiForm.scss';
-  @import './components/UiGroup.scss';
-  @import './components/UiInput.scss';
-  @import './components/UiInputSwitch.scss';
-  @import './components/UiLoading.scss';
-  @import './components/UiSelect.scss';
-  @import './components/UiSelectList.scss';
-  @import './components/UiTabs.scss';
-  @import './components/UiToolbar.scss';
-  @import './components/UiUpload.scss';
-  @import './components/UiWindow.scss';
+@import './components/UiButton.scss';
+@import './components/UiDataTable.scss';
+@import './components/UiDetails.scss';
+@import './components/UiDrawerStack.scss';
+@import './components/UiDropdown.scss';
+@import './components/UiFileList.scss';
+@import './components/UiForm--wide.scss';
+@import './components/UiForm.scss';
+@import './components/UiGroup.scss';
+@import './components/UiInput.scss';
+@import './components/UiInputSwitch.scss';
+@import './components/UiLoading.scss';
+@import './components/UiSelect.scss';
+@import './components/UiSelectList.scss';
+@import './components/UiTabs.scss';
+@import './components/UiToolbar.scss';
+@import './components/UiUpload.scss';
+@import './components/UiWindow.scss';
 
-  @import './modifiers/clickable.scss';
-}
+@import './modifiers/clickable.scss';

@@ -341,7 +341,13 @@ const uid = ref('UiInput' + (++_UiInput_counter))
     <div class="UiInput__body">
       <slot name="default">
         <template v-if="customComponent">
-          <!-- Create an invisible input field to handle native validations -->
+          <component
+            :is="customComponent"
+            ref="element"
+            v-bind="elementProps"
+          />
+
+          <!-- Invisible input field to handle native validations -->
           <label class="UiInput__validatorInput">
             <input
               :id="uid"
@@ -350,12 +356,6 @@ const uid = ref('UiInput' + (++_UiInput_counter))
               v-bind="validatorInputProps"
             >
           </label>
-
-          <component
-            :is="customComponent"
-            ref="element"
-            v-bind="elementProps"
-          />
         </template>
         <textarea
           v-else-if="props.type == 'textarea'"

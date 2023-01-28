@@ -109,40 +109,43 @@ async function onDialogClose($event) {
       class="UiDialog__dialog"
       @close="onDialogClose"
     >
-      <div class="UiDialog__header">
-        <slot
-          name="header"
-          :close="close"
-        />
-      </div>
+      <div class="UiDialog__box">
+        <div class="UiDialog__header">
+          <slot
+            name="header"
+            :close="close"
+          />
+        </div>
 
-      <div
-        v-if="$slots.contents || $slots.default"
-        class="UiDialog__contents"
-      >
-        <slot
-          name="contents"
-          :close="close"
-        />
-        <slot
-          name="default"
-          :close="close"
-        />
-      </div>
+        <div
+          v-if="$slots.contents || $slots.default"
+          class="UiDialog__contents"
+        >
+          <slot
+            name="contents"
+            :close="close"
+          />
+          <slot
+            name="default"
+            :close="close"
+          />
+        </div>
 
-      <slot
-        name="footer"
-        :close="close"
-      >
-        <button
-          v-if="showCloseButton"
-          class="UiDialog__closeButton"
-          type="button"
-          style="margin: 4px"
-          @click="close"
-          v-text="i18n.t('close')"
-        />
-      </slot>
+        <slot
+          name="footer"
+          :close="close"
+        >
+          <footer class="UiDialog__footer">
+            <button
+              v-if="showCloseButton"
+              class="UiDialog__closeButton UiButton UiButton--cancel"
+              type="button"
+              @click="close"
+              v-text="i18n.t('Close')"
+            />
+          </footer>
+        </slot>
+      </div>
     </dialog>
   </div>
 </template>
@@ -150,63 +153,60 @@ async function onDialogClose($event) {
 <style lang="scss">
 .UiDialog {
   &__dialog {
-    position: relative;
-    width: 100%;
-    // max-width: 40vw;
-    max-width: 600px;
+    // position: relative;
+    // width: 100%;
+    // // max-width: 40vw;
+    // max-width: 600px;
+    // height: 100%;
+    // min-width: 40vw;
+    width: 600px;
 
     border: 0;
     border-radius: 5px;
-    background-color: var(--ui-color-background);
-    color: var(--ui-color-foreground);
+    // background-color: var(--ui-color-background);
+    // color: var(--ui-color-foreground);
     padding: 0;
-
     overflow: visible; // allows UiPopover inside dialog to show correctly
-    margin-top: 10%;
+    margin-top: 8vh;
 
     &::backdrop {
       background: rgba(0,0,0, 0.6);
     }
   }
 
+  &__box {
+    max-height: 82vh;
+    display: flex;
+    flex-direction: column;
+  }
+
   &__contents {
-    height: 100%;
+    flex: 1;
+
     overflow: auto;
-    &::-webkit-scrollbar {
-      width: 7px;
-    }
+    // &::-webkit-scrollbar {
+    //   width: 7px;
+    // }
 
-    &::-webkit-scrollbar-thumb {
-      background-color: rgba(255,255,255, 0.1);
-      border-radius: 6px;
-    }
+    // &::-webkit-scrollbar-thumb {
+    //   background-color: rgba(255,255,255, 0.1);
+    //   border-radius: 6px;
+    // }
 
-    &:hover::-webkit-scrollbar-thumb {
-      background-color: #ccc;
-    }
+    // &:hover::-webkit-scrollbar-thumb {
+    //   background-color: #ccc;
+    // }
+  }
+
+  &__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px;
   }
 
   &__closeButton {
-    position: absolute;
-    right: 0;
-    bottom: 100%;
-
-    cursor: pointer;
-    background: transparent;
-    border: 0;
-    border-radius: 4px;
-    padding: 8px 12px;
-
-    &:hover {
-      background-color: rgba(255,255,255, 0.1);
-    }
+    margin-left: auto;
   }
 }
-
-// @media only screen and (max-width: 768px) {
-//   .UiDialog {
-//     width: 100%;
-//   }
-// }
-
 </style>

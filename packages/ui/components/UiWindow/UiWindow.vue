@@ -3,7 +3,7 @@ export default { inheritAttrs: false }
 </script>
 
 <script setup>
-import { useAttrs, ref, watch, onMounted } from 'vue'
+import { useAttrs, ref, watch, onMounted, computed } from 'vue'
 
 import { UiIcon } from '../UiIcon'
 import { UiPopover } from '../UiPopover'
@@ -217,6 +217,21 @@ function resetBody() {
 
 
 const isTransparent = ref(false)
+
+const currentIcon = computed(() => {
+  switch (dock.value) {
+  case 'bottom':
+    return 'mdi:dock-bottom'
+  case 'top':
+    return 'mdi:dock-top'
+  case 'left':
+    return 'mdi:dock-left'
+  case 'right':
+    return 'mdi:dock-right'
+  default:
+    return 'mdi:dock-window'
+  }
+})
 </script>
 
 <template>
@@ -288,7 +303,7 @@ const isTransparent = ref(false)
 
           <UiPopover>
             <template #trigger>
-              <UiIcon src="mdi:dots-vertical" />
+              <UiIcon :src="currentIcon" />
             </template>
             <template #contents="popover">
               <div
