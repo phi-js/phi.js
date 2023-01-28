@@ -16,15 +16,25 @@ import { getTree, getComponent } from './pages.js'
 
 import { provideI18n } from '@/packages/i18n'
 const i18n = provideI18n({
-  locale: 'es', // set locale
-  fallbackLocale: 'en', // set fallback locale,
-  currency: 'cop', //default currency
-  dictionary: {
-    de: { globalWord: 'globales Wort' },
-    en: { globalWord: 'Global Word' },
-    es: { globalWord: 'Palabra Global' },
-    fr: { globalWord: 'mot global' },
+  // new options
+  languages: {
+    en: 'English',
+    es: 'Español',
+    de: 'Deutsch',
+    fr: 'Français',
+    pir: 'Pirate!',
   },
+
+  // old options
+  // locale: 'es', // set locale
+  // fallbackLocale: 'en', // set fallback locale,
+  // currency: 'cop', //default currency
+  // dictionary: {
+  //   de: { globalWord: 'globales Wort' },
+  //   en: { globalWord: 'Global Word' },
+  //   es: { globalWord: 'Palabra Global' },
+  //   fr: { globalWord: 'mot global' },
+  // },
 })
 
 function filterTree(arrTree, strFilter) {
@@ -107,25 +117,13 @@ watch(
         icon="/phi.svg"
       />
 
-      <UiItem
-        icon="mdi:web"
+      <UiInput
+        v-model="i18n.language.value"
         class="App__langPicker"
-      >
-        <select v-model="i18n.locale">
-          <option value="en">
-            en
-          </option>
-          <option value="es">
-            es
-          </option>
-          <option value="de">
-            de
-          </option>
-          <option value="fr">
-            fr
-          </option>
-        </select>
-      </UiItem>
+        type="select-native"
+        icon="mdi:web"
+        :options="i18n.availableLanguages"
+      />
     </div>
 
     <div class="App__container">

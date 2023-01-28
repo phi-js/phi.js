@@ -10,10 +10,16 @@ export default defineConfig({
     visualizer(),
   ],
 
-  resolve: { alias: { '@': path.resolve(__dirname, './') } },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './'),
+      'vue': 'vue/dist/vue.esm-bundler.js',
+    },
+  },
 
   build: {
     sourcemap: false,
+    // sourcemap: true,
     lib: {
       entry: path.resolve(__dirname, 'lib/index.js'),
       name: 'Phi',
@@ -22,11 +28,11 @@ export default defineConfig({
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: ['vue'],
+      // external: ['vue'], // Use Vue BUILT IN the exported script
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps
-        globals: { vue: 'Vue' },
+        // globals: { vue: 'Vue' },
 
         inlineDynamicImports: true,
       },
