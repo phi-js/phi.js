@@ -12,7 +12,10 @@ const props = defineProps({
       label,
       subtext,
       options,
-    }
+    },
+    rules: [
+      {type: 'required'}
+    ]
   }
   */
   modelValue: {
@@ -75,6 +78,7 @@ function onClickFace() {
       v-else
       :style="!isButton ? 'pointer-events: none;' : null"
       v-bind="translatedProps"
+      :rules="modelValue.rules"
     />
   </div>
 </template>

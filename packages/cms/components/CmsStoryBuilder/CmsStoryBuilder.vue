@@ -269,6 +269,7 @@ const isModelExplorerOpen = ref(false)
         <!-- Run / Stop button -->
         <UiItem
           class="CmsStoryBuilder__clickable CmsStoryBuilder__runButton"
+          :class="{'CmsStoryBuilder__runButton--running': isRunning}"
           :text="!isRunning ? i18n.t('CmsStoryBuilder.Run') : i18n.t('CmsStoryBuilder.Stop')"
           :icon="!isRunning ? 'mdi:play' : 'mdi:stop'"
           @click="isRunning = !isRunning"
