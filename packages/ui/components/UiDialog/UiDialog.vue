@@ -135,9 +135,11 @@ async function onDialogClose($event) {
           name="footer"
           :close="close"
         >
-          <footer class="UiDialog__footer">
+          <footer
+            v-if="showCloseButton"
+            class="UiDialog__footer"
+          >
             <button
-              v-if="showCloseButton"
               class="UiDialog__closeButton UiButton UiButton--cancel"
               type="button"
               @click="close"
@@ -153,18 +155,12 @@ async function onDialogClose($event) {
 <style lang="scss">
 .UiDialog {
   &__dialog {
-    // position: relative;
-    // width: 100%;
-    // // max-width: 40vw;
-    // max-width: 600px;
-    // height: 100%;
-    // min-width: 40vw;
     width: 600px;
 
     border: 0;
     border-radius: 5px;
-    // background-color: var(--ui-color-background);
-    // color: var(--ui-color-foreground);
+    background-color: var(--ui-color-background);
+    color: var(--ui-color-foreground);
     padding: 0;
     overflow: visible; // allows UiPopover inside dialog to show correctly
     margin-top: 8vh;

@@ -202,6 +202,7 @@ function rotate() {
       flex-direction: column;
       align-items: stretch;
       gap: 8px;
+      padding: 5px;
     }
   }
 }

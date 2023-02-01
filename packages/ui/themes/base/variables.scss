@@ -2,10 +2,40 @@
   --ui-color-primary: #1d7cbf;
   --ui-color-danger: #ea5455;
   --ui-color-hover: rgba(255,255,255, 0.08);
-  --ui-color-z1: rgba(0,0,0, 0.1);
 
   --ui-duration-snap: .2s;
   --ui-duration-quick: .3s;
   --ui-duration-smooth: .7s;
   --ui-duration-slow: 1s;
+}
+
+:root,
+.color-scheme-light {
+  --ui-color-foreground: #222;
+  --ui-color-background: #f1f2f3;
+
+  --ui-color-z1: rgba(0, 0, 0, 0.05);
+  --ui-color-z2: #f8f8f8;
+  --ui-color-z3: #e8e8e8;
+  --ui-color-hover: rgba(0,0,0, 0.06);
+
+  --ui-color-ridge-top: #eeeeee99;
+  --ui-color-ridge-bottom: #ddd;
+  --ui-color-ridge-left: #ccc;
+  --ui-color-ridge-right: #ccc;
+}
+
+.color-scheme-dark {
+  --ui-color-foreground: #eeeeee;
+  --ui-color-background: #212223;
+
+  --ui-color-z1: rgba(255, 255, 255, 0.06);
+  --ui-color-z2: #48484c;
+  --ui-color-z3: #68686c;
+  --ui-color-hover: rgba(255,255,255, 0.08);
+
+  --ui-color-ridge-top: #cccccc22;
+  --ui-color-ridge-bottom: #00000088;
+  --ui-color-ridge-left: #00000044;
+  --ui-color-ridge-right: #00000055;
 }

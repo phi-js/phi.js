@@ -57,6 +57,7 @@ textarea.UiInput__element {
     opacity: 0.8;
   }
 
+  input[type=text].UiInput__element, // So that it prioritizes
   &__element {
     @extend .UiInputNativeElement;
 
