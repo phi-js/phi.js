@@ -76,7 +76,8 @@ const CmsBlock = {
     }
 
     function emitUpdate(newModelValue) {
-      _haltEmit = true
+      // _haltEmit = true  // this is breaking updates on computed items (see CmsStory '$enum')
+      // The thing is, I know it was added to prevent an update loop, but I've seen no errors after removing it so far
       emit('update:modelValue', newModelValue)
     }
 

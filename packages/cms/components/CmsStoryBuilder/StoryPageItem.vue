@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import { UiItem, UiIcon, UiPopover } from '@/packages/ui'
+import { UiItem, UiIcon, UiDropdown } from '@/packages/ui'
 import { getBlockEditors } from '../../functions'
 
 const i18n = useI18n({
@@ -51,15 +51,15 @@ function onClickAction(action) {
       </template>
     </UiItem>
 
-    <UiPopover>
+    <UiDropdown>
       <template #trigger>
         <UiIcon
           src="mdi:dots-vertical"
           class="CmsStoryBuilder__controlItem"
         />
       </template>
-      <template #contents="{ close }">
-        <div class="BlockScaffold__popover">
+      <template #default="{ close }">
+        <div class="BlockScaffold__popover color-scheme-dark">
           <UiItem
             v-for="action in blockEditors.actions"
             :key="action.id"
@@ -74,7 +74,7 @@ function onClickAction(action) {
           />
         </div>
       </template>
-    </UiPopover>
+    </UiDropdown>
   </div>
 </template>
 
@@ -83,9 +83,10 @@ function onClickAction(action) {
   display: inline-flex;
   align-items: stretch;
 
-  .UiPopover__trigger {
-    border-left: 1px solid #cccccc77;
-    border-right: 1px solid #ccc;
+  .UiDropdown__trigger {
+    border-left: 1px solid var(--ui-color-ridge-left, #cccccc77);
+    border-right: 1px solid var(--ui-color-ridge-right, #ccc);
+
     height: 100%;
   }
 }

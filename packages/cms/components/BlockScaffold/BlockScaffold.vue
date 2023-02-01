@@ -2,7 +2,7 @@
 import { computed, inject } from 'vue'
 
 import { useI18n } from '@/packages/i18n'
-import { UiItem, UiIcon, UiPopover } from '@/packages/ui'
+import { UiItem, UiIcon, UiDropdown } from '@/packages/ui'
 import { getBlockDefinition, getBlockEditors } from '../../functions'
 
 const i18n = useI18n({
@@ -87,7 +87,7 @@ const parent = curSlotItem?.parent
           @click.stop.prevent="parent.selectBlock()"
         />
 
-        <div class="BlockScaffold__toolbar">
+        <div class="BlockScaffold__toolbar color-scheme-dark">
           <UiItem
             class="BlockScaffold__dragHandle"
             icon="mdi:drag"
@@ -109,14 +109,14 @@ const parent = curSlotItem?.parent
           />
 
           <!-- Available actions dropdown -->
-          <UiPopover>
+          <UiDropdown class="BlockScaffold__dropdown">
             <template #trigger>
               <UiItem
                 class="BlockScaffold__menuBtn"
                 icon="mdi:dots-vertical"
               />
             </template>
-            <template #contents="{close}">
+            <template #default="{close}">
               <div class="BlockScaffold__popover">
                 <UiItem
                   v-for="action in availableActions"
@@ -132,7 +132,7 @@ const parent = curSlotItem?.parent
                 />
               </div>
             </template>
-          </UiPopover>
+          </UiDropdown>
         </div>
       </template>
 

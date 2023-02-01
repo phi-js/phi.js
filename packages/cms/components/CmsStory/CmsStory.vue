@@ -17,6 +17,7 @@ import {
   getPluginData,
   sanitizeStory,
   forEachBlock,
+  getProperty,
   setProperty,
   useStylesheets,
 } from '../../functions'
@@ -353,6 +354,8 @@ export default {
       return currentPage.value?.id == pageId
     }
 
+    const storyStylesheets = computed(() => sanitizedStory.value.stylesheets)
+
     // Provide global story methods (used by CmsBlock)
     const providedData = {
       getPageHref,
@@ -366,6 +369,7 @@ export default {
       nav: pageNav,
       refs: blockRefs,
       defineBlockRef,
+      stylesheets: storyStylesheets,
     }
     provide('$_cms_story', providedData)
     storyVM.custom = { story: providedData }
@@ -397,6 +401,74 @@ export default {
       if (previousScrollY?.[currentPage.value?.id]) {
         window.scrollTo(0, previousScrollY[currentPage.value.id])
       }
+    }
+
+
+    const declaredEnums = computed(() => {
+      const retval = {}
+      forEachBlock(sanitizedStory.value, (block) => {
+        if (block.component == 'InputSelect' && block['v-model']) {
+          retval[block['v-model']] = block.props?.options?.length
+            ? i18n.obj(block.props?.options)
+            : []
+        }
+      })
+      return retval
+    })
+
+    const $enum = computed(() => {
+      const enumValues = {}
+      for (const [variableName, enumOptions] of Object.entries(declaredEnums.value)) {
+        const currentValue = getProperty(innerModel.value, variableName)
+
+        let targetValue = null
+        if (Array.isArray(currentValue)) {
+          // Find values this way, so that the end result is sorted in the same order as the enum options
+          targetValue = []
+          enumOptions.forEach((option) => {
+            if (currentValue.includes(option.value)) {
+              targetValue.push(option.text)
+            }
+          })
+        } else {
+          const matchingEnum = enumOptions.find((e) => e.value == currentValue)
+          targetValue = matchingEnum?.text ? matchingEnum.text : currentValue
+        }
+
+        setProperty(enumValues, variableName, targetValue)
+      }
+
+      return enumValues
+    })
+
+    const $format = {
+      ul(value) {
+        if (!value) {
+          return ''
+        }
+        const arrValue = Array.isArray(value) ? value : [value]
+        return '<ul>'
+          + arrValue.map((i) => `<li>${i}</li>`).join('')
+          + '</ul>'
+      },
+
+      ol(value) {
+        if (!value) {
+          return ''
+        }
+        const arrValue = Array.isArray(value) ? value : [value]
+        return '<ol>'
+          + arrValue.map((i) => `<li>${i}</li>`).join('')
+          + '</ol>'
+      },
+
+      list(value) {
+        if (!value) {
+          return ''
+        }
+        const arrValue = Array.isArray(value) ? value : [value]
+        return new Intl.ListFormat(i18n.language.value).format(arrValue) // This is awesome
+      },
     }
 
     // Render function
@@ -431,6 +503,8 @@ export default {
                   $pages: visiblePages.value,
                   $nav: pageNav.value,
                   $page: pageNav.value.current,
+                  $enum: $enum.value,
+                  $format: $format,
                 },
                 'onUpdate:modelValue': onUpdateModelValue,
               })

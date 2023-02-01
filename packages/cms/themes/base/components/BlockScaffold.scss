@@ -19,7 +19,6 @@
     visibility: visible;
   }
 
-
   // "outline"
   &::after {
     content: '';
@@ -67,7 +66,8 @@
     position: absolute;
     left: 0;
     bottom: 100%;
-    z-index: 1;
+    
+    z-index: 2;
 
     display: flex;
     flex-wrap: nowrap;
@@ -100,6 +100,10 @@
     text-shadow: none;
   }
 
+  &:hover {
+    z-index: 4;
+  }
+
   &:hover > &__toolbar-container > &__label {
     opacity: 1;
   }
@@ -118,7 +122,7 @@
     user-select: none;
     z-index: 1;
 
-    overflow-x: auto;
+    // overflow-x: auto;
     max-width: calc(100vw - 72px);
 
     .UiForm {
@@ -134,9 +138,10 @@
 
   &__dragHandle {
     cursor: move;
-    font-size: 0.9rem;
-    font-weight: bold;
     color: #ffffffcc;
+
+    font-weight: bold;
+    font-size: 0.85rem;
 
     &:hover {
       background-color: rgba(255,255,255, 0.1);
@@ -154,6 +159,7 @@
     width: 36px;
 
     color: rgba(255,255,255, 0.7);
+    font-size: 0.85rem;
 
     cursor: pointer;
     &:hover {
@@ -172,6 +178,8 @@
     padding: 0 10px;
     border: 0;
     background: transparent;
+
+    font-size: 0.75rem;
 
     &--active {
       color: var(--ui-color-primary);
@@ -193,8 +201,19 @@
     --ui-item-padding: 8px 12px;
     user-select: none;
 
+    color: var(--ui-color-foreground);
+    background-color: var(--ui-color-z2);
+
+    padding: 4px;
+    border-radius: 4px;
+
     .UiItem {
       @extend .ui--clickable;
+
+      font-weight: bold;
+      font-size: 0.85rem;
+
+      border-radius: 4px;
     }
   }
 
@@ -276,6 +295,7 @@
 
 // Block-specific stylings
 .BlockScaffold--LayoutGroup {
+  z-index: 2;
   padding: 6px;
   // margin: 0 -3px; // causes horizontal overscroll on body
   margin-bottom: 6px;

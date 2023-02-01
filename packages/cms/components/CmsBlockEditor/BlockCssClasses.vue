@@ -208,6 +208,7 @@ function updateStoryDeclaration(sheetDeclaration) {
       v-for="(blockClass, i) in classList"
       :key="blockClass.name"
       :text="blockClass.name"
+      class="BlockCssClasses__class outset"
       @delete="removeClass(blockClass.name)"
     >
       <!-- Class declaration editor (changes injected story's "stylesheets") if a matching declaration exists -->
@@ -228,6 +229,7 @@ function updateStoryDeclaration(sheetDeclaration) {
 
     <!-- Class appender -->
     <UiInput
+      class="BlockCssClasses__adder"
       type="select-native"
       placeholder="Add class"
       :options="appenderOptions"
@@ -265,3 +267,28 @@ function updateStoryDeclaration(sheetDeclaration) {
     </UiDialog>
   </div>
 </template>
+
+<style lang="scss">
+.BlockCssClasses {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  &__adder,
+  &__class summary {
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+
+  &__adder select {
+    width: 100%;
+    border-radius: 5px;
+    border: 2px dashed rgba(153, 153, 153, 0.5333333333);
+    outline: none !important;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--ui-color-hover);
+    }
+  }
+}
+</style>

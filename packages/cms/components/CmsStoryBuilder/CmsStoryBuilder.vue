@@ -247,7 +247,7 @@ function onOpenEditor({ index, actionId }) {
 
 
 
-const storyFields = computed(() => getStoryFields(innerStory.value))
+const storyFields = computed(() => i18n.obj(getStoryFields(innerStory.value)))
 provide('$_vm_fields', storyFields)
 
 
