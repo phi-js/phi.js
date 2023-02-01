@@ -15,6 +15,7 @@ export default {
   'Create': 'Create',
   'Creating': 'Creating',
   'Close': 'Close',
+  'Clear': 'Clear',
   'Edit': 'Edit',
   'Rename': 'Rename',
 

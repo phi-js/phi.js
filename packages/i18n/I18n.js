@@ -118,7 +118,7 @@ export default class I18n {
     if (!objDate) {
       return date + '(?)'
     }
-    return objDate.toLocaleString(this.language.value, options)
+    return objDate.toLocaleString(this.baseLanguage.value, options)
   }
 
   // backwards compat.  deprecate
@@ -131,7 +131,7 @@ export default class I18n {
     if (!objDate) {
       return date + '(?)'
     }
-    return objDate.toLocaleTimeString(this.language.value, options)
+    return objDate.toLocaleTimeString(this.baseLanguage.value, options)
   }
 
   datetime(date, options = undefined) {
@@ -139,7 +139,7 @@ export default class I18n {
     if (!objDate) {
       return date + '(?)'
     }
-    return objDate.toLocaleString(this.language.value, options)
+    return objDate.toLocaleString(this.baseLanguage.value, options)
   }
 
   // "Pretty date" for past dates (1 minute ago, yesterday, etc)
@@ -169,12 +169,12 @@ export default class I18n {
   weekday(nDay) {
     var baseDate = new Date(Date.UTC(2017, 0, 1)) // just a Sunday
     baseDate.setDate(baseDate.getDate() + parseInt(nDay))
-    return baseDate.toLocaleDateString(this.language.value, { weekday: 'long' })
+    return baseDate.toLocaleDateString(this.baseLanguage.value, { weekday: 'long' })
   }
 
   // Format currency
   $(value, currency = null) {
-    return Number(value).toLocaleString(this.language.value, {
+    return Number(value).toLocaleString(this.baseLanguage.value, {
       style: 'currency',
       currency: currency || this.currency || 'USD',
     })
