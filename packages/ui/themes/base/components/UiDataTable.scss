@@ -27,6 +27,16 @@
   max-width: none;
 }
 
+
+button.UiDataTable__toolbarItem {
+  font-family: inherit;
+  color: inherit;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+}
+
+
 .UiDataTable {
   display: flex;
   flex-direction: column;
@@ -52,13 +62,11 @@
 
   &__toolbarItem {
     --ui-item-padding: 8px 12px;
-    cursor: pointer;
     user-select: none;
     border-radius: 4px;
-
+    cursor: pointer;
     &:hover {
-      // background-color: var(--ui-color-hover);
-      background-color: rgba(255,255,255, 0.6);
+      background-color: var(--ui-color-hover) !important;
     }
 
     font-size: 0.9em;
@@ -304,5 +312,49 @@
         }
       }
     }
+  }
+}
+
+
+/* Loading bar */
+.UiDataTable--loading {
+  .UiDataTable__toolbar {
+    position: relative;
+
+    &::after {
+      content: '';
+      border: 2px solid var(--ui-color-primary);
+      border-radius: 2px;
+      display: block;
+
+      position: absolute;
+      top: 100%;
+      z-index: 9;
+
+      animation: borealisBar 2s linear infinite;
+    }
+  }
+}
+
+@keyframes borealisBar {
+  0% {
+    left:0%;
+    right:100%;
+    width:0%;
+  }
+  20% {
+    left:0%;
+    right:75%;
+    width:40%;
+  }
+  85% {
+    right:0%;
+    left:75%;
+    width:20%;
+  }
+  100% {
+    left:100%;
+    right:0%;
+    width:0%;
   }
 }

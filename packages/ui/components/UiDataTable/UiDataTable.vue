@@ -37,6 +37,12 @@ const props = defineProps({
     required: false,
     default: () => [],
   },
+
+  isLoading: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['click-record', 'update:order', 'scroll-bottom'])
@@ -263,6 +269,7 @@ watch(
     class="UiDataTable"
     :class="{
       'UiDataTable--fullscreen': isFullscreen,
+      'UiDataTable--loading': isLoading,
       'UiDataTable--dragging': !!dropData.source,
     }"
   >
