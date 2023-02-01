@@ -1,0 +1,1 @@
+export { default as VmStatementDialog } from './VmStatementDialog.vue'
