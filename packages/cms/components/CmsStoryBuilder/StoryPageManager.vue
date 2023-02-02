@@ -2,7 +2,7 @@
 import { computed, inject, ref, watch } from 'vue'
 import draggable from 'vuedraggable'
 import { useI18n } from '@/packages/i18n'
-import { UiItem, UiDialog, UiInput } from '@/packages/ui'
+import { UiItem, UiDialog } from '@/packages/ui'
 import StoryPageItem from './StoryPageItem.vue'
 
 const i18n = useI18n({

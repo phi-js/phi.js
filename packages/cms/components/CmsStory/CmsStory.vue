@@ -408,9 +408,17 @@ export default {
       const retval = {}
       forEachBlock(sanitizedStory.value, (block) => {
         if (block.component == 'InputSelect' && block['v-model']) {
-          retval[block['v-model']] = block.props?.options?.length
+          let enumOptions = block.props?.options?.length
             ? i18n.obj(block.props?.options)
             : []
+
+          // what if options is a parsed value  e.g. "{{children}}"
+          enumOptions = storyVM.eval(enumOptions, innerModel.value)
+          // what if InputSelect has option-text and option-value props?  2DO!
+
+          if (Array.isArray(enumOptions)) {
+            retval[block['v-model']] = enumOptions
+          }
         }
       })
       return retval

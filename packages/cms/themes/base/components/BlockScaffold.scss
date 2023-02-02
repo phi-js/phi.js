@@ -44,7 +44,7 @@
   }
 
   &--selected {
-    z-index: 2; // messes up dragstart from toolbar (in html blocks only ???)
+    z-index: 3; // messes up dragstart from toolbar (in html blocks only ???)
 
     .BlockScaffold__label {
       display: none;
@@ -54,6 +54,11 @@
       border-color: var(--ui-color-primary);
     }
   }
+
+  &:hover {
+    z-index: 2;
+  }
+
 
   &--selected::after,
   &:hover::after {
@@ -66,7 +71,7 @@
     position: absolute;
     left: 0;
     bottom: 100%;
-    
+
     z-index: 2;
 
     display: flex;
@@ -98,10 +103,6 @@
     //reset
     text-decoration: none;
     text-shadow: none;
-  }
-
-  &:hover {
-    z-index: 4;
   }
 
   &:hover > &__toolbar-container > &__label {
@@ -157,13 +158,12 @@
   &__shortcut {
     align-self: stretch;
     width: 36px;
-
-    color: rgba(255,255,255, 0.7);
     font-size: 0.85rem;
+    opacity: 0.7;
 
     cursor: pointer;
     &:hover {
-      color: #fff;
+      opacity: 1;
       background-color: var(--ui-color-hover);
     }
   }
@@ -295,7 +295,7 @@
 
 // Block-specific stylings
 .BlockScaffold--LayoutGroup {
-  z-index: 2;
+  // z-index: 2;
   padding: 6px;
   // margin: 0 -3px; // causes horizontal overscroll on body
   margin-bottom: 6px;

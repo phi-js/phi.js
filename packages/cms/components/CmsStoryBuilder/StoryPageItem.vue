@@ -23,6 +23,8 @@ const emit = defineEmits(['click', 'delete', 'click-action'])
 
 const blockEditors = computed(() => getBlockEditors(props.modelValue, { allowSource: true }))
 
+const shortcuts = computed(() => blockEditors.value.actions.filter((a) => a.hasData))
+
 const innerBlock = ref()
 watch(
   () => props.modelValue,
@@ -38,7 +40,7 @@ function onClickAction(action) {
 <template>
   <div class="StoryPageItem">
     <UiItem
-      class="CmsStoryBuilder__clickable"
+      class="StoryPageItem__face CmsStoryBuilder__clickable"
       icon="mdi:file"
       :text="innerBlock.title || innerBlock.hash || innerBlock.id"
       @click="emit('click', $event)"
@@ -50,6 +52,16 @@ function onClickAction(action) {
         />
       </template>
     </UiItem>
+
+    <!-- shortcut icons -->
+    <UiIcon
+      v-for="action in shortcuts"
+      :key="action.id"
+      :src="action.icon"
+      :title="action.description"
+      class="BlockScaffold__shortcut"
+      @click.stop="onClickAction(action)"
+    />
 
     <UiDropdown>
       <template #trigger>
@@ -80,13 +92,15 @@ function onClickAction(action) {
 
 <style lang="scss">
 .StoryPageItem {
-  display: inline-flex;
+  display: flex;
   align-items: stretch;
 
-  .UiDropdown__trigger {
-    border-left: 1px solid var(--ui-color-ridge-left, #cccccc77);
+  &__face {
     border-right: 1px solid var(--ui-color-ridge-right, #ccc);
+  }
 
+  .UiDropdown__trigger {
+    border-right: 1px solid var(--ui-color-ridge-right, #ccc);
     height: 100%;
   }
 }
