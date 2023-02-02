@@ -47,6 +47,7 @@ watch(
 
     switch (props.schema.type) {
     case 'date':
+    case 'datetime':
       statement.value = {
         field: props.schema.value,
         op: 'date.between',
@@ -94,7 +95,7 @@ function emitUpdate() {
   // const curValue = JSON.parse(JSON.stringify(statement.value))
   const curValue = { ...statement.value }
 
-  if (props.schema.type == 'date') {
+  if (props.schema.type == 'date' || props.schema.type == 'datetime') {
     if (statement.value.args?.[0] && statement.value.args?.[1]) {
       emit('update:modelValue', curValue)
     }
