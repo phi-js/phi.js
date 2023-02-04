@@ -178,7 +178,7 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
     'component': BlockListenersEditor,
     'v-model': 'block',
 
-    'hasData': !!block['v-on'],
+    'hasData': block['v-on'] && typeof block['v-on'] == 'object' && Object.keys(block['v-on']).length,
     'description': 'This block reacts to events',
   })
 
