@@ -71,11 +71,7 @@ function open() {
 }
 
 function close() {
-  // refDialog.value?.close?.()
-  document.body.style.overflow = null
-  isOpen.value = false
-  emit('update:open', isOpen.value)
-  emit('close')
+  refDialog.value?.close?.()
 }
 
 async function onDialogClose($event) {
@@ -93,7 +89,11 @@ async function onDialogClose($event) {
   }
 
   $event.target.returnValue = '' // reset dialog's returnValue
-  close()
+
+  document.body.style.overflow = null
+  isOpen.value = false
+  emit('update:open', isOpen.value)
+  emit('close')
 }
 </script>
 
@@ -149,7 +149,6 @@ async function onDialogClose($event) {
           :close="close"
         >
           <form
-            v-if="onAccept || onCancel"
             class="UiDialog__footer"
             method="dialog"
           >
@@ -165,6 +164,12 @@ async function onDialogClose($event) {
               class="UiDialog__cancelButton UiButton UiButton--cancel"
               type="submit"
               v-text="i18n.t('Cancel')"
+            />
+            <button
+              v-else
+              class="UiDialog__cancelButton UiButton UiButton--cancel"
+              type="submit"
+              v-text="i18n.t('Close')"
             />
           </form>
         </slot>
