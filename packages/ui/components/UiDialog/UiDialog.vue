@@ -11,20 +11,26 @@ const props = defineProps({
     default: false,
   },
 
+  onAccept: {
+    type: Function,
+    required: false,
+    default: null,
+  },
+
   onCancel: {
     type: Function,
     required: false,
     default: null,
   },
 
-  showCloseButton: {
-    type: Boolean,
+  tabindex: {
+    type: [String, Number],
     required: false,
-    default: false,
+    default: '',
   },
 })
 
-const emit = defineEmits(['update:open', 'open', 'close'])
+const emit = defineEmits(['update:open', 'open', 'close', 'accept', 'cancel'])
 
 const refDialog = ref()
 
@@ -65,7 +71,7 @@ function open() {
 }
 
 function close() {
-  refDialog.value?.close?.()
+  // refDialog.value?.close?.()
   document.body.style.overflow = null
   isOpen.value = false
   emit('update:open', isOpen.value)
@@ -82,7 +88,12 @@ async function onDialogClose($event) {
     }
   }
 
-  return close()
+  if ($event.target.returnValue == 'accept' && props.onAccept) {
+    await props.onAccept()
+  }
+
+  $event.target.returnValue = '' // reset dialog's returnValue
+  close()
 }
 </script>
 
@@ -94,7 +105,9 @@ async function onDialogClose($event) {
     <div
       v-if="$slots.trigger"
       class="UiDialog__trigger"
+      :tabindex="tabindex"
       @click="open()"
+      @keypress.enter.prevent="open()"
     >
       <slot
         name="trigger"
@@ -135,17 +148,25 @@ async function onDialogClose($event) {
           name="footer"
           :close="close"
         >
-          <footer
-            v-if="showCloseButton"
+          <form
+            v-if="onAccept || onCancel"
             class="UiDialog__footer"
+            method="dialog"
           >
             <button
-              class="UiDialog__closeButton UiButton UiButton--cancel"
-              type="button"
-              @click="close"
-              v-text="i18n.t('Close')"
+              v-if="onAccept"
+              class="UiDialog__acceptButton UiButton UiButton--main"
+              type="submit"
+              value="accept"
+              v-text="i18n.t('Accept')"
             />
-          </footer>
+            <button
+              v-if="onCancel"
+              class="UiDialog__cancelButton UiButton UiButton--cancel"
+              type="submit"
+              v-text="i18n.t('Cancel')"
+            />
+          </form>
         </slot>
       </div>
     </dialog>
@@ -201,7 +222,7 @@ async function onDialogClose($event) {
     padding: 4px;
   }
 
-  &__closeButton {
+  &__cancelButton {
     margin-left: auto;
   }
 }
