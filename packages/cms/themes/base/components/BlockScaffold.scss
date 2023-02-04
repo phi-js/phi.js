@@ -298,6 +298,8 @@
   // z-index: 2;
   padding: 6px;
   // margin: 0 -3px; // causes horizontal overscroll on body
+
+  margin-top: 20px; // height of BlockScaffold__label
   margin-bottom: 6px;
 
   .BlockScaffold--LayoutGroup {

@@ -15,9 +15,9 @@
   &__headerStory {
     display: flex;
     flex-wrap: nowrap;
+    overflow-x: auto;
     gap: 4px;
     padding: 4px;
-    overflow-x: auto;
 
     border-bottom: 1px solid var(--ui-color-ridge-bottom);
   }
@@ -44,7 +44,7 @@
     font-weight: 600;
     font-size: 0.85rem;
 
-    min-width: auto; // do not let tabItems be squeezed too narrow
+    min-width: auto !important; // do not let tabItems be squeezed too narrow
 
     // Hide icons
     .UiItem__icon {
@@ -54,7 +54,7 @@
 
   &__runButton {
     @extend .outset;
-    min-width: 100px;
+    min-width: auto !important;
     font-weight: bold !important;
 
     .UiIcon {

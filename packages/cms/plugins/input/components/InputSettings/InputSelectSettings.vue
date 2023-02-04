@@ -3,6 +3,7 @@ import { ref, watch } from 'vue'
 
 import { useI18n } from '@/packages/i18n'
 import { UiInput } from '@/packages/ui/components'
+import CmsPropInput from '../../../../components/CmsPropInput/CmsPropInput.vue'
 import OptionsEditor from '@/packages/ui/components/UiInputEditor/editors/OptionsEditor.vue'
 
 const props = defineProps({
@@ -29,11 +30,17 @@ const emitUpdate = function () {
 
 const i18n = useI18n({
   en: {
+    'InputSelectSettings.Label': 'Label',
+    'InputSelectSettings.VariableName': 'Variable',
+    'InputSelectSettings.Options': 'Options',
     'InputSelectSettings.Single': 'Single',
     'InputSelectSettings.Multiple': 'Multiple',
     'InputSelectSettings.ValueType': 'Value type',
   },
   es: {
+    'InputSelectSettings.Label': 'Etiqueta',
+    'InputSelectSettings.VariableName': 'Variable',
+    'InputSelectSettings.Options': 'Opciones',
     'InputSelectSettings.Single': 'Único',
     'InputSelectSettings.Multiple': 'Múltiple',
     'InputSelectSettings.ValueType': 'Tipo de dato',
@@ -54,17 +61,47 @@ const multipleOptions = [
 
 <template>
   <div class="InputSelectSettings">
+    <CmsPropInput
+      v-model="block.props.label"
+      class="InputSelectSettings__item"
+      type="text"
+      :label="i18n.t('InputSelectSettings.Label')"
+      @update:model-value="emitUpdate"
+    />
+
+    <UiInput
+      :label="i18n.t('InputSelectSettings.Options')"
+      class="InputSelectSettings__item"
+    >
+      <OptionsEditor
+        v-model="block.props.options"
+        @update:model-value="emitUpdate"
+      />
+    </UiInput>
+
     <UiInput
       v-model="block.props.multiple"
+      class="InputSelectSettings__item"
       :label="i18n.t('InputSelectSettings.ValueType')"
-      type="select-buttons"
+      type="select-list"
       :options="multipleOptions"
       @update:model-value="emitUpdate"
     />
 
-    <OptionsEditor
-      v-model="block.props.options"
+    <UiInput
+      v-model="block['v-model']"
+      class="InputSelectSettings__item"
+      :label="i18n.t('InputSelectSettings.VariableName')"
+      type="text"
       @update:model-value="emitUpdate"
     />
   </div>
 </template>
+
+<style lang="scss">
+.InputSelectSettings {
+  &__item {
+    margin-bottom: 1rem;
+  }
+}
+</style>
