@@ -96,10 +96,7 @@ function onSelectItem($event) {
 </script>
 
 <template>
-  <UiDialog
-    class="VmStatementPicker"
-    show-close-button
-  >
+  <UiDialog class="VmStatementPicker">
     <template #trigger>
       <UiItem
         class="VmStatementPicker__item"
