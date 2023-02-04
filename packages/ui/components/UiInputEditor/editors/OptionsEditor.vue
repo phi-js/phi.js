@@ -1,15 +1,12 @@
-<script>
-let lastUsedView = 'text'
-</script>
-
 <script setup>
-import { ref, watch, nextTick, computed } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import draggable from 'vuedraggable'
-import { useI18n } from '@/packages/i18n'
-import { UiItem, UiIcon, UiInput } from '@/packages/ui/components'
+import { useI18n, TranslationInput } from '@/packages/i18n'
+import { UiItem, UiIcon, UiDialog, UiInput } from '@/packages/ui/components'
 
 const i18n = useI18n({
   en: {
+    'OptionsEditor.ImportText': 'Import text',
     'OptionsEditor.AddOption': 'Add option',
     'OptionsEditor.List': 'List',
     'OptionsEditor.Text': 'Text',
@@ -17,6 +14,7 @@ const i18n = useI18n({
     'OptionsEditor.TextareaPlaceholder': 'Write one option per line',
   },
   es: {
+    'OptionsEditor.ImportText': 'Importar texto',
     'OptionsEditor.AddOption': 'Agregar opción',
     'OptionsEditor.List': 'Lista',
     'OptionsEditor.Text': 'Texto',
@@ -28,6 +26,10 @@ const i18n = useI18n({
 // import { normalize } from '@/packages/ui/helpers'
 // Store default option values AS IS.
 function normalize(str) {
+  if (str?.$i18n) {
+    return Object.values(str.$i18n)[0]
+  }
+
   return str
 }
 
@@ -56,30 +58,6 @@ function emitUpdate() {
   emit('update:modelValue', [...innerOptions.value])
 }
 
-/*
-A \n delimited string with all innerOption TEXTs
-*/
-const stringValue = computed({
-  get() {
-    return innerOptions.value
-      .map((opt) => opt.text)
-      .join('\n')
-  },
-
-  set(newValue) {
-    innerOptions.value = newValue
-      .trim()
-      .split('\n')
-      .filter((strLine) => !!strLine)
-      .map((strLine) => ({
-        text: strLine,
-        value: strLine,
-      }))
-
-    emitUpdate()
-  },
-})
-
 const refRoot = ref()
 async function pushOption() {
   innerOptions.value.push({ text: '', value: '' })
@@ -103,11 +81,23 @@ function setOptionText(option, newValue) {
   emitUpdate()
 }
 
-const currentView = ref(lastUsedView) // list | text
+function onDialogAccept(textareaValue) {
+  const incomingOptions = textareaValue
+    .trim()
+    .split('\n')
+    .map((strLine) => strLine.trim())
+    .filter((strLine) => !!strLine)
+    .map((strLine) => ({
+      text: strLine,
+      value: strLine,
+    }))
 
-function onViewChange() {
-  lastUsedView = currentView.value
+  if (incomingOptions.length) {
+    innerOptions.value.push(...incomingOptions)
+    emitUpdate()
+  }
 }
+
 </script>
 
 <template>
@@ -115,94 +105,81 @@ function onViewChange() {
     ref="refRoot"
     class="OptionsEditor"
   >
-    <div class="OptionsEditor__viewPicker">
-      <label>
-        <input
-          v-model="currentView"
-          type="radio"
-          value="text"
-          @change="onViewChange()"
-        >
-        {{ i18n.t('OptionsEditor.Text') }}
-      </label>
-      <label>
-        <input
-          v-model="currentView"
-          type="radio"
-          value="list"
-          @change="onViewChange()"
-        >
-        {{ i18n.t('OptionsEditor.List') }}
-      </label>
-    </div>
-
     <div class="OptionsEditor__body">
-      <div
-        v-if="currentView == 'list'"
-        class="OptionsEditor__list"
+      <draggable
+        v-model="innerOptions"
+        group="select-block"
+        :item-key="(foo) => innerOptions.indexOf(foo)"
+        handle=".UiItem__icon"
+        @update:model-value="emitUpdate"
       >
-        <draggable
-          v-model="innerOptions"
-          group="select-block"
-          :item-key="(foo) => innerOptions.indexOf(foo)"
-          handle=".UiItem__icon"
-          @update:model-value="emitUpdate"
-        >
-          <template #item="{ index }">
-            <UiItem
-              class="OptionsEditor__option-item"
-              :icon="modelValue.type == 'select-list'
-                ? (modelValue.multiple ? 'mdi:checkbox-blank-outline' : 'mdi:radiobox-blank')
-                : 'mdi:drag-vertical'"
-            >
-              <div class="OptionEditor">
-                <input
-                  :value="innerOptions[index].text"
-                  type="text"
-                  class="OptionEditor__text"
-                  :placeholder="i18n.t('OptionsEditor.Text')"
-                  @input="setOptionText(innerOptions[index], $event.target.value)"
-                  @keypress.enter="pushOption"
-                  @keydown.backspace="!innerOptions[index].text && deleteOption(index)"
-                  @keydown.delete="!innerOptions[index].text && deleteOption(index)"
-                >
-                <input
-                  v-model="innerOptions[index].value"
-                  type="text"
-                  class="OptionEditor__value"
-                  :placeholder="i18n.t('OptionsEditor.Value')"
-                  @input="emitUpdate"
-                  @keypress.enter="pushOption"
-                >
-              </div>
-              <template #actions>
-                <UiIcon
-                  src="mdi:close"
-                  @click="deleteOption(index)"
-                />
-              </template>
-            </UiItem>
-          </template>
-        </draggable>
+        <template #item="{ index }">
+          <UiItem
+            class="OptionsEditor__option-item"
+            :icon="modelValue.type == 'select-list'
+              ? (modelValue.multiple ? 'mdi:checkbox-blank-outline' : 'mdi:radiobox-blank')
+              : 'mdi:drag-vertical'"
+          >
+            <div class="OptionEditor">
+              <TranslationInput
+                :model-value="innerOptions[index].text"
+                type="text"
+                class="OptionEditor__text"
+                :placeholder="i18n.t('OptionsEditor.Text')"
+                @update:model-value="setOptionText(innerOptions[index], $event)"
+                @keypress.enter="pushOption"
+                @keydown.backspace="!innerOptions?.[index]?.text && deleteOption(index)"
+                @keydown.delete="!innerOptions?.[index]?.text && deleteOption(index)"
+              />
 
+              <input
+                v-model="innerOptions[index].value"
+                type="text"
+                class="OptionEditor__value"
+                :placeholder="i18n.t('OptionsEditor.Value')"
+                @input="emitUpdate"
+                @keypress.enter="pushOption"
+              >
+            </div>
+            <template #actions>
+              <UiIcon
+                src="mdi:close"
+                @click="deleteOption(index)"
+              />
+            </template>
+          </UiItem>
+        </template>
+      </draggable>
+
+      <div class="OptionsEditor__addBar">
         <UiItem
+          class="OptionsEditor__adder"
           tabindex="0"
           :text="i18n.t('OptionsEditor.AddOption')"
           icon="mdi:plus"
           @click="pushOption"
           @keypress.enter="pushOption"
         />
-      </div>
 
-      <div
-        v-if="currentView == 'text'"
-        class="OptionsEditor__text"
-      >
-        <UiInput
-          v-model="stringValue"
-          type="textarea"
-          :placeholder="i18n.t('OptionsEditor.TextareaPlaceholder')"
-        />
+        <UiDialog
+          show-close-button
+          @accept="onDialogAccept(_tmp)"
+        >
+          <template #trigger>
+            <UiItem
+              class="OptionsEditor__adder"
+              :text="i18n.t('OptionsEditor.ImportText')"
+              icon="mdi:text-box-plus-outline"
+            />
+          </template>
+          <template #contents>
+            <UiInput
+              type="textarea"
+              :placeholder="i18n.t('OptionsEditor.TextareaPlaceholder')"
+              @update:model-value="_tmp = $event"
+            />
+          </template>
+        </UiDialog>
       </div>
     </div>
   </div>
@@ -214,42 +191,27 @@ function onViewChange() {
 .OptionsEditor {
   position: relative;
 
-  &__viewPicker {
-    text-align: right;
+  &__addBar {
+    border-radius: 5px;
+    border: 2px dashed rgba(153, 153, 153, 0.5333333333);
+    margin-top: 0.5rem;
 
-    label {
-      font-size: 12px;
-      font-weight: bold;
-      user-select: none;
-
-      display: inline-flex;
-      align-items: center;
-      margin-left: 2px;
-
-      padding: 4px 6px;
-      border-radius: 4px;
-
-      @extend .ui--clickable;
-    }
-
-    input {
-      padding: 0;
-      margin: 0 2px 0 0;
-      cursor: pointer;
+    display: flex;
+    & > :first-child {
+      flex: 1;
+      border-right: 1px solid var(--ui-color-ridge-right);
     }
   }
 
-  &__text {
-    textarea {
-      width: 100%;
-      min-width: 300px;
-      min-height: 100px !important;
-    }
+  &__adder {
+    @extend .ui--clickable;
+    --ui-item-padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
   }
 
   &__option-item {
     --ui-item-padding: 4px 0;
-
     .UiItem__icon {
       cursor: move;
     }
@@ -265,18 +227,20 @@ function onViewChange() {
   &__value {
     font-size: inherit;
     color: inherit;
-    border: 0;
-    border-radius: 3px;
     padding: 4px 12px;
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-
-  &__text {
-    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--ui-color-ridge-right);
   }
 
   &__value {
-    background-color: rgba(255, 255, 255, 0.05);
+    border-left: 1px solid var(--ui-color-ridge-left);
+  }
+
+  .TranslationInput {
+    flex: 1;
+    border-right: 0;
+    input {
+      width: 100%;
+    }
   }
 }
 </style>

@@ -34,7 +34,10 @@ function emitUpdate() {
 </script>
 
 <template>
-  <div class="SelectEditor" :class="`SelectEditor--type-${modelValue.type}`">
+  <div
+    class="SelectEditor"
+    :class="`SelectEditor--type-${modelValue.type}`"
+  >
     <UiInput
       class="SelectEditor__preview"
       v-bind="{ ...modelValue, style: undefined }"
@@ -48,31 +51,10 @@ function emitUpdate() {
 .SelectEditor {
   &--type-select,
   &--type-select-native,
-  // &--type-select-list,
   &--type-select-buttons {
     .SelectEditor__body {
       background-color: rgba(0, 0, 0, 0.035);
     }
   }
-
-  // &--type-select,
-  // &--type-select-native {
-  //   .SelectEditor__body {
-  //     max-width: 440px;
-
-  //     // Estilos de tippy-box
-  //     border-radius: 4px;
-  //     font-size: 14px;
-  //     line-height: 1.4;
-  //     white-space: normal;
-  //     outline: 0;
-  //     transition-property: transform,visibility,opacity;
-  //     background-color: #fff;
-  //     background-clip: padding-box;
-  //     border: 1px solid rgba(0,8,16,.15);
-  //     color: #333;
-  //     box-shadow: 0 4px 14px -2px rgb(0 8 16 / 8%);
-  //   }
-  // }
 }
 </style>
