@@ -93,13 +93,56 @@ function parse(string, sourceData, preserveUndefined = false) {
 evalExpression(" nombre + ' ' + apellido ", {nombre: 'a', apellido: 'b', genero: false })
 */
 function evalExpression(expr, model) {
+  /*
+  All model properties will be declared as function arguments!
+  e.g.
+  model: {
+    message: 'hello',
+    thing: 'thing'
+  }
+  expr: "Oh hi {{thing + ' :: ' + message}}"
+  --->
+  Generated function:
+  function eval(message, thing) {
+    return thing + ' :: ' + message
+  }
+
+  So, if the property names of the model are not valid variable names ...
+  e.g.
+  model: {
+    'oh no.what': '???'
+    message: 'hello',
+    thing: 'thing'
+  }
+
+  the generated function will be broken:
+  function eval(oh no.what, message, thing) { !! 'oh no.what' is not a valid variable name
+    return thing + ' :: ' + message
+  }
+  */
+  const fxArgs = Object.keys(model)
+    .map((keyName) => {
+      // "sanitize" into valid variable name
+      return keyName.replace(/^[^a-zA-Z_$]|[^a-zA-Z0-9$]+/g, '_')
+    })
+
+  let fn = null
   try {
-    const fn = new Function(
-      Object.keys(model),
+    fn = new Function(
+      fxArgs,
       '"use strict"; var window = null; var document = null; var alert = null; var console = null; return ' + expr,
     )
+  } catch (err) {
+    // Error creating evaluation function. Show error
+    console.error(err, { expr, model })
+    return ''
+  }
+
+  try {
     return fn(...Object.values(model))
   } catch (err) {
+    // Error executing.  Warn (or ignore?)
+    // console.warn(err, { expr, model })
     return ''
   }
 }
