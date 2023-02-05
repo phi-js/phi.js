@@ -186,11 +186,6 @@ function rotate() {
 <style lang="scss">
 .UiResolutionPicker {
   .UiDropdown {
-    &__container {
-      right: 0;
-      top: 90%;
-    }
-
     &__trigger {
       height: 100%;
       display: flex;

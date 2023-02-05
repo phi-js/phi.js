@@ -284,6 +284,8 @@ const currentIcon = computed(() => {
         @end="onResizableEnd"
       >
         <div class="UiWindow__header">
+          <slot name="corner" />
+
           <div
             class="UiWindow__dragger"
             @mousedown="startMove"
@@ -299,6 +301,8 @@ const currentIcon = computed(() => {
             @mouseenter="isTransparent = true"
             @mouseleave="isTransparent = false"
           /> -->
+
+          <slot name="controls" />
 
           <UiPopover>
             <template #trigger>

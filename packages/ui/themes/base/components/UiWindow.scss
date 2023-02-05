@@ -103,6 +103,7 @@
   }
 
   &__header {
+    user-select: none;
     display: flex;
     align-items: center;
     padding: 4px;
