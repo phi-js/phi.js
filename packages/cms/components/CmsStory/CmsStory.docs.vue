@@ -1,13 +1,19 @@
 <script setup>
 import { ref } from 'vue'
 import CmsStory from './CmsStory.vue'
-import story from './sample.js'
+import story from './sample2.js'
 
-const modelValue = ref({ limit: 3 })
+const modelValue = ref({
+  'limit': 3,
+  'things': 'some.things',
+  'arrThings': ['hello.workd', 'how.are.you'],
+  'person.name': 'hi',
+})
 const curPageId = ref()
 </script>
 
 <template>
+  <h1>CmsStory</h1>
   <CmsStory
     v-model="modelValue"
     v-model:currentPageId="curPageId"

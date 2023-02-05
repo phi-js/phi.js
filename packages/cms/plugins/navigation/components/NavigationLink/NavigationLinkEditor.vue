@@ -53,14 +53,7 @@ function emitUpdate() {
       @update:model-value="emitUpdate()"
     />
 
-    <UiInput
-      v-if="props.modelValue.component == 'NavigationLink'"
-      label="Target page"
-    >
-      <!--
-  https://stackoverflow.com/questions/71585426/in-vue-3-can-i-use-both-v-modelcustom-property-and-updatecustom-property
-  Vue bug (?)
-      -->
+    <UiInput label="Target page">
       <NavigationPagePicker
         v-model:pageId="blockProps.pageId"
         @update:page-id="emitUpdate()"

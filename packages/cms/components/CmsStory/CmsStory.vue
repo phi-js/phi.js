@@ -328,6 +328,35 @@ export default {
     }
 
     /*
+    pageId can also be "next" or "back"
+    IF the page is visible, returns a page info object:
+    {
+      id,
+      hash,
+      title
+    }
+    */
+    function getPageById(pageId) {
+      if (pageId == 'next') {
+        return pageNav.value.next
+      }
+      if (pageId == 'back') {
+        return pageNav.value.prev
+      }
+
+      const targetPage = visiblePages.value.find((p) => p.id == pageId)
+      if (!targetPage) {
+        return null
+      }
+
+      return {
+        id: targetPage?.id,
+        hash: targetPage?.hash,
+        title: targetPage?.title || targetPage?.info?.text,
+      }
+    }
+
+    /*
     storyEvent: {
       name: 'custom event name',
       data: { ... custom event data }
@@ -363,6 +392,7 @@ export default {
       goNext,
       goTo,
       goBack,
+      getPageById,
       sanitizedStory,
       emitStoryEvent,
       visiblePages,
@@ -507,7 +537,7 @@ export default {
                 'block': translatedPage.value,
                 'modelValue': {
                   ...innerModel.value,
-                  $i18n: i18n,
+                  // $i18n: i18n,
                   $pages: visiblePages.value,
                   $nav: pageNav.value,
                   $page: pageNav.value.current,

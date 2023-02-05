@@ -5,13 +5,13 @@ export default {
   tags: ['navigation'],
 
   name: 'NavigationLink',
-  title: 'Link to page',
+  title: 'Go to',
   icon: 'mdi:arrow-right-thick',
 
   block: {
     component: NavigationLink,
     props: {
-      pageId: null,
+      pageId: 'next',
       icon: null,
       text: '',
       subtext: '',

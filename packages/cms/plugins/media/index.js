@@ -53,10 +53,8 @@ export default {
       ],
     },
     {
-      title: 'Navigation',
-      children: [
-        MediaLink,
-      ],
+      title: 'Navigation', // so that the Navigation tab is kept in this position (afer content)
+      children: [],
     },
     {
       title: 'Layout',

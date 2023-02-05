@@ -1,7 +1,7 @@
 <script setup>
-import { ref, shallowRef, watch } from 'vue'
+import { computed, ref, shallowRef, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import { UiWindow, UiDrawerStack, UiTab, UiItem } from '@/packages/ui'
+import { UiWindow, UiItem, UiDropdown } from '@/packages/ui'
 import EditorAction from './EditorAction.vue'
 import { getBlockDefinition, getBlockEditors } from '../../functions'
 
@@ -29,7 +29,6 @@ watch(
   { immediate: true },
 )
 
-
 const innerBlock = ref()
 const initialValue = ref()
 
@@ -56,6 +55,14 @@ watch(
   },
   { immediate: true },
 )
+
+const currentAction = computed(() => {
+  if (!availableEditors.value?.actions?.length) {
+    return null
+  }
+
+  return availableEditors.value.actions.find((a) => a.id == currentActionId.value)
+})
 
 function emitUpdate() {
   _ignoreNextUpdate = true
@@ -86,32 +93,42 @@ function cancel() {
       <UiItem
         class="BlockWindow__header"
         :icon="definition?.icon"
-        :text="innerBlock?.title || definition?.title"
+        :text="(innerBlock?.title || definition?.title)"
       />
+    </template>
+
+    <template #controls>
+      <UiDropdown>
+        <template #trigger>
+          <UiItem
+            class="BlockWindow__pickerItem"
+            :text="currentAction.title"
+            icon="mdi:dots-vertical"
+          />
+        </template>
+        <template #default="{ close }">
+          <div class="BlockScaffold__actionList color-scheme-dark">
+            <UiItem
+              v-for="action in availableEditors.actions"
+              :key="action.id"
+              :text="action.title"
+              :icon="action.icon"
+              @click="emit('update:action-id', action.id); close();"
+            />
+          </div>
+        </template>
+      </UiDropdown>
     </template>
 
     <template #default>
       <div class="BlockWindow__contents">
-        <UiDrawerStack
-          v-model="currentActionId"
-          class="BlockWindow__tabs"
-          @update:model-value="emit('update:action-id', $event)"
-        >
-          <UiTab
-            v-for="(action) in availableEditors.actions"
-            :key="action.id"
-            :value="action.id"
-            :text="action.title"
-            :icon="action.icon"
-          >
-            <EditorAction
-              v-model:block="innerBlock"
-              :class="['BlockWindow__action', `BlockWindow__action--${action.id}`]"
-              :action="action"
-              @update:block="emitUpdate()"
-            />
-          </UiTab>
-        </UiDrawerStack>
+        <EditorAction
+          v-if="currentAction"
+          v-model:block="innerBlock"
+          :class="['BlockWindow__action', `BlockWindow__action--${currentAction.id}`]"
+          :action="currentAction"
+          @update:block="emitUpdate()"
+        />
       </div>
     </template>
 
@@ -133,12 +150,34 @@ function cancel() {
 </template>
 
 <style lang="scss">
+@import '@/packages/ui/themes/base/modifiers/clickable.scss';
+
 .BlockWindow {
   --ui-color-primary: #41b883;
 
   &__header {
-    --ui-item-padding: 6px 11px;
-    font-size: 0.9rem;
+    --ui-item-padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+  }
+
+  &__contents {
+    padding: 0.6em;
+  }
+
+  &__pickerItem {
+    @extend .ui--clickable;
+    --ui-item-padding: 6px 12px;
+    // min-height: 32px;
+
+    font-size: 0.8rem;
+    font-weight: bold;
+    border: 1px solid var(--ui-color-z1);
+    border-radius: 5px;
+
+    .UiIcon {
+      order: 1;
+    }
   }
 }
 </style>

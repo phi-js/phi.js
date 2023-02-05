@@ -109,7 +109,7 @@ const parent = curSlotItem?.parent
           />
 
           <!-- Available actions dropdown -->
-          <UiDropdown class="BlockScaffold__dropdown">
+          <UiDropdown>
             <template #trigger>
               <UiItem
                 class="BlockScaffold__menuBtn"
@@ -117,7 +117,7 @@ const parent = curSlotItem?.parent
               />
             </template>
             <template #default="{close}">
-              <div class="BlockScaffold__popover">
+              <div class="BlockScaffold__actionList">
                 <UiItem
                   v-for="action in availableActions"
                   :key="action.id"

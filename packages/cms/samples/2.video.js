@@ -3,10 +3,10 @@ export default {
 
   slot: [
     {
-      component: 'LayoutRow',
+      component: 'LayoutGroup',
       slot: [
         {
-          component: 'LayoutColumn',
+          component: 'LayoutGroup',
           slot: [
             {
               'component': 'MediaVideo',
@@ -36,7 +36,7 @@ export default {
           ],
         },
         {
-          component: 'LayoutColumn',
+          component: 'LayoutGroup',
           slot: [
             {
               component: 'MediaImage',

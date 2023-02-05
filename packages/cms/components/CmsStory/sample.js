@@ -10,10 +10,10 @@ export default {
       props: { path: 'zero' },
       slot: [
         {
-          component: 'LayoutRow',
+          component: 'LayoutGroup',
           slot: [
             {
-              component: 'LayoutColumn',
+              component: 'LayoutGroup',
               slot: [
                 {
                   component: 'MediaHtml',

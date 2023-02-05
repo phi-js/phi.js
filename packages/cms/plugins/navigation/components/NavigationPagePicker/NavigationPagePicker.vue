@@ -13,7 +13,18 @@ const props = defineProps({
 const emit = defineEmits(['update:pageId'])
 
 const injectedStory = inject('_cms_currentStory', null)
-const availablePages = computed(() => injectedStory?.value?.pages || [])
+const injectedPages = computed(() => injectedStory?.value?.pages || [])
+const availablePages = computed(() => [
+  {
+    id: 'next',
+    info: { text: 'Next page' },
+  },
+  {
+    id: 'back',
+    info: { text: 'Previous page' },
+  },
+  ...injectedPages.value,
+])
 </script>
 
 <template>

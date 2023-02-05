@@ -2,9 +2,9 @@
   position: relative;
   outline: none;
 
-  // --outline-offset: -5px; // causes body horizontal scroll
-
+  // --outline-offset: -4px; // causes body horizontal scroll
   --outline-offset: 0;
+
   z-index: 1; // messes up dragstart from toolbar (in html blocks only ???)
 
 
@@ -197,7 +197,7 @@
     @extend .ui--clickable;
   }
 
-  &__popover {
+  &__actionList {
     --ui-item-padding: 8px 12px;
     user-select: none;
 
@@ -293,7 +293,9 @@
 }
 
 
-// Block-specific stylings
+/*** Block-specific stylings ***/
+
+// LayoutGroup
 .BlockScaffold--LayoutGroup {
   // z-index: 2;
   padding: 6px;
@@ -334,7 +336,13 @@
   // }
 }
 
-.BlockScaffold--NavigationNext,
-.BlockScaffold--NavigationBack {
+// NavigationLink
+.BlockScaffold--NavigationLink {
   display: inline-block;
+
+  &.UiButton--cancel {
+    .UiButton {
+      @extend .UiButton--cancel;
+    }
+  }
 }

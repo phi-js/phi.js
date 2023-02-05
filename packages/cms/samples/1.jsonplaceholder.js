@@ -19,10 +19,10 @@ export default {
 
   slot: [
     {
-      component: 'LayoutRow',
+      component: 'LayoutGroup',
       slot: [
         {
-          component: 'LayoutColumn',
+          component: 'LayoutGroup',
           slot: [
             {
               component: 'MediaHtml',
@@ -35,10 +35,10 @@ export default {
 
     {
       'v-for': 'users',
-      'component': 'LayoutRow',
+      'component': 'LayoutGroup',
       'slot': [
         {
-          component: 'LayoutColumn',
+          component: 'LayoutGroup',
           props: { flex: 1 },
           slot: [
             {
@@ -54,7 +54,7 @@ export default {
           ],
         },
         {
-          component: 'LayoutColumn',
+          component: 'LayoutGroup',
           props: { flex: 2 },
           slot: [
             {

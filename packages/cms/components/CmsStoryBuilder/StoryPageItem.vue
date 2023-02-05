@@ -71,7 +71,7 @@ function onClickAction(action) {
         />
       </template>
       <template #default="{ close }">
-        <div class="BlockScaffold__popover color-scheme-dark">
+        <div class="BlockScaffold__actionList color-scheme-dark">
           <UiItem
             v-for="action in blockEditors.actions"
             :key="action.id"
