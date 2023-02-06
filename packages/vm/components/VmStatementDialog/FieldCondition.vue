@@ -80,7 +80,7 @@ watch(
       statement.value = {
         search: {
           string: newValue?.search?.string,
-          fields: [props.schema.value],
+          fields: [props.schema.filterable || props.schema.value],
         },
       }
       break
