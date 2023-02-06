@@ -30,10 +30,6 @@ const props = defineProps({
   },
 })
 
-const isSelect = computed(() =>
-  props.modelValue?.props?.type
-  && props.modelValue.props.type.substring(0, 6) == 'select')
-
 const isButton = computed(() =>
   props.modelValue?.props?.type
   && ['button', 'submit', 'cancel'].includes(props.modelValue.props.type))
@@ -53,7 +49,7 @@ function onClickFace() {
     return
   }
 
-  props.openAction(isSelect.value ? 'InputSelectSettings' : 'InputSettings')
+  props.openAction('InputSettings')
 }
 </script>
 
@@ -62,20 +58,7 @@ function onClickFace() {
     class="InputFace CmsBlock UiInput"
     @click="onClickFace"
   >
-    <!-- stand-in for empty Select fields -->
-    <div
-      v-if="isSelect && !Array.isArray(translatedProps?.options)"
-      class="InputFace__dummy"
-    >
-      <span>Click to add options</span>
-      <UiInput
-        v-bind="translatedProps"
-        style="pointer-events: none;"
-        :options="['Sample option 1', 'Sample option 2', 'Sample option 3']"
-      />
-    </div>
     <UiInput
-      v-else
       :style="!isButton ? 'pointer-events: none;' : null"
       v-bind="translatedProps"
       :rules="modelValue.rules"
@@ -87,32 +70,12 @@ function onClickFace() {
 .InputFace {
   cursor: pointer;
   pointer-events: none;
-
-  &__dummy {
-    position: relative;
-
-    & > span {
-      position: absolute;
-      top: 50%;
-      margin-top: -1em;
-      left: 12px;
-      text-shadow: 0 2px 3px #000, 0 0 6px #000;
-      font-weight: bold;
-      color: #fff;
-    }
-
-    .UiInput__body {
-      filter: blur(0.33rem);
-      opacity: 0.66;
-      position: relative;
-    }
-  }
 }
 
-.SlotItem--active {
-  .InputFace {
-    cursor: initial;
-    pointer-events: initial;
-  }
-}
+// .SlotItem--active {
+//   .InputFace {
+//     cursor: initial;
+//     pointer-events: initial;
+//   }
+// }
 </style>

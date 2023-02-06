@@ -1,5 +1,5 @@
 import { UiInput } from '@/packages/ui/components'
-import InputFace from '../components/InputFace.vue'
+import InputSelectFace from '../components/InputSelectFace.vue'
 import InputSettings from '../components/InputSettings/InputSettings.vue'
 import InputSelectSettings from '../components/InputSettings/InputSelectSettings.vue'
 
@@ -29,7 +29,7 @@ export default {
   ],
 
   editor: {
-    face: { component: InputFace },
+    face: { component: InputSelectFace },
 
     actions: [
       {
