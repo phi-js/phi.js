@@ -133,10 +133,20 @@ textarea.UiInput__element {
   }
 }
 
+/* Type specific styles */
 .UiInput {
+
+  /* type="checkbox" */
   &--type-checkbox {
     label {
       cursor: pointer;
+    }
+  }
+
+  /* type="translation" */
+  &--type-translation {
+    .TranslationInput__input {
+      @extend .UiInputNativeElement;
     }
   }
 }

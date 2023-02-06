@@ -104,5 +104,9 @@ function emitUpdate(newValue) {
       margin-left: auto;
     }
   }
+
+  .UiDialog__footer {
+    display: none;
+  }
 }
 </style>

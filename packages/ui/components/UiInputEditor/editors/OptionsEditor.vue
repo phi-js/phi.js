@@ -211,8 +211,8 @@ function onDialogAccept(textareaValue) {
   }
 
   &__option-item {
-    --ui-item-padding: 4px 0;
     .UiItem__icon {
+      width: 31px;
       cursor: move;
     }
   }
@@ -222,12 +222,14 @@ function onDialogAccept(textareaValue) {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  margin: 3px 0;
 
   &__text,
   &__value {
+    font-family: inherit;
     font-size: inherit;
     color: inherit;
-    padding: 4px 12px;
+    padding: 4px 8px;
     border: 1px solid var(--ui-color-ridge-right);
   }
 

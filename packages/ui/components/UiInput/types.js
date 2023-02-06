@@ -11,6 +11,7 @@ import { UiSelectButtons } from '../UiSelectButtons'
 import { UiSelectList } from '../UiSelectList'
 import { UiSelectNative } from '../UiSelectNative'
 import { UiUpload } from '../UiUpload'
+import { TranslationInput } from '@/packages/i18n'
 
 export default {
   'code': UiInputCode,
@@ -24,6 +25,7 @@ export default {
   'select-native': UiSelectNative,
   'select': UiSelect,
   'timer': UiInputTimer,
+  'translation': TranslationInput,
   'upload': UiUpload,
   'url': UiInputUrl,
 }
