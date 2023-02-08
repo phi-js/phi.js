@@ -145,13 +145,27 @@ function validateValue(value, rules = []) {
   return null
 }
 
+const allValidationRules = computed(() => {
+  const retval = Array.isArray(props.rules) ? props.rules.concat() : []
+
+  // Make sure "required" rule is present when required prop is set
+  if (props.required) {
+    const foundRequiredRule = retval.find((rule) => rule.type == 'required')
+    if (!foundRequiredRule) {
+      retval.push({ type: 'required' })
+    }
+  }
+
+  return retval
+})
+
 const validationProps = computed(() => {
   return {
-    ...toHTMLProps(props.rules),
+    ...toHTMLProps(allValidationRules.value),
 
     onInvalid: (event) => {
       isInvalid.value = true
-      const failedRule = validateValue(event.target.value, props.rules)
+      const failedRule = validateValue(event.target.value, allValidationRules.value)
       if (failedRule) {
         event.target.setCustomValidity(failedRule?.message || '')
         emit('invalid', failedRule)

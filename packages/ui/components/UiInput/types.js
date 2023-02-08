@@ -11,7 +11,12 @@ import { UiSelectButtons } from '../UiSelectButtons'
 import { UiSelectList } from '../UiSelectList'
 import { UiSelectNative } from '../UiSelectNative'
 import { UiUpload } from '../UiUpload'
-import { TranslationInput } from '@/packages/i18n'
+
+// import { TranslationInput } from '@/packages/i18n/components'
+// !!! TranslationInput includes UiInput, leading to a circular dependency
+// break dependency by declaring it async
+import { defineAsyncComponent } from 'vue'
+const TranslationInput = defineAsyncComponent(() => import('@/packages/i18n/components/TranslationInput/TranslationInput.vue'))
 
 export default {
   'code': UiInputCode,
