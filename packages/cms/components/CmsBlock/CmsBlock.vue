@@ -67,11 +67,13 @@ const CmsBlock = {
 
       // Use props.modelValue instead of innerModel, as innerModel is NOT reactive
       // and any call to getModelProperty will not be tracked by watchEffect
-      return getProperty(props.modelValue, propName)
+      // return getProperty(props.modelValue, propName)
+      return getProperty({ ...props.modelValue, $slot: props.slotBindings }, propName)
     }
 
     function setModelProperty(propName, newValue) {
-      setProperty(innerModel, propName, newValue)
+      // setProperty(innerModel, propName, newValue)
+      setProperty({ ...innerModel, $slot: props.slotBindings }, propName, newValue)
       emitUpdate({ ...innerModel })
     }
 
