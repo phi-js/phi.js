@@ -5,7 +5,7 @@ export default { inheritAttrs: false }
 <script setup>
 import { computed, ref, watch } from 'vue'
 
-import { useI18n } from '@/packages/i18n'
+import useI18n from '../../useI18n.js'
 import { fillGaps } from '@/packages/i18n/googleTranslate.js'
 import { UiDialog, UiInput, UiIcon } from '@/packages/ui'
 
