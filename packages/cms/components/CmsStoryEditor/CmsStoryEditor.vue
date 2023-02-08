@@ -1,8 +1,20 @@
 <script setup>
 import { computed, provide, ref, shallowRef, watch, watchEffect } from 'vue'
 
+import { useI18n } from '@/packages/i18n'
 import { useStylesheets } from '../../functions'
 import CmsSlotEditor from '../CmsSlotEditor/CmsSlotEditor.vue'
+
+const i18n = useI18n({
+  en: {
+    'CmsStoryEditor.Header': 'Header',
+    'CmsStoryEditor.Footer': 'Footer',
+  },
+  es: {
+    'CmsStoryEditor.Header': 'Encabezado',
+    'CmsStoryEditor.Footer': 'Pie de página',
+  },
+})
 
 const props = defineProps({
   story: {
@@ -57,26 +69,41 @@ function emitUpdate() {
   emit('update:story', { ...innerStory.value })
 }
 
+// isHeaderVISIBLE(?)
 const isHeaderEnabled = computed({
   get() {
-    return currentPage.value?.omitHeader === undefined
-      ? innerStory.value.header?.length > 0
-      : !currentPage.value.omitHeader
+    // Return strictly defined boolean values
+    if (currentPage.value?.isHeaderEnabled === false) {
+      return false
+    }
+    if (currentPage.value?.isHeaderEnabled === true) {
+      return true
+    }
+
+    // is not enabled/disabled explicitly:
+    return innerStory.value.header?.length > 0
   },
   set(isEnabled) {
-    currentPage.value.omitHeader = !isEnabled
+    currentPage.value.isHeaderEnabled = !!isEnabled
     emitUpdate()
   },
 })
 
 const isFooterEnabled = computed({
   get() {
-    return currentPage.value?.omitFooter === undefined
-      ? innerStory.value.footer?.length > 0
-      : !currentPage.value.omitFooter
+    // Return strictly defined boolean values
+    if (currentPage.value?.isFooterEnabled === false) {
+      return false
+    }
+    if (currentPage.value?.isFooterEnabled === true) {
+      return true
+    }
+
+    // is not enabled/disabled explicitly:
+    return innerStory.value.footer?.length > 0
   },
   set(isEnabled) {
-    currentPage.value.omitFooter = !isEnabled
+    currentPage.value.isFooterEnabled = !!isEnabled
     emitUpdate()
   },
 })
@@ -90,7 +117,13 @@ provide('$_cms_story', {
 </script>
 
 <template>
-  <div class="CmsStoryEditor CmsStory">
+  <div
+    class="CmsStoryEditor CmsStory"
+    :style="{
+      '--storyeditor-header-title': `'${i18n.t('CmsStoryEditor.Header')}'`,
+      '--storyeditor-footer-title': `'${i18n.t('CmsStoryEditor.Footer')}'`,
+    }"
+  >
     <Transition
       name="phi-navigation"
       :enter-from-class="`phi-navigation-enter-from phi-navigation-${transitionDirection}-enter-from`"
@@ -106,60 +139,30 @@ provide('$_cms_story', {
         :class="currentPage?.props?.class"
         :style="currentPage?.props?.style"
       >
-        <div
-          class="CmsStoryEditor__header"
-          :class="{
-            'CmsStoryEditor__header--empty': !innerStory.header?.length,
-            'CmsStoryEditor__header--disabled': !isHeaderEnabled
-          }"
-        >
-          <CmsSlotEditor
-            v-model:slot="innerStory.header"
-            class="LayoutPage__header"
-            label="Header"
-            @update:slot="emitUpdate"
-          />
-          <div class="CmsStoryEditor__separator">
-            <label title="Toggle header for this page">
-              <span>Header</span>
-              <input
-                v-model="isHeaderEnabled"
-                type="checkbox"
-              >
-            </label>
-          </div>
-        </div>
+        <!-- Page header -->
+        <CmsSlotEditor
+          v-if="isHeaderEnabled"
+          v-model:slot="innerStory.header"
+          class="CmsStoryEditor__header LayoutPage__header"
+          label="Header"
+          @update:slot="emitUpdate"
+        />
 
+        <!-- Page contents -->
         <CmsSlotEditor
           v-model:slot="currentPage.slots.default"
           class="CmsStoryEditor__contents LayoutPage__contents"
           @update:slot="emitUpdate"
         />
 
-        <div
-          class="CmsStoryEditor__footer"
-          :class="{
-            'CmsStoryEditor__footer--empty': !innerStory.footer?.length,
-            'CmsStoryEditor__footer--disabled': !isFooterEnabled
-          }"
-        >
-          <div class="CmsStoryEditor__separator">
-            <label title="Toggle footer for this page">
-              <span>Footer</span>
-              <input
-                v-model="isFooterEnabled"
-                type="checkbox"
-              >
-            </label>
-          </div>
-
-          <CmsSlotEditor
-            v-model:slot="innerStory.footer"
-            class="LayoutPage__footer"
-            label="Footer"
-            @update:slot="emitUpdate"
-          />
-        </div>
+        <!-- Page footer -->
+        <CmsSlotEditor
+          v-if="isFooterEnabled"
+          v-model:slot="innerStory.footer"
+          class="CmsStoryEditor__footer LayoutPage__footer"
+          label="Footer"
+          @update:slot="emitUpdate"
+        />
       </div>
     </Transition>
   </div>
@@ -167,41 +170,51 @@ provide('$_cms_story', {
 
 <style lang="scss">
 .CmsStoryEditor {
+  --outline-color: #99999933;
+
   &__header,
   &__footer {
     position: relative;
+    margin: 4px 0;
+    margin-top: 24px;
 
-    &--disabled {
+    border: 1px solid var(--outline-color);
+    border-radius: 4px;
+
+    &::before {
+      display: block;
+      position: absolute;
+      left: 0;
+      bottom: 100%;
+
+      font-size: 8pt;
+      font-weight: bold;
       opacity: 0.5;
-      .CmsSlotEditor {
-        pointer-events: none;
-        &__footer {
-          display: none;
-        }
-      }
+
+      padding: 2px 8px;
+      background-color: var(--outline-color);
+      border-radius: 4px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    &:hover::before {
+      opacity: 1;
     }
   }
 
-  &__separator {
-    font-size: 9pt;
-    font-weight: 600;
-    text-align: right;
+  &__header {
+    margin-bottom: 2rem;
+    &::before {
+      content: var(--storyeditor-header-title, 'Header');
+    }
+  }
 
-    label {
-      user-select: none;
+  &__footer {
+    margin-top: calc(2rem + 24px);
 
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-
-      padding: 3px;
-      cursor: pointer;
-      input {
-        cursor: pointer;
-      }
-      &:hover {
-        background-color: var(--ui-color-hover);
-      }
+    &::before {
+      content: var(--storyeditor-footer-title, 'Footer');
     }
   }
 }

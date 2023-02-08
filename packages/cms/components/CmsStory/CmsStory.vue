@@ -70,8 +70,8 @@ export default {
       // Splice story header and footer into page slots
       currentPage.value.slots = {
         ...currentPage.value.slots,
-        header: !currentPage.value.omitHeader ? sanitizedStory.value.header : undefined,
-        footer: !currentPage.value.omitFooter ? sanitizedStory.value.footer : undefined,
+        header: currentPage.value.isHeaderEnabled === false ? undefined : sanitizedStory.value.header,
+        footer: currentPage.value.isFooterEnabled === false ? undefined : sanitizedStory.value.footer,
       }
     }
 

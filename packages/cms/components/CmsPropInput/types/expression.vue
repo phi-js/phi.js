@@ -6,8 +6,6 @@ import { UiInput } from '@/packages/ui'
 
 const injectedFields = inject('$_vm_fields', null)
 
-console.log('injectedFields', injectedFields.value)
-
 const props = defineProps({
   /*
   String containing interpolated variable

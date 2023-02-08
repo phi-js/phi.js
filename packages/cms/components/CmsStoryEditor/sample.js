@@ -128,7 +128,7 @@ export default {
         ],
       },
       props: {},
-      omitHeader: true,
+      isHeaderEnabled: false,
     },
   ],
   paths: [],

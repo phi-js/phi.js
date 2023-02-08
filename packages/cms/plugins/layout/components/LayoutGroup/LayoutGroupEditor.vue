@@ -4,7 +4,7 @@ import { ref, watch } from 'vue'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
 
 const props = defineProps({
-  /* modelValue object */
+  /* BLOCK object */
   modelValue: {
     type: Object,
     required: true,

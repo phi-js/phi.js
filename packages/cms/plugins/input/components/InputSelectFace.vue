@@ -113,15 +113,13 @@ const translatedProps = computed(() => {
   }
 }
 
-.BlockScaffold--selected,
+.BlockScaffold--selected > .InputSelectFace,
 .InputSelectFace--empty {
-  .InputSelectFace {
-    &__editor {
-      display: block;
-    }
-    &__preview {
-      display: none;
-    }
+  .InputSelectFace__editor {
+    display: block;
+  }
+  .InputSelectFace__preview {
+    display: none;
   }
 }
 </style>

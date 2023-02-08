@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 
 import { useI18n } from '@/packages/i18n'
+import { UiInput } from '@/packages/ui'
 import CmsPropInput from '../../../../components/CmsPropInput/CmsPropInput.vue'
 
 const props = defineProps({
@@ -111,6 +112,13 @@ const i18n = useI18n({
       :label="i18n.t('InputSettings.Placeholder')"
       @update:model-value="emitUpdate"
       @update:block="emitUpdate"
+    />
+
+    <UiInput
+      v-model="block['v-model']"
+      type="text"
+      :label="i18n.t('InputSettings.VariableName')"
+      @update:model-value="emitUpdate"
     />
   </div>
 </template>

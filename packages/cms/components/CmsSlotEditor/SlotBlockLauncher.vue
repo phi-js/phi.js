@@ -190,10 +190,11 @@ function onPickerUpdateOpen($event) {
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
+    margin: 5px;
 
     .UiItem {
+      --ui-item-padding: 8px 14px;
       flex: 1;
-      --ui-item-padding: 12px 16px;
 
       user-select: none;
       font-size: 0.8rem;

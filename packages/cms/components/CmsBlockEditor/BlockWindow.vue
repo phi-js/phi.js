@@ -91,7 +91,7 @@ function cancel() {
   >
     <template #header>
       <UiItem
-        class="BlockWindow__header"
+        class="BlockWindow__headerItem"
         :icon="definition?.icon"
         :text="(innerBlock?.title || definition?.title)"
       />
@@ -153,9 +153,18 @@ function cancel() {
 @import '@/packages/ui/themes/base/modifiers/clickable.scss';
 
 .BlockWindow {
-  --ui-color-primary: #41b883;
+  // --window-ridge-color: black;
+  --window-ridge-color: #99999966;
 
-  &__header {
+  .UiWindow {
+    &__header {
+      border-bottom: 1px solid var(--window-ridge-color);
+      padding-bottom: 0;
+    }
+  }
+
+
+  &__headerItem {
     --ui-item-padding: 6px 12px;
     font-size: 0.8rem;
     font-weight: bold;
@@ -168,12 +177,20 @@ function cancel() {
   &__pickerItem {
     @extend .ui--clickable;
     --ui-item-padding: 6px 12px;
-    // min-height: 32px;
+
+    margin-right: 1em;
+    margin-bottom: -1px;
+    padding-top: 7px;
 
     font-size: 0.8rem;
     font-weight: bold;
-    border: 1px solid var(--ui-color-z1);
+
+    border: 1px solid var(--window-ridge-color);
+    border-bottom: 1px solid var(--ui-color-z2); // match .UiWindow__box background color
+
     border-radius: 5px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 
     .UiIcon {
       order: 1;

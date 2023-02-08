@@ -1,12 +1,41 @@
 <script setup>
-import { onMounted, inject } from 'vue'
+import { ref, onMounted, inject, provide } from 'vue'
 
 const emit = defineEmits(['mounted', 'submit', 'change'])
 const injectedStory = inject('$_cms_story', null)
 
 onMounted(() => emit('mounted'))
 
-function onFormSubmit($event) {
+
+const onBeforeSubmit = []
+provide('_LayoutPage_onBeforeSubmit', (callable) => onBeforeSubmit.push(callable))
+
+const isSubmitting = ref(false)
+
+async function onFormSubmit($event) {
+
+  if (isSubmitting.value) {
+    return
+  }
+  isSubmitting.value = true
+
+  // // Run all onBeforeSubmit callbacks (one by one)
+  // for (let i = 0; i < onBeforeSubmit.length; i++) {
+  //   const res = await onBeforeSubmit[i]($event)
+  //   if (res === false) {
+  //     return false
+  //   }
+  // }
+
+  // Run all onBeforeSubmit callbacks (concurrently)
+  const results = await Promise.allSettled(onBeforeSubmit.map((callback) => callback($event)))
+  if (results.some((outcome) => outcome.status == 'rejected' || outcome.value === false)) {
+    isSubmitting.value = false
+    return false
+  }
+
+  isSubmitting.value = false
+
   // If a 'story-goto' value is present in the form data
   // with either "next", "back" or a page id,
   // navigate accordingly
