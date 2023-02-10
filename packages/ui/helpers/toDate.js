@@ -19,11 +19,7 @@ export default function toDate(input) {
   }
 
   // Unix timestamps
-  if (
-    (typeof input == 'string' || typeof input == 'number') &&
-    !isNaN(input) &&
-    input.toString().length <= 10
-  ) {
+  if ((typeof input == 'string' || typeof input == 'number') && !isNaN(input)) {
     return new Date(input * 1000)
   }
 
