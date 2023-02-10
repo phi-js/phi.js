@@ -46,12 +46,27 @@ export default {
       required: false,
       default: null,
     },
+
+    onDelete: {
+      type: Function,
+      required: false,
+      default: null,
+    },
   },
+
   emits: ['click', 'click-icon', 'click-body', 'click-actions'],
+
+  data() {
+    return { isEndangered: false }
+  },
 
   methods: {
     hasSlot(slotName) {
       return !!this.$slots[slotName]
+    },
+
+    doDelete() {
+      this.$emit('delete')
     },
   },
 }
@@ -62,6 +77,7 @@ export default {
     :is="href ? 'a' : 'div'"
     :href="href"
     class="UiItem"
+    :class="{'UiItem--endangered': isEndangered}"
     @click="$emit('click', $event)"
   >
     <div
@@ -107,6 +123,18 @@ export default {
     >
       <slot name="actions" />
     </div>
+    <div
+      v-else-if="onDelete"
+      :class="'UiItem__actions' + (bem ? ` ${bem}__actions` : '')"
+    >
+      <UiIcon
+        class="UiItem__deleter ui--clickable"
+        src="mdi:close"
+        @click="doDelete()"
+        @pointerenter="isEndangered = true"
+        @pointerleave="isEndangered = false"
+      />
+    </div>
 
     <div
       v-if="badge"
@@ -130,6 +158,11 @@ export default {
   gap: var(--ui-item-padding);
 
   color: inherit;
+
+  &--endangered {
+    // background-color: var(--ui-color-danger, #ea5455) !important;
+    background-color: #ea545555 !important;
+  }
 
   &__icon,
   &__body,
