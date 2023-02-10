@@ -30,11 +30,6 @@ const props = defineProps({
   },
 })
 
-const isButton = computed(() =>
-  props.modelValue?.props?.type
-  && ['button', 'submit', 'cancel'].includes(props.modelValue.props.type))
-
-
 const i18n = useI18n()
 const translatedProps = computed(() => {
   return i18n.obj({
@@ -54,16 +49,12 @@ function onClickFace() {
 </script>
 
 <template>
-  <div
-    class="InputFace CmsBlock UiInput"
+  <UiInput
+    class="InputFace CmsBlock"
+    v-bind="translatedProps"
+    :rules="modelValue.rules"
     @click="onClickFace"
-  >
-    <UiInput
-      :style="!isButton ? 'pointer-events: none;' : null"
-      v-bind="translatedProps"
-      :rules="modelValue.rules"
-    />
-  </div>
+  />
 </template>
 
 <style lang="scss">
@@ -71,11 +62,4 @@ function onClickFace() {
   cursor: pointer;
   pointer-events: none;
 }
-
-// .SlotItem--active {
-//   .InputFace {
-//     cursor: initial;
-//     pointer-events: initial;
-//   }
-// }
 </style>

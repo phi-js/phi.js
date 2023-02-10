@@ -38,9 +38,3 @@ const props = defineProps({
     <slot />
   </div>
 </template>
-
-<style lang="scss">
-.LayoutGroup > * {
-  flex: 1;
-}
-</style>

@@ -126,14 +126,15 @@ const i18n = useI18n({
       >
         <UiTabs>
           <UiTab
-            value="methods"
-            icon="mdi:variable"
-            :text="i18n.t('StoryEditorWindow.methods')"
+            value="setup"
+            icon="mdi:gesture-tap"
+            :text="i18n.t('StoryEditorWindow.setup')"
           >
-            <StoryMethodsEditor
-              v-model:story="innerStory"
-              class="StoryEditorWindow__methods"
-              @update:story="emitStoryUpdate"
+            <VmStatement
+              v-model="innerStory.setup"
+              class="StoryEditorWindow__setup"
+              :default="{chain:[]}"
+              @update:model-value="emitStoryUpdate"
             />
           </UiTab>
 
@@ -150,15 +151,14 @@ const i18n = useI18n({
           </UiTab>
 
           <UiTab
-            value="setup"
-            icon="mdi:gesture-tap"
-            :text="i18n.t('StoryEditorWindow.setup')"
+            value="methods"
+            icon="mdi:variable"
+            :text="i18n.t('StoryEditorWindow.methods')"
           >
-            <VmStatement
-              v-model="innerStory.setup"
-              class="StoryEditorWindow__setup"
-              :default="{chain:[]}"
-              @update:model-value="emitStoryUpdate"
+            <StoryMethodsEditor
+              v-model:story="innerStory"
+              class="StoryEditorWindow__methods"
+              @update:story="emitStoryUpdate"
             />
           </UiTab>
         </UiTabs>

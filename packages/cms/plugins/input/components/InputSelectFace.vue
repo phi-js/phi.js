@@ -23,12 +23,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-
-  openAction: {
-    type: Function,
-    required: false,
-    default: null,
-  },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -62,6 +56,8 @@ const translatedProps = computed(() => {
     style: undefined,
   })
 })
+
+const optionsIsString = computed(() => typeof props.modelValue?.props?.options == 'string' && props.modelValue.props.options.length)
 </script>
 
 <template>
@@ -69,40 +65,34 @@ const translatedProps = computed(() => {
     class="InputSelectFace CmsBlock"
     :class="{'InputSelectFace--empty': !options.length}"
   >
-    <UiInput
-      v-bind="translatedProps"
-      class="InputSelectFace__editor"
-    >
-      <OptionsEditor
-        v-model="options"
-        @update:model-value="emitUpdate()"
+    <template v-if="optionsIsString">
+      <UiInput
+        style="pointer-events:none"
+        v-bind="translatedProps"
+        :options="[
+          {value: 0, text: modelValue.props.options}
+        ]"
       />
-    </UiInput>
-    <UiInput
-      v-bind="translatedProps"
-      class="InputSelectFace__preview"
-    />
+    </template>
+    <template v-else>
+      <UiInput
+        v-bind="translatedProps"
+        class="InputSelectFace__editor"
+      >
+        <OptionsEditor
+          v-model="options"
+          @update:model-value="emitUpdate()"
+        />
+      </UiInput>
+      <UiInput
+        v-bind="translatedProps"
+        class="InputSelectFace__preview CmsBlock"
+      />
+    </template>
   </div>
 </template>
 
 <style lang="scss">
-// .InputSelectFace {
-//   position: relative;
-
-//   &__editor {
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     opacity: 0.5;
-//     border: 1px dashed red;
-//   }
-//   &__preview {
-//     display: block;
-//     pointer-events: none;
-//   }
-// }
-
-
 .InputSelectFace {
   &__editor {
     display: none;

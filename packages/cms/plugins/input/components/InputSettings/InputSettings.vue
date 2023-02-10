@@ -68,6 +68,10 @@ const i18n = useI18n({
     'InputSettings.VariableName': 'Variable name',
     'InputSettings.Debounce': 'Input delay',
     'InputSettings.ValueType': 'Value type',
+
+    'InputSettings.InputType': 'Type',
+    'InputSettings.type.Date': 'Day',
+    'InputSettings.type.DateRange': 'Range',
   },
   es: {
     'InputSettings.Texts': 'Textos',
@@ -81,12 +85,28 @@ const i18n = useI18n({
     'InputSettings.VariableName': 'Nombre de variable',
     'InputSettings.Debounce': 'Demorar input',
     'InputSettings.ValueType': 'Tipo de dato',
+
+    'InputSettings.InputType': 'Tipo',
+    'InputSettings.type.Date': 'Día',
+    'InputSettings.type.DateRange': 'Rango',
   },
 })
 </script>
 
 <template>
   <div class="InputSettings">
+    <UiInput
+      v-if="['date', 'date-range'].includes(block.props.type)"
+      v-model="block.props.type"
+      type="select-list"
+      :label="i18n.t('InputSettings.InputType')"
+      :options="[
+        {value: 'date', text: i18n.t('InputSettings.type.Date')},
+        {value: 'date-range', text: i18n.t('InputSettings.type.DateRange')},
+      ]"
+      @update:model-value="emitUpdate"
+    />
+
     <CmsPropInput
       v-model:block="block"
       :model-value="block.props.label"
