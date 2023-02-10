@@ -121,6 +121,18 @@ export default class I18n {
     return objDate.toLocaleString(this.baseLanguage.value, options)
   }
 
+  formatRange(startDate, endDate, options = null) {
+    const fmt = new Intl.DateTimeFormat(this.baseLanguage.value, options || {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
+    const date1 = toDate(startDate)
+    const date2 = toDate(endDate)
+
+    return fmt.formatRange(date1, date2)
+  }
+
   // backwards compat.  deprecate
   d(date, options = undefined) {
     return this.date(date, options)
