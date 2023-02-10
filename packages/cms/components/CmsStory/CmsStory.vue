@@ -507,6 +507,14 @@ export default {
         const arrValue = Array.isArray(value) ? value : [value]
         return new Intl.ListFormat(i18n.language.value).format(arrValue) // This is awesome
       },
+
+      date(value, options = null) {
+        return i18n.date(value, options)
+      },
+
+      range(startDate, endDate, options = null) {
+        return i18n.formatRange(startDate, endDate, options)
+      },
     }
 
     // Render function
