@@ -36,6 +36,7 @@ function sanitizeRange(strStartDate, strEndDate, priority = 'start') {
 <template>
   <span class="UiInputDateRange">
     <input
+      v-bind="{...$attrs, class:null, style:null}"
       v-model="startDate"
       type="date"
       class="UiInput__element"

@@ -1,22 +1,22 @@
-@at-root {
-  .color-scheme-light {
-    .UiInput__element,
-    input.UiInput,
-    textarea.UiInput,
-    select.UiInput {
-      background-color: #fcfcfc;
-    }
-  }
+// @at-root {
+//   .color-scheme-light {
+//     .UiInput__element,
+//     input.UiInput,
+//     textarea.UiInput,
+//     select.UiInput {
+//       background-color: #fcfcfc;
+//     }
+//   }
 
-  .color-scheme-dark {
-    .UiInput__element,
-    input.UiInput,
-    textarea.UiInput,
-    select.UiInput {
-      background-color: #595959;
-    }
-  }
-}
+//   .color-scheme-dark {
+//     .UiInput__element,
+//     input.UiInput,
+//     textarea.UiInput,
+//     select.UiInput {
+//       background-color: #595959;
+//     }
+//   }
+// }
 
 .UiInputNativeElement {
   box-sizing: border-box;
@@ -30,7 +30,8 @@
   border-left: 1px solid rgba(0,0,0, .26);
 
   font: inherit;
-  color: inherit;
+  color: fieldtext;
+  background-color: field;
 
   &:focus {
     outline: 1px solid var(--ui-color-primary);
@@ -146,6 +147,13 @@ textarea.UiInput__element {
   /* type="translation" */
   &--type-translation {
     .TranslationInput__input {
+      @extend .UiInputNativeElement;
+    }
+  }
+
+  &--type-country,
+  &--type-select {
+    .UiSelect__face > div {
       @extend .UiInputNativeElement;
     }
   }

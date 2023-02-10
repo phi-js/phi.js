@@ -8,6 +8,7 @@ import { computed, useAttrs, ref, inject, watch, nextTick } from 'vue'
 import { toHTMLProps } from './validation.js'
 import types from './types.js'
 import UiButton from '../UiButton/UiButton.vue'
+import { toDate } from '../../helpers'
 
 const attrs = useAttrs()
 const injectedTypes = inject('_ui_input_types', {})
@@ -92,6 +93,24 @@ function emitUpdate() {
     if (!isNaN(numValue) && innerValue.value !== numValue) {
       innerValue.value = numValue
     }
+  }
+
+  if (attrs.format == 'timestamp') {
+    let fakeUtcTime, d
+
+    switch (props.type) {
+    case 'date':
+      innerValue.value = Math.floor(new Date(innerValue.value).getTime() / 1000)
+      break
+
+    case 'time':
+    case 'datetime-local':
+      fakeUtcTime = new Date(`${innerValue.value}Z`)
+      d = new Date(fakeUtcTime.getTime() + fakeUtcTime.getTimezoneOffset() * 60000)
+      innerValue.value = Math.floor(d.getTime() / 1000)
+      break
+    }
+
   }
 
   clearTimeout(timeout)
@@ -296,6 +315,40 @@ const nativeElementProps = computed(() => {
   }
 })
 
+// SEE https://stackoverflow.com/questions/28760254/assign-javascript-date-to-html5-datetime-local-input
+const nativeDateProps = computed(() => {
+  if (attrs.format == 'timestamp') {
+    const d = toDate(innerValue.value)
+    let inputDateValue = null
+
+    if (d) {
+      switch (props.type) {
+      case 'date':
+        inputDateValue = d
+          .toISOString()
+          .padStart(24, '0')
+          .split('T')[0]
+        break
+
+      case 'time':
+      case 'datetime-local':
+        inputDateValue = new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+          .toISOString()
+          .padStart(24, '0') // toISOString does NOT return YYYY-MM-DD for years between 0 and 999 !
+          .slice(0, -1)
+        break
+      }
+    }
+
+    return {
+      ...nativeElementProps.value,
+      value: inputDateValue,
+    }
+  } else {
+    return nativeElementProps.value
+  }
+})
+
 const nativeCheckboxProps = computed(() => {
   return {
     ...elementProps.value,
@@ -378,6 +431,14 @@ const uid = ref('UiInput' + (++_UiInput_counter))
           class="UiInput__element"
           v-bind="nativeElementProps"
         />
+        <input
+          v-else-if="props.type == 'date' || props.type == 'time' || props.type == 'datetime-local'"
+          :id="uid"
+          ref="element"
+          type="date"
+          class="UiInput__element"
+          v-bind="nativeDateProps"
+        >
         <label
           v-else-if="props.type == 'checkbox'"
           :type="props.type"

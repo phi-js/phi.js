@@ -22,6 +22,8 @@ const modelValue = ref({
   week: '',
   month: '',
   dateRange: ['2000-01-01', '2000-12-31'],
+  timestamp: 1675886203,
+  negStamp: -9842357059,
 
   color: '#ffffff',
   single: null,
@@ -110,6 +112,21 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
           type="date"
           label="date"
         />
+
+        <UiInput
+          v-model="modelValue.timestamp"
+          type="date"
+          format="timestamp"
+          label="date (con valor timestamp)"
+        />
+
+        <UiInput
+          v-model="modelValue.negStamp"
+          type="datetime-local"
+          format="timestamp"
+          label="date (con valor negStamp)"
+        />
+
         <UiInput
           v-model="modelValue.time"
           type="time"

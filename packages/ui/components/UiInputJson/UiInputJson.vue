@@ -69,7 +69,7 @@ function pretify() {
       lang="json"
       class="UiInputJson__code"
       :placeholder="props.placeholder"
-      @update:modelValue="onTextareaInput"
+      @update:model-value="onTextareaInput"
       @focus="$emit('focus', $event)"
       @blur="$emit('blur', $event)"
     />
