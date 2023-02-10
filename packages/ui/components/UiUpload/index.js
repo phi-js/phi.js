@@ -1,3 +1,1 @@
-// export { default as UiUpload } from './UiUpload.vue'
-import { defineAsyncComponent } from 'vue'
-export const UiUpload = defineAsyncComponent(() => import('./UiUpload.vue'))
+export { default as UiUpload } from './UiUpload.vue'
