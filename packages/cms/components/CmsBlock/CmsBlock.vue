@@ -72,8 +72,11 @@ const CmsBlock = {
     }
 
     function setModelProperty(propName, newValue) {
-      // setProperty(innerModel, propName, newValue)
-      setProperty({ ...innerModel, $slot: props.slotBindings }, propName, newValue)
+      setProperty(innerModel, propName, newValue)
+
+      // Mutate $slot variables, when block has v-model like "$slot.person.something"
+      setProperty({ $slot: props.slotBindings }, propName, newValue)
+
       emitUpdate({ ...innerModel })
     }
 
@@ -277,7 +280,7 @@ const CmsBlock = {
                 'key': child._key || i,
                 'block': child,
                 'modelValue': props.modelValue,
-                'slotBindings': slotBindings,
+                'slotBindings': { ...props.slotBindings, ...slotBindings },
                 'onUpdate:modelValue': ($event) => onChildUpdateModelvalue($event),
               },
             ))
