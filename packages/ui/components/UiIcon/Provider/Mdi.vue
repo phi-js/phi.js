@@ -15,3 +15,9 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.UiIcon .mdi::before {
+  display: block;
+}
+</style>
