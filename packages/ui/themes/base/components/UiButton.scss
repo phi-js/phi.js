@@ -88,7 +88,7 @@ button.UiButton {
       overflow: hidden;
       max-width: 20px;
       min-width: 0;
-      transition: 
+      transition:
         opacity var(--loading-transition-duration),
         max-width var(--loading-transition-duration) ease-in;
     }
@@ -96,7 +96,7 @@ button.UiButton {
     &__actions {
       opacity: 0;
       max-width: 0;
-      
+
       // "hide"
       position: absolute;
       right: 0;
@@ -104,6 +104,8 @@ button.UiButton {
   }
 
   &--loading {
+    cursor: wait;
+
     .UiItem {
       &__icon {
         max-width: 0;
@@ -113,6 +115,18 @@ button.UiButton {
         position: initial;
         opacity: 1;
         max-width: 20px;
+      }
+
+      // Show the loading label using CSS, which means just by adding this class to any parent element you can style the button as loading
+      // (and not have to rely on setting is-loading= manually to the button element
+      // e.g. LayoutPage.scss, &--submitting { ... styles buttons as loading
+      &__body {
+        &::before {
+          content: var(--ui-button-loading-label);
+        }
+      }
+      &__text {
+        display: none;
       }
     }
   }

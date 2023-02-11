@@ -94,6 +94,9 @@ const currentText = computed(() => {
       'UiButton--loading': isLoading,
       'UiButton--error': errors.length,
     }"
+    :style="{
+      '--ui-button-loading-label': `'${props.loadingLabel || currentText}'`
+    }"
     v-bind="$attrs"
   >
     <UiItem
