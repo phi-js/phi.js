@@ -113,7 +113,7 @@ function cancel() {
               :key="action.id"
               :text="action.title"
               :icon="action.icon"
-              @click="emit('update:action-id', action.id); close();"
+              @click="currentActionId = action.id; emit('update:action-id', action.id); close();"
             />
           </div>
         </template>
