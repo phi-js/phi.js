@@ -52,6 +52,7 @@ const i18n = useI18n()
 const translatedProps = computed(() => {
   return i18n.obj({
     ...props.modelValue?.props,
+    rules: props.modelValue?.rules,
     class: undefined,
     style: undefined,
   })
@@ -62,11 +63,12 @@ const optionsIsString = computed(() => typeof props.modelValue?.props?.options =
 
 <template>
   <div
-    class="InputSelectFace CmsBlock"
+    class="InputSelectFace"
     :class="{'InputSelectFace--empty': !options.length}"
   >
     <template v-if="optionsIsString">
       <UiInput
+        class="CmsBlock"
         style="pointer-events:none"
         v-bind="translatedProps"
         :options="[
@@ -75,19 +77,23 @@ const optionsIsString = computed(() => typeof props.modelValue?.props?.options =
       />
     </template>
     <template v-else>
-      <UiInput
-        v-bind="translatedProps"
-        class="InputSelectFace__editor"
-      >
-        <OptionsEditor
-          v-model="options"
-          @update:model-value="emitUpdate()"
+      <span class="InputSelectFace__editor">
+        <UiInput
+          v-bind="translatedProps"
+          class="CmsBlock"
+        >
+          <OptionsEditor
+            v-model="options"
+            @update:model-value="emitUpdate()"
+          />
+        </UiInput>
+      </span>
+      <span class="InputSelectFace__preview">
+        <UiInput
+          v-bind="translatedProps"
+          class="CmsBlock"
         />
-      </UiInput>
-      <UiInput
-        v-bind="translatedProps"
-        class="InputSelectFace__preview CmsBlock"
-      />
+      </span>
     </template>
   </div>
 </template>
@@ -98,7 +104,7 @@ const optionsIsString = computed(() => typeof props.modelValue?.props?.options =
     display: none;
   }
   &__preview {
-    display: block;
+    display: initial;
     pointer-events: none;
   }
 }
@@ -106,7 +112,7 @@ const optionsIsString = computed(() => typeof props.modelValue?.props?.options =
 .BlockScaffold--selected > .InputSelectFace,
 .InputSelectFace--empty {
   .InputSelectFace__editor {
-    display: block;
+    display: initial;
   }
   .InputSelectFace__preview {
     display: none;

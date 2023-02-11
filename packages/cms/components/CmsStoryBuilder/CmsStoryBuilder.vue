@@ -134,13 +134,15 @@ const currentPageId = computed({
 
 
 // Used by VmExpressionPicker
+// Within available actions, shows a tab called "VmExpression.functions.title"
+
 provide('$_vm_functions', computed(() => {
   if (!innerStory.value.methods?.length) {
     return []
   }
   return [{
-    name: 'functions',
-    title: 'Functions',
+    name: 'story',
+    title: 'Story methods',
     children: innerStory.value.methods
       .map((storyMethod) => ({
         name: storyMethod.name,

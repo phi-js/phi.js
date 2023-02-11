@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onBeforeUnmount, watchEffect } from 'vue'
+import { ref, computed, onBeforeUnmount, watchEffect, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { UiIcon, UiPopover, UiTabs, UiTab, UiButton } from '@/packages/ui'
 
@@ -25,8 +25,10 @@ const props = defineProps({
 const emit = defineEmits(['update:block', 'select', 'focus', 'blur'])
 
 const i18n = useI18n()
-const curLanguage = i18n.language
 const isLanguageOpen = ref(false)
+const curLanguage = ref(i18n.language.value)
+
+watch(i18n.language, (newValue) => curLanguage.value = newValue)
 
 const innerValue = ref('')
 const isFocused = ref(false)
@@ -76,11 +78,10 @@ watchEffect(() => {
   const incomingValue = props.block?.props?.value
   let targetValue = ''
 
-  if (incomingValue?.['$i18n'] && typeof incomingValue?.['$i18n'] === 'object') {
-    targetValue = incomingValue['$i18n']?.[curLanguage.value]
-      || incomingValue['$i18n'][Object.keys(incomingValue['$i18n'])[0]]
-  } else {
+  if (!incomingValue?.['$i18n']) {
     targetValue = incomingValue
+  } else {
+    targetValue = incomingValue['$i18n']?.[curLanguage.value] || ''
   }
 
   if (targetValue != innerValue.value) {
@@ -90,7 +91,7 @@ watchEffect(() => {
 
 
 function setLanguage(newValue) {
-  emitUpdate()
+  // emitUpdate()
   curLanguage.value = newValue
 }
 
@@ -298,6 +299,15 @@ async function doTranslation() {
     emitUpdate()
   }
 }
+
+function toggleLanguageTabs() {
+  isLanguageOpen.value = !isLanguageOpen.value
+
+  // when closing, reset curLanguage
+  if (!isLanguageOpen.value) {
+    curLanguage.value = i18n.language.value
+  }
+}
 </script>
 
 <template>
@@ -391,43 +401,42 @@ async function doTranslation() {
         src="mdi:translate"
         class="BlockScaffold__button BlockScaffold__button--expansible"
         :class="{ 'BlockScaffold__button--active': isLanguageOpen }"
-        @click="isLanguageOpen = !isLanguageOpen"
+        @click="toggleLanguageTabs"
       />
+
+      <UiTabs
+        v-if="isLanguageOpen"
+        class="MediaHtmlBlockEditor__languageTabs"
+        :model-value="curLanguage"
+        @update:model-value="setLanguage($event)"
+      >
+        <template #default>
+          <UiTab
+            v-for="(locale) in i18n.availableLanguages"
+            :key="locale.value"
+            :text="locale.text"
+            :value="locale.value"
+          />
+        </template>
+
+        <template #right>
+          <UiButton
+            :disabled="!!innerValue && innerValue != '<p></p>'"
+            label="Translate"
+            icon="mdi:translate"
+            class="UiButton--cancel"
+            @click="doTranslation()"
+          />
+        </template>
+      </UiTabs>
     </template>
 
     <template #default>
-      <div class="MediaHtmlBlockEditor">
-        <UiTabs
-          v-if="isLanguageOpen"
-          class="MediaHtmlBlockEditor__tabs"
-          :model-value="curLanguage"
-          @update:model-value="setLanguage($event)"
-        >
-          <template #default>
-            <UiTab
-              v-for="(locale) in i18n.availableLanguages"
-              :key="locale.value"
-              :text="locale.text"
-              :value="locale.value"
-            />
-          </template>
-
-          <template #right>
-            <UiButton
-              v-show="curLanguage != 'en'"
-              label="Translate"
-              icon="mdi:translate"
-              class="UiButton--cancel"
-              @click="doTranslation()"
-            />
-          </template>
-        </UiTabs>
-
-        <EditorContentWrapper
-          :value="innerValue"
-          :editor="editor"
-        />
-      </div>
+      <EditorContentWrapper
+        v-bind="block.props"
+        :value="innerValue"
+        :editor="editor"
+      />
     </template>
   </BlockScaffold>
 </template>
@@ -449,9 +458,15 @@ async function doTranslation() {
 }
 
 .MediaHtmlBlockEditor {
-  &__tabs {
+  &__languageTabs {
     background-color: #333;
     color: #eee;
+
+    font-size: 10pt;
+
+    display: block;
+    min-width: 100%; // position within toolbar
+    order: 1;
   }
 }
 </style>

@@ -3,7 +3,7 @@ import CallEditor from './CallEditor.vue'
 export default {
   name: 'Story.call',
   icon: 'mdi:variable',
-  title: 'Call function',
+  title: 'Call method',
 
   editor: {
     component: CallEditor,

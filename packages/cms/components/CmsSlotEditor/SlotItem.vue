@@ -169,14 +169,16 @@ export default {
               'action': this.definition.editor.face,
               'block': this.innerBlock,
               'onUpdate:block': (evt) => this.$emit('update:block', evt),
+
+              'class': ['CmsBlock', this.innerBlock.props?.class],
+              'style': this.innerBlock.props?.style,
             },
           )
-          : () => h( // Use block component as editor face.  Pa
+          : () => h( // Use block component as editor face
             this.definition.block.component,
             this.i18n.obj({
               ...this.innerBlock.props,
-              class: undefined,
-              style: undefined,
+              class: ['CmsBlock', this.innerBlock.props?.class],
             }),
           ),
 

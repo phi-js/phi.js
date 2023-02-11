@@ -13,10 +13,12 @@ import pluginInput from '../plugins/input'
 import pluginLayout from '../plugins/layout'
 import pluginMedia from '../plugins/media'
 import pluginNavigation from '../plugins/navigation'
+import pluginStory from '../plugins/story'
 import pluginVideo from '../plugins/video'
 
 // This order is used in PickerContents
 usePlugin([
+  pluginStory,
   pluginMedia,
   pluginInput,
   pluginLayout,

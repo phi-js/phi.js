@@ -79,6 +79,8 @@
     align-items: center;
 
     font-size: 1rem;
+
+    min-width: 120px;
   }
 
   &__label {
@@ -118,7 +120,8 @@
     border-radius: 4px;
 
     display: flex;
-    flex-wrap: nowrap;
+    // flex-wrap: nowrap;
+    flex-wrap: wrap; // so things like MediaHtmlBlockEditor toolbar don't suck
     align-items: center;
 
     user-select: none;
@@ -184,6 +187,7 @@
 
     &--active {
       color: var(--ui-color-primary);
+      background-color: var(--ui-color-hover);
     }
 
     &--expansible {

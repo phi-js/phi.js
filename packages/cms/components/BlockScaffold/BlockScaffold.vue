@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 
 import { useI18n } from '@/packages/i18n'
 import { UiItem, UiIcon, UiDropdown } from '@/packages/ui'
@@ -45,6 +45,9 @@ const shortcuts = computed(() => availableActions.value.filter((a) => a.hasData)
 
 function emitSelect(evt) {
   evt.stopPropagation()
+  if (props.selected) {
+    return
+  }
   emit('select')
 }
 
@@ -57,19 +60,46 @@ const parent = curSlotItem?.parent
 //   curParent = curParent.parent
 //   ancestry.unshift(curParent)
 // }
+
+
+/*
+Apply all basic display properties of the default slot
+into the container element. (display, flex, width, height)
+*/
+
+const refSlot = ref()
+const stylesInChild = computed(() => {
+  if (!refSlot.value) {
+    return null
+  }
+
+  const elementInSlot = refSlot.value.querySelector('.BlockScaffold__toolbar-container + *')
+  if (!elementInSlot) {
+    return null
+  }
+
+  const elementStyle = getComputedStyle(elementInSlot)
+  return {
+    display: elementStyle.display,
+    flex: elementStyle.flex,
+    alignSelf: elementStyle.alignSelf,
+    float: elementStyle.float,
+  }
+})
+
 </script>
 
 <template>
   <div
+    ref="refSlot"
     class="BlockScaffold"
     :class="[
       'BlockScaffold--'+props.block.component,
       `BlockScaffold--${direction}`,
       {'BlockScaffold--selected': props.selected},
-      props.block.props?.class,
     ]"
-    :style="props.block.props?.style"
     tabindex="0"
+    :style="stylesInChild"
     @click="emitSelect"
     @focus="emitSelect"
   >

@@ -72,6 +72,10 @@ const i18n = useI18n({
     'InputSettings.InputType': 'Type',
     'InputSettings.type.Date': 'Day',
     'InputSettings.type.DateRange': 'Range',
+
+    'InputSettings.DateFormat': 'Date format',
+    'InputSettings.DateFormat.native': 'Native [YYYY-MM-DD]',
+    'InputSettings.DateFormat.timestamp': 'Timestamp',
   },
   es: {
     'InputSettings.Texts': 'Textos',
@@ -89,12 +93,17 @@ const i18n = useI18n({
     'InputSettings.InputType': 'Tipo',
     'InputSettings.type.Date': 'Día',
     'InputSettings.type.DateRange': 'Rango',
+
+    'InputSettings.DateFormat': 'Formato de fecha',
+    'InputSettings.DateFormat.native': 'Nativo [YYYY-MM-DD]',
+    'InputSettings.DateFormat.timestamp': 'Timestamp',
   },
 })
 </script>
 
 <template>
   <div class="InputSettings">
+    <!-- Date options-->
     <UiInput
       v-if="['date', 'date-range'].includes(block.props.type)"
       v-model="block.props.type"
@@ -138,6 +147,19 @@ const i18n = useI18n({
       v-model="block['v-model']"
       type="text"
       :label="i18n.t('InputSettings.VariableName')"
+      @update:model-value="emitUpdate"
+    />
+
+    <!-- Date format picker -->
+    <UiInput
+      v-if="['date', 'date-range'].includes(block.props.type)"
+      v-model="block.props.format"
+      type="select-list"
+      :label="i18n.t('InputSettings.DateFormat')"
+      :options="[
+        {value: '', text: i18n.t('InputSettings.DateFormat.native')},
+        {value: 'timestamp', text: i18n.t('InputSettings.DateFormat.timestamp')},
+      ]"
       @update:model-value="emitUpdate"
     />
   </div>
