@@ -173,7 +173,7 @@ const CmsBlock = {
         const listeners = props.block['v-on']
         for (let eventName in listeners) {
           const eventCallback = ($event) => {
-            blockVM.eval(
+            return blockVM.eval(
               listeners[eventName],
               {
                 ...innerModel,
