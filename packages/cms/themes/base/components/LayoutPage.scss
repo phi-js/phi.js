@@ -1,3 +1,5 @@
+@import '@/packages/ui/themes/base/components/UiButton.scss';
+
 .LayoutPage {
   position: relative;
   min-height: 100%;
@@ -16,6 +18,13 @@
     input[type=submit],
     button[type=submit] {
       opacity: 0.6;
+    }
+  }
+
+  /* Animate buttons while submitting */
+  &--submitting {
+    button[type=submit].UiButton {
+      @extend .UiButton--loading;
     }
   }
 }

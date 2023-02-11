@@ -1,0 +1,24 @@
+.FetchEditor {
+  &__row {
+    display: flex;
+    align-items: flex-end;
+
+    & > :last-child {
+      flex: 1;
+      input {
+        width: 100%;
+      }
+    }
+  }
+
+  &__body {
+    @extend .outset;
+    --ui-item-padding: 6px 10px;
+    margin: 5px 0;
+
+    .UiItem {
+      font-size: 10pt;
+      font-weight: bold;
+    }
+  }
+}

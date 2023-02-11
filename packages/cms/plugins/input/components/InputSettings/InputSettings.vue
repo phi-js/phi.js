@@ -63,6 +63,7 @@ const i18n = useI18n({
     'InputSettings.Single': 'Single',
     'InputSettings.Multiple': 'Multiple',
     'InputSettings.Label': 'Label',
+    'InputSettings.LoadingLabel': 'Label (while submitting)',
     'InputSettings.Placeholder': 'Placeholder',
     'InputSettings.Subtext': 'Subtext',
     'InputSettings.VariableName': 'Variable name',
@@ -72,6 +73,10 @@ const i18n = useI18n({
     'InputSettings.InputType': 'Type',
     'InputSettings.type.Date': 'Day',
     'InputSettings.type.DateRange': 'Range',
+
+    'InputSettings.ButtonType': 'Button type',
+    'InputSettings.type.Button': 'Button',
+    'InputSettings.type.Submit': 'Submit',
 
     'InputSettings.DateFormat': 'Date format',
     'InputSettings.DateFormat.native': 'Native [YYYY-MM-DD]',
@@ -84,6 +89,7 @@ const i18n = useI18n({
     'InputSettings.Single': 'Único',
     'InputSettings.Multiple': 'Múltiple',
     'InputSettings.Label': 'Etiqueta',
+    'InputSettings.LoadingLabel': 'Etiqueta (mientras envía)',
     'InputSettings.Placeholder': 'Placeholder',
     'InputSettings.Subtext': 'Subtexto',
     'InputSettings.VariableName': 'Nombre de variable',
@@ -93,6 +99,10 @@ const i18n = useI18n({
     'InputSettings.InputType': 'Tipo',
     'InputSettings.type.Date': 'Día',
     'InputSettings.type.DateRange': 'Rango',
+
+    'InputSettings.ButtonType': 'Tipo de botón',
+    'InputSettings.type.Button': 'Botón',
+    'InputSettings.type.Submit': 'Enviar formulario',
 
     'InputSettings.DateFormat': 'Formato de fecha',
     'InputSettings.DateFormat.native': 'Nativo [YYYY-MM-DD]',
@@ -116,12 +126,36 @@ const i18n = useI18n({
       @update:model-value="emitUpdate"
     />
 
+    <!-- Button options -->
+    <UiInput
+      v-if="block.component == 'InputButton'"
+      v-model="block.props.type"
+      type="select-list"
+      :label="i18n.t('InputSettings.ButtonType')"
+      :options="[
+        {value: 'submit', text: i18n.t('InputSettings.type.Submit')},
+        {value: 'button', text: i18n.t('InputSettings.type.Button')},
+      ]"
+      @update:model-value="emitUpdate"
+    />
+
     <CmsPropInput
       v-model:block="block"
       :model-value="block.props.label"
       type="text"
       :label="i18n.t('InputSettings.Label')"
       @update:model-value="onUpdateLabel"
+      @update:block="emitUpdate"
+    />
+
+    <CmsPropInput
+      v-if="block.component == 'InputButton' && block.props.type == 'submit'"
+      v-model="block.props.loadingLabel"
+      v-model:block="block"
+      :placeholder="block.props.label"
+      type="text"
+      :label="i18n.t('InputSettings.LoadingLabel')"
+      @update:model-value="emitUpdate"
       @update:block="emitUpdate"
     />
 

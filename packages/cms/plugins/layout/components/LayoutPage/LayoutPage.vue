@@ -1,11 +1,19 @@
 <script setup>
 import { ref, onMounted, inject, provide } from 'vue'
 
-const emit = defineEmits(['mounted', 'submit', 'change'])
 const injectedStory = inject('$_cms_story', null)
 
-onMounted(() => emit('mounted'))
+const props = defineProps({
+  onSubmit: {
+    type: [Function, Array],
+    required: false,
+    default: null,
+  },
+})
 
+const emit = defineEmits(['mounted', 'change'])
+
+onMounted(() => emit('mounted'))
 
 const onBeforeSubmit = []
 provide('_LayoutPage_onBeforeSubmit', (callable) => onBeforeSubmit.push(callable))
@@ -13,10 +21,11 @@ provide('_LayoutPage_onBeforeSubmit', (callable) => onBeforeSubmit.push(callable
 const isSubmitting = ref(false)
 
 async function onFormSubmit($event) {
-
   if (isSubmitting.value) {
     return
   }
+
+  const startTime = new Date()
   isSubmitting.value = true
 
   // // Run all onBeforeSubmit callbacks (one by one)
@@ -34,12 +43,36 @@ async function onFormSubmit($event) {
     return false
   }
 
+  // Run @submit
+  if (props.onSubmit) {
+    const arrCallbacks = Array.isArray(props.onSubmit) ? props.onSubmit : [props.onSubmit]
+    const results = await Promise.allSettled(arrCallbacks.map((callback) => callback($event)))
+    if (results.some((outcome) => outcome.status == 'rejected' || outcome.value === false)) {
+      isSubmitting.value = false
+      return false
+    }
+  }
+
+  /*
+  Duration padding
+  When a form submit happens TOO fast, the user may be left without a sense of confirmation.
+  submitting a form is important! The user should now the thing ran.  Reacting INSTANTLY fast MAY not be the best experience
+  Make sure the form stays in "submitting" state for ... one second?
+  */
+  const durationPadding = 1000
+
+  const endTime = new Date()
+  const duration = endTime - startTime //in ms
+  if (duration < durationPadding) {
+    await new Promise((resolve) => setTimeout(resolve, durationPadding - duration))
+  }
+
   isSubmitting.value = false
+
 
   // If a 'story-goto' value is present in the form data
   // with either "next", "back" or a page id,
   // navigate accordingly
-
   // https://stackoverflow.com/a/69986560/3934387
   let data = new FormData($event.target)
   if ($event.submitter) {
@@ -67,8 +100,6 @@ async function onFormSubmit($event) {
     injectedStory?.goTo?.(goTo)
     break
   }
-
-  emit('submit', $event)
 }
 
 function onFormChange($event) {
@@ -79,6 +110,7 @@ function onFormChange($event) {
 <template>
   <form
     class="LayoutPage"
+    :class="{'LayoutPage--submitting': isSubmitting}"
     @submit.prevent="onFormSubmit"
     @change="onFormChange"
   >
