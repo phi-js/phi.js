@@ -26,9 +26,13 @@ export default function getClient(clientType) {
   // }
 
   // Buscar en attrs
-  const attrs = useAttrs()
-  if (attrs?.[`api-${clientType}`]) {
-    return attrs?.[`api-${clientType}`]
+  try {
+    const attrs = useAttrs()
+    if (attrs?.[`api-${clientType}`]) {
+      return attrs?.[`api-${clientType}`]
+    }
+  } catch (err) {
+    // useAttrs error.  Not called inside setup().
   }
 
   console.error(`http client '%c${clientType}%c' not provided
