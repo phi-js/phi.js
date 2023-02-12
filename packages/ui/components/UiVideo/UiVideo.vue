@@ -212,17 +212,18 @@ function onUpdateCurrentTime(msTime) {
 
 <style lang="scss">
 .UiVideo {
-  width: auto;
-  height: auto;
-  min-height: 280px;
+  // width: auto; // don't mess with the video dimensions.  Let sizing/styling come from props or elsewhere.
+  // height: auto;
+  // min-height: 280px;
 
   &--empty {
+    min-height: 256px;
+
     display: flex;
     align-items: center;
     justify-content: center;
     border: 1px dashed rgba(0, 0, 0, 0.4);
     background-color: rgba(0, 0, 0, 0.08);
-    min-height: 256px;
   }
 }
 </style>

@@ -1,8 +1,6 @@
 <template>
   <video
     class="UiVideoNative"
-    width="100%"
-    height="100%"
     controls
     :src="url"
     v-bind="$attrs"
