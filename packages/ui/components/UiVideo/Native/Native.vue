@@ -50,6 +50,7 @@ export default {
       videoData: {
         isPlaying: false,
         time: null,
+        _ignoreChanges: false,
       },
     }
   },
@@ -62,6 +63,14 @@ export default {
 
       val ? this.$el.play() : this.$el.pause()
     },
+
+    currentTime(newValue) {
+      if (this._ignoreChanges) {
+        this._ignoreChanges = false
+        return
+      }
+      this.$el.currentTime = newValue / 1000
+    },
   },
 
   methods: {
@@ -69,6 +78,7 @@ export default {
       this.videoData.time = Math.floor(evt.target.currentTime * 1000)
       this.videoData.isPlaying = true
 
+      this._ignoreChanges = true
       this.$emit('play')
       this.$emit('update:isPlaying', this.videoData.isPlaying)
       this.$emit('update:currentTime', this.videoData.time)
@@ -78,6 +88,7 @@ export default {
       this.videoData.time = Math.floor(evt.target.currentTime * 1000)
       this.videoData.isPlaying = false
 
+      this._ignoreChanges = true
       this.$emit('pause')
       this.$emit('update:isPlaying', this.videoData.isPlaying)
       this.$emit('update:currentTime', this.videoData.time)
@@ -85,6 +96,7 @@ export default {
 
     onVideoTimeupdate(evt) {
       this.videoData.time = Math.floor(evt.target.currentTime * 1000)
+      this._ignoreChanges = true
       this.$emit('update:currentTime', this.videoData.time)
     },
   },

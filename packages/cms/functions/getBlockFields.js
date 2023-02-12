@@ -74,7 +74,7 @@ export default function getBlockFields(block) {
   if (block.component == 'MediaVideo' || block.component == 'MediaVideoContainer') {
     if (block['v-model:isPlaying']) {
       retval.push({
-        name: block['v-model:isPlaying'],
+        value: block['v-model:isPlaying'],
         type: 'boolean',
         info: {
           icon: 'mdi:youtube',
@@ -86,7 +86,7 @@ export default function getBlockFields(block) {
 
     if (block['v-model:currentTime']) {
       retval.push({
-        name: block['v-model:currentTime'],
+        value: block['v-model:currentTime'],
         type: 'number',
         info: {
           text: 'Video time',
@@ -101,7 +101,7 @@ export default function getBlockFields(block) {
       const arrChapters = Array.isArray(block.props?.chapters) ? block.props.chapters : []
 
       retval.push({
-        name: block['v-model:activeChapters'],
+        value: block['v-model:activeChapters'],
         type: 'array',
         info: {
           icon: 'mdi:youtube',

@@ -80,7 +80,7 @@ const stylesInChild = computed(() => {
 
   const elementStyle = getComputedStyle(elementInSlot)
   return {
-    display: elementStyle.display,
+    display: elementStyle.display == 'inline' ? 'inline-block' : elementStyle.display,
     flex: elementStyle.flex,
     alignSelf: elementStyle.alignSelf,
     float: elementStyle.float,

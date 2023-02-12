@@ -86,7 +86,7 @@ function emitUpdate() {
   &__minute,
   &__second,
   &__millisecond {
-    width: 2.2rem;
+    width: 3rem;
     text-align: right;
   }
 
