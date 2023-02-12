@@ -4,10 +4,10 @@
   .UiInput {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
 
     &__label {
       min-width: var(--ui-form-label-width);
+      padding: 4px 2px;
     }
 
     &__body {

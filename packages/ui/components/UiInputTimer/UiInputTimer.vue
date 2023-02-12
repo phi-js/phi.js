@@ -82,6 +82,9 @@ function emitUpdate() {
 
 <style lang="scss">
 .UiInputTimer {
+  display: flex;
+  align-items: center;
+  gap: 2px;
 
   &__minute,
   &__second,
@@ -92,6 +95,7 @@ function emitUpdate() {
 
   &__millisecond {
     width: 3.3rem;
+    font-size: 0.8em;
   }
 }
 </style>
