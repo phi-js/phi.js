@@ -37,6 +37,8 @@ const props = defineProps({
      *     name: "Capitulo 1",
      *     start: 0,
      *     end: 3000  // ms.
+     *     onStart: null  // 'pause' | [time in ms] | null
+     *     onEnd: null  // 'pause' | [time in ms] | null
      *   },
      *   ...
      * ]
@@ -65,13 +67,11 @@ watch(
   { immediate: true },
 )
 
-let oldValue = 0
 const innerCurrentTime = ref(0)
 watch(
   () => props.currentTime,
   (newValue) => {
     innerCurrentTime.value = newValue
-    oldValue = newValue
   },
   { immediate: true },
 )
@@ -110,21 +110,15 @@ watch(
         name: chapter.name || i,
         start: chapter.start || 0,
         end: chapter.end || Infinity,
-        pauseOnEnter: !!chapter.pauseOnEnter,
+
+        onStart: chapter.onStart,
+        onEnd: chapter.onEnd,
+
         isActive: !!innerChapters.value[i]?.isActive,
       }))
   },
   { immediate: true },
 )
-
-const jumpPoints = computed(() => {
-  return innerChapters.value
-    .filter((c) => !!c.jumpTo)
-    .map((c) => ({
-      from: c.end,
-      to: c.jumpTo,
-    }))
-})
 
 function goToChapter(chapterName) {
   const foundChapter = innerChapters.value.find((c) => c.name == chapterName)
@@ -133,7 +127,6 @@ function goToChapter(chapterName) {
     return
   }
 
-  oldValue = foundChapter.start
   setTimeout(() => innerCurrentTime.value = foundChapter.start, 0)
 }
 
@@ -147,40 +140,49 @@ defineExpose({
   },
 })
 
+/*
+event: "pause" | [time in ms.] | null
+*/
+function runEventListener(event) {
+  if (event === 'pause') {
+    innerIsPlaying.value = false
+    emit('update:isPlaying', false)
+    return
+  }
+
+  const targetTime = parseInt(event)
+  if (targetTime >= 0) {
+    // innerCurrentTime.value = targetTime
+    setTimeout(() => innerCurrentTime.value = targetTime, 0)
+  }
+}
 
 function onUpdateCurrentTime(msTime) {
   innerCurrentTime.value = msTime
   emit('update:currentTime', msTime)
-
-  // Trigger jump points
-  jumpPoints.value.forEach((point) => {
-    if (oldValue <= point.from && point.from < msTime) {
-      // Hit point! jump to target time
-      setTimeout(() => innerCurrentTime.value = point.to, 0)
-    }
-  })
-  oldValue = msTime
-
 
   let activeChapters = []
   let chapterChanged = false
   for (let i = 0; i < innerChapters.value.length; i++) {
     let c = innerChapters.value[i]
     let isActive = c.start <= msTime && msTime < c.end
-    if (isActive != c.isActive) {
-      c.isActive = isActive
-      chapterChanged = true
-      emit(isActive ? 'chapter-enter' : 'chapter-leave', c.name)
-
-      // "pauseOnEnter" prop in chapter
-      if (isActive && c.pauseOnEnter) {
-        innerIsPlaying.value = false
-        emit('update:isPlaying', false)
-      }
-    }
 
     if (isActive) {
       activeChapters.push(c.name)
+    }
+
+    if (isActive != c.isActive) {
+      c.isActive = isActive
+      chapterChanged = true
+
+      // chapter event listeners
+      if (isActive) {
+        runEventListener(c.onStart)
+        emit('chapter-enter', c.name)
+      } else {
+        runEventListener(c.onEnd)
+        emit('chapter-leave', c.name)
+      }
     }
   }
 

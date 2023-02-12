@@ -1,14 +1,27 @@
 <script>
 import draggable from 'vuedraggable'
 
-import UiVideo from './UiVideo.vue'
+import UiButton from '../UiButton/UiButton.vue'
+import UiDialog from '../UiDialog/UiDialog.vue'
 import UiIcon from '../UiIcon/UiIcon.vue'
 import UiInput from '../UiInput/UiInput.vue'
-import UiButton from '../UiButton/UiButton.vue'
+import TempValue from '../TempValue/TempValue.vue'
+
+import UiVideo from './UiVideo.vue'
+import ChapterEditor from './ChapterEditor.vue'
 
 export default {
   name: 'UiVideoChaptersEditor',
-  components: { UiVideo, UiIcon, UiButton, UiInput, draggable },
+  components: {
+    draggable,
+    UiButton,
+    UiDialog,
+    UiIcon,
+    UiInput,
+    TempValue,
+    UiVideo,
+    ChapterEditor,
+  },
 
   props: {
     url: {
@@ -209,21 +222,32 @@ export default {
                 @update:model-value="emitInput"
               />
             </td>
-            <td
-              align="right"
-              nowrap
-            >
-              <UiIcon
-                :src="innerModel[index].pauseOnEnter ? 'mdi:pause' : 'mdi:play'"
-                style="width: 40px;"
-                class="ui--clickable"
-                @click="innerModel[index].pauseOnEnter = !innerModel[index].pauseOnEnter; emitInput();"
-              />
+            <td nowrap>
+              <TempValue
+                v-slot="{ tmp, accept, cancel}"
+                v-model="innerModel[index]"
+                @update:model-value="emitInput"
+              >
+                <UiDialog
+                  style="display:inline-block"
+                  @accept="accept()"
+                  @cancel="cancel()"
+                >
+                  <template #trigger>
+                    <UiIcon
+                      class="ui--clickable"
+                      src="mdi:dots-vertical"
+                    />
+                  </template>
+                  <template #default>
+                    <ChapterEditor v-model="tmp.value" />
+                  </template>
+                </UiDialog>
+              </TempValue>
 
               <UiIcon
                 class="ui--clickable"
                 src="mdi:close"
-                style="width: 40px; margin-left: 1rem;"
                 @click="removeChapter(index)"
               />
             </td>
@@ -240,9 +264,13 @@ export default {
               style="margin-right: 1rem"
               @click="pushChapter(pointer)"
             />
-            {{ strPointer }}
           </td>
-          <td />
+          <td>
+            <UiInput
+              v-model="pointer"
+              type="timer"
+            />
+          </td>
           <td />
           <td />
         </tr>
@@ -276,7 +304,7 @@ export default {
       padding-right: 18px;
     }
     td {
-      padding-right: 12px;
+      padding: 0 3px;
     }
 
     th,td {
@@ -296,6 +324,18 @@ export default {
     &--active {
       outline: 2px solid #ff8;
       border-radius: 4px;
+    }
+
+    .UiIcon.ui--clickable {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 4px;
+      width: 28px;
+      height: 28px;
+      margin: 0;
+      padding: 0;
     }
   }
 }
