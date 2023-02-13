@@ -48,15 +48,17 @@ const editor = computed(() => {
 
 <template>
   <div class="StmtCall">
-    <!-- <input
-      v-model="innerModel.call"
-      type="text"
-      class="UiInput"
-      @input="emitUpdate"
-    > -->
     <component
       :is="editor.component"
-      v-if="editor"
+      v-if="editor && editor['v-model'] == 'args'"
+      v-model="innerModel.args"
+      v-bind="editor.props"
+      @update:model-value="emitUpdate"
+    />
+
+    <component
+      :is="editor.component"
+      v-else-if="editor"
       v-model="innerModel"
       v-bind="editor.props"
       @update:model-value="emitUpdate"
