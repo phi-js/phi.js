@@ -1,0 +1,1 @@
+export { default as UiSelectAsync } from './UiSelectAsync.vue'
