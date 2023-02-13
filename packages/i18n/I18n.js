@@ -114,6 +114,10 @@ export default class I18n {
 
   // Format date
   date(date, options = undefined) {
+    if (Array.isArray(date)) {
+      return this.formatRange(date[0], date[1], options)
+    }
+
     const objDate = toDate(date)
     if (!objDate) {
       return date + '(?)'
