@@ -46,7 +46,7 @@
   &--selected {
     z-index: 3; // messes up dragstart from toolbar (in html blocks only ???)
 
-    .BlockScaffold__label {
+    & > .BlockScaffold__toolbar-container .BlockScaffold__label {
       display: none;
     }
 
