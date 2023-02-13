@@ -39,6 +39,37 @@ export default class VM {
       return retval
     }
 
+    /*
+    If an object has statement properties but needs to be ignored
+    e.g.
+    {
+      query: {
+        from: "something",
+        where: { // This object WILL be evaluated (as stmtOperator)
+          field: "foo",
+          op: "eq",
+          args: "{{something}}"
+        },
+        coolWhere: { // This object will NOT be evaluated as stmtOperator)
+          $literal: true,
+          field: "foo",
+          op: "eq",
+          args: "{{something}}" // but this will still be evaluated
+        }
+      }
+    }
+    */
+    if (expr.$literal) {
+      const retval = {}
+      for (const [propName, propValue] of Object.entries(expr)) {
+        if (propName == '$literal') {
+          continue
+        }
+        retval[propName] = this.eval(propValue, localScope)
+      }
+      return retval
+    }
+
     // Backwards compatibility
     if (typeof expr.do !== 'undefined') {
       return this.stmtAssign({
