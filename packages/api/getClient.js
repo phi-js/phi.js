@@ -19,12 +19,6 @@ export default function getClient(clientType) {
     return registeredClients[clientType][0]
   }
 
-  // provideClient.js no longer uses provide()
-  // const injected = inject(`$_phi_api_${clientType}`, null)
-  // if (injected) {
-  //   return injected
-  // }
-
   // Buscar en attrs
   try {
     const attrs = useAttrs()
