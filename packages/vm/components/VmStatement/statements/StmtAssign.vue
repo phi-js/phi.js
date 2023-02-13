@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { UiInput, UiDetails, UiItem } from '@/packages/ui/components'
+import { UiInput, UiDialog, UiItem } from '@/packages/ui/components'
 import { VmStatement } from '..'
 
 import useVmI18n from '../../../i18n'
@@ -46,8 +46,8 @@ const faceItemProps = computed(() => {
 </script>
 
 <template>
-  <UiDetails class="StmtAssign">
-    <template #summary>
+  <UiDialog class="StmtAssign">
+    <template #trigger>
       <UiItem
         class="StmtAssign__item"
         v-bind="faceItemProps"
@@ -60,16 +60,22 @@ const faceItemProps = computed(() => {
           class="StmtAssign__statement"
           @update:model-value="emitUpdate"
         />
-
-        <div class="StmtAssign__footer">
-          <UiInput
-            v-model="statement.assign"
-            :label="i18n.t('StmtAssign.assign')"
-            type="text"
-            @update:model-value="emitUpdate"
-          />
-        </div>
       </div>
     </template>
-  </UiDetails>
+    <template #footer="{ close }">
+      <div class="StmtAssign__footer">
+        <UiInput
+          v-model="statement.assign"
+          :label="i18n.t('StmtAssign.assign')"
+          type="text"
+          @update:model-value="emitUpdate"
+        />
+        <UiInput
+          type="button"
+          :label="i18n.t('Close')"
+          @click="close"
+        />
+      </div>
+    </template>
+  </UiDialog>
 </template>

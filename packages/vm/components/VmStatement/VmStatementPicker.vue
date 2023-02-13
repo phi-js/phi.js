@@ -117,12 +117,18 @@ function onSelectItem($event) {
 <style lang="scss">
 .VmStatementPicker {
   &__item {
-    --ui-item-padding: 6px;
+    --ui-item-padding: 10px 12px;
     border: 2px dashed #ccc;
     border-radius: 4px;
 
     user-select: none;
     cursor: pointer;
+    &:hover {
+      background-color: var(--ui-color-hover);
+    }
+
+    font-size: 10pt;
+    font-weight: 600;
   }
 }
 </style>
