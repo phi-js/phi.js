@@ -85,6 +85,7 @@ function emitInput() {
       v-if="innerValue.args.options.method != 'get'"
       class="FetchEditor__body"
       :text="i18n.t('FetchEditor.Body')"
+      open
     >
       <UiInput
         v-model="innerValue.args.options.body"
