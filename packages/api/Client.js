@@ -210,13 +210,13 @@ export default class Client {
         var k = prefix ? prefix + '[' + p + ']' : p
         var v = obj[p]
 
-        if (v == null) {
+        if (v === null || v === false) {
           continue
         }
 
         if (typeof v == 'object') {
           str.push(Client.serialize(v, k))
-        } else if (typeof v == 'number' || v.length > 0) {
+        } else {
           str.push(encodeURIComponent(k) + '=' + encodeURIComponent(v))
         }
       }
