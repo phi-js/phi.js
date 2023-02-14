@@ -9,6 +9,7 @@ import StmtChain from './statements/StmtChain/StmtChain.vue'
 import StmtEval from './statements/StmtEval.vue'
 import StmtIf from './statements/StmtIf.vue'
 import StmtOp from './statements/StmtOp.vue'
+import StmtSearch from './statements/StmtSearch.vue'
 
 import { definedEditors } from './defineStatementEditor.js'
 
@@ -113,6 +114,10 @@ const editor = computed(() => {
 
   if (typeof _modelValue.value.op != 'undefined') {
     return { component: StmtOp }
+  }
+
+  if (typeof _modelValue.value.search != 'undefined') {
+    return { component: StmtSearch }
   }
 
   if (typeof _modelValue.value.eval != 'undefined') {

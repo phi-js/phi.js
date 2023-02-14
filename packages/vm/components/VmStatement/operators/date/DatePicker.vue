@@ -62,7 +62,7 @@ export default {
 
   computed: {
     fieldFormat() {
-      return this.field?.format || 'timestamp'
+      return this.field?.format
     },
 
     rangeValue() {

@@ -17,7 +17,7 @@ const props = defineProps({
   /*
   OP Object
   {
-    "fiels": "some.field.name",
+    "field": "some.field.name",
     "op": "string.eq",
     "args": "Hello"
   }
@@ -95,16 +95,15 @@ const translatedOperators = computed(() => {
 })
 
 const availableOperators = computed(() => {
-  let fieldType = currentField.value?.type || 'string'
+  if (!currentField.value?.type) {
+    return translatedOperators.value
+  }
 
   return translatedOperators.value.filter((op) => {
-    return op.type == fieldType
+    return op.type == currentField.value?.type
     || (
       op.operator.substring(0, 5) === 'enum.'
-      && (
-        currentField.value?.enum?.length
-        || currentField.value?.oneOf?.length
-      )
+      && (currentField.value?.enum?.length || currentField.value?.oneOf?.length)
     )
   })
 })

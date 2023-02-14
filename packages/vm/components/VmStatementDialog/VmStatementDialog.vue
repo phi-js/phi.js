@@ -1,6 +1,7 @@
 <script setup>
 import { useI18n } from '@/packages/i18n'
 import { UiDialog, UiInput } from '@/packages/ui'
+import VmStatement from '../VmStatement/VmStatement.vue'
 import FieldCondition from './FieldCondition.vue'
 
 const i18n = useI18n()
@@ -43,7 +44,6 @@ function emitUpdate(newValue) {
   emit('update:modelValue', newValue)
   return true
 }
-
 </script>
 
 <template>
@@ -53,7 +53,14 @@ function emitUpdate(newValue) {
   >
     <template #contents="{ close }">
       <form @submit.prevent="emitUpdate(_tmp) && close()">
+        <VmStatement
+          v-if="field.filter"
+          :model-value="modelValue || field.filter"
+          open
+          @update:model-value="_tmp = $event"
+        />
         <FieldCondition
+          v-else
           class="VmStatementDialog__content"
           :model-value="modelValue"
           :schema="field"
