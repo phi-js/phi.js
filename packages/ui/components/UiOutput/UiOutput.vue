@@ -44,6 +44,13 @@ const customType = computed(() => {
     }
   }
 
+  if (Array.isArray(attrs.enum)) {
+    return {
+      component: availableTypes.enum,
+      props: { options: attrs.enum },
+    }
+  }
+
   return {
     component: availableTypes[props.type] || injectedTypes[props.type],
     props: attrs,
