@@ -1,11 +1,30 @@
 <script setup>
 import { reactive, watch, computed, ref } from 'vue'
 import { useI18n } from '@/packages/i18n'
-
-import { UiOutput, UiPopover, UiItem, UiIntersectionObserver } from '../'
+import { UiOutput, UiPopover, UiItem, UiIntersectionObserver, UiInput } from '../'
 import { getProperty } from '../../helpers'
-
 import deduceColumns from './deduceColumns'
+
+const i18n = useI18n({
+  en: {
+    'UiDataTable.AllColumns': 'All columns',
+    'UiDataTable.HideColumn': 'Hide',
+    'UiDataTable.Expand': 'Expand',
+    'UiDataTable.Collapse': 'Collapse',
+  },
+  es: {
+    'UiDataTable.AllColumns': 'Todas las columnas',
+    'UiDataTable.HideColumn': 'Ocultar',
+    'UiDataTable.Expand': 'Expandir',
+    'UiDataTable.Collapse': 'Colapsar',
+  },
+  de: {
+    'UiDataTable.AllColumns': 'Alle Spalten',
+    'UiDataTable.HideColumn': 'Ausblenden',
+    'UiDataTable.Expand': 'Erweitern Sie',
+    'UiDataTable.Collapse': 'Kollabieren',
+  },
+})
 
 const props = defineProps({
   /* Array of arbitrary JSON objects */
@@ -47,24 +66,6 @@ const props = defineProps({
 
 const emit = defineEmits(['click-record', 'update:order', 'scroll-bottom'])
 
-const i18n = useI18n({
-  en: {
-    'UiDataTable.HideColumn': 'Hide',
-    'UiDataTable.Expand': 'Expand',
-    'UiDataTable.Collapse': 'Collapse',
-  },
-  es: {
-    'UiDataTable.HideColumn': 'Ocultar',
-    'UiDataTable.Expand': 'Expandir',
-    'UiDataTable.Collapse': 'Colapsar',
-  },
-  de: {
-    'UiDataTable.HideColumn': 'Ausblenden',
-    'UiDataTable.Expand': 'Erweitern Sie',
-    'UiDataTable.Collapse': 'Kollabieren',
-  },
-})
-
 const inner = reactive({ order: props.order })
 
 watch(
@@ -91,6 +92,29 @@ const allColumns = computed(() => {
 })
 
 
+// Filter columns by "group" property
+const availableGroups = computed(() => {
+  const foundGroups = {} // hashed.  foundGroups[group name]: { group object }
+  allColumns.value.forEach((column) => {
+    if (!column.group) {
+      return
+    }
+    if (!foundGroups[column.group]) {
+      foundGroups[column.group] = {
+        text: column.group,
+        value: column.group,
+        count: 0,
+      }
+    }
+    foundGroups[column.group].count++
+  })
+
+  return Object.values(foundGroups)
+})
+
+const selectedGroup = ref(null)
+
+
 /*
 The list, and order, in which columns are to be shown.
 Items in the array correspond to the column's _index.
@@ -101,11 +125,15 @@ columnLayout = [3,2,0]
 const columnLayout = reactive([])
 
 const visibleColumns = computed(() => {
-  if (!columnLayout.length) {
-    return allColumns.value
+  const columnList = !columnLayout.length
+    ? allColumns.value
+    : columnLayout.map((colIndex) => allColumns.value[colIndex])
+
+  if (!selectedGroup.value) {
+    return columnList
   }
 
-  return columnLayout.map((colIndex) => allColumns.value[colIndex])
+  return columnList.filter((col) => !col.group || col.group == selectedGroup.value)
 })
 
 
@@ -262,6 +290,7 @@ watch(
     }
   },
 )
+
 </script>
 
 <template>
@@ -301,7 +330,6 @@ watch(
           </template>
         </UiPopover>
 
-
         <!-- Toggle "fullscreen" -->
         <UiItem
           class="UiDataTable__toolbarItem UiDataTable__toolbarItem--fullscreen"
@@ -310,6 +338,16 @@ watch(
           @click="isFullscreen = !isFullscreen"
         />
       </div>
+
+      <!-- Filter columns by group -->
+      <UiInput
+        v-if="availableGroups.length"
+        v-model="selectedGroup"
+        class="UiDataTable__columnSelect"
+        type="select-native"
+        :options="availableGroups"
+        :placeholder="i18n.t('UiDataTable.AllColumns')"
+      />
     </header>
 
     <div class="UiDataTable__body">

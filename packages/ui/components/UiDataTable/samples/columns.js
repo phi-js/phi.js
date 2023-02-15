@@ -18,7 +18,21 @@ export default [
       { value: 0, text: 'Chica' },
       { value: 1, text: 'Chico' },
     ],
+    group: 'Personal info',
   },
+  {
+    title: 'Username',
+    value: '$.username',
+    group: 'Personal info',
+  },
+  {
+    title: 'eMail',
+    value: '$.email',
+    type: 'email',
+    sortable: '$.email',
+    group: 'Personal info',
+  },
+
   {
     title: 'A pick',
     value: '$.picks',
@@ -33,34 +47,29 @@ export default [
     },
   },
   {
-    title: 'Username',
-    value: '$.username',
-  },
-  {
-    title: 'eMail',
-    value: '$.email',
-    type: 'email',
-    sortable: '$.email',
-  },
-  {
     title: 'Street',
     value: '$.address.street',
+    group: 'Address',
   },
   {
     title: 'suite',
     value: '$.address.suite',
+    group: 'Address',
   },
   {
     title: 'city',
     value: '$.address.city',
+    group: 'Address',
   },
   {
     title: 'zipcode',
     value: '$.address.zipcode',
+    group: 'Address',
   },
   {
     title: 'Location',
     value: '$.address.geo',
+    group: 'Address',
     type: 'geo',
   },
   {
@@ -75,13 +84,16 @@ export default [
   {
     title: 'Name',
     value: '$.company.name',
+    group: 'Company details',
   },
   {
     title: 'Catch phrase',
     value: '$.company.catchPhrase',
+    group: 'Company details',
   },
   {
     title: 'BS',
     value: '$.company.bs',
+    group: 'Company details',
   },
 ]
