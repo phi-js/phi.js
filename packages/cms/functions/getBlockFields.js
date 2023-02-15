@@ -3,11 +3,11 @@ export default function getBlockFields(block) {
 
   let field = {
     value: block['v-model'],
-    text: block['v-model'],
-
-    name: block['v-model'],
     type: null,
-    props: null,
+    title: block._plugin_api_storage?.title || block.props?.label || block['v-model'],
+
+    text: block['v-model'],
+    name: block['v-model'],
     info: {
       text: block.props?.label || '',
       subtext: block['v-model'],
@@ -19,7 +19,7 @@ export default function getBlockFields(block) {
 
   if (block.component.substring(0, 5) == 'Input') {
 
-    if (!block['v-model']) {
+    if (!block['v-model'] || block['v-model'][0] == '$') { // ignore v-model variables starting with $ !!!!
       return []
     }
 
