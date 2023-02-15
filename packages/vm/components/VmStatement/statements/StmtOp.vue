@@ -68,7 +68,7 @@ function findField(targetValue, availableFields) {
   }
 
   for (let field of availableFields) {
-    if (field.value == targetValue) {
+    if (field.value == targetValue || field.field == targetValue) {
       return field
     }
 
@@ -237,7 +237,6 @@ function argsToString(strArgs) {
           v-if="customArgsComponent?.component"
           v-model="innerModel.args"
           v-bind="customArgsComponent.props"
-          xxxxfield-schema="fieldSchema"
           :field="currentField"
           @update:model-value="emitInput"
         />
