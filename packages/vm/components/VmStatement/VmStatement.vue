@@ -20,12 +20,6 @@ const props = defineProps({
     default: null,
   },
 
-  modelSchema: {
-    type: Object,
-    required: false,
-    default: null,
-  },
-
   fields: {
     type: Array,
     required: false,

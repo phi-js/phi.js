@@ -55,8 +55,9 @@ function emitUpdate(newValue) {
       <form @submit.prevent="emitUpdate(_tmp) && close()">
         <VmStatement
           v-if="field.filter"
-          :model-value="modelValue || field.filter"
           open
+          :fields="[field]"
+          :model-value="modelValue || field.filter"
           @update:model-value="_tmp = $event"
         />
         <FieldCondition
