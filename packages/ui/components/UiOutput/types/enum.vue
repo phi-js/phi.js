@@ -19,5 +19,5 @@ const displayValue = computed(() => props.options.find((e) => e?.value == props.
 </script>
 
 <template>
-  <span v-text="(displayValue?.text || pops.value)" />
+  <span v-text="(displayValue?.text || props.value)" />
 </template>
