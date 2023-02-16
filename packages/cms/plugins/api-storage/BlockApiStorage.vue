@@ -39,12 +39,13 @@ function emitUpdate() {
     <UiInput
       v-model="innerValue.trackable"
       type="checkbox"
-      label="Track data changes"
+      label="Save in database"
       @update:model-value="emitUpdate"
     />
     <UiInput
+      v-show="innerValue.trackable"
       v-model="innerValue.title"
-      type="text"
+      type="translation"
       label="Column title"
       @update:model-value="emitUpdate"
     />

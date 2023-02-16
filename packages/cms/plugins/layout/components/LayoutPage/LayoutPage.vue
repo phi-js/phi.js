@@ -57,9 +57,9 @@ async function onFormSubmit($event) {
   Duration padding
   When a form submit happens TOO fast, the user may be left without a sense of confirmation.
   submitting a form is important! The user should now the thing ran.  Reacting INSTANTLY fast MAY not be the best experience
-  Make sure the form stays in "submitting" state for ... one second?
+  Make sure the form stays in "submitting" state for ... half a second?
   */
-  const durationPadding = 1000
+  const durationPadding = 400
 
   const endTime = new Date()
   const duration = endTime - startTime //in ms

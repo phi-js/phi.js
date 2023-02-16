@@ -44,7 +44,7 @@ const i18n = useI18n({
 </script>
 
 <template>
-  <div class="BlockDataEditor">
+  <div class="BlockDataEditor UiForm UiForm--wide">
     <UiInput
       v-model="block['v-model']"
       :label="i18n.t('BlockDataEditor.VariableName')"
