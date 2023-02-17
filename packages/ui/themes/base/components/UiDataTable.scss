@@ -4,14 +4,16 @@
     --ui-table-color-header: #eeeef0;
     --ui-table-color-cell: #fff;
     --ui-table-color-border: #ddd;
-    --ui-table-color-hover: var(--ui-color-hover);
+    // --ui-table-color-hover: var(--ui-color-hover); // AVOID Transparent backgrounds, since they get fucky on :hover
+    --ui-table-color-hover: #f4f4f4;
   }
 
   .color-scheme-dark {
     --ui-table-color-header: #525255;
-    --ui-table-color-cell: ##3e3e42;
+    --ui-table-color-cell: #3e3e42;
     --ui-table-color-border: #dddddd33;
-    --ui-table-color-hover: var(--ui-color-hover);
+    // --ui-table-color-hover: var(--ui-color-hover);
+    --ui-table-color-hover: #525255ee;
   }
 }
 
@@ -160,7 +162,9 @@ button.UiDataTable__toolbarItem {
 
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 4px;
+    padding: 4px 10px;
+
+    font-size: 0.9em;
   }
 
   &__header {
@@ -173,6 +177,7 @@ button.UiDataTable__toolbarItem {
     &--ordered {
       .UiDataTable__header-title::before {
         color: var(--ui-color-primary);
+        margin-right: 8px;
       }
 
       &-asc .UiDataTable__header-title::before {
@@ -201,21 +206,27 @@ button.UiDataTable__toolbarItem {
     display: flex;
     align-items: stretch;
     justify-content: center;
-    width: 24px;
-
-    opacity: 0.1;
 
     .UiPopover__trigger {
       display: flex;
       align-items: stretch;
     }
+  }
 
+  &__columnIcon {
+    align-self: stretch;
+    width: 30px;
+    font-size: 0.8em;
+
+    opacity: 0.4;
+
+    cursor: pointer;
     &:hover {
       background-color: rgba(255,255,255, 0.6);
     }
   }
 
-  .UiDataTable__header:hover .UiDataTable__columnPopup {
+  .UiDataTable__header:hover .UiDataTable__columnIcon {
     opacity: 1;
   }
 

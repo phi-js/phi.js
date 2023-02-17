@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, watch, computed, ref } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import { UiOutput, UiPopover, UiItem, UiIntersectionObserver, UiInput } from '../'
+import { UiOutput, UiPopover, UiItem, UiIntersectionObserver, UiInput, UiIcon } from '../'
 import { getProperty } from '../../helpers'
 import deduceColumns from './deduceColumns'
 
@@ -384,12 +384,21 @@ watch(
                 >
                   {{ column.title }}
                 </div>
+
+                <slot
+                  name="column-icons"
+                  :column="column"
+                />
+
                 <UiPopover
                   placement="bottom-end"
                   class="UiDataTable__columnPopup"
                 >
                   <template #trigger>
-                    <UiItem icon="mdi:dots-vertical" />
+                    <UiIcon
+                      src="mdi:dots-vertical"
+                      class="UiDataTable__columnIcon"
+                    />
                   </template>
                   <template #contents="{ close }">
                     <div class="UiDataTable__menuOptions">
