@@ -217,12 +217,14 @@ export default class Client {
         if (typeof v == 'object') {
           str.push(Client.serialize(v, k))
         } else {
-          str.push(encodeURIComponent(k) + '=' + encodeURIComponent(v))
+          const targetValue = encodeURIComponent(v)
+          if (targetValue !== '' && targetValue !== 'null' && targetValue !== 'undefined') {
+            str.push(encodeURIComponent(k) + '=' + encodeURIComponent(v))
+          }
         }
       }
     }
 
     return str.join('&')
   }
-
 }
