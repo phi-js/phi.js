@@ -59,12 +59,9 @@ const customType = computed(() => {
 </script>
 
 <template>
-  <template v-if="props.value === null">
-    <!-- NULL -->
-  </template>
   <Component
     :is="customType.component"
-    v-else-if="customType.component"
+    v-if="customType.component"
     class="UiOutput"
     :class="`UiOutput--${props.type}`"
     v-bind="customType.props"

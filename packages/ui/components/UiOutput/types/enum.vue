@@ -15,9 +15,9 @@ const props = defineProps({
   },
 })
 
-const displayValue = computed(() => props.options.find((e) => e?.value == props.value) || { text: props.value })
+const displayValue = computed(() => props.options.find((o) => o?.value == props.value) || { text: props.value })
 </script>
 
 <template>
-  <span v-text="(displayValue?.text || props.value)" />
+  <span v-text="displayValue.text" />
 </template>
