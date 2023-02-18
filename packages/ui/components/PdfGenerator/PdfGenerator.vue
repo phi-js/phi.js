@@ -85,12 +85,13 @@ watch(
     >
 
       <!-- Fallback del objeto.  Mostrar el HTML -->
-      <div class="pdf-container">
+      <!-- Parece(?) que se renderiza SIEMPRE, incluso si el objeto ha cargado. -->
+      <!-- <div class="pdf-container">
         <div
           class="document-html pdf-html"
           v-html="props.html"
         />
-      </div>
+      </div> -->
     </object>
   </div>
 </template>
