@@ -1,12 +1,13 @@
 <script setup>
+import { ref, watch } from 'vue'
+
 import { useI18n } from '@/packages/i18n'
 import { UiDialog, UiInput } from '@/packages/ui'
 import VmStatement from '../VmStatement/VmStatement.vue'
-import FieldCondition from './FieldCondition.vue'
 
 const i18n = useI18n()
 
-defineProps({
+const props = defineProps({
   /*
   Current statement
   {
@@ -40,9 +41,31 @@ defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
+const tmpValue = ref()
+
+watch(
+  () => props.modelValue,
+  (newValue) => tmpValue.value = newValue || props.field.filter,
+  { immediate: true },
+)
+
+function accept() {
+  emitUpdate(tmpValue.value)
+  return true
+}
+
+function cancel() {
+  tmpValue.value = props.modelValue || props.field.filter
+  return true
+}
+
+function clear() {
+  emitUpdate(null)
+  return true
+}
+
 function emitUpdate(newValue) {
   emit('update:modelValue', newValue)
-  return true
 }
 </script>
 
@@ -52,20 +75,11 @@ function emitUpdate(newValue) {
     :open="true"
   >
     <template #contents="{ close }">
-      <form @submit.prevent="emitUpdate(_tmp) && close()">
+      <form @submit.prevent="accept() && close()">
         <VmStatement
-          v-if="field.filter"
+          v-model="tmpValue"
           open
           :fields="[field]"
-          :model-value="modelValue || field.filter"
-          @update:model-value="_tmp = $event"
-        />
-        <FieldCondition
-          v-else
-          class="VmStatementDialog__content"
-          :model-value="modelValue"
-          :schema="field"
-          @update:model-value="_tmp = $event"
         />
         <footer class="VmStatementDialog__footer">
           <UiInput
@@ -76,14 +90,14 @@ function emitUpdate(newValue) {
             class="UiButton--cancel"
             type="button"
             :label="i18n.t('Cancel')"
-            @click="close()"
+            @click="cancel() && close();"
           />
           <UiInput
             :disabled="!modelValue"
             class="UiButton--danger"
             type="button"
             :label="i18n.t('Clear')"
-            @click="emitUpdate(null) && close()"
+            @click="clear() && close()"
           />
         </footer>
       </form>
