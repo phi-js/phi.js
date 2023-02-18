@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, watch, computed, ref } from 'vue'
+import { reactive, watch, computed, ref, nextTick } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { UiOutput, UiPopover, UiItem, UiIntersectionObserver, UiInput, UiIcon } from '../'
 import { getProperty } from '../../helpers'
@@ -62,9 +62,94 @@ const props = defineProps({
     required: false,
     default: false,
   },
+
+  maxTds: {
+    type: [String, Number],
+    required: false,
+    default: -1,
+  },
 })
 
 const emit = defineEmits(['click-record', 'update:order', 'scroll-bottom'])
+
+/* Only render a batch of records at a time, and refresh when scrolling (i.e. allow thousands of records) */
+const visibleWindow = ref()
+watch(
+  () => props.records,
+  () => {
+    visibleWindow.value = {
+      batchSize: parseInt(props.maxTds), // only render [maxTds] <td>s at a time
+      start: 0,
+      length: parseInt(props.maxTds),
+    }
+  },
+  { immediate: true },
+)
+
+const visibleRecords = computed(() => {
+  if (!props.maxTds || props.maxTds <= 0) {
+    return props.records
+  }
+
+  return props.records.slice(
+    visibleWindow.value.start,
+    visibleWindow.value.start + visibleWindow.value.length,
+  )
+})
+
+
+
+const refBody = ref()
+let _halt = false
+
+function onScrollBottom() {
+  // if (_halt) {
+  //   _halt = false
+  //   return
+  // }
+
+  if (!props.maxTds || props.maxTds <= 0) {
+    emit('scroll-bottom')
+    return
+  }
+
+  if (visibleWindow.value.start + visibleWindow.value.length >= props.records.length) {
+    // reached bottom of all existing records
+    emit('scroll-bottom')
+  } else {
+    // reached bottom of visible records
+    _halt = true
+    visibleWindow.value.start += visibleWindow.value.batchSize - 20
+    setTimeout(() => _halt = false, 100)
+  }
+}
+
+function onScrollTop() {
+  if (_halt) {
+    _halt = false
+    return
+  }
+
+  if (!props.maxTds || props.maxTds <= 0) {
+    return
+  }
+
+  if (visibleWindow.value.start <= 20) {
+    return
+  }
+
+  visibleWindow.value.start = Math.max(0, visibleWindow.value.start - visibleWindow.value.batchSize + 20)
+  nextTick(() => {
+    const previousTopElement = refBody.value.querySelector(`tbody tr:nth-child(${visibleWindow.value.batchSize})`)
+    if (!previousTopElement) {
+      return
+    }
+    previousTopElement.scrollIntoView({
+      block: 'nearest',
+      inline: 'nearest',
+    })
+  })
+}
 
 const inner = reactive({ order: props.order })
 
@@ -143,7 +228,7 @@ columnValues[record index][column index] = the record's value for the column's p
 */
 const columnValues = computed(() => {
   const retval = {}
-  props.records.forEach((record, recordIndex) => {
+  visibleRecords.value.forEach((record, recordIndex) => {
     if (typeof retval[recordIndex] == 'undefined') {
       retval[recordIndex] = {}
     }
@@ -290,7 +375,6 @@ watch(
     }
   },
 )
-
 </script>
 
 <template>
@@ -350,7 +434,10 @@ watch(
       />
     </header>
 
-    <div class="UiDataTable__body">
+    <div
+      ref="refBody"
+      class="UiDataTable__body"
+    >
       <table class="UiDataTable__table">
         <thead>
           <tr>
@@ -421,9 +508,15 @@ watch(
         </thead>
 
         <tbody>
+          <tr v-if="visibleWindow.start > 20">
+            <td :colspan="visibleColumns.length">
+              <UiIntersectionObserver @show="onScrollTop()" />
+            </td>
+          </tr>
+
           <tr
-            v-for="(record, ri) in props.records"
-            :key="ri"
+            v-for="(record, ri) in visibleRecords"
+            :key="record?.id || ri"
             @click="emit('click-record', record)"
           >
             <td
@@ -442,7 +535,7 @@ watch(
 
           <tr v-if="props.records?.length">
             <td :colspan="visibleColumns.length">
-              <UiIntersectionObserver @show="emit('scroll-bottom')">
+              <UiIntersectionObserver @show="onScrollBottom()">
                 <slot name="bottom" />
               </UiIntersectionObserver>
             </td>
