@@ -85,7 +85,7 @@ watch(
   { immediate: true },
 )
 
-function emitUpdate() {
+function emitUpdate(ignoreDebounce = false) {
   // hmmm
   // internal implementation of: https://vuejs.org/guide/essentials/forms.html#number
   if (props.type == 'number') {
@@ -110,11 +110,10 @@ function emitUpdate() {
       innerValue.value = Math.floor(d.getTime() / 1000)
       break
     }
-
   }
 
   clearTimeout(timeout)
-  if (props.debounce > 0 && innerValue.value) {
+  if (props.debounce > 0 && innerValue.value && !ignoreDebounce) {
     timeout = setTimeout(() => emit('update:modelValue', innerValue.value), props.debounce)
   } else {
     emit('update:modelValue', innerValue.value)
@@ -307,6 +306,11 @@ const nativeElementProps = computed(() => {
 
       event.target.setCustomValidity('')
       isInvalid.value = !event.target.checkValidity()
+    },
+    onKeydown: (event) => {
+      if (event.key == 'Enter') {
+        emitUpdate(true)
+      }
     },
     ...validationProps.value,
 
