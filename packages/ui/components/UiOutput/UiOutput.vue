@@ -69,6 +69,7 @@ const customType = computed(() => {
   />
   <ul
     v-else-if="props.type == 'array'"
+    v-bind="attrs"
     class="UiOutput UiOutput--list"
   >
     <li
