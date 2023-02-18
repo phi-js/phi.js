@@ -171,7 +171,7 @@ columnSort[columnIndex] = 'asc' | 'desc' | null
 const columnSort = computed(() => {
   const retval = {}
   allColumns.value.forEach((column, columnIndex) => {
-    const foundOrder = inner.order.find((o) => o.field == column.sortable)
+    const foundOrder = inner.order.find((o) => o.field == column.orderBy)
     if (foundOrder) {
       retval[columnIndex] = foundOrder.desc ? 'desc' : 'asc'
     } else {
@@ -183,18 +183,18 @@ const columnSort = computed(() => {
 })
 
 function onClickHeader($event, column) {
-  if (!column.sortable) {
+  if (!column.orderBy) {
     return
   }
 
-  const foundOrder = inner.order.find((o) => o.field == column.sortable)
+  const foundOrder = inner.order.find((o) => o.field == column.orderBy)
   if (!foundOrder) {
     if (!$event.ctrlKey) {
       inner.order = []
     }
 
     inner.order.push({
-      field: column.sortable,
+      field: column.orderBy,
       desc: false,
     })
   } else {
