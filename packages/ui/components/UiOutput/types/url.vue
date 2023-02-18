@@ -28,12 +28,13 @@ const href = computed(() => {
   return props.value
 })
 
+const linkText = computed(() => props.text || props.value)
 </script>
 
 <template>
   <a
     :href="href"
     :target="props.target"
-    v-text="props.text || props.value"
+    v-text="linkText"
   />
 </template>
