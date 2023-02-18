@@ -7,7 +7,7 @@ const records = ref([])
 
 onMounted(async () => {
   isLoading.value = true
-  records.value = await fetch('https://jsonplaceholder.typicode.com/photos?_limit=9999')
+  records.value = await fetch('https://jsonplaceholder.typicode.com/photos?_limit=300')
     .then((r) => r.json())
 
   isLoading.value = false
@@ -47,7 +47,7 @@ const columns = [
       :records="records"
       :columns="columns"
       :is-loading="isLoading"
-      max-tds="200"
+      xxxxmax-tds="300"
       style="max-height: 80vh"
     />
   </div>

@@ -66,7 +66,7 @@ const props = defineProps({
   maxTds: {
     type: [String, Number],
     required: false,
-    default: -1,
+    default: 200,
   },
 })
 
@@ -97,59 +97,42 @@ const visibleRecords = computed(() => {
   )
 })
 
-
-
-const refBody = ref()
-let _halt = false
-
-function onScrollBottom() {
-  // if (_halt) {
-  //   _halt = false
-  //   return
-  // }
-
-  if (!props.maxTds || props.maxTds <= 0) {
-    emit('scroll-bottom')
-    return
-  }
-
-  if (visibleWindow.value.start + visibleWindow.value.length >= props.records.length) {
-    // reached bottom of all existing records
-    emit('scroll-bottom')
-  } else {
-    // reached bottom of visible records
-    _halt = true
-    visibleWindow.value.start += visibleWindow.value.batchSize - 20
-    setTimeout(() => _halt = false, 100)
-  }
+function onHitBottom() {
+  emit('scroll-bottom')
 }
 
-function onScrollTop() {
-  if (_halt) {
-    _halt = false
-    return
-  }
+let atScrollTop = false
+let atScrollBottom = false
 
-  if (!props.maxTds || props.maxTds <= 0) {
-    return
-  }
+const batchSize = Math.ceil(parseInt(props.maxTds) / 3)
 
-  if (visibleWindow.value.start <= 20) {
-    return
-  }
+function onBodyScroll(event) {
+  const pixelsOnTop = event.target.scrollTop
+  const pixelsOnBottom = event.target.scrollHeight - (event.target.scrollTop + event.target.offsetHeight)
 
-  visibleWindow.value.start = Math.max(0, visibleWindow.value.start - visibleWindow.value.batchSize + 20)
-  nextTick(() => {
-    const previousTopElement = refBody.value.querySelector(`tbody tr:nth-child(${visibleWindow.value.batchSize})`)
-    if (!previousTopElement) {
+  if (pixelsOnBottom < 200) {
+    if (atScrollBottom) { // i'm already at the bottom hotzone. ignore
       return
     }
-    previousTopElement.scrollIntoView({
-      block: 'nearest',
-      inline: 'nearest',
-    })
-  })
+    atScrollBottom = true
+    visibleWindow.value.start += batchSize
+  } else {
+    atScrollBottom = false
+  }
+
+  if (pixelsOnTop < 200) {
+    if (atScrollTop) { // I'm already at top hotzone. ignore.
+      return
+    }
+    atScrollTop = true
+    visibleWindow.value.start = Math.max(0, visibleWindow.value.start - batchSize)
+  } else {
+    atScrollTop = false
+  }
 }
+
+
+
 
 const inner = reactive({ order: props.order })
 
@@ -375,6 +358,7 @@ watch(
     }
   },
 )
+
 </script>
 
 <template>
@@ -435,8 +419,8 @@ watch(
     </header>
 
     <div
-      ref="refBody"
       class="UiDataTable__body"
+      @scroll="onBodyScroll"
     >
       <table class="UiDataTable__table">
         <thead>
@@ -508,12 +492,6 @@ watch(
         </thead>
 
         <tbody>
-          <tr v-if="visibleWindow.start > 20">
-            <td :colspan="visibleColumns.length">
-              <UiIntersectionObserver @show="onScrollTop()" />
-            </td>
-          </tr>
-
           <tr
             v-for="(record, ri) in visibleRecords"
             :key="record?.id || ri"
@@ -535,7 +513,7 @@ watch(
 
           <tr v-if="props.records?.length">
             <td :colspan="visibleColumns.length">
-              <UiIntersectionObserver @show="onScrollBottom()">
+              <UiIntersectionObserver @show="onHitBottom()">
                 <slot name="bottom" />
               </UiIntersectionObserver>
             </td>

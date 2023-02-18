@@ -86,6 +86,7 @@ button.UiDataTable__toolbarItem {
   &__body {
     flex: 1;
     overflow: auto;
+    overscroll-behavior: contain;
   }
 
   &__table {
