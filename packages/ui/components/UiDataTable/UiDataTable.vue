@@ -1,7 +1,7 @@
 <script setup>
-import { reactive, watch, computed, ref, nextTick } from 'vue'
+import { reactive, watch, computed, ref } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import { UiOutput, UiPopover, UiItem, UiIntersectionObserver, UiInput, UiIcon } from '../'
+import { UiOutput, UiPopover, UiItem, UiInput, UiIcon } from '../'
 import { getProperty } from '../../helpers'
 import deduceColumns from './deduceColumns'
 
@@ -63,24 +63,35 @@ const props = defineProps({
     default: false,
   },
 
-  maxTds: {
+  maxTds: { // visibleWindow.length
     type: [String, Number],
     required: false,
     default: 200,
   },
+
+  pointer: { // visibleWindow.start
+    type: Number,
+    required: false,
+    default: 0,
+  },
 })
 
-const emit = defineEmits(['click-record', 'update:order', 'scroll-bottom'])
+const emit = defineEmits(['click-record', 'update:order', 'update:pointer', 'scroll-bottom'])
+
+const refBody = ref()
 
 /* Only render a batch of records at a time, and refresh when scrolling (i.e. allow thousands of records) */
-const visibleWindow = ref()
+const visibleWindow = ref({})
 watch(
-  () => props.records,
+  () => [props.maxTds, props.pointer],
   () => {
     visibleWindow.value = {
-      batchSize: parseInt(props.maxTds), // only render [maxTds] <td>s at a time
-      start: 0,
+      start: parseInt(props.pointer),
       length: parseInt(props.maxTds),
+    }
+
+    if (visibleWindow.value.start == 0 && refBody.value?.scrollTop) {
+      refBody.value.scrollTop = 0
     }
   },
   { immediate: true },
@@ -101,31 +112,37 @@ function onHitBottom() {
   emit('scroll-bottom')
 }
 
-let atScrollTop = false
+let atScrollTop = true
 let atScrollBottom = false
 
-const batchSize = Math.ceil(parseInt(props.maxTds) / 3)
+const batchSize = Math.ceil(visibleWindow.value.length / 3)
 
 function onBodyScroll(event) {
   const pixelsOnTop = event.target.scrollTop
   const pixelsOnBottom = event.target.scrollHeight - (event.target.scrollTop + event.target.offsetHeight)
 
-  if (pixelsOnBottom < 200) {
+  if (pixelsOnBottom < 250) {
     if (atScrollBottom) { // i'm already at the bottom hotzone. ignore
       return
     }
     atScrollBottom = true
     visibleWindow.value.start += batchSize
+    emit('update:pointer', visibleWindow.value.start)
+
+    if (visibleWindow.value.start + visibleWindow.value.length > props.records.length) {
+      onHitBottom()
+    }
   } else {
     atScrollBottom = false
   }
 
-  if (pixelsOnTop < 200) {
+  if (pixelsOnTop < 250) {
     if (atScrollTop) { // I'm already at top hotzone. ignore.
       return
     }
     atScrollTop = true
     visibleWindow.value.start = Math.max(0, visibleWindow.value.start - batchSize)
+    emit('update:pointer', visibleWindow.value.start)
   } else {
     atScrollTop = false
   }
@@ -419,6 +436,7 @@ watch(
     </header>
 
     <div
+      ref="refBody"
       class="UiDataTable__body"
       @scroll="onBodyScroll"
     >
@@ -508,14 +526,6 @@ watch(
                 v-bind="column"
                 :value="columnValues[ri][column._index]"
               />
-            </td>
-          </tr>
-
-          <tr v-if="props.records?.length">
-            <td :colspan="visibleColumns.length">
-              <UiIntersectionObserver @show="onHitBottom()">
-                <slot name="bottom" />
-              </UiIntersectionObserver>
             </td>
           </tr>
         </tbody>
