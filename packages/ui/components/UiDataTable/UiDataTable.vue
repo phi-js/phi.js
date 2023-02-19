@@ -98,14 +98,15 @@ watch(
 )
 
 const visibleRecords = computed(() => {
-  if (!props.maxTds || props.maxTds <= 0) {
+  if (!props.maxTds || parseInt(props.maxTds) <= 0) {
     return props.records
   }
 
-  return props.records.slice(
-    visibleWindow.value.start,
-    visibleWindow.value.start + visibleWindow.value.length,
-  )
+  const start = visibleWindow.value.start
+  const end = visibleWindow.value.start + visibleWindow.value.length
+  return props.records
+    .map((r, _idx) => ({ ...r, _idx }))
+    .slice(start, end)
 })
 
 function onHitBottom() {
@@ -115,40 +116,38 @@ function onHitBottom() {
 let atScrollTop = true
 let atScrollBottom = false
 
-const batchSize = Math.ceil(visibleWindow.value.length / 3)
+const increment = Math.min(25, Math.ceil(props.maxTds / 4))
 
 function onBodyScroll(event) {
   const pixelsOnTop = event.target.scrollTop
   const pixelsOnBottom = event.target.scrollHeight - (event.target.scrollTop + event.target.offsetHeight)
 
-  if (pixelsOnBottom < 250) {
+  if (pixelsOnBottom < 333) {
     if (atScrollBottom) { // i'm already at the bottom hotzone. ignore
       return
     }
     atScrollBottom = true
-    visibleWindow.value.start += batchSize
-    emit('update:pointer', visibleWindow.value.start)
-
     if (visibleWindow.value.start + visibleWindow.value.length > props.records.length) {
       onHitBottom()
+    } else {
+      visibleWindow.value.start += increment
+      emit('update:pointer', visibleWindow.value.start)
     }
   } else {
     atScrollBottom = false
   }
 
-  if (pixelsOnTop < 250) {
+  if (pixelsOnTop < 333) {
     if (atScrollTop) { // I'm already at top hotzone. ignore.
       return
     }
     atScrollTop = true
-    visibleWindow.value.start = Math.max(0, visibleWindow.value.start - batchSize)
+    visibleWindow.value.start = Math.max(0, visibleWindow.value.start - increment)
     emit('update:pointer', visibleWindow.value.start)
   } else {
     atScrollTop = false
   }
 }
-
-
 
 
 const inner = reactive({ order: props.order })
@@ -512,7 +511,7 @@ watch(
         <tbody>
           <tr
             v-for="(record, ri) in visibleRecords"
-            :key="record?.id || ri"
+            :key="record._idx"
             @click="emit('click-record', record)"
           >
             <td

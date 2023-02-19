@@ -47,7 +47,6 @@ const columns = [
       :records="records"
       :columns="columns"
       :is-loading="isLoading"
-      xxxxmax-tds="300"
       style="max-height: 80vh"
     />
   </div>
