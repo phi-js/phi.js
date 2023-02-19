@@ -28,7 +28,7 @@ watch(
     innerModel.value = {
       search: {
         string: newValue?.search?.string || '',
-        fields: Array.isArray(newValue?.search.fields) ? newValue.search.fields : [],
+        fields: newValue?.search?.fields,
       },
     }
   },
