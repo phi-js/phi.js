@@ -25,7 +25,8 @@ export default function useSelectionManager(incomingValue, isMultiple, onValueCh
     (newValue) => {
       selection.value = Array.isArray(newValue)
         ? newValue.concat()
-        : newValue !== undefined ? [newValue] : []
+        : newValue !== undefined && newValue !== null ? [newValue] : []
+        // : newValue !== undefined ? [newValue] : []
     },
     { immediate: true },
   )
