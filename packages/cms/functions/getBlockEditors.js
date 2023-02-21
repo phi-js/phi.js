@@ -106,7 +106,7 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
   // BUILT IN ACTIONS:
   // Shown in the block options dropdown in the order declared here
 
-  // Validation editor (only if v-model property exists in definition)
+  // v-model editor (only if v-model property exists in definition)
   if (definition.block['v-model'] != undefined) {
     retval.actions.push({
       'id': 'data',
