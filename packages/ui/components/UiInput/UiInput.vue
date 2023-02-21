@@ -385,7 +385,18 @@ const uid = ref('UiInput' + (++_UiInput_counter))
 </script>
 
 <template>
-  <template v-if="props.type == 'button' || props.type == 'submit'">
+  <template v-if="props.type == 'invisible'">
+    <!-- Invisible/hidden input field to handle native validations for custom components -->
+    <label class="UiInput__validatorInput">
+      <input
+        :id="uid"
+        ref="validatorInput"
+        type="text"
+        v-bind="validatorInputProps"
+      >
+    </label>
+  </template>
+  <template v-else-if="props.type == 'button' || props.type == 'submit'">
     <UiButton
       :type="type"
       :label="props.label"
