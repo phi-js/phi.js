@@ -1,0 +1,1 @@
+export { default as UiSelectNationality } from './UiSelectNationality.vue'

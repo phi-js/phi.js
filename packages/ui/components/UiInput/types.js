@@ -32,6 +32,7 @@ const UiSelect = defineAsyncComponent(() => import('../UiSelect/UiSelect.vue'))
 const UiSelectButtons = defineAsyncComponent(() => import('../UiSelectButtons/UiSelectButtons.vue'))
 const UiSelectCountry = defineAsyncComponent(() => import('../UiSelectCountry/UiSelectCountry.vue'))
 const UiSelectList = defineAsyncComponent(() => import('../UiSelectList/UiSelectList.vue'))
+const UiSelectNationality = defineAsyncComponent(() => import('../UiSelectNationality/UiSelectNationality.vue'))
 const UiSelectNative = defineAsyncComponent(() => import('../UiSelectNative/UiSelectNative.vue'))
 const UiUpload = defineAsyncComponent(() => import('../UiUpload/UiUpload.vue'))
 
@@ -43,6 +44,7 @@ export default {
   'date-range': UiInputDateRange,
   'html': UiInputHtml,
   'json': UiInputJson,
+  'nationality': UiSelectNationality,
   'number-slide': UiInputNumberSlide,
   'select-buttons': UiSelectButtons,
   'select-list': UiSelectList,
