@@ -122,7 +122,7 @@ export default class I18n {
     if (!objDate) {
       return date + '(?)'
     }
-    return objDate.toLocaleString(this.baseLanguage.value, options)
+    return objDate.toLocaleString(this.baseLanguage.value, options || {})
   }
 
   formatRange(startDate, endDate, options = null) {
