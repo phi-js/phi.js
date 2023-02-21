@@ -2,15 +2,26 @@
   display: inline-block;
 
   &__face {
-    @extend .ui--clickable;
+    @extend .UiInput__element;
+    padding: 4px;
+
     display: flex;
     flex-wrap: nowrap;
+    gap: 4px;
 
     .UiItem {
       &__text {
         max-width: 200px;
       }
     }
+  }
+
+  &__aggregator {
+    padding: 5px;
+    padding-left: 12px;
+    font-size: 0.9em;
+    font-weight: 500;
+    cursor: pointer;
   }
 
   &__options {
@@ -42,7 +53,7 @@
       &--focused {
         background-color: rgba(255,255,255, 0.2);
       }
-  
+
       &--selected {
         font-weight: bold;
       }
@@ -64,20 +75,30 @@
   }
 
   .UiChip {
-    transition: all 0.18s;
+    border-radius: 4px;
+    padding: 5px;
+    padding-left: 12px;
+    font-size: 0.9em;
+    font-weight: 500;
+
+    cursor: pointer;
+    &:hover {
+      background-color:rgba(0, 0, 0, 0.06);
+    }
 
     &__btn-close {
-      width: 28px;
+      padding: 0 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: bold;
 
       transition: all var(--ui-duration-snap);
+      opacity: 0.4;
     }
 
     &--threatened {
-      background-color: var(--ui-color-danger);
+      background-color: var(--ui-color-danger) !important;
       opacity: 0.7;
       color: #fff;
     }

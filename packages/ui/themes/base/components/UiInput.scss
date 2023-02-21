@@ -20,14 +20,15 @@
 
 .UiInputNativeElement {
   box-sizing: border-box;
-  // min-width: max-content; // no idea why I added this in the first place
-  outline-color: var(--ui-color-primary);
-  padding: 7px;
+  padding: 6px 8px;
 
-  border-radius: 5px;
+  outline-color: var(--ui-color-primary);
+  border-radius: 4px;
   border: 1px solid rgba(0,0,0, 0.15);
   border-top: 1px solid rgba(0,0,0, .26);
   border-left: 1px solid rgba(0,0,0, .26);
+
+  min-height: 38px;
 
   font: inherit;
   color: fieldtext;
@@ -39,7 +40,6 @@
 }
 
 textarea.UiInput__element {
-  width: 100%;
   min-height: 100px;
   font: inherit;
 }
@@ -50,7 +50,6 @@ textarea.UiInput__element {
   &__label {
     font-weight: bold;
     font-size: 0.9em;
-    display: block;
   }
 
   &__subtext {
@@ -136,24 +135,29 @@ textarea.UiInput__element {
 
 /* Type specific styles */
 .UiInput {
-
   /* type="checkbox" */
   &--type-checkbox {
-    label {
+    .UiInput__body label {
+      display: flex;
+      align-items: center;
+      border-radius: 4px;
+
+      input {
+        cursor: pointer;
+        margin: 0 1em;
+        outline: none !important;
+      }
+
       cursor: pointer;
+      &:hover {
+        background-color: var(--ui-color-hover);
+      }
     }
   }
 
   /* type="translation" */
   &--type-translation {
     .TranslationInput__input {
-      @extend .UiInputNativeElement;
-    }
-  }
-
-  &--type-country,
-  &--type-select {
-    .UiSelect__face > div {
       @extend .UiInputNativeElement;
     }
   }

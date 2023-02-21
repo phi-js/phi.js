@@ -243,8 +243,6 @@ function rotate() {
   --ui-item-padding: 8px 12px;
   border-radius: 4px;
   user-select: none;
-
-  font-size: 0.9em;
   font-weight: bold;
 
   cursor: pointer;
