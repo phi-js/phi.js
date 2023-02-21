@@ -4,7 +4,8 @@ import { ref } from 'vue'
 import { UiItem } from '@/packages/ui'
 import CmsBlockPicker from '../CmsBlockPicker/CmsBlockPicker.vue'
 import { getPluginData } from '../../functions'
-import { CmsBlock } from '../CmsBlock'
+import SlotItem from './SlotItem.vue'
+
 import BlockWindow from '../CmsBlockEditor/BlockWindow.vue'
 
 const pluginData = getPluginData()
@@ -157,7 +158,10 @@ function onPickerUpdateOpen($event) {
     </div>
 
     <template v-if="stagingBlock">
-      <CmsBlock :block="stagingBlock" />
+      <SlotItem
+        :block="stagingBlock"
+        :selected="true"
+      />
       <BlockWindow
         v-model:block="stagingBlock"
         open
