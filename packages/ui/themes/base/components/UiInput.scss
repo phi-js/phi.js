@@ -170,3 +170,14 @@ select {
     @extend .UiInputNativeElement;
   }
 }
+
+
+
+.UiInput textarea,
+.UiInput input[type=password],
+.UiInput input[type=email],
+.UiInput input[type=text] {
+  width: 100%;
+  min-width: 200px;
+  resize: vertical;
+}
