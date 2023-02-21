@@ -142,7 +142,7 @@ function evalExpression(expr, model) {
     return fn(...Object.values(model))
   } catch (err) {
     // Error executing.  Warn (or ignore?)
-    // console.warn(err, { expr, model })
+    console.warn(err, { expr, model })
     return ''
   }
 }
