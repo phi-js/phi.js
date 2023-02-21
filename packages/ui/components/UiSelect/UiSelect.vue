@@ -114,8 +114,8 @@ function clickOption(objOption) {
     searchElem.value.select()
   } else {
     select(objOption.value)
-    close()
   }
+  close()
 }
 
 const listedOptions = filteredOptions
@@ -276,6 +276,7 @@ const placeholderOption = computed(() => {
           </template>
 
           <div
+            class="UiSelect__aggregator"
             style="flex: 1; display: flex; align-items: center"
             @click="toggleDialog"
           >
