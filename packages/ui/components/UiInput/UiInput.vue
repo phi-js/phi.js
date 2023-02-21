@@ -124,6 +124,7 @@ function emitUpdate(ignoreDebounce = false) {
 function isEmpty(testValue) {
   return testValue === null
     || testValue === undefined
+    || testValue === false
     || testValue === ''
     || (Array.isArray(testValue) && !testValue.length)
 }
@@ -182,8 +183,12 @@ const validationProps = computed(() => {
     ...toHTMLProps(allValidationRules.value),
 
     onInvalid: (event) => {
+      const validableValue = event.target.type == 'checkbox'
+        ? event.target.checked
+        : event.target.value
+
       isInvalid.value = true
-      const failedRule = validateValue(event.target.value, allValidationRules.value)
+      const failedRule = validateValue(validableValue, allValidationRules.value)
       if (failedRule) {
         event.target.setCustomValidity(failedRule?.message || '')
         emit('invalid', failedRule)
@@ -319,6 +324,21 @@ const nativeElementProps = computed(() => {
   }
 })
 
+const nativeCheckboxProps = computed(() => {
+  return {
+    ...elementProps.value,
+    checked: !!innerValue.value,
+    onInput: (event) => {
+      innerValue.value = event.target.checked
+      emitUpdate()
+      event.target.setCustomValidity('')
+      isInvalid.value = !event.target.checkValidity()
+    },
+    ...validationProps.value,
+  }
+})
+
+
 // SEE https://stackoverflow.com/questions/28760254/assign-javascript-date-to-html5-datetime-local-input
 const nativeDateProps = computed(() => {
   if (attrs.format == 'timestamp') {
@@ -350,17 +370,6 @@ const nativeDateProps = computed(() => {
     }
   } else {
     return nativeElementProps.value
-  }
-})
-
-const nativeCheckboxProps = computed(() => {
-  return {
-    ...elementProps.value,
-    checked: !!innerValue.value,
-    onInput: (event) => {
-      innerValue.value = event.target.checked
-      emitUpdate()
-    },
   }
 })
 
