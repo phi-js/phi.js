@@ -21,6 +21,12 @@ const props = defineProps({
     required: false,
     default: null,
   },
+  /* CSS property.  gap (in pixels) */
+  gap: {
+    type: [String, Number],
+    required: false,
+    default: null,
+  },
 })
 </script>
 
@@ -33,6 +39,7 @@ const props = defineProps({
       flexWrap: 'wrap',
       alignItems: props.alignItems,
       justifyContent: props.justifyContent,
+      gap: props.gap ? `${props.gap}px` : null
     }"
   >
     <slot />

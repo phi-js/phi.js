@@ -40,6 +40,7 @@ function onSlotUpdate() {
       flexWrap: 'wrap',
       alignItems: modelValue.props.alignItems,
       justifyContent: modelValue.props.justifyContent,
+      gap: modelValue.props.gap ? `${modelValue.props.gap}px` : null
     }"
     :direction="modelValue.props.direction == 'row' ? 'horizontal' : 'vertical'"
 

@@ -85,6 +85,15 @@ const i18n = useI18n({
       label="justifyContent"
       @update:model-value="emitUpdate"
     /> -->
+
+    <UiInput
+      v-model="block.props.gap"
+      class="LayoutGroupSettings__input"
+      type="number"
+      label="Gap"
+      min="0"
+      @update:model-value="emitUpdate"
+    />
   </div>
 </template>
 
