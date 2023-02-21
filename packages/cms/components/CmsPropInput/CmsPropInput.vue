@@ -100,7 +100,7 @@ const i18n = useI18n({
 
 <template>
   <div
-    class="CmsPropInput"
+    class="CmsPropInput UiInput"
     :class="`CmsPropInput--${type}`"
   >
     <label
@@ -109,54 +109,60 @@ const i18n = useI18n({
       v-text="$attrs.label"
     />
 
-    <select
-      v-model="type"
-      class="CmsPropInput__typeSelect"
-    >
-      <option
-        value="constant"
-        v-text="i18n.t('CmsPropInput.constant')"
-      />
-      <option
-        value="dictionary"
-        v-text="i18n.t('CmsPropInput.dictionary')"
-      />
-      <option
-        value="expression"
-        v-text="i18n.t('CmsPropInput.expression')"
-      />
+    <div class="CmsPropInput__body UiInput__body">
+      <select
+        v-model="type"
+        class="CmsPropInput__typeSelect"
+      >
+        <option
+          value="constant"
+          v-text="i18n.t('CmsPropInput.constant')"
+        />
+        <option
+          value="dictionary"
+          v-text="i18n.t('CmsPropInput.dictionary')"
+        />
+        <option
+          value="expression"
+          v-text="i18n.t('CmsPropInput.expression')"
+        />
       <!-- <option
         value="lang"
         v-text="i18n.t('CmsPropInput.lang')"
       /> -->
-    </select>
+      </select>
 
-    <Component
-      :is="editorComponent"
-      v-if="editorComponent"
-      class="CmsPropInput__component"
-      :model-value="props.modelValue"
-      :block="props.block"
-      @update:model-value="emit('update:modelValue', $event)"
-    />
+      <Component
+        :is="editorComponent"
+        v-if="editorComponent"
+        class="CmsPropInput__component"
+        :model-value="props.modelValue"
+        :block="props.block"
+        @update:model-value="emit('update:modelValue', $event)"
+      />
+    </div>
   </div>
 </template>
 
 <style lang="scss">
 .CmsPropInput {
-  display: flex;
-  flex-wrap: wrap;
+  &__body {
+    position: relative;
+  }
 
   &__typeSelect {
     // background: transparent; // fucks up option text color (white on white)
-    padding: 2px 6px;
+
+    position: absolute;
+    right: 0;
+    bottom: 100%;
+
+    padding: 4px 6px;
     border: 0;
     border-radius: 4px;
     color: inherit;
     font-size: 0.8em;
     font-weight: bold;
-
-    margin-left: auto;
 
     opacity: 0.5;
     &:hover {
