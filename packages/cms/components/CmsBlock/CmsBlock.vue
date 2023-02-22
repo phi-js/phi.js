@@ -100,40 +100,44 @@ const CmsBlock = {
     }
 
     /* Eval'd block props */
-    const storySettings = useStorySettings()
 
-    watchEffect(() => {
-      const allProps = {
-        ...blockDefinition?.block?.props,
-        ...props.block?.props,
-      }
+    // only for non-repeating blocks
+    if (!props.block['v-for']) {
+      const storySettings = useStorySettings()
 
-      // Parsed block props
-      blockProps.value = blockVM.eval(
-        allProps,
-        {
-          ...evaluableModel.value,
-          $settings: storySettings,
-        },
-      )
-
-      // props from v-models
-      for (const p in props.block) {
-        if (p.substring(0, 7) === 'v-model' && props.block[p]) {
-          const variableName = props.block[p]
-          const propName = p.substring(8) || 'modelValue'
-          blockProps.value[propName] = getModelProperty(variableName)
+      watchEffect(() => {
+        const allProps = {
+          ...blockDefinition?.block?.props,
+          ...props.block?.props,
         }
-      }
 
-      // // Set "required" prop if applies
-      // if (props.block?.rules?.length && props.block.rules.find((r) => r.required)) {
-      //   blockProps.value.required = true
-      // }
-      if (props.block?.rules?.length) {
-        blockProps.value.rules = props.block.rules
-      }
-    })
+        // Parsed block props
+        blockProps.value = blockVM.eval(
+          allProps,
+          {
+            ...evaluableModel.value,
+            $settings: storySettings,
+          },
+        )
+
+        // props from v-models
+        for (const p in props.block) {
+          if (p.substring(0, 7) === 'v-model' && props.block[p]) {
+            const variableName = props.block[p]
+            const propName = p.substring(8) || 'modelValue'
+            blockProps.value[propName] = getModelProperty(variableName)
+          }
+        }
+
+        // // Set "required" prop if applies
+        // if (props.block?.rules?.length && props.block.rules.find((r) => r.required)) {
+        //   blockProps.value.required = true
+        // }
+        if (props.block?.rules?.length) {
+          blockProps.value.rules = props.block.rules
+        }
+      })
+    }
 
     /* Block event listeners */
     function pushListener(objListeners, eventName, callback) {
