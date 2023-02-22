@@ -59,12 +59,13 @@ async function onFormSubmit($event) {
   submitting a form is important! The user should now the thing ran.  Reacting INSTANTLY fast MAY not be the best experience
   Make sure the form stays in "submitting" state for ... half a second?
   */
-  const durationPadding = 400
-
-  const endTime = new Date()
-  const duration = endTime - startTime //in ms
-  if (duration < durationPadding) {
-    await new Promise((resolve) => setTimeout(resolve, durationPadding - duration))
+  if (onBeforeSubmit.length) {
+    const durationPadding = 400
+    const endTime = new Date()
+    const duration = endTime - startTime //in ms
+    if (duration < durationPadding) {
+      await new Promise((resolve) => setTimeout(resolve, durationPadding - duration))
+    }
   }
 
   isSubmitting.value = false
