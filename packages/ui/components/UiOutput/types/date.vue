@@ -20,7 +20,9 @@ const props = defineProps({
 
 <template>
   <UiItem
+    v-if="props.value"
     icon="mdi:calendar"
     :text="i18n.date(props.value, props.format)"
   />
+  <span v-else />
 </template>
