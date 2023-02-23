@@ -4,8 +4,9 @@ export default function (text) {
   }
 
   return {
-    component: 'MediaVideo',
+    name: 'MediaVideo',
     title: 'Video',
-    props: { url: text },
+    icon: 'mdi:youtube',
+    block: { props: { url: text } },
   }
 }

@@ -17,8 +17,17 @@ export default function (text) {
   })
 
   return {
-    'component': 'InputSelect',
-    'props': { options },
-    'v-model': 'select',
+    name: 'InputSelect',
+    title: 'Select',
+    icon: 'mdi:form-dropdown',
+
+    block: {
+      'v-model': '',
+      'props': {
+        type: 'select-list',
+        multiple: false,
+        options,
+      },
+    },
   }
 }

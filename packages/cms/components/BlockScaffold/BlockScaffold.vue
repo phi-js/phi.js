@@ -5,6 +5,9 @@ import { useI18n } from '@/packages/i18n'
 import { UiItem, UiIcon, UiDropdown } from '@/packages/ui'
 import { getBlockDefinition, getBlockEditors } from '../../functions'
 
+import { getPluginData } from '../../functions'
+const pluginData = getPluginData()
+
 const i18n = useI18n({
   en: {
     'BlockScaffold.Delete': 'Delete',
@@ -155,6 +158,13 @@ const stylesInChild = computed(() => {
                   :text="action.title"
                   @click.stop="emit('open-editor', action.id); close();"
                 />
+
+                <Component
+                  :is="pluginData.getSlotComponent('BlockMenu')"
+                  :block="props.block"
+                  :close="close"
+                />
+
                 <UiItem
                   icon="mdi:close"
                   :text="i18n.t('BlockScaffold.Delete')"

@@ -16,8 +16,10 @@ export default function (text) {
   }
 
   return {
-    component: 'MediaHtml',
+    name: 'MediaHtml',
     title: 'Text',
-    props: { value: `<${tag}>${text}</${tag}>` },
+    icon: 'mdi:text',
+
+    block: { props: { value: `<${tag}>${text}</${tag}>` } },
   }
 }

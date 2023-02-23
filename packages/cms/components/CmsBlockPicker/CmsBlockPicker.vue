@@ -3,9 +3,10 @@ export default { inheritAttrs: false }
 </script>
 
 <script setup>
-import { ref, watch } from 'vue'
-import { UiDialog, UiItemFinder } from '@/packages/ui'
+import { computed, ref, watch } from 'vue'
+import { UiDialog, UiItemFinder, UiItem } from '@/packages/ui'
 import { useAvailableBlocks } from '../../functions/usePlugin'
+import getSuggestedBlocks from './Quicklaunch'
 
 const availableBlocks = useAvailableBlocks()
 
@@ -81,6 +82,30 @@ function onPopState() {
   hasPushedState = false
   setOpen(false)
 }
+
+const searchString = ref('')
+
+const suggestedBlocks = computed(() => {
+  if (!searchString.value.trim()) {
+    return [
+      {
+        name: 'LayoutGroup',
+        title: 'Group',
+        icon: 'mdi:group',
+        props: { direction: 'column' },
+      },
+    ]
+  }
+
+  return getSuggestedBlocks(searchString.value)
+})
+
+function onClickSuggestion(sugg) {
+  emit('input', {
+    ...sugg,
+    staging: false,
+  })
+}
 </script>
 
 <template>
@@ -94,10 +119,6 @@ function onPopState() {
       $attrs.class
     ]"
   >
-    <div class="CmsBlockPicker__trigger">
-      <slot name="trigger" />
-    </div>
-
     <UiDialog
       v-slot="{ close }"
       v-model:open="isOpen"
@@ -105,11 +126,23 @@ function onPopState() {
       @update:open="emit('update:open', $event)"
     >
       <UiItemFinder
-        class="PickerContents"
+        v-model:searchString="searchString"
         :items="availableBlocks"
         @select-item="emit('input', $event); close()"
       >
         <template #body>
+          <div class="CmsBlockPicker__suggestions">
+            <UiItem
+              v-for="(sugg,i) in suggestedBlocks"
+              :key="i"
+              class="FinderItem FinderItem--item"
+              :icon="sugg.icon"
+              :text="sugg.title"
+              :subtext="sugg.subtext"
+              @click="onClickSuggestion(sugg); close()"
+            />
+          </div>
+
           <slot
             name="body"
             :close="close"
@@ -119,3 +152,24 @@ function onPopState() {
     </UiDialog>
   </div>
 </template>
+
+<style lang="scss">
+.CmsBlockPicker {
+  &__suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 8px;
+    font-size: 0.9em;
+
+    .FinderItem {
+      border: 1px solid #999;
+      opacity: 0.5;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
+</style>

@@ -159,7 +159,6 @@ function cancel() {
   .UiWindow {
     &__header {
       border-bottom: 1px solid var(--window-ridge-color);
-      padding-bottom: 0;
     }
   }
 
@@ -178,9 +177,11 @@ function cancel() {
     @extend .ui--clickable;
     --ui-item-padding: 6px 12px;
 
-    margin-right: 1em;
+    margin-right: 0.5em;
     margin-bottom: -1px;
-    padding-top: 7px;
+    padding-top: 8px;
+    padding-bottom: 10px;
+    margin-bottom: -5px;
 
     font-size: 0.8rem;
     font-weight: bold;

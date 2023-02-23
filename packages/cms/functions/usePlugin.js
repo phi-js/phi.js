@@ -15,6 +15,7 @@ import pluginMedia from '../plugins/media'
 import pluginNavigation from '../plugins/navigation'
 import pluginStory from '../plugins/story'
 import pluginVideo from '../plugins/video'
+import pluginClipboard from '../plugins/clipboard'
 
 // This order is used in PickerContents
 usePlugin([
@@ -25,6 +26,7 @@ usePlugin([
   pluginData,
   pluginVideo,
   pluginNavigation,
+  pluginClipboard,
 ])
 
 export default function usePlugin(plugin) {

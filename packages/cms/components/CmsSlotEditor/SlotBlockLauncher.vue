@@ -18,16 +18,10 @@ const props = defineProps({
     validator: (v) => ['row', 'column'].includes(v),
   },
 
-  text: {
-    type: String,
-    required: false,
-    default: null,
-  },
-
   label: {
     type: String,
     required: false,
-    default: 'Adding content here',
+    default: '',
   },
 
   title: {
@@ -139,24 +133,9 @@ function onPickerUpdateOpen($event) {
     class="SlotBlockLauncher"
     :class="[
       `SlotBlockLauncher--${props.direction}`,
-      {
-        'SlotBlockLauncher--open': isOpen,
-      }
+      { 'SlotBlockLauncher--open': isOpen }
     ]"
   >
-    <div
-      v-show="!isOpen"
-      class="SlotBlockLauncher__trigger"
-      :title="props.title"
-      @click="onTriggerClick"
-    >
-      <UiItem
-        icon="mdi:plus"
-        :text="props.text"
-        :subtext="props.title"
-      />
-    </div>
-
     <template v-if="stagingBlock">
       <SlotItem
         :block="stagingBlock"
@@ -169,6 +148,14 @@ function onPickerUpdateOpen($event) {
         @cancel="onStagingCancel"
       />
     </template>
+
+    <UiItem
+      icon="mdi:plus"
+      :text="props.label"
+      class="SlotBlockLauncher__trigger"
+      :title="props.title"
+      @click="onTriggerClick"
+    />
 
     <CmsBlockPicker
       v-model:open="isPopupOpen"
@@ -187,128 +174,43 @@ function onPickerUpdateOpen($event) {
 
 <style lang="scss">
 .SlotBlockLauncher {
-  position: relative;
-
   &__trigger {
+    display: inline-flex;
+    --ui-item-padding: 8px 14px;
+
+    user-select: none;
+    font-size: 0.8rem;
+    font-weight: bold;
+
+    border-radius: 5px;
+    border: 2px dashed #99999988;
+    opacity: 0.6;
+
     cursor: pointer;
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: center;
-    margin: 5px;
-
-    .UiItem {
-      --ui-item-padding: 8px 14px;
-      flex: 1;
-
-      user-select: none;
-      font-size: 0.8rem;
-      font-weight: bold;
-
-      border-radius: 5px;
-      border: 2px dashed #99999988;
-      opacity: 0.5;
-    }
-
-    &:hover .UiItem {
-      // background-color: var(--ui-color-hover);
+    &:hover {
       border: 2px solid var(--ui-color-primary);
       color: var(--ui-color-primary);
       opacity: 1;
     }
-  }
 
-  &__box {
-    display: flex;
-    flex-direction: column;
 
-    user-select: none;
-
-    transition:
-      width var(--ui-duration-snap),
-      height var(--ui-duration-snap),
-      opacity var(--ui-duration-snap);
-
-    overflow: hidden;
-
-    div {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-
-      font-weight: bold;
-      font-size: 1em;
-
-      background-color: var(--ui-color-hover);
+    transition: all var(--ui-duration-snap);
+    gap: 0;
+    .UiItem {
+      &__body {
+        overflow: hidden;
+        max-width: 0;
+      }
     }
-  }
-}
 
-.SlotBlockLauncher {
-  &__stagedEditor {
-    position: relative;
-    border: 1px solid transparent; // prevent margin collapse
-
-    &::before {
-      content: '';
-
-      pointer-events: none;
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      bottom: -5px;
-      left: -5px;
-
-      border-radius: 5px;
-      border: 2px dashed var(--ui-color-primary);
+    &:hover {
+      gap: 8px;
+      .UiItem {
+        &__body {
+          max-width: none;
+        }
+      }
     }
-  }
-}
-
-
-
-
-.SlotBlockLauncher--column {
-  .SlotBlockLauncher__box {
-    height: 0;
-  }
-
-  &.SlotBlockLauncher--open .SlotBlockLauncher__box {
-    height: 60px;
-  }
-
-}
-
-
-.SlotBlockLauncher--row {
-  .SlotBlockLauncher__trigger {
-    position: absolute;
-    flex-direction: column;
-    top: 0;
-    bottom: 0;
-    left: -12px;
-    right: auto;
-  }
-
-  .SlotBlockLauncher__box {
-    width: 0;
-    height: 100%;
-  }
-
-  &.SlotBlockLauncher--open {
-    flex: 1;
-  }
-
-  &.SlotBlockLauncher--open .SlotBlockLauncher__box {
-    width: auto;
-  }
-
-  ///damn
-  & > .CmsBlockPicker,
-  & > .CmsBlockPicker > .UiPopover,
-  & > .CmsBlockPicker > .UiPopover > .UiPopover__trigger {
-    height: 100%;
   }
 }
 </style>

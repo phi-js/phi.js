@@ -14,21 +14,19 @@ const generators = [
   Html,
 ]
 
-export default {
-  getSuggestedBlocks(text) {
-    let retval = []
-    let string = text.trim()
-    if (!string) {
-      return retval
-    }
-
-    generators.forEach((generator) => {
-      let generated = generator(string)
-      if (generated) {
-        retval.push(generated)
-      }
-    })
-
+export default function getSuggestedBlocks(text) {
+  let retval = []
+  let string = text.trim()
+  if (!string) {
     return retval
-  },
+  }
+
+  generators.forEach((generator) => {
+    let generated = generator(string)
+    if (generated) {
+      retval.push(generated)
+    }
+  })
+
+  return retval
 }

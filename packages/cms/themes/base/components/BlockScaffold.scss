@@ -19,6 +19,16 @@
     visibility: visible;
   }
 
+  // toolbar-container only clickable when SELECTED
+  & > &__toolbar-container {
+    pointer-events: none;
+  }
+
+  &--selected > &__toolbar-container {
+    pointer-events: initial;
+  }
+
+
   // "outline"
   &::after {
     content: '';
@@ -91,21 +101,28 @@
     transition: all 222ms;
     opacity: 0;
 
-    // font-size: 12px;
     font-size: 8pt;
     font-weight: bold;
-    padding: 2px 8px;
+    padding: 4px 10px;
     border-radius: 4px;
 
     position: relative;
-    left: 2px;
-    background-color: var(--ui-color-background);
-    // color: var(--ui-color-foreground, #fff);
-    color: var(--ui-color-primary, #fff);
+    left: 3px;
 
     //reset
     text-decoration: none;
     text-shadow: none;
+
+    // place labels inside block outline
+    position: absolute;
+    top: 100%;
+    margin-top: 3px;
+    background-color: var(--ui-color-background);
+    color: var(--ui-color-primary);
+    background-color: #eeeeeeea;
+
+    // or just fuck it, hide labels
+    display: none;
   }
 
   &:hover > &__toolbar-container > &__label {
@@ -301,17 +318,21 @@
 /*** Block-specific stylings ***/
 
 // LayoutGroup
+.BlockScaffold--PersonEditor,
 .BlockScaffold--NestedForm,
 .BlockScaffold--LayoutGroup {
-  // z-index: 2;
   padding: 6px;
   // margin: 0 -3px; // causes horizontal overscroll on body
-
   margin-top: 22px; // height of BlockScaffold__label + 2px
   margin-bottom: 6px;
 
   .BlockScaffold--LayoutGroup {
     margin-top: 18px;
+  }
+
+  // toolbar-container only clickable when SELECTED
+  .BlockScaffold__toolbar-container {
+    pointer-events: initial;
   }
 
   &:hover > .BlockScaffold__toolbar-container > .BlockScaffold__label {
@@ -322,6 +343,9 @@
     opacity: 1;
     top: 3px;
     color: inherit;
+    border: none;
+    background-color: transparent;
+    display: block;
   }
 
   &::after {

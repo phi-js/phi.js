@@ -146,6 +146,18 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
     'description': 'This block has conditional visibility',
   })
 
+  // v-on
+  retval.actions.push({
+    'id': 'events',
+    'title': 'Events',
+    'icon': 'mdi:gesture-tap',
+    'component': BlockListenersEditor,
+    'v-model': 'block',
+
+    'hasData': block['v-on'] && typeof block['v-on'] == 'object' && Object.keys(block['v-on']).length,
+    'description': 'This block reacts to events',
+  })
+
   // Block CSS property
   retval.actions.push({
     'id': 'css',
@@ -168,18 +180,6 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
 
     'hasData': !!block.transitions,
     'description': 'This block has transitions',
-  })
-
-  // v-on
-  retval.actions.push({
-    'id': 'events',
-    'title': 'Events',
-    'icon': 'mdi:gesture-tap',
-    'component': BlockListenersEditor,
-    'v-model': 'block',
-
-    'hasData': block['v-on'] && typeof block['v-on'] == 'object' && Object.keys(block['v-on']).length,
-    'description': 'This block reacts to events',
   })
 
   // v-for

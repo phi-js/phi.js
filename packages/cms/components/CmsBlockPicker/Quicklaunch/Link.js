@@ -9,14 +9,16 @@ export default function (text) {
   // Fetch the title (?)
   // let response = await cmsApi(store.state.httpClient).getUrlDetails(text);
 
-
   return {
-    component: 'MediaLink',
+    name: 'MediaLink',
     title: 'Link',
-    props: {
-      href: text,
-      text: '',
-      secondary: text,
+    icon: 'mdi:open-in-new',
+    block: {
+      props: {
+        href: text,
+        text: '',
+        secondary: text,
+      },
     },
   }
 }

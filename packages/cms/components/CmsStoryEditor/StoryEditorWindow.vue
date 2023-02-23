@@ -70,7 +70,7 @@ function emitStoryUpdate() {
 
 const i18n = useI18n({
   en: {
-    'StoryEditorWindow.setup': 'Setup',
+    'StoryEditorWindow.run': 'Run',
     'StoryEditorWindow.code': 'Code',
     'StoryEditorWindow.global': 'Global',
     'StoryEditorWindow.i18n': 'Languages',
@@ -82,7 +82,7 @@ const i18n = useI18n({
     'StoryEditorWindow.thisPage': 'This Page',
   },
   es: {
-    'StoryEditorWindow.setup': 'Setup',
+    'StoryEditorWindow.run': 'Ejecutar',
     'StoryEditorWindow.code': 'Código',
     'StoryEditorWindow.global': 'Global',
     'StoryEditorWindow.i18n': 'Idiomas',
@@ -128,7 +128,7 @@ const i18n = useI18n({
           <UiTab
             value="setup"
             icon="mdi:gesture-tap"
-            :text="i18n.t('StoryEditorWindow.setup')"
+            :text="i18n.t('StoryEditorWindow.run')"
           >
             <VmStatement
               v-model="innerStory.setup"

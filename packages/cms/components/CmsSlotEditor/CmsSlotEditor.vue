@@ -42,8 +42,14 @@ const props = defineProps({
 const emit = defineEmits(['update:slot'])
 
 const i18n = useI18n({
-  en: { 'CmsSlotEditor.AddContent': 'Add content' },
-  es: { 'CmsSlotEditor.AddContent': 'Agregar contenido' },
+  en: {
+    'CmsSlotEditor.AddContent': 'Add content',
+    'CmsSlotEditor.AddContentTo': 'Add content to',
+  },
+  es: {
+    'CmsSlotEditor.AddContent': 'Agregar contenido',
+    'CmsSlotEditor.AddContentTo': 'Agregar contenido en',
+  },
 })
 
 const blockRefs = ref([])
@@ -162,9 +168,6 @@ function onInsertSibling(index, position = null) {
     <template #item="{ element, index }">
       <div v-if="element._placeholder">
         <SlotBlockLauncher
-          :text="i18n.t('CmsSlotEditor.AddContent')"
-          :title="props.label"
-          :label="props.label || i18n.t('CmsSlotEditor.AddContent')"
           :open="true"
           @input="launchBlock($event, index)"
         />
@@ -188,9 +191,8 @@ function onInsertSibling(index, position = null) {
       <!-- block launcher at bottom -->
       <div class="CmsSlotEditor__footer">
         <SlotBlockLauncher
-          :text="i18n.t('CmsSlotEditor.AddContent')"
-          :title="props.label"
-          :label="props.label || i18n.t('CmsSlotEditor.AddContent')"
+          :label="i18n.t('CmsSlotEditor.AddContent')"
+          :title="i18n.t('CmsSlotEditor.AddContentTo') + ' ' + props.label"
           @input="launchBlock($event)"
         />
       </div>

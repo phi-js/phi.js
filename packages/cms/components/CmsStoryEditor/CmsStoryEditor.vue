@@ -9,10 +9,12 @@ const i18n = useI18n({
   en: {
     'CmsStoryEditor.Header': 'Header',
     'CmsStoryEditor.Footer': 'Footer',
+    'CmsStoryEditor.Page': 'Page',
   },
   es: {
     'CmsStoryEditor.Header': 'Encabezado',
     'CmsStoryEditor.Footer': 'Pie de página',
+    'CmsStoryEditor.Page': 'Página',
   },
 })
 
@@ -144,7 +146,7 @@ provide('$_cms_story', {
           v-if="isHeaderEnabled"
           v-model:slot="innerStory.header"
           class="CmsStoryEditor__header LayoutPage__header"
-          label="Header"
+          :label="i18n.t('CmsStoryEditor.Header')"
           @update:slot="emitUpdate"
         />
 
@@ -152,6 +154,7 @@ provide('$_cms_story', {
         <CmsSlotEditor
           v-model:slot="currentPage.slots.default"
           class="CmsStoryEditor__contents LayoutPage__contents"
+          :label="i18n.t('CmsStoryEditor.Page')"
           @update:slot="emitUpdate"
         />
 
@@ -160,7 +163,7 @@ provide('$_cms_story', {
           v-if="isFooterEnabled"
           v-model:slot="innerStory.footer"
           class="CmsStoryEditor__footer LayoutPage__footer"
-          label="Footer"
+          :label="i18n.t('CmsStoryEditor.Footer')"
           @update:slot="emitUpdate"
         />
       </div>
