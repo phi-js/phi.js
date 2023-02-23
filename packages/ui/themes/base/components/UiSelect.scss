@@ -17,8 +17,8 @@
   }
 
   &__aggregator {
-    padding: 5px;
-    padding-left: 12px;
+    --ui-item-padding: 0 12px;
+
     font-size: 0.9em;
     font-weight: 500;
     cursor: pointer;
