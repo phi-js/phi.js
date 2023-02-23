@@ -192,9 +192,7 @@ function onDialogAccept(textareaValue) {
   position: relative;
 
   &__addBar {
-    border-radius: 5px;
-    border: 2px dashed rgba(153, 153, 153, 0.5333333333);
-    margin-top: 0.5rem;
+    padding: 5px;
 
     display: flex;
     & > :first-child {
@@ -205,9 +203,17 @@ function onDialogAccept(textareaValue) {
 
   &__adder {
     @extend .ui--clickable;
-    --ui-item-padding: 6px 12px;
+    --ui-item-padding: 6px 8px;
     font-size: 0.8rem;
     font-weight: bold;
+
+    border-radius: 5px;
+    border: 2px dashed rgba(153, 153, 153, 0.5333333333);
+
+    .UiItem__text {
+      padding: 0 6px;
+      font-size: inherit;
+    }
   }
 
   &__option-item {
@@ -220,8 +226,9 @@ function onDialogAccept(textareaValue) {
 
 .OptionEditor {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
+
   margin: 3px 0;
 
   &__text,

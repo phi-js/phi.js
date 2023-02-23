@@ -29,7 +29,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['select-item'])
+const emit = defineEmits(['select-item', 'update:searchString'])
 
 const allItems = ref([])
 watch(
@@ -127,11 +127,15 @@ function onSearchEnter() {
   }
 
   firstElement.click()
+
+  searchString.value = ''
+  emit('update:searchString', '')
 }
 
 function onClickItem(item) {
   emit('select-item', item)
   searchString.value = ''
+  emit('update:searchString', '')
 }
 </script>
 
@@ -142,6 +146,7 @@ function onClickItem(item) {
       type="search"
       class="UiItemFinder__search"
       :placeholder="i18n.t('Search')"
+      @update:model-value="emit('update:searchString', $event)"
       @keyup.enter="onSearchEnter()"
     >
     <div
