@@ -1,12 +1,18 @@
 <script setup>
 import { ref } from 'vue'
 
-import { UiInput } from '../UiInput'
 import UiSelectCountry from './UiSelectCountry.vue'
+import UiSelectCity from './UiSelectCity.vue'
 
 const countrySingle = ref('')
 const countryMany = ref([])
 
+const somePerson = ref({
+  birthplace_iso_country: '',
+  birthplace_iso_province: '',
+  birthplace_iso_city: '',
+  birthplace_iso_text: '',
+})
 </script>
 
 <template>
@@ -19,40 +25,30 @@ const countryMany = ref([])
       >umpirsky/country-list</a>
     </p>
 
-
     <UiSelectCountry
       v-model="countrySingle"
-      placeholder="Nationality (one)"
+      placeholder="Country (one)"
     />
 
     <UiSelectCountry
       v-model="countryMany"
-      placeholder="Nationality (many)"
+      placeholder="Country (many)"
       multiple
     />
-
-    <UiInput
-      type="translation"
-      label="Just a text"
-    />
-
     <pre>countrySingle: {{ countrySingle }}</pre>
     <pre>countryMany: {{ countryMany }}</pre>
+
     <hr>
 
-    <UiInput
-      v-model="countrySingle"
-      label="Nationality"
-      type="country"
-      placeholder="Nationality (one)"
+    <h1>UiSelectCity</h1>
+
+    <UiSelectCity
+      v-model:country="somePerson.birthplace_iso_country"
+      v-model:province="somePerson.birthplace_iso_province"
+      v-model:city="somePerson.birthplace_iso_city"
+      v-model:text="somePerson.birthplace_iso_text"
     />
 
-    <UiInput
-      v-model="countryMany"
-      label="Nationality"
-      type="country"
-      placeholder="Nationality (many)"
-      multiple
-    />
+    <pre>{{ somePerson }}</pre>
   </div>
 </template>

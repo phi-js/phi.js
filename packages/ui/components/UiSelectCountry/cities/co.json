@@ -1,0 +1,4680 @@
+{
+  "05": {
+    "code": "05",
+    "name": "Antioquia",
+    "cities": {
+      "05001": {
+        "code": "05001",
+        "name": "Medell\u00edn"
+      },
+      "05002": {
+        "code": "05002",
+        "name": "Abejorral"
+      },
+      "05004": {
+        "code": "05004",
+        "name": "Abriaqu\u00ed"
+      },
+      "05021": {
+        "code": "05021",
+        "name": "Alejandr\u00eda"
+      },
+      "05030": {
+        "code": "05030",
+        "name": "Amag\u00e1"
+      },
+      "05031": {
+        "code": "05031",
+        "name": "Amalfi"
+      },
+      "05034": {
+        "code": "05034",
+        "name": "Andes"
+      },
+      "05036": {
+        "code": "05036",
+        "name": "Angel\u00f3polis"
+      },
+      "05038": {
+        "code": "05038",
+        "name": "Angostura"
+      },
+      "05040": {
+        "code": "05040",
+        "name": "Anor\u00ed"
+      },
+      "05042": {
+        "code": "05042",
+        "name": "Santaf\u00e9 de antioquia"
+      },
+      "05044": {
+        "code": "05044",
+        "name": "Anza"
+      },
+      "05045": {
+        "code": "05045",
+        "name": "Apartad\u00f3"
+      },
+      "05051": {
+        "code": "05051",
+        "name": "Arboletes"
+      },
+      "05055": {
+        "code": "05055",
+        "name": "Argelia"
+      },
+      "05059": {
+        "code": "05059",
+        "name": "Armenia"
+      },
+      "05079": {
+        "code": "05079",
+        "name": "Barbosa"
+      },
+      "05086": {
+        "code": "05086",
+        "name": "Belmira"
+      },
+      "05088": {
+        "code": "05088",
+        "name": "Bello"
+      },
+      "05091": {
+        "code": "05091",
+        "name": "Betania"
+      },
+      "05093": {
+        "code": "05093",
+        "name": "Betulia"
+      },
+      "05101": {
+        "code": "05101",
+        "name": "Ciudad bol\u00edvar"
+      },
+      "05107": {
+        "code": "05107",
+        "name": "Brice\u00f1o"
+      },
+      "05113": {
+        "code": "05113",
+        "name": "Buritic\u00e1"
+      },
+      "05120": {
+        "code": "05120",
+        "name": "C\u00e1ceres"
+      },
+      "05125": {
+        "code": "05125",
+        "name": "Caicedo"
+      },
+      "05129": {
+        "code": "05129",
+        "name": "Caldas"
+      },
+      "05134": {
+        "code": "05134",
+        "name": "Campamento"
+      },
+      "05138": {
+        "code": "05138",
+        "name": "Ca\u00f1asgordas"
+      },
+      "05142": {
+        "code": "05142",
+        "name": "Caracol\u00ed"
+      },
+      "05145": {
+        "code": "05145",
+        "name": "Caramanta"
+      },
+      "05147": {
+        "code": "05147",
+        "name": "Carepa"
+      },
+      "05148": {
+        "code": "05148",
+        "name": "El carmen de viboral"
+      },
+      "05150": {
+        "code": "05150",
+        "name": "Carolina"
+      },
+      "05154": {
+        "code": "05154",
+        "name": "Caucasia"
+      },
+      "05172": {
+        "code": "05172",
+        "name": "Chigorod\u00f3"
+      },
+      "05190": {
+        "code": "05190",
+        "name": "Cisneros"
+      },
+      "05197": {
+        "code": "05197",
+        "name": "Cocorn\u00e1"
+      },
+      "05206": {
+        "code": "05206",
+        "name": "Concepci\u00f3n"
+      },
+      "05209": {
+        "code": "05209",
+        "name": "Concordia"
+      },
+      "05212": {
+        "code": "05212",
+        "name": "Copacabana"
+      },
+      "05234": {
+        "code": "05234",
+        "name": "Dabeiba"
+      },
+      "05237": {
+        "code": "05237",
+        "name": "Don mat\u00edas"
+      },
+      "05240": {
+        "code": "05240",
+        "name": "Eb\u00e9jico"
+      },
+      "05250": {
+        "code": "05250",
+        "name": "El bagre"
+      },
+      "05264": {
+        "code": "05264",
+        "name": "Entrerrios"
+      },
+      "05266": {
+        "code": "05266",
+        "name": "Envigado"
+      },
+      "05282": {
+        "code": "05282",
+        "name": "Fredonia"
+      },
+      "05284": {
+        "code": "05284",
+        "name": "Frontino"
+      },
+      "05306": {
+        "code": "05306",
+        "name": "Giraldo"
+      },
+      "05308": {
+        "code": "05308",
+        "name": "Girardota"
+      },
+      "05310": {
+        "code": "05310",
+        "name": "G\u00f3mez plata"
+      },
+      "05313": {
+        "code": "05313",
+        "name": "Granada"
+      },
+      "05315": {
+        "code": "05315",
+        "name": "Guadalupe"
+      },
+      "05318": {
+        "code": "05318",
+        "name": "Guarne"
+      },
+      "05321": {
+        "code": "05321",
+        "name": "Guatape"
+      },
+      "05347": {
+        "code": "05347",
+        "name": "Heliconia"
+      },
+      "05353": {
+        "code": "05353",
+        "name": "Hispania"
+      },
+      "05360": {
+        "code": "05360",
+        "name": "Itagui"
+      },
+      "05361": {
+        "code": "05361",
+        "name": "Ituango"
+      },
+      "05364": {
+        "code": "05364",
+        "name": "Jard\u00edn"
+      },
+      "05368": {
+        "code": "05368",
+        "name": "Jeric\u00f3"
+      },
+      "05376": {
+        "code": "05376",
+        "name": "La ceja"
+      },
+      "05380": {
+        "code": "05380",
+        "name": "La estrella"
+      },
+      "05390": {
+        "code": "05390",
+        "name": "La pintada"
+      },
+      "05400": {
+        "code": "05400",
+        "name": "La uni\u00f3n"
+      },
+      "05411": {
+        "code": "05411",
+        "name": "Liborina"
+      },
+      "05425": {
+        "code": "05425",
+        "name": "Maceo"
+      },
+      "05440": {
+        "code": "05440",
+        "name": "Marinilla"
+      },
+      "05467": {
+        "code": "05467",
+        "name": "Montebello"
+      },
+      "05475": {
+        "code": "05475",
+        "name": "Murind\u00f3"
+      },
+      "05480": {
+        "code": "05480",
+        "name": "Mutat\u00e1"
+      },
+      "05483": {
+        "code": "05483",
+        "name": "Nari\u00f1o"
+      },
+      "05490": {
+        "code": "05490",
+        "name": "Necocl\u00ed"
+      },
+      "05495": {
+        "code": "05495",
+        "name": "Nech\u00ed"
+      },
+      "05501": {
+        "code": "05501",
+        "name": "Olaya"
+      },
+      "05541": {
+        "code": "05541",
+        "name": "Pe\u00f1ol"
+      },
+      "05543": {
+        "code": "05543",
+        "name": "Peque"
+      },
+      "05576": {
+        "code": "05576",
+        "name": "Pueblorrico"
+      },
+      "05579": {
+        "code": "05579",
+        "name": "Puerto berr\u00edo"
+      },
+      "05585": {
+        "code": "05585",
+        "name": "Puerto nare"
+      },
+      "05591": {
+        "code": "05591",
+        "name": "Puerto triunfo"
+      },
+      "05604": {
+        "code": "05604",
+        "name": "Remedios"
+      },
+      "05607": {
+        "code": "05607",
+        "name": "Retiro"
+      },
+      "05615": {
+        "code": "05615",
+        "name": "Rionegro"
+      },
+      "05628": {
+        "code": "05628",
+        "name": "Sabanalarga"
+      },
+      "05631": {
+        "code": "05631",
+        "name": "Sabaneta"
+      },
+      "05642": {
+        "code": "05642",
+        "name": "Salgar"
+      },
+      "05647": {
+        "code": "05647",
+        "name": "San andr\u00e9s"
+      },
+      "05649": {
+        "code": "05649",
+        "name": "San carlos"
+      },
+      "05652": {
+        "code": "05652",
+        "name": "San francisco"
+      },
+      "05656": {
+        "code": "05656",
+        "name": "San jer\u00f3nimo"
+      },
+      "05658": {
+        "code": "05658",
+        "name": "San jos\u00e9 de la monta\u00f1a"
+      },
+      "05659": {
+        "code": "05659",
+        "name": "San juan de urab\u00e1"
+      },
+      "05660": {
+        "code": "05660",
+        "name": "San luis"
+      },
+      "05664": {
+        "code": "05664",
+        "name": "San pedro"
+      },
+      "05665": {
+        "code": "05665",
+        "name": "San pedro de uraba"
+      },
+      "05667": {
+        "code": "05667",
+        "name": "San rafael"
+      },
+      "05670": {
+        "code": "05670",
+        "name": "San roque"
+      },
+      "05674": {
+        "code": "05674",
+        "name": "San vicente"
+      },
+      "05679": {
+        "code": "05679",
+        "name": "Santa b\u00e1rbara"
+      },
+      "05686": {
+        "code": "05686",
+        "name": "Santa rosa de osos"
+      },
+      "05690": {
+        "code": "05690",
+        "name": "Santo domingo"
+      },
+      "05697": {
+        "code": "05697",
+        "name": "El santuario"
+      },
+      "05736": {
+        "code": "05736",
+        "name": "Segovia"
+      },
+      "05756": {
+        "code": "05756",
+        "name": "Sonson"
+      },
+      "05761": {
+        "code": "05761",
+        "name": "Sopetr\u00e1n"
+      },
+      "05789": {
+        "code": "05789",
+        "name": "T\u00e1mesis"
+      },
+      "05790": {
+        "code": "05790",
+        "name": "Taraz\u00e1"
+      },
+      "05792": {
+        "code": "05792",
+        "name": "Tarso"
+      },
+      "05809": {
+        "code": "05809",
+        "name": "Titirib\u00ed"
+      },
+      "05819": {
+        "code": "05819",
+        "name": "Toledo"
+      },
+      "05837": {
+        "code": "05837",
+        "name": "Turbo"
+      },
+      "05842": {
+        "code": "05842",
+        "name": "Uramita"
+      },
+      "05847": {
+        "code": "05847",
+        "name": "Urrao"
+      },
+      "05854": {
+        "code": "05854",
+        "name": "Valdivia"
+      },
+      "05856": {
+        "code": "05856",
+        "name": "Valpara\u00edso"
+      },
+      "05858": {
+        "code": "05858",
+        "name": "Vegach\u00ed"
+      },
+      "05861": {
+        "code": "05861",
+        "name": "Venecia"
+      },
+      "05873": {
+        "code": "05873",
+        "name": "Vig\u00eda del fuerte"
+      },
+      "05885": {
+        "code": "05885",
+        "name": "Yal\u00ed"
+      },
+      "05887": {
+        "code": "05887",
+        "name": "Yarumal"
+      },
+      "05890": {
+        "code": "05890",
+        "name": "Yolomb\u00f3"
+      },
+      "05893": {
+        "code": "05893",
+        "name": "Yond\u00f3"
+      },
+      "05895": {
+        "code": "05895",
+        "name": "Zaragoza"
+      }
+    }
+  },
+  "08": {
+    "code": "08",
+    "name": "Atl\u00e1ntico",
+    "cities": {
+      "08001": {
+        "code": "08001",
+        "name": "Barranquilla"
+      },
+      "08078": {
+        "code": "08078",
+        "name": "Baranoa"
+      },
+      "08137": {
+        "code": "08137",
+        "name": "Campo de la cruz"
+      },
+      "08141": {
+        "code": "08141",
+        "name": "Candelaria"
+      },
+      "08296": {
+        "code": "08296",
+        "name": "Galapa"
+      },
+      "08372": {
+        "code": "08372",
+        "name": "Juan de acosta"
+      },
+      "08421": {
+        "code": "08421",
+        "name": "Luruaco"
+      },
+      "08433": {
+        "code": "08433",
+        "name": "Malambo"
+      },
+      "08436": {
+        "code": "08436",
+        "name": "Manat\u00ed"
+      },
+      "08520": {
+        "code": "08520",
+        "name": "Palmar de varela"
+      },
+      "08549": {
+        "code": "08549",
+        "name": "Pioj\u00f3"
+      },
+      "08558": {
+        "code": "08558",
+        "name": "Polonuevo"
+      },
+      "08560": {
+        "code": "08560",
+        "name": "Ponedera"
+      },
+      "08573": {
+        "code": "08573",
+        "name": "Puerto colombia"
+      },
+      "08606": {
+        "code": "08606",
+        "name": "Repel\u00f3n"
+      },
+      "08634": {
+        "code": "08634",
+        "name": "Sabanagrande"
+      },
+      "08638": {
+        "code": "08638",
+        "name": "Sabanalarga"
+      },
+      "08675": {
+        "code": "08675",
+        "name": "Santa luc\u00eda"
+      },
+      "08685": {
+        "code": "08685",
+        "name": "Santo tom\u00e1s"
+      },
+      "08758": {
+        "code": "08758",
+        "name": "Soledad"
+      },
+      "08770": {
+        "code": "08770",
+        "name": "Suan"
+      },
+      "08832": {
+        "code": "08832",
+        "name": "Tubar\u00e1"
+      },
+      "08849": {
+        "code": "08849",
+        "name": "Usiacur\u00ed"
+      }
+    }
+  },
+  "11": {
+    "code": 11,
+    "name": "Bogot\u00e1 D.C",
+    "cities": {
+      "11001": {
+        "code": 11001,
+        "name": "Bogot\u00e1 D.C"
+      }
+    }
+  },
+  "13": {
+    "code": 13,
+    "name": "Bol\u00edvar",
+    "cities": {
+      "13001": {
+        "code": 13001,
+        "name": "Cartagena"
+      },
+      "13006": {
+        "code": 13006,
+        "name": "Ach\u00ed"
+      },
+      "13030": {
+        "code": 13030,
+        "name": "Altos del rosario"
+      },
+      "13042": {
+        "code": 13042,
+        "name": "Arenal"
+      },
+      "13052": {
+        "code": 13052,
+        "name": "Arjona"
+      },
+      "13062": {
+        "code": 13062,
+        "name": "Arroyohondo"
+      },
+      "13074": {
+        "code": 13074,
+        "name": "Barranco de loba"
+      },
+      "13140": {
+        "code": 13140,
+        "name": "Calamar"
+      },
+      "13160": {
+        "code": 13160,
+        "name": "Cantagallo"
+      },
+      "13188": {
+        "code": 13188,
+        "name": "Cicuco"
+      },
+      "13212": {
+        "code": 13212,
+        "name": "C\u00f3rdoba"
+      },
+      "13222": {
+        "code": 13222,
+        "name": "Clemencia"
+      },
+      "13244": {
+        "code": 13244,
+        "name": "El carmen de bol\u00edvar"
+      },
+      "13248": {
+        "code": 13248,
+        "name": "El guamo"
+      },
+      "13268": {
+        "code": 13268,
+        "name": "El pe\u00f1\u00f3n"
+      },
+      "13300": {
+        "code": 13300,
+        "name": "Hatillo de loba"
+      },
+      "13430": {
+        "code": 13430,
+        "name": "Magangu\u00e9"
+      },
+      "13433": {
+        "code": 13433,
+        "name": "Mahates"
+      },
+      "13440": {
+        "code": 13440,
+        "name": "Margarita"
+      },
+      "13442": {
+        "code": 13442,
+        "name": "Mar\u00eda la baja"
+      },
+      "13458": {
+        "code": 13458,
+        "name": "Montecristo"
+      },
+      "13468": {
+        "code": 13468,
+        "name": "Momp\u00f3s"
+      },
+      "13473": {
+        "code": 13473,
+        "name": "Morales"
+      },
+      "13549": {
+        "code": 13549,
+        "name": "Pinillos"
+      },
+      "13580": {
+        "code": 13580,
+        "name": "Regidor"
+      },
+      "13600": {
+        "code": 13600,
+        "name": "R\u00edo viejo"
+      },
+      "13620": {
+        "code": 13620,
+        "name": "San crist\u00f3bal"
+      },
+      "13647": {
+        "code": 13647,
+        "name": "San estanislao"
+      },
+      "13650": {
+        "code": 13650,
+        "name": "San fernando"
+      },
+      "13654": {
+        "code": 13654,
+        "name": "San jacinto"
+      },
+      "13655": {
+        "code": 13655,
+        "name": "San jacinto del cauca"
+      },
+      "13657": {
+        "code": 13657,
+        "name": "San juan nepomuceno"
+      },
+      "13667": {
+        "code": 13667,
+        "name": "San mart\u00edn de loba"
+      },
+      "13670": {
+        "code": 13670,
+        "name": "San pablo"
+      },
+      "13673": {
+        "code": 13673,
+        "name": "Santa catalina"
+      },
+      "13683": {
+        "code": 13683,
+        "name": "Santa rosa"
+      },
+      "13688": {
+        "code": 13688,
+        "name": "Santa rosa del sur"
+      },
+      "13744": {
+        "code": 13744,
+        "name": "Simit\u00ed"
+      },
+      "13760": {
+        "code": 13760,
+        "name": "Soplaviento"
+      },
+      "13780": {
+        "code": 13780,
+        "name": "Talaigua nuevo"
+      },
+      "13810": {
+        "code": 13810,
+        "name": "Tiquisio"
+      },
+      "13836": {
+        "code": 13836,
+        "name": "Turbaco"
+      },
+      "13838": {
+        "code": 13838,
+        "name": "Turban\u00e1"
+      },
+      "13873": {
+        "code": 13873,
+        "name": "Villanueva"
+      },
+      "13894": {
+        "code": 13894,
+        "name": "Zambrano"
+      }
+    }
+  },
+  "15": {
+    "code": 15,
+    "name": "Boyac\u00e1",
+    "cities": {
+      "15001": {
+        "code": 15001,
+        "name": "Tunja"
+      },
+      "15022": {
+        "code": 15022,
+        "name": "Almeida"
+      },
+      "15047": {
+        "code": 15047,
+        "name": "Aquitania"
+      },
+      "15051": {
+        "code": 15051,
+        "name": "Arcabuco"
+      },
+      "15087": {
+        "code": 15087,
+        "name": "Bel\u00e9n"
+      },
+      "15090": {
+        "code": 15090,
+        "name": "Berbeo"
+      },
+      "15092": {
+        "code": 15092,
+        "name": "Bet\u00e9itiva"
+      },
+      "15097": {
+        "code": 15097,
+        "name": "Boavita"
+      },
+      "15104": {
+        "code": 15104,
+        "name": "Boyac\u00e1"
+      },
+      "15106": {
+        "code": 15106,
+        "name": "Brice\u00f1o"
+      },
+      "15109": {
+        "code": 15109,
+        "name": "Buenavista"
+      },
+      "15114": {
+        "code": 15114,
+        "name": "Busbanz\u00e1"
+      },
+      "15131": {
+        "code": 15131,
+        "name": "Caldas"
+      },
+      "15135": {
+        "code": 15135,
+        "name": "Campohermoso"
+      },
+      "15162": {
+        "code": 15162,
+        "name": "Cerinza"
+      },
+      "15172": {
+        "code": 15172,
+        "name": "Chinavita"
+      },
+      "15176": {
+        "code": 15176,
+        "name": "Chiquinquir\u00e1"
+      },
+      "15180": {
+        "code": 15180,
+        "name": "Chiscas"
+      },
+      "15183": {
+        "code": 15183,
+        "name": "Chita"
+      },
+      "15185": {
+        "code": 15185,
+        "name": "Chitaraque"
+      },
+      "15187": {
+        "code": 15187,
+        "name": "Chivat\u00e1"
+      },
+      "15189": {
+        "code": 15189,
+        "name": "Ci\u00e9nega"
+      },
+      "15204": {
+        "code": 15204,
+        "name": "C\u00f3mbita"
+      },
+      "15212": {
+        "code": 15212,
+        "name": "Coper"
+      },
+      "15215": {
+        "code": 15215,
+        "name": "Corrales"
+      },
+      "15218": {
+        "code": 15218,
+        "name": "Covarach\u00eda"
+      },
+      "15223": {
+        "code": 15223,
+        "name": "Cubar\u00e1"
+      },
+      "15224": {
+        "code": 15224,
+        "name": "Cucaita"
+      },
+      "15226": {
+        "code": 15226,
+        "name": "Cu\u00edtiva"
+      },
+      "15232": {
+        "code": 15232,
+        "name": "Ch\u00edquiza"
+      },
+      "15236": {
+        "code": 15236,
+        "name": "Chivor"
+      },
+      "15238": {
+        "code": 15238,
+        "name": "Duitama"
+      },
+      "15244": {
+        "code": 15244,
+        "name": "El cocuy"
+      },
+      "15248": {
+        "code": 15248,
+        "name": "El espino"
+      },
+      "15272": {
+        "code": 15272,
+        "name": "Firavitoba"
+      },
+      "15276": {
+        "code": 15276,
+        "name": "Floresta"
+      },
+      "15293": {
+        "code": 15293,
+        "name": "Gachantiv\u00e1"
+      },
+      "15296": {
+        "code": 15296,
+        "name": "Gameza"
+      },
+      "15299": {
+        "code": 15299,
+        "name": "Garagoa"
+      },
+      "15317": {
+        "code": 15317,
+        "name": "Guacamayas"
+      },
+      "15322": {
+        "code": 15322,
+        "name": "Guateque"
+      },
+      "15325": {
+        "code": 15325,
+        "name": "Guayat\u00e1"
+      },
+      "15332": {
+        "code": 15332,
+        "name": "G\u00fcic\u00e1n"
+      },
+      "15362": {
+        "code": 15362,
+        "name": "Iza"
+      },
+      "15367": {
+        "code": 15367,
+        "name": "Jenesano"
+      },
+      "15368": {
+        "code": 15368,
+        "name": "Jeric\u00f3"
+      },
+      "15377": {
+        "code": 15377,
+        "name": "Labranzagrande"
+      },
+      "15380": {
+        "code": 15380,
+        "name": "La capilla"
+      },
+      "15401": {
+        "code": 15401,
+        "name": "La victoria"
+      },
+      "15403": {
+        "code": 15403,
+        "name": "La uvita"
+      },
+      "15407": {
+        "code": 15407,
+        "name": "Villa de leyva"
+      },
+      "15425": {
+        "code": 15425,
+        "name": "Macanal"
+      },
+      "15442": {
+        "code": 15442,
+        "name": "Marip\u00ed"
+      },
+      "15455": {
+        "code": 15455,
+        "name": "Miraflores"
+      },
+      "15464": {
+        "code": 15464,
+        "name": "Mongua"
+      },
+      "15466": {
+        "code": 15466,
+        "name": "Mongu\u00ed"
+      },
+      "15469": {
+        "code": 15469,
+        "name": "Moniquir\u00e1"
+      },
+      "15476": {
+        "code": 15476,
+        "name": "Motavita"
+      },
+      "15480": {
+        "code": 15480,
+        "name": "Muzo"
+      },
+      "15491": {
+        "code": 15491,
+        "name": "Nobsa"
+      },
+      "15494": {
+        "code": 15494,
+        "name": "Nuevo col\u00f3n"
+      },
+      "15500": {
+        "code": 15500,
+        "name": "Oicat\u00e1"
+      },
+      "15507": {
+        "code": 15507,
+        "name": "Otanche"
+      },
+      "15511": {
+        "code": 15511,
+        "name": "Pachavita"
+      },
+      "15514": {
+        "code": 15514,
+        "name": "P\u00e1ez"
+      },
+      "15516": {
+        "code": 15516,
+        "name": "Paipa"
+      },
+      "15518": {
+        "code": 15518,
+        "name": "Pajarito"
+      },
+      "15522": {
+        "code": 15522,
+        "name": "Panqueba"
+      },
+      "15531": {
+        "code": 15531,
+        "name": "Pauna"
+      },
+      "15533": {
+        "code": 15533,
+        "name": "Paya"
+      },
+      "15537": {
+        "code": 15537,
+        "name": "Paz de r\u00edo"
+      },
+      "15542": {
+        "code": 15542,
+        "name": "Pesca"
+      },
+      "15550": {
+        "code": 15550,
+        "name": "Pisba"
+      },
+      "15572": {
+        "code": 15572,
+        "name": "Puerto boyac\u00e1"
+      },
+      "15580": {
+        "code": 15580,
+        "name": "Qu\u00edpama"
+      },
+      "15599": {
+        "code": 15599,
+        "name": "Ramiriqu\u00ed"
+      },
+      "15600": {
+        "code": 15600,
+        "name": "R\u00e1quira"
+      },
+      "15621": {
+        "code": 15621,
+        "name": "Rond\u00f3n"
+      },
+      "15632": {
+        "code": 15632,
+        "name": "Saboy\u00e1"
+      },
+      "15638": {
+        "code": 15638,
+        "name": "S\u00e1chica"
+      },
+      "15646": {
+        "code": 15646,
+        "name": "Samac\u00e1"
+      },
+      "15660": {
+        "code": 15660,
+        "name": "San eduardo"
+      },
+      "15664": {
+        "code": 15664,
+        "name": "San jos\u00e9 de pare"
+      },
+      "15667": {
+        "code": 15667,
+        "name": "San luis de gaceno"
+      },
+      "15673": {
+        "code": 15673,
+        "name": "San mateo"
+      },
+      "15676": {
+        "code": 15676,
+        "name": "San miguel de sema"
+      },
+      "15681": {
+        "code": 15681,
+        "name": "San pablo de borbur"
+      },
+      "15686": {
+        "code": 15686,
+        "name": "Santana"
+      },
+      "15690": {
+        "code": 15690,
+        "name": "Santa mar\u00eda"
+      },
+      "15693": {
+        "code": 15693,
+        "name": "Santa rosa de viterbo"
+      },
+      "15696": {
+        "code": 15696,
+        "name": "Santa sof\u00eda"
+      },
+      "15720": {
+        "code": 15720,
+        "name": "Sativanorte"
+      },
+      "15723": {
+        "code": 15723,
+        "name": "Sativasur"
+      },
+      "15740": {
+        "code": 15740,
+        "name": "Siachoque"
+      },
+      "15753": {
+        "code": 15753,
+        "name": "Soat\u00e1"
+      },
+      "15755": {
+        "code": 15755,
+        "name": "Socot\u00e1"
+      },
+      "15757": {
+        "code": 15757,
+        "name": "Socha"
+      },
+      "15759": {
+        "code": 15759,
+        "name": "Sogamoso"
+      },
+      "15761": {
+        "code": 15761,
+        "name": "Somondoco"
+      },
+      "15762": {
+        "code": 15762,
+        "name": "Sora"
+      },
+      "15763": {
+        "code": 15763,
+        "name": "Sotaquir\u00e1"
+      },
+      "15764": {
+        "code": 15764,
+        "name": "Sorac\u00e1"
+      },
+      "15774": {
+        "code": 15774,
+        "name": "Susac\u00f3n"
+      },
+      "15776": {
+        "code": 15776,
+        "name": "Sutamarch\u00e1n"
+      },
+      "15778": {
+        "code": 15778,
+        "name": "Sutatenza"
+      },
+      "15790": {
+        "code": 15790,
+        "name": "Tasco"
+      },
+      "15798": {
+        "code": 15798,
+        "name": "Tenza"
+      },
+      "15804": {
+        "code": 15804,
+        "name": "Tiban\u00e1"
+      },
+      "15806": {
+        "code": 15806,
+        "name": "Tibasosa"
+      },
+      "15808": {
+        "code": 15808,
+        "name": "Tinjac\u00e1"
+      },
+      "15810": {
+        "code": 15810,
+        "name": "Tipacoque"
+      },
+      "15814": {
+        "code": 15814,
+        "name": "Toca"
+      },
+      "15816": {
+        "code": 15816,
+        "name": "Tog\u00fc\u00ed"
+      },
+      "15820": {
+        "code": 15820,
+        "name": "T\u00f3paga"
+      },
+      "15822": {
+        "code": 15822,
+        "name": "Tota"
+      },
+      "15832": {
+        "code": 15832,
+        "name": "Tunungu\u00e1"
+      },
+      "15835": {
+        "code": 15835,
+        "name": "Turmequ\u00e9"
+      },
+      "15837": {
+        "code": 15837,
+        "name": "Tuta"
+      },
+      "15839": {
+        "code": 15839,
+        "name": "Tutaz\u00e1"
+      },
+      "15842": {
+        "code": 15842,
+        "name": "Umbita"
+      },
+      "15861": {
+        "code": 15861,
+        "name": "Ventaquemada"
+      },
+      "15879": {
+        "code": 15879,
+        "name": "Viracach\u00e1"
+      },
+      "15897": {
+        "code": 15897,
+        "name": "Zetaquira"
+      }
+    }
+  },
+  "17": {
+    "code": 17,
+    "name": "Caldas",
+    "cities": {
+      "17001": {
+        "code": 17001,
+        "name": "Manizales"
+      },
+      "17013": {
+        "code": 17013,
+        "name": "Aguadas"
+      },
+      "17042": {
+        "code": 17042,
+        "name": "Anserma"
+      },
+      "17050": {
+        "code": 17050,
+        "name": "Aranzazu"
+      },
+      "17088": {
+        "code": 17088,
+        "name": "Belalc\u00e1zar"
+      },
+      "17174": {
+        "code": 17174,
+        "name": "Chinchin\u00e1"
+      },
+      "17272": {
+        "code": 17272,
+        "name": "Filadelfia"
+      },
+      "17380": {
+        "code": 17380,
+        "name": "La dorada"
+      },
+      "17388": {
+        "code": 17388,
+        "name": "La merced"
+      },
+      "17433": {
+        "code": 17433,
+        "name": "Manzanares"
+      },
+      "17442": {
+        "code": 17442,
+        "name": "Marmato"
+      },
+      "17444": {
+        "code": 17444,
+        "name": "Marquetalia"
+      },
+      "17446": {
+        "code": 17446,
+        "name": "Marulanda"
+      },
+      "17486": {
+        "code": 17486,
+        "name": "Neira"
+      },
+      "17495": {
+        "code": 17495,
+        "name": "Norcasia"
+      },
+      "17513": {
+        "code": 17513,
+        "name": "P\u00e1cora"
+      },
+      "17524": {
+        "code": 17524,
+        "name": "Palestina"
+      },
+      "17541": {
+        "code": 17541,
+        "name": "Pensilvania"
+      },
+      "17614": {
+        "code": 17614,
+        "name": "Riosucio"
+      },
+      "17616": {
+        "code": 17616,
+        "name": "Risaralda"
+      },
+      "17653": {
+        "code": 17653,
+        "name": "Salamina"
+      },
+      "17662": {
+        "code": 17662,
+        "name": "Saman\u00e1"
+      },
+      "17665": {
+        "code": 17665,
+        "name": "San jos\u00e9"
+      },
+      "17777": {
+        "code": 17777,
+        "name": "Sup\u00eda"
+      },
+      "17867": {
+        "code": 17867,
+        "name": "Victoria"
+      },
+      "17873": {
+        "code": 17873,
+        "name": "Villamar\u00eda"
+      },
+      "17877": {
+        "code": 17877,
+        "name": "Viterbo"
+      }
+    }
+  },
+  "18": {
+    "code": 18,
+    "name": "Caquet\u00e1",
+    "cities": {
+      "18001": {
+        "code": 18001,
+        "name": "Florencia"
+      },
+      "18029": {
+        "code": 18029,
+        "name": "Albania"
+      },
+      "18094": {
+        "code": 18094,
+        "name": "Bel\u00e9n de los andaquies"
+      },
+      "18150": {
+        "code": 18150,
+        "name": "Cartagena del chair\u00e1"
+      },
+      "18205": {
+        "code": 18205,
+        "name": "Curillo"
+      },
+      "18247": {
+        "code": 18247,
+        "name": "El doncello"
+      },
+      "18256": {
+        "code": 18256,
+        "name": "El paujil"
+      },
+      "18410": {
+        "code": 18410,
+        "name": "La monta\u00f1ita"
+      },
+      "18460": {
+        "code": 18460,
+        "name": "Milan"
+      },
+      "18479": {
+        "code": 18479,
+        "name": "Morelia"
+      },
+      "18592": {
+        "code": 18592,
+        "name": "Puerto rico"
+      },
+      "18610": {
+        "code": 18610,
+        "name": "San jos\u00e9 del fragua"
+      },
+      "18753": {
+        "code": 18753,
+        "name": "San vicente del cagu\u00e1n"
+      },
+      "18756": {
+        "code": 18756,
+        "name": "Solano"
+      },
+      "18785": {
+        "code": 18785,
+        "name": "Solita"
+      },
+      "18860": {
+        "code": 18860,
+        "name": "Valpara\u00edso"
+      }
+    }
+  },
+  "19": {
+    "code": 19,
+    "name": "Cauca",
+    "cities": {
+      "19001": {
+        "code": 19001,
+        "name": "Popay\u00e1n"
+      },
+      "19022": {
+        "code": 19022,
+        "name": "Almaguer"
+      },
+      "19050": {
+        "code": 19050,
+        "name": "Argelia"
+      },
+      "19075": {
+        "code": 19075,
+        "name": "Balboa"
+      },
+      "19100": {
+        "code": 19100,
+        "name": "Bol\u00edvar"
+      },
+      "19110": {
+        "code": 19110,
+        "name": "Buenos aires"
+      },
+      "19130": {
+        "code": 19130,
+        "name": "Cajib\u00edo"
+      },
+      "19137": {
+        "code": 19137,
+        "name": "Caldono"
+      },
+      "19142": {
+        "code": 19142,
+        "name": "Caloto"
+      },
+      "19212": {
+        "code": 19212,
+        "name": "Corinto"
+      },
+      "19256": {
+        "code": 19256,
+        "name": "El tambo"
+      },
+      "19290": {
+        "code": 19290,
+        "name": "Florencia"
+      },
+      "19318": {
+        "code": 19318,
+        "name": "Guapi"
+      },
+      "19355": {
+        "code": 19355,
+        "name": "Inz\u00e1"
+      },
+      "19364": {
+        "code": 19364,
+        "name": "Jambal\u00f3"
+      },
+      "19392": {
+        "code": 19392,
+        "name": "La sierra"
+      },
+      "19397": {
+        "code": 19397,
+        "name": "La vega"
+      },
+      "19418": {
+        "code": 19418,
+        "name": "L\u00f3pez"
+      },
+      "19450": {
+        "code": 19450,
+        "name": "Mercaderes"
+      },
+      "19455": {
+        "code": 19455,
+        "name": "Miranda"
+      },
+      "19473": {
+        "code": 19473,
+        "name": "Morales"
+      },
+      "19513": {
+        "code": 19513,
+        "name": "Padilla"
+      },
+      "19517": {
+        "code": 19517,
+        "name": "Paez"
+      },
+      "19532": {
+        "code": 19532,
+        "name": "Pat\u00eda"
+      },
+      "19533": {
+        "code": 19533,
+        "name": "Piamonte"
+      },
+      "19548": {
+        "code": 19548,
+        "name": "Piendam\u00f3"
+      },
+      "19573": {
+        "code": 19573,
+        "name": "Puerto tejada"
+      },
+      "19585": {
+        "code": 19585,
+        "name": "Purac\u00e9"
+      },
+      "19622": {
+        "code": 19622,
+        "name": "Rosas"
+      },
+      "19693": {
+        "code": 19693,
+        "name": "San sebasti\u00e1n"
+      },
+      "19698": {
+        "code": 19698,
+        "name": "Santander de quilichao"
+      },
+      "19701": {
+        "code": 19701,
+        "name": "Santa rosa"
+      },
+      "19743": {
+        "code": 19743,
+        "name": "Silvia"
+      },
+      "19760": {
+        "code": 19760,
+        "name": "Sotara"
+      },
+      "19780": {
+        "code": 19780,
+        "name": "Su\u00e1rez"
+      },
+      "19785": {
+        "code": 19785,
+        "name": "Sucre"
+      },
+      "19807": {
+        "code": 19807,
+        "name": "Timb\u00edo"
+      },
+      "19809": {
+        "code": 19809,
+        "name": "Timbiqu\u00ed"
+      },
+      "19821": {
+        "code": 19821,
+        "name": "Toribio"
+      },
+      "19824": {
+        "code": 19824,
+        "name": "Totor\u00f3"
+      },
+      "19845": {
+        "code": 19845,
+        "name": "Villa rica"
+      }
+    }
+  },
+  "20": {
+    "code": 20,
+    "name": "Cesar",
+    "cities": {
+      "20001": {
+        "code": 20001,
+        "name": "Valledupar"
+      },
+      "20011": {
+        "code": 20011,
+        "name": "Aguachica"
+      },
+      "20013": {
+        "code": 20013,
+        "name": "Agust\u00edn codazzi"
+      },
+      "20032": {
+        "code": 20032,
+        "name": "Astrea"
+      },
+      "20045": {
+        "code": 20045,
+        "name": "Becerril"
+      },
+      "20060": {
+        "code": 20060,
+        "name": "Bosconia"
+      },
+      "20175": {
+        "code": 20175,
+        "name": "Chimichagua"
+      },
+      "20178": {
+        "code": 20178,
+        "name": "Chiriguan\u00e1"
+      },
+      "20228": {
+        "code": 20228,
+        "name": "Curuman\u00ed"
+      },
+      "20238": {
+        "code": 20238,
+        "name": "El copey"
+      },
+      "20250": {
+        "code": 20250,
+        "name": "El paso"
+      },
+      "20295": {
+        "code": 20295,
+        "name": "Gamarra"
+      },
+      "20310": {
+        "code": 20310,
+        "name": "Gonz\u00e1lez"
+      },
+      "20383": {
+        "code": 20383,
+        "name": "La gloria"
+      },
+      "20400": {
+        "code": 20400,
+        "name": "La jagua de ibirico"
+      },
+      "20443": {
+        "code": 20443,
+        "name": "Manaure"
+      },
+      "20517": {
+        "code": 20517,
+        "name": "Pailitas"
+      },
+      "20550": {
+        "code": 20550,
+        "name": "Pelaya"
+      },
+      "20570": {
+        "code": 20570,
+        "name": "Pueblo bello"
+      },
+      "20614": {
+        "code": 20614,
+        "name": "R\u00edo de oro"
+      },
+      "20621": {
+        "code": 20621,
+        "name": "La paz"
+      },
+      "20710": {
+        "code": 20710,
+        "name": "San alberto"
+      },
+      "20750": {
+        "code": 20750,
+        "name": "San diego"
+      },
+      "20770": {
+        "code": 20770,
+        "name": "San mart\u00edn"
+      },
+      "20787": {
+        "code": 20787,
+        "name": "Tamalameque"
+      }
+    }
+  },
+  "23": {
+    "code": 23,
+    "name": "C\u00f3rdoba",
+    "cities": {
+      "23001": {
+        "code": 23001,
+        "name": "Monter\u00eda"
+      },
+      "23068": {
+        "code": 23068,
+        "name": "Ayapel"
+      },
+      "23079": {
+        "code": 23079,
+        "name": "Buenavista"
+      },
+      "23090": {
+        "code": 23090,
+        "name": "Canalete"
+      },
+      "23162": {
+        "code": 23162,
+        "name": "Ceret\u00e9"
+      },
+      "23168": {
+        "code": 23168,
+        "name": "Chim\u00e1"
+      },
+      "23182": {
+        "code": 23182,
+        "name": "Chin\u00fa"
+      },
+      "23189": {
+        "code": 23189,
+        "name": "Ci\u00e9naga de oro"
+      },
+      "23300": {
+        "code": 23300,
+        "name": "Cotorra"
+      },
+      "23350": {
+        "code": 23350,
+        "name": "La apartada"
+      },
+      "23417": {
+        "code": 23417,
+        "name": "Lorica"
+      },
+      "23419": {
+        "code": 23419,
+        "name": "Los c\u00f3rdobas"
+      },
+      "23464": {
+        "code": 23464,
+        "name": "Momil"
+      },
+      "23466": {
+        "code": 23466,
+        "name": "Montel\u00edbano"
+      },
+      "23500": {
+        "code": 23500,
+        "name": "Mo\u00f1itos"
+      },
+      "23555": {
+        "code": 23555,
+        "name": "Planeta rica"
+      },
+      "23570": {
+        "code": 23570,
+        "name": "Pueblo nuevo"
+      },
+      "23574": {
+        "code": 23574,
+        "name": "Puerto escondido"
+      },
+      "23580": {
+        "code": 23580,
+        "name": "Puerto libertador"
+      },
+      "23586": {
+        "code": 23586,
+        "name": "Pur\u00edsima"
+      },
+      "23660": {
+        "code": 23660,
+        "name": "Sahag\u00fan"
+      },
+      "23670": {
+        "code": 23670,
+        "name": "San andr\u00e9s sotavento"
+      },
+      "23672": {
+        "code": 23672,
+        "name": "San antero"
+      },
+      "23675": {
+        "code": 23675,
+        "name": "San bernardo del viento"
+      },
+      "23678": {
+        "code": 23678,
+        "name": "San carlos"
+      },
+      "23686": {
+        "code": 23686,
+        "name": "San pelayo"
+      },
+      "23807": {
+        "code": 23807,
+        "name": "Tierralta"
+      },
+      "23855": {
+        "code": 23855,
+        "name": "Valencia"
+      }
+    }
+  },
+  "25": {
+    "code": 25,
+    "name": "Cundinamarca",
+    "cities": {
+      "25001": {
+        "code": 25001,
+        "name": "Agua de dios"
+      },
+      "25019": {
+        "code": 25019,
+        "name": "Alb\u00e1n"
+      },
+      "25035": {
+        "code": 25035,
+        "name": "Anapoima"
+      },
+      "25040": {
+        "code": 25040,
+        "name": "Anolaima"
+      },
+      "25053": {
+        "code": 25053,
+        "name": "Arbel\u00e1ez"
+      },
+      "25086": {
+        "code": 25086,
+        "name": "Beltr\u00e1n"
+      },
+      "25095": {
+        "code": 25095,
+        "name": "Bituima"
+      },
+      "25099": {
+        "code": 25099,
+        "name": "Bojac\u00e1"
+      },
+      "25120": {
+        "code": 25120,
+        "name": "Cabrera"
+      },
+      "25123": {
+        "code": 25123,
+        "name": "Cachipay"
+      },
+      "25126": {
+        "code": 25126,
+        "name": "Cajic\u00e1"
+      },
+      "25148": {
+        "code": 25148,
+        "name": "Caparrap\u00ed"
+      },
+      "25151": {
+        "code": 25151,
+        "name": "Caqueza"
+      },
+      "25154": {
+        "code": 25154,
+        "name": "Carmen de carupa"
+      },
+      "25168": {
+        "code": 25168,
+        "name": "Chaguan\u00ed"
+      },
+      "25175": {
+        "code": 25175,
+        "name": "Ch\u00eda"
+      },
+      "25178": {
+        "code": 25178,
+        "name": "Chipaque"
+      },
+      "25181": {
+        "code": 25181,
+        "name": "Choach\u00ed"
+      },
+      "25183": {
+        "code": 25183,
+        "name": "Chocont\u00e1"
+      },
+      "25200": {
+        "code": 25200,
+        "name": "Cogua"
+      },
+      "25214": {
+        "code": 25214,
+        "name": "Cota"
+      },
+      "25224": {
+        "code": 25224,
+        "name": "Cucunub\u00e1"
+      },
+      "25245": {
+        "code": 25245,
+        "name": "El colegio"
+      },
+      "25258": {
+        "code": 25258,
+        "name": "El pe\u00f1\u00f3n"
+      },
+      "25260": {
+        "code": 25260,
+        "name": "El rosal"
+      },
+      "25269": {
+        "code": 25269,
+        "name": "Facatativ\u00e1"
+      },
+      "25279": {
+        "code": 25279,
+        "name": "Fomeque"
+      },
+      "25281": {
+        "code": 25281,
+        "name": "Fosca"
+      },
+      "25286": {
+        "code": 25286,
+        "name": "Funza"
+      },
+      "25288": {
+        "code": 25288,
+        "name": "F\u00faquene"
+      },
+      "25290": {
+        "code": 25290,
+        "name": "Fusagasug\u00e1"
+      },
+      "25293": {
+        "code": 25293,
+        "name": "Gachala"
+      },
+      "25295": {
+        "code": 25295,
+        "name": "Gachancip\u00e1"
+      },
+      "25297": {
+        "code": 25297,
+        "name": "Gachet\u00e1"
+      },
+      "25299": {
+        "code": 25299,
+        "name": "Gama"
+      },
+      "25307": {
+        "code": 25307,
+        "name": "Girardot"
+      },
+      "25312": {
+        "code": 25312,
+        "name": "Granada"
+      },
+      "25317": {
+        "code": 25317,
+        "name": "Guachet\u00e1"
+      },
+      "25320": {
+        "code": 25320,
+        "name": "Guaduas"
+      },
+      "25322": {
+        "code": 25322,
+        "name": "Guasca"
+      },
+      "25324": {
+        "code": 25324,
+        "name": "Guataqu\u00ed"
+      },
+      "25326": {
+        "code": 25326,
+        "name": "Guatavita"
+      },
+      "25328": {
+        "code": 25328,
+        "name": "Guayabal de siquima"
+      },
+      "25335": {
+        "code": 25335,
+        "name": "Guayabetal"
+      },
+      "25339": {
+        "code": 25339,
+        "name": "Guti\u00e9rrez"
+      },
+      "25368": {
+        "code": 25368,
+        "name": "Jerusal\u00e9n"
+      },
+      "25372": {
+        "code": 25372,
+        "name": "Jun\u00edn"
+      },
+      "25377": {
+        "code": 25377,
+        "name": "La calera"
+      },
+      "25386": {
+        "code": 25386,
+        "name": "La mesa"
+      },
+      "25394": {
+        "code": 25394,
+        "name": "La palma"
+      },
+      "25398": {
+        "code": 25398,
+        "name": "La pe\u00f1a"
+      },
+      "25402": {
+        "code": 25402,
+        "name": "La vega"
+      },
+      "25407": {
+        "code": 25407,
+        "name": "Lenguazaque"
+      },
+      "25426": {
+        "code": 25426,
+        "name": "Macheta"
+      },
+      "25430": {
+        "code": 25430,
+        "name": "Madrid"
+      },
+      "25436": {
+        "code": 25436,
+        "name": "Manta"
+      },
+      "25438": {
+        "code": 25438,
+        "name": "Medina"
+      },
+      "25473": {
+        "code": 25473,
+        "name": "Mosquera"
+      },
+      "25483": {
+        "code": 25483,
+        "name": "Nari\u00f1o"
+      },
+      "25486": {
+        "code": 25486,
+        "name": "Nemoc\u00f3n"
+      },
+      "25488": {
+        "code": 25488,
+        "name": "Nilo"
+      },
+      "25489": {
+        "code": 25489,
+        "name": "Nimaima"
+      },
+      "25491": {
+        "code": 25491,
+        "name": "Nocaima"
+      },
+      "25506": {
+        "code": 25506,
+        "name": "Venecia"
+      },
+      "25513": {
+        "code": 25513,
+        "name": "Pacho"
+      },
+      "25518": {
+        "code": 25518,
+        "name": "Paime"
+      },
+      "25524": {
+        "code": 25524,
+        "name": "Pandi"
+      },
+      "25530": {
+        "code": 25530,
+        "name": "Paratebueno"
+      },
+      "25535": {
+        "code": 25535,
+        "name": "Pasca"
+      },
+      "25572": {
+        "code": 25572,
+        "name": "Puerto salgar"
+      },
+      "25580": {
+        "code": 25580,
+        "name": "Pul\u00ed"
+      },
+      "25592": {
+        "code": 25592,
+        "name": "Quebradanegra"
+      },
+      "25594": {
+        "code": 25594,
+        "name": "Quetame"
+      },
+      "25596": {
+        "code": 25596,
+        "name": "Quipile"
+      },
+      "25599": {
+        "code": 25599,
+        "name": "Apulo"
+      },
+      "25612": {
+        "code": 25612,
+        "name": "Ricaurte"
+      },
+      "25645": {
+        "code": 25645,
+        "name": "San antonio del tequendama"
+      },
+      "25649": {
+        "code": 25649,
+        "name": "San bernardo"
+      },
+      "25653": {
+        "code": 25653,
+        "name": "San cayetano"
+      },
+      "25658": {
+        "code": 25658,
+        "name": "San francisco"
+      },
+      "25662": {
+        "code": 25662,
+        "name": "San juan de r\u00edo seco"
+      },
+      "25718": {
+        "code": 25718,
+        "name": "Sasaima"
+      },
+      "25736": {
+        "code": 25736,
+        "name": "Sesquil\u00e9"
+      },
+      "25740": {
+        "code": 25740,
+        "name": "Sibat\u00e9"
+      },
+      "25743": {
+        "code": 25743,
+        "name": "Silvania"
+      },
+      "25745": {
+        "code": 25745,
+        "name": "Simijaca"
+      },
+      "25754": {
+        "code": 25754,
+        "name": "Soacha"
+      },
+      "25758": {
+        "code": 25758,
+        "name": "Sop\u00f3"
+      },
+      "25769": {
+        "code": 25769,
+        "name": "Subachoque"
+      },
+      "25772": {
+        "code": 25772,
+        "name": "Suesca"
+      },
+      "25777": {
+        "code": 25777,
+        "name": "Supat\u00e1"
+      },
+      "25779": {
+        "code": 25779,
+        "name": "Susa"
+      },
+      "25781": {
+        "code": 25781,
+        "name": "Sutatausa"
+      },
+      "25785": {
+        "code": 25785,
+        "name": "Tabio"
+      },
+      "25793": {
+        "code": 25793,
+        "name": "Tausa"
+      },
+      "25797": {
+        "code": 25797,
+        "name": "Tena"
+      },
+      "25799": {
+        "code": 25799,
+        "name": "Tenjo"
+      },
+      "25805": {
+        "code": 25805,
+        "name": "Tibacuy"
+      },
+      "25807": {
+        "code": 25807,
+        "name": "Tibirita"
+      },
+      "25815": {
+        "code": 25815,
+        "name": "Tocaima"
+      },
+      "25817": {
+        "code": 25817,
+        "name": "Tocancip\u00e1"
+      },
+      "25823": {
+        "code": 25823,
+        "name": "Topaip\u00ed"
+      },
+      "25839": {
+        "code": 25839,
+        "name": "Ubal\u00e1"
+      },
+      "25841": {
+        "code": 25841,
+        "name": "Ubaque"
+      },
+      "25843": {
+        "code": 25843,
+        "name": "Villa de san diego de ubate"
+      },
+      "25845": {
+        "code": 25845,
+        "name": "Une"
+      },
+      "25851": {
+        "code": 25851,
+        "name": "\u00fatica"
+      },
+      "25862": {
+        "code": 25862,
+        "name": "Vergara"
+      },
+      "25867": {
+        "code": 25867,
+        "name": "Vian\u00ed"
+      },
+      "25871": {
+        "code": 25871,
+        "name": "Villag\u00f3mez"
+      },
+      "25873": {
+        "code": 25873,
+        "name": "Villapinz\u00f3n"
+      },
+      "25875": {
+        "code": 25875,
+        "name": "Villeta"
+      },
+      "25878": {
+        "code": 25878,
+        "name": "Viot\u00e1"
+      },
+      "25885": {
+        "code": 25885,
+        "name": "Yacop\u00ed"
+      },
+      "25898": {
+        "code": 25898,
+        "name": "Zipac\u00f3n"
+      },
+      "25899": {
+        "code": 25899,
+        "name": "Zipaquir\u00e1"
+      }
+    }
+  },
+  "27": {
+    "code": 27,
+    "name": "Choc\u00f3",
+    "cities": {
+      "27001": {
+        "code": 27001,
+        "name": "Quibd\u00f3"
+      },
+      "27006": {
+        "code": 27006,
+        "name": "Acand\u00ed"
+      },
+      "27025": {
+        "code": 27025,
+        "name": "Alto baudo"
+      },
+      "27050": {
+        "code": 27050,
+        "name": "Atrato"
+      },
+      "27073": {
+        "code": 27073,
+        "name": "Bagad\u00f3"
+      },
+      "27075": {
+        "code": 27075,
+        "name": "Bah\u00eda solano"
+      },
+      "27077": {
+        "code": 27077,
+        "name": "Bajo baud\u00f3"
+      },
+      "27086": {
+        "code": 27086,
+        "name": "Bel\u00e9n de bajir\u00e1"
+      },
+      "27099": {
+        "code": 27099,
+        "name": "Bojaya"
+      },
+      "27135": {
+        "code": 27135,
+        "name": "El cant\u00f3n del san pablo"
+      },
+      "27150": {
+        "code": 27150,
+        "name": "Carmen del darien"
+      },
+      "27160": {
+        "code": 27160,
+        "name": "C\u00e9rtegui"
+      },
+      "27205": {
+        "code": 27205,
+        "name": "Condoto"
+      },
+      "27245": {
+        "code": 27245,
+        "name": "El carmen de atrato"
+      },
+      "27250": {
+        "code": 27250,
+        "name": "El litoral del san juan"
+      },
+      "27361": {
+        "code": 27361,
+        "name": "Istmina"
+      },
+      "27372": {
+        "code": 27372,
+        "name": "Jurad\u00f3"
+      },
+      "27413": {
+        "code": 27413,
+        "name": "Llor\u00f3"
+      },
+      "27425": {
+        "code": 27425,
+        "name": "Medio atrato"
+      },
+      "27430": {
+        "code": 27430,
+        "name": "Medio baud\u00f3"
+      },
+      "27450": {
+        "code": 27450,
+        "name": "Medio san juan"
+      },
+      "27491": {
+        "code": 27491,
+        "name": "N\u00f3vita"
+      },
+      "27495": {
+        "code": 27495,
+        "name": "Nuqu\u00ed"
+      },
+      "27580": {
+        "code": 27580,
+        "name": "R\u00edo iro"
+      },
+      "27600": {
+        "code": 27600,
+        "name": "R\u00edo quito"
+      },
+      "27615": {
+        "code": 27615,
+        "name": "Riosucio"
+      },
+      "27660": {
+        "code": 27660,
+        "name": "San jos\u00e9 del palmar"
+      },
+      "27745": {
+        "code": 27745,
+        "name": "Sip\u00ed"
+      },
+      "27787": {
+        "code": 27787,
+        "name": "Tad\u00f3"
+      },
+      "27800": {
+        "code": 27800,
+        "name": "Ungu\u00eda"
+      },
+      "27810": {
+        "code": 27810,
+        "name": "Uni\u00f3n panamericana"
+      }
+    }
+  },
+  "41": {
+    "code": 41,
+    "name": "Huila",
+    "cities": {
+      "41001": {
+        "code": 41001,
+        "name": "Neiva"
+      },
+      "41006": {
+        "code": 41006,
+        "name": "Acevedo"
+      },
+      "41013": {
+        "code": 41013,
+        "name": "Agrado"
+      },
+      "41016": {
+        "code": 41016,
+        "name": "Aipe"
+      },
+      "41020": {
+        "code": 41020,
+        "name": "Algeciras"
+      },
+      "41026": {
+        "code": 41026,
+        "name": "Altamira"
+      },
+      "41078": {
+        "code": 41078,
+        "name": "Baraya"
+      },
+      "41132": {
+        "code": 41132,
+        "name": "Campoalegre"
+      },
+      "41206": {
+        "code": 41206,
+        "name": "Colombia"
+      },
+      "41244": {
+        "code": 41244,
+        "name": "El\u00edas"
+      },
+      "41298": {
+        "code": 41298,
+        "name": "Garz\u00f3n"
+      },
+      "41306": {
+        "code": 41306,
+        "name": "Gigante"
+      },
+      "41319": {
+        "code": 41319,
+        "name": "Guadalupe"
+      },
+      "41349": {
+        "code": 41349,
+        "name": "Hobo"
+      },
+      "41357": {
+        "code": 41357,
+        "name": "Iquira"
+      },
+      "41359": {
+        "code": 41359,
+        "name": "Isnos"
+      },
+      "41378": {
+        "code": 41378,
+        "name": "La argentina"
+      },
+      "41396": {
+        "code": 41396,
+        "name": "La plata"
+      },
+      "41483": {
+        "code": 41483,
+        "name": "N\u00e1taga"
+      },
+      "41503": {
+        "code": 41503,
+        "name": "Oporapa"
+      },
+      "41518": {
+        "code": 41518,
+        "name": "Paicol"
+      },
+      "41524": {
+        "code": 41524,
+        "name": "Palermo"
+      },
+      "41530": {
+        "code": 41530,
+        "name": "Palestina"
+      },
+      "41548": {
+        "code": 41548,
+        "name": "Pital"
+      },
+      "41551": {
+        "code": 41551,
+        "name": "Pitalito"
+      },
+      "41615": {
+        "code": 41615,
+        "name": "Rivera"
+      },
+      "41660": {
+        "code": 41660,
+        "name": "Saladoblanco"
+      },
+      "41668": {
+        "code": 41668,
+        "name": "San agust\u00edn"
+      },
+      "41676": {
+        "code": 41676,
+        "name": "Santa mar\u00eda"
+      },
+      "41770": {
+        "code": 41770,
+        "name": "Suaza"
+      },
+      "41791": {
+        "code": 41791,
+        "name": "Tarqui"
+      },
+      "41797": {
+        "code": 41797,
+        "name": "Tesalia"
+      },
+      "41799": {
+        "code": 41799,
+        "name": "Tello"
+      },
+      "41801": {
+        "code": 41801,
+        "name": "Teruel"
+      },
+      "41807": {
+        "code": 41807,
+        "name": "Timan\u00e1"
+      },
+      "41872": {
+        "code": 41872,
+        "name": "Villavieja"
+      },
+      "41885": {
+        "code": 41885,
+        "name": "Yaguar\u00e1"
+      }
+    }
+  },
+  "44": {
+    "code": 44,
+    "name": "La Guajira",
+    "cities": {
+      "44001": {
+        "code": 44001,
+        "name": "Riohacha"
+      },
+      "44035": {
+        "code": 44035,
+        "name": "Albania"
+      },
+      "44078": {
+        "code": 44078,
+        "name": "Barrancas"
+      },
+      "44090": {
+        "code": 44090,
+        "name": "Dibulla"
+      },
+      "44098": {
+        "code": 44098,
+        "name": "Distracci\u00f3n"
+      },
+      "44110": {
+        "code": 44110,
+        "name": "El molino"
+      },
+      "44279": {
+        "code": 44279,
+        "name": "Fonseca"
+      },
+      "44378": {
+        "code": 44378,
+        "name": "Hatonuevo"
+      },
+      "44420": {
+        "code": 44420,
+        "name": "La jagua del pilar"
+      },
+      "44430": {
+        "code": 44430,
+        "name": "Maicao"
+      },
+      "44560": {
+        "code": 44560,
+        "name": "Manaure"
+      },
+      "44561": {
+        "code": 44561,
+        "name": "Mushaisa"
+      },
+      "44650": {
+        "code": 44650,
+        "name": "San juan del cesar"
+      },
+      "44847": {
+        "code": 44847,
+        "name": "Uribia"
+      },
+      "44855": {
+        "code": 44855,
+        "name": "Urumita"
+      },
+      "44874": {
+        "code": 44874,
+        "name": "Villanueva"
+      }
+    }
+  },
+  "47": {
+    "code": 47,
+    "name": "Magdalena",
+    "cities": {
+      "47001": {
+        "code": 47001,
+        "name": "Santa marta"
+      },
+      "47030": {
+        "code": 47030,
+        "name": "Algarrobo"
+      },
+      "47053": {
+        "code": 47053,
+        "name": "Aracataca"
+      },
+      "47058": {
+        "code": 47058,
+        "name": "Ariguan\u00ed"
+      },
+      "47161": {
+        "code": 47161,
+        "name": "Cerro san antonio"
+      },
+      "47170": {
+        "code": 47170,
+        "name": "Chibolo"
+      },
+      "47189": {
+        "code": 47189,
+        "name": "Ci\u00e9naga"
+      },
+      "47205": {
+        "code": 47205,
+        "name": "Concordia"
+      },
+      "47245": {
+        "code": 47245,
+        "name": "El banco"
+      },
+      "47258": {
+        "code": 47258,
+        "name": "El pi\u00f1on"
+      },
+      "47268": {
+        "code": 47268,
+        "name": "El ret\u00e9n"
+      },
+      "47288": {
+        "code": 47288,
+        "name": "Fundaci\u00f3n"
+      },
+      "47318": {
+        "code": 47318,
+        "name": "Guamal"
+      },
+      "47460": {
+        "code": 47460,
+        "name": "Nueva granada"
+      },
+      "47541": {
+        "code": 47541,
+        "name": "Pedraza"
+      },
+      "47545": {
+        "code": 47545,
+        "name": "Piji\u00f1o del carmen"
+      },
+      "47551": {
+        "code": 47551,
+        "name": "Pivijay"
+      },
+      "47555": {
+        "code": 47555,
+        "name": "Plato"
+      },
+      "47570": {
+        "code": 47570,
+        "name": "Puebloviejo"
+      },
+      "47605": {
+        "code": 47605,
+        "name": "Remolino"
+      },
+      "47660": {
+        "code": 47660,
+        "name": "Sabanas de san angel"
+      },
+      "47675": {
+        "code": 47675,
+        "name": "Salamina"
+      },
+      "47692": {
+        "code": 47692,
+        "name": "San sebasti\u00e1n de buenavista"
+      },
+      "47703": {
+        "code": 47703,
+        "name": "San zen\u00f3n"
+      },
+      "47707": {
+        "code": 47707,
+        "name": "Santa ana"
+      },
+      "47720": {
+        "code": 47720,
+        "name": "Santa b\u00e1rbara de pinto"
+      },
+      "47745": {
+        "code": 47745,
+        "name": "Sitionuevo"
+      },
+      "47798": {
+        "code": 47798,
+        "name": "Tenerife"
+      },
+      "47960": {
+        "code": 47960,
+        "name": "Zapay\u00e1n"
+      },
+      "47980": {
+        "code": 47980,
+        "name": "Zona bananera"
+      }
+    }
+  },
+  "50": {
+    "code": 50,
+    "name": "Meta",
+    "cities": {
+      "50001": {
+        "code": 50001,
+        "name": "Villavicencio"
+      },
+      "50006": {
+        "code": 50006,
+        "name": "Acac\u00edas"
+      },
+      "50110": {
+        "code": 50110,
+        "name": "Barranca de up\u00eda"
+      },
+      "50124": {
+        "code": 50124,
+        "name": "Cabuyaro"
+      },
+      "50150": {
+        "code": 50150,
+        "name": "Castilla la nueva"
+      },
+      "50223": {
+        "code": 50223,
+        "name": "Cubarral"
+      },
+      "50226": {
+        "code": 50226,
+        "name": "Cumaral"
+      },
+      "50245": {
+        "code": 50245,
+        "name": "El calvario"
+      },
+      "50251": {
+        "code": 50251,
+        "name": "El castillo"
+      },
+      "50270": {
+        "code": 50270,
+        "name": "El dorado"
+      },
+      "50287": {
+        "code": 50287,
+        "name": "Fuente de oro"
+      },
+      "50313": {
+        "code": 50313,
+        "name": "Granada"
+      },
+      "50318": {
+        "code": 50318,
+        "name": "Guamal"
+      },
+      "50325": {
+        "code": 50325,
+        "name": "Mapirip\u00e1n"
+      },
+      "50330": {
+        "code": 50330,
+        "name": "Mesetas"
+      },
+      "50350": {
+        "code": 50350,
+        "name": "La macarena"
+      },
+      "50370": {
+        "code": 50370,
+        "name": "Uribe"
+      },
+      "50400": {
+        "code": 50400,
+        "name": "Lejan\u00edas"
+      },
+      "50450": {
+        "code": 50450,
+        "name": "Puerto concordia"
+      },
+      "50568": {
+        "code": 50568,
+        "name": "Puerto gait\u00e1n"
+      },
+      "50573": {
+        "code": 50573,
+        "name": "Puerto l\u00f3pez"
+      },
+      "50577": {
+        "code": 50577,
+        "name": "Puerto lleras"
+      },
+      "50590": {
+        "code": 50590,
+        "name": "Puerto rico"
+      },
+      "50606": {
+        "code": 50606,
+        "name": "Restrepo"
+      },
+      "50680": {
+        "code": 50680,
+        "name": "San carlos de guaroa"
+      },
+      "50683": {
+        "code": 50683,
+        "name": "San juan de arama"
+      },
+      "50686": {
+        "code": 50686,
+        "name": "San juanito"
+      },
+      "50689": {
+        "code": 50689,
+        "name": "San mart\u00edn"
+      },
+      "50711": {
+        "code": 50711,
+        "name": "Vistahermosa"
+      }
+    }
+  },
+  "52": {
+    "code": 52,
+    "name": "Nari\u00f1o",
+    "cities": {
+      "52001": {
+        "code": 52001,
+        "name": "Pasto"
+      },
+      "52019": {
+        "code": 52019,
+        "name": "Alb\u00e1n"
+      },
+      "52022": {
+        "code": 52022,
+        "name": "Aldana"
+      },
+      "52036": {
+        "code": 52036,
+        "name": "Ancuy\u00e1"
+      },
+      "52051": {
+        "code": 52051,
+        "name": "Arboleda"
+      },
+      "52079": {
+        "code": 52079,
+        "name": "Barbacoas"
+      },
+      "52083": {
+        "code": 52083,
+        "name": "Bel\u00e9n"
+      },
+      "52110": {
+        "code": 52110,
+        "name": "Buesaco"
+      },
+      "52203": {
+        "code": 52203,
+        "name": "Col\u00f3n"
+      },
+      "52207": {
+        "code": 52207,
+        "name": "Consaca"
+      },
+      "52210": {
+        "code": 52210,
+        "name": "Contadero"
+      },
+      "52215": {
+        "code": 52215,
+        "name": "C\u00f3rdoba"
+      },
+      "52224": {
+        "code": 52224,
+        "name": "Cuaspud"
+      },
+      "52227": {
+        "code": 52227,
+        "name": "Cumbal"
+      },
+      "52233": {
+        "code": 52233,
+        "name": "Cumbitara"
+      },
+      "52240": {
+        "code": 52240,
+        "name": "Chachag\u00fc\u00ed"
+      },
+      "52250": {
+        "code": 52250,
+        "name": "El charco"
+      },
+      "52254": {
+        "code": 52254,
+        "name": "El pe\u00f1ol"
+      },
+      "52256": {
+        "code": 52256,
+        "name": "El rosario"
+      },
+      "52258": {
+        "code": 52258,
+        "name": "El tabl\u00f3n de g\u00f3mez"
+      },
+      "52260": {
+        "code": 52260,
+        "name": "El tambo"
+      },
+      "52287": {
+        "code": 52287,
+        "name": "Funes"
+      },
+      "52317": {
+        "code": 52317,
+        "name": "Guachucal"
+      },
+      "52320": {
+        "code": 52320,
+        "name": "Guaitarilla"
+      },
+      "52323": {
+        "code": 52323,
+        "name": "Gualmat\u00e1n"
+      },
+      "52352": {
+        "code": 52352,
+        "name": "Iles"
+      },
+      "52354": {
+        "code": 52354,
+        "name": "Imu\u00e9s"
+      },
+      "52356": {
+        "code": 52356,
+        "name": "Ipiales"
+      },
+      "52378": {
+        "code": 52378,
+        "name": "La cruz"
+      },
+      "52381": {
+        "code": 52381,
+        "name": "La florida"
+      },
+      "52385": {
+        "code": 52385,
+        "name": "La llanada"
+      },
+      "52390": {
+        "code": 52390,
+        "name": "La tola"
+      },
+      "52399": {
+        "code": 52399,
+        "name": "La uni\u00f3n"
+      },
+      "52405": {
+        "code": 52405,
+        "name": "Leiva"
+      },
+      "52411": {
+        "code": 52411,
+        "name": "Linares"
+      },
+      "52418": {
+        "code": 52418,
+        "name": "Los andes"
+      },
+      "52427": {
+        "code": 52427,
+        "name": "Mag\u00fci"
+      },
+      "52435": {
+        "code": 52435,
+        "name": "Mallama"
+      },
+      "52473": {
+        "code": 52473,
+        "name": "Mosquera"
+      },
+      "52480": {
+        "code": 52480,
+        "name": "Nari\u00f1o"
+      },
+      "52490": {
+        "code": 52490,
+        "name": "Olaya herrera"
+      },
+      "52506": {
+        "code": 52506,
+        "name": "Ospina"
+      },
+      "52520": {
+        "code": 52520,
+        "name": "Francisco pizarro"
+      },
+      "52540": {
+        "code": 52540,
+        "name": "Policarpa"
+      },
+      "52560": {
+        "code": 52560,
+        "name": "Potos\u00ed"
+      },
+      "52565": {
+        "code": 52565,
+        "name": "Providencia"
+      },
+      "52573": {
+        "code": 52573,
+        "name": "Puerres"
+      },
+      "52585": {
+        "code": 52585,
+        "name": "Pupiales"
+      },
+      "52612": {
+        "code": 52612,
+        "name": "Ricaurte"
+      },
+      "52621": {
+        "code": 52621,
+        "name": "Roberto pay\u00e1n"
+      },
+      "52678": {
+        "code": 52678,
+        "name": "Samaniego"
+      },
+      "52683": {
+        "code": 52683,
+        "name": "Sandon\u00e1"
+      },
+      "52685": {
+        "code": 52685,
+        "name": "San bernardo"
+      },
+      "52687": {
+        "code": 52687,
+        "name": "San lorenzo"
+      },
+      "52693": {
+        "code": 52693,
+        "name": "San pablo"
+      },
+      "52694": {
+        "code": 52694,
+        "name": "San pedro de cartago"
+      },
+      "52696": {
+        "code": 52696,
+        "name": "Santa b\u00e1rbara"
+      },
+      "52699": {
+        "code": 52699,
+        "name": "Santacruz"
+      },
+      "52720": {
+        "code": 52720,
+        "name": "Sapuyes"
+      },
+      "52786": {
+        "code": 52786,
+        "name": "Taminango"
+      },
+      "52788": {
+        "code": 52788,
+        "name": "Tangua"
+      },
+      "52835": {
+        "code": 52835,
+        "name": "Tumaco"
+      },
+      "52838": {
+        "code": 52838,
+        "name": "T\u00faquerres"
+      },
+      "52885": {
+        "code": 52885,
+        "name": "Yacuanquer"
+      }
+    }
+  },
+  "54": {
+    "code": 54,
+    "name": "Norte de Santander",
+    "cities": {
+      "54001": {
+        "code": 54001,
+        "name": "C\u00facuta"
+      },
+      "54003": {
+        "code": 54003,
+        "name": "Abrego"
+      },
+      "54051": {
+        "code": 54051,
+        "name": "Arboledas"
+      },
+      "54099": {
+        "code": 54099,
+        "name": "Bochalema"
+      },
+      "54109": {
+        "code": 54109,
+        "name": "Bucarasica"
+      },
+      "54125": {
+        "code": 54125,
+        "name": "C\u00e1cota"
+      },
+      "54128": {
+        "code": 54128,
+        "name": "Cachir\u00e1"
+      },
+      "54172": {
+        "code": 54172,
+        "name": "Chin\u00e1cota"
+      },
+      "54174": {
+        "code": 54174,
+        "name": "Chitag\u00e1"
+      },
+      "54206": {
+        "code": 54206,
+        "name": "Convenci\u00f3n"
+      },
+      "54223": {
+        "code": 54223,
+        "name": "Cucutilla"
+      },
+      "54239": {
+        "code": 54239,
+        "name": "Durania"
+      },
+      "54245": {
+        "code": 54245,
+        "name": "El carmen"
+      },
+      "54250": {
+        "code": 54250,
+        "name": "El tarra"
+      },
+      "54261": {
+        "code": 54261,
+        "name": "El zulia"
+      },
+      "54313": {
+        "code": 54313,
+        "name": "Gramalote"
+      },
+      "54344": {
+        "code": 54344,
+        "name": "Hacar\u00ed"
+      },
+      "54347": {
+        "code": 54347,
+        "name": "Herr\u00e1n"
+      },
+      "54377": {
+        "code": 54377,
+        "name": "Labateca"
+      },
+      "54385": {
+        "code": 54385,
+        "name": "La esperanza"
+      },
+      "54398": {
+        "code": 54398,
+        "name": "La playa"
+      },
+      "54405": {
+        "code": 54405,
+        "name": "Los patios"
+      },
+      "54418": {
+        "code": 54418,
+        "name": "Lourdes"
+      },
+      "54480": {
+        "code": 54480,
+        "name": "Mutiscua"
+      },
+      "54498": {
+        "code": 54498,
+        "name": "Oca\u00f1a"
+      },
+      "54518": {
+        "code": 54518,
+        "name": "Pamplona"
+      },
+      "54520": {
+        "code": 54520,
+        "name": "Pamplonita"
+      },
+      "54553": {
+        "code": 54553,
+        "name": "Puerto santander"
+      },
+      "54599": {
+        "code": 54599,
+        "name": "Ragonvalia"
+      },
+      "54660": {
+        "code": 54660,
+        "name": "Salazar"
+      },
+      "54670": {
+        "code": 54670,
+        "name": "San calixto"
+      },
+      "54673": {
+        "code": 54673,
+        "name": "San cayetano"
+      },
+      "54680": {
+        "code": 54680,
+        "name": "Santiago"
+      },
+      "54720": {
+        "code": 54720,
+        "name": "Sardinata"
+      },
+      "54743": {
+        "code": 54743,
+        "name": "Silos"
+      },
+      "54800": {
+        "code": 54800,
+        "name": "Teorama"
+      },
+      "54810": {
+        "code": 54810,
+        "name": "Tib\u00fa"
+      },
+      "54820": {
+        "code": 54820,
+        "name": "Toledo"
+      },
+      "54871": {
+        "code": 54871,
+        "name": "Villa caro"
+      },
+      "54874": {
+        "code": 54874,
+        "name": "Villa del rosario"
+      }
+    }
+  },
+  "63": {
+    "code": 63,
+    "name": "Quindio",
+    "cities": {
+      "63001": {
+        "code": 63001,
+        "name": "Armenia"
+      },
+      "63111": {
+        "code": 63111,
+        "name": "Buenavista"
+      },
+      "63130": {
+        "code": 63130,
+        "name": "Calarca"
+      },
+      "63190": {
+        "code": 63190,
+        "name": "Circasia"
+      },
+      "63212": {
+        "code": 63212,
+        "name": "C\u00f3rdoba"
+      },
+      "63272": {
+        "code": 63272,
+        "name": "Filandia"
+      },
+      "63302": {
+        "code": 63302,
+        "name": "G\u00e9nova"
+      },
+      "63401": {
+        "code": 63401,
+        "name": "La tebaida"
+      },
+      "63470": {
+        "code": 63470,
+        "name": "Montenegro"
+      },
+      "63548": {
+        "code": 63548,
+        "name": "Pijao"
+      },
+      "63594": {
+        "code": 63594,
+        "name": "Quimbaya"
+      },
+      "63690": {
+        "code": 63690,
+        "name": "Salento"
+      }
+    }
+  },
+  "66": {
+    "code": 66,
+    "name": "Risaralda",
+    "cities": {
+      "66001": {
+        "code": 66001,
+        "name": "Pereira"
+      },
+      "66045": {
+        "code": 66045,
+        "name": "Ap\u00eda"
+      },
+      "66075": {
+        "code": 66075,
+        "name": "Balboa"
+      },
+      "66088": {
+        "code": 66088,
+        "name": "Bel\u00e9n de umbr\u00eda"
+      },
+      "66170": {
+        "code": 66170,
+        "name": "Dosquebradas"
+      },
+      "66318": {
+        "code": 66318,
+        "name": "Gu\u00e1tica"
+      },
+      "66383": {
+        "code": 66383,
+        "name": "La celia"
+      },
+      "66400": {
+        "code": 66400,
+        "name": "La virginia"
+      },
+      "66440": {
+        "code": 66440,
+        "name": "Marsella"
+      },
+      "66456": {
+        "code": 66456,
+        "name": "Mistrat\u00f3"
+      },
+      "66572": {
+        "code": 66572,
+        "name": "Pueblo rico"
+      },
+      "66594": {
+        "code": 66594,
+        "name": "Quinch\u00eda"
+      },
+      "66682": {
+        "code": 66682,
+        "name": "Santa rosa de cabal"
+      },
+      "66687": {
+        "code": 66687,
+        "name": "Santuario"
+      }
+    }
+  },
+  "68": {
+    "code": 68,
+    "name": "Santander",
+    "cities": {
+      "68001": {
+        "code": 68001,
+        "name": "Bucaramanga"
+      },
+      "68013": {
+        "code": 68013,
+        "name": "Aguada"
+      },
+      "68020": {
+        "code": 68020,
+        "name": "Albania"
+      },
+      "68051": {
+        "code": 68051,
+        "name": "Aratoca"
+      },
+      "68077": {
+        "code": 68077,
+        "name": "Barbosa"
+      },
+      "68079": {
+        "code": 68079,
+        "name": "Barichara"
+      },
+      "68081": {
+        "code": 68081,
+        "name": "Barrancabermeja"
+      },
+      "68092": {
+        "code": 68092,
+        "name": "Betulia"
+      },
+      "68101": {
+        "code": 68101,
+        "name": "Bol\u00edvar"
+      },
+      "68121": {
+        "code": 68121,
+        "name": "Cabrera"
+      },
+      "68132": {
+        "code": 68132,
+        "name": "California"
+      },
+      "68147": {
+        "code": 68147,
+        "name": "Capitanejo"
+      },
+      "68152": {
+        "code": 68152,
+        "name": "Carcas\u00ed"
+      },
+      "68160": {
+        "code": 68160,
+        "name": "Cepit\u00e1"
+      },
+      "68162": {
+        "code": 68162,
+        "name": "Cerrito"
+      },
+      "68167": {
+        "code": 68167,
+        "name": "Charal\u00e1"
+      },
+      "68169": {
+        "code": 68169,
+        "name": "Charta"
+      },
+      "68176": {
+        "code": 68176,
+        "name": "Chima"
+      },
+      "68179": {
+        "code": 68179,
+        "name": "Chipat\u00e1"
+      },
+      "68190": {
+        "code": 68190,
+        "name": "Cimitarra"
+      },
+      "68207": {
+        "code": 68207,
+        "name": "Concepci\u00f3n"
+      },
+      "68209": {
+        "code": 68209,
+        "name": "Confines"
+      },
+      "68211": {
+        "code": 68211,
+        "name": "Contrataci\u00f3n"
+      },
+      "68217": {
+        "code": 68217,
+        "name": "Coromoro"
+      },
+      "68229": {
+        "code": 68229,
+        "name": "Curit\u00ed"
+      },
+      "68235": {
+        "code": 68235,
+        "name": "El carmen de chucur\u00ed"
+      },
+      "68245": {
+        "code": 68245,
+        "name": "El guacamayo"
+      },
+      "68250": {
+        "code": 68250,
+        "name": "El pe\u00f1\u00f3n"
+      },
+      "68255": {
+        "code": 68255,
+        "name": "El play\u00f3n"
+      },
+      "68264": {
+        "code": 68264,
+        "name": "Encino"
+      },
+      "68266": {
+        "code": 68266,
+        "name": "Enciso"
+      },
+      "68271": {
+        "code": 68271,
+        "name": "Flori\u00e1n"
+      },
+      "68276": {
+        "code": 68276,
+        "name": "Floridablanca"
+      },
+      "68296": {
+        "code": 68296,
+        "name": "Gal\u00e1n"
+      },
+      "68298": {
+        "code": 68298,
+        "name": "Gambita"
+      },
+      "68307": {
+        "code": 68307,
+        "name": "Gir\u00f3n"
+      },
+      "68318": {
+        "code": 68318,
+        "name": "Guaca"
+      },
+      "68320": {
+        "code": 68320,
+        "name": "Guadalupe"
+      },
+      "68322": {
+        "code": 68322,
+        "name": "Guapot\u00e1"
+      },
+      "68324": {
+        "code": 68324,
+        "name": "Guavat\u00e1"
+      },
+      "68327": {
+        "code": 68327,
+        "name": "G\u00fcepsa"
+      },
+      "68344": {
+        "code": 68344,
+        "name": "Hato"
+      },
+      "68368": {
+        "code": 68368,
+        "name": "Jes\u00fas mar\u00eda"
+      },
+      "68370": {
+        "code": 68370,
+        "name": "Jord\u00e1n"
+      },
+      "68377": {
+        "code": 68377,
+        "name": "La belleza"
+      },
+      "68385": {
+        "code": 68385,
+        "name": "Land\u00e1zuri"
+      },
+      "68397": {
+        "code": 68397,
+        "name": "La paz"
+      },
+      "68406": {
+        "code": 68406,
+        "name": "Lebr\u00edja"
+      },
+      "68418": {
+        "code": 68418,
+        "name": "Los santos"
+      },
+      "68425": {
+        "code": 68425,
+        "name": "Macaravita"
+      },
+      "68432": {
+        "code": 68432,
+        "name": "M\u00e1laga"
+      },
+      "68444": {
+        "code": 68444,
+        "name": "Matanza"
+      },
+      "68464": {
+        "code": 68464,
+        "name": "Mogotes"
+      },
+      "68468": {
+        "code": 68468,
+        "name": "Molagavita"
+      },
+      "68498": {
+        "code": 68498,
+        "name": "Ocamonte"
+      },
+      "68500": {
+        "code": 68500,
+        "name": "Oiba"
+      },
+      "68502": {
+        "code": 68502,
+        "name": "Onzaga"
+      },
+      "68522": {
+        "code": 68522,
+        "name": "Palmar"
+      },
+      "68524": {
+        "code": 68524,
+        "name": "Palmas del socorro"
+      },
+      "68533": {
+        "code": 68533,
+        "name": "P\u00e1ramo"
+      },
+      "68547": {
+        "code": 68547,
+        "name": "Piedecuesta"
+      },
+      "68549": {
+        "code": 68549,
+        "name": "Pinchote"
+      },
+      "68572": {
+        "code": 68572,
+        "name": "Puente nacional"
+      },
+      "68573": {
+        "code": 68573,
+        "name": "Puerto parra"
+      },
+      "68575": {
+        "code": 68575,
+        "name": "Puerto wilches"
+      },
+      "68615": {
+        "code": 68615,
+        "name": "Rionegro"
+      },
+      "68655": {
+        "code": 68655,
+        "name": "Sabana de torres"
+      },
+      "68669": {
+        "code": 68669,
+        "name": "San andr\u00e9s"
+      },
+      "68673": {
+        "code": 68673,
+        "name": "San benito"
+      },
+      "68679": {
+        "code": 68679,
+        "name": "San gil"
+      },
+      "68682": {
+        "code": 68682,
+        "name": "San joaqu\u00edn"
+      },
+      "68684": {
+        "code": 68684,
+        "name": "San jos\u00e9 de miranda"
+      },
+      "68686": {
+        "code": 68686,
+        "name": "San miguel"
+      },
+      "68689": {
+        "code": 68689,
+        "name": "San vicente de chucur\u00ed"
+      },
+      "68705": {
+        "code": 68705,
+        "name": "Santa b\u00e1rbara"
+      },
+      "68720": {
+        "code": 68720,
+        "name": "Santa helena del op\u00f3n"
+      },
+      "68745": {
+        "code": 68745,
+        "name": "Simacota"
+      },
+      "68755": {
+        "code": 68755,
+        "name": "Socorro"
+      },
+      "68770": {
+        "code": 68770,
+        "name": "Suaita"
+      },
+      "68773": {
+        "code": 68773,
+        "name": "Sucre"
+      },
+      "68780": {
+        "code": 68780,
+        "name": "Surat\u00e1"
+      },
+      "68820": {
+        "code": 68820,
+        "name": "Tona"
+      },
+      "68855": {
+        "code": 68855,
+        "name": "Valle de san jos\u00e9"
+      },
+      "68861": {
+        "code": 68861,
+        "name": "V\u00e9lez"
+      },
+      "68867": {
+        "code": 68867,
+        "name": "Vetas"
+      },
+      "68872": {
+        "code": 68872,
+        "name": "Villanueva"
+      },
+      "68895": {
+        "code": 68895,
+        "name": "Zapatoca"
+      }
+    }
+  },
+  "70": {
+    "code": 70,
+    "name": "Sucre",
+    "cities": {
+      "70001": {
+        "code": 70001,
+        "name": "Sincelejo"
+      },
+      "70110": {
+        "code": 70110,
+        "name": "Buenavista"
+      },
+      "70124": {
+        "code": 70124,
+        "name": "Caimito"
+      },
+      "70204": {
+        "code": 70204,
+        "name": "Coloso"
+      },
+      "70215": {
+        "code": 70215,
+        "name": "Corozal"
+      },
+      "70221": {
+        "code": 70221,
+        "name": "Cove\u00f1as"
+      },
+      "70230": {
+        "code": 70230,
+        "name": "Chal\u00e1n"
+      },
+      "70233": {
+        "code": 70233,
+        "name": "El roble"
+      },
+      "70235": {
+        "code": 70235,
+        "name": "Galeras"
+      },
+      "70265": {
+        "code": 70265,
+        "name": "Guaranda"
+      },
+      "70400": {
+        "code": 70400,
+        "name": "La uni\u00f3n"
+      },
+      "70418": {
+        "code": 70418,
+        "name": "Los palmitos"
+      },
+      "70429": {
+        "code": 70429,
+        "name": "Majagual"
+      },
+      "70473": {
+        "code": 70473,
+        "name": "Morroa"
+      },
+      "70508": {
+        "code": 70508,
+        "name": "Ovejas"
+      },
+      "70523": {
+        "code": 70523,
+        "name": "Palmito"
+      },
+      "70670": {
+        "code": 70670,
+        "name": "Sampu\u00e9s"
+      },
+      "70678": {
+        "code": 70678,
+        "name": "San benito abad"
+      },
+      "70702": {
+        "code": 70702,
+        "name": "San juan de betulia"
+      },
+      "70708": {
+        "code": 70708,
+        "name": "San marcos"
+      },
+      "70713": {
+        "code": 70713,
+        "name": "San onofre"
+      },
+      "70717": {
+        "code": 70717,
+        "name": "San pedro"
+      },
+      "70742": {
+        "code": 70742,
+        "name": "Sinc\u00e9"
+      },
+      "70771": {
+        "code": 70771,
+        "name": "Sucre"
+      },
+      "70820": {
+        "code": 70820,
+        "name": "Santiago de tol\u00fa"
+      },
+      "70823": {
+        "code": 70823,
+        "name": "Tol\u00fa viejo"
+      }
+    }
+  },
+  "73": {
+    "code": 73,
+    "name": "Tolima",
+    "cities": {
+      "73001": {
+        "code": 73001,
+        "name": "Ibague"
+      },
+      "73024": {
+        "code": 73024,
+        "name": "Alpujarra"
+      },
+      "73026": {
+        "code": 73026,
+        "name": "Alvarado"
+      },
+      "73030": {
+        "code": 73030,
+        "name": "Ambalema"
+      },
+      "73043": {
+        "code": 73043,
+        "name": "Anzoategui"
+      },
+      "73055": {
+        "code": 73055,
+        "name": "Armero"
+      },
+      "73067": {
+        "code": 73067,
+        "name": "Ataco"
+      },
+      "73124": {
+        "code": 73124,
+        "name": "Cajamarca"
+      },
+      "73148": {
+        "code": 73148,
+        "name": "Carmen de apicala"
+      },
+      "73152": {
+        "code": 73152,
+        "name": "Casabianca"
+      },
+      "73168": {
+        "code": 73168,
+        "name": "Chaparral"
+      },
+      "73200": {
+        "code": 73200,
+        "name": "Coello"
+      },
+      "73217": {
+        "code": 73217,
+        "name": "Coyaima"
+      },
+      "73226": {
+        "code": 73226,
+        "name": "Cunday"
+      },
+      "73236": {
+        "code": 73236,
+        "name": "Dolores"
+      },
+      "73268": {
+        "code": 73268,
+        "name": "Espinal"
+      },
+      "73270": {
+        "code": 73270,
+        "name": "Falan"
+      },
+      "73275": {
+        "code": 73275,
+        "name": "Flandes"
+      },
+      "73283": {
+        "code": 73283,
+        "name": "Fresno"
+      },
+      "73319": {
+        "code": 73319,
+        "name": "Guamo"
+      },
+      "73347": {
+        "code": 73347,
+        "name": "Herveo"
+      },
+      "73349": {
+        "code": 73349,
+        "name": "Honda"
+      },
+      "73352": {
+        "code": 73352,
+        "name": "Icononzo"
+      },
+      "73408": {
+        "code": 73408,
+        "name": "Lerida"
+      },
+      "73411": {
+        "code": 73411,
+        "name": "Libano"
+      },
+      "73443": {
+        "code": 73443,
+        "name": "Mariquita"
+      },
+      "73449": {
+        "code": 73449,
+        "name": "Melgar"
+      },
+      "73461": {
+        "code": 73461,
+        "name": "Murillo"
+      },
+      "73483": {
+        "code": 73483,
+        "name": "Natagaima"
+      },
+      "73504": {
+        "code": 73504,
+        "name": "Ortega"
+      },
+      "73520": {
+        "code": 73520,
+        "name": "Palocabildo"
+      },
+      "73547": {
+        "code": 73547,
+        "name": "Piedras"
+      },
+      "73555": {
+        "code": 73555,
+        "name": "Planadas"
+      },
+      "73563": {
+        "code": 73563,
+        "name": "Prado"
+      },
+      "73585": {
+        "code": 73585,
+        "name": "Purificaci\u00f3n"
+      },
+      "73616": {
+        "code": 73616,
+        "name": "Rioblanco"
+      },
+      "73622": {
+        "code": 73622,
+        "name": "Roncesvalles"
+      },
+      "73624": {
+        "code": 73624,
+        "name": "Rovira"
+      },
+      "73671": {
+        "code": 73671,
+        "name": "Salda\u00f1a"
+      },
+      "73675": {
+        "code": 73675,
+        "name": "San antonio"
+      },
+      "73678": {
+        "code": 73678,
+        "name": "San luis"
+      },
+      "73686": {
+        "code": 73686,
+        "name": "Santa isabel"
+      },
+      "73770": {
+        "code": 73770,
+        "name": "Su\u00e1rez"
+      },
+      "73854": {
+        "code": 73854,
+        "name": "Valle de san juan"
+      },
+      "73861": {
+        "code": 73861,
+        "name": "Venadillo"
+      },
+      "73870": {
+        "code": 73870,
+        "name": "Villahermosa"
+      },
+      "73873": {
+        "code": 73873,
+        "name": "Villarrica"
+      }
+    }
+  },
+  "76": {
+    "code": 76,
+    "name": "Valle del Cauca",
+    "cities": {
+      "76001": {
+        "code": 76001,
+        "name": "Cali"
+      },
+      "76020": {
+        "code": 76020,
+        "name": "Alcal\u00e1"
+      },
+      "76036": {
+        "code": 76036,
+        "name": "Andaluc\u00eda"
+      },
+      "76041": {
+        "code": 76041,
+        "name": "Ansermanuevo"
+      },
+      "76054": {
+        "code": 76054,
+        "name": "Argelia"
+      },
+      "76100": {
+        "code": 76100,
+        "name": "Bol\u00edvar"
+      },
+      "76109": {
+        "code": 76109,
+        "name": "Buenaventura"
+      },
+      "76111": {
+        "code": 76111,
+        "name": "Guadalajara de buga"
+      },
+      "76113": {
+        "code": 76113,
+        "name": "Bugalagrande"
+      },
+      "76122": {
+        "code": 76122,
+        "name": "Caicedonia"
+      },
+      "76126": {
+        "code": 76126,
+        "name": "Calima"
+      },
+      "76130": {
+        "code": 76130,
+        "name": "Candelaria"
+      },
+      "76147": {
+        "code": 76147,
+        "name": "Cartago"
+      },
+      "76233": {
+        "code": 76233,
+        "name": "Dagua"
+      },
+      "76243": {
+        "code": 76243,
+        "name": "El \u00e1guila"
+      },
+      "76246": {
+        "code": 76246,
+        "name": "El cairo"
+      },
+      "76248": {
+        "code": 76248,
+        "name": "El cerrito"
+      },
+      "76250": {
+        "code": 76250,
+        "name": "El dovio"
+      },
+      "76275": {
+        "code": 76275,
+        "name": "Florida"
+      },
+      "76306": {
+        "code": 76306,
+        "name": "Ginebra"
+      },
+      "76318": {
+        "code": 76318,
+        "name": "Guacar\u00ed"
+      },
+      "76364": {
+        "code": 76364,
+        "name": "Jamund\u00ed"
+      },
+      "76377": {
+        "code": 76377,
+        "name": "La cumbre"
+      },
+      "76400": {
+        "code": 76400,
+        "name": "La uni\u00f3n"
+      },
+      "76403": {
+        "code": 76403,
+        "name": "La victoria"
+      },
+      "76497": {
+        "code": 76497,
+        "name": "Obando"
+      },
+      "76520": {
+        "code": 76520,
+        "name": "Palmira"
+      },
+      "76563": {
+        "code": 76563,
+        "name": "Pradera"
+      },
+      "76606": {
+        "code": 76606,
+        "name": "Restrepo"
+      },
+      "76616": {
+        "code": 76616,
+        "name": "Riofr\u00edo"
+      },
+      "76622": {
+        "code": 76622,
+        "name": "Roldanillo"
+      },
+      "76670": {
+        "code": 76670,
+        "name": "San pedro"
+      },
+      "76736": {
+        "code": 76736,
+        "name": "Sevilla"
+      },
+      "76823": {
+        "code": 76823,
+        "name": "Toro"
+      },
+      "76828": {
+        "code": 76828,
+        "name": "Trujillo"
+      },
+      "76834": {
+        "code": 76834,
+        "name": "Tulua"
+      },
+      "76845": {
+        "code": 76845,
+        "name": "Ulloa"
+      },
+      "76863": {
+        "code": 76863,
+        "name": "Versalles"
+      },
+      "76869": {
+        "code": 76869,
+        "name": "Vijes"
+      },
+      "76890": {
+        "code": 76890,
+        "name": "Yotoco"
+      },
+      "76892": {
+        "code": 76892,
+        "name": "Yumbo"
+      },
+      "76895": {
+        "code": 76895,
+        "name": "Zarzal"
+      }
+    }
+  },
+  "81": {
+    "code": 81,
+    "name": "Arauca",
+    "cities": {
+      "81001": {
+        "code": 81001,
+        "name": "Arauca"
+      },
+      "81065": {
+        "code": 81065,
+        "name": "Arauquita"
+      },
+      "81220": {
+        "code": 81220,
+        "name": "Cravo norte"
+      },
+      "81300": {
+        "code": 81300,
+        "name": "Fortul"
+      },
+      "81591": {
+        "code": 81591,
+        "name": "Puerto rond\u00f3n"
+      },
+      "81736": {
+        "code": 81736,
+        "name": "Saravena"
+      },
+      "81794": {
+        "code": 81794,
+        "name": "Tame"
+      }
+    }
+  },
+  "85": {
+    "code": 85,
+    "name": "Casanare",
+    "cities": {
+      "85001": {
+        "code": 85001,
+        "name": "Yopal"
+      },
+      "85010": {
+        "code": 85010,
+        "name": "Aguazul"
+      },
+      "85015": {
+        "code": 85015,
+        "name": "Chameza"
+      },
+      "85125": {
+        "code": 85125,
+        "name": "Hato corozal"
+      },
+      "85136": {
+        "code": 85136,
+        "name": "La salina"
+      },
+      "85139": {
+        "code": 85139,
+        "name": "Man\u00ed"
+      },
+      "85162": {
+        "code": 85162,
+        "name": "Monterrey"
+      },
+      "85225": {
+        "code": 85225,
+        "name": "Nunch\u00eda"
+      },
+      "85230": {
+        "code": 85230,
+        "name": "Orocu\u00e9"
+      },
+      "85250": {
+        "code": 85250,
+        "name": "Paz de ariporo"
+      },
+      "85263": {
+        "code": 85263,
+        "name": "Pore"
+      },
+      "85279": {
+        "code": 85279,
+        "name": "Recetor"
+      },
+      "85300": {
+        "code": 85300,
+        "name": "Sabanalarga"
+      },
+      "85315": {
+        "code": 85315,
+        "name": "S\u00e1cama"
+      },
+      "85325": {
+        "code": 85325,
+        "name": "San luis de palenque"
+      },
+      "85400": {
+        "code": 85400,
+        "name": "T\u00e1mara"
+      },
+      "85410": {
+        "code": 85410,
+        "name": "Tauramena"
+      },
+      "85430": {
+        "code": 85430,
+        "name": "Trinidad"
+      },
+      "85440": {
+        "code": 85440,
+        "name": "Villanueva"
+      }
+    }
+  },
+  "86": {
+    "code": 86,
+    "name": "Putumayo",
+    "cities": {
+      "86001": {
+        "code": 86001,
+        "name": "Mocoa"
+      },
+      "86219": {
+        "code": 86219,
+        "name": "Col\u00f3n"
+      },
+      "86320": {
+        "code": 86320,
+        "name": "Orito"
+      },
+      "86568": {
+        "code": 86568,
+        "name": "Puerto as\u00eds"
+      },
+      "86569": {
+        "code": 86569,
+        "name": "Puerto caicedo"
+      },
+      "86571": {
+        "code": 86571,
+        "name": "Puerto guzm\u00e1n"
+      },
+      "86573": {
+        "code": 86573,
+        "name": "Legu\u00edzamo"
+      },
+      "86749": {
+        "code": 86749,
+        "name": "Sibundoy"
+      },
+      "86755": {
+        "code": 86755,
+        "name": "San francisco"
+      },
+      "86757": {
+        "code": 86757,
+        "name": "San miguel"
+      },
+      "86760": {
+        "code": 86760,
+        "name": "Santiago"
+      },
+      "86865": {
+        "code": 86865,
+        "name": "Valle del guamuez"
+      },
+      "86885": {
+        "code": 86885,
+        "name": "Villagarz\u00f3n"
+      }
+    }
+  },
+  "88": {
+    "code": 88,
+    "name": "San Andr\u00e9s y Providencia",
+    "cities": {
+      "88001": {
+        "code": 88001,
+        "name": "San Andr\u00e9s"
+      },
+      "88564": {
+        "code": 88564,
+        "name": "Providencia y Santa Catalina"
+      }
+    }
+  },
+  "91": {
+    "code": 91,
+    "name": "Amazonas",
+    "cities": {
+      "91001": {
+        "code": 91001,
+        "name": "Leticia"
+      },
+      "91263": {
+        "code": 91263,
+        "name": "El encanto"
+      },
+      "91405": {
+        "code": 91405,
+        "name": "La chorrera"
+      },
+      "91407": {
+        "code": 91407,
+        "name": "La pedrera"
+      },
+      "91430": {
+        "code": 91430,
+        "name": "La victoria"
+      },
+      "91460": {
+        "code": 91460,
+        "name": "Miriti - paran\u00e1"
+      },
+      "91530": {
+        "code": 91530,
+        "name": "Puerto alegr\u00eda"
+      },
+      "91536": {
+        "code": 91536,
+        "name": "Puerto arica"
+      },
+      "91540": {
+        "code": 91540,
+        "name": "Puerto nari\u00f1o"
+      },
+      "91669": {
+        "code": 91669,
+        "name": "Puerto santander"
+      },
+      "91798": {
+        "code": 91798,
+        "name": "Tarapac\u00e1"
+      }
+    }
+  },
+  "94": {
+    "code": 94,
+    "name": "Guain\u00eda",
+    "cities": {
+      "94001": {
+        "code": 94001,
+        "name": "In\u00edrida"
+      },
+      "94343": {
+        "code": 94343,
+        "name": "Barranco minas"
+      },
+      "94663": {
+        "code": 94663,
+        "name": "Mapiripana"
+      },
+      "94883": {
+        "code": 94883,
+        "name": "San felipe"
+      },
+      "94884": {
+        "code": 94884,
+        "name": "Puerto colombia"
+      },
+      "94885": {
+        "code": 94885,
+        "name": "La guadalupe"
+      },
+      "94886": {
+        "code": 94886,
+        "name": "Cacahual"
+      },
+      "94887": {
+        "code": 94887,
+        "name": "Pana pana"
+      },
+      "94888": {
+        "code": 94888,
+        "name": "Morichal"
+      }
+    }
+  },
+  "95": {
+    "code": 95,
+    "name": "Guaviare",
+    "cities": {
+      "95001": {
+        "code": 95001,
+        "name": "San jos\u00e9 del guaviare"
+      },
+      "95015": {
+        "code": 95015,
+        "name": "Calamar"
+      },
+      "95025": {
+        "code": 95025,
+        "name": "El retorno"
+      },
+      "95200": {
+        "code": 95200,
+        "name": "Miraflores"
+      }
+    }
+  },
+  "97": {
+    "code": 97,
+    "name": "Vaup\u00e9s",
+    "cities": {
+      "97001": {
+        "code": 97001,
+        "name": "Mit\u00fa"
+      },
+      "97161": {
+        "code": 97161,
+        "name": "Caruru"
+      },
+      "97511": {
+        "code": 97511,
+        "name": "Pacoa"
+      },
+      "97666": {
+        "code": 97666,
+        "name": "Taraira"
+      },
+      "97777": {
+        "code": 97777,
+        "name": "Papunaua"
+      },
+      "97889": {
+        "code": 97889,
+        "name": "Yavarat\u00e9"
+      }
+    }
+  },
+  "99": {
+    "code": 99,
+    "name": "Vichada",
+    "cities": {
+      "99001": {
+        "code": 99001,
+        "name": "Puerto carre\u00f1o"
+      },
+      "99524": {
+        "code": 99524,
+        "name": "La primavera"
+      },
+      "99624": {
+        "code": 99624,
+        "name": "Santa rosal\u00eda"
+      },
+      "99773": {
+        "code": 99773,
+        "name": "Cumaribo"
+      }
+    }
+  }
+}

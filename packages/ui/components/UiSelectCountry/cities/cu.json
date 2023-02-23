@@ -1,0 +1,694 @@
+{
+  "01": {
+    "code": "01",
+    "name": "ARTEMISA",
+    "cities": {
+      "1001": {
+        "code": 1001,
+        "name": "Bah\u00eda Honda"
+      },
+      "1002": {
+        "code": 1002,
+        "name": "Mariel"
+      },
+      "1003": {
+        "code": 1003,
+        "name": "Guanajay"
+      },
+      "1004": {
+        "code": 1004,
+        "name": "Caimito"
+      },
+      "1005": {
+        "code": 1005,
+        "name": "Bauta"
+      },
+      "1006": {
+        "code": 1006,
+        "name": "San Antonio de los Ba\u00f1os"
+      },
+      "1007": {
+        "code": 1007,
+        "name": "G\u00fcira de Melena"
+      },
+      "1008": {
+        "code": 1008,
+        "name": "Alquizar"
+      },
+      "1009": {
+        "code": 1009,
+        "name": "Artemisa"
+      },
+      "1010": {
+        "code": 1010,
+        "name": "Candelaria"
+      },
+      "1011": {
+        "code": 1011,
+        "name": "San Crist\u00f3bal"
+      }
+    }
+  },
+  "02": {
+    "code": "02",
+    "name": "CAMAG\u00dcEY",
+    "cities": {
+      "2001": {
+        "code": 2001,
+        "name": "Carlos Manuel de C\u00e9spedes"
+      },
+      "2002": {
+        "code": 2002,
+        "name": "Florida"
+      },
+      "2003": {
+        "code": 2003,
+        "name": "Vertientes"
+      },
+      "2004": {
+        "code": 2004,
+        "name": "Santa Cruz"
+      },
+      "2005": {
+        "code": 2005,
+        "name": "Najasa"
+      },
+      "2006": {
+        "code": 2006,
+        "name": "Jimaguay\u00fa"
+      },
+      "2007": {
+        "code": 2007,
+        "name": "Camaguey"
+      },
+      "2008": {
+        "code": 2008,
+        "name": "Cubitas"
+      },
+      "2009": {
+        "code": 2009,
+        "name": "Esmeralda"
+      },
+      "2010": {
+        "code": 2010,
+        "name": "Minas"
+      },
+      "2011": {
+        "code": 2011,
+        "name": "Sibanic\u00fa"
+      },
+      "2012": {
+        "code": 2012,
+        "name": "Gu\u00e1imaro"
+      },
+      "2013": {
+        "code": 2013,
+        "name": "Nuevitas"
+      }
+    }
+  },
+  "03": {
+    "code": "03",
+    "name": "CIEGO DE \u00c1VILA",
+    "cities": {
+      "3001": {
+        "code": 3001,
+        "name": "Chambas"
+      },
+      "3002": {
+        "code": 3002,
+        "name": "Florencia"
+      },
+      "3003": {
+        "code": 3003,
+        "name": "Majagua"
+      },
+      "3004": {
+        "code": 3004,
+        "name": "Venezuela"
+      },
+      "3005": {
+        "code": 3005,
+        "name": "Ciego de Avila"
+      },
+      "3006": {
+        "code": 3006,
+        "name": "Ciro Redondo"
+      },
+      "3007": {
+        "code": 3007,
+        "name": "Mor\u00f3n"
+      },
+      "3008": {
+        "code": 3008,
+        "name": "Baragu\u00e1"
+      },
+      "3009": {
+        "code": 3009,
+        "name": "Primero de Enero"
+      },
+      "3010": {
+        "code": 3010,
+        "name": "Bolivia"
+      }
+    }
+  },
+  "04": {
+    "code": "04",
+    "name": "CIENFUEGOS",
+    "cities": {
+      "4001": {
+        "code": 4001,
+        "name": "Aguada de Pasajeros"
+      },
+      "4002": {
+        "code": 4002,
+        "name": "Rodas"
+      },
+      "4003": {
+        "code": 4003,
+        "name": "Abreus"
+      },
+      "4004": {
+        "code": 4004,
+        "name": "Lajas"
+      },
+      "4005": {
+        "code": 4005,
+        "name": "Palmira"
+      },
+      "4006": {
+        "code": 4006,
+        "name": "Cruces"
+      },
+      "4007": {
+        "code": 4007,
+        "name": "Cienfuegos"
+      },
+      "4008": {
+        "code": 4008,
+        "name": "Cumanayagua"
+      }
+    }
+  },
+  "05": {
+    "code": "05",
+    "name": "GRANMA",
+    "cities": {
+      "5001": {
+        "code": 5001,
+        "name": "Niquero"
+      },
+      "5002": {
+        "code": 5002,
+        "name": "Pil\u00f3n"
+      },
+      "5003": {
+        "code": 5003,
+        "name": "Media Luna"
+      },
+      "5004": {
+        "code": 5004,
+        "name": "Campechuela"
+      },
+      "5005": {
+        "code": 5005,
+        "name": "Bartolom\u00e9 Mas\u00f3"
+      },
+      "5006": {
+        "code": 5006,
+        "name": "Manzanillo"
+      },
+      "5007": {
+        "code": 5007,
+        "name": "Yara"
+      },
+      "5008": {
+        "code": 5008,
+        "name": "Buey Arriba"
+      },
+      "5009": {
+        "code": 5009,
+        "name": "Guisa"
+      },
+      "5010": {
+        "code": 5010,
+        "name": "R\u00edo Cauto"
+      },
+      "5011": {
+        "code": 5011,
+        "name": "Jiguan\u00ed"
+      },
+      "5012": {
+        "code": 5012,
+        "name": "Cauto Cristo"
+      }
+    }
+  },
+  "06": {
+    "code": "06",
+    "name": "GUANT\u00c1NAMO",
+    "cities": {
+      "6001": {
+        "code": 6001,
+        "name": "Niceto P\u00e9rez"
+      },
+      "6002": {
+        "code": 6002,
+        "name": "Caimanera"
+      },
+      "6003": {
+        "code": 6003,
+        "name": "Guant\u00e1namo"
+      },
+      "6004": {
+        "code": 6004,
+        "name": "El Salvador"
+      },
+      "6005": {
+        "code": 6005,
+        "name": "Manuel Tames"
+      },
+      "6006": {
+        "code": 6006,
+        "name": "Yateras"
+      },
+      "6007": {
+        "code": 6007,
+        "name": "San Antonio del Sur"
+      },
+      "6008": {
+        "code": 6008,
+        "name": "Im\u00edas"
+      },
+      "6009": {
+        "code": 6009,
+        "name": "Baracoa"
+      },
+      "6010": {
+        "code": 6010,
+        "name": "Mais\u00ed"
+      }
+    }
+  },
+  "07": {
+    "code": "07",
+    "name": "HOLGU\u00cdN",
+    "cities": {
+      "7001": {
+        "code": 7001,
+        "name": "Buenaventura"
+      },
+      "7002": {
+        "code": 7002,
+        "name": "Cacocum"
+      },
+      "7003": {
+        "code": 7003,
+        "name": "Holguin"
+      },
+      "7004": {
+        "code": 7004,
+        "name": "Gibara"
+      },
+      "7005": {
+        "code": 7005,
+        "name": "Urbano Noris"
+      },
+      "7006": {
+        "code": 7006,
+        "name": "B\u00e1guanos"
+      },
+      "7007": {
+        "code": 7007,
+        "name": "Rafael Freyre"
+      },
+      "7008": {
+        "code": 7008,
+        "name": "B\u00e1guanos"
+      },
+      "7009": {
+        "code": 7009,
+        "name": "Cueto"
+      },
+      "7010": {
+        "code": 7010,
+        "name": "Mayar\u00ed"
+      },
+      "7011": {
+        "code": 7011,
+        "name": "Banes"
+      },
+      "7012": {
+        "code": 7012,
+        "name": "Frank Pa\u00eds"
+      },
+      "7013": {
+        "code": 7013,
+        "name": "Sagua de T\u00e1namo"
+      },
+      "7014": {
+        "code": 7014,
+        "name": "Moa"
+      }
+    }
+  },
+  "08": {
+    "code": "08",
+    "name": "ISLA DE LA JUVENTUD",
+    "cities": {
+      "8001": {
+        "code": 8001,
+        "name": "Isla de la Juventud"
+      }
+    }
+  },
+  "09": {
+    "code": "09",
+    "name": "LA HABANA",
+    "cities": {
+      "9001": {
+        "code": 9001,
+        "name": "Playa"
+      },
+      "9002": {
+        "code": 9002,
+        "name": "La Lisa"
+      },
+      "9003": {
+        "code": 9003,
+        "name": "Boyeros"
+      },
+      "9004": {
+        "code": 9004,
+        "name": "Marianao"
+      },
+      "9005": {
+        "code": 9005,
+        "name": "Arroyo Naranjo"
+      },
+      "9006": {
+        "code": 9006,
+        "name": "Cerro"
+      },
+      "9007": {
+        "code": 9007,
+        "name": "Plaza de la Revoluci\u00f3n"
+      },
+      "9008": {
+        "code": 9008,
+        "name": "Diez de Octubre"
+      },
+      "9009": {
+        "code": 9009,
+        "name": "Cotorro"
+      },
+      "9010": {
+        "code": 9010,
+        "name": "San Miguel del Padr\u00f3n"
+      },
+      "9011": {
+        "code": 9011,
+        "name": "Habana Vieja"
+      },
+      "9012": {
+        "code": 9012,
+        "name": "Regla"
+      },
+      "9013": {
+        "code": 9013,
+        "name": "Guanabacoa"
+      },
+      "9014": {
+        "code": 9014,
+        "name": "Habana del Este"
+      }
+    }
+  },
+  "10": {
+    "code": 10,
+    "name": "LAS TUNAS",
+    "cities": {
+      "10001": {
+        "code": 10001,
+        "name": "Amancio Rodriguez"
+      },
+      "10002": {
+        "code": 10002,
+        "name": "Colombia"
+      },
+      "10003": {
+        "code": 10003,
+        "name": "Jobabo"
+      },
+      "10004": {
+        "code": 10004,
+        "name": "Las Tunas"
+      },
+      "10005": {
+        "code": 10005,
+        "name": "Calixto Garc\u00eda"
+      },
+      "10006": {
+        "code": 10006,
+        "name": "Manat\u00ed"
+      },
+      "10007": {
+        "code": 10007,
+        "name": "Puerto Grande"
+      },
+      "10008": {
+        "code": 10008,
+        "name": "Jes\u00fas Men\u00e9ndez"
+      }
+    }
+  },
+  "11": {
+    "code": 11,
+    "name": "MATANZAS",
+    "cities": {
+      "11001": {
+        "code": 11001,
+        "name": "Ci\u00e9naga de Zapata"
+      },
+      "11002": {
+        "code": 11002,
+        "name": "Uni\u00f3n de Reyes"
+      },
+      "11003": {
+        "code": 11003,
+        "name": "Limonar"
+      },
+      "11004": {
+        "code": 11004,
+        "name": "Matanzas"
+      },
+      "11005": {
+        "code": 11005,
+        "name": "Varadero"
+      },
+      "11006": {
+        "code": 11006,
+        "name": "C\u00e1rdenas"
+      },
+      "11007": {
+        "code": 11007,
+        "name": "Jovellanos"
+      },
+      "11008": {
+        "code": 11008,
+        "name": "Jaguey Grande"
+      },
+      "11009": {
+        "code": 11009,
+        "name": "Pedro Betancourt"
+      },
+      "11010": {
+        "code": 11010,
+        "name": "Calimete"
+      },
+      "11011": {
+        "code": 11011,
+        "name": "Los Arabos"
+      },
+      "11012": {
+        "code": 11012,
+        "name": "Colon"
+      },
+      "11013": {
+        "code": 11013,
+        "name": "Perico"
+      },
+      "11014": {
+        "code": 11014,
+        "name": "Mart\u00ed"
+      }
+    }
+  },
+  "12": {
+    "code": 12,
+    "name": "MAYABEQUE",
+    "cities": {
+      "12001": {
+        "code": 12001,
+        "name": "Bejucal"
+      },
+      "12002": {
+        "code": 12002,
+        "name": "San Jos\u00e9 de las Lajas"
+      },
+      "12003": {
+        "code": 12003,
+        "name": "Jaruco"
+      },
+      "12004": {
+        "code": 12004,
+        "name": "Santa Cruz del Norte"
+      },
+      "12005": {
+        "code": 12005,
+        "name": "Madruga"
+      },
+      "12006": {
+        "code": 12006,
+        "name": "Nueva Paz"
+      },
+      "12007": {
+        "code": 12007,
+        "name": "San Nicol\u00e1s de Bari"
+      },
+      "12008": {
+        "code": 12008,
+        "name": "G\u00fcines"
+      },
+      "12009": {
+        "code": 12009,
+        "name": "Melena del Sur"
+      },
+      "12010": {
+        "code": 12010,
+        "name": "Bataban\u00f3"
+      },
+      "12011": {
+        "code": 12011,
+        "name": "Quivic\u00e1n"
+      }
+    }
+  },
+  "13": {
+    "code": 13,
+    "name": "PINAR DEL R\u00cdO",
+    "cities": {
+      "13001": {
+        "code": 13001,
+        "name": "Candelaria"
+      }
+    }
+  },
+  "14": {
+    "code": 14,
+    "name": "SANCTI SP\u00cdRITUS",
+    "cities": {
+      "14001": {
+        "code": 14001,
+        "name": "Trinidad"
+      },
+      "14002": {
+        "code": 14002,
+        "name": "Fomento"
+      },
+      "14003": {
+        "code": 14003,
+        "name": "Sancti Spiritus"
+      },
+      "14004": {
+        "code": 14004,
+        "name": "La Sierpe"
+      },
+      "14005": {
+        "code": 14005,
+        "name": "Cabaigu\u00e1n"
+      },
+      "14006": {
+        "code": 14006,
+        "name": "Taguasco"
+      },
+      "14007": {
+        "code": 14007,
+        "name": "Jatibonico"
+      },
+      "14008": {
+        "code": 14008,
+        "name": "Yaguajay"
+      }
+    }
+  },
+  "15": {
+    "code": 15,
+    "name": "SANTIAGO DE CUBA",
+    "cities": {
+      "15001": {
+        "code": 15001,
+        "name": "Segundo Frente"
+      }
+    }
+  },
+  "16": {
+    "code": 16,
+    "name": "VILLA CLARA",
+    "cities": {
+      "16001": {
+        "code": 16001,
+        "name": "Corralillo"
+      },
+      "16002": {
+        "code": 16002,
+        "name": "Quemado de Guines"
+      },
+      "16003": {
+        "code": 16003,
+        "name": "Santo Domingo"
+      },
+      "16004": {
+        "code": 16004,
+        "name": "Sagua la Grande"
+      },
+      "16005": {
+        "code": 16005,
+        "name": "Cifuentes"
+      },
+      "16006": {
+        "code": 16006,
+        "name": "Ranchuelo"
+      },
+      "16007": {
+        "code": 16007,
+        "name": "Santa Clara"
+      },
+      "16008": {
+        "code": 16008,
+        "name": "Camajuan\u00ed"
+      },
+      "16009": {
+        "code": 16009,
+        "name": "Encrucijada"
+      },
+      "16010": {
+        "code": 16010,
+        "name": "Caibari\u00e9n"
+      },
+      "16011": {
+        "code": 16011,
+        "name": "Remedios"
+      },
+      "16012": {
+        "code": 16012,
+        "name": "Placetas"
+      },
+      "16013": {
+        "code": 16013,
+        "name": "Manicaragua"
+      }
+    }
+  }
+}
