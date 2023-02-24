@@ -103,7 +103,7 @@ const isFooterEnabled = computed({
 </script>
 
 <template>
-  <div class="LayoutPageSettings">
+  <div class="LayoutPageSettings UiForm">
     <UiInput
       v-model="page.title"
       type="text"

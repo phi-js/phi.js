@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, shallowRef, watch } from 'vue'
+import { computed, onMounted, ref, shallowRef, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { UiWindow, UiItem, UiDropdown } from '@/packages/ui'
 import EditorAction from './EditorAction.vue'
@@ -81,6 +81,22 @@ function cancel() {
   emit('cancel', initialValue.value)
   return true
 }
+
+// Imitate <dialog> behavior:  focus first found input field
+const refContents = ref()
+
+onMounted(() => {
+  if (!refContents.value) {
+    return
+  }
+  // const foundInput = refContents.value.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+  const foundInput = refContents.value.querySelector('.UiInput__element')
+  if (foundInput) {
+    foundInput.focus()
+  }
+})
+
+
 </script>
 
 <template>
@@ -88,6 +104,7 @@ function cancel() {
     name="phi"
     class="BlockWindow"
     @cancel="cancel"
+    @submit.prevent="accept"
   >
     <template #header>
       <UiItem
@@ -121,7 +138,10 @@ function cancel() {
     </template>
 
     <template #default>
-      <div class="BlockWindow__contents">
+      <div
+        ref="refContents"
+        class="BlockWindow__contents"
+      >
         <EditorAction
           v-if="currentAction"
           v-model:block="innerBlock"
@@ -134,9 +154,8 @@ function cancel() {
 
     <template #footer="{ close }">
       <button
-        type="button"
+        type="submit"
         class="UiButton UiButton--main"
-        @click="accept() && close()"
         v-text="i18n.t('Accept')"
       />
       <button
@@ -162,7 +181,6 @@ function cancel() {
     }
   }
 
-
   &__headerItem {
     --ui-item-padding: 6px 12px;
     font-size: 0.8rem;
@@ -171,6 +189,7 @@ function cancel() {
 
   &__contents {
     padding: 0.6em;
+    height: 100%;
   }
 
   &__pickerItem {
@@ -197,5 +216,27 @@ function cancel() {
       order: 1;
     }
   }
+
+  // Make sure the source editor stretches to the full window content
+  .BlockWindow__action--source {
+    height: 100%;
+    .UiInputCode {
+      overflow: auto;
+      & > div { //cm-editor
+        height: 100%;
+      }
+    }
+  }
 }
+
+// Disabled submit buttons on invalid forms
+.BlockWindow:invalid {
+  .UiWindow__footer {
+    input[type=submit],
+    button[type=submit] {
+      opacity: 0.6;
+    }
+  }
+}
+
 </style>

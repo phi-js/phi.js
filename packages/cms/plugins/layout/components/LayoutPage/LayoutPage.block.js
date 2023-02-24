@@ -5,7 +5,7 @@ export default {
   name: 'LayoutPage',
   private: true, // hide from CmsBlockPicker
   title: 'Página',
-  icon: 'mdi:page-layout-body',
+  icon: 'mdi:file',
 
   block: { component: LayoutPage },
 

@@ -133,6 +133,7 @@ const i18n = useI18n({
       </select>
 
       <Component
+        v-bind="{...$attrs, label:undefined }"
         :is="editorComponent"
         v-if="editorComponent"
         class="CmsPropInput__component"
