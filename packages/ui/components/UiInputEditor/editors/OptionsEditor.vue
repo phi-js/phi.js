@@ -240,6 +240,10 @@ function onDialogAccept(textareaValue) {
     border: 1px solid var(--ui-color-ridge-right);
   }
 
+  &__text {
+    width: 100%;
+  }
+
   &__value {
     border-left: 1px solid var(--ui-color-ridge-left);
   }
