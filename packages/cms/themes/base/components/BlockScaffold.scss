@@ -21,11 +21,11 @@
 
   // toolbar-container only clickable when SELECTED
   & > &__toolbar-container {
-    pointer-events: none;
+    display: none;
   }
 
   &--selected > &__toolbar-container {
-    pointer-events: initial;
+    display: flex;
   }
 
 
@@ -55,11 +55,6 @@
 
   &--selected {
     z-index: 3; // messes up dragstart from toolbar (in html blocks only ???)
-
-    & > .BlockScaffold__toolbar-container .BlockScaffold__label {
-      display: none;
-    }
-
     &::after {
       border-color: var(--ui-color-primary);
     }
@@ -91,42 +86,6 @@
     font-size: 1rem;
 
     min-width: 240px;
-  }
-
-  &__label {
-    user-select: none;
-    pointer-events: none;
-    white-space: nowrap;
-
-    transition: all 222ms;
-    opacity: 0;
-
-    font-size: 8pt;
-    font-weight: bold;
-    padding: 4px 10px;
-    border-radius: 4px;
-
-    position: relative;
-    left: 3px;
-
-    //reset
-    text-decoration: none;
-    text-shadow: none;
-
-    // place labels inside block outline
-    position: absolute;
-    top: 100%;
-    margin-top: 3px;
-    background-color: var(--ui-color-background);
-    color: var(--ui-color-primary);
-    background-color: #eeeeeeea;
-
-    // or just fuck it, hide labels
-    display: none;
-  }
-
-  &:hover > &__toolbar-container > &__label {
-    opacity: 1;
   }
 
   &__toolbar {
@@ -241,13 +200,19 @@
 
   &__parent {
     align-self: flex-start;
+    --ui-item-padding: 8px;
 
-    --ui-item-padding: 4px 8px;
     background-color: #999;
     color: #eee;
     border-radius: 4px;
-    left: 4px;
+
+    top: -4px;
+    left: 8px;
     margin-left: -15px;
+
+    padding-right: 80px;
+    margin-right: -72px;
+
     cursor: pointer;
     &:hover {
       background-color: #888;
@@ -316,56 +281,6 @@
 
 
 /*** Block-specific stylings ***/
-
-// LayoutGroup
-.BlockScaffold--PersonEditor,
-.BlockScaffold--NestedForm,
-.BlockScaffold--LayoutGroup {
-  padding: 6px;
-  // margin: 0 -3px; // causes horizontal overscroll on body
-  margin-top: 22px; // height of BlockScaffold__label + 2px
-  margin-bottom: 6px;
-
-  .BlockScaffold--LayoutGroup {
-    margin-top: 18px;
-  }
-
-  // toolbar-container only clickable when SELECTED
-  .BlockScaffold__toolbar-container {
-    pointer-events: initial;
-  }
-
-  &:hover > .BlockScaffold__toolbar-container > .BlockScaffold__label {
-    color: var(--ui-color-primary);
-  }
-
-  & > .BlockScaffold__toolbar-container > .BlockScaffold__label {
-    opacity: 1;
-    top: 3px;
-    color: inherit;
-    border: none;
-    background-color: transparent;
-    display: block;
-  }
-
-  &::after {
-    opacity: 0.3;
-  }
-
-  & + .BlockScaffold--LayoutGroup {
-    margin-top: 18px;
-  }
-
-  // & > .LayoutGroupEditor > .CmsSlotEditor__footer {
-  //   display: none;
-  // }
-
-  // & > .LayoutGroupEditor.CmsSlotEditor--empty > .CmsSlotEditor__footer,
-  // &.BlockScaffold--selected > .LayoutGroupEditor > .CmsSlotEditor__footer {
-  //   display: block;
-  // }
-}
-
 // NavigationLink
 .BlockScaffold--NavigationLink {
   display: inline-block;

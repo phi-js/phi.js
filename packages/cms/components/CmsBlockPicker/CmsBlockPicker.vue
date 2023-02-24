@@ -163,7 +163,7 @@ function onClickSuggestion(sugg) {
     font-size: 0.9em;
 
     .FinderItem {
-      border: 1px solid #999;
+      border: 1px solid #999 !important;
       opacity: 0.5;
 
       &:hover {

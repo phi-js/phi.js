@@ -16,4 +16,5 @@ export default {
   'BlockEditors.actions.validation.title': 'Validación',
   'BlockEditors.actions.validation.description': 'Este bloque tiene reglas de validación',
   'BlockEditors.actions.NavigationLinkEditor.title': 'Ajustes de enlace',
+  'BlockEditors.actions.LayoutGroupSettings.title': 'Opciones de grupo',
 }

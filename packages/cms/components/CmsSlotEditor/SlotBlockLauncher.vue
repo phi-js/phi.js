@@ -137,10 +137,7 @@ function onPickerUpdateOpen($event) {
     ]"
   >
     <template v-if="stagingBlock">
-      <SlotItem
-        :block="stagingBlock"
-        :selected="true"
-      />
+      <SlotItem :block="stagingBlock" />
       <BlockWindow
         v-model:block="stagingBlock"
         open
@@ -150,11 +147,14 @@ function onPickerUpdateOpen($event) {
     </template>
 
     <UiItem
+      v-show="!stagingBlock"
       icon="mdi:plus"
       :text="props.label"
       class="SlotBlockLauncher__trigger"
       :title="props.title"
+      tabindex="0"
       @click="onTriggerClick"
+      @keyup.enter="onTriggerClick"
     />
 
     <CmsBlockPicker
@@ -203,14 +203,15 @@ function onPickerUpdateOpen($event) {
       }
     }
 
-    &:hover {
-      gap: 8px;
-      .UiItem {
-        &__body {
-          max-width: none;
-        }
-      }
-    }
+    // Expoand text on hover
+    // &:hover {
+    //   gap: 8px;
+    //   .UiItem {
+    //     &__body {
+    //       max-width: none;
+    //     }
+    //   }
+    // }
   }
 }
 </style>

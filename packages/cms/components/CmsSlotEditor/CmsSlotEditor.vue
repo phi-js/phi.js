@@ -187,12 +187,18 @@ function onInsertSibling(index, position = null) {
       />
     </template>
 
+    <template #header>
+      <slot name="header" />
+    </template>
+
     <template #footer>
       <!-- block launcher at bottom -->
       <div class="CmsSlotEditor__footer">
         <SlotBlockLauncher
-          :label="i18n.t('CmsSlotEditor.AddContent')"
-          :title="i18n.t('CmsSlotEditor.AddContentTo') + ' ' + props.label"
+          xxxx-label="i18n.t('CmsSlotEditor.AddContent')"
+          :title="props.label
+            ? i18n.t('CmsSlotEditor.AddContentTo') + ' ' + props.label
+            : i18n.t('CmsSlotEditor.AddContent')"
           @input="launchBlock($event)"
         />
       </div>

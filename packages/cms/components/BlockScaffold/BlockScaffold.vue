@@ -107,10 +107,6 @@ const stylesInChild = computed(() => {
     @focus="emitSelect"
   >
     <div class="BlockScaffold__toolbar-container">
-      <div class="BlockScaffold__label">
-        {{ props.block.title || definition?.title || props.block.component }}
-      </div>
-
       <template v-if="selected">
         <UiItem
           v-if="parent"

@@ -154,7 +154,6 @@ provide('$_cms_story', {
         <CmsSlotEditor
           v-model:slot="currentPage.slots.default"
           class="CmsStoryEditor__contents LayoutPage__contents"
-          :label="i18n.t('CmsStoryEditor.Page')"
           @update:slot="emitUpdate"
         />
 
