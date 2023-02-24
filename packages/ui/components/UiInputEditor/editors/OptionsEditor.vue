@@ -247,9 +247,6 @@ function onDialogAccept(textareaValue) {
   .TranslationInput {
     flex: 1;
     border-right: 0;
-    input {
-      width: 100%;
-    }
   }
 }
 </style>

@@ -173,11 +173,11 @@ select {
 
 
 
-.UiInput textarea,
-.UiInput input[type=password],
-.UiInput input[type=email],
-.UiInput input[type=text] {
+.UiInput textarea.UiInput__element,
+.UiInput input[type=password].UiInput__element,
+.UiInput input[type=email].UiInput__element,
+.UiInput input[type=text].UiInput__element {
   width: 100%;
-  min-width: 200px;
+  // min-width: 200px;
   resize: vertical;
 }

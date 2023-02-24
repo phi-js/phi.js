@@ -218,5 +218,11 @@ export default {
     align-items: center;
     justify-content: center;
   }
+
+  &__deleter {
+    height: 100%;
+    min-width: 32px;
+    border-radius: 5px;
+  }
 }
 </style>
