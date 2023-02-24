@@ -36,6 +36,7 @@ const i18n = useI18n({
     'InputSelectSettings.Single': 'Single',
     'InputSelectSettings.Multiple': 'Multiple',
     'InputSelectSettings.ValueType': 'Value type',
+    'InputSelectSettings.SelectType': 'Style',
   },
   es: {
     'InputSelectSettings.Label': 'Etiqueta',
@@ -44,6 +45,7 @@ const i18n = useI18n({
     'InputSelectSettings.Single': 'Único',
     'InputSelectSettings.Multiple': 'Múltiple',
     'InputSelectSettings.ValueType': 'Tipo de dato',
+    'InputSelectSettings.SelectType': 'Estilo',
   },
 })
 
@@ -93,6 +95,20 @@ const multipleOptions = [
       class="InputSelectSettings__item"
       :label="i18n.t('InputSelectSettings.VariableName')"
       type="text"
+      @update:model-value="emitUpdate"
+    />
+
+    <UiInput
+      v-model="block.props.type"
+      class="InputSelectSettings__item"
+      :label="i18n.t('InputSelectSettings.SelectType')"
+      type="select-native"
+      :options="[
+        {value: 'select-native', text: 'Nativo'},
+        {value: 'select-list', text: 'Lista'},
+        {value: 'select-buttons', text: 'Botones'},
+        {value: 'select', text: 'Selector con busqueda'},
+      ]"
       @update:model-value="emitUpdate"
     />
   </div>

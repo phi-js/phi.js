@@ -76,6 +76,14 @@ const optionsIsString = computed(() => typeof props.modelValue?.props?.options =
         ]"
       />
     </template>
+    <template v-else-if="modelValue.props.type != 'select-list'">
+      <!-- Use frozen input as block face -->
+      <UiInput
+        v-bind="translatedProps"
+        class="CmsBlock"
+        style="pointer-events: none"
+      />
+    </template>
     <template v-else>
       <span class="InputSelectFace__editor">
         <UiInput
