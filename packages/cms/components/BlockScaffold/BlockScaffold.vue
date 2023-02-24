@@ -140,9 +140,9 @@ const stylesInChild = computed(() => {
           <!-- Available actions dropdown -->
           <UiDropdown>
             <template #trigger>
-              <UiItem
+              <UiIcon
                 class="BlockScaffold__menuBtn"
-                icon="mdi:dots-vertical"
+                src="mdi:dots-vertical"
               />
             </template>
             <template #default="{close}">

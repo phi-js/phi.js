@@ -84,15 +84,12 @@ function onSlotUpdate() {
   }
 
   & > .CmsSlotEditor__footer {
-    margin: 4px 0;
+    margin: 3px;
   }
 }
 
 .LayoutGroupEditor--row {
   & > .CmsSlotEditor__footer {
-    // margin: 0;
-
-    margin: 4px;
     align-self: stretch;
     display: flex;
     align-items: stretch;

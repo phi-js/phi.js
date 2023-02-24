@@ -98,7 +98,7 @@
     display: flex;
     // flex-wrap: nowrap;
     flex-wrap: wrap; // so things like MediaHtmlBlockEditor toolbar don't suck
-    align-items: center;
+    align-items: stretch;
 
     user-select: none;
     z-index: 1;
@@ -110,6 +110,7 @@
       .UiInput {
         &__element {
           background: rgba(255,255,255,0.08);
+          color: #fff;
           min-width: 0 !important;
           max-width: 5rem;
         }
@@ -173,9 +174,17 @@
     }
   }
 
+  &__toolbar > .UiDropdown > .UiDropdown__trigger {
+    height: 100%;
+  }
 
   &__menuBtn {
     @extend .ui--clickable;
+    width: 40px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &__actionList {
