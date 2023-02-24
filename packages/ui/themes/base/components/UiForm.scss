@@ -9,10 +9,10 @@
   }
 
   fieldset {
-    border: 1px inset #555;
+    border: 1px inset var(--ui-color-ridge-top);
     border-radius: 5px;
-    padding: 8px;
-    margin: 10px 0;
+    padding: 4px;
+    margin: 16px 0;
 
     min-inline-size: auto;  // OMG.  El CSS nativo de fieldset es "min-inline-size: min-content;" y eso previene hacer overflow en contenedores angostos
 
@@ -21,17 +21,10 @@
     }
 
     legend {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: bold;
       padding: 0 12px;
       opacity: 0.7;
-    }
-
-    & > .UiInput {
-      margin-bottom: 12px;
-      &:last-child {
-        margin-bottom: 0;
-      }
     }
   }
 
