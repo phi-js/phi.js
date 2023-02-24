@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from 'vue'
-import { CmsStoryBuilder } from '@/packages/cms'
-// import { CmsStory as CmsStoryBuilder } from '@/packages/cms'
+import { CmsStoryBuilder, provideStorySettings } from '@/packages/cms'
+import useLocationHashPage from '@/packages/cms/functions/useLocationHashPage.js'
 // import savedStory from './home.json'
+
+const currentPageId = useLocationHashPage()
 
 const defaultStory = {
   id: 'story-test-1',
@@ -43,10 +45,9 @@ function saveStory() {
   localStorage.setItem('phijs:home', JSON.stringify(story.value))
 }
 
-const settings = ref({
-  allowSource: true,
-  uploads: { endpoint: 'http://v4.local/1/cms/pages/test/files' },
-})
+const settings = { allowSource: true }
+
+provideStorySettings({ uploads: { assets: 'http://v4.local/1/cms/pages/test/files' } })
 
 function reset() {
   if (!confirm('Reset story?')) {
@@ -57,12 +58,19 @@ function reset() {
   saveStory()
 }
 
-const modelValue = ref({})
+const modelValue = ref({
+  entry: {
+    id: 'ID_DEL_ENTRY_1',
+    type: 'mensaje',
+    data: { foo: 'foo' },
+  },
+})
 </script>
 
 <template>
   <CmsStoryBuilder
     v-model:story="story"
+    v-model:currentPageId="currentPageId"
     v-model="modelValue"
     :settings="settings"
     @update:story="saveStory()"

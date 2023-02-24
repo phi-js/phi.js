@@ -182,8 +182,8 @@
       },
       "title": "p1",
       "component": "LayoutPage",
-      "omitFooter": true,
-      "omitHeader": true
+      "isFooterEnabled": false,
+      "isHeaderEnabled": false
     }
   ],
   "paths": [],
