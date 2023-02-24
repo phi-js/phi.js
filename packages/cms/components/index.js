@@ -7,5 +7,5 @@ export * from './CmsStoryBuilder/index.lazy.js'
 // export * from './CmsBlockEditor'
 // export * from './CmsStoryBuilder'
 // export * from './CmsStoryEditor'
-
 // export * from './CmsStoryGraph'
+export { default as CmsPropInput } from './CmsPropInput/CmsPropInput.vue'
