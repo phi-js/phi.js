@@ -236,7 +236,7 @@ const currentIcon = computed(() => {
 
 <template>
   <Teleport :to="props.container">
-    <div
+    <form
       v-show="isOpen"
       v-bind="attrs"
       :class="[
@@ -294,6 +294,8 @@ const currentIcon = computed(() => {
             <slot name="header" />
           </div>
 
+          <slot name="controls" />
+
           <!-- <UiIcon
             v-show="!dock"
             class="UiWindow__eyeIcon"
@@ -301,8 +303,6 @@ const currentIcon = computed(() => {
             @mouseenter="isTransparent = true"
             @mouseleave="isTransparent = false"
           /> -->
-
-          <slot name="controls" />
 
           <UiPopover>
             <template #trigger>
@@ -379,7 +379,7 @@ const currentIcon = computed(() => {
           />
         </footer>
       </UiResizable>
-    </div>
+    </form>
   </Teleport>
 </template>
 
