@@ -9,6 +9,8 @@
   }
 
   fieldset {
+    position: relative;
+
     border: 1px inset var(--ui-color-ridge-top);
     border-radius: 5px;
     padding: 4px;

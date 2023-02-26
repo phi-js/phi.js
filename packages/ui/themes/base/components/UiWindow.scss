@@ -202,39 +202,6 @@
     }
   }
 
-  .UiInput {
-    &__label {
-      user-select: none;
-    }
-
-    &--type-checkbox {
-      margin: 4px 0;
-
-      .UiInput__body label {
-        @extend .ui--clickable;
-
-        display: flex;
-        align-items: center;
-        min-width: 40px;
-        min-height: 40px;
-        border-radius: 4px;
-
-        font-size: 0.9em;
-        font-weight: bold;
-        padding: 4px 8px;
-
-        input {
-          margin-right: 1rem;
-        }
-      }
-
-      .UiInput__element {
-        cursor: pointer;
-        outline: none;
-      }
-    }
-  }
-
   &__header {
     & > .UiIcon,
     .UiPopover__trigger .UiIcon {
