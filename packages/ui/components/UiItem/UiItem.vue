@@ -157,7 +157,7 @@ export default {
   padding: var(--ui-item-padding);
   gap: var(--ui-item-padding);
 
-  color: inherit;
+  // color: inherit; // messes up UiItems inside UiButton
 
   &--endangered {
     // background-color: var(--ui-color-danger, #ea5455) !important;
