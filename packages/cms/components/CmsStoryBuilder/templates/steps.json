@@ -1,0 +1,77 @@
+{
+  "id": "template-steps",
+  "title": "Pasos",
+  "subtext": "",
+  "icon": "mdi:transfer-right",
+  "pages": [
+    {
+      "component": "LayoutPage",
+      "slots": {
+        "default": []
+      },
+      "id": "paso1",
+      "title": "Paso 1",
+      "hash": "paso1",
+      "isFooterEnabled": true,
+      "isHeaderEnabled": false
+    },
+    {
+      "id": "paso2",
+      "component": "LayoutPage",
+      "title": "Paso 2",
+      "slots": {
+        "default": []
+      },
+      "hash": "p2",
+      "isFooterEnabled": true
+    },
+    {
+      "id": "fin",
+      "component": "LayoutPage",
+      "title": "Fin",
+      "slots": {
+        "default": []
+      },
+      "hash": "fin"
+    }
+  ],
+  "header": [],
+  "footer": [
+    {
+      "component": "NavigationLink",
+      "props": {
+        "pageId": "back",
+        "icon": null,
+        "text": "Regresar",
+        "subtext": "",
+        "class": [
+          "UiButton--cancel"
+        ]
+      },
+      "_key": "itm_15_0"
+    },
+    {
+      "component": "NavigationLink",
+      "props": {
+        "pageId": "next",
+        "icon": null,
+        "text": "Continuar",
+        "subtext": ""
+      },
+      "_key": "itm_15_1"
+    }
+  ],
+  "stylesheets": [
+    {
+      "id": "story-style",
+      "src": {
+        "--ui-content-margin": "12px 12px 12px 12px"
+      }
+    },
+    {
+      "id": "UiButton--cancel",
+      "type": "class",
+      "src": ".UiButton--cancel {\n\n}"
+    }
+  ]
+}

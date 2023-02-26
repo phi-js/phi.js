@@ -1,9 +1,7 @@
 export default function sanitizeStory(story) {
-  const emptyPage = { component: 'LayoutPage' }
-
   const defaultStory = {
     title: '',
-    pages: [emptyPage],
+    pages: [],
     paths: [],
   }
 
@@ -11,9 +9,9 @@ export default function sanitizeStory(story) {
     story = defaultStory
   }
 
-  // Every story has an ARRAY of pages
+  // Every story has an ARRAY of pages (which can be empty)
   if (!Array.isArray(story.pages) || !story.pages.length) {
-    story.pages = [emptyPage]
+    story.pages = []
   }
 
   // Every story has a HEADER and FOOTER array (slot)

@@ -7,6 +7,7 @@ import CmsStoryEditor from '../CmsStoryEditor/CmsStoryEditor.vue'
 import StoryEditorWindow from '../CmsStoryEditor/StoryEditorWindow.vue'
 import BlockWindow from '../CmsBlockEditor/BlockWindow.vue'
 import StoryPageManager from './StoryPageManager.vue'
+import StoryTemplatePicker from './StoryTemplatePicker.vue'
 
 import { getStoryFields, sanitizeStory } from '../../functions'
 
@@ -260,10 +261,15 @@ const { push, undo, redo, hasUndo, hasRedo } = useUndo(innerStory.value, (newVal
 })
 
 const isModelExplorerOpen = ref(false)
+
+const isEmpty = computed(() => !innerStory.value.pages?.length)
 </script>
 
 <template>
-  <div class="CmsStoryBuilder">
+  <div
+    class="CmsStoryBuilder"
+    :class="{'CmsStoryBuilder--empty': isEmpty}"
+  >
     <div class="CmsStoryBuilder__header">
       <div class="CmsStoryBuilder__headerStory">
         <slot name="header" />
@@ -320,7 +326,10 @@ const isModelExplorerOpen = ref(false)
         <slot name="corner" />
       </div>
 
-      <div class="CmsStoryBuilder__headerPage">
+      <div
+        v-if="!isEmpty"
+        class="CmsStoryBuilder__headerPage"
+      >
         <!-- sitemap button -->
         <StoryPageManager
           v-model:current-page-id="currentPageId"
@@ -356,64 +365,71 @@ const isModelExplorerOpen = ref(false)
       </div>
     </div>
 
-    <UiContentWrapper
-      :size="contentSize"
-      class="CmsStoryBuilder__body"
-    >
-      <CmsStoryEditor
-        v-show="!isRunning"
-        v-model:current-page-id="currentPageId"
-        v-model:story="innerStory"
-        @update:story="onUpdateStory()"
-      />
-
-      <CmsStory
-        v-if="isRunning"
-        v-model:current-page-id="currentPageId"
-        :model-value="props.modelValue"
-        :story="innerStory"
-        @update:model-value="emit('update:modelValue', $event)"
-        @story-emit="emit('story-emit', $event)"
-      />
-    </UiContentWrapper>
-
-    <StoryEditorWindow
-      v-model:story="innerStory"
-      v-model:current-tab="windowTab"
-      :current-page-id="currentPageId"
-      @accept="onWindowAccept"
-      @cancel="onWindowCancel"
+    <StoryTemplatePicker
+      v-if="isEmpty"
+      @input="innerStory = $event; onUpdateStory();"
     />
 
-    <!-- current block window -->
-    <BlockWindow
-      v-if="editingBlock"
-      v-model:action-id="currentActionId"
-      v-model:block="editingBlock.innerBlock.value"
-      open
-      @accept="editingBlock.updateBlock($event); closeBlockWindow()"
-      @cancel="editingBlock?.cancel?.(); closeBlockWindow()"
-    />
-
-    <!-- modelValue explorer -->
-    <UiWindow
-      v-model:open="isModelExplorerOpen"
-      name="phi"
-    >
-      <template #header>
-        <UiItem
-          :text="i18n.t('CmsStoryBuilder.DataExplorer')"
-          icon="mdi:code-json"
+    <template v-else>
+      <UiContentWrapper
+        :size="contentSize"
+        class="CmsStoryBuilder__body"
+      >
+        <CmsStoryEditor
+          v-show="!isRunning"
+          v-model:current-page-id="currentPageId"
+          v-model:story="innerStory"
+          @update:story="onUpdateStory()"
         />
-      </template>
-      <template #default>
-        <UiInput
-          v-if="isModelExplorerOpen"
-          type="json"
+
+        <CmsStory
+          v-if="isRunning"
+          v-model:current-page-id="currentPageId"
           :model-value="props.modelValue"
+          :story="innerStory"
           @update:model-value="emit('update:modelValue', $event)"
+          @story-emit="emit('story-emit', $event)"
         />
-      </template>
-    </UiWindow>
+      </UiContentWrapper>
+
+      <StoryEditorWindow
+        v-model:story="innerStory"
+        v-model:current-tab="windowTab"
+        :current-page-id="currentPageId"
+        @accept="onWindowAccept"
+        @cancel="onWindowCancel"
+      />
+
+      <!-- current block window -->
+      <BlockWindow
+        v-if="editingBlock"
+        v-model:action-id="currentActionId"
+        v-model:block="editingBlock.innerBlock.value"
+        open
+        @accept="editingBlock.updateBlock($event); closeBlockWindow()"
+        @cancel="editingBlock?.cancel?.(); closeBlockWindow()"
+      />
+
+      <!-- modelValue explorer -->
+      <UiWindow
+        v-model:open="isModelExplorerOpen"
+        name="phi"
+      >
+        <template #header>
+          <UiItem
+            :text="i18n.t('CmsStoryBuilder.DataExplorer')"
+            icon="mdi:code-json"
+          />
+        </template>
+        <template #default>
+          <UiInput
+            v-if="isModelExplorerOpen"
+            type="json"
+            :model-value="props.modelValue"
+            @update:model-value="emit('update:modelValue', $event)"
+          />
+        </template>
+      </UiWindow>
+    </template>
   </div>
 </template>

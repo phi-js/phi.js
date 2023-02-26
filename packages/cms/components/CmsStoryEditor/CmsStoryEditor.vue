@@ -177,24 +177,25 @@ provide('$_cms_story', {
   &__header,
   &__footer {
     position: relative;
-    margin: 4px 0;
-    margin-top: 24px;
+    margin: 4px auto;
 
     border: 1px solid var(--outline-color);
     border-radius: 4px;
+
+    padding: 3px;
+    padding-top: 28px;
 
     &::before {
       display: block;
       position: absolute;
       left: 0;
-      bottom: 100%;
+      top: 0;
 
       font-size: 8pt;
       font-weight: bold;
       opacity: 0.5;
 
       padding: 2px 8px;
-      background-color: var(--outline-color);
       border-radius: 4px;
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
@@ -202,6 +203,7 @@ provide('$_cms_story', {
 
     &:hover::before {
       opacity: 1;
+      color: var(--ui-color-primary);
     }
   }
 

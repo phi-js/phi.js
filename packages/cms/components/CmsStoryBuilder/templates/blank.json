@@ -1,0 +1,29 @@
+{
+  "id": "template-blank",
+  "title": "Blank page",
+  "icon": "mdi:file",
+  "subtext": "Start from scratch",
+  "pages": [
+    {
+      "component": "LayoutPage",
+      "slot": [],
+      "slots": {
+        "default": []
+      },
+      "id": "page-1",
+      "title": "page-1",
+      "hash": "page-1"
+    }
+  ],
+  "header": [],
+  "footer": [],
+  "paths": [],
+  "stylesheets": [
+    {
+      "id": "story-style",
+      "src": {
+        "--ui-content-margin": "12px 12px 12px 12px"
+      }
+    }
+  ]
+}

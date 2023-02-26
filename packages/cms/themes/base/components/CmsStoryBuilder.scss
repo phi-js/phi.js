@@ -138,6 +138,13 @@
   }
 }
 
+.CmsStoryBuilder--empty {
+  .CmsStoryBuilder__header {
+    pointer-events: none;
+    opacity: 0.6;
+  }
+}
+
 
 // Mobile displays
 @media (max-width: 500px) {
