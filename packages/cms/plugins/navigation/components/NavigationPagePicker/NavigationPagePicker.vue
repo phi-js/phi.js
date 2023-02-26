@@ -29,7 +29,7 @@ const availablePages = computed(() => [
 
 <template>
   <UiInput
-    type="select-list"
+    type="select-native"
     :options="availablePages"
     :model-value="props.pageId"
     option-text="$.info.text"

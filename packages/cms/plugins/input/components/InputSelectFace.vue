@@ -69,7 +69,7 @@ const optionsIsString = computed(() => typeof props.modelValue?.props?.options =
     <template v-if="optionsIsString">
       <UiInput
         class="CmsBlock"
-        style="pointer-events:none"
+        style="pointer-events: none"
         v-bind="translatedProps"
         :options="[
           {value: 0, text: modelValue.props.options}

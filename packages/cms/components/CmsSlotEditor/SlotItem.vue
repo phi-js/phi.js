@@ -179,6 +179,7 @@ export default {
             this.i18n.obj({
               ...this.innerBlock.props,
               class: ['CmsBlock', this.innerBlock.props?.class],
+              style: 'pointer-events:none',
             }),
           ),
 

@@ -152,7 +152,8 @@ const i18n = useI18n({
   }
 
   &__typeSelect {
-    // background: transparent; // fucks up option text color (white on white)
+    background: transparent; // fucks up option text color (white on white)
+    color: inherit;
 
     position: absolute;
     right: 0;
@@ -161,7 +162,6 @@ const i18n = useI18n({
     padding: 4px 6px;
     border: 0;
     border-radius: 4px;
-    color: inherit;
     font-size: 0.8em;
     font-weight: bold;
 
