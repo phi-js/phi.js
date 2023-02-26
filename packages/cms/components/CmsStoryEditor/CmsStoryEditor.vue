@@ -177,50 +177,55 @@ provide('$_cms_story', {
   &__header,
   &__footer {
     position: relative;
-    margin: 4px auto;
 
-    border: 1px solid var(--outline-color);
-    border-radius: 4px;
-
+    margin: auto;
     padding: 3px;
-    padding-top: 28px;
+
 
     &::before {
       display: block;
       position: absolute;
       left: 0;
-      top: 0;
 
       font-size: 8pt;
       font-weight: bold;
       opacity: 0.5;
 
-      padding: 2px 8px;
+      padding: 2px;
       border-radius: 4px;
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
     }
 
-    &:hover::before {
-      opacity: 1;
-      color: var(--ui-color-primary);
+    &:hover {
+      border-color: var(--ui-color-primary);
+      &::before {
+        opacity: 1;
+        color: var(--ui-color-primary);
+      }
     }
   }
 
   &__header {
-    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--outline-color);
+    padding-bottom: 24px;
+    margin-bottom: 1rem;
+
     &::before {
+      bottom: 0;
       content: var(--storyeditor-header-title, 'Header');
     }
   }
 
   &__footer {
-    margin-top: calc(2rem + 24px);
+    border-top: 2px solid var(--outline-color);
+    padding-top: 24px;
+    margin-top: 1rem;
 
     &::before {
+      top: 0;
       content: var(--storyeditor-footer-title, 'Footer');
     }
   }
 }
-
 </style>
