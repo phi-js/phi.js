@@ -1,7 +1,7 @@
 {
   "id": "template-blank",
-  "title": "Blank page",
-  "icon": "mdi:file",
+  "icon": "mdi:file-outline",
+  "title": "Blank",
   "subtext": "Start from scratch",
   "pages": [
     {

@@ -10,18 +10,20 @@ function selectTemplate(template) {
 
 <template>
   <div class="StoryTemplatePicker">
-    <div
-      v-for="(template,i) in availableTemplates"
-      :key="i"
-      class="StoryTemplate"
-      @click="selectTemplate(template)"
-    >
-      <UiIcon :src="template.icon" />
-      <h1 v-text="template.title" />
-      <p
-        v-if="template.subtext"
-        v-text="template.subtext"
-      />
+    <div class="StoryTemplatePicker__list">
+      <div
+        v-for="(template,i) in availableTemplates"
+        :key="i"
+        class="StoryTemplate"
+        @click="selectTemplate(template)"
+      >
+        <UiIcon :src="template.icon" />
+        <h1 v-text="template.title" />
+        <p
+          v-if="template.subtext"
+          v-text="template.subtext"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -32,9 +34,17 @@ function selectTemplate(template) {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-
   padding: 12vh 8px;
+
+  &__list {
+    display: flex;
+    gap: 12px;
+
+    & > * {
+      flex: 1;
+      min-width: 222px;
+    }
+  }
 }
 
 .StoryTemplate {
@@ -42,18 +52,11 @@ function selectTemplate(template) {
   border-radius: 5px;
   padding: 24px;
 
-  width: 222px;
-  height: 240px;
-
   .UiIcon {
     display: flex;
     margin: auto;
-    font-size: 50px;
-    margin: 2rem 0;
-  }
-
-  h1 {
-    font-size: 1.3rem;
+    font-size: 2rem;
+    margin: 1rem 0;
   }
 
   h1, p {
@@ -61,10 +64,21 @@ function selectTemplate(template) {
     text-align: center;
   }
 
-  user-select: none;
+  h1 {
+    font-size: 1.2rem;
+  }
+
+  p {
+    font-size: 0.8em;
+  }
+
   cursor: pointer;
+  user-select: none;
+  opacity: 0.75;
+
   &:hover {
     background-color: var(--ui-color-hover);
+    opacity: 1;
   }
 }
 </style>

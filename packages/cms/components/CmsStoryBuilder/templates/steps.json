@@ -1,8 +1,8 @@
 {
   "id": "template-steps",
-  "title": "Pasos",
+  "icon": "mdi:application-settings-outline",
+  "title": "Steps",
   "subtext": "",
-  "icon": "mdi:transfer-right",
   "pages": [
     {
       "component": "LayoutPage",
