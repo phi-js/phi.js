@@ -10,6 +10,10 @@ function sanitizeItem(item, settings = null) {
     keywords: getKeywords(item, settings?.optionSearch).join(' '),
   }
 
+  if (!retval.text) {
+    retval.text = retval.value
+  }
+
   if (retval.children?.length) {
     retval.children = retval.children.map((child) => sanitizeItem(child, settings))
   }

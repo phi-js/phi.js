@@ -106,12 +106,14 @@ const proxyValue = computed({
           v-for="child in option.children"
           :key="child.value"
           :value="child.value"
+          :disabled="child.disabled"
           v-text="child.text"
         />
       </optgroup>
       <option
         v-else
         :value="option.value"
+        :disabled="option.disabled"
         v-text="option.text"
       />
     </template>
