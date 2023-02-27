@@ -50,6 +50,7 @@ export default {
 
     actions: [
       {
+        'id': 'DataTableVariables',
         'title': 'Variables',
         'icon': 'mdi:variable',
         'component': UiForm,
