@@ -1,10 +1,8 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
-
 import { useI18n } from '@/packages/i18n'
 import { UiInput, UiDrawer, UiItem } from '@/packages/ui'
 import CmsPropInput from '../CmsPropInput/CmsPropInput.vue'
-
 
 /*
 Manage block.rules property
@@ -35,6 +33,26 @@ Manage block.rules property
 ]
 */
 
+const i18n = useI18n({
+  en: {
+    'BlockValidationEditor.Required': 'Required',
+    'BlockValidationEditor.MinLength': 'Min. length',
+    'BlockValidationEditor.MaxLength': 'Max. length',
+    'BlockValidationEditor.RegularExpression': 'Regular expression',
+    'BlockValidationEditor.Pattern': 'Pattern',
+    'BlockValidationEditor.ErrorMessage': 'Error message',
+  },
+  es: {
+    'BlockValidationEditor.Required': 'Requerido',
+    'BlockValidationEditor.MinLength': 'Longitud mínima',
+    'BlockValidationEditor.MaxLength': 'Longitud máxima',
+    'BlockValidationEditor.RegularExpression': 'Expresión regular',
+    'BlockValidationEditor.Pattern': 'Patrón',
+    'BlockValidationEditor.ErrorMessage': 'Mensaje de error',
+  },
+})
+
+
 
 const props = defineProps({
   /* BLOCK object */
@@ -48,21 +66,25 @@ const emit = defineEmits(['update:modelValue'])
 
 const rules = ref([
   {
+    text: i18n.t('BlockValidationEditor.Required'),
     type: 'required',
     message: null,
     isEnabled: false,
   },
   {
+    text: i18n.t('BlockValidationEditor.MinLength'),
     type: 'minlength',
     message: null,
     isEnabled: false,
   },
   {
+    text: i18n.t('BlockValidationEditor.MaxLength'),
     type: 'maxlength',
     message: null,
     isEnabled: false,
   },
   {
+    text: i18n.t('BlockValidationEditor.RegularExpression'),
     type: 'pattern',
     message: null,
     isEnabled: false,
@@ -141,24 +163,6 @@ function emitUpdate() {
     rules: targetValue?.length ? targetValue : null,
   })
 }
-
-
-const i18n = useI18n({
-  en: {
-    'BlockValidationEditor.Required': 'Required',
-    'BlockValidationEditor.RegEx': 'RegEx',
-    'BlockValidationEditor.RegularExpression': 'Regular expression',
-    'BlockValidationEditor.ErrorMessage': 'Error message',
-    'BlockValidationEditor.Expression': 'Expression',
-  },
-  es: {
-    'BlockValidationEditor.Required': 'Requerido',
-    'BlockValidationEditor.RegEx': 'RegEx',
-    'BlockValidationEditor.RegularExpression': 'Expresión regular',
-    'BlockValidationEditor.ErrorMessage': 'Mensaje de error',
-    'BlockValidationEditor.Expression': 'Expresión',
-  },
-})
 </script>
 
 <template>
@@ -171,25 +175,29 @@ const i18n = useI18n({
     >
       <UiItem
         class="BlockValidationEditor__ruleItem"
-        :text="rule.type"
+        :text="rule.text"
         :icon="rule.isEnabled ? 'mdi:checkbox-marked' : 'mdi:checkbox-blank-outline'"
         @click="rule.isEnabled = !rule.isEnabled; emitUpdate()"
       />
 
       <UiDrawer :open="rule.isEnabled">
-        <div class="BlockValidationEditor__ruleBody">
+        <div
+          v-if="rule.isEnabled"
+          class="BlockValidationEditor__ruleBody"
+        >
           <UiInput
             v-if="rule.type == 'pattern'"
             v-model="rule.value"
             type="text"
-            label="Pattern"
+            :label="i18n.t('BlockValidationEditor.Pattern')"
+            required
             @update:model-value="emitUpdate()"
           />
           <UiInput
             v-else-if="rule.type == 'minlength' || rule.type == 'maxlength'"
             v-model="rule.value"
             type="number"
-            label="Value"
+            required
             @update:model-value="emitUpdate()"
           />
 
