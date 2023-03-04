@@ -280,6 +280,12 @@ function closeOthersInGroup() {
           :close="shrink"
         />
       </slot>
+
+      <slot
+        name="footer"
+        :is-open="isOpen || isExpanding"
+        :close="shrink"
+      />
     </div>
   </details>
 </template>

@@ -50,6 +50,9 @@ onMounted(() => {
 watch(
   () => props.open,
   (newValue) => {
+    if (isOpen.value === newValue) {
+      return
+    }
     isOpen.value = !!newValue
     if (isOpen.value) {
       refDialog.value?.showModal?.()
@@ -75,12 +78,10 @@ function close() {
 }
 
 async function onDialogClose($event) {
-  if (!$event.target.returnValue) {
-    if (props.onCancel) {
-      let res = await props.onCancel()
-      if (res !== undefined && !res) {
-        return
-      }
+  if (!$event.target.returnValue && props.onCancel) {
+    let res = await props.onCancel()
+    if (res !== undefined && !res) {
+      return
     }
   }
 
@@ -103,7 +104,7 @@ async function onDialogClose($event) {
     :class="{ 'UiDialog--open': isOpen }"
   >
     <div
-      v-if="$slots.trigger"
+      v-if="$slots.trigger || $slots.summary"
       class="UiDialog__trigger"
       :tabindex="tabindex"
       @click="open()"
@@ -111,6 +112,14 @@ async function onDialogClose($event) {
     >
       <slot
         name="trigger"
+        :is-open="isOpen"
+        :open="open"
+        :close="close"
+      />
+
+      <!-- for naming convenience, switching between UiDetails -->
+      <slot
+        name="summary"
         :is-open="isOpen"
         :open="open"
         :close="close"
