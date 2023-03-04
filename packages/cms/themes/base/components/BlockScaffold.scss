@@ -77,7 +77,7 @@
     left: 0;
     bottom: 100%;
 
-    z-index: 2;
+    z-index: 99;
 
     display: flex;
     flex-wrap: nowrap;
@@ -86,6 +86,7 @@
     font-size: 1rem;
 
     min-width: 240px;
+    max-width: 500px;
   }
 
   &__toolbar {

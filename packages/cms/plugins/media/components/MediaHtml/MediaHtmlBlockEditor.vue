@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onBeforeUnmount, watchEffect, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import { UiIcon, UiPopover, UiTabs, UiTab, UiButton } from '@/packages/ui'
+import { UiIcon, UiPopover, UiButton, UiInput } from '@/packages/ui'
 
 import BlockScaffold from '../../../../components/BlockScaffold/BlockScaffold.vue'
 
@@ -24,7 +24,11 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:block', 'select', 'focus', 'blur'])
 
-const i18n = useI18n()
+const i18n = useI18n({
+  en: { 'MediaHtmlBlockEditor.Tanslate': 'Translate' },
+  es: { 'MediaHtmlBlockEditor.Tanslate': 'Traducir' },
+})
+
 const isLanguageOpen = ref(false)
 const curLanguage = ref(i18n.language.value)
 
@@ -80,8 +84,10 @@ watchEffect(() => {
 
   if (!incomingValue?.['$i18n']) {
     targetValue = incomingValue
+  } else if (incomingValue['$i18n']?.[curLanguage.value]) {
+    targetValue = incomingValue['$i18n'][curLanguage.value]
   } else {
-    targetValue = incomingValue['$i18n']?.[curLanguage.value] || ''
+    targetValue = Object.values(incomingValue['$i18n'])?.[0] || ''
   }
 
   if (targetValue != innerValue.value) {
@@ -282,6 +288,30 @@ const alignment = computed(() => {
   return { current, available }
 })
 
+
+const translateButtonEnabled = computed(() => {
+  if (innerValue.value == '<p></p>') {
+    return true
+  }
+
+  const incomingValue = props.block?.props?.value
+
+  if (!incomingValue?.['$i18n']) {
+    return true
+  }
+
+  if (!incomingValue['$i18n']?.[curLanguage.value]) {
+    return true
+  }
+
+  if (incomingValue['$i18n'][curLanguage.value] == '<p></p>') {
+    return true
+  }
+
+  return false
+})
+
+
 async function doTranslation() {
   const dictionary = props.block?.props?.value?.$i18n
   if (!dictionary || typeof dictionary !== 'object') {
@@ -404,31 +434,25 @@ function toggleLanguageTabs() {
         @click="toggleLanguageTabs"
       />
 
-      <UiTabs
+      <div
         v-if="isLanguageOpen"
         class="MediaHtmlBlockEditor__languageTabs"
-        :model-value="curLanguage"
-        @update:model-value="setLanguage($event)"
       >
-        <template #default>
-          <UiTab
-            v-for="(locale) in i18n.availableLanguages"
-            :key="locale.value"
-            :text="locale.text"
-            :value="locale.value"
-          />
-        </template>
-
-        <template #right>
-          <UiButton
-            :disabled="!!innerValue && innerValue != '<p></p>'"
-            label="Translate"
-            icon="mdi:translate"
-            class="UiButton--cancel"
-            @click="doTranslation()"
-          />
-        </template>
-      </UiTabs>
+        <UiInput
+          v-if="isLanguageOpen"
+          :model-value="curLanguage"
+          type="select-native"
+          :options="i18n.availableLanguages"
+          @update:model-value="setLanguage($event)"
+        />
+        <UiButton
+          :disabled="!translateButtonEnabled"
+          :label="i18n.t('MediaHtmlBlockEditor.Tanslate')"
+          icon="mdi:translate"
+          class="UiButton--cancel"
+          @click="doTranslation()"
+        />
+      </div>
     </template>
 
     <template #default>
@@ -459,14 +483,17 @@ function toggleLanguageTabs() {
 
 .MediaHtmlBlockEditor {
   &__languageTabs {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+
     background-color: #333;
     color: #eee;
-
     font-size: 10pt;
 
-    display: block;
-    min-width: 100%; // position within toolbar
-    order: 1;
+    order: 2;
+    padding: 4px;
+    gap: 4px;
   }
 }
 </style>
