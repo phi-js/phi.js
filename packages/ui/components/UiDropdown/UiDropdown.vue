@@ -1,11 +1,17 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { nextTick, onUnmounted, ref, watch } from 'vue'
 
 const props = defineProps({
   open: {
     type: [String, Number, Boolean],
     required: false,
     default: false,
+  },
+
+  trigger: {
+    type: String,
+    required: false,
+    default: 'click', // 'click' | 'hover'
   },
 })
 
@@ -22,11 +28,17 @@ watch(
 function open() {
   isOpen.value = true
   emit('update:open', isOpen.value)
+
+  nextTick(() => {
+    document.addEventListener('click', onClickOutside, true)
+  })
 }
 
 function close() {
+  document.removeEventListener('click', onClickOutside, true)
   isOpen.value = false
   emit('update:open', isOpen.value)
+
 }
 
 function toggle() {
@@ -35,12 +47,20 @@ function toggle() {
 
 let _ignoreNextClick = false
 function onMouseenter() {
+  if (props.trigger != 'hover') {
+    return
+  }
+
   open()
   _ignoreNextClick = true
   setTimeout(() => _ignoreNextClick = false, 420)
 }
 
 function onMouseleave() {
+  if (props.trigger != 'hover') {
+    return
+  }
+
   close()
 }
 
@@ -51,10 +71,25 @@ function onTriggerClick() {
   }
   toggle()
 }
+
+
+const elContainer = ref()
+
+function onClickOutside(event) {
+  if (elContainer.value && elContainer.value.contains(event.target)) {
+    return
+  }
+  close()
+}
+
+onUnmounted(() => {
+  document.removeEventListener('click', onClickOutside, true)
+})
 </script>
 
 <template>
   <div
+    ref="elContainer"
     class="UiDropdown"
     :class="{'UiDropdown--open': isOpen}"
     @mouseleave="onMouseleave"
@@ -76,7 +111,7 @@ function onTriggerClick() {
 
     <div
       class="UiDropdown__container"
-      @mouseleave="close"
+      @mouseleave="onMouseleave"
     >
       <div class="UiDropdown__body">
         <slot
