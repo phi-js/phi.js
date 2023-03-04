@@ -1,6 +1,6 @@
 <!-- eslint-disable max-len -->
 <script>
-import { h, ref, shallowRef, watchEffect, Transition, inject, computed, watch, onMounted } from 'vue'
+import { h, ref, shallowRef, watchEffect, inject, computed, watch, onMounted } from 'vue'
 import { VM } from '@/packages/vm'
 import { getBlockDefinition } from '../../functions'
 
@@ -72,11 +72,13 @@ const CmsBlock = {
     }
 
     function setModelProperty(propName, newValue) {
+      if (propName.startsWith('$slot')) {
+        // Mutate $slot variables, when block has v-model like "$slot.person.something"
+        setProperty({ $slot: props.slotBindings }, propName, newValue)
+        return
+      }
+
       setProperty(innerModel, propName, newValue)
-
-      // Mutate $slot variables, when block has v-model like "$slot.person.something"
-      setProperty({ $slot: props.slotBindings }, propName, newValue)
-
       emitUpdate({ ...innerModel })
     }
 
@@ -398,29 +400,17 @@ const CmsBlock = {
       this.blockSlots,
     )
 
-    // v-if transition
-    if (this.block.transition) {
-      return h(
-        Transition,
-        { name: 'transition-fade', ...this.block.transition },
-        () => this.isVisible ? blockNode : null,
-      )
-    }
+    // // v-if transition
+    // if (this.block.transition) {
+    //   return h(
+    //     Transition,
+    //     { name: 'transition-fade', ...this.block.transition },
+    //     () => this.isVisible ? blockNode : null,
+    //   )
+    // }
 
     return this.isVisible ? blockNode : null
   },
 }
 export default CmsBlock
 </script>
-
-<style lang="scss">
-.transition-fade-enter-active,
-.transition-fade-leave-active {
-  transition: opacity var(--ui-duration-quick);
-}
-
-.transition-fade-enter-from,
-.transition-fade-leave-to {
-  opacity: 0;
-}
-</style>

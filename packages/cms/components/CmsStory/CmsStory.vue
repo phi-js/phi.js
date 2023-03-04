@@ -198,10 +198,6 @@ export default {
     const loadedPages = {} // loadedPages[page-id] = true | false
     const transitionDirection = ref('forward') // 'forward' | 'back'
 
-    // Hash of window.scrollY positions when leaving a page
-    // previousY[page name] = n
-    let previousScrollY = {}
-
     const navigateToPage = (pageId) => {
       if (pageId && pageId == currentPage.value?.id) {
         return
@@ -209,9 +205,8 @@ export default {
 
       const previousId = currentPage.value?.id
 
-      previousScrollY[previousId] = window.scrollY
-
       setCurrentPage(pageId)
+
       if (currentPage.value?.id) {
         emit('update:currentPageId', currentPage.value.id)
       }
@@ -251,7 +246,9 @@ export default {
 
     watch(
       () => props.currentPageId,
-      (newPageId) => navigateToPage(newPageId),
+      (newPageId) => {
+        navigateToPage(newPageId)
+      },
       { immediate: true },
     )
 
@@ -426,14 +423,6 @@ export default {
       }
     })
 
-    /* Preserve previous window scroll position when navigating */
-    function onTransitionEnter() {
-      if (previousScrollY?.[currentPage.value?.id]) {
-        window.scrollTo(0, previousScrollY[currentPage.value.id])
-      }
-    }
-
-
     const declaredEnums = computed(() => {
       const retval = {}
       forEachBlock(sanitizedStory.value, (block) => {
@@ -517,6 +506,11 @@ export default {
       },
     }
 
+    /* Scroll to top of new page */
+    function onTransitionEnter() {
+      window.scrollTo(0, 0)
+    }
+
     // Render function
     return () => !isMounted.value
       ? null
@@ -571,5 +565,11 @@ export default {
 
   position: relative;
   // border: 1px solid transparent; // prevent margin collapses // BUT it fucks up elements with 100vh or 100vw
+
+  font-size: var(--ui-font-size);
+  font-family: var(--ui-font-texts);
+  h1,h2,h3,h4,h5,h6 {
+    font-family: var(--ui-font-titles);
+  }
 }
 </style>

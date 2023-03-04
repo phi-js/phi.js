@@ -171,18 +171,16 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
   })
 
   // Transitions
-  if (block.component == 'LayoutPage') { // Only show transitions editor for LayoutPage (for now?)
-    retval.actions.push({
-      'id': 'transitions',
-      'title': 'Transitions',
-      'icon': 'mdi:transition',
-      'component': BlockTransitionsEditor,
-      'v-model': 'block',
+  retval.actions.push({
+    'id': 'transitions',
+    'title': 'Transitions',
+    'icon': 'mdi:transition',
+    'component': BlockTransitionsEditor,
+    'v-model': 'block',
 
-      'hasData': !!block.transitions,
-      'description': 'This block has transitions',
-    })
-  }
+    'hasData': !!block.transitions,
+    'description': 'This block has transitions',
+  })
 
   // v-for
   if (block.component != 'LayoutPage') { // Hide v-for option for LayoutPage

@@ -1,0 +1,15 @@
+@keyframes fadeOutTop {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, var(--transition-displacement-top), 0);
+  }
+}
+
+.fadeOutTop {
+  animation-name: fadeOutTop;
+}

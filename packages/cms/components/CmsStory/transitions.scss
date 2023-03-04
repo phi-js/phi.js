@@ -1,8 +1,33 @@
+// Transition global variables
+:root {
+  --transition-displacement-left: -128px;
+  --transition-displacement-right: 128px;
+
+  --transition-displacement-top: -128px;
+  --transition-displacement-bottom: 128px;
+}
+
+@import './transitions/bounceInLeft.scss';
+@import './transitions/bounceInRight.scss';
+@import './transitions/bounceOutLeft.scss';
+@import './transitions/bounceOutRight.scss';
+
+@import './transitions/fadeInLeft.scss';
+@import './transitions/fadeInRight.scss';
+@import './transitions/fadeOutLeft.scss';
+@import './transitions/fadeOutRight.scss';
+
+@import './transitions/fadeInTop.scss';
+@import './transitions/fadeInBottom.scss';
+@import './transitions/fadeOutTop.scss';
+@import './transitions/fadeOutBottom.scss';
+
+
 .phi-navigation {
   &-enter-active,
   &-leave-active {
     transition-duration: var(--cms-story-transition-duration);
-    // overflow: hidden;
+    animation-duration: var(--cms-story-transition-duration);
   }
 
   // The leaving container will be absolutely positioned over the standing element
@@ -20,27 +45,16 @@
   }
 }
 
-// Block defined transitions
-:root {
-  --transition-displacement-left: -128px;
-  --transition-displacement-right: 128px;
-}
 
-@import './transitions/bounceInRight.scss';
-@import './transitions/bounceOutRight.scss';
-@import './transitions/fadeInLeft.scss';
-@import './transitions/fadeInRight.scss';
-@import './transitions/fadeOutLeft.scss';
-@import './transitions/fadeOutRight.scss';
 
 .phi-navigation {
   &-enter-active,
   &-leave-active {
-    [class*="_phi_transition_"] {
+    &[class*="_phi_transition_"] {
       animation-duration: var(--cms-story-transition-duration);
     }
 
-    &[class*="_phi_transition_"] {
+    [class*="_phi_transition_"] {
       animation-duration: var(--cms-story-transition-duration);
     }
   }
@@ -54,11 +68,20 @@
   &-forward-leave-active ._phi_transition_navigation-forward-leave,
   &-back-enter-active ._phi_transition_navigation-back-enter,
   &-back-leave-active ._phi_transition_navigation-back-leave {
+    &_bounceInLeft { @extend .bounceInLeft; }
     &_bounceInRight { @extend .bounceInRight; }
+    &_bounceOutLeft { @extend .bounceOutLeft; }
     &_bounceOutRight { @extend .bounceOutRight; }
+
     &_fadeInLeft { @extend .fadeInLeft; }
     &_fadeInRight { @extend .fadeInRight; }
     &_fadeOutLeft { @extend .fadeOutLeft; }
     &_fadeOutRight { @extend .fadeOutRight; }
+
+    &_fadeInTop { @extend .fadeInTop; }
+    &_fadeInBottom { @extend .fadeInBottom; }
+    &_fadeOutTop { @extend .fadeOutTop; }
+    &_fadeOutBottom { @extend .fadeOutBottom; }
+
   }
 }
