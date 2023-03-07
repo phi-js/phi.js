@@ -6,8 +6,10 @@ export default {
 </script>
 
 <script setup>
-import { toRef, computed } from 'vue'
+import { toRef, computed, useAttrs } from 'vue'
 import useOptionsManager from '../UiSelect/composables/useOptionsManager.js'
+
+const attrs = useAttrs()
 
 const emit = defineEmits(['update:modelValue'])
 const props = defineProps({
@@ -85,6 +87,7 @@ const proxyValue = computed({
     v-model="proxyValue"
     class="UiSelectNative UiInput__element"
     :multiple="!!props.multiple"
+    v-bind="{...attrs, type: undefined}"
   >
     <option
       v-if="props.placeholder && !props.multiple"

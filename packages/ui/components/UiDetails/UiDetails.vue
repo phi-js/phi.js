@@ -187,7 +187,7 @@ function onAnimationFinish(open) {
   }
 
   emit('update:open', open)
-  open ? emit('open') : emit('close')
+  open ? emit('open', refEl.value) : emit('close', refEl.value)
 }
 
 

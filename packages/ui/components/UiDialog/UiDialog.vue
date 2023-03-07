@@ -28,6 +28,13 @@ const props = defineProps({
     required: false,
     default: '',
   },
+
+  // Show a close button
+  closeButton: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
 })
 
 const emit = defineEmits(['update:open', 'open', 'close', 'accept', 'cancel'])
@@ -158,6 +165,7 @@ async function onDialogClose($event) {
           :close="close"
         >
           <form
+            v-if="onAccept || onCancel || closeButton"
             class="UiDialog__footer"
             method="dialog"
           >
@@ -175,7 +183,7 @@ async function onDialogClose($event) {
               v-text="i18n.t('Cancel')"
             />
             <button
-              v-else
+              v-else-if="closeButton"
               class="UiDialog__cancelButton UiButton UiButton--cancel"
               type="submit"
               v-text="i18n.t('Close')"
