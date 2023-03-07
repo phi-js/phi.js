@@ -1,6 +1,8 @@
 <script setup>
 import { ref, defineAsyncComponent, watch } from 'vue'
 import { UiDetails } from '../UiDetails'
+import { UiItem } from '../UiItem'
+import { UiIcon } from '../UiIcon'
 const UiTree = defineAsyncComponent(() => import('./UiTree.vue'))
 
 const props = defineProps({
@@ -38,6 +40,22 @@ const props = defineProps({
     default: null,
   },
 
+  open: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+
+  /*
+  Currently selected path
+  An ARRAY of indexes. e.g. [2,1,2]
+  */
+  path: {
+    type: Array,
+    required: false,
+    default: () => [],
+  },
+
   /* Unique name (to use as drawer group base name) */
   name: {
     type: String,
@@ -47,7 +65,7 @@ const props = defineProps({
 })
 
 const children = ref()
-const isOpen = ref(false)
+const isOpen = ref(props.open)
 
 watch(
   () => props.value,
@@ -86,6 +104,14 @@ function collapse() {
 
   isOpen.value = false
 }
+
+function onDetailsOpen($event) {
+  if ($event?.parentNode?.scrollIntoView) {
+    setTimeout(() => {
+      $event.parentNode.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+    }, 120)
+  }
+}
 </script>
 
 <template>
@@ -98,7 +124,7 @@ function collapse() {
       :class="{ 'UiTree__face--open': isOpen, 'UiTree__face--closed': !isOpen }"
     >
       <slot
-        name="default"
+        name="item"
         :item="props.value"
         :children="children"
         :is-open="isOpen"
@@ -106,13 +132,30 @@ function collapse() {
         :expand="expand"
         :collapse="collapse"
         :depth="props.depth"
-      />
+        :navigate="toggle"
+      >
+        <UiItem
+          :text="props.value.text"
+          :subtext="props.value.subtext"
+          :color="props.value.color"
+          :icon="props.value.icon"
+          @click="toggle"
+        >
+          <template
+            v-if="children?.length"
+            #actions
+          >
+            <UiIcon :src="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'" />
+          </template>
+        </UiItem>
+      </slot>
     </div>
     <UiDetails
       v-if="children?.length"
       v-model:open="isOpen"
       :drawer-group="`UiTree-${props.name}-${props.depth}`"
       :group="`UiTree-${props.name}-${props.depth}`"
+      @open="onDetailsOpen"
     >
       <UiTree
         class="UiTree__children"
@@ -121,9 +164,9 @@ function collapse() {
         :value="children"
         :depth="props.depth + 1"
       >
-        <template #default="slotProps">
+        <template #item="slotProps">
           <slot
-            name="default"
+            name="item"
             v-bind="slotProps"
           />
         </template>

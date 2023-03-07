@@ -51,7 +51,7 @@ export default [
           {
             text: 'Item 3.2.3',
             children: [
-              { text: 'Item 3.2.3.1' },
+              { text: 'Item 3.2.3.1', href: 'https://www.google.com' },
               { text: 'Item 3.2.3.2' },
               { text: 'Item 3.2.3.3' },
               { text: 'Item 3.2.3.4' },

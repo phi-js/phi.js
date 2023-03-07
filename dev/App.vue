@@ -137,35 +137,36 @@ watch(
         />
 
         <UiTree
-          v-slot="{ item, children, isOpen, toggle }"
           class="NavTree"
           :value="filteredTree"
           :initial-open="(item) => item.isActive"
         >
-          <a
-            v-if="!item.children"
-            class="NavTree__link"
-            :class="{ 'NavTree__link--active': currentUrl == item.url }"
-            :href="`#${item.url}`"
-          >
-            <UiItem :text="item.text" />
-          </a>
-          <div v-else>
-            <UiItem
-              :icon="item.icon"
-              :text="item.text"
-              :subtext="item.subtext"
-              class="NavTree__toggler"
-              @click="toggle()"
+          <template #item="{ item, children, isOpen, toggle }">
+            <a
+              v-if="!item.children"
+              class="NavTree__link"
+              :class="{ 'NavTree__link--active': currentUrl == item.url }"
+              :href="`#${item.url}`"
             >
-              <template
-                v-if="children?.length"
-                #actions
+              <UiItem :text="item.text" />
+            </a>
+            <div v-else>
+              <UiItem
+                :icon="item.icon"
+                :text="item.text"
+                :subtext="item.subtext"
+                class="NavTree__toggler"
+                @click="toggle()"
               >
-                <UiIcon :src="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'" />
-              </template>
-            </UiItem>
-          </div>
+                <template
+                  v-if="children?.length"
+                  #actions
+                >
+                  <UiIcon :src="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'" />
+                </template>
+              </UiItem>
+            </div>
+          </template>
         </UiTree>
       </div>
 

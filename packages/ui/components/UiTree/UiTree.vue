@@ -40,6 +40,16 @@ const props = defineProps({
     required: false,
     default: () => 'UiTree_' + Math.floor(Math.random() * 100000),
   },
+
+  /*
+  Currently selected path
+  An ARRAY of indexes. e.g. [2,1,2]
+  */
+  path: {
+    type: Array,
+    required: false,
+    default: () => [],
+  },
 })
 
 const emit = defineEmits(['click-item'])
@@ -63,11 +73,13 @@ watch(
       :children-prop="props.childrenProp"
       :initial-open="props.initialOpen"
       :name="props.name"
+      :open="props.path[0] == i"
+      :path="props.path[0] == i ? props.path.slice(1) : []"
       @click-item="emit('click-item', $event)"
     >
-      <template #default="slotProps">
+      <template #item="slotProps">
         <slot
-          name="default"
+          name="item"
           v-bind="slotProps"
         />
       </template>
