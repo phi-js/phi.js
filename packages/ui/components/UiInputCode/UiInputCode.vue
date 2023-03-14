@@ -4,11 +4,13 @@ import { EditorState, EditorView, basicSetup } from '@codemirror/basic-setup'
 import { javascript } from '@codemirror/lang-javascript'
 import { json } from '@codemirror/lang-json'
 import { css } from '@codemirror/lang-css'
+import { html } from '@codemirror/lang-html'
 
 const availableLanguages = {
   javascript,
   json,
   css,
+  html,
 }
 
 const props = defineProps({

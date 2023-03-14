@@ -20,11 +20,11 @@ const emit = defineEmits(['update:modelValue'])
 
 <template>
   <div
-    class="UiInputUrl UiGroup"
+    class="UiInputUrl UiInput__element"
     tabindex="0"
   >
     <input
-      class="UiInputUrl__input UiInput__element"
+      class="UiInputUrl__input"
       type="text"
       :value="props.modelValue"
       :placeholder="$attrs.placeholder"
@@ -40,3 +40,31 @@ const emit = defineEmits(['update:modelValue'])
     />
   </div>
 </template>
+
+<style lang="scss">
+.UiInputUrl {
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 4px;
+  padding-left: 12px;
+
+  &__input {
+    flex: 1;
+    background: transparent;
+    color: inherit;
+
+    border: 0;
+    margin: 0;
+    padding: 0;
+    outline: none;
+
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  .UiUpload__button {
+    --ui-item-padding: 6px 16px;
+    min-height: 0;
+  }
+}
+</style>

@@ -80,6 +80,11 @@ const proxyValue = computed({
   get: () => props.modelValue,
   set: (newValue) => emit('update:modelValue', newValue),
 })
+
+const elementAttributes = computed(() => {
+  const { type, ...otherAttrs } = attrs
+  return otherAttrs
+})
 </script>
 
 <template>
@@ -87,7 +92,7 @@ const proxyValue = computed({
     v-model="proxyValue"
     class="UiSelectNative UiInput__element"
     :multiple="!!props.multiple"
-    v-bind="{...attrs, type: undefined}"
+    v-bind="elementAttributes"
   >
     <option
       v-if="props.placeholder && !props.multiple"

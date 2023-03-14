@@ -94,7 +94,7 @@
   }
 
   &__box {
-    position: absolute;
+    position: absolute !important;
 
     display: flex;
     flex-direction: column;
