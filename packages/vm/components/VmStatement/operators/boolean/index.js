@@ -1,3 +1,5 @@
+import BoolPicker from './BoolPicker.vue'
+
 export default [
   {
     operator: 'boolean.isTrue',
@@ -13,5 +15,13 @@ export default [
     icon: 'mdi:checkbox-blank-outline',
     text: 'es falso',
     editor: false,
+  },
+
+  {
+    operator: 'boolean.eq',
+    type: 'boolean',
+    icon: 'mdi:checkbox-outline',
+    text: 'booleano',
+    editor: { component: BoolPicker },
   },
 ]

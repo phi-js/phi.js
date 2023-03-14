@@ -2,7 +2,7 @@ import { computed, inject } from 'vue'
 import useVmI18n from '../../i18n'
 import { availableFunctions } from '../../plugins/registerPlugin.js'
 
-export default function getAvailableStatements() {
+export default function getDefinedStatements() {
   const injectedFunctions = inject('$_vm_functions', {})
   const i18n = useVmI18n()
 
