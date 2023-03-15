@@ -16,6 +16,7 @@ import pluginNavigation from '../plugins/navigation'
 import pluginStory from '../plugins/story'
 import pluginVideo from '../plugins/video'
 import pluginClipboard from '../plugins/clipboard'
+import pluginChartJs from '../../chartjs/cms-plugin'
 
 // This order is used in PickerContents
 usePlugin([
@@ -27,6 +28,7 @@ usePlugin([
   pluginVideo,
   pluginNavigation,
   pluginClipboard,
+  pluginChartJs,
 ])
 
 export default function usePlugin(plugin) {
@@ -52,6 +54,9 @@ export default function usePlugin(plugin) {
             found.children.push(...pluginBlock.children.filter((c) => !c.private))
           }
         } else {
+          if (Array.isArray(pluginBlock.children)) {
+            pluginBlock.children = pluginBlock.children.filter((c) => !c.private)
+          }
           availableBlocks.push(pluginBlock)
         }
       })

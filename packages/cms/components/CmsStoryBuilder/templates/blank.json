@@ -1,8 +1,18 @@
 {
   "id": "template-blank",
   "icon": "mdi:file-outline",
-  "title": "Blank",
-  "subtext": "Start from scratch",
+  "title": {
+    "$i18n": {
+      "en": "Blank",
+      "es": "En blanco"
+    }
+  },
+  "subtext": {
+    "$i18n": {
+      "en": "Start from scratch",
+      "es": "Empezar desde cero"
+    }
+  },
   "pages": [
     {
       "component": "LayoutPage",

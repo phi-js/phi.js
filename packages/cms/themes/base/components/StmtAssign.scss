@@ -1,0 +1,30 @@
+.StmtAssign {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+
+  &__item {
+    --ui-item-padding: 10px 12px;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      background-color: var(--ui-color-hover);
+    }
+  }
+
+  &__statement {
+    padding: 8px;
+  }
+
+  &__footer {
+    padding: 6px;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    background-color:rgba(0, 0, 0, 0.02);
+
+    & :last-child {
+      margin-left: auto
+    }
+  }
+}

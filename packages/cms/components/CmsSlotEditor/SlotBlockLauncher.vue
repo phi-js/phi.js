@@ -55,6 +55,12 @@ function onBlockPickerInput(blockDefinition) {
     component: blockDefinition.name,
   }))
 
+  // "Alias" (or "preset"?) blocks, are blocks which simply define a
+  // pre-configured block objects (with props and slots)
+  if (typeof blockDefinition.block.component === 'string') {
+    candidateBlock.component = blockDefinition.block.component
+  }
+
   const newBlock = onBeforeCreateBlock(candidateBlock)
   if (!newBlock) {
     console.warn('Block creation halted by onBeforeCreateBlock')

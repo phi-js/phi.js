@@ -9,6 +9,7 @@ import { useStorySettings } from '../../functions'
 import CmsThemePicker from '../CmsThemePicker/CmsThemePicker.vue'
 import CssClassManager from '../CssClassManager/CssClassManager.vue'
 // import CssPalettePicker from '../CssPalettePicker/CssPalettePicker.vue'
+import Spacing from '../../../ui/components/CssEditor/properties/Spacing.vue'
 
 const i18n = useI18n({
   en: {
@@ -111,11 +112,6 @@ const marginCss = {
         },
       },
     },
-
-    '--ui-content-margin': {
-      title: 'Document margin',
-      format: 'css-spacing',
-    },
   },
 }
 // ////
@@ -189,6 +185,18 @@ const innerStoryVariablesDark = computed({
   get: () => getSheetSrc('story-style-dark') || {},
   set: (newValue) => setSheetSrc('story-style-dark', newValue),
 })
+
+
+const pseudoMargin = computed({
+  get: () => {
+    const storyStyle = getSheetSrc('story-style') || {}
+    return { margin: storyStyle['--ui-content-margin'] || '' }
+  },
+  set: (newValue) => {
+    setSheetSrc('story-style', { '--ui-content-margin': newValue.margin })
+  },
+})
+
 
 const availableFonts = computed(() => [
   {
@@ -328,6 +336,11 @@ function importGoogleFont(varName) {
         :endpoint="uploadsEndpoint"
         @update:model-value="emitUpdate"
       />
+      <Spacing
+        v-model="pseudoMargin"
+        class="CmsStoryStyle__spacing"
+        @update:model-value="emitUpdate"
+      />
     </UiTab>
 
     <UiTab :text="i18n.t('CmsStoryStyle.css')">
@@ -344,6 +357,19 @@ function importGoogleFont(varName) {
 .CmsStoryStyle {
   &__properties {
     padding: 16px 12px;
+  }
+
+  &__spacing {
+    .SpacingBox__slot {
+      border: 1px solid rgba(0,0,0, 0.3);
+      border-radius: 4px;
+      height: 32px;
+      background: var(--ui-color-background);
+    }
+
+    .SpacingBox--padding {
+      display: none;
+    }
   }
 }
 </style>

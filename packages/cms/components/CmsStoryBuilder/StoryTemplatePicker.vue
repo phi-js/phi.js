@@ -1,10 +1,40 @@
 <script setup>
-import { UiIcon } from '@/packages/ui'
+import { shallowRef } from 'vue'
+import { useI18n } from '@/packages/i18n'
+import { UiIcon, UiDialog } from '@/packages/ui'
 import availableTemplates from './templates'
+
+const i18n = useI18n()
+
 const emit = defineEmits(['input'])
 
+const stagingComponent = shallowRef()
+
 function selectTemplate(template) {
+  if (template.component) {
+    stagingComponent.value = template.component
+    return
+  }
+
   emit('input', JSON.parse(JSON.stringify(template)))
+}
+
+function onStagingAccept($event) {
+  const finalStory = {
+    id: 'imported',
+    pages: [
+      {
+        component: 'LayoutPage',
+        slots: { default: [$event] },
+        id: 'page-1',
+        title: 'page-1',
+        hash: 'page-1',
+      },
+    ],
+  }
+
+  emit('input', finalStory)
+  return true
 }
 </script>
 
@@ -18,13 +48,28 @@ function selectTemplate(template) {
         @click="selectTemplate(template)"
       >
         <UiIcon :src="template.icon" />
-        <h1 v-text="template.title" />
+        <h1 v-text="i18n.obj(template.title)" />
         <p
           v-if="template.subtext"
-          v-text="template.subtext"
+          v-text="i18n.obj(template.subtext)"
         />
       </div>
     </div>
+
+    <UiDialog
+      v-if="stagingComponent"
+      v-slot="{ close}"
+      :open="true"
+      :close-button="false"
+      class="StoryTemplatePicker__dialog"
+      @close="stagingComponent = null"
+    >
+      <Component
+        :is="stagingComponent"
+        @accept="onStagingAccept($event) && close()"
+        @cancel="close()"
+      />
+    </UiDialog>
   </div>
 </template>
 

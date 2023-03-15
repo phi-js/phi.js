@@ -91,8 +91,18 @@ export default {
     })
 
     const innerRef = ref()
-
     const i18n = useI18n()
+
+    const faceProps = computed(() => {
+      return i18n.obj({
+        ...innerBlock.value.props,
+        class: ['CmsBlock', innerBlock.value.props?.class],
+        style: {
+          ...innerBlock.value.props?.style,
+          pointerEvents: 'none',
+        },
+      })
+    })
 
     return {
       innerBlock,
@@ -104,6 +114,7 @@ export default {
       insertSibling,
       innerRef,
       i18n,
+      faceProps,
     }
   },
 
@@ -176,11 +187,7 @@ export default {
           )
           : () => h( // Use block component as editor face
             this.definition.block.component,
-            this.i18n.obj({
-              ...this.innerBlock.props,
-              class: ['CmsBlock', this.innerBlock.props?.class],
-              style: 'pointer-events:none',
-            }),
+            this.faceProps,
           ),
 
         toolbar: this.definition?.editor?.toolbar

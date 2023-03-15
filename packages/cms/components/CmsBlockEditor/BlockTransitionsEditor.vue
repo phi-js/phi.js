@@ -138,7 +138,7 @@ const transitions = ref()
 
 watch(
   () => props.modelValue,
-  () => transitions.value = props.modelValue?.transitions || {},
+  () => transitions.value = props.modelValue?.transitions || null,
   { immediate: true },
 )
 
@@ -151,7 +151,9 @@ function emitUpdate() {
 
 const currentTemplateId = computed({
   get() {
-    return transitions.value?.id || 'custom'
+    return transitions.value === null
+      ? ''
+      : transitions.value?.id || 'custom'
   },
   set(templateId) {
     const tpl = availableTemplates.find((t) => t.id == templateId)
@@ -161,7 +163,10 @@ const currentTemplateId = computed({
         ...tpl.transitions,
       }
     } else {
-      transitions.value.id = 'custom'
+      transitions.value = {
+        ...transitions.value,
+        id: 'custom',
+      }
     }
     emitUpdate()
   },

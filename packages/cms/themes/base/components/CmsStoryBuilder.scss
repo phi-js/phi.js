@@ -47,7 +47,8 @@
     border-radius: 4px;
     --ui-item-padding: 8px 14px;
 
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 13px;
 
     min-width: auto !important; // do not let tabItems be squeezed too narrow
 
@@ -60,7 +61,8 @@
   &__runButton {
     @extend .outset;
     min-width: auto !important;
-    font-weight: bold !important;
+    font-weight: 700 !important;
+    font-size: 13px;
 
     .UiIcon {
       color: var(--ui-color-primary);

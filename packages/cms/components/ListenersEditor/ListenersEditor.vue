@@ -117,7 +117,6 @@ const endangeredIndex = ref(-1)
       :key="i"
       class="ListenersEditor__listener"
       :text="eventNames[event.name] || event.name"
-      group="ListenersEditor"
       @delete="removeEvent(i)"
     >
       <VmStatement

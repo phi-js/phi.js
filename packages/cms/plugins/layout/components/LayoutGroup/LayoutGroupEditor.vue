@@ -85,6 +85,7 @@ function onSlotUpdate() {
 
   & > .CmsSlotEditor__footer {
     margin: 3px;
+    flex: none !important;
   }
 }
 

@@ -1,61 +1,140 @@
 {
   "id": "template-steps",
   "icon": "mdi:application-settings-outline",
-  "title": "Steps",
+  "title": {
+    "$i18n": {
+      "en": "Steps",
+      "es": "Pasos"
+    }
+  },
   "subtext": "",
   "pages": [
     {
       "component": "LayoutPage",
       "slots": {
-        "default": []
+        "default": [
+          {
+            "component": "MediaHtml",
+            "props": {
+              "value": {
+                "$i18n": {
+                  "en": "<h1>Paso 1</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur habichuela porta. Nam dapibus magna ac lacus viverra, condimentum feugiat velit consectetur mater. Interdum et malesuada fames ac ante ipsum primis in faucibus anus. Etiam dignissim tempus nulla, in lacinia orci aliquam sed ar mola. Praesent eu lobortis erat. Sed eros velit, laoreet in hendrerit id. Nullam at lorem at mi luctus pulvinar in quis orci benedict. Curabitur eget sollicitudin dolor. Fusce ultricies est nunc, vitae vehicula metus. Donec in velit ac nibh dictum mattis. Duis mollis lactus sed. Suspendisse potenti. Nunc fringilla, dui id vestibulum malesuada, metus massa ultricies. Sed lacinia ligula tellus sit amet. Morbi feugiat in ex centum ūndecim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur</p>"
+                }
+              }
+            },
+            "_key": "itm_2_2"
+          }
+        ]
       },
       "id": "paso1",
       "title": "Paso 1",
       "hash": "paso1",
       "isFooterEnabled": true,
-      "isHeaderEnabled": false
+      "isHeaderEnabled": true,
+      "transitions": {
+        "id": "nav-fade-horizontal",
+        "navigation-forward-enter": "fadeInRight",
+        "navigation-forward-leave": "fadeOutLeft",
+        "navigation-back-enter": "fadeInLeft",
+        "navigation-back-leave": "fadeOutRight"
+      }
     },
     {
       "id": "paso2",
       "component": "LayoutPage",
       "title": "Paso 2",
       "slots": {
-        "default": []
+        "default": [
+          {
+            "component": "MediaHtml",
+            "props": {
+              "value": {
+                "$i18n": {
+                  "en": "<h1>Paso 2</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur habichuela porta. Nam dapibus magna ac lacus viverra, condimentum feugiat velit consectetur mater. Interdum et malesuada fames ac ante ipsum primis in faucibus anus. Etiam dignissim tempus nulla, in lacinia orci aliquam sed ar mola. Praesent eu lobortis erat. Sed eros velit, laoreet in hendrerit id. Nullam at lorem at mi luctus pulvinar in quis orci benedict. Curabitur eget sollicitudin dolor. Fusce ultricies est nunc, vitae vehicula metus. Donec in velit ac nibh dictum mattis. Duis mollis lactus sed. Suspendisse potenti. Nunc fringilla, dui id vestibulum malesuada, metus massa ultricies. Sed lacinia ligula tellus sit amet. Morbi feugiat in ex centum ūndecim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur</p>",
+                  "es": "<h1>Paso 2</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur habichuela porta. Nam dapibus magna ac lacus viverra, condimentum feugiat velit consectetur mater. Interdum et malesuada fames ac ante ipsum primis in faucibus anus. Etiam dignissim tempus nulla, in lacinia orci aliquam sed ar mola. Praesent eu lobortis erat. Sed eros velit, laoreet in hendrerit id. Nullam at lorem at mi luctus pulvinar in quis orci benedict. Curabitur eget sollicitudin dolor. Fusce ultricies est nunc, vitae vehicula metus. Donec in velit ac nibh dictum mattis. Duis mollis lactus sed. Suspendisse potenti. Nunc fringilla, dui id vestibulum malesuada, metus massa ultricies. Sed lacinia ligula tellus sit amet. Morbi feugiat in ex centum ūndecim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur</p>"
+                }
+              }
+            },
+            "_key": "itm_4_0"
+          }
+        ]
       },
       "hash": "p2",
-      "isFooterEnabled": true
+      "isFooterEnabled": true,
+      "transitions": {
+        "id": "nav-fade-horizontal",
+        "navigation-forward-enter": "fadeInRight",
+        "navigation-forward-leave": "fadeOutLeft",
+        "navigation-back-enter": "fadeInLeft",
+        "navigation-back-leave": "fadeOutRight"
+      }
     },
     {
       "id": "fin",
       "component": "LayoutPage",
       "title": "Fin",
       "slots": {
-        "default": []
+        "default": [
+          {
+            "component": "MediaHtml",
+            "props": {
+              "value": {
+                "$i18n": {
+                  "en": "<h1>FIN</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur habichuela porta. Nam dapibus magna ac lacus viverra, condimentum feugiat velit consectetur mater. Interdum et malesuada fames ac ante ipsum primis in faucibus anus. Etiam dignissim tempus nulla, in lacinia orci aliquam sed ar mola. Praesent eu lobortis erat. Sed eros velit, laoreet in hendrerit id. Nullam at lorem at mi luctus pulvinar in quis orci benedict. Curabitur eget sollicitudin dolor. Fusce ultricies est nunc, vitae vehicula metus. Donec in velit ac nibh dictum mattis. Duis mollis lactus sed. Suspendisse potenti. Nunc fringilla, dui id vestibulum malesuada, metus massa ultricies. Sed lacinia ligula tellus sit amet. Morbi feugiat in ex centum ūndecim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur</p>",
+                  "es": "<h1>FIN</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur habichuela porta. Nam dapibus magna ac lacus viverra, condimentum feugiat velit consectetur mater. Interdum et malesuada fames ac ante ipsum primis in faucibus anus. Etiam dignissim tempus nulla, in lacinia orci aliquam sed ar mola. Praesent eu lobortis erat. Sed eros velit, laoreet in hendrerit id. Nullam at lorem at mi luctus pulvinar in quis orci benedict. Curabitur eget sollicitudin dolor. Fusce ultricies est nunc, vitae vehicula metus. Donec in velit ac nibh dictum mattis. Duis mollis lactus sed. Suspendisse potenti. Nunc fringilla, dui id vestibulum malesuada, metus massa ultricies. Sed lacinia ligula tellus sit amet. Morbi feugiat in ex centum ūndecim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur</p>"
+                }
+              }
+            },
+            "_key": "itm_6_0"
+          }
+        ]
       },
-      "hash": "fin"
+      "hash": "fin",
+      "transitions": {
+        "id": "nav-fade-horizontal",
+        "navigation-forward-enter": "fadeInRight",
+        "navigation-forward-leave": "fadeOutLeft",
+        "navigation-back-enter": "fadeInLeft",
+        "navigation-back-leave": "fadeOutRight"
+      }
     }
   ],
-  "header": [],
-  "footer": [
+  "header": [
     {
       "component": "NavigationLink",
       "props": {
         "pageId": "back",
         "icon": null,
-        "text": "Regresar",
+        "text": {
+          "$i18n": {
+            "es": "Regresar",
+            "de": "Geh zurück",
+            "en": "Go back",
+            "fr": "Retourner"
+          }
+        },
         "subtext": "",
         "class": [
           "UiButton--cancel"
         ]
       },
       "_key": "itm_15_0"
-    },
+    }
+  ],
+  "footer": [
     {
       "component": "NavigationLink",
       "props": {
         "pageId": "next",
         "icon": null,
-        "text": "Continuar",
+        "text": {
+          "$i18n": {
+            "es": "Continuar",
+            "de": "Weitermachen",
+            "en": "Continue",
+            "fr": "Continuer"
+          }
+        },
         "subtext": ""
       },
       "_key": "itm_15_1"
@@ -73,5 +152,6 @@
       "type": "class",
       "src": ".UiButton--cancel {\n\n}"
     }
-  ]
+  ],
+  "paths": []
 }

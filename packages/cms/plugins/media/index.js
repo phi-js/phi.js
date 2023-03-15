@@ -8,6 +8,7 @@ import MediaDocument from './components/MediaDocument/MediaDocument.block.js'
 import MediaFileList from './components/MediaFileList/MediaFileList.block.js'
 import MediaGallery from './components/MediaGallery/MediaGallery.block.js'
 import MediaHtml from './components/MediaHtml/MediaHtml.block.js'
+import MediaHtmlCode from './components/MediaHtml/MediaHtmlCode.block.js'
 import MediaIframe from './components/MediaIframe/MediaIframe.block.js'
 import MediaImage from './components/MediaImage/MediaImage.block.js'
 import MediaItem from './components/MediaItem/MediaItem.block.js'
@@ -49,6 +50,7 @@ export default {
         MediaFileList,
         MediaGallery,
         MediaItem,
+        MediaHtmlCode,
         MediaLoremIpsum,
       ],
     },

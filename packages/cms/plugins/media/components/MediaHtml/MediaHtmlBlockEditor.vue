@@ -1,11 +1,12 @@
 <script setup>
 import { ref, computed, onBeforeUnmount, watchEffect, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import { UiIcon, UiPopover, UiButton, UiInput } from '@/packages/ui'
-
-import BlockScaffold from '../../../../components/BlockScaffold/BlockScaffold.vue'
+import { UiIcon, UiPopover, UiButton, UiInput, UiDialog } from '@/packages/ui'
 
 import googleTranslate from '../../../../components/CmsPropInput/types/googleTranslate'
+import OpenAiText from './OpenAiText.vue'
+import BlockScaffold from '../../../../components/BlockScaffold/BlockScaffold.vue'
+
 
 import { Editor } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
@@ -426,6 +427,19 @@ function toggleLanguageTabs() {
         :class="{ 'BlockScaffold__button--active': allCommands.orderedList.isActive }"
         @click="allCommands.orderedList.callback()"
       />
+
+      <UiDialog>
+        <template #trigger>
+          <UiIcon
+            src="mdi:head-snowflake"
+            class="BlockScaffold__button"
+            title="OpenAI"
+          />
+        </template>
+        <template #default="{ close }">
+          <OpenAiText @input="innerValue = $event; emitUpdate(); close()" />
+        </template>
+      </UiDialog>
 
       <UiIcon
         src="mdi:translate"
