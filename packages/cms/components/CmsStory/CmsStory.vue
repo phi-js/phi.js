@@ -20,7 +20,9 @@ import {
   getProperty,
   setProperty,
   useStylesheets,
+  useStorySettings,
 } from '../../functions'
+
 import { useI18n } from '@/packages/i18n'
 import { VM } from '@/packages/vm'
 
@@ -112,12 +114,30 @@ export default {
 
 
     // Story modelValue
+    const storySettings = useStorySettings()
+
     const innerModel = ref({})
     watch(
       () => props.modelValue,
-      (newValue) => innerModel.value = newValue, // OJO. REFERENCE to prop !!!
+      (newValue) => innerModel.value = {
+        ...newValue,
+        $settings: storySettings,
+      },
       { immediate: true },
     )
+
+    function onUpdateModelValue(event) {
+      innerModel.value = event
+      emit('update:modelValue', { ...innerModel.value, $settings: undefined })
+
+      // evaluate story[v-on][update:modelValue]
+      if (sanitizedStory.value?.['v-on']?.['update:modelValue']) {
+        const initialSetter = storyVM.onModelSet
+        storyVM.onModelSet = null
+        storyVM.eval(sanitizedStory.value['v-on']['update:modelValue'], innerModel.value)
+          .then(() => storyVM.onModelSet = initialSetter)
+      }
+    }
 
     // StoryVM
     const storyVM = new VM
@@ -402,19 +422,6 @@ export default {
     storyVM.custom = { story: providedData }
 
 
-    function onUpdateModelValue(event) {
-      innerModel.value = event
-      emit('update:modelValue', innerModel.value)
-
-      // evaluate story[v-on][update:modelValue]
-      if (sanitizedStory.value?.['v-on']?.['update:modelValue']) {
-        const initialSetter = storyVM.onModelSet
-        storyVM.onModelSet = null
-        storyVM.eval(sanitizedStory.value['v-on']['update:modelValue'], innerModel.value)
-          .then(() => storyVM.onModelSet = initialSetter)
-      }
-    }
-
     /* Story defined stylesheets */
     watchEffect(() => {
       if (Array.isArray(sanitizedStory.value?.stylesheets)) {
@@ -540,6 +547,11 @@ export default {
                 'modelValue': {
                   ...innerModel.value,
                   // $i18n: i18n,
+                  $i18n: {
+                    t: (a, b, c) => i18n.t(a, b, c),
+                    obj: (v) => i18n.obj(v),
+                    currency: (value, currency) => i18n.$(value, currency),
+                  },
                   $pages: visiblePages.value,
                   $nav: pageNav.value,
                   $page: pageNav.value.current,

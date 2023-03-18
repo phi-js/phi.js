@@ -6,7 +6,6 @@ import { getBlockDefinition } from '../../functions'
 
 import {
   getPluginData,
-  useStorySettings,
   getProperty,
   setProperty,
 } from '../../functions'
@@ -105,7 +104,6 @@ const CmsBlock = {
 
     // only for non-repeating blocks
     if (!props.block['v-for']) {
-      const storySettings = useStorySettings()
 
       watchEffect(() => {
         const allProps = {
@@ -116,10 +114,7 @@ const CmsBlock = {
         // Parsed block props
         blockProps.value = blockVM.eval(
           allProps,
-          {
-            ...evaluableModel.value,
-            $settings: storySettings,
-          },
+          evaluableModel.value,
         )
 
         // props from v-models
