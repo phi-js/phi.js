@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /*
 Retorna todos los editores (listos para usar en <component>) relacionados al bloque
 
@@ -27,13 +28,16 @@ import { useI18n } from '@/packages/i18n'
 import { UiInputJson } from '@/packages/ui/components'
 
 import getBlockDefinition from './getBlockDefinition.js'
-import BlockDataEditor from '../components/CmsBlockEditor/BlockDataEditor.vue'
-import BlockListenersEditor from '../components/CmsBlockEditor/BlockListenersEditor.vue'
-import BlockVisibilityEditor from '../components/CmsBlockEditor/BlockVisibilityEditor.vue'
-import BlockCssEditor from '../components/CmsBlockEditor/BlockCssEditor.vue'
-import BlockValidationEditor from '../components/CmsBlockEditor/BlockValidationEditor.vue'
-import BlockRepeatEditor from '../components/CmsBlockEditor/BlockRepeatEditor.vue'
-import BlockTransitionsEditor from '../components/CmsBlockEditor/BlockTransitionsEditor.vue'
+
+const BlockDataEditor = defineAsyncComponent(() => import('../components/CmsBlockEditor/BlockDataEditor.vue'))
+const BlockListenersEditor = defineAsyncComponent(() => import('../components/CmsBlockEditor/BlockListenersEditor.vue'))
+const BlockVisibilityEditor = defineAsyncComponent(() => import('../components/CmsBlockEditor/BlockVisibilityEditor.vue'))
+const BlockCssEditor = defineAsyncComponent(() => import('../components/CmsBlockEditor/BlockCssEditor.vue'))
+const BlockValidationEditor = defineAsyncComponent(() => import('../components/CmsBlockEditor/BlockValidationEditor.vue'))
+const BlockRepeatEditor = defineAsyncComponent(() => import('../components/CmsBlockEditor/BlockRepeatEditor.vue'))
+const BlockTransitionsEditor = defineAsyncComponent(() => import('../components/CmsBlockEditor/BlockTransitionsEditor.vue'))
+
+const OpenAiBlockHelper = defineAsyncComponent(() => import('../plugins/openai/OpenAiBlockHelper.vue'))
 
 import dictionary from '../i18n/index.js'
 const i18n = useI18n(dictionary)
@@ -144,6 +148,15 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
 
     'hasData': !!block['v-if'],
     'description': 'This block has conditional visibility',
+  })
+
+  // OpenAi
+  retval.actions.push({
+    'id': 'openai',
+    'title': 'OpenAI',
+    'icon': 'mdi:head-snowflake',
+    'component': OpenAiBlockHelper,
+    'v-model': 'block',
   })
 
   // v-on

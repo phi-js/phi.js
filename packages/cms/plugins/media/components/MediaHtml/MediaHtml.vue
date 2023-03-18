@@ -17,19 +17,28 @@ const htmlValue = computed(() => typeof props.value == 'string'
 <template>
   <!-- eslint-disable vue/no-v-html -->
   <div
-    v-if="htmlValue"
     class="MediaHtml story-html"
+    :class="{'MediaHtml--empty': htmlValue === '' || props.value === null}"
     v-html="htmlValue"
-  />
-  <div
-    v-else
-    class="MediaHtml story-html"
-    v-text="props.value"
   />
 </template>
 
 <style lang="scss">
 .MediaHtml {
   word-break: break-word;
+}
+
+.BlockScaffold--MediaHtmlCode {
+  .MediaHtml--empty {
+    min-height: 3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &::after {
+      content: 'Empty HTML block';
+      font-size: 9pt;
+      opacity: 0.7;
+    }
+  }
 }
 </style>

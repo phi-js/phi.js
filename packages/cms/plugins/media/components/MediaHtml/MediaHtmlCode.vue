@@ -1,5 +1,5 @@
 <script setup>
-import UiInputCode from '../../../../../ui/components/UiInputCode/UiInputCode.vue'
+import { UiInputCode } from '@/packages/ui/components'
 
 const props = defineProps({
   // BLOCK object

@@ -1,5 +1,8 @@
-import MediaHtml from './MediaHtml.vue'
-import MediaHtmlCode from './MediaHtmlCode.vue'
+import { defineAsyncComponent } from 'vue'
+const MediaHtml = defineAsyncComponent(() => import('./MediaHtml.vue'))
+const MediaHtmlCode = defineAsyncComponent(() => import('./MediaHtmlCode.vue'))
+// import MediaHtml from './MediaHtml.vue'
+// import MediaHtmlCode from './MediaHtmlCode.vue'
 
 export default {
   name: 'MediaHtmlCode',

@@ -1,10 +1,9 @@
 <script setup>
-import { ref, computed, onBeforeUnmount, watchEffect, watch } from 'vue'
+import { ref, computed, onBeforeUnmount, watchEffect, watch, inject } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { UiIcon, UiPopover, UiButton, UiInput, UiDialog } from '@/packages/ui'
 
 import googleTranslate from '../../../../components/CmsPropInput/types/googleTranslate'
-import OpenAiText from './OpenAiText.vue'
 import BlockScaffold from '../../../../components/BlockScaffold/BlockScaffold.vue'
 
 
@@ -26,8 +25,16 @@ const props = defineProps({
 const emit = defineEmits(['update:block', 'select', 'focus', 'blur'])
 
 const i18n = useI18n({
-  en: { 'MediaHtmlBlockEditor.Tanslate': 'Translate' },
-  es: { 'MediaHtmlBlockEditor.Tanslate': 'Traducir' },
+  en: {
+    'MediaHtmlBlockEditor.Tanslate': 'Translate',
+    'MediaHtmlBlockEditor.currentTab': 'Current tab',
+    'MediaHtmlBlockEditor.newTab': 'New tab',
+  },
+  es: {
+    'MediaHtmlBlockEditor.Tanslate': 'Traducir',
+    'MediaHtmlBlockEditor.currentTab': 'Pestaña actual',
+    'MediaHtmlBlockEditor.newTab': 'Nueva pestaña',
+  },
 })
 
 const isLanguageOpen = ref(false)
@@ -204,36 +211,9 @@ const allCommands = computed(() => {
       icon: 'mdi:link',
       text: 'link',
       callback: () => {
-        const previousUrl = editor.getAttributes('link').href
-        const url = window.prompt('URL', previousUrl)
-
-        // cancelled
-        if (url === null) {
-          return
-        }
-
-        // empty
-        if (url === '') {
-          editor
-            .chain()
-            .focus()
-            .extendMarkRange('link')
-            .unsetLink()
-            .run()
-
-          return
-        }
-
-        // update link
-        editor
-          .chain()
-          .focus()
-          .extendMarkRange('link')
-          .setLink({
-            href: url,
-            target: url.startsWith('http') ? '_blank' : '_self',
-          })
-          .run()
+        linkUrl.value = editor.getAttributes('link').href
+        linkTarget.value = editor.getAttributes('link').target
+        isLinkDialogOpen.value = true
       },
       isActive: editor.isActive('link'),
     },
@@ -339,6 +319,54 @@ function toggleLanguageTabs() {
     curLanguage.value = i18n.language.value
   }
 }
+
+/* Link dialog */
+const injectedStory = inject('_cms_currentStory', null)
+const injectedPages = computed(() => injectedStory?.value?.pages || [])
+const pageOptions = computed(() => injectedPages.value.map((p) => ({
+  value: `#p:${p.id}`,
+  text: p.title,
+})))
+
+const isLinkDialogOpen = ref(false)
+const linkUrl = ref('')
+const linkTarget = ref('')
+
+function onDialogAccept() {
+  if (linkUrl.value === '') {
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange('link')
+      .unsetLink()
+      .run()
+  } else {
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange('link')
+      .setLink({
+        href: linkUrl.value,
+        target: linkTarget.value || '_self',
+      })
+      .run()
+  }
+
+  isLinkDialogOpen.value = false
+  linkUrl.value = ''
+  linkTarget.value = ''
+}
+
+function onDialogCancel() {
+  isLinkDialogOpen.value = false
+  linkUrl.value = ''
+  linkTarget.value = ''
+}
+
+const targetOptions = [
+  { value: '_self', text: i18n.t('MediaHtmlBlockEditor.currentTab') },
+  { value: '_blank', text: i18n.t('MediaHtmlBlockEditor.newTab') },
+]
 </script>
 
 <template>
@@ -428,19 +456,6 @@ function toggleLanguageTabs() {
         @click="allCommands.orderedList.callback()"
       />
 
-      <UiDialog>
-        <template #trigger>
-          <UiIcon
-            src="mdi:head-snowflake"
-            class="BlockScaffold__button"
-            title="OpenAI"
-          />
-        </template>
-        <template #default="{ close }">
-          <OpenAiText @input="innerValue = $event; emitUpdate(); close()" />
-        </template>
-      </UiDialog>
-
       <UiIcon
         src="mdi:translate"
         class="BlockScaffold__button BlockScaffold__button--expansible"
@@ -475,6 +490,46 @@ function toggleLanguageTabs() {
         :value="innerValue"
         :editor="editor"
       />
+
+      <UiDialog
+        v-model:open="isLinkDialogOpen"
+        :close-button="false"
+      >
+        <form
+          class="MediaHtmlBlockEditor__linkDialog"
+          method="dialog"
+          @submit="onDialogAccept"
+        >
+          <UiInput
+            v-model="linkUrl"
+            placeholder="URL"
+          />
+          <UiInput
+            v-if="pageOptions.length"
+            v-model="linkUrl"
+            type="select-list"
+            :options="pageOptions"
+          />
+          <UiInput
+            v-model="linkTarget"
+            type="select-list"
+            :options="targetOptions"
+          />
+
+          <footer>
+            <UiInput
+              type="submit"
+              :label="i18n.t('Accept')"
+            />
+            <UiInput
+              type="button"
+              class="UiButton--cancel"
+              :label="i18n.t('Cancel')"
+              @click="onDialogCancel"
+            />
+          </footer>
+        </form>
+      </UiDialog>
     </template>
   </BlockScaffold>
 </template>
@@ -508,6 +563,20 @@ function toggleLanguageTabs() {
     order: 2;
     padding: 4px;
     gap: 4px;
+  }
+
+  &__linkDialog {
+    padding: 5px;
+
+    .UiInput {
+      margin-bottom: 1em;
+    }
+
+    footer {
+      display: flex;
+      gap: 5px;
+      padding: 5px;
+    }
   }
 }
 </style>

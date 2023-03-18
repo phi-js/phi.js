@@ -1,11 +1,18 @@
 <script setup>
 import { ref } from 'vue'
-
 import { UiInput } from '@/packages/ui'
 import { useApi } from '@/packages/api'
-import openAiApi from '../../../openai/api.js'
+import openAiApi from './api.js'
 
 const api = useApi(openAiApi)
+
+const props = defineProps({
+  existing: {
+    type: String,
+    required: false,
+    default: null,
+  },
+})
 
 const emit = defineEmits(['input'])
 
@@ -14,12 +21,17 @@ const isLoading = ref(false)
 const error = ref('')
 
 async function generateText() {
+
+  const strPrompt = props.existing
+    ? `given the following text: ${props.existing}\n${prompt.value}`
+    : prompt.value
+
   error.value = ''
   isLoading.value = true
   try {
     const response = await api.generateText({
       apiKey: 'please',
-      prompt: prompt.value,
+      prompt: strPrompt + '\nreply with HTML formatted text',
     })
 
     if (response.error) {
