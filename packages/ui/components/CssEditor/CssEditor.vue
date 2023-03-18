@@ -5,6 +5,7 @@ import UiDetails from '../UiDetails/UiDetails.vue'
 import Background from './properties/Background.vue'
 import Spacing from './properties/Spacing.vue'
 import Typography from './properties/Typography.vue'
+import CssDisplay from './properties/CssDisplay.vue'
 
 const props = defineProps({
   /*
@@ -59,7 +60,6 @@ function convertToCamelCase(obj) {
     </UiDetails>
 
     <UiDetails
-      open
       text="Background"
       class="CssEditor__background"
     >
@@ -71,7 +71,16 @@ function convertToCamelCase(obj) {
     </UiDetails>
 
     <UiDetails
-      open
+      text="Display"
+      class="CssEditor__display"
+    >
+      <CssDisplay
+        v-model="css"
+        @update:model-value="emit('update:modelValue', $event)"
+      />
+    </UiDetails>
+
+    <UiDetails
       text="Typography"
       class="CssEditor__typography"
     >
@@ -86,6 +95,7 @@ function convertToCamelCase(obj) {
 <style lang="scss">
 .CssEditor {
   &__background,
+  &__display,
   &__typography {
 
     .UiInput {
@@ -116,9 +126,13 @@ function convertToCamelCase(obj) {
       }
     }
 
+    .UiSelectButtons {
+      flex-wrap: wrap;
+    }
+
     .UiSelectButtons__button {
       // flex: 1;
-      min-width: 111px;
+      width: 130px;
     }
   }
 }

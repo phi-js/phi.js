@@ -1,0 +1,105 @@
+<script setup>
+import { ref, watch } from 'vue'
+
+import UiInput from '../../UiInput/UiInput.vue'
+import CssAlignItems from '../values/align-items.vue'
+import CssJustifyContent from '../values/justify-content.vue'
+import CssUnit from '../values/unit.vue'
+
+const props = defineProps({
+  /*
+  CSS Object:
+  {
+    fontFamily: 'MyFontWhatever, sans-serif',
+    color: "#fff",
+    textShadow: "1px 1px 1px #000",
+    ... every CSS property (yeah)
+
+    This block will edit:
+
+    display: "block",  // block, inline, inline-block, flex, inline-flex
+    flexDirection: "",
+    flexWrap: "",
+    alignItems: "",
+    justifyContent: "",
+    gap: "",
+  }
+  */
+  modelValue: {
+    type: Object,
+    required: false,
+    default: () => ({}),
+  },
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+const css = ref()
+
+watch(
+  () => props.modelValue,
+  () => css.value = { ...props.modelValue },
+  { immediate: true },
+)
+
+function emitUpdate() {
+  emit('update:modelValue', { ...css.value })
+}
+</script>
+
+<template>
+  <div class="CssDisplay">
+    <UiInput
+      v-model="css.display"
+      type="select-native"
+      label="Display"
+      :options="[
+        { value: 'block', text: 'block' },
+        { value: 'inline', text: 'inline' },
+        { value: 'flex', text: 'flex' },
+        { value: 'inline-block', text: 'inline-block' },
+        { value: 'inline-flex', text: 'inline-flex' },
+      ]"
+      @update:model-value="emitUpdate"
+    />
+
+    <template v-if="['flex', 'inline-flex'].includes(css.display)">
+      <UiInput
+        v-model="css.flexDirection"
+        type="select-native"
+        label="Direction"
+        :options="[
+          { value: 'row', text: 'row' },
+          { value: 'column', text: 'column' },
+        ]"
+        @update:model-value="emitUpdate"
+      />
+      <UiInput
+        v-model="css.flexWrap"
+        type="select-native"
+        label="Wrap"
+        :options="[
+          { value: 'wrap', text: 'wrap' },
+          { value: 'nowrap', text: 'nowrap' },
+        ]"
+        @update:model-value="emitUpdate"
+      />
+
+      <CssAlignItems
+        v-model="css.alignItems"
+        label="Align items"
+        @update:model-value="emitUpdate"
+      />
+      <CssJustifyContent
+        v-model="css.justifyContent"
+        label="Justify content"
+        @update:model-value="emitUpdate"
+      />
+      <CssUnit
+        v-model="css.gap"
+        label="Gap"
+        @update:model-value="emitUpdate"
+      />
+    </template>
+  </div>
+</template>
