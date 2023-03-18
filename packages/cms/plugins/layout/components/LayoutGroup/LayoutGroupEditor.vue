@@ -37,10 +37,6 @@ function onSlotUpdate() {
     :style="{
       display: modelValue.props.direction == 'row' ? 'flex' : 'block',
       flexDirection: modelValue.props.direction,
-      flexWrap: 'wrap',
-      alignItems: modelValue.props.alignItems,
-      justifyContent: modelValue.props.justifyContent,
-      gap: modelValue.props.gap ? `${modelValue.props.gap}px` : null
     }"
     :direction="modelValue.props.direction == 'row' ? 'horizontal' : 'vertical'"
     @update:slot="onSlotUpdate"

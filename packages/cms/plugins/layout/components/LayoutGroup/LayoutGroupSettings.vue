@@ -30,14 +30,12 @@ const i18n = useI18n({
     'LayoutGroupSettings.ContentDirection': 'Content direction',
     'LayoutGroupSettings.DirectionColumn': 'Column',
     'LayoutGroupSettings.DirectionRow': 'Row',
-    'LayoutGroupSettings.AlignItems': 'Align items',
   },
   es: {
     'LayoutGroupSettings.GroupName': 'Nombre del grupo',
     'LayoutGroupSettings.ContentDirection': 'Dirección del contenido',
     'LayoutGroupSettings.DirectionColumn': 'Columna',
     'LayoutGroupSettings.DirectionRow': 'Fila',
-    'LayoutGroupSettings.AlignItems': 'Alinear',
   },
 })
 
@@ -61,37 +59,6 @@ const i18n = useI18n({
         { value: 'column', text: i18n.t('LayoutGroupSettings.DirectionColumn') },
         { value: 'row', text: i18n.t('LayoutGroupSettings.DirectionRow') },
       ]"
-      @update:model-value="emitUpdate"
-    />
-
-    <UiInput
-      v-show="block.props.direction == 'row'"
-      v-model="block.props.alignItems"
-      type="select-buttons"
-      class="LayoutGroupSettings__input"
-      :label="i18n.t('LayoutGroupSettings.AlignItems')"
-      :options="[
-        { value: 'flex-start', icon: 'mdi:align-vertical-top', title: 'flex-start' },
-        { value: 'center', icon: 'mdi:align-vertical-center', title: 'center' },
-        { value: 'flex-end', icon: 'mdi:align-vertical-bottom', title: 'flex-end' },
-      ]"
-      @update:model-value="emitUpdate"
-    />
-
-    <!-- <UiInput
-      v-model="block.props.justifyContent"
-      class="LayoutGroupSettings__input"
-      type="text"
-      label="justifyContent"
-      @update:model-value="emitUpdate"
-    /> -->
-
-    <UiInput
-      v-model="block.props.gap"
-      class="LayoutGroupSettings__input"
-      type="number"
-      label="Gap"
-      min="0"
       @update:model-value="emitUpdate"
     />
   </div>
