@@ -3,11 +3,16 @@
   "icon": "mdi:application-settings-outline",
   "title": {
     "$i18n": {
-      "en": "Steps",
-      "es": "Pasos"
+      "en": "Multiple steps",
+      "es": "Múltiples pasos"
     }
   },
-  "subtext": "",
+  "subtext": {
+    "$i18n": {
+      "en": "Page navigation with next/back",
+      "es": "Navegar entre páginas con anterior/siguiente"
+    }
+  },
   "pages": [
     {
       "component": "LayoutPage",

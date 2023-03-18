@@ -1,7 +1,7 @@
 import OpenAiBlockLauncher from '../../../plugins/openai/OpenAiBlockLauncher.vue'
 
 export default {
-  id: 'template-importer',
+  id: 'template-openai',
   icon: 'mdi:head-snowflake',
   title: {
     $i18n: {

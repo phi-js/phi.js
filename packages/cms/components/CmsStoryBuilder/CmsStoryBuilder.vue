@@ -263,6 +263,16 @@ const { push, undo, redo, hasUndo, hasRedo } = useUndo(innerStory.value, (newVal
 const isModelExplorerOpen = ref(false)
 
 const isEmpty = computed(() => !innerStory.value.pages?.length)
+
+function onTemplatePickerInput($event) {
+  innerStory.value = {
+    ...$event,
+    id: props.story.id,
+    title: innerStory.value.title || $event.title,
+    subtext: undefined,
+  }
+  onUpdateStory()
+}
 </script>
 
 <template>
@@ -307,12 +317,12 @@ const isEmpty = computed(() => !innerStory.value.pages?.length)
           @click="windowTab = 'i18n'"
         /> -->
 
-        <UiItem
+        <!-- <UiItem
           class="CmsStoryBuilder__tabItem"
           :text="i18n.t('CmsStoryBuilder.DataExplorer')"
           icon="mdi:code-json"
           @click="isModelExplorerOpen = true"
-        />
+        /> -->
 
         <UiItem
           v-if="settings?.allowSource"
@@ -367,7 +377,7 @@ const isEmpty = computed(() => !innerStory.value.pages?.length)
 
     <StoryTemplatePicker
       v-if="isEmpty"
-      @input="innerStory = $event; onUpdateStory();"
+      @input="onTemplatePickerInput"
     />
 
     <template v-else>
