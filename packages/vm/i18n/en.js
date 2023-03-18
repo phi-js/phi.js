@@ -82,7 +82,7 @@ export default {
   'VmExpression.fetch.title': 'HTTP Request',
   'VmExpression.fetch.description': 'Fetch data from a URL',
 
-  'VmExpression.window.title': 'Browser functions',
+  'VmExpression.window.title': 'Browser',
 
   'VmExpression.console.log.title': 'Output to console',
   'VmExpression.console.log.description': 'console.log',

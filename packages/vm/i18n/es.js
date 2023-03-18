@@ -81,7 +81,7 @@ export default {
   'VmExpression.fetch.title': 'Ejecutar Request',
   'VmExpression.fetch.description': 'Ejecuta un Request HTTP a una URL',
 
-  'VmExpression.window.title': 'Funciones del navegador',
+  'VmExpression.window.title': 'Navegador',
 
   'VmExpression.console.log.title': 'Mostrar en consola',
   'VmExpression.console.log.description': 'console.log',
