@@ -78,30 +78,6 @@
       }
     }
   }
-
-  // // Stretch the tab underline from the direction
-  // // of the previous tab
-  // &--direction-left {
-  //   .UiTab {
-  //     &--incoming::after {
-  //       transform-origin: bottom right;
-  //     }
-  //     &--outgoing::after {
-  //       transform-origin: bottom left;
-  //     }
-  //   }
-  // }
-
-  // &--direction-right {
-  //   .UiTab {
-  //     &--incoming::after {
-  //       transform-origin: bottom left;
-  //     }
-  //     &--outgoing::after {
-  //       transform-origin: bottom right;
-  //     }
-  //   }
-  // }
 }
 
 a.UiTab {
@@ -116,7 +92,6 @@ a.UiTab {
   user-select: none;
 
   .UiItem {
-    // text-align: center;
     justify-content: center;
     border-radius: 4px;
 
