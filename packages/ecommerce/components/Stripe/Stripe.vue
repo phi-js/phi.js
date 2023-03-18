@@ -3,7 +3,7 @@
 http://localhost:3000/build/?payment_intent=pi_3LdEROKYqXBTZV721oiLHXew&payment_intent_client_secret=pi_3LdEROKYqXBTZV721oiLHXew_secret_pu8DTuC1A4HdFfZeLNjKXr037&redirect_status=succeeded#/home
 http://localhost:3000/build/?payment_intent=pi_3LdEzWKYqXBTZV720YKPWzDA&payment_intent_client_secret=pi_3LdEzWKYqXBTZV720YKPWzDA_secret_zwf5mD3TT6ji1kqodN9RONp1n&redirect_status=succeeded#/home
 */
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, computed } from 'vue'
 
 // import { loadStripe } from '@stripe/stripe-js'
 import { loadStripe } from '@stripe/stripe-js/pure' // see https://stackoverflow.com/questions/45718026/stripe-js-making-duplicate-requests-new-requests-on-state-change
@@ -17,14 +17,19 @@ const api = useApi(stripeApi)
 const props = defineProps({
   publishableKey: {
     type: String,
-    // required: false,
-    default: 'pk_test_SuiHsYxWNU4c4rBxICLQvLyT',
+    required: true,
   },
 
   amount: {
     type: [String, Number],
     required: false,
     default: 0,
+  },
+
+  label: {
+    type: String,
+    required: false,
+    default: '',
   },
 })
 
@@ -35,9 +40,7 @@ async function getStripeInstance() {
   }
 
   if (!stripeInstance) {
-    stripeInstance = await loadStripe(props.publishableKey,
-      // { stripeAccount: 'acct_1Le2nYHVpLZUUz5C' },
-    )
+    stripeInstance = await loadStripe(props.publishableKey)
   }
 
   return stripeInstance
@@ -86,12 +89,13 @@ async function createIntent() {
 
   elements = stripe.elements({ clientSecret: response.clientSecret })
   const paymentElement = elements.create('payment')
+  paymentElement.on('change', () => {
+    errorMsg.value = ''
+  })
   paymentElement.mount('#payment-element')
 
   isIntentCreated.value = true
 }
-
-
 
 async function onFormSubmit() {
   isLoading.value = true
@@ -109,6 +113,9 @@ async function onFormSubmit() {
   isLoading.value = false
   errorMsg.value = error.message
 }
+
+const buttonLabel = computed(() => props.label || 'Pay')
+
 </script>
 
 <template>
@@ -117,33 +124,64 @@ async function onFormSubmit() {
     class="Stripe"
   >
     <template v-if="paymentIntent">
-      <h3>{{ paymentIntent.status }}</h3>
-      <p>$ {{ paymentIntent.amount/100 }} {{ paymentIntent.currency }}</p>
+      <div
+        v-if="paymentIntent.status === 'succeeded'"
+        class="Stripe__success"
+      >
+        <slot
+          name="success"
+          :payment-intent="paymentIntent"
+        >
+          <h3>Payment successful</h3>
+          <p>$ {{ paymentIntent.amount/100 }} {{ paymentIntent.currency }}</p>
+        </slot>
+      </div>
+      <div
+        v-else
+        class="Stripe__resolved"
+      >
+        <h3>{{ paymentIntent.status }}</h3>
+        <p>$ {{ paymentIntent.amount/100 }} {{ paymentIntent.currency }}</p>
+        <pre>{{ paymentIntent }}</pre>
+      </div>
     </template>
     <template v-else>
       <UiButton
         v-show="!isIntentCreated"
+        class="Stripe__button"
         :disabled="amount <= 0"
         @click="createIntent()"
       >
-        Pay ${{ amount/100 }}
+        {{ buttonLabel }}
       </UiButton>
 
       <form @submit.prevent="onFormSubmit">
-        <div id="payment-element">
-        <!--Stripe.js injects the Payment Element-->
+        <div
+          id="payment-element"
+          class="Stripe__element"
+        >
+          <!--Stripe.js injects the Payment Element-->
         </div>
 
         <UiButton
           v-if="isIntentCreated"
+          class="Stripe__button"
           type="submit"
           :is-loading="isLoading"
           loading-label="Processing ..."
           :error="errorMsg"
         >
-          Pay ${{ amount/100 }}
+          {{ buttonLabel }}
         </UiButton>
       </form>
     </template>
   </div>
 </template>
+
+<style lang="scss">
+.Stripe {
+  &__button {
+    margin: 16px 0;
+  }
+}
+</style>

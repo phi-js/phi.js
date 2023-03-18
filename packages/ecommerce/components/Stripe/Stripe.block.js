@@ -1,5 +1,7 @@
-import { UiForm } from '@/packages/ui'
-import Stripe from './Stripe.vue'
+import { defineAsyncComponent } from 'vue'
+import CmsPropsForm from '@/packages/cms/components/CmsPropsForm/CmsPropsForm.vue'
+const Stripe = defineAsyncComponent(() => import('./Stripe.vue'))
+const StripeFace = defineAsyncComponent(() => import('./StripeFace.vue'))
 
 export default {
   name: 'Stripe',
@@ -15,15 +17,18 @@ export default {
   },
 
   editor: {
+    face: { component: StripeFace },
+
     actions: [
       {
         'id': 'Stripe',
         'title': 'Stripe settings',
-        'component': UiForm,
+        'component': CmsPropsForm,
         'props': {
           fields: [
             { type: 'text', label: 'publishableKey', model: 'publishableKey' },
             { type: 'number', label: 'Amount', model: 'amount' },
+            { type: 'text', label: 'Label', model: 'label' },
           ],
         },
         'v-model': 'block.props',
