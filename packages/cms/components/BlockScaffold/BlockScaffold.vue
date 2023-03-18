@@ -71,6 +71,7 @@ into the container element. (display, flex, width, height)
 */
 
 const refSlot = ref()
+/*
 const stylesInChild = computed(() => {
   if (!refSlot.value) {
     return null
@@ -86,10 +87,12 @@ const stylesInChild = computed(() => {
     display: elementStyle.display == 'inline' ? 'inline-block' : elementStyle.display,
     flex: elementStyle.flex,
     alignSelf: elementStyle.alignSelf,
+    alignItems: elementStyle.alignItems,
+    justifyContent: elementStyle.justifyContent,
     float: elementStyle.float,
   }
 })
-
+*/
 </script>
 
 <template>
@@ -102,7 +105,7 @@ const stylesInChild = computed(() => {
       {'BlockScaffold--selected': props.selected},
     ]"
     tabindex="0"
-    :style="stylesInChild"
+    xxxstyle="stylesInChild"
     @click="emitSelect"
     @focus="emitSelect"
   >

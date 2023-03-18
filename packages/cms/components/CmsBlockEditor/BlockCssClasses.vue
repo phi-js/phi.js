@@ -286,9 +286,6 @@ function updateStoryDeclaration(sheetDeclaration) {
     border: 2px dashed rgba(153, 153, 153, 0.5333333333);
     outline: none !important;
     cursor: pointer;
-    &:hover {
-      background-color: var(--ui-color-hover);
-    }
   }
 }
 </style>
