@@ -84,21 +84,7 @@ function onPopState() {
 }
 
 const searchString = ref('')
-
-const suggestedBlocks = computed(() => {
-  if (!searchString.value.trim()) {
-    return [
-      {
-        name: 'LayoutGroup',
-        title: 'Group',
-        icon: 'mdi:group',
-        props: { direction: 'column' },
-      },
-    ]
-  }
-
-  return getSuggestedBlocks(searchString.value)
-})
+const suggestedBlocks = computed(() => getSuggestedBlocks(searchString.value))
 
 function onClickSuggestion(sugg) {
   emit('input', {
