@@ -1,5 +1,6 @@
-import ChartJs from './components/ChartJs.vue'
-import ChartJsSettings from './components/ChartJsSettings.vue'
+import { defineAsyncComponent } from 'vue'
+const ChartJs = defineAsyncComponent(() => import('./components/ChartJs.vue'))
+const ChartJsSettings = defineAsyncComponent(() => import('./components/ChartJsSettings.vue'))
 
 const sampleData = {
   labels: [2010, 2011, 2012, 2013, 2014, 2015, 2016],
