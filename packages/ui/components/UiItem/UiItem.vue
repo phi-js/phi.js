@@ -54,7 +54,7 @@ export default {
     },
   },
 
-  emits: ['click', 'click-icon', 'click-body', 'click-actions'],
+  emits: ['click', 'click-icon', 'click-body', 'click-actions', 'delete'],
 
   data() {
     return { isEndangered: false }
@@ -130,7 +130,7 @@ export default {
       <UiIcon
         class="UiItem__deleter ui--clickable"
         src="mdi:close"
-        @click="doDelete()"
+        @click.prevent="doDelete()"
         @pointerenter="isEndangered = true"
         @pointerleave="isEndangered = false"
       />
@@ -162,6 +162,7 @@ export default {
   &--endangered {
     // background-color: var(--ui-color-danger, #ea5455) !important;
     background-color: #ea545555 !important;
+    --ui-color-hover: transparent !important;
   }
 
   &__icon,
