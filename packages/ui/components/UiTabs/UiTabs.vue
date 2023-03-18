@@ -167,7 +167,7 @@ function selectTab(incomingTab, scrollIntoView = true) {
           />
           <UiItem
             v-else
-            v-bind="tab.props"
+            v-bind="{...tab.props, href: undefined}"
             class="ui--clickable"
             style="white-space: nowrap"
             @click="selectTab(tab)"
