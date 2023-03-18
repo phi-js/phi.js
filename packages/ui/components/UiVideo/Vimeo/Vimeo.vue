@@ -116,7 +116,7 @@ export default {
 
         player.on('timeupdate', (eventData) => {
           this.videoData.time = eventData.seconds * 1000
-          this.$emit('timeupdate', this.videoData)
+          this.$emit('update:currentTime', this.videoData.time)
           this.$emit('input', this.videoData)
         })
 

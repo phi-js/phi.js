@@ -50,7 +50,7 @@ function onWordEnter(word) {
     <UiVideo
       class="video"
       :url="lyrics.url"
-      @timeupdate="currentTime = $event.time"
+      @update:current-time="currentTime = $event"
     />
     <LyricsPlayer
       :lyrics="lyrics"
