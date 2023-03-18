@@ -149,6 +149,8 @@
       opacity: 1;
       background-color: var(--ui-color-hover);
     }
+
+    text-shadow: 0px 2px 0px #000;
   }
 
   &__button {
@@ -174,6 +176,8 @@
         content: "▾";
       }
     }
+
+    text-shadow: 0px 2px 0px #000;
   }
 
   &__toolbar > .UiDropdown > .UiDropdown__trigger {
@@ -187,6 +191,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    text-shadow: 0px 2px 0px #000;
   }
 
   &__actionList {
@@ -206,6 +212,8 @@
       font-size: 0.85rem;
 
       border-radius: 4px;
+
+      text-shadow: 0px 2px 0px #000;
     }
   }
 
