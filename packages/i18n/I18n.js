@@ -248,11 +248,28 @@ export default class I18n {
   get availableLanguages() {
     const retval = []
     for (let languageCode in this.languages) {
-      retval.push({
-        value: languageCode,
-        text: this.languages[languageCode].title || languageCode,
-      })
+      if (this.languages[languageCode].title) {
+        retval.push({
+          value: languageCode,
+          text: this.languages[languageCode].title,
+        })
+      }
     }
+
+    // What if the current language is not in the list? (it can happen!)
+    const foundCurrent = retval.find((i) => i.value == this.language.value)
+    if (!foundCurrent) {
+      const foundCurrentBase = retval.find((i) => i.value == this.baseLanguage.value)
+      if (foundCurrentBase) {
+        foundCurrentBase.value = this.language.value
+      } else {
+        retval.push({
+          value: this.language.value,
+          text: this.languages[this.baseLanguage.value].title || this.language.value,
+        })
+      }
+    }
+
     return retval
   }
 }
