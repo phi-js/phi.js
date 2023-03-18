@@ -202,8 +202,7 @@ async function onDialogClose($event) {
 
     border: 0;
     border-radius: 5px;
-    background-color: var(--ui-color-background);
-    color: var(--ui-color-foreground);
+    background-color: var(--ui-color-z1);
     padding: 0;
     overflow: visible; // allows UiPopover inside dialog to show correctly
     margin-top: 8vh;
@@ -221,20 +220,7 @@ async function onDialogClose($event) {
 
   &__contents {
     flex: 1;
-
     overflow: auto;
-    // &::-webkit-scrollbar {
-    //   width: 7px;
-    // }
-
-    // &::-webkit-scrollbar-thumb {
-    //   background-color: rgba(255,255,255, 0.1);
-    //   border-radius: 6px;
-    // }
-
-    // &:hover::-webkit-scrollbar-thumb {
-    //   background-color: #ccc;
-    // }
   }
 
   &__footer {
