@@ -1,5 +1,5 @@
 <script setup>
-import { nextTick, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 import { UiInput, UiItem, UiIcon, UiPopover } from '@/packages/ui'
 
@@ -182,7 +182,7 @@ const isPopoverOpen = ref(false)
 
 <style lang="scss">
 .UiSelectAsync {
-  max-width: 627px;
+  // max-width: 627px; // WHY? oddly specific too
 
   box-sizing: border-box;
   padding: 4px;
