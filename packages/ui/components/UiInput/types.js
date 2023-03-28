@@ -5,6 +5,7 @@ const TranslationInput = defineAsyncComponent(() => import('@/packages/i18n/comp
 const UiInputCode = defineAsyncComponent(() => import('../UiInputCode/UiInputCode.vue'))
 const UiInputColorCss = defineAsyncComponent(() => import('../UiInputColorCss/UiInputColorCss.vue'))
 const UiInputDateRange = defineAsyncComponent(() => import('../UiInputDateRange/UiInputDateRange.vue'))
+const UiInputDatetime = defineAsyncComponent(() => import('../UiInputDatetime/UiInputDatetime.vue'))
 const UiInputHtml = defineAsyncComponent(() => import('../UiInputHtml/UiInputHtml.vue'))
 const UiInputJson = defineAsyncComponent(() => import('../UiInputJson/UiInputJson.vue'))
 const UiInputNumberSlide = defineAsyncComponent(() => import('../UiInputNumberSlide/UiInputNumberSlide.vue'))
@@ -24,6 +25,7 @@ export default {
   'color-css': UiInputColorCss,
   'country': UiSelectCountry,
   'date-range': UiInputDateRange,
+  'datetime-local-select': UiInputDatetime,
   'html': UiInputHtml,
   'json': UiInputJson,
   'nationality': UiSelectNationality,

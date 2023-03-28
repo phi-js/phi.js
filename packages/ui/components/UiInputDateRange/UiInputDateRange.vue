@@ -1,6 +1,6 @@
 <script setup>
-import { computed } from 'vue'
-import { toDate } from '../../helpers'
+import { computed, useAttrs } from 'vue'
+import { toDateString } from '../../helpers'
 
 const props = defineProps({
   modelValue: {
@@ -18,24 +18,6 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-
-/*
-Convierte "cualquier valor" a una cadena "yyyy-mm-dd" (valor valido para usar en <input type="date" value="XXXXX" />)
-
-ej toDateValue(131232131) // unix timestamp
-ej toDateValue('1982-01-15')
-*/
-function toDateValue(incoming) {
-  const d = toDate(incoming)
-  if (!d) {
-    return ''
-  }
-
-  return d.toISOString()
-    .padStart(24, '0')
-    .split('T')[0]
-}
-
 function toOutputValue(strDate) {
   if (!strDate) {
     return ''
@@ -47,13 +29,13 @@ function toOutputValue(strDate) {
 }
 
 const startDate = computed({
-  get: () => toDateValue(props.modelValue?.[0]),
-  set: (newValue) => emit('update:modelValue', sanitizeRange(newValue, toDateValue(props.modelValue?.[1]), 'start')),
+  get: () => toDateString(props.modelValue?.[0]),
+  set: (newValue) => emit('update:modelValue', sanitizeRange(newValue, toDateString(props.modelValue?.[1]), 'start')),
 })
 
 const endDate = computed({
-  get: () => toDateValue(props.modelValue?.[1]),
-  set: (newValue) => emit('update:modelValue', sanitizeRange(toDateValue(props.modelValue?.[0]), newValue, 'end')),
+  get: () => toDateString(props.modelValue?.[1]),
+  set: (newValue) => emit('update:modelValue', sanitizeRange(toDateString(props.modelValue?.[0]), newValue, 'end')),
 })
 
 function sanitizeRange(strStartDate, strEndDate, priority = 'start') {
@@ -70,12 +52,31 @@ function sanitizeRange(strStartDate, strEndDate, priority = 'start') {
     toOutputValue(strEndDate),
   ]
 }
+
+const attrs = useAttrs()
+
+function sanitizeIsoDateString(strIsoDate) {
+  if (!strIsoDate) {
+    return ''
+  }
+  return strIsoDate.split('T')?.[0] || ''
+}
+
+const startDateAttrs = computed(() => {
+  return {
+    ...attrs,
+    min: sanitizeIsoDateString(attrs.min),
+    max: sanitizeIsoDateString(attrs.max),
+    class: null,
+    style: null,
+  }
+})
 </script>
 
 <template>
   <span class="UiInputDateRange">
     <input
-      v-bind="{...$attrs, class:null, style:null}"
+      v-bind="startDateAttrs"
       v-model="startDate"
       type="date"
       class="UiInput__element"
@@ -85,7 +86,8 @@ function sanitizeRange(strStartDate, strEndDate, priority = 'start') {
       v-model="endDate"
       type="date"
       class="UiInput__element"
-      :min="startDate"
+      :min="startDate || startDateAttrs.min"
+      :max="$attrs.max"
     >
   </span>
 </template>

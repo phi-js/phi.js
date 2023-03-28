@@ -137,6 +137,17 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
           type="datetime-local"
           label="datetime-local"
         />
+
+        <UiInput
+          v-model="modelValue.dateTime"
+          type="datetime-local-select"
+          label="datetime-local-select"
+          time-min="08:21"
+          time-max="17:40"
+          time-step="16"
+          subtext="time-min: 09:00, time-max: 17:15, time-step: 15"
+        />
+
         <UiInput
           v-model="modelValue.week"
           type="week"
