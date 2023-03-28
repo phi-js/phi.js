@@ -16,7 +16,7 @@ const i18n = useI18n({
     'CmsStoryStyle.theme': 'Theme',
     'CmsStoryStyle.font': 'Font',
     'CmsStoryStyle.colors': 'Colors',
-    'CmsStoryStyle.margins': 'Margins',
+    'CmsStoryStyle.margin': 'Margin',
     'CmsStoryStyle.css': 'CSS',
     'CmsStoryStyle.fontTitles': 'Titles',
     'CmsStoryStyle.fontTexts': 'Texts',
@@ -28,7 +28,7 @@ const i18n = useI18n({
     'CmsStoryStyle.theme': 'Temas',
     'CmsStoryStyle.font': 'Fuente',
     'CmsStoryStyle.colors': 'Colores',
-    'CmsStoryStyle.margins': 'Márgen',
+    'CmsStoryStyle.margin': 'Márgen',
     'CmsStoryStyle.css': 'CSS',
     'CmsStoryStyle.fontTitles': 'Títulos',
     'CmsStoryStyle.fontTexts': 'Textos',
@@ -189,11 +189,14 @@ const innerStoryVariablesDark = computed({
 
 const pseudoMargin = computed({
   get: () => {
-    const storyStyle = getSheetSrc('story-style') || {}
+    const storyStyle = innerStoryVariables.value
     return { margin: storyStyle['--ui-content-margin'] || '' }
   },
   set: (newValue) => {
-    setSheetSrc('story-style', { '--ui-content-margin': newValue.margin })
+    setSheetSrc('story-style', {
+      ...innerStoryVariables.value,
+      '--ui-content-margin': newValue.margin,
+    })
   },
 })
 
@@ -328,7 +331,7 @@ function importGoogleFont(varName) {
       /> -->
     </UiTab>
 
-    <UiTab :text="i18n.t('CmsStoryStyle.margins')">
+    <UiTab :text="i18n.t('CmsStoryStyle.margin')">
       <CssStyleEditor
         v-model="innerStoryVariables"
         class="CmsStoryStyle__properties"

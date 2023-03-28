@@ -1,6 +1,6 @@
 <script setup>
-import { ref, watchEffect, nextTick } from 'vue'
-import { UiDetails, UiInput } from '../../../ui'
+import { ref, watchEffect } from 'vue'
+import { UiDetails, UiItem } from '../../../ui'
 import { VmStatement } from '../../../vm'
 
 const props = defineProps({
@@ -24,34 +24,33 @@ function emitUpdate() {
   emit('update:story', { ...props.story, methods: storyMethods.value })
 }
 
-const newMethod = ref({
-  name: '',
-  do: { chain: [] },
-})
-
-function resetNewMethod() {
-  newMethod.value = {
-    name: '',
-    do: { chain: [] },
-  }
-}
+const openDetailIndexes = ref([])
 
 function appendMethod() {
-  storyMethods.value.push(newMethod.value)
-  emitUpdate()
-  resetNewMethod()
+  const methodName = window.prompt('Method name')
+  if (!methodName) {
+    return
+  }
 
-  // Expand newly created element
-  nextTick(() => {
-    el.value.querySelectorAll('.StoryMethodsEditor__method')[storyMethods.value.length - 1].setAttribute('open', true)
+  const found = storyMethods.value.find((v) => v.name == methodName)
+  if (found) {
+    alert(`Method '${methodName}' already exists`)
+    return
+  }
+
+  storyMethods.value.push({
+    name: methodName,
+    do: { chain: [] },
   })
+
+  emitUpdate()
+  openDetailIndexes.value.push(storyMethods.value.length - 1)
 }
 
 function deleteMethodAt(i) {
   storyMethods.value.splice(i, 1)
   emitUpdate()
 }
-
 </script>
 
 <template>
@@ -62,10 +61,11 @@ function deleteMethodAt(i) {
     <UiDetails
       v-for="(method, i) in storyMethods"
       :key="i"
-      group="StoryMethodsEditor"
       class="StoryMethodsEditor__method"
       :text="method.name || '...'"
+      :open="openDetailIndexes.includes(i)"
       @delete="deleteMethodAt(i)"
+      @close="openDetailIndexes.splice(openDetailIndexes.indexOf(i), 1)"
     >
       <!-- <UiInput
         v-model="storyMethods[i].name"
@@ -79,34 +79,13 @@ function deleteMethodAt(i) {
       />
     </UiDetails>
 
-    <UiDetails
-      v-slot="{ close }"
-      group="StoryMethodsEditor"
+    <UiItem
       class="StoryMethodsEditor__adder"
-      text="Crear función"
-    >
-      <form @submit.prevent="appendMethod(); close();">
-        <UiInput
-          v-model="newMethod.name"
-          type="text"
-          placeholder="Function name"
-        />
-        <footer>
-          <button
-            type="submit"
-            class="UiButton"
-          >
-            Create
-          </button>
-          <button
-            type="button"
-            class="UiButton UiButton--cancel"
-            @click="resetNewMethod(); close();"
-          >
-            Cancel
-          </button>
-        </footer>
-      </form>
-    </UiDetails>
+      text="Create function"
+      icon="mdi:plus"
+      tabindex="0"
+      @click="appendMethod"
+      @keyup.enter="appendMethod"
+    />
   </div>
 </template>

@@ -10,8 +10,22 @@ export default {
     {
       title: 'Navigation',
       children: [
-        NavigationLink,
+
+        // Block alias
+        {
+          name: 'NavigationButton',
+          title: 'Navigation button',
+          icon: 'mdi:card',
+          block: {
+            component: 'InputButton',
+            props: {
+              name: 'story-goto',
+              value: 'next',
+            },
+          },
+        },
         NavigationMenu,
+        NavigationLink, // TO BE DEPRECATED
       ],
     },
   ],

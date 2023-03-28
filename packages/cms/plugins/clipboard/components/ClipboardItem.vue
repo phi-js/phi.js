@@ -32,6 +32,7 @@ function toggle() {
 
 <template>
   <UiItem
+    class="BlockScaffold__action BlockScaffold__action--copy"
     :text="i18n.t(isCopied ? 'ClipboardItem.Copied' : 'ClipboardItem.Copy')"
     :icon="isCopied ? 'mdi:checkbox-multiple-marked-outline' : 'mdi:checkbox-multiple-blank-outline'"
     @click="toggle"

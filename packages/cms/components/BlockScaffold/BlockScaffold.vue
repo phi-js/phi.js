@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject, ref } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 
 import { useI18n } from '@/packages/i18n'
 import { UiItem, UiIcon, UiDropdown } from '@/packages/ui'
@@ -71,8 +71,9 @@ into the container element. (display, flex, width, height)
 */
 
 const refSlot = ref()
-/*
-const stylesInChild = computed(() => {
+const stylesInChild = ref()
+
+function getChildStyles() {
   if (!refSlot.value) {
     return null
   }
@@ -83,16 +84,31 @@ const stylesInChild = computed(() => {
   }
 
   const elementStyle = getComputedStyle(elementInSlot)
-  return {
-    display: elementStyle.display == 'inline' ? 'inline-block' : elementStyle.display,
+  stylesInChild.value = {
+    display: elementInSlot.tagName == 'IFRAME' ? 'block' : elementStyle.display,
     flex: elementStyle.flex,
     alignSelf: elementStyle.alignSelf,
-    alignItems: elementStyle.alignItems,
-    justifyContent: elementStyle.justifyContent,
     float: elementStyle.float,
+
+    // These mess up LayoutGroup blocks:
+    // alignItems: elementStyle.alignItems,
+    // justifyContent: elementStyle.justifyContent,
+
+    // ...props.block?.props?.style,
   }
+}
+
+const mutationObserver = new MutationObserver(getChildStyles)
+
+onMounted(() => {
+  getChildStyles()
+
+  mutationObserver.observe(refSlot.value, {
+    childList: true,
+    attributes: true,
+    subtree: false,
+  })
 })
-*/
 </script>
 
 <template>
@@ -105,7 +121,7 @@ const stylesInChild = computed(() => {
       {'BlockScaffold--selected': props.selected},
     ]"
     tabindex="0"
-    xxxstyle="stylesInChild"
+    :style="stylesInChild"
     @click="emitSelect"
     @focus="emitSelect"
   >
@@ -136,7 +152,7 @@ const stylesInChild = computed(() => {
             :key="action.id"
             :src="action.icon"
             :title="action.description"
-            class="BlockScaffold__shortcut"
+            :class="`BlockScaffold__shortcut BlockScaffold__action--${action.id}`"
             @click.stop="emit('open-editor', action.id)"
           />
 
@@ -155,6 +171,7 @@ const stylesInChild = computed(() => {
                   :key="action.id"
                   :icon="action.icon"
                   :text="action.title"
+                  :class="`BlockScaffold__action BlockScaffold__action--${action.id}`"
                   @click.stop="emit('open-editor', action.id); close();"
                 />
 
@@ -165,6 +182,7 @@ const stylesInChild = computed(() => {
                 />
 
                 <UiItem
+                  class="BlockScaffold__action BlockScaffold__action--delete"
                   icon="mdi:close"
                   :text="i18n.t('BlockScaffold.Delete')"
                   @click="emit('delete'); close()"

@@ -22,6 +22,9 @@ import {
 
 import { useUndo } from '@/packages/ui/helpers'
 
+import { getPluginData } from '../../functions'
+const pluginData = getPluginData()
+
 const props = defineProps({
   story: {
     type: Object,
@@ -317,12 +320,12 @@ function onTemplatePickerInput($event) {
           @click="windowTab = 'i18n'"
         /> -->
 
-        <!-- <UiItem
+        <UiItem
           class="CmsStoryBuilder__tabItem"
           :text="i18n.t('CmsStoryBuilder.DataExplorer')"
           icon="mdi:code-json"
           @click="isModelExplorerOpen = true"
-        /> -->
+        />
 
         <UiItem
           v-if="settings?.allowSource"
@@ -424,13 +427,24 @@ function onTemplatePickerInput($event) {
       <UiWindow
         v-model:open="isModelExplorerOpen"
         name="phi"
+        class="CmsStoryBuilder__modelValue BlockWindow"
       >
         <template #header>
           <UiItem
             :text="i18n.t('CmsStoryBuilder.DataExplorer')"
             icon="mdi:code-json"
+            class="BlockWindow__headerItem"
           />
         </template>
+
+        <template #limbo>
+          <Component
+            :is="pluginData.getSlotComponent('StoryModelValue')"
+            :model-value="props.modelValue"
+            @update:model-value="emit('update:modelValue', $event)"
+          />
+        </template>
+
         <template #default>
           <UiInput
             v-if="isModelExplorerOpen"

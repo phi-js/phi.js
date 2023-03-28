@@ -1,9 +1,6 @@
 <script setup>
-import { UiTabs, UiTab } from '@/packages/ui'
 import { useI18n } from '@/packages/i18n'
-import OpenAiText from './OpenAiText.vue'
-import OpenAiCss from './OpenAiCss.vue'
-import OpenAiImage from './OpenAiImage.vue'
+import OpenAiText from '../../../openai/OpenAiText.vue'
 import { computed } from 'vue'
 
 const i18n = useI18n()
@@ -62,31 +59,10 @@ function onTextInput($event) {
 </script>
 
 <template>
-  <div class="OpenAiBlockHelper">
-    <UiTabs>
-      <UiTab
-        v-if="modelValue.component == 'MediaHtml'"
-        text="Content"
-      >
-        <OpenAiText
-          :existing="existingText"
-          @input="onTextInput"
-        />
-      </UiTab>
-
-      <UiTab
-        v-if="modelValue.component == 'MediaImage'"
-        text="Image"
-      >
-        <OpenAiImage @input="emitUpdate({props:{src:$event}})" />
-      </UiTab>
-
-      <UiTab text="Style">
-        <OpenAiCss
-          :existing="props.modelValue.props?.style"
-          @input="emitUpdate({props:{style:$event}})"
-        />
-      </UiTab>
-    </UiTabs>
+  <div class="MediaHtmlAi">
+    <OpenAiText
+      :existing="existingText"
+      @input="onTextInput"
+    />
   </div>
 </template>

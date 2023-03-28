@@ -1,14 +1,26 @@
 <script setup>
-import { shallowRef } from 'vue'
+import { computed, onMounted, ref, shallowRef } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { UiIcon, UiDialog } from '@/packages/ui'
-import availableTemplates from './templates'
+
+import { getProvidedTemplates } from '../../functions/provideTemplates.js'
+import hardcodedTemplates from './templates'
 
 const i18n = useI18n()
 
 const emit = defineEmits(['input'])
 
 const stagingComponent = shallowRef()
+
+const providedTemplates = ref([])
+
+onMounted(async () => providedTemplates.value = await getProvidedTemplates())
+
+const availableTemplates = computed(() => [
+  ...providedTemplates.value,
+  ...hardcodedTemplates,
+])
+
 
 function selectTemplate(template) {
   if (template.component) {

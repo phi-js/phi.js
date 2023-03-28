@@ -47,14 +47,14 @@ export default {
           fields: [
             {
               type: 'number',
-              label: 'Cantidad de parrafos',
+              label: 'Paragraphs',
               model: 'props.nParagraphs',
               min: 1,
               required: true,
             },
             {
               type: 'number',
-              label: 'Cantidad de palabras',
+              label: 'Words per paragraph',
               model: 'props.nWords',
               min: 1,
               required: true,

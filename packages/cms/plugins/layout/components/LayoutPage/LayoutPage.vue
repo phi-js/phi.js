@@ -74,6 +74,7 @@ async function onFormSubmit($event) {
   // If a 'story-goto' value is present in the form data
   // with either "next", "back" or a page id,
   // navigate accordingly
+  // e.g. <button name="story-goto" value="next">
   // https://stackoverflow.com/a/69986560/3934387
   let data = new FormData($event.target)
   if ($event.submitter) {

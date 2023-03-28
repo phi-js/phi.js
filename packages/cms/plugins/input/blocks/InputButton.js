@@ -1,16 +1,12 @@
-import { UiInput } from '../../../../ui/components'
-import InputSettings from '../components/InputSettings/InputSettings.vue'
-import InputFace from '../components/InputFace.vue'
+import InputButton from '../components/InputButton/InputButton.vue'
+import InputButtonSettings from '../components/InputButton/InputButtonSettings.vue'
 
 export default {
   name: 'InputButton',
   title: 'Button',
   icon: 'mdi:card',
 
-  block: {
-    component: UiInput,
-    props: { type: 'submit' },
-  },
+  block: { component: InputButton },
 
   emits: [
     {
@@ -20,13 +16,11 @@ export default {
   ],
 
   editor: {
-    face: { component: InputFace },
-
     actions: [
       {
-        'id': 'InputSettings',
+        'id': 'InputButtonSettings',
         'title': 'Button options',
-        'component': InputSettings,
+        'component': InputButtonSettings,
         'v-model': 'block',
       },
     ],

@@ -35,28 +35,38 @@ async function generateImage({ prompt, n = 1, size = '256x256' }) {
     <UiInput
       v-model="prompt"
       type="textarea"
-      label="Generate image with DALLE-2"
       placeholder="Describe your image here ..."
     />
 
-    <UiInput
-      v-model="size"
-      type="select-buttons"
-      :options="[
-        {value: '256x256', text: '256x256'},
-        {value: '512x512', text: '512x512'},
-        {value: '1024x1024', text: '1024x1024'},
-      ]"
-    />
+    <footer>
+      <UiInput
+        v-model="size"
+        type="select-buttons"
+        :options="[
+          {value: '256x256', text: '256x256'},
+          {value: '512x512', text: '512x512'},
+          {value: '1024x1024', text: '1024x1024'},
+        ]"
+      />
 
-    <UiInput
-      style="margin-top: 1em"
-      type="button"
-      label="Generate"
-      loading-label="Generating ..."
-      :is-loading="isLoading"
-      :disabled="!prompt"
-      @click="generateImage({prompt, size})"
-    />
+      <UiInput
+        type="button"
+        label="Generate"
+        loading-label="Generating ..."
+        :is-loading="isLoading"
+        :disabled="!prompt"
+        @click="generateImage({prompt, size})"
+      />
+    </footer>
   </div>
 </template>
+
+<style lang="scss">
+.OpenAiImage {
+  footer {
+    display: flex;
+    gap: 6px;
+    justify-content: space-between;
+  }
+}
+</style>

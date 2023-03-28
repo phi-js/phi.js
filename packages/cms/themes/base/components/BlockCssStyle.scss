@@ -1,7 +1,14 @@
 .BlockCssStyle {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+
+  &__ai {
+    margin-bottom: 6px;
+  }
+
+  &__css {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
 
   .UiDetails {
     @extend .outset;

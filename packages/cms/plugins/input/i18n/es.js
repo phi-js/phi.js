@@ -9,5 +9,5 @@ export default {
   'plugin.component.InputNumber.title': 'Númber',
   'plugin.component.InputUpload.title': 'Archivo',
   'plugin.component.InputPassword.title': 'Contraseña',
-  'plugin.component.InputButton.title': 'Botón Enviar',
+  'plugin.component.InputButton.title': 'Botón',
 }

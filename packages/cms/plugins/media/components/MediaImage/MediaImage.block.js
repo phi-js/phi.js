@@ -1,7 +1,9 @@
+import { defineAsyncComponent } from 'vue'
 import MediaImage from './MediaImage.vue'
-import MediaImageToolbar from './MediaImageToolbar.vue'
-import MediaImageFace from './MediaImageFace.vue'
-import MediaImageSettings from './MediaImageSettings.vue'
+
+const MediaImageToolbar = defineAsyncComponent(() => import('./MediaImageToolbar.vue'))
+const MediaImageFace = defineAsyncComponent(() => import('./MediaImageFace.vue'))
+const MediaImageSettings = defineAsyncComponent(() => import('./MediaImageSettings.vue'))
 
 export default {
   name: 'MediaImage',

@@ -16,11 +16,6 @@ export default {
   },
 
   editor: {
-    face: {
-      'component': MediaLinkEditor,
-      'v-model': 'block.props',
-    },
-
     actions: [
       {
         'id': 'MediaLinkEditor',

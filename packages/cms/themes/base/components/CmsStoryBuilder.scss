@@ -137,6 +137,27 @@
       opacity: 1;
     }
   }
+
+
+  // modelValue explorer window
+  &__modelValue {
+    // Make sure the source editor stretches to the full window content
+    .UiWindow__body {
+      & > .UiInput,
+      & > .UiInput > .UiInput__body,
+      & > .UiInput > .UiInput__body > .UiInputJson {
+        height: 100%;
+      }
+
+      .UiInputCode {
+        flex: 1;
+        overflow: auto;
+        & > div { //cm-editor
+          height: 100%;
+        }
+      }
+    }
+  }
 }
 
 .CmsStoryBuilder--empty {

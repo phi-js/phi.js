@@ -9,7 +9,16 @@ export default {
 
   block: {
     component: LayoutGroup,
-    props: { direction: 'column' },
+    props: {
+      direction: 'column',
+      style: {
+        'display': 'block',
+        'flex-direction': 'row',
+        'flex-wrap': 'nowrap',
+        'align-items': 'flex-start',
+        'justify-content': 'flex-start',
+      },
+    },
   },
 
   staging: true,

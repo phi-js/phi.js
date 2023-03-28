@@ -316,6 +316,14 @@ export default {
     })
 
     function goTo(pageId) {
+      if (pageId == 'next') {
+        return goNext()
+      }
+
+      if (pageId == 'back') {
+        return goBack()
+      }
+
       navigateToPage(pageId)
     }
 
@@ -513,9 +521,17 @@ export default {
       },
     }
 
+
+    const isAnimating = ref(false)
+
     /* Scroll to top of new page */
     function onTransitionEnter() {
+      isAnimating.value = true
       window.scrollTo(0, 0)
+    }
+
+    function onTransitionAfterEnter() {
+      isAnimating.value = false
     }
 
     // Render function
@@ -523,7 +539,12 @@ export default {
       ? null
       : h(
         'div',
-        { class: 'CmsStory' },
+        {
+          class: [
+            'CmsStory',
+            { 'CmsStory--animating': isAnimating.value },
+          ],
+        },
         h(
           Transition,
           {
@@ -535,6 +556,7 @@ export default {
             'leave-active-class': `phi-navigation-leave-active phi-navigation-${transitionDirection.value}-leave-active`,
             'leave-to-class': `phi-navigation-leave-to phi-navigation-${transitionDirection.value}-leave-to`,
             'onEnter': onTransitionEnter,
+            'onAfterEnter': onTransitionAfterEnter,
           },
           () => h(
             KeepAlive,
@@ -550,6 +572,7 @@ export default {
                   $i18n: {
                     t: (a, b, c) => i18n.t(a, b, c),
                     obj: (v) => i18n.obj(v),
+                    words: (v) => i18n.words(v),
                     currency: (value, currency) => i18n.$(value, currency),
                   },
                   $pages: visiblePages.value,
@@ -572,7 +595,6 @@ export default {
 @import "./transitions.scss";
 
 .CmsStory {
-  --cms-story-transition-duration: var(--ui-duration-quick);
   --cms-story-transition-duration: 0.3s;
 
   position: relative;
@@ -582,6 +604,10 @@ export default {
   font-family: var(--ui-font-texts);
   h1,h2,h3,h4,h5,h6 {
     font-family: var(--ui-font-titles);
+  }
+
+  &--animating {
+    overflow: hidden;
   }
 }
 </style>

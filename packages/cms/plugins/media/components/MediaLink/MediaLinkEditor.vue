@@ -57,72 +57,60 @@ const currentTab = ref(innerValue.value.pageHash || (availablePages.value.length
 </script>
 
 <template>
-  <UiTabs
-    v-model="currentTab"
-    class="MediaLinkEditor"
-  >
-    <UiTab
-      text="Internal"
-      value="internal"
-    >
-      <div class="MediaLinkEditor__tabContents">
-        <UiInput
-          v-model="innerValue.pageHash"
-          label="Target page"
-          type="select-list"
-          :options="optionsPages"
-          @update:model-value="emitUpdate('pageHash')"
-        />
-        <CmsPropInput
-          v-model="innerValue.text"
-          type="text"
-          label="Titulo"
-          @update:model-value="emitUpdate()"
-        />
-        <CmsPropInput
-          v-model="innerValue.subtext"
-          type="text"
-          label="Descripcion"
-          @update:model-value="emitUpdate()"
-        />
-      </div>
-    </UiTab>
+  <div class="MediaLinkEditor">
+    <CmsPropInput
+      v-model="innerValue.text"
+      type="text"
+      label="Titulo"
+      @update:model-value="emitUpdate()"
+    />
+    <CmsPropInput
+      v-model="innerValue.subtext"
+      type="text"
+      label="Descripcion"
+      @update:model-value="emitUpdate()"
+    />
 
-    <UiTab
-      text="External"
-      value="external"
-    >
-      <div class="MediaLinkEditor__tabContents">
-        <UiInput
-          v-model="innerValue.href"
-          type="url"
-          label="URL"
-          placeholder="http://..."
-          @update:model-value="emitUpdate('href')"
-        />
-        <CmsPropInput
-          v-model="innerValue.text"
-          type="text"
-          label="Titulo"
-          @update:model-value="emitUpdate()"
-        />
-        <CmsPropInput
-          v-model="innerValue.subtext"
-          type="text"
-          label="Descripcion"
-          @update:model-value="emitUpdate()"
-        />
-        <UiInput
-          v-model="innerValue.target"
-          type="select-list"
-          label="Abrir en"
-          :options="[
-            { value: '_blank', text: 'Nueva pestaña' },
-            { value: '_self', text: 'Pestaña actual' },
-          ]"
-          @update:model-value="emitUpdate()"
-        />
-      </div>
-    </UiTab>
-  </UiTabs>
+    <UiTabs v-model="currentTab">
+      <UiTab
+        text="Internal"
+        value="internal"
+      >
+        <div class="MediaLinkEditor__tabContents">
+          <UiInput
+            v-model="innerValue.pageHash"
+            label="Target page"
+            type="select-list"
+            :options="optionsPages"
+            @update:model-value="emitUpdate('pageHash')"
+          />
+        </div>
+      </UiTab>
+
+      <UiTab
+        text="External"
+        value="external"
+      >
+        <div class="MediaLinkEditor__tabContents">
+          <UiInput
+            v-model="innerValue.href"
+            type="url"
+            label="URL"
+            placeholder="http://..."
+            @update:model-value="emitUpdate('href')"
+          />
+          <UiInput
+            v-model="innerValue.target"
+            type="select-list"
+            label="Abrir en"
+            :options="[
+              { value: '_blank', text: 'Nueva pestaña' },
+              { value: '_self', text: 'Pestaña actual' },
+            ]"
+            @update:model-value="emitUpdate()"
+          />
+        </div>
+      </UiTab>
+    </UiTabs>
+  </div>
 </template>

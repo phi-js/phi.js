@@ -37,8 +37,6 @@ const BlockValidationEditor = defineAsyncComponent(() => import('../components/C
 const BlockRepeatEditor = defineAsyncComponent(() => import('../components/CmsBlockEditor/BlockRepeatEditor.vue'))
 const BlockTransitionsEditor = defineAsyncComponent(() => import('../components/CmsBlockEditor/BlockTransitionsEditor.vue'))
 
-const OpenAiBlockHelper = defineAsyncComponent(() => import('../plugins/openai/OpenAiBlockHelper.vue'))
-
 import dictionary from '../i18n/index.js'
 const i18n = useI18n(dictionary)
 
@@ -113,7 +111,7 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
   // v-model editor (only if v-model property exists in definition)
   if (definition.block['v-model'] != undefined) {
     retval.actions.push({
-      'id': 'data',
+      'id': 'BlockDataEditor',
       'title': 'Data',
       'icon': 'mdi:code-json',
       'component': BlockDataEditor,
@@ -127,7 +125,7 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
   // Validation editor (only if v-model property exists in definition)
   if (definition.block['v-model'] != undefined) {
     retval.actions.push({
-      'id': 'validation',
+      'id': 'BlockValidationEditor',
       'title': 'Validation',
       'icon': 'mdi:message-alert',
       'component': BlockValidationEditor,
@@ -140,7 +138,7 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
 
   // Visibility: v-if
   retval.actions.push({
-    'id': 'visibility',
+    'id': 'BlockVisibilityEditor',
     'title': 'Visibility',
     'icon': block['v-if'] ? 'mdi:eye' : 'mdi:eye-outline',
     'component': BlockVisibilityEditor,
@@ -150,18 +148,9 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
     'description': 'This block has conditional visibility',
   })
 
-  // OpenAi
-  retval.actions.push({
-    'id': 'openai',
-    'title': 'OpenAI',
-    'icon': 'mdi:head-snowflake',
-    'component': OpenAiBlockHelper,
-    'v-model': 'block',
-  })
-
   // v-on
   retval.actions.push({
-    'id': 'events',
+    'id': 'BlockListenersEditor',
     'title': 'Events',
     'icon': 'mdi:gesture-tap',
     'component': BlockListenersEditor,
@@ -173,7 +162,7 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
 
   // Block CSS property
   retval.actions.push({
-    'id': 'css',
+    'id': 'BlockCssEditor',
     'title': 'Style',
     'icon': 'mdi:water',
     'component': BlockCssEditor,
@@ -185,7 +174,7 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
 
   // Transitions
   retval.actions.push({
-    'id': 'transitions',
+    'id': 'BlockTransitionsEditor',
     'title': 'Transitions',
     'icon': 'mdi:transition',
     'component': BlockTransitionsEditor,
@@ -198,7 +187,7 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
   // v-for
   if (block.component != 'LayoutPage') { // Hide v-for option for LayoutPage
     retval.actions.push({
-      'id': 'repeat',
+      'id': 'BlockRepeatEditor',
       'title': 'Repeat',
       'icon': 'mdi:repeat-variant',
       'component': BlockRepeatEditor,
@@ -212,7 +201,7 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
   // Raw block source editor
   if (CmsStoryBuidlerSettings?.allowSource) {
     retval.actions.push({
-      id: 'source',
+      id: 'BlockSource',
       title: 'Source',
       icon: 'mdi:code-json',
       component: UiInputJson,

@@ -1,0 +1,20 @@
+.dashed-element {
+  --ui-item-padding: 10px 12px;
+  border: 2px dashed #cccccc66;
+  border-radius: 4px;
+  font-size: 10pt;
+  font-weight: 600;
+
+  user-select: none;
+  cursor: pointer;
+  &:hover {
+    background-color: var(--ui-color-hover);
+  }
+}
+
+.VmStatementPicker__item,
+.StoryComputedEditor__adder,
+.StoryMethodsEditor__adder
+{
+  @extend .dashed-element;
+}

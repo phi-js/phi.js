@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { UiInput } from '@/packages/ui'
+import OpenAiImage from '../../../openai/OpenAiImage.vue'
 
 const props = defineProps({
   /* BLOCK object */
@@ -35,6 +36,10 @@ function emitUpdate() {
 
 <template>
   <div class="MediaImageSettings UiForm">
+    <UiInput label="Generate image (DALL·E 2)">
+      <OpenAiImage @input="block.props.src = $event; emitUpdate()" />
+    </UiInput>
+
     <UiInput
       v-model="block.props.src"
       type="url"

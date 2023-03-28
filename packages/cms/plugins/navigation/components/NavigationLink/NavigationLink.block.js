@@ -2,7 +2,7 @@ import NavigationLink from './NavigationLink.vue'
 import NavigationLinkEditor from './NavigationLinkEditor.vue'
 
 export default {
-  tags: ['navigation'],
+  private: true,
 
   name: 'NavigationLink',
   title: 'Go to',

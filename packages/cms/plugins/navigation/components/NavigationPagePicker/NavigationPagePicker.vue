@@ -1,6 +1,18 @@
 <script setup>
 import { inject, computed } from 'vue'
+import { useI18n } from '@/packages/i18n'
 import { UiInput } from '@/packages/ui'
+
+const i18n = useI18n({
+  en: {
+    'NavigationPagePicker.NextPage': 'Next page',
+    'NavigationPagePicker.PreviousPage': 'Previous page',
+  },
+  es: {
+    'NavigationPagePicker.NextPage': 'Siguiente',
+    'NavigationPagePicker.PreviousPage': 'Anterior',
+  },
+})
 
 const props = defineProps({
   pageId: {
@@ -16,14 +28,17 @@ const injectedStory = inject('_cms_currentStory', null)
 const injectedPages = computed(() => injectedStory?.value?.pages || [])
 const availablePages = computed(() => [
   {
-    id: 'next',
-    info: { text: 'Next page' },
+    text: i18n.t('NavigationPagePicker.NextPage'),
+    value: 'next',
   },
   {
-    id: 'back',
-    info: { text: 'Previous page' },
+    text: i18n.t('NavigationPagePicker.PreviousPage'),
+    value: 'back',
   },
-  ...injectedPages.value,
+  ...injectedPages.value.map((page) => ({
+    text: page.title || page.info?.text || page.hash || page.id,
+    value: page.id,
+  })),
 ])
 </script>
 
@@ -32,8 +47,6 @@ const availablePages = computed(() => [
     type="select-native"
     :options="availablePages"
     :model-value="props.pageId"
-    option-text="$.info.text"
-    option-value="$.id"
     @update:model-value="emit('update:pageId', $event)"
   />
 </template>

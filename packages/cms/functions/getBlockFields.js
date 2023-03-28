@@ -6,8 +6,8 @@ export default function getBlockFields(block) {
     type: null,
     title: block._plugin_api_storage?.title || block.props?.label || block['v-model'],
 
-    text: block['v-model'],
-    name: block['v-model'],
+    // text: block['v-model'],
+    // name: block['v-model'],
     info: {
       text: block.props?.label || '',
       subtext: block['v-model'],

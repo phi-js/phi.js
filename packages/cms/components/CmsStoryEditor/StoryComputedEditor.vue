@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { UiDetails, UiInput } from '@/packages/ui'
+import { UiDetails, UiInput, UiItem } from '@/packages/ui'
 import { VmStatement } from '@/packages/vm'
 
 const props = defineProps({
@@ -34,41 +34,45 @@ function emitUpdate() {
   emit('update:modelValue', [...computedVariables.value])
 }
 
+const openDetailIndexes = ref([])
+
 function appendVariable() {
-  computedVariables.value.push(newVariable.value)
+  const varName = window.prompt('Variable name')
+  if (!varName) {
+    return
+  }
+
+  const found = computedVariables.value.find((v) => v.name == varName)
+  if (found) {
+    alert(`Variable '${varName}' already exists`)
+    return
+  }
+
+  computedVariables.value.push({
+    name: varName,
+    statement: { eval: '' },
+  })
+
   emitUpdate()
-  resetNewVariable()
+  openDetailIndexes.value.push(computedVariables.value.length - 1)
 }
 
 function deleteVariableAt(i) {
   computedVariables.value.splice(i, 1)
   emitUpdate()
 }
-
-const newVariable = ref()
-
-function resetNewVariable() {
-  newVariable.value = {
-    name: '',
-    statement: { eval: '' },
-  }
-}
-
-// initialize
-resetNewVariable()
 </script>
 
 <template>
-  <div
-    class="StoryComputedEditor"
-  >
+  <div class="StoryComputedEditor">
     <UiDetails
       v-for="(computation, i) in computedVariables"
       :key="i"
-      group="StoryComputedEditor"
       class="StoryComputedEditor__variable"
       :text="computation.name || '...'"
+      :open="openDetailIndexes.includes(i)"
       @delete="deleteVariableAt(i)"
+      @close="openDetailIndexes.splice(openDetailIndexes.indexOf(i), 1)"
     >
       <UiInput
         v-model="computedVariables[i].name"
@@ -82,43 +86,13 @@ resetNewVariable()
       />
     </UiDetails>
 
-    <UiDetails
-      v-slot="{ close }"
-      group="StoryComputedEditor"
+    <UiItem
       class="StoryComputedEditor__adder"
       text="Create computed variable"
-    >
-      <form
-        @submit.prevent="appendVariable(); close();"
-      >
-        <UiInput
-          v-model="newVariable.name"
-          type="text"
-          label="Variable name"
-          @update:model-value="emitUpdate()"
-        />
-
-        <VmStatement
-          v-model="newVariable.statement"
-          @update:model-value="emitUpdate()"
-        />
-
-        <footer>
-          <button
-            type="submit"
-            class="UiButton"
-          >
-            Create
-          </button>
-          <button
-            type="button"
-            class="UiButton UiButton--cancel"
-            @click="resetNewVariable(); close();"
-          >
-            Cancel
-          </button>
-        </footer>
-      </form>
-    </UiDetails>
+      icon="mdi:plus"
+      tabindex="0"
+      @click="appendVariable"
+      @keyup.enter="appendVariable"
+    />
   </div>
 </template>

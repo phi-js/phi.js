@@ -59,7 +59,7 @@ function onClickAction(action) {
       :key="action.id"
       :src="action.icon"
       :title="action.description"
-      class="BlockScaffold__shortcut"
+      :class="`BlockScaffold__shortcut BlockScaffold__action--${action.id}`"
       @click.stop="onClickAction(action)"
     />
 
@@ -77,9 +77,11 @@ function onClickAction(action) {
             :key="action.id"
             :text="action.title"
             :icon="action.icon"
+            :class="`BlockScaffold__action BlockScaffold__action--${action.id}`"
             @click="close(); onClickAction(action);"
           />
           <UiItem
+            class="BlockScaffold__action BlockScaffold__action--delete"
             icon="mdi:close"
             :text="i18n.t('StoryPageItem.Delete')"
             @click="close(); emit('delete');"

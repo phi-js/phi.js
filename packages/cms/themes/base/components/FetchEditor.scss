@@ -2,6 +2,7 @@
   &__row {
     display: flex;
     align-items: flex-end;
+    gap: 5px;
 
     & > :last-child {
       flex: 1;
@@ -20,5 +21,11 @@
       font-size: 10pt;
       font-weight: bold;
     }
+  }
+
+  &__headers {
+    @extend .outset;
+    --ui-item-padding: 6px 10px;
+    margin-top: 5px;
   }
 }
