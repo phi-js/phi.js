@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import UiDetails from '../UiDetails/UiDetails.vue'
+import UiInput from '../UiInput/UiInput.vue'
 
 import Background from './properties/Background.vue'
 import Spacing from './properties/Spacing.vue'
@@ -49,7 +50,6 @@ function convertToCamelCase(obj) {
 <template>
   <div class="CssEditor">
     <UiDetails
-      open
       text="Spacing"
       class="CssEditor__spacing"
     >
@@ -86,6 +86,18 @@ function convertToCamelCase(obj) {
     >
       <Typography
         v-model="css"
+        @update:model-value="emit('update:modelValue', $event)"
+      />
+    </UiDetails>
+
+    <!-- Special: Source -->
+    <UiDetails
+      text="Source"
+      class="CssEditor__source"
+    >
+      <UiInput
+        v-model="css"
+        type="json"
         @update:model-value="emit('update:modelValue', $event)"
       />
     </UiDetails>

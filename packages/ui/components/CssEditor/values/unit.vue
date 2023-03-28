@@ -1,5 +1,5 @@
 <script setup>
-import { UiInput } from '@/packages/ui'
+import { UiInput, UiPopover } from '@/packages/ui'
 import { nextTick, ref, watch } from 'vue'
 
 const props = defineProps({
@@ -33,7 +33,6 @@ function emitUpdate() {
 
 const units = [
   'auto',
-
   '%',
   'px',
   'pt',
@@ -82,101 +81,82 @@ function toUnitString(obj, defaultValue = 0) {
   return `${obj.value}${obj.units || 'px'}`
 }
 
-const refForm = ref()
-const isOpen = ref(false)
+const refInput = ref()
 
-function openInput() {
-  isOpen.value = true
+const unitOptions = [
+  { value: null, text: 'default' },
+  ...units.map((u) => ({ text: u, value: u })),
+]
 
-  // focus+select first form input
-  nextTick(() => refForm.value.querySelector('input,select')?.focus?.())
-}
-
-function onFormSubmit() {
-  isOpen.value = false
+function onUnitsChange() {
+  emitUpdate()
+  nextTick(() => refInput.value && refInput.value.select())
 }
 
 </script>
 
 <template>
-  <UiInput
-    class="CssUnit"
-    :class="{'CssUnit--closed': !isOpen}"
-  >
-    <div class="CssUnit__container">
-      <div
-        class="CssUnit__face"
-        tabindex="0"
-        @click="openInput"
-        @keydown.enter.prevent="openInput"
+  <UiInput class="CssUnit">
+    <div class="CssUnit__face">
+      <input
+        v-if="innerValue.units !== 'auto' && innerValue.units !== null"
+        ref="refInput"
+        v-model="innerValue.value"
+        type="text"
+        @input="emitUpdate"
       >
-        {{ props.modelValue || '-' }}
-      </div>
-      <form
-        ref="refForm"
-        class="CssUnit__form"
-        @submit.prevent="onFormSubmit"
-      >
-        <input
-          v-if="innerValue.units !== 'auto'"
-          v-model="innerValue.value"
-          type="number"
-          @input="emitUpdate"
-        >
-        <select
-          v-model="innerValue.units"
-          @change="emitUpdate"
-        >
-          <option
-            v-for="unit in units"
-            :key="unit"
-            :value="unit"
-            v-text="unit"
+
+      <UiPopover>
+        <template #trigger="{ open }">
+          <span
+            tabindex="0"
+            @keydown.enter.prevent="open"
+          >{{ innerValue.units || 'default' }}</span>
+        </template>
+        <template #contents="{ close }">
+          <UiInput
+            v-model="innerValue.units"
+            type="select-list"
+            :options="unitOptions"
+            @update:model-value="onUnitsChange(); close()"
           />
-        </select>
-        <input
-          type="submit"
-          value="OK"
-        >
-      </form>
+        </template>
+      </UiPopover>
     </div>
   </UiInput>
 </template>
 
 <style lang="scss">
 .CssUnit {
-  &__container {
-    position: relative;
-    padding: 3px;
-  }
-
-  &__form {
-    background-color: #3f3f3f;
-    color: #fff;
-    padding: 8px;
-    border-radius: 4px;
-
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2;
-
+  &__face {
     display: flex;
     flex-wrap: nowrap;
     align-items: stretch;
-    gap: 5px;
 
-    input[type=submit] {
-      background: transparent;
-      border: none;
-      color: #fff;
+    border-radius: 4px;
+    background-color: field;
+    color: fieldtext;
+
+    padding: 3px;
+
+    input {
+      border: 0;
       font-size: 8pt;
-      font-weight: bold;
+      background: transparent;
+      color: inherit;
+      padding: 4px;
+      flex: 1;
     }
   }
 
-  &--closed &__form {
-    display: none;
+  .UiPopover__trigger {
+    border-radius: 4px;
+    padding: 2px 4px;
+    display: block;
+
+    &:hover {
+      background-color: var(--ui-color-hover);
+    }
   }
 }
 </style>

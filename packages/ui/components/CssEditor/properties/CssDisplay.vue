@@ -54,6 +54,7 @@ function emitUpdate() {
       type="select-native"
       label="Display"
       :options="[
+        { value: null, text: 'default' },
         { value: 'block', text: 'block' },
         { value: 'inline', text: 'inline' },
         { value: 'flex', text: 'flex' },
@@ -69,6 +70,7 @@ function emitUpdate() {
         type="select-native"
         label="Direction"
         :options="[
+          { value: null, text: 'default' },
           { value: 'row', text: 'row' },
           { value: 'column', text: 'column' },
         ]"
@@ -79,6 +81,7 @@ function emitUpdate() {
         type="select-native"
         label="Wrap"
         :options="[
+          { value: null, text: 'default' },
           { value: 'wrap', text: 'wrap' },
           { value: 'nowrap', text: 'nowrap' },
         ]"
@@ -101,5 +104,21 @@ function emitUpdate() {
         @update:model-value="emitUpdate"
       />
     </template>
+
+    <UiInput
+      v-model="css.flex"
+      type="select-native"
+      label="Flex"
+      :options="[
+        { value: null, text: 'default' },
+        { value: 'none', text: 'none' },
+        { value: 1, text: '1' },
+        { value: 2, text: '2' },
+        { value: 3, text: '3' },
+        { value: 4, text: '4' },
+        { value: 5, text: '5' },
+      ]"
+      @update:model-value="emitUpdate"
+    />
   </div>
 </template>

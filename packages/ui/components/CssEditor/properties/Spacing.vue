@@ -256,9 +256,8 @@ function isDimensionEmpty(obj) {
 
 <style lang="scss">
 .SpacingBox {
-  --box-frame-size: 30px;
-  --box-frame-width: 50px;
-  --box-frame-height: 30px;
+  --box-frame-width: 75px;
+  --box-frame-height: 32px;
 
   color: #000;
 

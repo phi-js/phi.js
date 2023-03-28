@@ -48,6 +48,7 @@ function emitUpdate() {
     type="select-native"
     class="CssAlignItems"
     :options="[
+      { value: null, text: 'default' },
       { value: 'flex-start', icon: 'mdi:align-vertical-top', text: 'flex-start' },
       { value: 'center', icon: 'mdi:align-vertical-center', text: 'center' },
       { value: 'flex-end', icon: 'mdi:align-vertical-bottom', text: 'flex-end' },

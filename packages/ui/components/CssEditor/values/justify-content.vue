@@ -34,6 +34,7 @@ function emitUpdate() {
     type="select-native"
     class="CssJustifyContent"
     :options="[
+      { value: null, text: 'default' },
       { value: 'center', icon: 'mdi:align-horizontal-center', text: 'center' },
       { value: 'flex-start', icon: 'mdi:align-horizontal-left', text: 'flex-start' },
       { value: 'flex-end', icon: 'mdi:align-horizontal-right', text: 'flex-end' },
