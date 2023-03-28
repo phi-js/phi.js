@@ -46,7 +46,7 @@ export default {
         return null
       }
 
-      match = this.url.match(/^.*(vimeo.com\/)([^#&?]*).*/)
+      match = this.url.match(/^.*(vimeo.com\/)([^#&?/]*).*/)
       let videoId = match && match[2] && match[2].length ? match[2] : null
 
       if (!videoId) {
