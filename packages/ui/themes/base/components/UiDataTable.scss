@@ -86,7 +86,7 @@ button.UiDataTable__toolbarItem {
   &__body {
     flex: 1;
     overflow: auto;
-    overscroll-behavior: contain;
+    // overscroll-behavior: contain; // !!! In mobile, when there is also HORIZONTAL overscroll, vertical scroll BREAKS
   }
 
   &__table {
@@ -156,6 +156,9 @@ button.UiDataTable__toolbarItem {
   &__output {
     --ui-item-padding: 2px 10px;
     margin: 5px 8px;
+
+    // Large fields (like UiOutput--upload) can break horizontal scroll (in mobile). hence: hide overflow
+    overflow-x: hidden;
   }
 
   &__header-title {

@@ -8,7 +8,7 @@
 
   &__tabList {
     flex: 1;
-    min-width: 350px;
+    // min-width: 350px; // Too short for mobile. Causes horizontal scroll
 
     display: flex;
     flex-wrap: nowrap;

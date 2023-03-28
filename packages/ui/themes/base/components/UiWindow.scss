@@ -105,8 +105,13 @@
   &__header {
     user-select: none;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     padding: 4px;
+  }
+
+  &__limbo {
+    width: 100%;
   }
 
   &__dragger {
@@ -219,4 +224,8 @@
       min-height: 32px;
     }
   }
+}
+
+.color-scheme-dark .UiWindow__box {
+  box-shadow: 0 0px 30px #00000088;
 }
