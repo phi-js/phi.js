@@ -206,11 +206,11 @@ export default {
     background-color: var(--ui-item-badge-color);
     color: #fff;
     font-size: min(0.6em, 26px);
-    width: 0.9rem;
-    height: 0.9rem;
+    width: 9px;
+    height: 9px;
 
     position: absolute;
-    top: 0.6rem;
+    top: 9px;
     left: 0;
 
     border-radius: 50%;
