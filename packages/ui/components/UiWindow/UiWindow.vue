@@ -362,6 +362,13 @@ const currentIcon = computed(() => {
             src="mdi:close"
             @click="cancel"
           />
+
+          <div
+            v-if="$slots.limbo"
+            class="UiWindow__limbo"
+          >
+            <slot name="limbo" />
+          </div>
         </div>
 
         <div class="UiWindow__body">
