@@ -9,8 +9,8 @@ import Webcam from '@uppy/webcam'
 import XHRUpload from '@uppy/xhr-upload'
 import ImageEditor from '@uppy/image-editor'
 
-// import English from '@uppy/locales/lib/en_US'
-// import German from '@uppy/locales/lib/de_DE'
+import English from '@uppy/locales/lib/en_US'
+import German from '@uppy/locales/lib/de_DE'
 import Spanish from '@uppy/locales/lib/es_ES'
 
 import '@uppy/core/dist/style.css'
@@ -120,10 +120,9 @@ function deleteFile(file) {
 const uppy = computed(() => new Uppy({
   autoProceed: props.autoProceed, // si se autoprocede, no se puede usar ImageEditor
 
-  // i18n
-  // locale: English,
-  // locale: German,
-  locale: Spanish,
+  locale: i18n.baseLanguage.value == 'es'
+    ? Spanish
+    : (i18n.baseLanguage.value == 'de' ? German : English),
 
   restrictions: {
     minNumberOfFiles: props.multiple ? null : 1,
