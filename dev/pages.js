@@ -53,6 +53,11 @@ addPages(import.meta.glob('../packages/**/*.docs.vue'))
 
 
 export function getComponent(url) {
+  const parts = url.split('?', 2)
+  if (parts.length == 2) {
+    url = parts[0]
+  }
+
   const foundPage = allPages.find((page) => page.url == url)
   if (!foundPage?.component) {
     console.warn(`Cannot find component for url '${url}'`)
