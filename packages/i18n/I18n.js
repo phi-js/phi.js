@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import { toDate } from '@/packages/ui/helpers'
+import numberToWords from './numberToWords'
 
 export default class I18n {
   /*
@@ -200,6 +201,9 @@ export default class I18n {
     return parseTranslationObject(objValue, this.language.value, this.baseLanguage.value)
   }
 
+  words(num) {
+    return numberToWords(num)
+  }
   /* /utility functions */
 
 
@@ -248,12 +252,10 @@ export default class I18n {
   get availableLanguages() {
     const retval = []
     for (let languageCode in this.languages) {
-      if (this.languages[languageCode].title) {
-        retval.push({
-          value: languageCode,
-          text: this.languages[languageCode].title,
-        })
-      }
+      retval.push({
+        value: languageCode,
+        text: this.languages[languageCode]?.title || languageCode,
+      })
     }
 
     // What if the current language is not in the list? (it can happen!)
