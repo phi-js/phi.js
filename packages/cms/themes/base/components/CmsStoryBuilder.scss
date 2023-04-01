@@ -16,14 +16,15 @@
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
-    gap: 4px;
-    padding: 4px;
+    gap: 6px;
+    padding: 6px 4px;
   }
 
   &__headerPage {
     display: flex;
     flex-wrap: nowrap;
     gap: 4px;
+    padding: 3px;
 
     border-top: 1px solid var(--ui-color-ridge-top);
     border-bottom: 1px solid var(--ui-color-ridge-bottom);
