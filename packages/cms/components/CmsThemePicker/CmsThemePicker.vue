@@ -102,12 +102,17 @@ function selectTheme(theme) {
     }
 
     &__icon {
-      width: 100px;
-      height: 60px;
+      width: 105px;
+      height: 70px;
       border-radius: 4px;
       overflow: hidden;
     }
   }
+
+  .UiIcon__image {
+    background-size: cover !important;
+  }
+
 
   &--active {
     background-color: var(--ui-color-primary) !important;

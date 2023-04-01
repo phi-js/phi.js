@@ -2,7 +2,6 @@
 import { ref, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { VmStatement } from '@/packages/vm'
-import { UiInput } from '@/packages/ui'
 
 const props = defineProps({
   /**
@@ -32,11 +31,11 @@ function emitUpdate() {
 
 const i18n = useI18n({
   en: {
-    'BlockVisibilityEditor.visibleWhen': 'Show block if...',
+    'BlockVisibilityEditor.visibleWhen': 'This block is shown if',
     'BlockVisibilityEditor.useAnimation': 'Use animation',
   },
   es: {
-    'BlockVisibilityEditor.visibleWhen': 'Mostrar bloque si...',
+    'BlockVisibilityEditor.visibleWhen': 'Mostrar este bloque si se cumplen',
     'BlockVisibilityEditor.useAnimation': 'Usar animación',
   },
 })
@@ -44,15 +43,10 @@ const i18n = useI18n({
 
 <template>
   <div class="BlockVisibilityEditor">
+    <label>{{ i18n.t('BlockVisibilityEditor.visibleWhen') }}</label>
     <VmStatement
       v-model="block['v-if']"
       :default="{ and: [] }"
-      @update:model-value="emitUpdate"
-    />
-    <UiInput
-      v-model="block.transition"
-      type="checkbox"
-      :placeholder="i18n.t('BlockVisibilityEditor.useAnimation')"
       @update:model-value="emitUpdate"
     />
   </div>

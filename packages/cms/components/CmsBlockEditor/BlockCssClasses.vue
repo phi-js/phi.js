@@ -26,12 +26,30 @@ const props = defineProps({
 const emit = defineEmits(['update:block'])
 
 const injectedStory = inject('_cms_currentStory', {})
-const availableClasses = ref(injectedStory.value.stylesheets.filter((sheet) => sheet.type == 'class'))
+const storyClasses = ref(injectedStory.value.stylesheets.filter((sheet) => sheet.type == 'class'))
+
+const sheetsWithClasses = injectedStory.value.stylesheets.filter((sheet) => Array.isArray(sheet.classes))
+/*
+Hash of classes provided by themes:
+{
+  "className": {... ?}
+}
+*/
+const hashThemeClasses = {}
+sheetsWithClasses.forEach((sheet) => {
+  sheet.classes.forEach((themeClass) => {
+    hashThemeClasses[themeClass.name] = {
+      ...themeClass,
+      theme: sheet.id,
+    }
+  })
+})
+console.log('hashThemeClasses', hashThemeClasses)
 
 
 /*
-classList is an array of NORMALIZED array of class objects
-as objects with "name" and "condition"
+blockClassList is an array of NORMALIZED array of class objects
+as objects with "name", "condition" and "origin" ("story" | "theme")
 
 Given an incoming block.props.class:
 [
@@ -41,7 +59,7 @@ Given an incoming block.props.class:
 
 it's normalized as
 
-classList: [
+blockClassList: [
   {
     "name": "my-class",
     "condition": null
@@ -52,7 +70,7 @@ classList: [
   }
 ]
 */
-const classList = ref([])
+const blockClassList = ref([])
 watch(
   () => props.block,
   (incomingBlock) => {
@@ -60,12 +78,15 @@ watch(
       ? incomingBlock.props.class
       : incomingBlock?.props?.class ? [incomingBlock?.props?.class] : []
 
-    classList.value = blockClasses
+    blockClassList.value = blockClasses
       .map((classValue) => {
+        const origin = hashThemeClasses[classValue] ? 'theme' : 'story'
+
         if (typeof classValue === 'string') {
           return {
             name: classValue,
             condition: null,
+            origin,
           }
         }
 
@@ -73,6 +94,7 @@ watch(
           return {
             name: classValue.then,
             condition: classValue.if,
+            origin,
           }
         }
       })
@@ -82,7 +104,7 @@ watch(
 )
 
 const appenderOptions = computed(() => {
-  const unused = availableClasses.value.filter((classObj) => !isClassSelected(classObj.id))
+  const unused = storyClasses.value.filter((classObj) => !isClassSelected(classObj.id))
   const retval = unused.map((unusedClass) => ({ value: unusedClass.id, text: unusedClass.id }))
   retval.push({ value: 'new', text: 'Create new class ...' })
   return retval
@@ -107,14 +129,12 @@ function promptNewClassName() {
 
   const newSheet = { id: className, type: 'class', src: `.${className } {\n\n}` }
   injectedStory.value.stylesheets.push(newSheet)
-  availableClasses.value.push(newSheet)
+  storyClasses.value.push(newSheet)
 }
 
 
-
-
 function emitUpdate() {
-  const classArray = classList.value.map((objClass) => {
+  const classArray = blockClassList.value.map((objClass) => {
     if (objClass.condition?.and?.length || objClass.condition?.or?.length) {
       return {
         if: objClass.condition,
@@ -135,11 +155,11 @@ function emitUpdate() {
 }
 
 function isClassSelected(className) {
-  return classList.value.findIndex((c) => c.name == className) >= 0
+  return blockClassList.value.findIndex((c) => c.name == className) >= 0
 }
 
 function hasCondition(className) {
-  const found = classList.value.find((c) => c.name == className)
+  const found = blockClassList.value.find((c) => c.name == className)
   return !!found?.condition
 }
 
@@ -147,16 +167,22 @@ function appendClass(className) {
   if (isClassSelected(className)) {
     return
   }
-  classList.value.push({ name: className })
+  blockClassList.value.push({ name: className })
   emitUpdate()
 }
 
 function removeClass(className) {
-  const foundIndex = classList.value.findIndex((c) => c.name == className)
+  const foundIndex = blockClassList.value.findIndex((c) => c.name == className)
   if (foundIndex >= 0) {
-    classList.value.splice(foundIndex, 1)
+    blockClassList.value.splice(foundIndex, 1)
   }
   emitUpdate()
+}
+
+function toggleClass(className) {
+  return isClassSelected(className)
+    ? removeClass(className)
+    : appendClass(className)
 }
 
 
@@ -164,7 +190,7 @@ function removeClass(className) {
 const editingClass = ref()
 
 function openVisibilityEditor(className) {
-  const foundClass = classList.value.find((c) => c.name == className)
+  const foundClass = blockClassList.value.find((c) => c.name == className)
   if (!foundClass) {
     return
   }
@@ -176,7 +202,7 @@ function openVisibilityEditor(className) {
 }
 
 function onEditorSubmit() {
-  const foundClass = classList.value.find((c) => c.name == editingClass.value?.name)
+  const foundClass = blockClassList.value.find((c) => c.name == editingClass.value?.name)
   if (!foundClass) {
     return
   }
@@ -190,9 +216,23 @@ function onEditorClose() {
 
 /* Class Editor which changes the injected story's "stylesheets" props */
 
-const injectedStoryDeclarations = computed(() => classList.value.map((objClass) => {
-  return availableClasses.value.find((c) => c.id == objClass.name)
-}))
+/*
+injectedStoryDeclarations: {
+  className1: {...stylesheet definition },
+  className2: {...stylesheet definition },
+  ...
+}
+*/
+const injectedStoryDeclarations = computed(() => {
+  const retval = {}
+  blockClassList.value.forEach((objClass) => {
+    const found = storyClasses.value.find((c) => c.id == objClass.name)
+    if (found) {
+      retval[found.id] = found
+    }
+  })
+  return retval
+})
 
 function updateStoryDeclaration(sheetDeclaration) {
   const matchingDeclaration = injectedStory.value.stylesheets.find((sheet) => sheet.id == sheetDeclaration.id)
@@ -200,12 +240,50 @@ function updateStoryDeclaration(sheetDeclaration) {
     Object.assign(matchingDeclaration, sheetDeclaration)
   }
 }
+
+const blockClassesFromStory = computed(() => blockClassList.value.filter((cls) => cls.origin == 'story'))
 </script>
 
 <template>
   <div class="BlockCssClasses">
+    <!-- theme classes -->
+    <div class="UiForm">
+      <fieldset
+        v-for="theme in sheetsWithClasses"
+        :key="theme.id"
+        class="BlockCssClasses__fieldset"
+      >
+        <legend v-text="theme.title" />
+
+        <div
+          v-for="themeClass in theme.classes"
+          :key="themeClass.name"
+          class="ThemeClassItem outset"
+          :class="{'ThemeClassItem--selected': isClassSelected(themeClass.name)}"
+        >
+          <input
+            :id="`checkbox_${themeClass.name}`"
+            type="checkbox"
+            :checked="isClassSelected(themeClass.name)"
+            @input="toggleClass(themeClass.name)"
+          >
+          <label :for="`checkbox_${themeClass.name}`">
+            <h3>{{ themeClass.text }}</h3>
+            <small>{{ themeClass.subtext }}</small>
+          </label>
+          <UiIcon
+            class="ThemeClassItem__visibilityIcon"
+            :src="hasCondition(themeClass.name) ? 'mdi:eye' : 'mdi:eye-outline'"
+            @click="openVisibilityEditor(themeClass.name)"
+          />
+        </div>
+      </fieldset>
+    </div>
+
+
+    <!-- Classes from Story -->
     <UiDetails
-      v-for="(blockClass, i) in classList"
+      v-for="(blockClass) in blockClassesFromStory"
       :key="blockClass.name"
       :text="blockClass.name"
       class="BlockCssClasses__class outset"
@@ -213,8 +291,8 @@ function updateStoryDeclaration(sheetDeclaration) {
     >
       <!-- Class declaration editor (changes injected story's "stylesheets") if a matching declaration exists -->
       <CssClassEditor
-        v-if="injectedStoryDeclarations[i]"
-        :model-value="injectedStoryDeclarations[i]"
+        v-if="injectedStoryDeclarations[blockClass.name]"
+        :model-value="injectedStoryDeclarations[blockClass.name]"
         @update:model-value="updateStoryDeclaration($event)"
       />
 
@@ -286,6 +364,45 @@ function updateStoryDeclaration(sheetDeclaration) {
     border: 2px dashed rgba(153, 153, 153, 0.5333333333);
     outline: none !important;
     cursor: pointer;
+  }
+
+  .UiForm {
+    padding: 0;
+    margin-bottom: 1em;
+  }
+
+  &__fieldset {
+    padding: 6px 11px !important;
+  }
+}
+
+.ThemeClassItem {
+  display: flex;
+  align-items: center;
+  user-select: none;
+  padding: 0 12px;
+  margin-bottom: 5px;
+
+  cursor: pointer;
+  &:hover {
+    background-color: var(--ui-color-hover);
+  }
+
+  label {
+    flex: 1;
+    padding: 9px 11px;
+  }
+
+  * {
+    cursor: inherit;
+  }
+
+  &__visibilityIcon {
+    opacity: 0.3;
+  }
+
+  &--selected &__visibilityIcon {
+    opacity: 1;
   }
 }
 </style>
