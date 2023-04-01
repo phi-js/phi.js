@@ -54,8 +54,8 @@ const props = defineProps({
 const emit = defineEmits([
   'update:isPlaying',
   'update:currentTime',
-
   'update:activeChapters', // Emits an ARRAY of chapter names ['Capitulo 1', ...]
+
   'chapter-enter',
   'chapter-leave',
 ])

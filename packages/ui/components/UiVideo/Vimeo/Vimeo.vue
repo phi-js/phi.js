@@ -29,6 +29,14 @@ export default {
     },
   },
 
+  emits: [
+    'update:isPlaying',
+    'update:currentTime',
+    'play',
+    'pause',
+    'end',
+  ],
+
   data() {
     return {
       player: null,
@@ -94,30 +102,30 @@ export default {
       this.loadApi().then(() => {
         // this.player is a PROXY object, which fucks up .on('xxx') calls.  use as const instead
         // this.player = new Vimeo.Player(this.$el.querySelector('iframe'));
+        // eslint-disable-next-line no-undef
         const player = new Vimeo.Player(this.$el.querySelector('iframe'))
 
         player.on('play', (/*eventData*/) => {
           this.videoData.isPlaying = true
-          this.$emit('play', this.videoData)
-          this.$emit('input', this.videoData)
+          this.$emit('play')
+          this.$emit('update:isPlaying', this.videoData.isPlaying)
         })
 
         player.on('pause', (/*eventData*/) => {
           this.videoData.isPlaying = false
-          this.$emit('pause', this.videoData)
-          this.$emit('input', this.videoData)
+          this.$emit('pause')
+          this.$emit('update:isPlaying', this.videoData.isPlaying)
         })
 
         player.on('end', (/*eventData*/) => {
           this.videoData.isPlaying = false
-          this.$emit('end', this.videoData)
-          this.$emit('input', this.videoData)
+          this.$emit('end')
+          this.$emit('update:isPlaying', this.videoData.isPlaying)
         })
 
         player.on('timeupdate', (eventData) => {
           this.videoData.time = eventData.seconds * 1000
           this.$emit('update:currentTime', this.videoData.time)
-          this.$emit('input', this.videoData)
         })
 
         this.player = player
