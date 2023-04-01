@@ -38,7 +38,7 @@ function pasteBlock(block) {
       v-for="item in copiedItems"
       :key="item.block._key"
       class="FinderItem FinderItem--item"
-      :text="item.definition.title"
+      :text="item.block.title || item.block.props?.label || item.definition.title"
       :subtext="i18n.d(item.timestamp)"
       :icon="item.definition.icon"
       @click="pasteBlock(item.block)"
