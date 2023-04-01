@@ -1,9 +1,11 @@
 <script setup>
 import { ref, onMounted, onUnmounted, inject } from 'vue'
+import { useApi } from '@/packages/api'
 import PdfGenerator from '@/packages/ui/components/PdfGenerator/PdfGenerator.vue'
+import pdfApi from './api.js'
 
+const api = useApi(pdfApi)
 const injectedStory = inject('$_cms_story', null)
-
 const el = ref()
 const innerHTML = ref('')
 
@@ -51,14 +53,8 @@ onMounted(() => {
 
 onUnmounted(() => mutationObserver.disconnect())
 
-async function toPDF({ html, options }) {
-  return fetch(
-    'http://v4.local/1/esign/pdf/generator',
-    {
-      method: 'POST',
-      body: JSON.stringify({ html, options }),
-    },
-  ).then((response) => response.blob())
+function toPDF({ html, options }) {
+  return api.toPDF(html, options)
 }
 </script>
 
