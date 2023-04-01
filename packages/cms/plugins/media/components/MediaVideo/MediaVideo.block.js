@@ -16,6 +16,21 @@ export default {
     'v-model:activeChapters': '',
   },
 
+  emits: [
+    {
+      event: 'play',
+      text: 'Play',
+    },
+    {
+      event: 'pause',
+      text: 'Pause',
+    },
+    {
+      event: 'end',
+      text: 'Video ends',
+    },
+  ],
+
   editor: {
     actions: [
       {
