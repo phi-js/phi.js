@@ -5,8 +5,8 @@ import { UiItem, UiIcon, UiDropdown } from '@/packages/ui'
 import { getBlockEditors } from '../../functions'
 
 const i18n = useI18n({
-  en: { 'StoryPageItem.Delete': 'Delete' },
-  es: { 'StoryPageItem.Delete': 'Eliminar' },
+  en: { 'StoryPageToolbar.Delete': 'Delete' },
+  es: { 'StoryPageToolbar.Delete': 'Eliminar' },
 })
 
 const props = defineProps({
@@ -38,21 +38,7 @@ function onClickAction(action) {
 </script>
 
 <template>
-  <div class="StoryPageItem">
-    <UiItem
-      class="StoryPageItem__face CmsStoryBuilder__clickable"
-      icon="mdi:file"
-      :text="innerBlock.title || innerBlock.hash || innerBlock.id"
-      @click="emit('click', $event)"
-    >
-      <template #actions>
-        <UiIcon
-          src="mdi:chevron-down"
-          @click="emit('click', $event)"
-        />
-      </template>
-    </UiItem>
-
+  <div class="StoryPageToolbar">
     <!-- shortcut icons -->
     <UiIcon
       v-for="action in shortcuts"
@@ -83,7 +69,7 @@ function onClickAction(action) {
           <UiItem
             class="BlockScaffold__action BlockScaffold__action--delete"
             icon="mdi:close"
-            :text="i18n.t('StoryPageItem.Delete')"
+            :text="i18n.t('StoryPageToolbar.Delete')"
             @click="close(); emit('delete');"
           />
         </div>
@@ -93,7 +79,7 @@ function onClickAction(action) {
 </template>
 
 <style lang="scss">
-.StoryPageItem {
+.StoryPageToolbar {
   display: flex;
   align-items: stretch;
 

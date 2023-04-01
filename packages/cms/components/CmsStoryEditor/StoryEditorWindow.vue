@@ -12,6 +12,7 @@ import { VmStatement } from '@/packages/vm'
 import StoryDictionaryEditor from './StoryDictionaryEditor.vue'
 import StoryMethodsEditor from './StoryMethodsEditor.vue'
 import StoryComputedEditor from './StoryComputedEditor.vue'
+import CmsStoryGraph from '../CmsStoryGraph/CmsStoryGraph.vue'
 
 const props = defineProps({
   story: {
@@ -71,6 +72,7 @@ function emitStoryUpdate() {
 const i18n = useI18n({
   en: {
     'StoryEditorWindow.run': 'Run',
+    'StoryEditorWindow.graph': 'Navigation',
     'StoryEditorWindow.code': 'Code',
     'StoryEditorWindow.global': 'Global',
     'StoryEditorWindow.i18n': 'Languages',
@@ -83,6 +85,7 @@ const i18n = useI18n({
   },
   es: {
     'StoryEditorWindow.run': 'Ejecutar',
+    'StoryEditorWindow.graph': 'Navegación',
     'StoryEditorWindow.code': 'Código',
     'StoryEditorWindow.global': 'Global',
     'StoryEditorWindow.i18n': 'Idiomas',
@@ -111,6 +114,17 @@ const i18n = useI18n({
     </template>
 
     <template #default>
+      <div
+        v-if="currentTab == 'graph'"
+        class="contents-graph"
+      >
+        <CmsStoryGraph
+          v-model:story="innerStory"
+          :current-page-id="currentPageId"
+          @update:story="emitStoryUpdate"
+          @update:current-page-id="emit('update:currentPageId', $event)"
+        />
+      </div>
       <div
         v-if="currentTab == 'style'"
         class="contents-style"
@@ -223,6 +237,15 @@ const i18n = useI18n({
       & > div { //cm-editor
         height: 100%;
       }
+    }
+  }
+
+  // Same for story graph
+  .contents-graph {
+    height: 100%;
+
+    .CmsStoryGraph {
+      height: 100%;
     }
   }
 }

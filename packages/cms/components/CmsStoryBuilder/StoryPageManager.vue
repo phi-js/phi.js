@@ -1,9 +1,8 @@
 <script setup>
 import { computed, inject, ref, watch } from 'vue'
-import draggable from 'vuedraggable'
 import { useI18n } from '@/packages/i18n'
-import { UiItem, UiDialog } from '@/packages/ui'
-import StoryPageItem from './StoryPageItem.vue'
+import { UiInput } from '@/packages/ui'
+import StoryPageToolbar from './StoryPageToolbar.vue'
 
 const i18n = useI18n({
   en: {
@@ -32,7 +31,6 @@ const props = defineProps({
 const emit = defineEmits([
   'update:story',
   'update:currentPageId',
-  'open-editor',
 ])
 
 const innerPages = ref()
@@ -78,7 +76,6 @@ const currentPage = computed({
 const isDialogOpen = ref(false)
 
 const openBlockWindow = inject('$_cms_openBlockWindow')
-const newPage = ref()
 
 function onCurrentPageClickAction(actionId) {
   openBlockWindow(
@@ -92,144 +89,40 @@ function onCurrentPageClickAction(actionId) {
   )
 }
 
-function onPageClick(page) {
-  isDialogOpen.value = false
-  emit('update:currentPageId', page.id)
-}
-
-function openPageCreator() {
-  isDialogOpen.value = false
-
-  newPage.value = {
-    id: `p${innerPages.value.length + 1}`,
-    component: 'LayoutPage',
-  }
-
-  openBlockWindow(
-    {
-      innerBlock: newPage,
-      updateBlock: (newValue) => {
-        innerPages.value.push(newValue)
-        newPage.value = null
-        emitUpdate()
-        emit('update:currentPageId', newValue.id)
-      },
-      cancel: () => newPage.value = null,
-    },
-    'LayoutPageSettings',
-  )
-}
 </script>
 
 <template>
   <div class="StoryPageManager">
-    <StoryPageItem
+    <UiInput
+      type="select-native"
+      :model-value="currentPageId"
+      :options="innerPages"
+      option-value="$.id"
+      option-text="$.title"
+      @update:model-value="emit('update:currentPageId', $event)"
+    />
+
+    <slot name="buttons" />
+
+    <StoryPageToolbar
       v-if="currentPage"
       v-model="currentPage"
       @click="isDialogOpen = !isDialogOpen"
       @click-action="onCurrentPageClickAction"
       @delete="deletePage(currentPage.id)"
     />
-    <UiItem
-      v-else
-      :text="currentPageId"
-      @click="isDialogOpen = !isDialogOpen"
-    />
-
-    <UiDialog
-      v-model:open="isDialogOpen"
-      show-close-button
-    >
-      <template #contents>
-        <draggable
-          v-model="innerPages"
-          class="StoryPageManager__list"
-          group="StoryPageManager"
-          handle=".UiItem__icon"
-          item-key="id"
-          :animation="111"
-          :empty-insert-threshold="0"
-          :swap-threshold="0.5"
-          :inverted-swap-threshold="1"
-
-          @update:model-value="emitUpdate"
-        >
-          <template #item="{ element }">
-            <UiItem
-              icon="mdi:drag-vertical"
-              class="StoryPageManager__dragItem"
-            >
-              <UiItem
-                class="StoryPageManager__listItem"
-                :class="{'StoryPageManager__listItem--selected': element.id == currentPageId}"
-                icon="mdi:file"
-                :text="element.title || element.hash || element.id"
-                :subtext="`#${element.hash}`"
-                @click="onPageClick(element)"
-              />
-            </UiItem>
-          </template>
-
-          <template #footer>
-            <UiItem
-              class="StoryPageManager__pageAdder"
-              icon="mdi:plus"
-              :text="i18n.t('StoryPageManager.CreatePage')"
-              @click="openPageCreator"
-            />
-          </template>
-        </draggable>
-      </template>
-    </UiDialog>
   </div>
 </template>
 
 <style lang="scss">
-@import '@/packages/cms/themes/base/classes/outset.scss';
-
 .StoryPageManager {
-  &__list {
-    padding: 16px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 3px;
 
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  &__dragItem {
-    & > .UiItem__icon {
-      cursor: move;
-      padding: 0 8px;
-    }
-  }
-
-  &__listItem {
-    @extend .outset;
-
-    --ui-item-padding: 4px 12px;
-    user-select: none;
-
-    padding: 8px;
-    border-radius: 6px;
-    color: var(--ui-color-foreground);
-    background-color: var(--ui-color-background);
-    cursor: pointer;
-
-    &--selected {
-      border: 2px solid var(--ui-color-primary);
-      opacity: 1;
-    }
-  }
-
-  &__pageAdder {
-    --ui-item-padding: 12px 12px;
-    user-select: none;
-
-    font-size: 0.8rem;
-    font-weight: bold;
-    border-radius: 5px;
-    border: 2px dashed rgba(153, 153, 153, 0.5333333333);
-
+  & > .UiIcon {
+    width: 42px;
     cursor: pointer;
     &:hover {
       background-color: var(--ui-color-hover);

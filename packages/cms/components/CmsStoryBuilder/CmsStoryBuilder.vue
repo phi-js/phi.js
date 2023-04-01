@@ -84,6 +84,7 @@ watch(
 const i18n = useI18n({
   en: {
     'CmsStoryBuilder.Editor': 'Editor',
+    'CmsStoryBuilder.Graph': 'Navigation',
     'CmsStoryBuilder.Style': 'Style',
     'CmsStoryBuilder.Code': 'Code',
     'CmsStoryBuilder.Languages': 'Languages',
@@ -98,6 +99,7 @@ const i18n = useI18n({
   },
   es: {
     'CmsStoryBuilder.Editor': 'Editor',
+    'CmsStoryBuilder.Graph': 'Navegación',
     'CmsStoryBuilder.Style': 'Estilo',
     'CmsStoryBuilder.Code': 'Código',
     'CmsStoryBuilder.Languages': 'Idiomas',
@@ -215,43 +217,6 @@ function closeBlockWindow() {
 provide('$_cms_openBlockWindow', openBlockWindow)
 
 
-const editingPageIndex = ref(-1)
-const editingPage = computed({
-  get() {
-    if (editingPageIndex.value == -1) {
-      return null
-    }
-
-    return innerStory.value.pages[editingPageIndex.value]
-  },
-  set(newPage) {
-    if (editingPageIndex.value == -1) {
-      return
-    }
-    innerStory.value.pages[editingPageIndex.value] = newPage
-  },
-})
-
-
-function onOpenEditor({ index, actionId }) {
-  editingPageIndex.value = index
-  openBlockWindow(
-    {
-      innerBlock: editingPage,
-      updateBlock: () => {
-        onUpdateStory()
-        editingPageIndex.value = -1
-      },
-      cancel: () => {
-        editingPageIndex.value = -1
-      },
-    },
-    actionId,
-  )
-}
-
-
-
 
 const storyFields = computed(() => i18n.obj(getStoryFields(innerStory.value)))
 provide('$_vm_fields', storyFields)
@@ -343,13 +308,20 @@ function onTemplatePickerInput($event) {
         v-if="!isEmpty"
         class="CmsStoryBuilder__headerPage"
       >
-        <!-- sitemap button -->
+        <!-- Page picker and current page dropdown menu -->
         <StoryPageManager
           v-model:current-page-id="currentPageId"
           v-model:story="innerStory"
           @update:story="onUpdateStory()"
-          @open-editor="onOpenEditor"
-        />
+        >
+          <template #buttons>
+            <UiIcon
+              :title="i18n.t('CmsStoryBuilder.Graph')"
+              src="mdi:sitemap"
+              @click="windowTab = 'graph'"
+            />
+          </template>
+        </StoryPageManager>
 
 
         <div class="CmsStoryBuilder__controls">
@@ -408,7 +380,7 @@ function onTemplatePickerInput($event) {
       <StoryEditorWindow
         v-model:story="innerStory"
         v-model:current-tab="windowTab"
-        :current-page-id="currentPageId"
+        v-model:current-page-id="currentPageId"
         @accept="onWindowAccept"
         @cancel="onWindowCancel"
       />
