@@ -30,10 +30,10 @@ const props = defineProps({
   Arreglo de coordenadas iniciales
   (valores enteros, medidos en pixeles)
   {
-    "top": 10,
-    "left": 10,
+    "top": 100,
+    "left": 100,
     "width": 500,
-    "height": 500
+    "height": 550
   }
   */
   coords: {
@@ -66,10 +66,14 @@ const props = defineProps({
 
 const emit = defineEmits(['update:open', 'update:dock', 'update:coords', 'cancel'])
 
-
 /* Stored coords (for each dock) */
 const storedCoords = ref({
-  default: { top: 100, left: 100, width: 500, height: 550 },
+  default: {
+    top: 100,
+    left: 100,
+    width: props.coords?.width || 500,
+    height: props.coords?.height || 550,
+  },
   top: { height: 300 },
   bottom: { height: 300 },
   left: { width: 400 },
