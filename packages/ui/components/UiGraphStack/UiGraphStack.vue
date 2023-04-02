@@ -166,7 +166,7 @@ const pathItems = computed(() => {
         &::after {
           content: '▼';
           left: -5px;
-          bottom: -5px;
+          bottom: -7px;
         }
       }
 
@@ -177,7 +177,7 @@ const pathItems = computed(() => {
         &::after {
           content: '▲';
           left: -7px;
-          top: -5px;
+          top: -7px;
         }
       }
     }
