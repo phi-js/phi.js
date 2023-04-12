@@ -47,7 +47,7 @@ export default function sanitizeStory(story) {
 
     // every page has a unique ID
     if (!page.id) {
-      page.id = `page-${index + 1}`
+      page.id = `p${index + 1}`
     }
 
     // every page has a title

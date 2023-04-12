@@ -2,11 +2,11 @@ import { getClient } from '@/packages/api'
 
 export default class {
   constructor() {
-    this.http = getClient('v4')
+    this.http = getClient('phi')
   }
 
   toPDF(html, options) {
-    const request = this.http.buildRequest('/1/esign/pdf/generator', {
+    const request = this.http.buildRequest('/api/1/services/pdf', {
       method: 'POST',
       body: { html, options },
     })

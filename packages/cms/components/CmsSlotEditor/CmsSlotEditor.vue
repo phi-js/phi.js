@@ -7,15 +7,14 @@ export default { inheritAttrs: false }
 </script>
 
 <script setup>
-import { watch, nextTick } from 'vue'
-
-import draggable from 'vuedraggable'
+import { watch, nextTick, defineAsyncComponent } from 'vue'
 import { useI18n } from '@/packages/i18n'
-
 import SlotItem from './SlotItem.vue'
 import SlotBlockLauncher from './SlotBlockLauncher.vue'
 import { getBlockDefinition } from '../../functions'
 import * as sel from '../CmsStoryEditor/selectedBlock'
+// import draggable from 'vuedraggable'
+const draggable = defineAsyncComponent(() => import('vuedraggable'))
 
 const localCounter = _CmsSlotEditor_counter++
 

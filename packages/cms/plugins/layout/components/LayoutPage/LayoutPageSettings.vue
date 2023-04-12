@@ -2,6 +2,7 @@
 import { ref, watch, computed, inject } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { UiInput } from '@/packages/ui'
+import CmsPropInput from '../../../../components/CmsPropInput/CmsPropInput.vue'
 
 const currentStory = inject('_cms_currentStory', {})
 
@@ -60,7 +61,7 @@ function toValidHash(string) {
     return ''
   }
 
-  return string
+  return i18n.obj(string)
     .toString()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -104,7 +105,7 @@ const isFooterEnabled = computed({
 
 <template>
   <div class="LayoutPageSettings UiForm">
-    <UiInput
+    <CmsPropInput
       v-model="page.title"
       type="text"
       :label="i18n.t('LayoutPageSettings.Title')"

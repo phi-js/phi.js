@@ -96,7 +96,9 @@ onMounted(() => {
   }
 })
 
-
+const windowTitle = computed(() => {
+  return i18n.obj(innerBlock.value?.title) || definition.value?.title
+})
 </script>
 
 <template>
@@ -110,7 +112,7 @@ onMounted(() => {
       <UiItem
         class="BlockWindow__headerItem"
         :icon="definition?.icon"
-        :text="(innerBlock?.title || definition?.title)"
+        :text="windowTitle"
       />
     </template>
 

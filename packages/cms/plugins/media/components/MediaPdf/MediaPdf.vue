@@ -23,7 +23,7 @@ function exportHTML() {
     <head>
       <style>
         body {
-          font-family: Verdana, Tahoma, sans-serif;
+          font-family: Nunito, Verdana, Tahoma, sans-serif;
           font-size: 12pt;
         }
         ${style}
@@ -55,6 +55,7 @@ onUnmounted(() => mutationObserver.disconnect())
 
 function toPDF({ html, options }) {
   return api.toPDF(html, options)
+  // return api.toPDF(html, { setters: { title: 'HELLO THERE' } })
 }
 </script>
 

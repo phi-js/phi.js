@@ -1,7 +1,22 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { UiInput } from '@/packages/ui'
+
+const i18n = useI18n({
+  en: {
+    'LayoutGroupSettings.GroupName': 'Group name',
+    'LayoutGroupSettings.ContentDirection': 'Content direction',
+    'LayoutGroupSettings.DirectionColumn': 'Column',
+    'LayoutGroupSettings.DirectionRow': 'Row',
+  },
+  es: {
+    'LayoutGroupSettings.GroupName': 'Nombre del grupo',
+    'LayoutGroupSettings.ContentDirection': 'Dirección del contenido',
+    'LayoutGroupSettings.DirectionColumn': 'Columna',
+    'LayoutGroupSettings.DirectionRow': 'Fila',
+  },
+})
 
 const props = defineProps({
   /* Block object */
@@ -24,21 +39,21 @@ function emitUpdate() {
   emit('update:modelValue', block.value)
 }
 
-const i18n = useI18n({
-  en: {
-    'LayoutGroupSettings.GroupName': 'Group name',
-    'LayoutGroupSettings.ContentDirection': 'Content direction',
-    'LayoutGroupSettings.DirectionColumn': 'Column',
-    'LayoutGroupSettings.DirectionRow': 'Row',
+const styleSelectValue = computed({
+  get() {
+    return block.value.props?.direction || 'column'
   },
-  es: {
-    'LayoutGroupSettings.GroupName': 'Nombre del grupo',
-    'LayoutGroupSettings.ContentDirection': 'Dirección del contenido',
-    'LayoutGroupSettings.DirectionColumn': 'Columna',
-    'LayoutGroupSettings.DirectionRow': 'Fila',
+  set(newValue) {
+    if (newValue == 'row') {
+      block.value.props.style = Object.assign(block.value.props?.style || {}, { display: 'flex' })
+    } else {
+      block.value.props.style = Object.assign(block.value.props?.style || {}, { display: 'block' })
+    }
+
+    block.value.props.direction = newValue || 'column'
+    emitUpdate()
   },
 })
-
 </script>
 
 <template>
@@ -51,7 +66,7 @@ const i18n = useI18n({
       @update:model-value="emitUpdate"
     />
     <UiInput
-      v-model="block.props.direction"
+      v-model="styleSelectValue"
       class="LayoutGroupSettings__input"
       type="select-list"
       :label="i18n.t('LayoutGroupSettings.ContentDirection')"
@@ -59,7 +74,6 @@ const i18n = useI18n({
         { value: 'column', text: i18n.t('LayoutGroupSettings.DirectionColumn') },
         { value: 'row', text: i18n.t('LayoutGroupSettings.DirectionRow') },
       ]"
-      @update:model-value="emitUpdate"
     />
   </div>
 </template>

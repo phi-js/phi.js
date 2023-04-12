@@ -29,11 +29,13 @@ const i18n = useI18n({
     'MediaHtmlBlockEditor.Tanslate': 'Translate',
     'MediaHtmlBlockEditor.currentTab': 'Current tab',
     'MediaHtmlBlockEditor.newTab': 'New tab',
+    'MediaHtmlBlockEditor.placeholder': 'Type here ...',
   },
   es: {
     'MediaHtmlBlockEditor.Tanslate': 'Traducir',
     'MediaHtmlBlockEditor.currentTab': 'Pestaña actual',
     'MediaHtmlBlockEditor.newTab': 'Nueva pestaña',
+    'MediaHtmlBlockEditor.placeholder': 'Escribe aquí ...',
   },
 })
 
@@ -49,7 +51,7 @@ const editor = new Editor({
   extensions: [
     StarterKit,
     Underline,
-    Placeholder.configure({ placeholder: 'Escribe aquí ...' }),
+    Placeholder.configure({ placeholder: i18n.t('MediaHtmlBlockEditor.placeholder') }),
     TextAlign.configure({ types: ['heading', 'paragraph'] }),
     Link.configure({
       openOnClick: false,
@@ -325,7 +327,7 @@ const injectedStory = inject('_cms_currentStory', null)
 const injectedPages = computed(() => injectedStory?.value?.pages || [])
 const pageOptions = computed(() => injectedPages.value.map((p) => ({
   value: `#p:${p.id}`,
-  text: p.title,
+  text: i18n.obj(p.title),
 })))
 
 const isLinkDialogOpen = ref(false)

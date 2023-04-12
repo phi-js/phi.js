@@ -152,7 +152,6 @@ const i18n = useI18n({
   }
 
   &__typeSelect {
-    background: transparent; // fucks up option text color (white on white)
     color: inherit;
 
     position: absolute;

@@ -72,7 +72,7 @@ function emitStoryUpdate() {
 const i18n = useI18n({
   en: {
     'StoryEditorWindow.run': 'Run',
-    'StoryEditorWindow.graph': 'Navigation',
+    'StoryEditorWindow.graph': 'Sitemap',
     'StoryEditorWindow.code': 'Code',
     'StoryEditorWindow.global': 'Global',
     'StoryEditorWindow.i18n': 'Languages',
@@ -85,7 +85,7 @@ const i18n = useI18n({
   },
   es: {
     'StoryEditorWindow.run': 'Ejecutar',
-    'StoryEditorWindow.graph': 'Navegación',
+    'StoryEditorWindow.graph': 'Mapa del sitio',
     'StoryEditorWindow.code': 'Código',
     'StoryEditorWindow.global': 'Global',
     'StoryEditorWindow.i18n': 'Idiomas',
@@ -101,9 +101,10 @@ const i18n = useI18n({
 
 <template>
   <UiWindow
-    name="phi"
+    name="phi-story"
     class="StoryEditorWindow"
     :open="!!props.currentTab"
+    :coords="{width: 700, height: 500}"
     @update:open="emit('update:currentTab', null)"
   >
     <template #header>

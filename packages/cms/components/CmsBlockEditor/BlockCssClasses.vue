@@ -44,7 +44,6 @@ sheetsWithClasses.forEach((sheet) => {
     }
   })
 })
-console.log('hashThemeClasses', hashThemeClasses)
 
 
 /*
