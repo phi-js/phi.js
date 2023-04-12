@@ -1,3 +1,4 @@
+import InputList from './blocks/InputList.js'
 import InputButton from './blocks/InputButton.js'
 import InputCheckbox from './blocks/InputCheckbox.js'
 import InputCountry from './blocks/InputCountry.js'
@@ -29,6 +30,7 @@ export default {
         InputUpload,
         InputPassword,
         InputCountry,
+        InputList,
         InputButton,
       ],
     },

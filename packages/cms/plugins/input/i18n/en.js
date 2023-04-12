@@ -10,4 +10,5 @@ export default {
   'plugin.component.InputUpload.title': 'Upload',
   'plugin.component.InputPassword.title': 'Password',
   'plugin.component.InputButton.title': 'Submit button',
+  'plugin.component.InputList.title': 'List',
 }
