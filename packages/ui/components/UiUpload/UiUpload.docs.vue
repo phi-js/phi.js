@@ -40,6 +40,7 @@ const many = ref([
   <UiUpload
     v-model="one"
     endpoint="http://v4.local/1/cms/pages/test/files"
+    :aspect-ratio="120/160"
   />
 
   <hr>

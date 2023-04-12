@@ -45,6 +45,23 @@ const props = defineProps({
     default: false,
   },
 
+  /*
+  Cropper.js image aspect ratio.
+  Number (result of a division)
+  e.g. 16/9,  800/600
+  */
+  aspectRatio: {
+    type: [String, Boolean, Number],
+    required: false,
+    default: false,
+  },
+
+  autoOpenFileEditor: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
+
   multiple: {
     type: Boolean,
     required: false,
@@ -131,16 +148,30 @@ const uppy = computed(() => new Uppy({
   },
 
 })
-  .use(Webcam)
   .use(XHRUpload, {
     endpoint: props.endpoint,
     fieldName: 'file',
   })
-  .use(ImageEditor, { quality: 0.8 })
+
+  .use(Webcam)
+  .use(ImageEditor, {
+    quality: 0.8,
+    actions: {
+      revert: false,
+      rotate: true,
+      granularRotate: true,
+      flip: true,
+      zoomIn: true,
+      zoomOut: true,
+      cropSquare: false,
+      cropWidescreen: false,
+      cropWidescreenVertical: false,
+    },
+    cropperOptions: { aspectRatio: props.aspectRatio },
+  })
 
   .on('complete', (result) => {
     const uploads = []
-
     result.successful.forEach((upload) => {
       const resultObj = upload?.response?.body?.[0]
       if (!resultObj) {
@@ -157,7 +188,7 @@ const uppy = computed(() => new Uppy({
     }
   }))
 
-onBeforeUnmount(() => uppy.value.close)
+onBeforeUnmount(() => uppy.value.close())
 
 // Modal
 const isOpen = ref(false)
@@ -171,6 +202,9 @@ const dashboardProps = computed(() => ({
   closeAfterFinish: props.inline ? null : true,
   height: '100%',
   width: '100%',
+  autoOpenFileEditor: props.autoOpenFileEditor,
+  plugins: ['Webcam', 'ImageEditor'],
+  proudlyDisplayPoweredByUppy: false,
 }))
 
 const endangeredIndex = ref(-1)
@@ -265,7 +299,7 @@ function closeEditor(index) {
       </div>
     </div>
 
-    <template v-if="!props.inline">
+    <template v-if="!props.inline && (props.multiple || innerFiles.length < 1)">
       <UiButton
         v-if="placeholder?.text"
         class="UiUpload__button"
@@ -283,10 +317,10 @@ function closeEditor(index) {
 
     <component
       :is="props.inline ? Dashboard : DashboardModal"
+      v-if="props.multiple || innerFiles.length < 1"
       :open="isOpen"
       class="UiUpload__uploader"
       :uppy="uppy"
-      :plugins="['Webcam', 'ImageEditor']"
       :props="dashboardProps"
     />
   </div>

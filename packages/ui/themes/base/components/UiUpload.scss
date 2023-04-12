@@ -23,8 +23,9 @@
       display: block;
       width: 120px;
       height: 70px;
-      object-fit: cover;
       border-radius: 5px;
+      object-fit: contain;
+      background: #444;
     }
 
     small {
@@ -84,7 +85,7 @@
     cursor: pointer;
     &:hover {
       background-color: var(--ui-color-hover);
-    }  
+    }
   }
 
   &__deleter {
@@ -97,4 +98,13 @@
       background-color: var(--ui-color-hover);
     }
   }
+}
+
+/* UPPY styles override */
+.uppy-Dashboard-Item-preview .uppy-Dashboard-Item-previewInnerWrap {
+  background: #444 !important;
+}
+
+.uppy-Dashboard-Item-preview img.uppy-Dashboard-Item-previewImg {
+  object-fit: contain !important;
 }

@@ -74,12 +74,10 @@
 
 
 .UiWindow {
-  --ui-window-dockzone-size: 60px;
+  --ui-window-dockzone-size: 2vw;
   text-align: left;
 
   &--external {
-    // display: none;
-    // pointer-events: none;
     opacity: 0.4;
   }
 
