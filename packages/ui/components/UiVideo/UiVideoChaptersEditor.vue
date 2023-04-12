@@ -1,5 +1,5 @@
 <script>
-import draggable from 'vuedraggable'
+import { defineAsyncComponent } from 'vue'
 
 import UiButton from '../UiButton/UiButton.vue'
 import UiDialog from '../UiDialog/UiDialog.vue'
@@ -9,6 +9,9 @@ import TempValue from '../TempValue/TempValue.vue'
 
 import UiVideo from './UiVideo.vue'
 import ChapterEditor from './ChapterEditor.vue'
+
+// import draggable from 'vuedraggable'
+const draggable = defineAsyncComponent(() => import('vuedraggable'))
 
 export default {
   name: 'UiVideoChaptersEditor',

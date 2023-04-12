@@ -1,7 +1,8 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, defineAsyncComponent } from 'vue'
 import { UiIcon } from '../UiIcon'
-import VueZoomerGallery from './vue-zoomer/vue-zoomer-gallery.vue'
+// import VueZoomerGallery from './vue-zoomer/vue-zoomer-gallery.vue'
+const VueZoomerGallery = defineAsyncComponent(() => import('./vue-zoomer/vue-zoomer-gallery.vue'))
 
 const props = defineProps({
   files: {

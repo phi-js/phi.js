@@ -1,8 +1,9 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { defineAsyncComponent, ref, watch } from 'vue'
 import { UiDrawer, UiItem } from '../'
-import draggable from 'vuedraggable'
 import ColumnEditor from './ColumnEditor.vue'
+// import draggable from 'vuedraggable'
+const draggable = defineAsyncComponent(() => import('vuedraggable'))
 
 const props = defineProps({
   /*

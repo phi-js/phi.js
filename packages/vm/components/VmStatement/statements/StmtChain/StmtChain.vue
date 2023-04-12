@@ -1,11 +1,11 @@
 <script setup>
-import { ref, watch } from 'vue'
-import draggable from 'vuedraggable'
+import { defineAsyncComponent, ref, watch } from 'vue'
 import { UiIcon } from '@/packages/ui'
-
 import useVmI18n from '../../../../i18n'
 import StmtChainItem from './StmtChainItem.vue'
 import VmStatementPicker from '../../VmStatementPicker.vue'
+
+const draggable = defineAsyncComponent(() => import('vuedraggable'))
 
 const i18n = useVmI18n()
 

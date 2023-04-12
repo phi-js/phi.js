@@ -1,8 +1,9 @@
 <script setup>
-import { ref, watch, nextTick } from 'vue'
-import draggable from 'vuedraggable'
+import { ref, watch, nextTick, defineAsyncComponent } from 'vue'
 import { useI18n, TranslationInput } from '@/packages/i18n'
 import { UiItem, UiIcon, UiDialog, UiInput } from '@/packages/ui/components'
+// import draggable from 'vuedraggable'
+const draggable = defineAsyncComponent(() => import('vuedraggable'))
 
 const i18n = useI18n({
   en: {
