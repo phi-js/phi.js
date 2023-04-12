@@ -2,12 +2,12 @@
 import { computed, inject, useAttrs } from 'vue'
 import { UiInput } from '@/packages/ui'
 
-const injectedStory = inject('$_cms_story', null)
+const $nav = inject('$_cms_navigation', null)
 const attrs = useAttrs()
 
 function onButtonClick() {
-  if (attrs.type != 'submit' && attrs.name == 'story-goto' && attrs.value && injectedStory?.goTo) {
-    injectedStory.goTo(attrs.value)
+  if (attrs.type != 'submit' && attrs.name == 'story-goto' && attrs.value && $nav?.goTo) {
+    $nav.goTo(attrs.value)
   }
 }
 
@@ -38,10 +38,13 @@ const buttonIcon = computed(() => {
 
 <style lang="scss">
 .InputButton {
+  max-width: 300px;
+
   // move icon to the fron
   .UiIcon {
     order: 1;
   }
+
   // except for "back" buttons
   &--back {
     .UiIcon {

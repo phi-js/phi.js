@@ -11,10 +11,10 @@ export default {
   },
 
   callback: function(pageId, _scope = null, _vm = null) {
-    if (!_vm?.custom?.story) {
-      console.warn('Story.goto called without custom \'story\' object')
+    if (!_vm?.custom?.$nav) {
+      console.warn('Story.goTo called without custom \'$nav\' object')
       return
     }
-    _vm.custom.story.goTo(pageId)
+    _vm.custom.$nav.goTo(pageId)
   },
 }

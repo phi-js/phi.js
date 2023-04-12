@@ -37,6 +37,17 @@ const emit = defineEmits(['update:modelValue'])
 const block = ref({})
 const selectedPageIds = ref([])
 
+const useItems = computed({
+  get() {
+    return selectedPageIds.value.length ? 'some' : 'all'
+  },
+  set(newValue) {
+    if (newValue === 'all') {
+      selectedPageIds.value = []
+    }
+  },
+})
+
 watchEffect(() => {
   block.value = {
     component: 'NavigationMenu',
@@ -75,6 +86,17 @@ function emitInput() {
 <template>
   <div class="NavigationMenuEditor">
     <UiInput
+      v-model="useItems"
+      type="select-list"
+      :options="[
+        {value: 'all', text: 'All pages'},
+        {value: 'some', text: 'The following pages:'},
+      ]"
+      @update:model-value="emitInput"
+    />
+
+    <UiInput
+      v-if="useItems == 'some'"
       v-model="selectedPageIds"
       multiple
       type="select-list"

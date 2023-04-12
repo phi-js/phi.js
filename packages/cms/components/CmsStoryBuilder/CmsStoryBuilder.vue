@@ -8,6 +8,7 @@ import StoryEditorWindow from '../CmsStoryEditor/StoryEditorWindow.vue'
 import BlockWindow from '../CmsBlockEditor/BlockWindow.vue'
 import StoryPageManager from './StoryPageManager.vue'
 import StoryTemplatePicker from './StoryTemplatePicker.vue'
+import promptImportFont from './promptImportFont.js'
 
 import { getStoryFields, sanitizeStory } from '../../functions'
 
@@ -84,7 +85,7 @@ watch(
 const i18n = useI18n({
   en: {
     'CmsStoryBuilder.Editor': 'Editor',
-    'CmsStoryBuilder.Graph': 'Navigation',
+    'CmsStoryBuilder.Graph': 'Sitemap',
     'CmsStoryBuilder.Style': 'Style',
     'CmsStoryBuilder.Code': 'Code',
     'CmsStoryBuilder.Languages': 'Languages',
@@ -99,7 +100,7 @@ const i18n = useI18n({
   },
   es: {
     'CmsStoryBuilder.Editor': 'Editor',
-    'CmsStoryBuilder.Graph': 'Navegación',
+    'CmsStoryBuilder.Graph': 'Mapa del sitio',
     'CmsStoryBuilder.Style': 'Estilo',
     'CmsStoryBuilder.Code': 'Código',
     'CmsStoryBuilder.Languages': 'Idiomas',
@@ -126,6 +127,29 @@ watch(
 provide('_cms_currentStory', innerStory)
 
 
+/* CSS Font management */
+provide('_ui_CssEditor_availableFonts', computed(() => innerStory.value.fonts))
+
+provide('_ui_CssEditor_createFont', async () => {
+  const googleFont = await promptImportFont()
+  if (!googleFont) {
+    return
+  }
+
+  if (!Array.isArray(innerStory.value.fonts)) {
+    innerStory.value.fonts = []
+  }
+
+  if (!innerStory.value.fonts.find((fnt) => fnt.id === googleFont.id)) {
+    innerStory.value.fonts.push(googleFont)
+    onUpdateStory()
+  }
+
+  return googleFont.fontFamily
+})
+
+
+/* Current Page */
 const innerCurrentPageId = ref()
 
 const currentPageId = computed({
@@ -218,7 +242,28 @@ provide('$_cms_openBlockWindow', openBlockWindow)
 
 
 
-const storyFields = computed(() => i18n.obj(getStoryFields(innerStory.value)))
+const storyFields = computed(() => {
+  const storyFields = getStoryFields(innerStory.value)
+  const modelFields = [
+    // {
+    //   value: '$target.du',
+    //   info: { text: 'Target\'s DU' },
+    //   type: 'string',
+    //   enum: [
+    //     { value: 'du', text: 'DU' },
+    //     { value: 'de', text: 'DE' },
+    //     { value: 'he', text: 'HE' },
+    //     { value: 'llo', text: 'LLO!' },
+    //   ],
+    // },
+  ]
+
+  return i18n.obj([
+    ...storyFields,
+    ...modelFields,
+  ])
+})
+
 provide('$_vm_fields', storyFields)
 
 

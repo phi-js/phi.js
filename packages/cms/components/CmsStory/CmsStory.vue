@@ -21,6 +21,7 @@ import {
   setProperty,
   useStylesheets,
   useStorySettings,
+  useNavigation,
 } from '../../functions'
 
 import { useI18n } from '@/packages/i18n'
@@ -50,94 +51,19 @@ export default {
   emits: ['update:modelValue', 'update:currentPageId', 'story-emit'],
 
   setup(props, { emit }) {
+    const i18n = useI18n()
+
     // Sanitize and translate (precompile) incoming story
     const sanitizedStory = ref(null)
     watchEffect(() => {
       sanitizedStory.value = JSON.parse(JSON.stringify(sanitizeStory(props.story))) // clone is important, otherwise we'll be mutating prop (i.e. when setting block.props and block.rules below)
+      sanitizedStory.value.paths = i18n.obj(sanitizedStory.value.paths)
     })
 
-    // Determine current page
-    const currentPage = ref()
-
-    const setCurrentPage = (pageId) => {
-      const foundPage = pageId
-        ? sanitizedStory.value.pages.find((page) => page.id == pageId)
-        : null
-
-      currentPage.value = foundPage || sanitizedStory.value.pages?.[0]
-      if (!currentPage.value?.id) {
-        return
-      }
-
-      // Splice story header and footer into page slots
-      currentPage.value.slots = {
-        ...currentPage.value.slots,
-        header: currentPage.value.isHeaderEnabled === false ? undefined : sanitizedStory.value.header,
-        footer: currentPage.value.isFooterEnabled === false ? undefined : sanitizedStory.value.footer,
-      }
-    }
-
-    watch(
-      () => sanitizedStory.value,
-      () => {
-        // The story object changed from the outside, so update currentPage
-        if (currentPage.value?.id) {
-          setCurrentPage(currentPage.value.id)
-        }
-      },
-    )
-
-
-    // Parse translations
-    const i18n = useI18n()
-
-    const translatedPage = computed(() => {
-      if (!currentPage.value) {
-        return
-      }
-
-      const pageClone = JSON.parse(JSON.stringify(currentPage.value))
-      forEachBlock(pageClone, (block) => {
-        if (block.props) {
-          block.props = i18n.obj(block.props)
-        }
-        if (block.rules) {
-          block.rules = i18n.obj(block.rules)
-        }
-        if (block['v-on']) {
-          block['v-on'] = i18n.obj(block['v-on'])
-        }
-      })
-
-      return pageClone
-    })
-
-
-    // Story modelValue
-    const storySettings = useStorySettings()
-
+    // Story model value and single source of truth for all things model
     const innerModel = ref({})
-    watch(
-      () => props.modelValue,
-      (newValue) => innerModel.value = {
-        ...newValue,
-        $settings: storySettings,
-      },
-      { immediate: true },
-    )
 
-    function onUpdateModelValue(event) {
-      innerModel.value = event
-      emit('update:modelValue', { ...innerModel.value, $settings: undefined })
-
-      // evaluate story[v-on][update:modelValue]
-      if (sanitizedStory.value?.['v-on']?.['update:modelValue']) {
-        const initialSetter = storyVM.onModelSet
-        storyVM.onModelSet = null
-        storyVM.eval(sanitizedStory.value['v-on']['update:modelValue'], innerModel.value)
-          .then(() => storyVM.onModelSet = initialSetter)
-      }
-    }
+    // Story initialization: create VM, read plugins, run story setup()
 
     // StoryVM
     const storyVM = new VM
@@ -166,15 +92,139 @@ export default {
         },
       })
 
-      if (!sanitizedStory.value.setup) {
-        isMounted.value = true
+      if (sanitizedStory.value.setup) {
+        const evaluableSetup = i18n.obj(sanitizedStory.value.setup)
+        storyVM.eval(evaluableSetup, innerModel.value)
+      }
+
+      isMounted.value = true
+
+      // AFTER the story is mounted,
+      // run the initial watch of props.currentPageId
+      if (props.currentPageId) {
+        $nav.goTo(props.currentPageId)
+      } else {
+        $nav.goTo(sanitizedStory.value.pages[0]?.id)
+      }
+    })
+
+
+    // Story Navigation
+    const $nav = useNavigation(
+      sanitizedStory,
+      innerModel,
+      {
+        onPageEnter,
+        onPageLeave,
+      },
+    )
+
+    watch(
+      () => props.currentPageId,
+      (newPageId) => $nav.goTo(newPageId),
+      // { immediate: true }, // Do NOT run immediately. Initial run should be in onMounted
+    )
+
+
+    const loadedPages = {} // loadedPages[page-id] = true | false
+
+    function onPageEnter(pageId) {
+      const pageTo = sanitizedStory.value.pages.find((page) => page.id == pageId)
+
+      // Evaluate page setup() (once)
+      if (pageTo?.['v-on']?.load && !loadedPages[pageTo.id]) {
+        storyVM.eval(pageTo['v-on'].load, innerModel.value)
+        loadedPages[pageTo.id] = true
+      }
+
+      // Evaluate page enter event
+      if (pageTo?.['v-on']?.enter) {
+        storyVM.eval(pageTo['v-on'].enter, innerModel.value)
+      }
+
+      emit('update:currentPageId', pageId)
+    }
+
+    function onPageLeave(pageId) {
+      // Evaluate page leave event
+      const pageFrom = sanitizedStory.value.pages.find((page) => page.id == pageId)
+      if (pageFrom?.['v-on']?.leave) {
+        storyVM.eval(pageFrom['v-on'].leave, innerModel.value)
+      }
+    }
+
+    const currentPage = computed(() => {
+      let foundPage = sanitizedStory.value.pages.find((p) => p.id == $nav.currentPageId.value)
+      if (!foundPage) {
+        foundPage = sanitizedStory.value.pages[0]
+      }
+
+      if (!foundPage) {
+        return null
+      }
+
+      // Splice story header and footer into current page slots
+      return {
+        ...foundPage,
+        slots: {
+          ...foundPage.slots,
+          header: foundPage.isHeaderEnabled === false ? undefined : sanitizedStory.value.header,
+          footer: foundPage.isFooterEnabled === false ? undefined : sanitizedStory.value.footer,
+        },
+      }
+    })
+
+
+
+    // Parse translations
+    const translatedPage = computed(() => {
+      if (!currentPage.value) {
         return
       }
 
-      const evaluableSetup = i18n.obj(sanitizedStory.value.setup)
-      storyVM.eval(evaluableSetup, innerModel.value)
-      isMounted.value = true
+      const pageClone = JSON.parse(JSON.stringify(currentPage.value))
+      forEachBlock(pageClone, (block) => {
+        if (block.props) {
+          block.props = i18n.obj(block.props)
+        }
+        if (block.rules) {
+          block.rules = i18n.obj(block.rules)
+        }
+        if (block['v-on']) {
+          block['v-on'] = i18n.obj(block['v-on'])
+        }
+      })
+
+      return pageClone
     })
+
+
+    // Story modelValue
+    const storySettings = useStorySettings()
+
+    watch(
+      () => props.modelValue,
+      (newValue) => innerModel.value = {
+        ...newValue,
+        $settings: storySettings,
+      },
+      { immediate: true },
+    )
+
+    function onUpdateModelValue(event) {
+      innerModel.value = event
+      emit('update:modelValue', { ...innerModel.value, $settings: undefined })
+
+      // evaluate story[v-on][update:modelValue]
+      if (sanitizedStory.value?.['v-on']?.['update:modelValue']) {
+        const initialSetter = storyVM.onModelSet
+        storyVM.onModelSet = null
+        storyVM.eval(sanitizedStory.value['v-on']['update:modelValue'], innerModel.value)
+          .then(() => storyVM.onModelSet = initialSetter)
+      }
+    }
+
+
 
 
     // Computed variables
@@ -213,174 +263,6 @@ export default {
       })
     })
 
-    // Navigation history and direction
-    const navigationHistory = ref([]) // array of page IDs
-    const loadedPages = {} // loadedPages[page-id] = true | false
-    const transitionDirection = ref('forward') // 'forward' | 'back'
-
-    const navigateToPage = (pageId) => {
-      if (pageId && pageId == currentPage.value?.id) {
-        return
-      }
-
-      const previousId = currentPage.value?.id
-
-      setCurrentPage(pageId)
-
-      if (currentPage.value?.id) {
-        emit('update:currentPageId', currentPage.value.id)
-      }
-
-      if (previousId) {
-        const previousIndex = sanitizedStory.value.pages.findIndex((p) => p.id == previousId)
-        const nextIndex = sanitizedStory.value.pages.findIndex((p) => p.id == currentPage.value.id)
-        transitionDirection.value = nextIndex > previousIndex ? 'forward' : 'back'
-      }
-
-      if (navigationHistory.value[navigationHistory.value.length - 1]?.id == pageId) {
-        return
-      }
-      navigationHistory.value.push(pageId)
-
-      const pageTo = currentPage.value
-
-      // Evaluate page setup() (once)
-      if (pageTo?.['v-on']?.load && !loadedPages[pageTo.id]) {
-        storyVM.eval(pageTo['v-on'].load, innerModel.value)
-        loadedPages[pageTo.id] = true
-      }
-
-      // Evaluate page enter event
-      if (pageTo?.['v-on']?.enter) {
-        storyVM.eval(pageTo['v-on'].enter, innerModel.value)
-      }
-
-      // Evaluate page leave event
-      if (previousId) {
-        const pageFrom = sanitizedStory.value.pages.find((page) => page.id == previousId)
-        if (pageFrom?.['v-on']?.leave) {
-          storyVM.eval(pageFrom['v-on'].leave, innerModel.value)
-        }
-      }
-    }
-
-    watch(
-      () => props.currentPageId,
-      (newPageId) => {
-        navigateToPage(newPageId)
-      },
-      { immediate: true },
-    )
-
-    ////// Story navigation
-
-    // Visible pages.  All pages without v-if, or truthy v-if
-    const visiblePages = computed(() => {
-      return sanitizedStory.value.pages
-        .filter((page) => !page['v-if'] || storyVM.eval(page['v-if'], innerModel.value))
-        .map((page) => ({
-          id: page.id,
-          hash: page.hash,
-          title: page.title,
-        }))
-    })
-
-    const pageNav = computed(() => {
-      const currentIndex = visiblePages.value.findIndex((p) => p.id == currentPage.value?.id)
-      const previousPage = visiblePages.value?.[currentIndex - 1]
-      const nextPage = visiblePages.value?.[currentIndex + 1]
-
-      return {
-        current: {
-          id: currentPage.value?.id,
-          hash: currentPage.value?.hash,
-          title: currentPage.value?.title,
-        },
-
-        prev: previousPage
-          ? {
-            id: previousPage?.id,
-            hash: previousPage?.hash,
-            title: previousPage?.title,
-          }
-          : null,
-
-        next: nextPage
-          ? {
-            id: nextPage?.id,
-            hash: nextPage?.hash,
-            title: nextPage?.title,
-          }
-          : null,
-      }
-    })
-
-    function goTo(pageId) {
-      if (pageId == 'next') {
-        return goNext()
-      }
-
-      if (pageId == 'back') {
-        return goBack()
-      }
-
-      navigateToPage(pageId)
-    }
-
-    function goNext() {
-      const currentPageIndex = visiblePages.value.findIndex((p) => p.id == currentPage.value?.id)
-      const nextPage = visiblePages.value?.[currentPageIndex + 1]
-      if (!nextPage?.id) {
-        console.warn('CmsStory.goNext: No next page')
-        return
-      }
-
-      goTo(nextPage.id)
-    }
-
-    function goBack() {
-      navigationHistory.value.pop() // remove THIS page from history
-      const currentPageIndex = visiblePages.value.findIndex((p) => p.id == currentPage.value?.id)
-      const prevPage = visiblePages.value?.[currentPageIndex - 1]
-
-      // const lastPageId = navigationHistory.value.pop()
-      if (!prevPage?.id) {
-        console.warn('CmsStory.goBack: Already at start')
-        return
-      }
-
-      goTo(prevPage.id)
-    }
-
-    /*
-    pageId can also be "next" or "back"
-    IF the page is visible, returns a page info object:
-    {
-      id,
-      hash,
-      title
-    }
-    */
-    function getPageById(pageId) {
-      if (pageId == 'next') {
-        return pageNav.value.next
-      }
-      if (pageId == 'back') {
-        return pageNav.value.prev
-      }
-
-      const targetPage = visiblePages.value.find((p) => p.id == pageId)
-      if (!targetPage) {
-        return null
-      }
-
-      return {
-        id: targetPage?.id,
-        hash: targetPage?.hash,
-        title: targetPage?.title || targetPage?.info?.text,
-      }
-    }
-
     /*
     storyEvent: {
       name: 'custom event name',
@@ -393,35 +275,17 @@ export default {
       emit('story-emit', storyEvent)
     }
 
-
     const blockRefs = {}
     function defineBlockRef(refName, vueInstance) {
       blockRefs[refName] = vueInstance
-    }
-
-    function getPageHref(pageId) {
-      const useHashes = false
-      return useHashes ? `#/${pageId}` : null
-    }
-
-    function isPageActive(pageId) {
-      return currentPage.value?.id == pageId
     }
 
     const storyStylesheets = computed(() => sanitizedStory.value.stylesheets)
 
     // Provide global story methods (used by CmsBlock)
     const providedData = {
-      getPageHref,
-      isPageActive,
-      goNext,
-      goTo,
-      goBack,
-      getPageById,
       sanitizedStory,
       emitStoryEvent,
-      visiblePages,
-      nav: pageNav,
       refs: blockRefs,
       defineBlockRef,
       stylesheets: storyStylesheets,
@@ -432,9 +296,12 @@ export default {
 
     /* Story defined stylesheets */
     watchEffect(() => {
-      if (Array.isArray(sanitizedStory.value?.stylesheets)) {
+      if (Array.isArray(sanitizedStory.value?.stylesheets) || Array.isArray(sanitizeStory.value?.fonts)) {
         const parsedSheets = storyVM.eval(sanitizedStory.value.stylesheets, innerModel.value)
-        useStylesheets(parsedSheets)
+        useStylesheets({
+          stylesheets: parsedSheets,
+          fonts: sanitizedStory.value.fonts,
+        })
       }
     })
 
@@ -549,12 +416,12 @@ export default {
           Transition,
           {
             'name': 'phi-navigation',
-            'enter-from-class': `phi-navigation-enter-from phi-navigation-${transitionDirection.value}-enter-from`,
-            'enter-active-class': `phi-navigation-enter-active phi-navigation-${transitionDirection.value}-enter-active`,
-            'enter-to-class': `phi-navigation-enter-to phi-navigation-${transitionDirection.value}-enter-to`,
-            'leave-from-class': `phi-navigation-leave-from phi-navigation-${transitionDirection.value}-leave-from`,
-            'leave-active-class': `phi-navigation-leave-active phi-navigation-${transitionDirection.value}-leave-active`,
-            'leave-to-class': `phi-navigation-leave-to phi-navigation-${transitionDirection.value}-leave-to`,
+            'enter-from-class': `phi-navigation-enter-from phi-navigation-${$nav.transitionDirection.value}-enter-from`,
+            'enter-active-class': `phi-navigation-enter-active phi-navigation-${$nav.transitionDirection.value}-enter-active`,
+            'enter-to-class': `phi-navigation-enter-to phi-navigation-${$nav.transitionDirection.value}-enter-to`,
+            'leave-from-class': `phi-navigation-leave-from phi-navigation-${$nav.transitionDirection.value}-leave-from`,
+            'leave-active-class': `phi-navigation-leave-active phi-navigation-${$nav.transitionDirection.value}-leave-active`,
+            'leave-to-class': `phi-navigation-leave-to phi-navigation-${$nav.transitionDirection.value}-leave-to`,
             'onEnter': onTransitionEnter,
             'onAfterEnter': onTransitionAfterEnter,
           },
@@ -568,16 +435,12 @@ export default {
                 'block': translatedPage.value,
                 'modelValue': {
                   ...innerModel.value,
-                  // $i18n: i18n,
                   $i18n: {
                     t: (a, b, c) => i18n.t(a, b, c),
                     obj: (v) => i18n.obj(v),
                     words: (v) => i18n.words(v),
                     currency: (value, currency) => i18n.$(value, currency),
                   },
-                  $pages: visiblePages.value,
-                  $nav: pageNav.value,
-                  $page: pageNav.value.current,
                   $enum: $enum.value,
                   $format: $format,
                 },

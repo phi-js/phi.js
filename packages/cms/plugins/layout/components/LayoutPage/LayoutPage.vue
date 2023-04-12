@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, inject, provide } from 'vue'
 
-const injectedStory = inject('$_cms_story', null)
+const $nav = inject('$_cms_navigation', null)
 
 const props = defineProps({
   onSubmit: {
@@ -83,14 +83,6 @@ async function onFormSubmit($event) {
 
   let goTo = data.get('story-goto')
   switch (goTo) {
-  case 'next':
-    injectedStory?.goNext?.()
-    break
-
-  case 'back':
-    injectedStory?.goBack?.()
-    break
-
   case '':
   case 0:
   case null:
@@ -99,7 +91,7 @@ async function onFormSubmit($event) {
     break
 
   default:
-    injectedStory?.goTo?.(goTo)
+    $nav.goTo(goTo)
     break
   }
 }

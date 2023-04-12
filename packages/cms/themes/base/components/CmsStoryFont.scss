@@ -1,0 +1,14 @@
+.CmsStoryFont {
+  --ui-item-padding: 12px 12px;
+  padding: 8px;
+
+  &__defaults {
+    padding: 12px !important;
+  }
+
+  &__font,
+  &__adder {
+    @extend .ui--clickable;
+    border-radius: 4px;
+  }
+}

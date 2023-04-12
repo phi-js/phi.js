@@ -39,9 +39,12 @@ const CmsBlock = {
     const blockVM = new VM()
     blockVM.onModelSet = (varname, newValue) => setModelProperty(varname, newValue)
 
+    const $nav = inject('$_cms_navigation', null)
     const injectedStory = inject('$_cms_story', null)
-    if (injectedStory) {
-      blockVM.custom = { story: injectedStory }
+
+    blockVM.custom = {
+      story: injectedStory,
+      $nav,
     }
 
     /* modelValue source of truth functions */

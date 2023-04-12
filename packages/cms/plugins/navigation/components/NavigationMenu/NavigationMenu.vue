@@ -1,7 +1,7 @@
 <script setup>
 import { inject, computed } from 'vue'
 
-const parentStory = inject('$_cms_story', null)
+const $nav = inject('$_cms_navigation', null)
 
 const props = defineProps({
   /*
@@ -24,12 +24,17 @@ const props = defineProps({
 })
 
 const sanitizedItems = computed(() => {
-  const retval = props.items?.length ? props.items : []
+  const retval = props.items?.length
+    ? props.items
+    : $nav.graph.value.nodes.map((node) => ({
+      pageId: node.id,
+      text: node.title,
+    }))
+
   return retval.map((item) => ({
     ...item,
-    href: parentStory?.getPageHref?.(item.pageId),
-    // isActive: window.location.toString().includes(item.href),
-    isActive: parentStory?.isPageActive?.(item.pageId),
+    href: $nav.getPageHref(item.pageId),
+    isActive: $nav.currentPageId.value == item.pageId,
   }))
 })
 </script>
@@ -55,7 +60,7 @@ const sanitizedItems = computed(() => {
         :href="`#/${item.pageId}`"
         class="NavigationMenu__item"
         :class="{'NavigationMenu__item--active': item.isActive}"
-        @click.prevent="parentStory?.goTo?.(item.pageId)"
+        @click.prevent="$nav.goTo(item.pageId)"
         v-text="item.text"
       />
     </template>

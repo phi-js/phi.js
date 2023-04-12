@@ -4,10 +4,10 @@ export default {
   title: 'Go to next page',
 
   callback: function(pageId, _scope = null, _vm = null) {
-    if (!_vm?.custom?.story) {
-      console.warn('Story.goto called without custom \'story\' object')
+    if (!_vm?.custom?.$nav) {
+      console.warn('Story.goNext called without custom \'$nav\' object')
       return
     }
-    return _vm.custom.story.goNext()
+    _vm.custom.$nav.goNext()
   },
 }

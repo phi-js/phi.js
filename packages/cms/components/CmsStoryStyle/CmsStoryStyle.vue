@@ -2,14 +2,13 @@
 import { onMounted, ref, watch, reactive, nextTick, computed } from 'vue'
 
 import { useI18n } from '@/packages/i18n'
-import { colorScheme, UiTabs, UiTab, UiInput } from '@/packages/ui'
+import { colorScheme, UiTabs, UiTab } from '@/packages/ui'
 import CssStyleEditor from '@/packages/ui/components/CssStyleEditor/CssStyleEditor.vue'
-
-import { useStorySettings } from '../../functions'
 import CmsThemePicker from '../CmsThemePicker/CmsThemePicker.vue'
 import CssClassManager from '../CssClassManager/CssClassManager.vue'
 // import CssPalettePicker from '../CssPalettePicker/CssPalettePicker.vue'
 import Spacing from '../../../ui/components/CssEditor/properties/Spacing.vue'
+import CmsStoryFont from './CmsStoryFont.vue'
 
 const i18n = useI18n({
   en: {
@@ -37,10 +36,6 @@ const i18n = useI18n({
     'CmsStoryStyle.fontSize': 'Tamaño',
   },
 })
-
-
-const settings = useStorySettings()
-const uploadsEndpoint = settings.uploads.assets
 
 const props = defineProps({
   story: {
@@ -79,41 +74,6 @@ const colorSchemeCss = reactive({
     },
   },
 })
-
-const fontCss = {
-  type: 'object',
-  properties: {
-    '--ui-font-size': {
-      title: i18n.t('CmsStoryStyle.fontSize'),
-      format: {
-        type: 'css-unit',
-        props: {
-          min: 9,
-          max: 30,
-          units: 'pt',
-          defaultValue: '12pt',
-        },
-      },
-    },
-  },
-}
-
-const marginCss = {
-  type: 'object',
-  properties: {
-    '--ui-content-width': {
-      title: 'Max. content width',
-      format: {
-        type: 'css-slider',
-        props: {
-          min: 256,
-          max: 1000,
-          defaultValue: 1000,
-        },
-      },
-    },
-  },
-}
 // ////
 
 /*
@@ -190,70 +150,19 @@ const innerStoryVariablesDark = computed({
 const pseudoMargin = computed({
   get: () => {
     const storyStyle = innerStoryVariables.value
-    return { margin: storyStyle['--ui-content-margin'] || '' }
+    return {
+      margin: storyStyle['--ui-content-margin'] || '',
+      width: storyStyle['--ui-content-width'] || '',
+    }
   },
   set: (newValue) => {
     setSheetSrc('story-style', {
       ...innerStoryVariables.value,
-      '--ui-content-margin': newValue.margin,
+      '--ui-content-margin': newValue.margin.replaceAll('auto', '0'),
+      '--ui-content-width': newValue.width,
     })
   },
 })
-
-
-const availableFonts = computed(() => [
-  {
-    value: null,
-    text: 'Default',
-  },
-
-  ...innerStory.value.stylesheets
-    .filter((sh) => sh.type == 'google-font')
-    .map((sh) => ({
-      value: sh.id,
-      text: sh.id,
-    })),
-
-  {
-    value: '-import-',
-    text: '... load Google Font',
-  },
-])
-
-function setFontVariable(varName, varValue) {
-  if (varValue == '-import-') {
-    return importGoogleFont(varName)
-  }
-
-  innerStoryVariables.value = {
-    ...innerStoryVariables.value,
-    [varName]: varValue,
-  }
-  emitUpdate()
-}
-
-function importGoogleFont(varName) {
-  const fontName = prompt('Google font name')
-  if (!fontName?.trim?.()) {
-    return
-  }
-
-  if (innerStory.value.stylesheets.find((sh) => sh.type == 'google-font' && sh.id == fontName)) {
-    alert(`Font '${fontName}' id already loaded`)
-    return
-  }
-
-  innerStory.value.stylesheets.push({
-    id: fontName,
-    type: 'google-font',
-  })
-
-  innerStoryVariables.value = {
-    ...innerStoryVariables.value,
-    [varName]: fontName,
-  }
-  emitUpdate()
-}
 </script>
 
 <template>
@@ -266,32 +175,12 @@ function importGoogleFont(varName) {
     </UiTab>
 
     <UiTab :text="i18n.t('CmsStoryStyle.font')">
-      <div
-        class="CmsStoryStyle__properties"
-      >
-        <UiInput
-          :label="i18n.t('CmsStoryStyle.fontTitles')"
-          :model-value="innerStoryVariables['--ui-font-titles']"
-          type="select-native"
-          :options="availableFonts"
-          @update:model-value="setFontVariable('--ui-font-titles', $event)"
-        />
-
-        <UiInput
-          :label="i18n.t('CmsStoryStyle.fontTexts')"
-          :model-value="innerStoryVariables['--ui-font-texts']"
-          type="select-native"
-          :options="availableFonts"
-          @update:model-value="setFontVariable('--ui-font-texts', $event)"
-        />
-
-        <CssStyleEditor
-          v-model="innerStoryVariables"
-          :schema="fontCss"
-          :endpoint="uploadsEndpoint"
-          @update:model-value="emitUpdate"
-        />
-      </div>
+      <CmsStoryFont
+        v-model:story="innerStory"
+        v-model:storyCssVariables="innerStoryVariables"
+        @update:story-css-variables="emitUpdate"
+        @update:story="emitUpdate"
+      />
     </UiTab>
 
     <UiTab :text="i18n.t('CmsStoryStyle.colors')">
@@ -332,13 +221,6 @@ function importGoogleFont(varName) {
     </UiTab>
 
     <UiTab :text="i18n.t('CmsStoryStyle.margin')">
-      <CssStyleEditor
-        v-model="innerStoryVariables"
-        class="CmsStoryStyle__properties"
-        :schema="marginCss"
-        :endpoint="uploadsEndpoint"
-        @update:model-value="emitUpdate"
-      />
       <Spacing
         v-model="pseudoMargin"
         class="CmsStoryStyle__spacing"
@@ -366,12 +248,48 @@ function importGoogleFont(varName) {
     .SpacingBox__slot {
       border: 1px solid rgba(0,0,0, 0.3);
       border-radius: 4px;
-      height: 32px;
       background: var(--ui-color-background);
     }
 
+    .SpacingBox--margin {
+      &::before {
+        color: var(--ui-color-foreground);
+      }
+    }
+
     .SpacingBox--padding {
-      display: none;
+      padding: 0;
+      border: 0;
+      background: transparent;
+
+      .SpacingBox__top,
+      .SpacingBox__right,
+      .SpacingBox__bottom,
+      .SpacingBox__left {
+        display: none;
+      }
+
+      &::before {
+        content: 'Max. content width';
+        color: var(--ui-color-foreground);
+        top: 4px;
+        left: 0;
+        right: 0;
+        text-align: center;
+      }
+    }
+
+    .SpacingBox--dimensions {
+      background: transparent;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      & > span,
+      & > .SpacingBox__height {
+        display: none;
+      }
     }
   }
 }

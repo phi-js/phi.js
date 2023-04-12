@@ -1,5 +1,6 @@
-import NavigationLink from './components/NavigationLink/NavigationLink.block.js'
+import NavigationControls from './components/NavigationControls/NavigationControls.block.js'
 import NavigationMenu from './components/NavigationMenu/NavigationMenu.block.js'
+import NavigationProgress from './components/NavigationProgress/NavigationProgress.block.js'
 
 import goTo from './functions/goTo'
 import goNext from './functions/goNext'
@@ -10,22 +11,22 @@ export default {
     {
       title: 'Navigation',
       children: [
-
-        // Block alias
         {
+          // 'NavigationButton' block is an alias of 'InputButton'
           name: 'NavigationButton',
           title: 'Navigation button',
           icon: 'mdi:card',
           block: {
-            component: 'InputButton',
+            component: 'InputButton', // Block alias
             props: {
               name: 'story-goto',
               value: 'next',
             },
           },
         },
+        NavigationControls,
         NavigationMenu,
-        NavigationLink, // TO BE DEPRECATED
+        NavigationProgress,
       ],
     },
   ],

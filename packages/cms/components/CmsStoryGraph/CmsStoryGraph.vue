@@ -3,13 +3,19 @@ import { ref, watch, computed } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { UiInput, UiIcon, UiGraphStack, UiDialog, UiItem, UiDetails } from '@/packages/ui'
 import { VmStatement } from '@/packages/vm'
+import CmsPropInput from '../CmsPropInput/CmsPropInput.vue'
+import promptCreatePage from '../CmsStoryBuilder/promptCreatePage.js'
 
 const i18n = useI18n({
   en: {
+    'CmsStoryGraph.OutgoingLinks': 'Outgoing links',
+    'CmsStoryGraph.Visibility': 'Visibility',
     'CmsStoryGraph.CreatePathTo': 'Create path to ...',
     'CmsStoryGraph.CreatePage': 'Create page',
   },
   es: {
+    'CmsStoryGraph.OutgoingLinks': 'Rutas salientes',
+    'CmsStoryGraph.Visibility': 'Visibilidad',
     'CmsStoryGraph.CreatePathTo': 'Crear ruta a ...',
     'CmsStoryGraph.CreatePage': 'Crear página',
   },
@@ -36,7 +42,7 @@ const currentPageId = ref()
 function getGraph(story) {
   const nodes = story.pages.map((p) => ({
     'id': p.id,
-    'text': p.title || p.id,
+    'text': i18n.obj(p.title || p.id),
     'v-if': p['v-if'],
   }))
 
@@ -195,22 +201,28 @@ const availableOutgoingNodes = computed(() => {
 
 function setCurrentPageId(newId) {
   currentPageId.value = newId
-  // emit('update:currentPageId', currentPageId.value)
+  emit('update:currentPageId', currentPageId.value)
 }
 
 function createPage() {
-  const name = prompt('Page name', 'Untitled')
-
-  const newPage = {
-    id: `p${graph.value.nodes.length + 1}`,
-    component: 'LayoutPage',
-    title: name,
+  const newPage = promptCreatePage(props.story.pages)
+  if (!newPage) {
+    return
   }
 
   emit('update:story', {
     ...props.story,
     pages: props.story.pages.concat([newPage]),
   })
+}
+
+function updatePathLabel(path, label) {
+  const existing = graph.value.paths.find((p) => p.from == path.from && p.to == path.to)
+  if (!existing) {
+    return
+  }
+  existing.label = label
+  emitUpdate()
 }
 </script>
 
@@ -235,7 +247,8 @@ function createPage() {
       >
         <template #node-actions="{ node }">
           <UiIcon
-            :src="node['v-if'] ? 'mdi:eye-settings' : 'mdi:eye-outline'"
+            v-if="node['v-if']"
+            src="mdi:eye"
           />
         </template>
       </UiGraphStack>
@@ -256,7 +269,7 @@ function createPage() {
       />
 
       <UiDetails
-        text="Visibility"
+        :text="i18n.t('CmsStoryGraph.Visibility')"
         class="outset"
       >
         <VmStatement
@@ -268,7 +281,7 @@ function createPage() {
       </UiDetails>
 
       <UiDetails
-        text="Outgoing links"
+        :text="i18n.t('CmsStoryGraph.OutgoingLinks')"
         class="outset"
       >
         <table
@@ -296,10 +309,11 @@ function createPage() {
                 </UiItem>
               </td>
               <td>
-                <input
-                  v-model="path.label"
+                <CmsPropInput
+                  :model-value="path.label"
                   type="text"
-                >
+                  @update:model-value="updatePathLabel(path, $event)"
+                />
               </td>
               <td>
                 <button
@@ -316,6 +330,7 @@ function createPage() {
               <td>
                 <UiInput
                   v-model="toPageId"
+                  class="CmsStoryGraph__select"
                   type="select-native"
                   :placeholder="i18n.t('CmsStoryGraph.CreatePathTo')"
                   :options="availableOutgoingNodes"
@@ -336,13 +351,24 @@ function createPage() {
 </template>
 
 <style lang="scss">
+.color-scheme-light .CmsStoryGraph {
+  --graph-node-color: #999;
+}
+
+.color-scheme-dark .CmsStoryGraph {
+  --graph-node-color: #ccc;
+}
+
 .CmsStoryGraph {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: flex-start;
+
+  --graph-node-color: var(--ui-color-primary);
 
   &__headerItem,
   &__pathItem {
+    max-width: 250px;
     user-select: none;
   }
 
@@ -351,15 +377,18 @@ function createPage() {
   }
 
   &__pathItem {
-    height: 32px;
-    padding-left: 16px;
-    align-items: stretch;
+    align-items: center;
+    --ui-item-padding: 6px 8px;
 
     .UiItem {
+      &__icon {
+        color: var(--ui-color-primary);
+      }
+
       &__actions .UiIcon {
         border-radius: 4px;
         width: 32px;
-        height: 100%;
+        height: 32px;
         cursor: pointer;
         &:hover {
           background-color: var(--ui-color-hover);
@@ -368,13 +397,22 @@ function createPage() {
     }
   }
 
+  &__select {
+    select {
+      max-width: 150px;
+    }
+  }
+
   &__page {
     flex: 1;
-    margin: 0 12px;
+    margin: 0 8px;
 
     & > .UiDetails {
       margin-bottom: 1em;
-      --ui-item-padding: 6px 8px;
+
+      .UiDetails__item {
+        --ui-item-padding: 6px 8px;
+      }
     }
 
     table {
@@ -397,9 +435,9 @@ function createPage() {
   }
 
   &__stack {
-    min-width: 340px;
+    width: 330px;
     margin: auto;
-    padding: 8px 0 24px 0;
+    padding: 12px 0 24px 0;
     height: 100%;
     overflow-y: auto;
   }
@@ -467,16 +505,15 @@ function createPage() {
   }
 
   &__path {
-    color: #000;
-    border-color: #000;
-    opacity: 0.1;
-    border-width: 1px;
+    color: var(--graph-node-color);
+    border-color: var(--graph-node-color);
+    border-width: 2px;
+    opacity: 0.33;
 
     &--active {
-      border-width: 2px;
+      opacity: 1;
       color: var(--ui-color-primary);
       border-color: var(--ui-color-primary);
-      opacity: 0.8;
     }
   }
 }

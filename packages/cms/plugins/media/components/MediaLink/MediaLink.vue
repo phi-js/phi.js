@@ -40,7 +40,7 @@ const props = defineProps({
   },
 })
 
-const injectedStory = inject('$_cms_story', null)
+const $nav = inject('$_cms_navigation', null)
 function onClick($event) {
   if (!props.pageHash) {
     return
@@ -48,11 +48,11 @@ function onClick($event) {
 
   $event.preventDefault()
 
-  if (!injectedStory) {
-    console.warn('No $_cms_story injection found')
+  if (!$nav) {
+    console.warn('No $_cms_navigation injection found')
     return
   }
-  injectedStory.goTo(props.pageHash)
+  $nav.goTo(props.pageHash)
 }
 
 const innerValue = computed(() => ({

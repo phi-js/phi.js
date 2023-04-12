@@ -1,5 +1,15 @@
 /*
-An array of STYLESHEET declarationsm
+
+Takes a CMS STORY with the properties:
+
+story: {
+  stylesheets: [],
+  fonts: []
+}
+
+
+story.stylsheets:
+An array of STYLESHEET declarations
 defining CSS styles to be loaded to the document (via <link> or <style>)
 [
   {
@@ -36,17 +46,33 @@ defining CSS styles to be loaded to the document (via <link> or <style>)
     id: 'Gemunu Libre',  // Google font name
     type: 'google-font,
   }
+]
 
+story.fonts
+A list of Google fonts:
+[
+  {
+    id: 'unique ID',
+    url: 'http....' // URL to be used via @import url('...,
+    name: 'Font Name here'
+    fontFamily: 'Font name here' // to be used as font-family: value
+    type: 'google-font' // ... only google-font is used for now
+  }
 ]
 */
 import { colorScheme } from '@/packages/ui'
 
 const createdElements = {}
 
-export default function useStylesheets(arrSheets, containerSelector = 'body') {
-  if (!Array.isArray(arrSheets)) {
-    return
-  }
+export default function useStylesheets(story, containerSelector = 'body') {
+  const arrSheets = Array.isArray(story?.stylesheets)
+    ? story.stylesheets.concat([])
+    : []
+
+  const arrFonts = Array.isArray(story?.fonts)
+    ? story.fonts.concat([])
+    : []
+
 
   const containerElement = document.querySelector(containerSelector)
 
@@ -55,16 +81,20 @@ export default function useStylesheets(arrSheets, containerSelector = 'body') {
     deletionTargets[elUid] = elTarget
   }
 
-
-  const foundGoogleFonts = []
-
   arrSheets.forEach((sheet) => {
     if (sheet['prefers-color-scheme'] && sheet['prefers-color-scheme'] != colorScheme.value) {
       return
     }
 
+    // FOR BACKWARDS COMPAT ONLY!  DEPRECATE THIS !!!
     if (sheet.type == 'google-font') {
-      foundGoogleFonts.push(sheet)
+      if (!arrFonts.find((fnt) => fnt.id == sheet.id)) {
+        arrFonts.push({
+          id: sheet.id,
+          name: sheet.id,
+          type: 'google-font',
+        })
+      }
       return
     }
 
@@ -129,12 +159,15 @@ export default function useStylesheets(arrSheets, containerSelector = 'body') {
   }
   </style>
   */
-  if (foundGoogleFonts.length) {
+  if (arrFonts.length) {
     const stylesheetId = '_cms_sheet_google_fonts'
 
     deletionTargets[stylesheetId] = undefined
 
-    const names = foundGoogleFonts.map((s) => s.id.replace(' ', '+'))
+    const names = arrFonts
+      .filter((fnt) => !!fnt?.name)
+      .map((fnt) => fnt.name.replace(' ', '+'))
+
     const importUrl = 'https://fonts.googleapis.com/css2?family=' + names.join('&family=') + '&display=swap'
 
     if (!createdElements[stylesheetId]) {

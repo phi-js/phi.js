@@ -3,6 +3,7 @@ import { computed, inject, ref, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { UiInput } from '@/packages/ui'
 import StoryPageToolbar from './StoryPageToolbar.vue'
+import promptCreatePage from './promptCreatePage.js'
 
 const i18n = useI18n({
   en: {
@@ -47,6 +48,18 @@ function emitUpdate() {
   })
 }
 
+function createPage() {
+  const newPage = promptCreatePage(innerPages.value)
+  if (!newPage) {
+    return
+  }
+
+  innerPages.value.push(newPage)
+  emitUpdate()
+
+  return newPage.id
+}
+
 function deletePage(pageId) {
   if (!confirm(i18n.t('StoryPageManager.DeleteThisPage'))) {
     return
@@ -54,6 +67,10 @@ function deletePage(pageId) {
 
   const foundIndex = innerPages.value.findIndex((p) => p.id == pageId)
   if (foundIndex >= 0) {
+    if (innerPages.value[foundIndex].id == props.currentPageId) {
+      emit('update:currentPageId', innerPages.value[foundIndex - 1]?.id || innerPages.value[foundIndex + 1]?.id)
+    }
+
     innerPages.value.splice(foundIndex, 1)
     emitUpdate()
   }
@@ -89,17 +106,33 @@ function onCurrentPageClickAction(actionId) {
   )
 }
 
+const pagePickerOptions = computed(() => {
+  return innerPages.value
+    .map((page) => ({ value: page.id, text: i18n.obj(page.title) }))
+    .concat([{ value: 'create', text: i18n.t('StoryPageManager.CreatePage') }])
+})
+
+const pagePickerValue = computed({
+  get: () => props.currentPageId,
+  set(newValue) {
+    if (newValue == 'create') {
+      newValue = createPage()
+    }
+
+    if (newValue) {
+      emit('update:currentPageId', newValue)
+    }
+  },
+})
 </script>
 
 <template>
   <div class="StoryPageManager">
     <UiInput
+      v-model="pagePickerValue"
+      class="StoryPageManager__picker"
       type="select-native"
-      :model-value="currentPageId"
-      :options="innerPages"
-      option-value="$.id"
-      option-text="$.title"
-      @update:model-value="emit('update:currentPageId', $event)"
+      :options="pagePickerOptions"
     />
 
     <slot name="buttons" />
@@ -120,6 +153,10 @@ function onCurrentPageClickAction(actionId) {
   flex-wrap: nowrap;
   align-items: stretch;
   gap: 3px;
+
+  &__picker select {
+    max-width: 150px;
+  }
 
   & > .UiIcon {
     width: 42px;

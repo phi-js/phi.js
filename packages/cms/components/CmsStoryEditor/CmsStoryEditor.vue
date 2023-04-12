@@ -1,8 +1,8 @@
 <script setup>
-import { computed, provide, ref, shallowRef, watch, watchEffect } from 'vue'
+import { computed, shallowRef, watch, watchEffect } from 'vue'
 
 import { useI18n } from '@/packages/i18n'
-import { useStylesheets } from '../../functions'
+import { useNavigation, useStylesheets } from '../../functions'
 import CmsSlotEditor from '../CmsSlotEditor/CmsSlotEditor.vue'
 
 const i18n = useI18n({
@@ -38,21 +38,23 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:story', 'update:current-page-id'])
+const emit = defineEmits(['update:story'])
 
 const innerStory = shallowRef()
 const currentPage = shallowRef()
+
+const $nav = useNavigation(innerStory)
 
 watch(
   () => props.story,
   () => {
     innerStory.value = props.story
     currentPage.value = innerStory.value.pages.find((p) => p.id == props.currentPageId) || innerStory.value.pages?.[0]
+    $nav.goTo(currentPage.value?.id)
+
   },
   { immediate: true, deep: true },
 )
-
-const transitionDirection = ref('forward') // 'forward' | 'back'
 
 watch(
   () => props.currentPageId,
@@ -62,10 +64,11 @@ watch(
       return
     }
     currentPage.value = foundPage
+    $nav.goTo(foundPage.id)
   },
 )
 
-watchEffect(() => useStylesheets(props.story.stylesheets))
+watchEffect(() => useStylesheets(props.story))
 
 function emitUpdate() {
   emit('update:story', { ...innerStory.value })
@@ -109,13 +112,6 @@ const isFooterEnabled = computed({
     emitUpdate()
   },
 })
-
-// Provide navigation controls
-provide('$_cms_story', {
-  getPageHref: (pageId) => null,
-  isPageActive: (pageId) => props.currentPageId == pageId,
-  goTo: (pageId) => emit('update:current-page-id', pageId),
-})
 </script>
 
 <template>
@@ -128,12 +124,12 @@ provide('$_cms_story', {
   >
     <Transition
       name="phi-navigation"
-      :enter-from-class="`phi-navigation-enter-from phi-navigation-${transitionDirection}-enter-from`"
-      :enter-active-class="`phi-navigation-enter-active phi-navigation-${transitionDirection}-enter-active`"
-      :enter-to-class="`phi-navigation-enter-to phi-navigation-${transitionDirection}-enter-to`"
-      :leave-from-class="`phi-navigation-leave-from phi-navigation-${transitionDirection}-leave-from`"
-      :leave-active-class="`phi-navigation-leave-active phi-navigation-${transitionDirection}-leave-active`"
-      :leave-to-class="`phi-navigation-leave-to phi-navigation-${transitionDirection}-leave-to`"
+      :enter-from-class="`phi-navigation-enter-from phi-navigation-${$nav.transitionDirection}-enter-from`"
+      :enter-active-class="`phi-navigation-enter-active phi-navigation-${$nav.transitionDirection}-enter-active`"
+      :enter-to-class="`phi-navigation-enter-to phi-navigation-${$nav.transitionDirection}-enter-to`"
+      :leave-from-class="`phi-navigation-leave-from phi-navigation-${$nav.transitionDirection}-leave-from`"
+      :leave-active-class="`phi-navigation-leave-active phi-navigation-${$nav.transitionDirection}-leave-active`"
+      :leave-to-class="`phi-navigation-leave-to phi-navigation-${$nav.transitionDirection}-leave-to`"
     >
       <div
         :key="currentPage.id"
