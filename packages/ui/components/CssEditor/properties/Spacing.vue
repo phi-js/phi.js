@@ -135,12 +135,6 @@ function emitUpdate() {
   emit('update:modelValue', {
     ...props.modelValue,
     ...toCssObject(innerValue.value),
-
-    // ... sigh
-    marginTop: undefined,
-    marginRight: undefined,
-    marginBottom: undefined,
-    marginLeft: undefined,
   })
 }
 
@@ -239,11 +233,13 @@ function isDimensionEmpty(obj) {
             <div class="SpacingBox SpacingBox--dimensions">
               <CssUnit
                 v-model="innerValue.width"
+                class="SpacingBox__width"
                 @update:model-value="emitUpdate"
               />
               <span>&nbsp; &times; &nbsp;</span>
               <CssUnit
                 v-model="innerValue.height"
+                class="SpacingBox__height"
                 @update:model-value="emitUpdate"
               />
             </div>
@@ -256,8 +252,8 @@ function isDimensionEmpty(obj) {
 
 <style lang="scss">
 .SpacingBox {
-  --box-frame-width: 75px;
-  --box-frame-height: 32px;
+  --box-frame-width: 80px;
+  --box-frame-height: 56px;
 
   color: #000;
 

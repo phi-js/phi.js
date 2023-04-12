@@ -75,24 +75,3 @@ function emitUpdate() {
     </select>
   </div>
 </template>
-
-<style lang="scss">
-.CssUnit {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-
-  .UiInput__element {
-    width: 6rem;
-  }
-
-  &__select {
-    background: transparent;
-    color: inherit;
-    font-weight: 600;
-    border: 0;
-    margin: 0;
-    padding: 5px;
-  }
-}
-</style>

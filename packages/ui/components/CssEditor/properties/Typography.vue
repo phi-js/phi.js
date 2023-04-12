@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, inject, computed } from 'vue'
 
 import UiInput from '../../UiInput/UiInput.vue'
 import CssColor from '../values/color.vue'
@@ -35,27 +35,100 @@ watch(
 function emitUpdate() {
   emit('update:modelValue', { ...css.value })
 }
+
+/*
+_ui_CssEditor_availableFonts
+injected list of available FONT objects:
+
+[
+  {
+    id: 'unique ID',
+    url: 'http....' // URL to be used via @import url('...,
+    name: 'Font Name here'
+    fontFamily: 'Font name here' // to be used as font-family: value
+    type: 'google-font' // ... only google-font is used for now
+  }
+]
+*/
+
+const availableFonts = inject('_ui_CssEditor_availableFonts', null)
+const createFont = inject('_ui_CssEditor_createFont', null)
+
+const fontOptions = computed(() => {
+  const options = [
+    {
+      value: null,
+      text: 'Default',
+    },
+  ]
+
+  if (availableFonts?.value) {
+    options.push(...availableFonts.value.map((font) => ({
+      value: font.fontFamily,
+      text: font.name,
+    })))
+  }
+
+  if (typeof createFont === 'function') {
+    options.push({
+      value: '--create--',
+      text: '... Add font',
+    })
+  }
+
+  return options
+})
+
+async function onSelectFont(newValue) {
+  if (newValue === '--create--') {
+    const customFont = await createFont()
+    if (customFont) {
+      css.value.fontFamily = customFont
+    }
+  } else {
+    css.value.fontFamily = newValue
+  }
+
+  // !!! Machete
+  css.value['--ui-font-titles'] = css.value.fontFamily
+  css.value['--ui-font-texts'] = css.value.fontFamily
+
+  emitUpdate()
+}
 </script>
 
 <template>
   <div class="CssTypography">
-    <CssColor
-      v-model="css.color"
-      label="Color"
+    <UiInput
+      v-if="fontOptions.length"
+      :model-value="css.fontFamily"
+      type="select-native"
+      :options="fontOptions"
+      label="Font family"
+      @update:model-value="onSelectFont"
+    />
+    <UiInput
+      v-else
+      v-model="css.fontFamily"
+      type="text"
+      label="Font family"
       @update:model-value="emitUpdate"
     />
-
     <CssUnit
       v-model="css.fontSize"
       label="Font size"
       @update:model-value="emitUpdate"
     />
-
-    <UiInput
+    <CssColor
+      v-model="css.color"
+      label="Color"
+      @update:model-value="emitUpdate"
+    />
+    <!-- <UiInput
       v-model="css.textShadow"
       type="textarea"
       label="Text shadow"
       @update:model-value="emitUpdate"
-    />
+    /> -->
   </div>
 </template>

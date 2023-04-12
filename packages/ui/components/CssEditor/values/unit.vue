@@ -1,16 +1,16 @@
 <script setup>
+import { nextTick, ref, watch, computed } from 'vue'
 import { UiInput, UiPopover } from '@/packages/ui'
-import { nextTick, ref, watch } from 'vue'
 
 const props = defineProps({
   /*
   STRING. A css UNIT value
-  e.g:.  "12px", "50%", "auto", "none"
+  e.g:.  "12px", "50%", "auto", "none", null (a.k.a. 'default')
   */
   modelValue: {
     type: [String, Number],
     required: false,
-    default: '',
+    default: null,
   },
 })
 
@@ -31,94 +31,128 @@ function emitUpdate() {
   emit('update:modelValue', toUnitString(innerValue.value))
 }
 
-const units = [
-  'auto',
-  '%',
-  'px',
-  'pt',
-  'em',
-  'vw',
-  'vh',
-]
-
 /*
 Determines "value" and "units" for the given string
 
 parseValue("12px") -> {value: 12, units: 'px'}
 parseValue("50%") -> {value: 50, units: '%'}
-parseValue("auto") -> {value: null, units: 'auto'}
-parseValue("none") -> {value: null, units: 'none'}
+parseValue("auto") -> {value: 'auto', units: null}
+parseValue("none") -> {value: 'none', units: null}
+parseValue(null) -> {value: null, units: null}
 */
 function parseUnits(str) {
-  if (!str) {
+  const parsedValue = parseFloat(str)
+  if (isNaN(parsedValue)) {
     return {
-      value: null,
-      units: str,
+      value: str,
+      units: null,
     }
   }
 
-  const parsedValue = parseFloat(str)
-  const units = str.replace(parsedValue, '').trim() || null
   return {
-    value: isNaN(parsedValue) ? null : parsedValue,
-    units: units,
+    value: parsedValue,
+    units: str.toString().replace(parsedValue, '').trim() || null,
   }
 }
 
-function toUnitString(obj, defaultValue = 0) {
-  if (typeof obj === 'string') {
-    return obj
-  }
+/*
+Given a {value, units} object, returns a unit string
 
-  if (obj.units === 'auto') {
-    return obj.units
-  }
+toUnitStrig({value: 12, units: 'px'}) -> '12px'
+toUnitStrig({value: 50, units: '5'}) -> '50%'
+toUnitStrig({value: 'auto', units: null}) -> 'auto'
+toUnitStrig({value: null, units: null}) -> null
+toUnitStrig({value: null, units: null}, 'defaultValue') -> 'defaultValue'
+*/
 
+function toUnitString(obj, defaultValue = null) {
   if (obj.value === null) {
     return defaultValue
   }
 
-  return `${obj.value}${obj.units || 'px'}`
+  return `${obj.value}${obj.units || ''}`
 }
-
-const refInput = ref()
 
 const unitOptions = [
   { value: null, text: 'default' },
-  ...units.map((u) => ({ text: u, value: u })),
+  { value: 'auto', text: 'auto' },
+  { value: '%', text: '%' },
+  { value: 'px', text: 'px' },
+  { value: 'pt', text: 'pt' },
+  { value: 'em', text: 'em' },
+  { value: 'vw', text: 'vw' },
+  { value: 'vh', text: 'vh' },
 ]
 
-function onUnitsChange() {
-  emitUpdate()
-  nextTick(() => refInput.value && refInput.value.select())
+const refInput = ref()
+
+const unitPickerValue = computed({
+  get() {
+    if (innerValue.value.units !== null) {
+      return innerValue.value.units
+    }
+
+    return innerValue.value.value || null
+  },
+
+  set(newValue) {
+    if (newValue == 'auto') {
+      innerValue.value.value = 'auto'
+      innerValue.value.units = null
+    } else if (newValue === null) {
+      innerValue.value.value = null
+      innerValue.value.units = null
+    } else {
+      innerValue.value.units = newValue
+      innerValue.value.value = parseFloat(innerValue.value.value) || 0
+    }
+
+    nextTick(() => refInput.value && refInput.value.select())
+    emitUpdate()
+  },
+})
+
+const pickerFace = computed(() => {
+  return innerValue.value.units === null
+    ? innerValue.value.value || 'default'
+    : innerValue.value.units
+})
+
+const showInputField = computed(() => innerValue.value.units !== null)
+
+function onFieldInput() {
+  if (parseFloat(innerValue.value.value)) {
+    emitUpdate()
+  }
 }
 
 </script>
 
 <template>
   <UiInput class="CssUnit">
-    <div class="CssUnit__face">
+    <div class="CssUnit__face UiInput__element">
       <input
-        v-if="innerValue.units !== 'auto' && innerValue.units !== null"
+        v-if="showInputField"
         ref="refInput"
         v-model="innerValue.value"
-        type="text"
-        @input="emitUpdate"
+        type="number"
+        step="any"
+        @input="onFieldInput"
       >
-
       <UiPopover>
         <template #trigger="{ open }">
           <span
             tabindex="0"
             @keydown.enter.prevent="open"
-          >{{ innerValue.units || 'default' }}</span>
+            v-text="pickerFace"
+          />
         </template>
         <template #contents="{ close }">
           <UiInput
-            v-model="innerValue.units"
+            v-model="unitPickerValue"
             type="select-list"
             :options="unitOptions"
-            @update:model-value="onUnitsChange(); close()"
+            @update:model-value="close()"
           />
         </template>
       </UiPopover>
@@ -129,7 +163,7 @@ function onUnitsChange() {
 <style lang="scss">
 .CssUnit {
   &__face {
-    display: flex;
+    display: inline-flex;
     flex-wrap: nowrap;
     align-items: stretch;
 
@@ -151,12 +185,13 @@ function onUnitsChange() {
 
   .UiPopover__trigger {
     border-radius: 4px;
-    padding: 2px 4px;
-    display: block;
+    padding: 2px 8px;
+    display: flex;
+    height: 100%;
+    align-items: center;
 
-    &:hover {
-      background-color: var(--ui-color-hover);
-    }
+    cursor: pointer;
+    background-color: var(--ui-color-hover);
   }
 }
 </style>

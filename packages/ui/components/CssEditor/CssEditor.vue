@@ -1,12 +1,29 @@
 <script setup>
 import { ref, watch } from 'vue'
+import { useI18n } from '@/packages/i18n'
 import UiDetails from '../UiDetails/UiDetails.vue'
 import UiInput from '../UiInput/UiInput.vue'
-
 import Background from './properties/Background.vue'
 import Spacing from './properties/Spacing.vue'
 import Typography from './properties/Typography.vue'
 import CssDisplay from './properties/CssDisplay.vue'
+
+const i18n = useI18n({
+  en: {
+    'CssEditor.Spacing': 'Spacing',
+    'CssEditor.Background': 'Background',
+    'CssEditor.Display': 'Display',
+    'CssEditor.Typography': 'Typography',
+    'CssEditor.Source': 'CSS',
+  },
+  es: {
+    'CssEditor.Spacing': 'Espaciado',
+    'CssEditor.Background': 'Fondo',
+    'CssEditor.Display': 'Visualización',
+    'CssEditor.Typography': 'Tipografía',
+    'CssEditor.Source': 'CSS',
+  },
+})
 
 const props = defineProps({
   /*
@@ -33,24 +50,15 @@ const css = ref({})
 
 watch(
   () => props.modelValue,
-  () => css.value = convertToCamelCase(props.modelValue),
+  () => css.value = { ...props.modelValue },
   { immediate: true },
 )
-
-function convertToCamelCase(obj) {
-  const camelCaseObj = {}
-  for (let prop in obj) {
-    const camelCaseProp = prop.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase())
-    camelCaseObj[camelCaseProp] = obj[prop]
-  }
-  return camelCaseObj
-}
 </script>
 
 <template>
   <div class="CssEditor">
     <UiDetails
-      text="Spacing"
+      :text="i18n.t('CssEditor.Spacing')"
       class="CssEditor__spacing"
     >
       <Spacing
@@ -60,7 +68,7 @@ function convertToCamelCase(obj) {
     </UiDetails>
 
     <UiDetails
-      text="Background"
+      :text="i18n.t('CssEditor.Background')"
       class="CssEditor__background"
     >
       <Background
@@ -71,7 +79,7 @@ function convertToCamelCase(obj) {
     </UiDetails>
 
     <UiDetails
-      text="Display"
+      :text="i18n.t('CssEditor.Display')"
       class="CssEditor__display"
     >
       <CssDisplay
@@ -81,7 +89,7 @@ function convertToCamelCase(obj) {
     </UiDetails>
 
     <UiDetails
-      text="Typography"
+      :text="i18n.t('CssEditor.Typography')"
       class="CssEditor__typography"
     >
       <Typography
@@ -92,7 +100,7 @@ function convertToCamelCase(obj) {
 
     <!-- Special: Source -->
     <UiDetails
-      text="Source"
+      :text="i18n.t('CssEditor.Source')"
       class="CssEditor__source"
     >
       <UiInput
