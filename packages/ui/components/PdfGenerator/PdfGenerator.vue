@@ -53,20 +53,31 @@ const props = defineProps({
 var timeout = null
 
 const pdfDataUrl = ref('')
+const isDone = ref(false)
+
 watch(
   () => [props.html, props.options],
   () => {
     clearTimeout(timeout)
 
     timeout = setTimeout(async () => {
-      const pdfBlob = await props.generator({
-        html: props.html,
-        options: props.options,
-      })
+      try {
+        const pdfBlob = await props.generator({
+          html: props.html,
+          options: props.options,
+        })
 
-      const a = new FileReader()
-      a.onload = (e) => pdfDataUrl.value = e.target.result
-      a.readAsDataURL(pdfBlob)
+        const a = new FileReader()
+        a.onload = (e) => {
+          pdfDataUrl.value = e.target.result
+          isDone.value = true
+        }
+        a.readAsDataURL(pdfBlob)
+      } catch (err) {
+        console.warn(err.toString())
+        isDone.value = true
+      }
+
     }, props.debounce)
   },
   { immediate: true },
@@ -83,15 +94,15 @@ watch(
       type="application/pdf"
       :data="pdfDataUrl"
     >
-
-      <!-- Fallback del objeto.  Mostrar el HTML -->
-      <!-- Parece(?) que se renderiza SIEMPRE, incluso si el objeto ha cargado. -->
-      <!-- <div class="pdf-container">
-        <div
-          class="document-html pdf-html"
-          v-html="props.html"
-        />
-      </div> -->
+      <!-- Fallback del objeto -->
+      <a
+        :href="pdfDataUrl"
+        target="_blank"
+        download
+      >Download</a>
     </object>
+    <div v-else-if="isDone">
+      Error generating PDF
+    </div>
   </div>
 </template>
