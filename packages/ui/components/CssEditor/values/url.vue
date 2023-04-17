@@ -70,15 +70,6 @@ function onImgLoad(evt) {
 
 <template>
   <UiInput class="CssUrl">
-    <div class="CssUrl__input">
-      <UiInput
-        v-model="innerValue"
-        type="url"
-        :endpoint="$attrs.endpoint"
-        @update:model-value="emitUpdate()"
-      />
-    </div>
-
     <div
       v-if="innerValue"
       class="CssUrl__preview"
@@ -86,11 +77,13 @@ function onImgLoad(evt) {
       <a
         :href="innerValue"
         target="_blank"
+        class="CssUrl__imageLink"
+        title="Open image in new tab"
       >
         <img
           class="CssUrl__image"
           :src="innerValue"
-          :title="innerValue"
+          :alt="innerValue"
           @load="onImgLoad"
         >
       </a>
@@ -103,22 +96,35 @@ function onImgLoad(evt) {
           v-if="imgInfo.fileSize"
           class="CssUrl__info__size"
         >
-          {{ bytes(imgInfo.fileSize) }}
+          {{ bytes(imgInfo.fileSize) }} ??
         </div>
       </div>
     </div>
 
+    <div class="CssUrl__input">
+      <UiInput
+        v-model="innerValue"
+        type="url"
+        :endpoint="$attrs.endpoint"
+        @update:model-value="emitUpdate()"
+      />
+    </div>
+
     <UiDialog>
       <template #trigger>
-        <button type="button">
-          Generate with DALLE-2
-        </button>
+        <UiInput
+          class="CssUrl__dalleButton"
+          type="button"
+          label="Generate with DALLE-2"
+        />
       </template>
       <template #default="{ close }">
-        <AiImageUrl
-          v-model="innerValue"
-          @update:model-value="emitUpdate(); close();"
-        />
+        <div class="CssUrl__dalleDialog">
+          <AiImageUrl
+            v-model="innerValue"
+            @update:model-value="emitUpdate(); close();"
+          />
+        </div>
       </template>
     </UiDialog>
   </UiInput>
@@ -126,6 +132,14 @@ function onImgLoad(evt) {
 
 <style lang="scss">
 .CssUrl {
+  &__dalleButton {
+    width: 100%;
+  }
+
+  &__dalleDialog {
+    padding: 12px;
+  }
+
   &__input {
     display: flex;
     flex-wrap: nowrap;
@@ -133,21 +147,18 @@ function onImgLoad(evt) {
     gap: 5px;
   }
 
-  &__preview {
-    padding: 8px 0;
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: flex-start;
-    gap: 5px;
+  &__imageLink {
+    display: block;
+    text-align: center;
   }
 
   &__image {
-    max-width: 150px;
-    max-height: 150px;
+    max-width: 100%;
   }
 
   &__info {
     font-size: 0.9em;
+    text-align: right;
   }
 
   &__info__size {

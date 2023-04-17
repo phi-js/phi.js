@@ -10,24 +10,12 @@ import CssPosition from '../values/position.vue'
 
 const props = defineProps({
   /*
-  CSS Object:
+  CSS Object (already sanitized.  i.e. property names are dashed-case):
   {
-    fontFamily: 'MyFontWhatever, sans-serif',
-    color: "#fff",
-    textShadow: "1px 1px 1px #000",
-    ... every CSS property (yeah)
-
-    This block will edit:
-
-    backgroundColor: "#fff",
-    backgroundImage: "url(....)",
-    backgroundAttachment: "fixed",
-    backgroundSize: "cover",
-
-    // 2DO
-    backgroundPosition: "center",
-    backgroundRepeat: "center",
-    ... gradients? multiple backgrounds?
+    "font-family": 'MyFontWhatever, sans-serif',
+    "color": "#fff",
+    "text-shadow": "1px 1px 1px #000",
+    ...
   }
   */
   modelValue: {
@@ -55,33 +43,33 @@ function emitUpdate() {
 <template>
   <div class="CssBackground">
     <CssColor
-      v-model="css.backgroundColor"
+      v-model="css['background-color']"
       label="Color"
       @update:model-value="emitUpdate"
     />
     <CssUrl
-      v-model="css.backgroundImage"
+      v-model="css['background-image']"
       :endpoint="$attrs.endpoint"
       label="Image"
       @update:model-value="emitUpdate"
     />
     <CssBackgroundAttachment
-      v-model="css.backgroundAttachment"
+      v-model="css['background-attachment']"
       label="Attachment"
       @update:model-value="emitUpdate"
     />
     <CssBackgroundSize
-      v-model="css.backgroundSize"
+      v-model="css['background-size']"
       label="Size"
       @update:model-value="emitUpdate"
     />
     <CssRepeat
-      v-model="css.backgroundRepeat"
+      v-model="css['background-repeat']"
       label="Repeat"
       @update:model-value="emitUpdate"
     />
     <CssPosition
-      v-model="css.backgroundPosition"
+      v-model="css['background-position']"
       label="Position"
       @update:model-value="emitUpdate"
     />

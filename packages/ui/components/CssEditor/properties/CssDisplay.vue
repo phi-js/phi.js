@@ -8,21 +8,12 @@ import CssUnit from '../values/unit.vue'
 
 const props = defineProps({
   /*
-  CSS Object:
+  CSS Object (already sanitized.  i.e. property names are dashed-case):
   {
-    fontFamily: 'MyFontWhatever, sans-serif',
-    color: "#fff",
-    textShadow: "1px 1px 1px #000",
-    ... every CSS property (yeah)
-
-    This block will edit:
-
-    display: "block",  // block, inline, inline-block, flex, inline-flex
-    flexDirection: "",
-    flexWrap: "",
-    alignItems: "",
-    justifyContent: "",
-    gap: "",
+    "font-family": 'MyFontWhatever, sans-serif',
+    "color": "#fff",
+    "text-shadow": "1px 1px 1px #000",
+    ...
   }
   */
   modelValue: {
@@ -50,7 +41,7 @@ function emitUpdate() {
 <template>
   <div class="CssDisplay">
     <UiInput
-      v-model="css.display"
+      v-model="css['display']"
       type="select-native"
       label="Display"
       :options="[
@@ -66,7 +57,7 @@ function emitUpdate() {
 
     <template v-if="['flex', 'inline-flex'].includes(css.display)">
       <UiInput
-        v-model="css.flexDirection"
+        v-model="css['flex-direction']"
         type="select-native"
         label="Direction"
         :options="[
@@ -77,7 +68,7 @@ function emitUpdate() {
         @update:model-value="emitUpdate"
       />
       <UiInput
-        v-model="css.flexWrap"
+        v-model="css['flex-wrap']"
         type="select-native"
         label="Wrap"
         :options="[
@@ -89,24 +80,24 @@ function emitUpdate() {
       />
 
       <CssAlignItems
-        v-model="css.alignItems"
+        v-model="css['align-items']"
         label="Align items"
         @update:model-value="emitUpdate"
       />
       <CssJustifyContent
-        v-model="css.justifyContent"
+        v-model="css['justify-content']"
         label="Justify content"
         @update:model-value="emitUpdate"
       />
       <CssUnit
-        v-model="css.gap"
+        v-model="css['gap']"
         label="Gap"
         @update:model-value="emitUpdate"
       />
     </template>
 
     <UiInput
-      v-model="css.flex"
+      v-model="css['flex']"
       type="select-native"
       label="Flex"
       :options="[

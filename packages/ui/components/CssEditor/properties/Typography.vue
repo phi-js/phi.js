@@ -7,12 +7,12 @@ import CssUnit from '../values/unit.vue'
 
 const props = defineProps({
   /*
-  CSS Object:
+  CSS Object (already sanitized.  i.e. property names are dashed-case):
   {
-    fontSize: '12pt',
-    fontFamily: 'MyFontWhatever, sans-serif',
-    color: "#fff",
-    textShadow: "1px 1px 1px #000",
+    "font-family": 'MyFontWhatever, sans-serif',
+    "color": "#fff",
+    "text-shadow": "1px 1px 1px #000",
+    ...
   }
   */
   modelValue: {
@@ -83,15 +83,15 @@ async function onSelectFont(newValue) {
   if (newValue === '--create--') {
     const customFont = await createFont()
     if (customFont) {
-      css.value.fontFamily = customFont
+      css.value['font-family'] = customFont
     }
   } else {
-    css.value.fontFamily = newValue
+    css.value['font-family'] = newValue
   }
 
-  // !!! Machete
-  css.value['--ui-font-titles'] = css.value.fontFamily
-  css.value['--ui-font-texts'] = css.value.fontFamily
+  // !!! Set --ui-font-titles & --ui-font-texts CSS variables (used by main PHI style)
+  css.value['--ui-font-titles'] = css.value['font-family']
+  css.value['--ui-font-texts'] = css.value['font-family']
 
   emitUpdate()
 }

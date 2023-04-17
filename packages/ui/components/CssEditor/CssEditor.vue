@@ -27,14 +27,18 @@ const i18n = useI18n({
 
 const props = defineProps({
   /*
-  CSS Object:
+  Object with CSS properties:
+  * Existing property names in camelCase format
+  will be converted to dash-case (valid CSS property name)
+  backgroundImage --> background-image
+
   {
-    fontFamily: 'MyFontWhatever, sans-serif',
-    color: "#fff",
-    textShadow: "1px 1px 1px #000",
-    backgroundImage: "url(....)",
-    backgroundAttachment: "fixed",
-    ... every CSS property (yeah)
+    "font-family": "MyFontWhatever, sans-serif",
+    "color": "#fff",
+    "textShadow": "1px 1px 1px #000",
+    "backgroundImage": "url(....)",  --> will be converted to "background-image"
+    "background-attachment": "fixed",
+    ... any CSS property name
   }
   */
   modelValue: {
@@ -50,9 +54,22 @@ const css = ref({})
 
 watch(
   () => props.modelValue,
-  () => css.value = { ...props.modelValue },
+  () => css.value = sanitizeCssObject(props.modelValue),
   { immediate: true },
 )
+
+function sanitizeCssObject(cssObj) {
+  const sanitizedObj = {}
+
+  if (!cssObj || typeof cssObj !== 'object') {
+    return sanitizedObj
+  }
+  for (const [prop, value] of Object.entries(cssObj)) {
+    const sanitizedProp = prop.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`)
+    sanitizedObj[sanitizedProp] = value
+  }
+  return sanitizedObj
+}
 </script>
 
 <template>

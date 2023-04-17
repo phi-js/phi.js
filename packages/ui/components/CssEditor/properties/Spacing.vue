@@ -6,25 +6,24 @@ import CssUnit from '../values/unit.vue'
 
 const props = defineProps({
   /*
-  CSS Object:
+  CSS Object (already sanitized.  i.e. property names are dashed-case):
   {
-    fontFamily: 'MyFontWhatever, sans-serif',
-    color: "#fff",
-    textShadow: "1px 1px 1px #000",
+    "font-family": 'MyFontWhatever, sans-serif',
+    "color": "#fff",
+    "text-shadow": "1px 1px 1px #000",
     ... every CSS property (yeah)
 
     This block will edit:
+    "margin": "10px",
+    "margin-top": "50px",
+    "margin-XXX": "50px",
 
-    margin: "10px",
-    marginTop: "50px",
-    margin*: "50px",
+    "padding": "10px 33px",
+    "padding-top": "50px",
+    "padding-XXX": "50px",
 
-    padding: "10px 33px",
-    paddingTop: "50px",
-    padding*: "50px",
-
-    width: "100%",
-    height: "100%",
+    "width": "100%",
+    "height": "100%",
   }
   */
   modelValue: {
@@ -83,17 +82,17 @@ watch(
     innerValue.value.height = props.modelValue.height || 'auto'
 
     // ... sigh
-    if (props.modelValue.marginTop) {
-      innerValue.value.margin.top = props.modelValue.marginTop || 'auto'
+    if (props.modelValue['margin-top']) {
+      innerValue.value.margin.top = props.modelValue['margin-top'] || 'auto'
     }
-    if (props.modelValue.marginRight) {
-      innerValue.value.margin.right = props.modelValue.marginRight || 'auto'
+    if (props.modelValue['margin-right']) {
+      innerValue.value.margin.right = props.modelValue['margin-right'] || 'auto'
     }
-    if (props.modelValue.marginBottom) {
-      innerValue.value.margin.bottom = props.modelValue.marginBottom || 'auto'
+    if (props.modelValue['margin-bottom']) {
+      innerValue.value.margin.bottom = props.modelValue['margin-bottom'] || 'auto'
     }
-    if (props.modelValue.marginLeft) {
-      innerValue.value.margin.left = props.modelValue.marginLeft || 'auto'
+    if (props.modelValue['margin-left']) {
+      innerValue.value.margin.left = props.modelValue['margin-left'] || 'auto'
     }
   },
   { immediate: true },
@@ -233,12 +232,13 @@ function isDimensionEmpty(obj) {
             <div class="SpacingBox SpacingBox--dimensions">
               <CssUnit
                 v-model="innerValue.width"
+                label="Width"
                 class="SpacingBox__width"
                 @update:model-value="emitUpdate"
               />
-              <span>&nbsp; &times; &nbsp;</span>
               <CssUnit
                 v-model="innerValue.height"
+                label="Height"
                 class="SpacingBox__height"
                 @update:model-value="emitUpdate"
               />
@@ -251,9 +251,14 @@ function isDimensionEmpty(obj) {
 </template>
 
 <style lang="scss">
+.CssSpacing {
+  overflow-x: auto;
+}
+
 .SpacingBox {
   --box-frame-width: 80px;
   --box-frame-height: 56px;
+  min-width: fit-content;
 
   color: #000;
 
@@ -270,9 +275,10 @@ function isDimensionEmpty(obj) {
     position: absolute;
     top: 0;
     left: 0;
-    padding: 2px 4px;
+    padding: 12px;
     font-size: 11px;
     font-weight: bold;
+    opacity: 0.7;
   }
 
   &--margin {
@@ -292,17 +298,21 @@ function isDimensionEmpty(obj) {
 
   &--dimensions {
     border: 1px solid rgba(0,0,0, 0.2);
+    padding: 18px;
+
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    background-color: white;
-    padding: 18px;
+    gap: 12px;
+
+    background-color: var(--ui-color-background);
 
     input {
       width: 4em;
     }
   }
-
 
   &__top {
     position: absolute;
