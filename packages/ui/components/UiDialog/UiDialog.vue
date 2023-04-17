@@ -84,6 +84,15 @@ function close() {
   refDialog.value?.close?.()
 }
 
+function accept() {
+  if (!refDialog.value) {
+    return
+  }
+
+  refDialog.value.returnValue = 'accept'
+  refDialog.value.close()
+}
+
 async function onDialogClose($event) {
   if (!$event.target.returnValue && props.onCancel) {
     let res = await props.onCancel()
@@ -153,10 +162,12 @@ async function onDialogClose($event) {
           <slot
             name="contents"
             :close="close"
+            :accept="accept"
           />
           <slot
             name="default"
             :close="close"
+            :accept="accept"
           />
         </div>
 
