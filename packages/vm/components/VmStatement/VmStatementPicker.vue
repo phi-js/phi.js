@@ -38,6 +38,8 @@ function fieldSchemaToStatementItem(fieldSchema) {
 
   return {
     text: fieldSchema.text || fieldSchema.value,
+    subtext: fieldSchema.subtext,
+    icon: fieldSchema.icon,
     stmt: {
       field: fieldSchema.value,
       op: null,
