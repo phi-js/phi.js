@@ -1,24 +1,44 @@
-export default function getBlockFields(block) {
-  let retval = []
+/*
+Given a BLOCK object, returns an ARRAY of found/declared valid VM FIELD OBJECTS:
 
-  let field = {
+returns [
+  {
+    value: "record.name",  // JSON path of the modelValue's property
+    type: "string",
+
+    text: "Nombre", // propiedades de UiItem (text, subtext, icon)
+    subtext: "El nombre de la persona",
+    icon: "mdi:form-textbox"
+  },
+  {
+    value: "record.choice",
+    type: "string",
+    enum: [
+      { value: 'one', text: 'UNO' },
+      { value: 'two', text: 'DOS' },
+      { value: 'three', text: 'TRES' },
+      { value: 'four', text: 'CUATRO' },
+    ]
+  }
+]
+*/
+export default function getBlockFields(block) {
+  const retval = []
+
+  const field = {
     value: block['v-model'],
     type: null,
-    title: block._plugin_api_storage?.title || block.props?.label || block['v-model'],
-
-    // text: block['v-model'],
-    // name: block['v-model'],
-    info: {
-      text: block.props?.label || '',
-      subtext: block['v-model'],
-      icon: null,
-    },
+    text: block._plugin_api_storage?.title
+      || block.props?.label
+      || block.props?.placeholder
+      || block['v-model'],
+    subtext: block['v-model'],
+    icon: 'mdi:form-textbox',
   }
 
   const props = block.props || {}
 
   if (block.component.substring(0, 5) == 'Input') {
-
     if (!block['v-model'] || block['v-model'][0] == '$') { // ignore v-model variables starting with $ !!!!
       return []
     }
@@ -28,11 +48,16 @@ export default function getBlockFields(block) {
 
     switch (inputType) {
     case 'text':
+      field.icon = 'mdi:form-textbox'
+      field.type = 'string'
+      break
     case 'textarea':
+      field.icon = 'mdi:form-textarea'
       field.type = 'string'
       break
 
     case 'checkbox':
+      field.icon = 'mdi:checkbox-blank-outline'
       field.type = 'boolean'
       break
 
@@ -40,7 +65,7 @@ export default function getBlockFields(block) {
     case 'select-native':
     case 'select-list':
     case 'select-buttons':
-      field.info.icon = 'mdi:form-dropdown'
+      field.icon = 'mdi:form-dropdown'
 
       if (props.multiple) {
         field.type = 'array'
@@ -55,9 +80,7 @@ export default function getBlockFields(block) {
       break
 
     case 'upload':
-      field.info.text = props.placeholder || null
-      field.info.icon = 'mdi:paperclip'
-
+      field.icon = 'mdi:paperclip'
       if (props.multiple) {
         field.type = 'array'
         field.items = { type: 'upload' }
@@ -76,10 +99,9 @@ export default function getBlockFields(block) {
       retval.push({
         value: block['v-model:isPlaying'],
         type: 'boolean',
-        info: {
-          icon: 'mdi:youtube',
-          text: 'Video is playing',
-        },
+
+        icon: 'mdi:youtube',
+        text: 'Video is playing',
         important: true,
       })
     }
@@ -88,11 +110,9 @@ export default function getBlockFields(block) {
       retval.push({
         value: block['v-model:currentTime'],
         type: 'number',
-        info: {
-          text: 'Video time',
-          subtext: '(milliseconds)',
-          icon: 'mdi:youtube',
-        },
+        text: 'Video time',
+        subtext: '(milliseconds)',
+        icon: 'mdi:youtube',
         important: true,
       })
     }
@@ -103,10 +123,8 @@ export default function getBlockFields(block) {
       retval.push({
         value: block['v-model:activeChapters'],
         type: 'array',
-        info: {
-          icon: 'mdi:youtube',
-          text: block['v-model:activeChapters'],
-        },
+        icon: 'mdi:youtube',
+        text: block['v-model:activeChapters'],
         items: {
           type: 'string',
           enum: arrChapters.map((chapter) => ({

@@ -16,6 +16,7 @@ import pluginNavigation from '../plugins/navigation'
 import pluginStory from '../plugins/story'
 import pluginVideo from '../plugins/video'
 import pluginClipboard from '../plugins/clipboard'
+import pluginMeta from '../plugins/meta'
 import pluginChartJs from '../../chartjs/cms-plugin'
 
 // This order is used in PickerContents
@@ -28,6 +29,7 @@ usePlugin([
   pluginVideo,
   pluginNavigation,
   pluginClipboard,
+  pluginMeta(),
   pluginChartJs,
 ])
 

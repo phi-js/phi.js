@@ -19,7 +19,7 @@ const isVisible = ref(true)
 
 <template>
   <BlockScaffold
-    class="MediaDialogEditor"
+    class="LayoutDialogEditor"
     v-bind="$attrs"
     :block="props.block"
     style="margin: 8px 12px"
@@ -37,7 +37,7 @@ const isVisible = ref(true)
       <CmsSlotEditor
         v-show="isVisible"
         :slot="props.block.slot"
-        class="MediaDialogEditor__slot"
+        class="LayoutDialogEditor__slot"
         group-name="dialog-slot"
         @update:slot="emit('update:block', {...props.block, slot: $event})"
       />
@@ -46,7 +46,7 @@ const isVisible = ref(true)
 </template>
 
 <style lang="scss">
-.MediaDialogEditor {
+.LayoutDialogEditor {
   &__slot {
     background-color: var(--ui-color-background);
     padding: 12px;

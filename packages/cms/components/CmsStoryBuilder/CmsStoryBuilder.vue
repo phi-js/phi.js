@@ -243,25 +243,7 @@ provide('$_cms_openBlockWindow', openBlockWindow)
 
 
 const storyFields = computed(() => {
-  const storyFields = getStoryFields(innerStory.value)
-  const modelFields = [
-    // {
-    //   value: '$target.du',
-    //   info: { text: 'Target\'s DU' },
-    //   type: 'string',
-    //   enum: [
-    //     { value: 'du', text: 'DU' },
-    //     { value: 'de', text: 'DE' },
-    //     { value: 'he', text: 'HE' },
-    //     { value: 'llo', text: 'LLO!' },
-    //   ],
-    // },
-  ]
-
-  return i18n.obj([
-    ...storyFields,
-    ...modelFields,
-  ])
+  return i18n.obj(getStoryFields(innerStory.value))
 })
 
 provide('$_vm_fields', storyFields)

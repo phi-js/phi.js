@@ -361,10 +361,55 @@ function updatePathLabel(path, label) {
 
 .CmsStoryGraph {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: flex-start;
 
   --graph-node-color: var(--ui-color-primary);
+
+
+  &__stack {
+    flex: 1;
+    padding: 12px 0 24px 0;
+    height: 100%;
+    overflow-y: auto;
+
+    min-width: 200px;
+    max-width: 400px;
+  }
+
+  &__page {
+    flex: 1;
+    margin: 0 8px;
+
+    & > .UiDetails {
+      margin-bottom: 1em;
+
+      .UiDetails__item {
+        --ui-item-padding: 6px 8px;
+      }
+    }
+
+    table {
+      width: 100%;
+    }
+
+    tbody {
+      td {
+        padding: 3px;
+      }
+
+      tr:hover {
+        background-color: var(--ui-color-hover);
+      }
+
+      input {
+        padding: 4px 8px;
+      }
+    }
+  }
+
+
+
 
   &__headerItem,
   &__pathItem {
@@ -403,44 +448,7 @@ function updatePathLabel(path, label) {
     }
   }
 
-  &__page {
-    flex: 1;
-    margin: 0 8px;
 
-    & > .UiDetails {
-      margin-bottom: 1em;
-
-      .UiDetails__item {
-        --ui-item-padding: 6px 8px;
-      }
-    }
-
-    table {
-      width: 100%;
-    }
-
-    tbody {
-      td {
-        padding: 3px;
-      }
-
-      tr:hover {
-        background-color: var(--ui-color-hover);
-      }
-
-      input {
-        padding: 4px 8px;
-      }
-    }
-  }
-
-  &__stack {
-    width: 330px;
-    margin: auto;
-    padding: 12px 0 24px 0;
-    height: 100%;
-    overflow-y: auto;
-  }
 
   &__adderItem {
     user-select: none;

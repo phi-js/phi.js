@@ -143,11 +143,11 @@ const windowTitle = computed(() => {
       <div
         ref="refContents"
         class="BlockWindow__contents"
+        :class="`BlockWindow__contents--${currentActionId}`"
       >
         <EditorAction
           v-if="currentAction"
           v-model:block="innerBlock"
-          :class="['BlockWindow__action', `BlockWindow__action--${currentAction.id}`]"
           :action="currentAction"
           @update:block="emitUpdate()"
         />
@@ -220,9 +220,15 @@ const windowTitle = computed(() => {
   }
 
   // Make sure the source editor stretches to the full window content
-  .BlockWindow__action--source {
-    height: 100%;
+  .BlockWindow__contents--MediaHtmlCode,
+  .BlockWindow__contents--BlockSource {
+    padding: 0;
+    .UiInputJson {
+      height: 100%;
+    }
     .UiInputCode {
+      flex: 1;
+      height: 100%;
       overflow: auto;
       & > div { //cm-editor
         height: 100%;

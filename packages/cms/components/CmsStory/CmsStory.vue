@@ -7,7 +7,6 @@ import {
   provide,
   h,
   Transition,
-  KeepAlive,
   onMounted,
   computed,
 } from 'vue'
@@ -75,6 +74,28 @@ export default {
     // Get enabled plugins
     const pluginData = getPluginData()
 
+
+    // Story Navigation
+    const $nav = useNavigation(
+      sanitizedStory,
+      innerModel,
+      {
+        onPageEnter,
+        onPageLeave,
+      },
+    )
+
+    watch(
+      () => props.currentPageId,
+      (newPageId) => {
+        if (!newPageId || newPageId == $nav.currentPageId.value) {
+          return
+        }
+        $nav.goTo(newPageId)
+      },
+      // { immediate: true }, // If run immediately, conditional story pages are not resolved yet. Do this in onMounted for the first run.
+    )
+
     // Evaluate story.setup()
     const isMounted = ref()
     onMounted(async () => {
@@ -99,31 +120,16 @@ export default {
 
       isMounted.value = true
 
-      // AFTER the story is mounted,
-      // run the initial watch of props.currentPageId
+      // Initial currentPageId value
+      if (props.currentPageId && props.currentPageId == $nav.currentPageId.value) {
+        return
+      }
       if (props.currentPageId) {
         $nav.goTo(props.currentPageId)
       } else {
         $nav.goTo(sanitizedStory.value.pages[0]?.id)
       }
     })
-
-
-    // Story Navigation
-    const $nav = useNavigation(
-      sanitizedStory,
-      innerModel,
-      {
-        onPageEnter,
-        onPageLeave,
-      },
-    )
-
-    watch(
-      () => props.currentPageId,
-      (newPageId) => $nav.goTo(newPageId),
-      // { immediate: true }, // Do NOT run immediately. Initial run should be in onMounted
-    )
 
 
     const loadedPages = {} // loadedPages[page-id] = true | false
@@ -425,29 +431,25 @@ export default {
             'onEnter': onTransitionEnter,
             'onAfterEnter': onTransitionAfterEnter,
           },
-          () => h(
-            KeepAlive,
-            null,
-            currentPage.value
-              ? h(CmsBlock, {
-                'key': currentPage.value.id,
-                'class': 'CmsStory__page',
-                'block': translatedPage.value,
-                'modelValue': {
-                  ...innerModel.value,
-                  $i18n: {
-                    t: (a, b, c) => i18n.t(a, b, c),
-                    obj: (v) => i18n.obj(v),
-                    words: (v) => i18n.words(v),
-                    currency: (value, currency) => i18n.$(value, currency),
-                  },
-                  $enum: $enum.value,
-                  $format: $format,
+          () => currentPage.value
+            ? h(CmsBlock, {
+              'key': currentPage.value.id,
+              'class': 'CmsStory__page',
+              'block': translatedPage.value,
+              'modelValue': {
+                ...innerModel.value,
+                $i18n: {
+                  t: (a, b, c) => i18n.t(a, b, c),
+                  obj: (v) => i18n.obj(v),
+                  words: (v) => i18n.words(v),
+                  currency: (value, currency) => i18n.$(value, currency),
                 },
-                'onUpdate:modelValue': onUpdateModelValue,
-              })
-              : null,
-          ),
+                $enum: $enum.value,
+                $format: $format,
+              },
+              'onUpdate:modelValue': onUpdateModelValue,
+            })
+            : null,
         ),
       )
   },

@@ -43,7 +43,6 @@ function emitUpdate() {
 <template>
   <div class="BlockCssStyle">
     <UiDetails
-      open
       text="OpenAI"
       class="BlockCssStyle__ai"
     >

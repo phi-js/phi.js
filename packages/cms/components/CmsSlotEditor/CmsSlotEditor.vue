@@ -168,6 +168,7 @@ function onInsertSibling(index, position = null) {
       <div v-if="element._placeholder">
         <SlotBlockLauncher
           :open="true"
+          @cancel="innerSlot.splice(index, 1)"
           @input="launchBlock($event, index)"
         />
       </div>
@@ -194,7 +195,6 @@ function onInsertSibling(index, position = null) {
       <!-- block launcher at bottom -->
       <div class="CmsSlotEditor__footer">
         <SlotBlockLauncher
-          xxxx-label="i18n.t('CmsSlotEditor.AddContent')"
           :title="props.label
             ? i18n.t('CmsSlotEditor.AddContentTo') + ' ' + props.label
             : i18n.t('CmsSlotEditor.AddContent')"

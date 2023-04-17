@@ -2,30 +2,55 @@ import forEachBlock from './forEachBlock'
 import getBlockFields from './getBlockFields'
 
 export default function getStorySchema(story) {
-  const storyFields = []
+  const pageFields = {} // pageFields[pageIndex] = [... all fields in page]
+
   forEachBlock(story, (block, path) => {
     // Look for $.pages[XXXX]...  in the json path to the block
     const pathPageMatches = path.match(/\$\.pages\[(.+?)\]/i)
     const pageIndex = pathPageMatches?.[1] || -1
 
-    const page = pageIndex >= 0
-      ? {
-        id: story.pages[pageIndex].id,
-        title: story.pages[pageIndex].title,
-        hash: story.pages[pageIndex].hash,
-        index: pageIndex,
-      }
-      : null
-
     const blockFields = getBlockFields(block)
-      .map((field) => ({
-        ...field,
-        path,
-        page,
-      }))
+    if (!blockFields.length) {
+      return
+    }
 
-    storyFields.push(...blockFields)
+    if (typeof pageFields[pageIndex] === 'undefined') {
+      pageFields[pageIndex] = []
+    }
+
+    blockFields.forEach((blockField) => {
+      pageFields[pageIndex].push({
+        ...blockField,
+        page: {
+          id: story.pages?.[pageIndex]?.id,
+          title: story.pages?.[pageIndex]?.title,
+          hash: story.pages?.[pageIndex]?.hash,
+        },
+      })
+    })
   })
 
-  return storyFields
+  /*
+  Return an item for each PAGE, with its fields as children
+  [
+    {
+      text: 'Page 1',
+      children: [
+        {
+          value: 'model.something',
+          type: 'string',
+          text: 'Enter your something',
+        },
+        ...
+      ]
+    },
+    ...
+  ]
+  */
+  return Object.keys(pageFields)
+    .map((pageIndex) => ({
+      id: story.pages?.[pageIndex]?.id,
+      text: story.pages?.[pageIndex]?.title,
+      children: pageFields[pageIndex],
+    }))
 }

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 
+import { UiIcon } from '@/packages/ui'
 import CmsSlotEditor from '../../../../components/CmsSlotEditor/CmsSlotEditor.vue'
 
 const props = defineProps({
@@ -25,7 +26,6 @@ watch(
 function onSlotUpdate() {
   emit('update:modelValue', { ...props.modelValue, slot: pageSlot })
 }
-
 </script>
 
 <template>
@@ -33,7 +33,7 @@ function onSlotUpdate() {
     v-model:slot="pageSlot"
     :label="props.modelValue?.title"
 
-    :class="`LayoutGroupEditor LayoutGroupEditor--${modelValue.props.direction} LayoutGroup`"
+    :class="`LayoutGroupFace LayoutGroupFace--${modelValue.props.direction} LayoutGroup`"
     :style="{
       display: modelValue.props.direction == 'row' ? 'flex' : 'block',
       flexDirection: modelValue.props.direction,
@@ -42,7 +42,10 @@ function onSlotUpdate() {
     @update:slot="onSlotUpdate"
   >
     <template #header>
-      <label class="LayoutGroupEditor__label">{{ modelValue.title || modelValue.component }}</label>
+      <label class="LayoutGroupFace__label">
+        <UiIcon :src="modelValue.props.direction == 'row' ? 'mdi:view-column' : 'mdi:view-agenda'" />
+        {{ modelValue.title || modelValue.component }}
+      </label>
     </template>
   </CmsSlotEditor>
 </template>
@@ -57,14 +60,14 @@ function onSlotUpdate() {
     opacity: 0.3;
   }
 
-  &:hover > .LayoutGroupEditor > .LayoutGroupEditor__label {
+  &:hover > .LayoutGroupFace > .LayoutGroupFace__label {
     opacity: 1;
     color: var(--ui-color-primary);
   }
 }
 
 
-.LayoutGroupEditor {
+.LayoutGroupFace {
   position: relative;
   padding-top: 16px;
   width: 100%;
@@ -85,7 +88,7 @@ function onSlotUpdate() {
   }
 }
 
-.LayoutGroupEditor--row {
+.LayoutGroupFace--row {
   & > .CmsSlotEditor__footer {
     align-self: stretch;
     display: flex;

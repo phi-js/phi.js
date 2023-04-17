@@ -15,21 +15,12 @@ const generators = [
 ]
 
 export default function getSuggestedBlocks(text) {
-  let retval = []
   let string = text.trim()
   if (!string) {
-    return [
-      {
-        name: 'LayoutGroup',
-        title: 'Group',
-        icon: 'mdi:group',
-        block: {
-          title: 'Group',
-          props: { direction: 'column' },
-        },
-      },
-    ]
+    return []
   }
+
+  let retval = []
 
   generators.forEach((generator) => {
     let generated = generator(string)

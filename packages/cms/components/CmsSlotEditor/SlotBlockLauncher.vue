@@ -37,7 +37,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['input'])
+const emit = defineEmits(['input', 'cancel'])
 
 const isOpen = ref(props.open)
 const isPopupOpen = ref(props.open)
@@ -120,15 +120,12 @@ function onStagingAccept() {
 function onStagingCancel() {
   stagingBlock.value = null
   isOpen.value = props.open
+  emit('cancel')
 }
 
-// const elBox = ref()
 function onPickerUpdateOpen($event) {
   if (!stagingBlock.value) {
     isOpen.value = $event || props.open
-    // if (isOpen.value && window.innerWidth < 600) { // 2DO: Check CORRECTLY to see if using mobile
-    //   elBox.value?.scrollIntoView?.()
-    // }
   }
 }
 
@@ -167,6 +164,7 @@ function onPickerUpdateOpen($event) {
       v-model:open="isPopupOpen"
       @update:open="onPickerUpdateOpen"
       @input="onBlockPickerInput($event)"
+      @cancel="emit('cancel')"
     >
       <template #body="{ close }">
         <Component

@@ -3,7 +3,6 @@
 import i18n from './i18n'
 
 import MediaCalendar from './components/MediaCalendar/MediaCalendar.block.js'
-import MediaDialog from './components/MediaDialog/MediaDialog.block.js'
 import MediaDocument from './components/MediaDocument/MediaDocument.block.js'
 import MediaFileList from './components/MediaFileList/MediaFileList.block.js'
 import MediaGallery from './components/MediaGallery/MediaGallery.block.js'
@@ -55,14 +54,12 @@ export default {
       ],
     },
     {
-      title: 'Navigation', // so that the Navigation tab is kept in this position (afer content)
+      title: 'Layout', // so that the Layout tab is kept in this position (afer content)
       children: [],
     },
     {
-      title: 'Layout',
-      children: [
-        MediaDialog,
-      ],
+      title: 'Navigation', // so that the Navigation tab is kept in this position (afer Layout)
+      children: [],
     },
     {
       title: 'Video',

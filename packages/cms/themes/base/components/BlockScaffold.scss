@@ -6,27 +6,24 @@
   // --outline-offset: -4px; // causes body horizontal scroll
   --outline-offset: 0;
 
-  z-index: 1; // messes up dragstart from toolbar (in html blocks only ???)
-
-
   // Launchers visible on selected only
-  & > &__toolbar-container > &__launcher,
+  & > &__topArea > &__toolbar-container > &__launcher,
   & > &__launcher {
     visibility: hidden;
   }
 
-  &--selected > &__toolbar-container > &__launcher,
+  &--selected > &__topArea > &__toolbar-container > &__launcher,
   &--selected > &__launcher {
     visibility: visible;
   }
 
   // toolbar-container only clickable when SELECTED
-  & > &__toolbar-container {
+  & > &__topArea {
     display: none;
   }
 
-  &--selected > &__toolbar-container {
-    display: flex;
+  &--selected > &__topArea {
+    display: block;
   }
 
 
@@ -55,14 +52,18 @@
   }
 
   &--selected {
-    z-index: 3; // messes up dragstart from toolbar (in html blocks only ???)
     &::after {
       border-color: var(--ui-color-primary);
     }
   }
 
   &:hover {
-    z-index: 2;
+    z-index: 5;
+  }
+
+  &--selected &__topArea,
+  &:hover &__topArea {
+    z-index: 5;
   }
 
 
@@ -72,13 +73,15 @@
     border-color: var(--ui-color-primary);
   }
 
+  &__topArea {
+    position: sticky;
+    top: 130px;
+  }
 
   &__toolbar-container {
     position: absolute;
     left: 0;
     bottom: 100%;
-
-    z-index: 99;
 
     display: flex;
     flex-wrap: nowrap;
@@ -103,7 +106,7 @@
     align-items: stretch;
 
     user-select: none;
-    z-index: 1;
+    z-index: 1; // position above BlockScaffold_parent
 
     // overflow-x: auto;
     max-width: calc(100vw - 72px);
@@ -119,6 +122,28 @@
       }
     }
   }
+
+  &__parent {
+    align-self: flex-start;
+    --ui-item-padding: 8px;
+
+    background-color: #999;
+    color: #eee;
+    border-radius: 4px;
+
+    top: -4px;
+    left: 8px;
+    margin-left: -15px;
+
+    padding-right: 80px !important;
+    margin-right: -72px;
+
+    cursor: pointer;
+    &:hover {
+      background-color: #888;
+    }
+  }
+
 
   &__dragHandle {
     cursor: move;
@@ -217,26 +242,6 @@
     }
   }
 
-  &__parent {
-    align-self: flex-start;
-    --ui-item-padding: 8px;
-
-    background-color: #999;
-    color: #eee;
-    border-radius: 4px;
-
-    top: -4px;
-    left: 8px;
-    margin-left: -15px;
-
-    padding-right: 80px !important;
-    margin-right: -72px;
-
-    cursor: pointer;
-    &:hover {
-      background-color: #888;
-    }
-  }
 
   &__launcher {
     &--before {

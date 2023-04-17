@@ -42,7 +42,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['input', 'update:open'])
+const emit = defineEmits(['input', 'update:open', 'cancel'])
 
 const isOpen = ref()
 let hasPushedState = false
@@ -106,18 +106,21 @@ function onClickSuggestion(sugg) {
     ]"
   >
     <UiDialog
-      v-slot="{ close }"
+      v-slot="{ accept }"
       v-model:open="isOpen"
-      show-close-button
       @update:open="emit('update:open', $event)"
+      @cancel="emit('cancel')"
     >
       <UiItemFinder
         v-model:searchString="searchString"
         :items="availableBlocks"
-        @select-item="emit('input', $event); close()"
+        @select-item="emit('input', $event); accept()"
       >
         <template #body>
-          <div class="CmsBlockPicker__suggestions">
+          <div
+            v-show="suggestedBlocks.length"
+            class="CmsBlockPicker__suggestions"
+          >
             <UiItem
               v-for="(sugg,i) in suggestedBlocks"
               :key="i"
@@ -125,13 +128,13 @@ function onClickSuggestion(sugg) {
               :icon="sugg.icon"
               :text="sugg.title"
               :subtext="sugg.subtext"
-              @click="onClickSuggestion(sugg); close()"
+              @click="onClickSuggestion(sugg); accept()"
             />
           </div>
 
           <slot
             name="body"
-            :close="close"
+            :close="accept"
           />
         </template>
       </UiItemFinder>

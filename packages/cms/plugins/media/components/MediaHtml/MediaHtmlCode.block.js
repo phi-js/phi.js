@@ -21,7 +21,7 @@ export default {
       {
         id: 'MediaHtmlCode',
         icon: 'mdi:language-html5',
-        title: 'HTML code',
+        title: 'HTML source',
         component: MediaHtmlCode,
       },
     ],

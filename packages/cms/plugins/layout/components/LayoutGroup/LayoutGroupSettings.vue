@@ -57,7 +57,7 @@ const styleSelectValue = computed({
 </script>
 
 <template>
-  <div class="LayoutGroupSettings">
+  <div class="LayoutGroupSettings UiForm UiForm--wide">
     <UiInput
       v-model="block.title"
       class="LayoutGroupSettings__input"
@@ -68,11 +68,11 @@ const styleSelectValue = computed({
     <UiInput
       v-model="styleSelectValue"
       class="LayoutGroupSettings__input"
-      type="select-list"
+      type="select-buttons"
       :label="i18n.t('LayoutGroupSettings.ContentDirection')"
       :options="[
-        { value: 'column', text: i18n.t('LayoutGroupSettings.DirectionColumn') },
-        { value: 'row', text: i18n.t('LayoutGroupSettings.DirectionRow') },
+        { value: 'column', text: i18n.t('LayoutGroupSettings.DirectionColumn'), icon:'mdi:view-agenda' },
+        { value: 'row', text: i18n.t('LayoutGroupSettings.DirectionRow'), icon: 'mdi:view-column' },
       ]"
     />
   </div>
@@ -80,11 +80,16 @@ const styleSelectValue = computed({
 
 <style lang="scss">
 .LayoutGroupSettings {
-  padding: 8px 12px;
+  .UiSelectButtons {
+    &__button {
+      width: 100px;
+      flex-direction: column;
+      align-items: center;
 
-  &__input {
-    margin-bottom: 16px;
-    --ui-item-padding: 4px 8px;
+      .UiItem__icon {
+        font-size: 20px;
+      }
+    }
   }
 }
 </style>

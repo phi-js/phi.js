@@ -1,9 +1,9 @@
 import { UiDialog, UiForm } from '../../../../../ui/components'
-import MediaDialogEditor from './MediaDialogEditor.vue'
+import LayoutDialogEditor from './LayoutDialogEditor.vue'
 
 export default {
-  name: 'MediaDialog',
-  title: 'Popup',
+  name: 'LayoutDialog',
+  title: 'Dialog',
   icon: 'mdi:dock-window',
 
   block: {
@@ -24,7 +24,7 @@ export default {
   ],
 
   editor: {
-    component: MediaDialogEditor,
+    component: LayoutDialogEditor,
 
     actions: [
       {

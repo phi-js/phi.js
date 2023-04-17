@@ -24,11 +24,9 @@ function emitUpdate(html) {
 </script>
 
 <template>
-  <div>
-    <UiInputCode
-      lang="html"
-      :model-value="modelValue.props.value"
-      @update:model-value="emitUpdate($event)"
-    />
-  </div>
+  <UiInputCode
+    lang="html"
+    :model-value="modelValue.props.value"
+    @update:model-value="emitUpdate($event)"
+  />
 </template>

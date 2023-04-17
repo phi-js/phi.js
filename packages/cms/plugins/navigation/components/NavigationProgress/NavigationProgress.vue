@@ -1,6 +1,11 @@
+<script>
+import { onMounted } from 'vue'
+let lastNavigationScrollLeft = 0
+</script>
+
 <script setup>
 // https://www.designencyclopedia.io/element/walkthrough
-import { computed, inject } from 'vue'
+import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { UiItem } from '@/packages/ui'
 
 const $nav = inject('$_cms_navigation', null)
@@ -14,10 +19,41 @@ const steps = computed(() => {
     isPast: i < activeIndex,
   }))
 })
+
+const refEl = ref()
+
+watch(
+  $nav.currentPageId,
+  () => {
+    nextTick(() => {
+      if (!refEl.value) {
+        return
+      }
+
+      const activeItemRef = refEl.value.querySelector('.NavigationProgress__step--active')
+      if (!activeItemRef?.scrollIntoView) {
+        return
+      }
+      activeItemRef.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'nearest',
+      })
+    })
+  },
+  { immediate: true },
+)
+
+// Remember previous scrollLeft
+onBeforeUnmount(() => lastNavigationScrollLeft = refEl.value.scrollLeft)
+onMounted(() => refEl.value.scrollLeft = lastNavigationScrollLeft)
 </script>
 
 <template>
-  <nav class="NavigationProgress">
+  <nav
+    ref="refEl"
+    class="NavigationProgress"
+  >
     <UiItem
       v-for="page in steps"
       :key="page.id"
