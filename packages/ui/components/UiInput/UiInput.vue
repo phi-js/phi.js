@@ -439,7 +439,10 @@ const uid = ref('UiInput' + (++_UiInput_counter))
           />
 
           <!-- Invisible/hidden input field to handle native validations for custom components -->
-          <label class="UiInput__validatorInput">
+          <label
+            v-if="allValidationRules.length"
+            class="UiInput__validatorInput"
+          >
             <input
               :id="uid"
               ref="validatorInput"
