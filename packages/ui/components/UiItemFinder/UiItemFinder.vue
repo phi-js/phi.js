@@ -82,7 +82,6 @@ Returns a filtered copy of the item containing only elements matching
 the keywords.
 NULL if there is no match
 */
-
 function searchItem(item, keywords) {
   if (!item || !keywords) {
     return null
@@ -98,7 +97,8 @@ function searchItem(item, keywords) {
       : null
   }
 
-  if (item.searchKey.includes(keywords)) {
+  const words = keywords.split(' ')
+  if (words.every(((word) => item.searchKey.includes(word)))) {
     return item
   }
 
@@ -114,6 +114,7 @@ function toKeywords(string) {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
+    .replace(/-/g, ' ')
     .replace(/[^a-z0-9 ]/g, '')
 }
 
@@ -147,7 +148,7 @@ function onClickItem(item) {
       class="UiItemFinder__search"
       :placeholder="i18n.t('Search')"
       @update:model-value="emit('update:searchString', $event)"
-      @keyup.enter="onSearchEnter()"
+      @keydown.enter.stop.prevent="onSearchEnter()"
     >
     <div
       ref="refEl"

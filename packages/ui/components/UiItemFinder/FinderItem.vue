@@ -39,6 +39,7 @@ const emit = defineEmits(['click-item'])
   <UiDetails
     v-if="props.item?.children?.length"
     class="FinderItem FinderItem--group"
+    :class="props.item?.class"
     :group="props.group"
 
     :text="props.item?.text || props.item?.title"
@@ -59,6 +60,7 @@ const emit = defineEmits(['click-item'])
     v-else
     tabindex="0"
     class="FinderItem FinderItem--item"
+    :class="props.item?.class"
     :text="props.item?.text || props.item?.title"
     :subtext="props.item?.subtext || props.item?.description"
     :icon="props.item?.icon"
