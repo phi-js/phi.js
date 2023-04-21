@@ -130,7 +130,7 @@ export default {
       <UiIcon
         class="UiItem__deleter ui--clickable"
         src="mdi:close"
-        @click.prevent="doDelete()"
+        @click.stop.prevent="doDelete()"
         @pointerenter="isEndangered = true"
         @pointerleave="isEndangered = false"
       />
