@@ -62,12 +62,7 @@ textarea.UiInput__element {
     @extend .UiInputNativeElement;
 
     &[type=color] {
-      padding: 0;
-      margin: 0;
-      border: 0;
-      // min-width: 50px;
-      min-width: 20px;
-      max-width: 60px;
+      padding: 2px;
     }
   }
 
