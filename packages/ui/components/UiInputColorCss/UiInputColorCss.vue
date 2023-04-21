@@ -1,4 +1,6 @@
 <script setup>
+import { computed } from 'vue'
+
 const props = defineProps({
   modelValue: {
     type: String,
@@ -9,19 +11,28 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
+const ctx = document.createElement('canvas').getContext('2d')
+function standardize_color(str){
+  ctx.fillStyle = str
+  return ctx.fillStyle
+}
+
+const hexValue = computed({
+  get() {
+    return standardize_color(props.modelValue)
+  },
+  set(newValue) {
+    emit('update:modelValue', newValue)
+  },
+})
 </script>
 
 <template>
-  <div class="UiInputColorCss">
+  <span class="UiInputColorCss">
     <input
+      v-model="hexValue"
+      class="UiInput__element"
       type="color"
-      :value="props.modelValue"
-      @input="emit('update:modelValue', $event.target.value)"
     >
-    <input
-      type="checkbox"
-      :checked="!!props.modelValue"
-      @change="emit('update:modelValue', !$event.target.checked ? null : '#000')"
-    >
-  </div>
+  </span>
 </template>
