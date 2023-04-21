@@ -96,6 +96,16 @@ const testUrl = ref('http://v4.local/1/cms/pages/test/files')
           label="color"
         />
         <UiInput
+          v-model="modelValue.color"
+          type="color-css"
+          label="color-css"
+        />
+        <UiInput
+          v-model="modelValue.color"
+          type="text"
+          label="color-css"
+        />
+        <UiInput
           type="button"
           label="button"
         />
