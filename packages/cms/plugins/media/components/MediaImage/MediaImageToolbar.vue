@@ -1,13 +1,13 @@
 <script setup>
 import { computed } from 'vue'
-import { UiIcon, UiPopover } from '../../../../../ui'
+import { UiIcon } from '@/packages/ui'
 
 const props = defineProps({
   /* objeto PROPS para MediaImage:
 
     src: 'https://s3.amazonaws.com/phidias-api-1/desarrollodev/cms/pages/test/Best-Cheesecake-Recipe-2-1-of-1-4.jpg',
     align: 'center',
-    width: 'auto',
+    objectFit: 'cover',
     href: 'https://phidias.co',
   */
   modelValue: {
@@ -18,14 +18,14 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:modelValue'])
 
-const isFullWidth = computed({
+const isObjectFitCover = computed({
   get() {
-    return props.modelValue?.width == '100%'
+    return props.modelValue?.objectFit == 'cover'
   },
 
   set(newValue) {
-    const targetValue = newValue ? '100%' : 'auto'
-    emit('update:modelValue', { ...props.modelValue, width: targetValue })
+    const targetValue = newValue ? 'cover' : 'contain'
+    emit('update:modelValue', { ...props.modelValue, objectFit: targetValue })
   },
 })
 
@@ -47,37 +47,28 @@ const alignment = computed(() => {
 
 <template>
   <div class="MediaImageToolbar">
-    <UiPopover>
-      <template #trigger>
-        <UiIcon
-          :src="alignment.current.icon"
-          class="BlockScaffold__button BlockScaffold__button--expansible"
-        />
-      </template>
-      <template #contents="{ close }">
-        <div
-          class="UiGroup UiToolbar"
-          @click="close()"
-        >
-          <UiIcon
-            v-for="(align, i) in alignment.available"
-            :key="i"
-            :title="align.title"
-            :src="align.icon"
-            class="BlockScaffold__button"
-            :class="{ 'BlockScaffold__button--active': align.value == alignment.current.value }"
-            @click="emit('update:modelValue', { ...props.modelValue, align: align.value })"
-          />
-        </div>
-      </template>
-    </UiPopover>
-
-    <!-- <UiIcon
-      title="Full width"
+    <UiIcon
+      v-for="(align, i) in alignment.available"
+      :key="i"
+      :title="align.title"
+      :src="align.icon"
+      class="BlockScaffold__button"
+      :class="{ 'BlockScaffold__button--active': align.value == alignment.current.value }"
+      @click="emit('update:modelValue', { ...props.modelValue, align: align.value })"
+    />
+    <UiIcon
+      title="Stretch to cover"
       src="mdi:overscan"
-      class="MediaImageToolbar__icon"
-      :class="{'--active': isFullWidth}"
-      @click="isFullWidth = !isFullWidth"
-    />-->
+      class="BlockScaffold__button"
+      :class="{'BlockScaffold__button--active': isObjectFitCover}"
+      @click="isObjectFitCover = !isObjectFitCover"
+    />
   </div>
 </template>
+
+<style lang="scss">
+.MediaImageToolbar {
+  display: flex;
+  flex-wrap: nowrap;
+}
+</style>

@@ -63,6 +63,8 @@ export default class {
     "apiKey": "please",
     "prompt": "5px black rounded border, this image as background: https://es.rollingstone.com/wp-content/uploads/2023/02/Los-planes-de-Foo-Fighters-para-este-2023.jpg (fit contents)"
   }
+
+  Generates a STRING with valid CSS (including selectors)
   */
   generateCss(postData) {
     return this.http.post('/api/1/openai/css', postData)

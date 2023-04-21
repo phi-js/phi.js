@@ -68,17 +68,10 @@ const innerValue = computed(() => ({
 </script>
 
 <template>
-  <a
-    class="MediaLink"
-    :href="innerValue.href"
-    :target="innerValue.target"
-    style="display:block"
-    @click="onClick"
-  >
+  <div class="MediaLink">
     <UiItem
-      :text="innerValue.text"
-      :subtext="innerValue.subtext"
-      :icon="innerValue.icon"
+      v-bind="innerValue"
+      @click="onClick"
     />
-  </a>
+  </div>
 </template>

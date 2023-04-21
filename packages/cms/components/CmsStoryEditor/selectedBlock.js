@@ -35,6 +35,27 @@ function onClickOutside(event) {
   if (selectedBlock.value.$el.contains(event.target)) {
     return
   }
+
+  // The clicked element dissapeard on click.  So it was maybe a dialog or window.
+  // in that case do not deselect the blodk
+  if (!document.contains(event.target)) {
+    return
+  }
+
+  if (document.querySelector('.CmsStoryBuilder__blockWindow')?.contains?.(event.target)) {
+    return
+  }
+
+  // Do not clear selection if clicking inside .BlockScaffold__topArea
+  if (document.getElementById('omg-testing')?.contains?.(event.target)) {
+    return
+  }
+
+  // Do not clear selection if clicking inside .tippy-box
+  if (document.querySelector('.tippy-box')?.contains?.(event.target)) {
+    return
+  }
+
   clearSelectedBlock()
 }
 

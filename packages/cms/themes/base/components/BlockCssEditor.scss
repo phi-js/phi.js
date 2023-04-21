@@ -1,0 +1,83 @@
+.BlockWindow__contents--BlockCssEditor {
+  padding: 0 !important;
+}
+
+// Make source editor 100% height inside BlockWindow
+.BlockCssEditor {
+  height: 100%;
+
+  .CssEditor {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &__header {
+      padding: 2px;
+    }
+
+    &__body {
+      flex: 1;
+      overflow: auto;
+
+      .UiInput--type-code {
+        height: 100%;
+        .UiInput__body,
+        .UiInputCode {
+          height: 100%;
+        }
+      }
+    }
+  }
+}
+
+
+.BlockCssEditor {
+  @extend .UiForm;
+
+  &__fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  &__classItem {
+    @extend .ui--clickable;
+    @extend .outset;
+    --ui-item-padding: 4px;
+    user-select: none;
+
+    .UiItem__body {
+      padding: 6px 8px;
+    }
+
+    .UiItem__icon {
+      padding-left: 9px;
+    }
+  }
+
+  &__classIcon {
+    @extend .ui--clickable;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+  }
+
+  &__adder {
+    @extend .ui--clickable;
+    --ui-item-padding: 11px;
+
+    &:hover {
+      @extend .outset;
+    }
+  }
+
+  &__headerItem {
+    .UiItem__icon {
+      @extend .ui--clickable;
+      border-radius: 4px;
+      width: 36px;
+      height: 36px;
+      margin-right: 4px;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const props = defineProps({
   src: {
@@ -8,25 +8,28 @@ const props = defineProps({
     default: null,
   },
 
-  height: {
-    type: [Number, String],
-    required: false,
-    default: null, // CSS height property applied to container element
-  },
-
   align: {
     type: String,
     required: false,
-    default: 'center', // left, right, center
+    default: 'center', // center, left, right
   },
 
+  /*
+  To be applied to <img> object-fit CSS property directly
+  */
+  objectFit: {
+    type: String,
+    required: false,
+    default: 'contain', // cover, contain, none, ...
+  },
+
+  /* Link ptops (href, target) */
   href: {
     type: String,
     required: false,
     default: null,
   },
 
-  /* HREF target */
   target: {
     type: String,
     required: false,
@@ -36,23 +39,6 @@ const props = defineProps({
 })
 
 const isError = ref(false)
-const containerStyle = computed(() => ({
-  height: props.height || undefined,
-  boxSizing: 'border-box',
-  // overflowX: 'clip', // Uhh, no.  why?!
-  display: 'flex',
-  justifyContent: props.align,
-  // textAlign: props.align,
-  // backgroundPosition: `top ${props.align}`,
-  // backgroundRepeat: 'no-repeat',
-  // backgroundImage: `url(${props.src})`,
-  // backgroundSize: 'contain',
-}))
-
-const imgStyle = computed(() => ({
-  height: '100%',
-  maxWidth: '100%',
-}))
 
 watch(
   () => props.src,
@@ -63,39 +49,53 @@ watch(
 function onImageError() {
   isError.value = true
 }
+
+
+const imgStyle = computed(() => {
+  return {
+    'height': '100%',
+    'max-width': '100%',
+    'object-fit': props.objectFit,
+    'object-position': props.align,
+  }
+})
 </script>
 
 <template>
   <div
-    class="MediaImage"
-    :style="containerStyle"
+    v-if="isError"
+    class="MediaImage MediaImage--error"
+    style="max-width: 100%"
+  />
+  <a
+    v-else-if="href"
+    :href="href"
+    :target="target"
+    class="MediaImage MediaImage--link"
+    :align="props.align"
+    style="max-width: 100%"
   >
-    <div
-      v-if="isError"
-      class="MediaImage__placeholder"
-    />
-    <template v-else>
-      <a
-        v-if="href"
-        :href="href"
-        :target="target"
-        class="MediaImage__link"
-      >
-        <img
-          class="MediaImage__img"
-          :src="src"
-          :style="imgStyle"
-          @error="onImageError"
-        >
-      </a>
-      <img
-        v-else
-        class="MediaImage__img"
-        :src="src"
-        :style="imgStyle"
-        @error="onImageError"
-      >
-    </template>
+    <img
+      class="MediaImage__img"
+      :alt="src"
+      :src="src"
+      :style="imgStyle"
+      @error="onImageError"
+    >
+  </a>
+  <div
+    v-else
+    class="MediaImage"
+    :align="props.align"
+    style="max-width: 100%"
+  >
+    <img
+      class="MediaImage__img"
+      :alt="src"
+      :src="src"
+      :style="imgStyle"
+      @error="onImageError"
+    >
   </div>
 </template>
 
@@ -112,10 +112,10 @@ function onImageError() {
   //   max-height: 100%;
   // }
 
-  &__placeholder {
+  &--error {
     width: 100%;
     max-width: 100%;
-    height: 256px;
+    height: 256px !important;
     border: 1px dashed #999;
     background-color: rgba(0, 0, 0, 0.1);
 

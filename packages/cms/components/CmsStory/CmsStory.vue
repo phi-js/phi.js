@@ -400,7 +400,6 @@ export default {
     /* Scroll to top of new page */
     function onTransitionEnter() {
       isAnimating.value = true
-      window.scrollTo(0, 0)
     }
 
     function onTransitionAfterEnter() {

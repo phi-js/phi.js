@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 
 import { useI18n } from '@/packages/i18n'
 import { UiItem, UiIcon, UiDropdown } from '@/packages/ui'
@@ -78,7 +78,7 @@ function getChildStyles() {
     return null
   }
 
-  const elementInSlot = refSlot.value.querySelector('.BlockScaffold__toolbar-container + *')
+  const elementInSlot = refSlot.value.querySelector('.BlockScaffold__toolbar-container + *') /// FIX THIS, set correct selector
   if (!elementInSlot) {
     return null
   }
@@ -100,14 +100,22 @@ function getChildStyles() {
 
 const mutationObserver = new MutationObserver(getChildStyles)
 
-onMounted(() => {
-  getChildStyles()
+const refToolbar = ref()
 
+onMounted(() => {
+  /// !!! Black magic.  Teleport the toolbar into CsmStoryBuilder
+  document.getElementById('omg-testing').appendChild(refToolbar.value)
+
+  getChildStyles()
   mutationObserver.observe(refSlot.value, {
     childList: true,
     attributes: true,
     subtree: false,
   })
+})
+
+onBeforeUnmount(() => {
+  refToolbar.value.remove()
 })
 </script>
 
@@ -125,90 +133,102 @@ onMounted(() => {
     @click="emitSelect"
     @focus="emitSelect"
   >
-    <div class="BlockScaffold__topArea">
-      <div class="BlockScaffold__toolbar-container">
-        <template v-if="selected">
+    <div
+      ref="refToolbar"
+      class="BlockScaffold__toolbar-wrap"
+    >
+      <div
+        v-if="selected"
+        class="BlockScaffold__toolbar"
+      >
+        <div class="BlockScaffold__toolbarScroll">
           <UiItem
-            v-if="parent"
-            class="BlockScaffold__parent"
-            icon="mdi:chevron-up"
-            :title="parent.innerBlock.value.title || parent.definition.title || parent.innerBlock.value.component"
-            @click.stop.prevent="parent.selectBlock()"
+            class="BlockScaffold__titleItem"
+            :icon="definition.icon"
+            :text="props.block.title || definition.title || props.block.component"
           />
+          <!-- Custom block toolbar -->
+          <slot name="toolbar" />
 
-          <div class="BlockScaffold__toolbar color-scheme-dark">
-            <UiItem
-              class="BlockScaffold__dragHandle"
-              icon="mdi:drag"
-              :text="$slots.toolbar ? '' : props.block.title || definition?.title || props.block.component"
-            />
-            <!-- custom toolbar component -->
-            <slot name="toolbar" />
-
-            <div class="BlockScaffold__separator" />
-
-            <!-- shortcut icons -->
-            <UiIcon
-              v-for="action in shortcuts"
-              :key="action.id"
-              :src="action.icon"
-              :title="action.description"
-              :class="`BlockScaffold__shortcut BlockScaffold__action--${action.id}`"
-              @click.stop="emit('open-editor', action.id)"
-            />
-
-            <!-- Available actions dropdown -->
-            <UiDropdown>
-              <template #trigger>
-                <UiIcon
-                  class="BlockScaffold__menuBtn"
-                  src="mdi:dots-vertical"
-                />
-              </template>
-              <template #default="{close}">
-                <div class="BlockScaffold__actionList">
-                  <UiItem
-                    v-for="action in availableActions"
-                    :key="action.id"
-                    :icon="action.icon"
-                    :text="action.title"
-                    :class="`BlockScaffold__action BlockScaffold__action--${action.id}`"
-                    @click.stop="emit('open-editor', action.id); close();"
-                  />
-
-                  <Component
-                    :is="pluginData.getSlotComponent('BlockMenu')"
-                    :block="props.block"
-                    :close="close"
-                  />
-
-                  <UiItem
-                    class="BlockScaffold__action BlockScaffold__action--delete"
-                    icon="mdi:close"
-                    :text="i18n.t('BlockScaffold.Delete')"
-                    @click="emit('delete'); close()"
-                  />
-                </div>
-              </template>
-            </UiDropdown>
-          </div>
-        </template>
-
-        <div
-          v-if="direction == 'vertical'"
-          class="BlockScaffold__launcher BlockScaffold__launcher--before"
-          :title="i18n.t('BlockScaffold.InsertBlockBefore')"
-          @click="emit('insert-sibling', 'before')"
-        >
-          +
+          <!-- shortcut icons -->
+          <UiIcon
+            v-for="action in shortcuts"
+            :key="action.id"
+            :src="action.icon"
+            :title="action.description"
+            :class="`BlockScaffold__shortcut BlockScaffold__action--${action.id}`"
+            @click.stop="emit('open-editor', action.id)"
+          />
         </div>
+
+        <!-- Available actions dropdown -->
+        <UiDropdown>
+          <template #trigger>
+            <UiIcon
+              class="BlockScaffold__menuBtn"
+              src="mdi:dots-vertical"
+            />
+          </template>
+          <template #default="{close}">
+            <div class="BlockScaffold__actionList color-scheme-dark">
+              <UiItem
+                v-for="action in availableActions"
+                :key="action.id"
+                :icon="action.icon"
+                :text="action.title"
+                :class="`BlockScaffold__action BlockScaffold__action--${action.id}`"
+                @click.stop="emit('open-editor', action.id); close();"
+              />
+
+              <Component
+                :is="pluginData.getSlotComponent('BlockMenu')"
+                :block="props.block"
+                :close="close"
+              />
+
+              <UiItem
+                class="BlockScaffold__action BlockScaffold__action--delete"
+                icon="mdi:close"
+                :text="i18n.t('BlockScaffold.Delete')"
+                @click="emit('delete'); close()"
+              />
+            </div>
+          </template>
+        </UiDropdown>
+      </div>
+    </div>
+
+    <div
+      v-if="selected"
+      class="BlockScaffold__dragbar-wrap"
+    >
+      <div class="BlockScaffold__dragbar">
+        <UiItem
+          class="BlockScaffold__dragHandle color-scheme-dark"
+          icon="mdi:drag"
+          :text="props.block.title || definition?.title || props.block.component"
+        >
+          <template #actions>
+            <UiIcon
+              class="BlockScaffold__settingsIcon"
+              src="mdi:cog"
+              @click="emit('open-editor')"
+            />
+          </template>
+        </UiItem>
+        <UiItem
+          v-if="parent"
+          class="BlockScaffold__parent"
+          icon="mdi:chevron-up"
+          :title="parent.innerBlock.value.title || parent.definition.title || parent.innerBlock.value.component"
+          @click.stop.prevent="parent.selectBlock()"
+        />
       </div>
     </div>
 
     <slot />
 
     <div
-      v-if="direction == 'horizontal'"
       class="BlockScaffold__launcher BlockScaffold__launcher--before"
       :title="i18n.t('BlockScaffold.InsertBlockBefore')"
       @click="emit('insert-sibling', 'before')"

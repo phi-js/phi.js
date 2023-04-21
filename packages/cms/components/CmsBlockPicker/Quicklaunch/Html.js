@@ -19,7 +19,7 @@ export default function (text) {
     name: 'MediaHtml',
     title: 'Text',
     icon: 'mdi:text',
-
+    // subtext: text,
     block: { props: { value: `<${tag}>${text}</${tag}>` } },
   }
 }

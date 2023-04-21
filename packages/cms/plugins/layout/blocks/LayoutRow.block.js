@@ -12,15 +12,10 @@ export default {
         'display': 'flex',
         'flex-direction': 'row',
         'align-items': 'flex-start',
-        'justify-contents': 'space-evenly',
+        'justify-content': 'space-between',
       },
     },
-    slot: [
-      {
-        component: 'MediaHtml',
-        props: { value: '<h1>Heading</h1>' },
-      },
-    ],
+    slot: [],
   },
 
   staging: false,

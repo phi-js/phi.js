@@ -7,23 +7,11 @@
   --outline-offset: 0;
 
   // Launchers visible on selected only
-  & > &__topArea > &__toolbar-container > &__launcher,
   & > &__launcher {
     visibility: hidden;
   }
-
-  &--selected > &__topArea > &__toolbar-container > &__launcher,
   &--selected > &__launcher {
     visibility: visible;
-  }
-
-  // toolbar-container only clickable when SELECTED
-  & > &__topArea {
-    display: none;
-  }
-
-  &--selected > &__topArea {
-    display: block;
   }
 
 
@@ -57,114 +45,57 @@
     }
   }
 
-  &:hover {
-    z-index: 5;
-  }
-
-  &--selected &__topArea,
-  &:hover &__topArea {
-    z-index: 5;
-  }
-
-
   &--selected::after,
   &:hover::after {
     opacity: 1;
     border-color: var(--ui-color-primary);
   }
 
-  &__topArea {
-    position: sticky;
-    top: 130px;
-  }
 
-  &__toolbar-container {
-    position: absolute;
-    left: 0;
-    bottom: 100%;
+  // ToolBar.  Bar appended to CmsStoryBuilder toolbar
+  &__toolbar {
+    max-width: 98vw;
+
+    border-radius: 4px;
+    background-color: var(--ui-color-hover);
+
+    user-select: none;
+    --ui-item-padding: 3px 12px;
 
     display: flex;
     flex-wrap: nowrap;
-    align-items: center;
-
-    font-size: 1rem;
-
-    min-width: 240px;
-    max-width: 100vw;
-  }
-
-  &__toolbar {
-    --ui-item-padding: 8px 12px;
-
-    background: #333;
-    color: #eee;
-    border-radius: 4px;
-
-    display: flex;
-    // flex-wrap: nowrap;
-    flex-wrap: wrap; // so things like MediaHtmlBlockEditor toolbar don't suck
     align-items: stretch;
-
-    user-select: none;
-    z-index: 1; // position above BlockScaffold_parent
-
-    // overflow-x: auto;
-    max-width: calc(100vw - 72px);
+    // overflow-x: auto;   // overflow hides UiPopovers inside the toolbar :(
 
     .UiForm {
       .UiInput {
         &__element {
-          background: rgba(255,255,255,0.08);
-          color: #fff;
+          // background: rgba(255,255,255,0.08);
+          // color: #fff;
           min-width: 0 !important;
+          min-height: 0;
           max-width: 5rem;
         }
       }
     }
   }
 
-  &__parent {
-    align-self: flex-start;
-    --ui-item-padding: 8px;
+  &__toolbarScroll {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
 
-    background-color: #999;
-    color: #eee;
-    border-radius: 4px;
-
-    top: -4px;
-    left: 8px;
-    margin-left: -15px;
-
-    padding-right: 80px !important;
-    margin-right: -72px;
-
-    cursor: pointer;
-    &:hover {
-      background-color: #888;
-    }
+    overflow-x: auto;
   }
 
-
-  &__dragHandle {
-    cursor: move;
-    color: #ffffffcc;
-
+  &__titleItem {
+    font-size: 0.75rem;
     font-weight: bold;
-    font-size: 0.85rem;
-
-    &:hover {
-      background-color: rgba(255,255,255, 0.1);
-    }
+    max-width: 150px;
   }
 
-  &__separator {
-    align-self: stretch;
-    border-right: 1px solid #ffffff22;
-    border-left: 1px solid #00000055;
-  }
 
   &__shortcut {
-    align-self: stretch;
     width: 36px;
     font-size: 0.85rem;
     opacity: 0.7;
@@ -178,14 +109,28 @@
     text-shadow: 0px 1px 2px #00000055;
   }
 
+
+  &__menuBtn {
+    @extend .ui--clickable;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+  // Class BlockScaffold__button is added to <UiIcon> and <button> in MediaHtmlBlockEditor.vue
   &__button {
     @extend .ui--clickable;
-    min-width: 40px;
-    min-height: 40px;
+
+    min-width: 38px;
+    height: 38px;
 
     color: inherit;
     flex: none;
-    padding: 0 10px;
+    margin: 0;
+    padding: 0;
     border: 0;
     background: transparent;
 
@@ -201,24 +146,8 @@
         content: "▾";
       }
     }
-
-    text-shadow: 0px 2px 0px #000;
   }
 
-  &__toolbar > .UiDropdown > .UiDropdown__trigger {
-    height: 100%;
-  }
-
-  &__menuBtn {
-    @extend .ui--clickable;
-    width: 40px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    text-shadow: 0px 2px 0px #000;
-  }
 
   &__actionList {
     --ui-item-padding: 8px 12px;
@@ -232,27 +161,96 @@
 
     .UiItem {
       @extend .ui--clickable;
-
       font-weight: bold;
       font-size: 0.85rem;
-
       border-radius: 4px;
+    }
+  }
 
-      text-shadow: 0px 2px 0px #000;
+
+  // DragBar.  Bar placed absolutely over the block's face
+  &__dragbar-wrap {
+    position: sticky;
+    // top: 132px;  // Must match the height of CmsStoryBuilder__header + dragbar height.  92 + 40
+    top: calc(var(--cms-builder-header-bottom, 0) + 30px); // --cms-builder-header-bottom is set in CmsStoryBuilder.vue
+    z-index: 3;
+  }
+
+  &__dragbar {
+    user-select: none;
+
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+
+    display: flex;
+    flex-wrap: nowrap;
+
+    .UiItem {
+      border-radius: 4px;
+      &__icon {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  &__parent {
+    @extend .ui--clickable;
+    --ui-item-padding: 6px 12px;
+  }
+
+  &__dragHandle {
+    align-items: stretch;
+    text-shadow: none;
+
+    font-size: 0.75rem;
+    background-color: var(--ui-color-background);
+    color: var(--ui-color-foreground);
+    &:hover {
+      background-color: #444;
+    }
+
+    .UiItem__icon,
+    .UiItem__body {
+      cursor: move;
+    }
+
+    .UiItem__body {
+      padding: 6px 8px 6px 0;
+    }
+
+    .UiItem__icon {
+      width: 32px;
+    }
+  }
+
+  &__settingsIcon {
+    @extend .ui--clickable;
+    width: 32px;
+    height: 100%;
+
+    opacity: 0.6;
+    &:hover {
+      opacity: 1;
     }
   }
 
 
   &__launcher {
     &--before {
-      margin-left: 3px;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      margin-bottom: 3px;
+      margin-left: -14px;
+      z-index: 1;
     }
 
     &--after {
       position: absolute;
       top: 100%;
       left: 50%;
-      margin-top: 2px;
+      margin-top: 3px;
       margin-left: -14px;
       z-index: 1;
     }
@@ -267,8 +265,6 @@
 
     border-radius: 4px;
     border: 2px dashed #999;
-    // background-color: #333;
-    // color: #eee;
     font-weight: bold;
 
     cursor: pointer;
@@ -286,11 +282,11 @@
 .BlockScaffold--horizontal {
 
   & > .BlockScaffold__launcher--before {
-    position: absolute;
     top: 50%;
-    left: -18px;
+    left: 0;
+    bottom: auto;
+    right: auto;
     margin-top: -10px;
-    z-index: 1;
   }
 
   & > .BlockScaffold__launcher--after {
@@ -304,14 +300,7 @@
 }
 
 
-/*** Block-specific stylings ***/
-// NavigationLink
-.BlockScaffold--NavigationLink {
-  display: inline-block;
-
-  &.UiButton--cancel {
-    .UiButton {
-      @extend .UiButton--cancel;
-    }
-  }
+// !!! Dragbar position fixes for specific blocks (nested CmsSlotEditor mostly)
+.EsignConsentFace .CmsSlotEditor {
+  --cms-builder-header-bottom: 0;
 }

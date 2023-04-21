@@ -1,20 +1,21 @@
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import { UiInput, UiItem } from '@/packages/ui'
-import CssUnit from '../../../ui/components/CssEditor/values/unit.vue'
+import { UiItem } from '@/packages/ui'
+
+import CssInput from '@/packages/ui/components/CssEditor/CssInput.vue'
 
 import promptImportFont from '../CmsStoryBuilder/promptImportFont'
 
 const i18n = useI18n({
   en: {
     'CmsStoryFont.Defaults': 'Default fonts',
-    'CmsStoryFont.AvailableFonts': 'Available fonrts',
+    'CmsStoryFont.AvailableFonts': 'Available fonts',
     'CmsStoryFont.fontTitles': 'Titles',
     'CmsStoryFont.fontTexts': 'Texts',
-    'CmsStoryFont.fontSize': 'Size',
+    'CmsStoryFont.fontSize': 'Font size',
     'CmsStoryFont.ImportGoogleFont': 'Import Google font',
-    'CmsStoryFont.RemoveFont': 'Remove font?',
+    'CmsStoryFont.RemoveFont': 'Remove font',
 
   },
   es: {
@@ -24,7 +25,7 @@ const i18n = useI18n({
     'CmsStoryFont.fontTexts': 'Textos',
     'CmsStoryFont.fontSize': 'Tamaño',
     'CmsStoryFont.ImportGoogleFont': 'Importar de Google fonts',
-    'CmsStoryFont.RemoveFont': 'Eliminar esta fuente?',
+    'CmsStoryFont.RemoveFont': 'Eliminar',
   },
 })
 
@@ -57,20 +58,6 @@ function emitUpdate() {
   })
 }
 
-const availableFontsOptions = computed(() => {
-  return [
-    {
-      value: null,
-      text: 'Default',
-    },
-
-    ...fonts.value.map((font) => ({
-      value: font.fontFamily,
-      text: font.name,
-    })),
-  ]
-})
-
 async function importGoogleFont() {
   const googleFont = await promptImportFont()
   if (!googleFont) {
@@ -82,7 +69,8 @@ async function importGoogleFont() {
 }
 
 function deleteFontAt(index) {
-  if (!confirm(i18n.t('CmsStoryFont.RemoveFont'))) {
+  const fontName = fonts.value[index]?.name
+  if (!confirm(i18n.t('CmsStoryFont.RemoveFont') + ` '${fontName}'?`)) {
     return
   }
 
@@ -95,9 +83,9 @@ function deleteFontAt(index) {
   <div class="CmsStoryFont UiForm UiForm--wide">
     <fieldset class="CmsStoryFont__defaults">
       <legend>{{ i18n.t('CmsStoryFont.Defaults') }}</legend>
-      <UiInput
-        type="select-native"
-        :options="availableFontsOptions"
+
+      <CssInput
+        type="font-family"
         :label="i18n.t('CmsStoryFont.fontTitles')"
         :model-value="props.storyCssVariables['--ui-font-titles']"
         @update:model-value="emit('update:story-css-variables', {
@@ -106,9 +94,8 @@ function deleteFontAt(index) {
         })"
       />
 
-      <UiInput
-        type="select-native"
-        :options="availableFontsOptions"
+      <CssInput
+        type="font-family"
         :label="i18n.t('CmsStoryFont.fontTexts')"
         :model-value="props.storyCssVariables['--ui-font-texts']"
         @update:model-value="emit('update:story-css-variables', {
@@ -117,7 +104,8 @@ function deleteFontAt(index) {
         })"
       />
 
-      <CssUnit
+      <CssInput
+        type="length"
         :label="i18n.t('CmsStoryFont.fontSize')"
         :model-value="props.storyCssVariables['--ui-font-size']"
         @update:model-value="emit('update:story-css-variables', {

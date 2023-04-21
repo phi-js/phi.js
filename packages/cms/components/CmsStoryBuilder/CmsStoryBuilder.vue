@@ -23,8 +23,10 @@ import {
 
 import { useUndo } from '@/packages/ui/helpers'
 
-import { getPluginData } from '../../functions'
+import { getPluginData, useStorySettings } from '../../functions'
+
 const pluginData = getPluginData()
+const storySettings = useStorySettings()
 
 const props = defineProps({
   story: {
@@ -127,9 +129,9 @@ watch(
 provide('_cms_currentStory', innerStory)
 
 
-/* CSS Font management */
+/* CSS Editor settings */
+provide('_ui_CssEditor_uploadsEnpoint', storySettings?.uploads?.assets)
 provide('_ui_CssEditor_availableFonts', computed(() => innerStory.value.fonts))
-
 provide('_ui_CssEditor_createFont', async () => {
   const googleFont = await promptImportFont()
   if (!googleFont) {
@@ -188,6 +190,8 @@ provide('$_vm_functions', computed(() => {
 
 const isRunning = ref(false)
 
+const refHeader = ref()
+
 // CTRL+Space to toggle between editor and preview tabs
 function onKeyDown(event) {
   if (event.code == 'Space' && event.ctrlKey) {
@@ -195,12 +199,26 @@ function onKeyDown(event) {
   }
 }
 
+const storyBuilderStyle = ref({ '--cms-builder-header-bottom': '0px' })
+
+function onScroll() {
+  const rect = refHeader.value.getBoundingClientRect()
+  storyBuilderStyle.value['--cms-builder-header-bottom'] = `${rect.bottom}px`
+}
+
 onMounted(() => {
   document.addEventListener('keydown', onKeyDown)
+  document.addEventListener('scroll', onScroll)
+
+  setTimeout(() => {
+    const rect = refHeader.value.getBoundingClientRect()
+    storyBuilderStyle.value['--cms-builder-header-bottom'] = `${rect.bottom}px`
+  }, 80)
 })
 
 onUnmounted(() => {
   document.removeEventListener('keydown', onKeyDown)
+  document.removeEventListener('scroll', onScroll)
 })
 
 
@@ -274,8 +292,12 @@ function onTemplatePickerInput($event) {
   <div
     class="CmsStoryBuilder"
     :class="{'CmsStoryBuilder--empty': isEmpty}"
+    :style="storyBuilderStyle"
   >
-    <div class="CmsStoryBuilder__header">
+    <div
+      ref="refHeader"
+      class="CmsStoryBuilder__header"
+    >
       <div class="CmsStoryBuilder__headerStory">
         <slot name="header" />
 
@@ -350,6 +372,10 @@ function onTemplatePickerInput($event) {
           </template>
         </StoryPageManager>
 
+        <div
+          id="omg-testing"
+          style="flex:1"
+        />
 
         <div class="CmsStoryBuilder__controls">
           <UiIcon
@@ -417,6 +443,7 @@ function onTemplatePickerInput($event) {
         v-if="editingBlock"
         v-model:action-id="currentActionId"
         v-model:block="editingBlock.innerBlock.value"
+        class="CmsStoryBuilder__blockWindow"
         open
         @accept="editingBlock.updateBlock($event); closeBlockWindow()"
         @cancel="editingBlock?.cancel?.(); closeBlockWindow()"

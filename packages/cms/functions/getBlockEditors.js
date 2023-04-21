@@ -168,7 +168,7 @@ export default function getBlockEditors(block, CmsStoryBuidlerSettings = null) {
     'component': BlockCssEditor,
     'v-model': 'block',
 
-    'hasData': block.props?.style || block.props?.class?.length,
+    'hasData': (block.props?.style && typeof block.props.style == 'object' && Object.keys(block.props.style).length > 0) || block.props?.class?.length,
     'description': 'This block has CSS styles',
   })
 

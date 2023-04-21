@@ -26,7 +26,7 @@
 
   &__headerPage {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 4px;
     padding: 3px;
 
@@ -175,6 +175,12 @@
 
 // Mobile displays
 @media (max-width: 500px) {
+  // Move block to the bottom of headerPage
+  #omg-testing {
+    order: 1;
+    padding: 2px 0;
+  }
+
   // Hide resolution picker
   .UiResolutionPicker {
     display: none;

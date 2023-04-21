@@ -1,6 +1,6 @@
 <script setup>
 import { useI18n } from '@/packages/i18n'
-import CssColor from '../../../ui/components/CssEditor/values/color.vue'
+import CssInput from '@/packages/ui/components/CssEditor/CssInput.vue'
 
 const i18n = useI18n({
   en: {
@@ -48,17 +48,20 @@ function setCssVariable(variableName, variableValue) {
 
 <template>
   <div class="StoryColorPalette UiForm UiForm--wide">
-    <CssColor
+    <CssInput
+      type="color"
       :label="i18n.t('StoryColorPalette.Background')"
       :model-value="modelValue['--ui-color-background'] || defaultValues['--ui-color-background']"
       @update:model-value="setCssVariable('--ui-color-background', $event)"
     />
-    <CssColor
+    <CssInput
+      type="color"
       :label="i18n.t('StoryColorPalette.Foreground')"
       :model-value="modelValue['--ui-color-foreground'] || defaultValues['--ui-color-foreground']"
       @update:model-value="setCssVariable('--ui-color-foreground', $event)"
     />
-    <CssColor
+    <CssInput
+      type="color"
       :label="i18n.t('StoryColorPalette.Primary')"
       :model-value="modelValue['--ui-color-primary'] || defaultValues['--ui-color-primary']"
       @update:model-value="setCssVariable('--ui-color-primary', $event)"

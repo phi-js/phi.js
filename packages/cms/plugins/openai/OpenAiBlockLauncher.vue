@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 
-import { UiInput, UiButton } from '@/packages/ui'
+import { UiDetails, UiInput, UiButton } from '@/packages/ui'
 import { useApi } from '@/packages/api'
 import aiApi from './api.js'
 
@@ -9,11 +9,11 @@ import aiApi from './api.js'
 emits an input event
 containing an ARRAY of Phi blocks
 */
-const emit = defineEmits(['accept', 'cancel'])
+const emit = defineEmits(['input'])
 
 const api = useApi(aiApi)
 
-const apiKey = ref('')
+const apiKey = ref('please')
 const prompt = ref('')
 const temp = ref(0.7)
 
@@ -51,7 +51,7 @@ async function generateBlocks() {
       })
     }
 
-    emit('accept', finalBlock)
+    emit('input', finalBlock)
 
   } catch (err) {
     error.value = err?.message || err?.body?.props?.message || 'Error generating blocks. Click to retry'
@@ -61,58 +61,41 @@ async function generateBlocks() {
 </script>
 
 <template>
-  <form
-    class="OpenAiBlockLauncher"
-    @submit.prevent="generateBlocks"
+  <UiDetails
+    class="OpenAiBlockLauncher FinderItem FinderItem--group"
+    text="OpenAI"
+    group="UiItemFinder"
   >
-    <UiInput
-      v-model="apiKey"
-      type="text"
-      placeholder="OpenAI API Key"
-      required
-      @update:model-value="error = null"
-    />
-
-    <UiInput
-      v-model="prompt"
-      type="textarea"
-      placeholder="Write a content description here"
-      required
-      @update:model-value="error = null"
-    />
-
-    <footer class="OpenAiBlockLauncher__footer">
+    <div class="OpenAiBlockLauncher__contents">
+      <UiInput
+        v-model="prompt"
+        type="textarea"
+        placeholder="Write a content description here"
+        @update:model-value="error = null"
+      />
       <UiButton
-        type="submit"
+        :disabled="!prompt"
         :is-loading="isLoading"
         loading-label="Generating ..."
         label="Generate"
         :error="error"
+        @click="generateBlocks"
       />
-      <UiButton
-        class="UiButton--cancel"
-        type="button"
-        label="Cancel"
-        @click="emit('cancel')"
-      />
-    </footer>
-  </form>
+    </div>
+  </UiDetails>
 </template>
 
 <style lang="scss">
-form.OpenAiBlockLauncher { //clashing with D:\www\phi\frontend\cms-plugins\openai\OpenAiBlockLauncher.vue
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 8px;
+.OpenAiBlockLauncher {
+  &__contents {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+  }
 
   input[type=text] {
     width: 100%;
-  }
-
-  &__footer {
-    display: flex;
-    gap: 5px;
   }
 }
 </style>

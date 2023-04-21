@@ -59,9 +59,11 @@
 
 // Make sure all editor/builder components have a consistent font
 // i.e. do NOT inherit the default font
+.PageToolbar,
 .CmsStoryBuilder__header,
 .CmsStoryBuilder__sitemap,
 .BlockScaffold__toolbar,
+.CmsBlockPicker,
 .UiWindow,
 .tippy-content,
 .UiDialog__contents {

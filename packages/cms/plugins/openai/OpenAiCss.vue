@@ -5,8 +5,11 @@ import { useApi } from '@/packages/api'
 import openAiApi from './api.js'
 
 const props = defineProps({
+  /*
+  A CSS STRING (with selectors).  i.e. content that is valid inside <style>
+  */
   existing: {
-    type: Object,
+    type: String,
     required: false,
     default: null,
   },
@@ -25,7 +28,7 @@ async function generateCss() {
   isLoading.value = true
   try {
     const strPrompt = props.existing
-      ? `given the following styles: ${JSON.stringify(props.existing)}\n${prompt.value}`
+      ? `given the following styles: ${props.existing}\n${prompt.value}`
       : prompt.value
 
     const response = await api.generateCss({
@@ -47,11 +50,11 @@ async function generateCss() {
 </script>
 
 <template>
-  <div class="OpenAiText">
+  <div class="OpenAiCss">
     <UiInput
       v-model="prompt"
       type="textarea"
-      label="Prompt"
+      label="Add / change styles with ChatGPT"
       @update:model-value="error = ''"
     />
 

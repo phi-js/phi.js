@@ -11,6 +11,7 @@ const i18n = useI18n()
 const emit = defineEmits(['input'])
 
 const stagingComponent = shallowRef()
+const stagingComponentProps = shallowRef()
 
 const providedTemplates = ref([])
 
@@ -25,6 +26,7 @@ const availableTemplates = computed(() => [
 function selectTemplate(template) {
   if (template.component) {
     stagingComponent.value = template.component
+    stagingComponentProps.value = template.props
     return
   }
 
@@ -70,15 +72,15 @@ function onStagingAccept($event) {
 
     <UiDialog
       v-if="stagingComponent"
-      v-slot="{ close}"
+      v-slot="{ close }"
       :open="true"
-      :close-button="false"
       class="StoryTemplatePicker__dialog"
-      @close="stagingComponent = null"
+      @cancel="stagingComponent = null"
     >
       <Component
         :is="stagingComponent"
-        @accept="onStagingAccept($event) && close()"
+        v-bind="stagingComponentProps"
+        @input="onStagingAccept($event) && close()"
         @cancel="close()"
       />
     </UiDialog>
@@ -91,7 +93,7 @@ function onStagingAccept($event) {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  padding: 12vh 8px;
+  padding: 4vw 12px;
 
   &__list {
     display: flex;

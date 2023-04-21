@@ -79,7 +79,7 @@ function onSlotUpdate() {
   }
 
   &__body {
-    width: 800px;
+    // width: 800px;
     margin: auto;
     background: #fff;
     color: #000;

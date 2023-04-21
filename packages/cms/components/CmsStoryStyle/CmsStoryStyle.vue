@@ -4,11 +4,12 @@ import { ref, watch, computed } from 'vue'
 import { useI18n } from '@/packages/i18n'
 import { UiTabs, UiTab } from '@/packages/ui'
 import CmsThemePicker from '../CmsThemePicker/CmsThemePicker.vue'
-import CssClassManager from '../CssClassManager/CssClassManager.vue'
+
 import Spacing from '../../../ui/components/CssEditor/properties/Spacing.vue'
 
 import CmsStoryFont from './CmsStoryFont.vue'
 import CmsStoryColors from './CmsStoryColors.vue'
+import CmsStoryClasses from './CmsStoryClasses.vue'
 
 const i18n = useI18n({
   en: {
@@ -124,7 +125,7 @@ const pseudoMargin = computed({
     </UiTab>
 
     <UiTab :text="i18n.t('CmsStoryStyle.css')">
-      <CssClassManager
+      <CmsStoryClasses
         v-model="innerStory.stylesheets"
         class="CmsStoryStyle__classes"
         @update:model-value="emitUpdate"

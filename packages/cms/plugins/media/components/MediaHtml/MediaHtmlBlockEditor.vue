@@ -553,17 +553,18 @@ const targetOptions = [
 }
 
 .MediaHtmlBlockEditor {
+  .tiptap-editor-contents {
+    padding: 2px 4px;
+  }
+
   &__languageTabs {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
 
-    background-color: #333;
-    color: #eee;
     font-size: 10pt;
 
     order: 2;
-    padding: 4px;
     gap: 4px;
   }
 

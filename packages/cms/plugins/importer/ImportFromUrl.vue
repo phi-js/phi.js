@@ -1,15 +1,15 @@
 <script setup>
 import { ref } from 'vue'
 
-import { UiInput, UiButton } from '@/packages/ui'
+import { UiDetails, UiInput, UiButton } from '@/packages/ui'
 import { useApi } from '@/packages/api'
 import importApi from './api.js'
 
 /*
-emits an ACCEPT event
-containing a single PHI BLOCK: A LayoutGroup block with the imported blocks
+emits an input event
+containing an PHI BLOCK: A LayoutGroup block with the migrated typeform fields
 */
-const emit = defineEmits(['accept', 'cancel'])
+const emit = defineEmits(['input'])
 
 const api = useApi(importApi)
 
@@ -31,8 +31,9 @@ async function generateBlocks() {
       throw null
     }
 
-    emit('accept', {
+    emit('input', {
       component: 'LayoutGroup',
+      // title: 'Imported',
       title: sourceUrl.value,
       slot: response,
 
@@ -47,49 +48,43 @@ async function generateBlocks() {
 </script>
 
 <template>
-  <form
-    class="ImportFromUrl"
-    @submit.prevent="generateBlocks"
+  <UiDetails
+    class="ImportFromUrl FinderItem FinderItem--group"
+    text="Import"
+    group="UiItemFinder"
   >
-    <UiInput
-      v-model="sourceUrl"
-      type="text"
-      placeholder="URL (TypeForm, Google forms, etc.)"
-      required
-      @update:model-value="error = null"
-    />
-    <footer class="ImportFromUrl__footer">
+    <form
+      class="ImportFromUrl__contents"
+      @submit.prevent="generateBlocks"
+    >
+      <UiInput
+        v-model="sourceUrl"
+        type="text"
+        placeholder="URL (TypeForm, Google forms, etc.)"
+        @update:model-value="error = null"
+      />
       <UiButton
-        type="sumit"
+        type="submit"
         :is-loading="isLoading"
-        loading-label="Importing ..."
-        label="Import"
+        loading-label="Loading ..."
+        label="Load"
         :error="error"
       />
-      <UiButton
-        class="UiButton--cancel"
-        type="button"
-        label="Cancel"
-        @click="emit('cancel')"
-      />
-    </footer>
-  </form>
+    </form>
+  </UiDetails>
 </template>
 
 <style lang="scss">
 .ImportFromUrl {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 8px;
+  &__contents {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+  }
 
   input[type=text] {
     width: 100%;
-  }
-
-  &__footer {
-    display: flex;
-    gap: 5px;
   }
 }
 </style>

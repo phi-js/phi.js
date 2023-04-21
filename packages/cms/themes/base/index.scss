@@ -3,13 +3,15 @@
 
 @import './classes/outset.scss';
 
-@import './components/BlockCssStyle.scss';
+@import './components/CssEditor.scss';
+
+@import './components/BlockCssEditor.scss';
 @import './components/BlockScaffold.scss';
 @import './components/BlockValidationEditor.scss';
 @import './components/CmsBlock.scss';
 @import './components/CmsStoryBuilder.scss';
 @import './components/CmsStoryFont.scss';
-@import './components/CssClassManager.scss';
+@import './components/CmsStoryClasses.scss';
 @import './components/FetchEditor.scss';
 @import './components/LayoutPage.scss';
 @import './components/ListenersEditor.scss';
