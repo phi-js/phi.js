@@ -121,16 +121,20 @@ const pickerFace = computed(() => {
 const showInputField = computed(() => innerValue.value.units !== null)
 
 function onFieldInput() {
-  if (parseFloat(innerValue.value.value)) {
-    emitUpdate()
+  if (isNaN(parseFloat(innerValue.value.value))) {
+    return
   }
-}
 
+  emitUpdate()
+}
 </script>
 
 <template>
-  <UiInput class="CssUnit">
-    <div class="CssUnit__face UiInput__element">
+  <UiInput class="CssTypeLength">
+    <div
+      class="CssTypeLength__face UiInput__element"
+      :title="$attrs.title"
+    >
       <input
         v-if="showInputField"
         ref="refInput"
@@ -161,7 +165,7 @@ function onFieldInput() {
 </template>
 
 <style lang="scss">
-.CssUnit {
+.CssTypeLength {
   &__face {
     display: inline-flex;
     flex-wrap: nowrap;

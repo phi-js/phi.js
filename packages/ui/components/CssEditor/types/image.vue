@@ -1,9 +1,11 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { inject, ref, watch } from 'vue'
 import { UiInput, UiDialog } from '@/packages/ui'
 import bytes from '../../../filters/bytes'
 
 import AiImageUrl from '../../../../cms/plugins/openai/AiImageUrl.vue'
+
+const uploadsEnpoint = inject('_ui_CssEditor_uploadsEnpoint', null)
 
 /*
 A css url property value (string)
@@ -69,57 +71,58 @@ function onImgLoad(evt) {
 </script>
 
 <template>
-  <UiInput class="CssUrl">
+  <UiInput class="CssTypeImage">
+    <div class="CssTypeImage__input">
+      <UiInput
+        v-model="innerValue"
+        type="url"
+        :endpoint="uploadsEnpoint"
+        @update:model-value="emitUpdate()"
+      />
+    </div>
+
     <div
       v-if="innerValue"
-      class="CssUrl__preview"
+      class="CssTypeImage__preview"
     >
       <a
         :href="innerValue"
         target="_blank"
-        class="CssUrl__imageLink"
+        class="CssTypeImage__imageLink"
         title="Open image in new tab"
       >
         <img
-          class="CssUrl__image"
+          class="CssTypeImage__image"
           :src="innerValue"
           :alt="innerValue"
           @load="onImgLoad"
         >
       </a>
 
-      <div class="CssUrl__info">
-        <div class="CssUrl__info__dimensions">
+      <div class="CssTypeImage__info">
+        <div class="CssTypeImage__info__dimensions">
           {{ imgInfo.width }}x{{ imgInfo.height }}
         </div>
         <div
           v-if="imgInfo.fileSize"
-          class="CssUrl__info__size"
+          class="CssTypeImage__info__size"
         >
           {{ bytes(imgInfo.fileSize) }} ??
         </div>
       </div>
     </div>
 
-    <div class="CssUrl__input">
-      <UiInput
-        v-model="innerValue"
-        type="url"
-        :endpoint="$attrs.endpoint"
-        @update:model-value="emitUpdate()"
-      />
-    </div>
 
     <UiDialog>
       <template #trigger>
         <UiInput
-          class="CssUrl__dalleButton"
+          class="CssTypeImage__dalleButton"
           type="button"
           label="Generate with DALLE-2"
         />
       </template>
       <template #default="{ close }">
-        <div class="CssUrl__dalleDialog">
+        <div class="CssTypeImage__dalleDialog">
           <AiImageUrl
             v-model="innerValue"
             @update:model-value="emitUpdate(); close();"
@@ -131,7 +134,7 @@ function onImgLoad(evt) {
 </template>
 
 <style lang="scss">
-.CssUrl {
+.CssTypeImage {
   &__dalleButton {
     width: 100%;
   }
@@ -145,6 +148,10 @@ function onImgLoad(evt) {
     flex-wrap: nowrap;
     align-items: center;
     gap: 5px;
+
+    .UiInput {
+      flex: 1;
+    }
   }
 
   &__imageLink {
@@ -153,7 +160,8 @@ function onImgLoad(evt) {
   }
 
   &__image {
-    max-width: 100%;
+    max-width: 100px;
+    max-height: 100px;
   }
 
   &__info {

@@ -2,7 +2,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 
-import CssUnit from '../values/unit.vue'
+import CssUnit from '../types/length.vue'
 
 const props = defineProps({
   /*
@@ -122,10 +122,20 @@ function parseString(str, emptyValue = '') {
   }
 
   const parts = str.split(' ')
+
+  if (parts.length == 1) {
+    return {
+      top: str,
+      right: str,
+      bottom: str,
+      left: str,
+    }
+  }
+
   retval.top = parts?.[0] || emptyValue
   retval.right = parts?.[1] || emptyValue
   retval.bottom = parts?.[2] || retval.top
-  retval.left = parts?.[3] || retval.bottom
+  retval.left = parts?.[3] || retval.right
 
   return retval
 }

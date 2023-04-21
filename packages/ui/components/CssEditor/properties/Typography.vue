@@ -101,7 +101,7 @@ async function onSelectFont(newValue) {
   <div class="CssTypography">
     <UiInput
       v-if="fontOptions.length"
-      :model-value="css.fontFamily"
+      :model-value="css['font-family']"
       type="select-native"
       :options="fontOptions"
       label="Font family"
@@ -109,23 +109,23 @@ async function onSelectFont(newValue) {
     />
     <UiInput
       v-else
-      v-model="css.fontFamily"
+      v-model="css['font-family']"
       type="text"
       label="Font family"
       @update:model-value="emitUpdate"
     />
     <CssUnit
-      v-model="css.fontSize"
+      v-model="css['font-size']"
       label="Font size"
       @update:model-value="emitUpdate"
     />
     <CssColor
-      v-model="css.color"
+      v-model="css['color']"
       label="Color"
       @update:model-value="emitUpdate"
     />
     <!-- <UiInput
-      v-model="css.textShadow"
+      v-model="css['textShadow']"
       type="textarea"
       label="Text shadow"
       @update:model-value="emitUpdate"

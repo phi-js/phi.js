@@ -1,30 +1,16 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { useI18n } from '@/packages/i18n'
 import { UiInput } from '@/packages/ui'
-
-const i18n = useI18n({
-  en: {
-    'CssAlignItems.scroll': 'Scroll with page',
-    'CssAlignItems.fixed': 'Remain fixed',
-    'CssAlignItems.local': 'Scroll with element',
-  },
-  es: {
-    'CssAlignItems.scroll': 'Desplazar con la página',
-    'CssAlignItems.fixed': 'Permanecer fijo',
-    'CssAlignItems.local': 'Desplazar con elemento',
-  },
-})
 
 const props = defineProps({
   /*
-  String. A background-attachment value
-  e.g:. "scroll", "fixed", "local"
+  String. A align-items value
+  e.g:. "flex-start", "center", "flex-end"
   */
   modelValue: {
     type: String,
     required: false,
-    default: 'scroll',
+    default: 'flex-start',
   },
 })
 
@@ -45,10 +31,9 @@ function emitUpdate() {
 <template>
   <UiInput
     v-model="innerValue"
-    type="select-native"
-    class="CssAlignItems"
+    type="select-buttons"
+    class="CssTypeAlignItems"
     :options="[
-      { value: null, text: 'default' },
       { value: 'flex-start', icon: 'mdi:align-vertical-top', text: 'flex-start' },
       { value: 'center', icon: 'mdi:align-vertical-center', text: 'center' },
       { value: 'flex-end', icon: 'mdi:align-vertical-bottom', text: 'flex-end' },

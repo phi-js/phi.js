@@ -46,7 +46,7 @@ function emitUpdate() {
   <UiInput
     v-model="innerValue"
     class="CssBackgroundAttachment"
-    type="select-native"
+    type="select-buttons"
     :options="[
       { value: 'scroll', text: i18n.t('CssBackgroundAttachment.scroll') },
       { value: 'fixed', text: i18n.t('CssBackgroundAttachment.fixed') },

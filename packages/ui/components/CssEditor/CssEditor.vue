@@ -1,176 +1,157 @@
 <script setup>
-import { ref, watch } from 'vue'
-import { useI18n } from '@/packages/i18n'
-import UiDetails from '../UiDetails/UiDetails.vue'
-import UiInput from '../UiInput/UiInput.vue'
-import Background from './properties/Background.vue'
-import Spacing from './properties/Spacing.vue'
-import Typography from './properties/Typography.vue'
-import CssDisplay from './properties/CssDisplay.vue'
+import { computed, ref, watch } from 'vue'
 
-const i18n = useI18n({
-  en: {
-    'CssEditor.Spacing': 'Spacing',
-    'CssEditor.Background': 'Background',
-    'CssEditor.Display': 'Display',
-    'CssEditor.Typography': 'Typography',
-    'CssEditor.Source': 'CSS',
-  },
-  es: {
-    'CssEditor.Spacing': 'Espaciado',
-    'CssEditor.Background': 'Fondo',
-    'CssEditor.Display': 'Visualización',
-    'CssEditor.Typography': 'Tipografía',
-    'CssEditor.Source': 'CSS',
-  },
-})
+import { UiInput, UiIcon, UiDialog } from '../'
+import { cssStringToObject, cssObjectToString } from './helpers.js'
+import CssDeclaration from './CssDeclaration.vue'
+
+import OpenAiCss from '@/packages/cms/plugins/openai/OpenAiCss.vue'
 
 const props = defineProps({
   /*
-  Object with CSS properties:
-  * Existing property names in camelCase format
-  will be converted to dash-case (valid CSS property name)
-  backgroundImage --> background-image
+  A String with CSS:
 
-  {
-    "font-family": "MyFontWhatever, sans-serif",
-    "color": "#fff",
-    "textShadow": "1px 1px 1px #000",
-    "backgroundImage": "url(....)",  --> will be converted to "background-image"
-    "background-attachment": "fixed",
-    ... any CSS property name
+  "
+  .someClass {
+    background: red !important;
   }
+  .someClass > h1 { color: red; }
+
+  // !!! Not supported yet: media queries
+  @media only screen and (max-width: 600px) {
+    body {
+      background-color: lightblue;
+    }
+  }
+  "
   */
   modelValue: {
-    type: Object,
+    type: String,
     required: false,
-    default: () => ({}),
+    default: null,
   },
 })
 
 const emit = defineEmits(['update:modelValue'])
 
-const css = ref({})
+const innerObject = ref()
+const availableSelectors = computed(() => Object.keys(innerObject.value))
+const selectedSelector = ref()
+const isSourceOpen = ref(false)
 
 watch(
   () => props.modelValue,
-  () => css.value = sanitizeCssObject(props.modelValue),
+  (newValue) => {
+    innerObject.value = cssStringToObject(newValue)
+    if (!selectedSelector.value) {
+      selectedSelector.value = Object.keys(innerObject.value)[0]
+    }
+  },
   { immediate: true },
 )
 
-function sanitizeCssObject(cssObj) {
-  const sanitizedObj = {}
-
-  if (!cssObj || typeof cssObj !== 'object') {
-    return sanitizedObj
-  }
-  for (const [prop, value] of Object.entries(cssObj)) {
-    const sanitizedProp = prop.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`)
-    sanitizedObj[sanitizedProp] = value
-  }
-  return sanitizedObj
+function emitUpdate() {
+  emit('update:modelValue', cssObjectToString(innerObject.value))
 }
+
+function onOpenAiInput($event) {
+  emit('update:modelValue', $event)
+}
+
 </script>
 
 <template>
   <div class="CssEditor">
-    <UiDetails
-      :text="i18n.t('CssEditor.Spacing')"
-      class="CssEditor__spacing"
-    >
-      <Spacing
-        v-model="css"
-        @update:model-value="emit('update:modelValue', $event)"
-      />
-    </UiDetails>
+    <div class="CssEditor__header">
+      <slot name="header" />
+      <div class="CssEditor__spacer" />
 
-    <UiDetails
-      :text="i18n.t('CssEditor.Background')"
-      class="CssEditor__background"
-    >
-      <Background
-        v-model="css"
-        :endpoint="$attrs.endpoint"
-        @update:model-value="emit('update:modelValue', $event)"
-      />
-    </UiDetails>
-
-    <UiDetails
-      :text="i18n.t('CssEditor.Display')"
-      class="CssEditor__display"
-    >
-      <CssDisplay
-        v-model="css"
-        @update:model-value="emit('update:modelValue', $event)"
-      />
-    </UiDetails>
-
-    <UiDetails
-      :text="i18n.t('CssEditor.Typography')"
-      class="CssEditor__typography"
-    >
-      <Typography
-        v-model="css"
-        @update:model-value="emit('update:modelValue', $event)"
-      />
-    </UiDetails>
-
-    <!-- Special: Source -->
-    <UiDetails
-      :text="i18n.t('CssEditor.Source')"
-      class="CssEditor__source"
-    >
       <UiInput
-        v-model="css"
-        type="json"
-        @update:model-value="emit('update:modelValue', $event)"
+        v-if="availableSelectors.length > 1"
+        v-model="selectedSelector"
+        :disabled="isSourceOpen"
+        class="CssEditor__selectorPicker"
+        type="select-native"
+        :options="availableSelectors"
       />
-    </UiDetails>
+
+      <UiDialog>
+        <template #trigger>
+          <UiIcon
+            title="Edit styles with ChatGPT"
+            class="CssEditor__button"
+            src="mdi:head-snowflake"
+          />
+        </template>
+        <template #default="{ close }">
+          <OpenAiCss
+            :existing="props.modelValue"
+            @input="$event => { onOpenAiInput($event); close(); }"
+          />
+        </template>
+      </UiDialog>
+
+      <UiIcon
+        class="CssEditor__button"
+        :class="{'CssEditor__button--active': isSourceOpen}"
+        src="mdi:code-json"
+        @click="isSourceOpen = !isSourceOpen"
+      />
+    </div>
+
+    <div class="CssEditor__body">
+      <UiInput
+        v-if="isSourceOpen"
+        :model-value="props.modelValue"
+        type="code"
+        lang="css"
+        @update:model-value="$event => emit('update:modelValue', $event)"
+      />
+      <CssDeclaration
+        v-else-if="selectedSelector && innerObject[selectedSelector]"
+        v-model="innerObject[selectedSelector]"
+        @update:model-value="emitUpdate"
+      />
+    </div>
   </div>
 </template>
 
 <style lang="scss">
 .CssEditor {
-  &__background,
-  &__display,
-  &__typography {
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
 
-    .UiInput {
-      width: 100%;
-      margin: 3px 0;
-      padding: 3px 0;
-      border-bottom: 1px solid var(--ui-color-hover);
+  &__spacer {
+    flex: 1;
+  }
 
-      display: flex;
-      flex-wrap: wrap;
+  &__selectorPicker {
+    select {
+      max-width: 180px;
+    }
+  }
 
-      &__label {
-        width: 90px;
-        overflow: hidden;
-        text-overflow: ellipsis;
+  &__button {
+    width: 38px;
+    height: 38px;
+    border-radius: 4px;
+    margin: 3px;
 
-        padding: 8px 0;
-        font-size: 11px;
-        font-weight: normal;
-      }
-
-      &__body {
-        flex: 1;
-      }
-
-      &__element {
-        width: 100%;
-      }
+    cursor: pointer;
+    &:hover {
+      background-color: var(--ui-color-hover);
     }
 
-    .UiSelectButtons {
-      flex-wrap: wrap;
+    &--active {
+      color: var(--ui-color-primary);
     }
+  }
 
-    .UiSelectButtons__button {
-      // flex: 1;
-      width: 130px;
-    }
+  .OpenAiCss {
+    margin: 6px;
   }
 }
 </style>

@@ -46,7 +46,7 @@ function emitUpdate() {
   <UiInput
     v-model="innerValue"
     class="CssBackgroundSize"
-    type="select-native"
+    type="select-buttons"
     :options="[
       { value: 'auto', text: i18n.t('CssBackgroundSize.auto') },
       { value: 'cover', text: i18n.t('CssBackgroundSize.cover') },
