@@ -325,7 +325,16 @@ const CmsBlock = {
 
     /* Block transition classnames */
     const transitionClassNames = computed(() => {
-      const blockTransitions = props.block?.transitions || {}
+      let blockTransitions = props.block?.transitions
+
+      if (props.block.component === 'LayoutPage' && !blockTransitions) {
+        blockTransitions = injectedStory?.sanitizedStory?.value?.navigation?.defaultTransition?.transitions
+      }
+
+      if (!blockTransitions) {
+        blockTransitions = {}
+      }
+
       const objTransitions = {
         'navigation-forward-enter': blockTransitions['navigation-forward-enter'] || blockTransitions['navigation-enter'],
         'navigation-forward-leave': blockTransitions['navigation-forward-leave'] || blockTransitions['navigation-leave'],

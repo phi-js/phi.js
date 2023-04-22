@@ -75,3 +75,25 @@ const innerValue = computed(() => ({
     />
   </div>
 </template>
+
+<style lang="scss">
+.MediaLink {
+  --ui-item-padding: 6px 18px;
+  border-radius: 4px;
+  font-weight: bold;
+  color: inherit;
+
+  cursor: pointer;
+  &:hover {
+    background-color: var(--ui-color-hover, rgba(255,255,255, 0.08));
+  }
+
+  // move icon to the right
+  .UiItem {
+    &__icon {
+      color: var(--ui-color-primary);
+      order: 1;
+    }
+  }
+}
+</style>

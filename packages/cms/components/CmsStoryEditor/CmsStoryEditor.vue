@@ -112,6 +112,29 @@ const isFooterEnabled = computed({
     emitUpdate()
   },
 })
+
+const transitionClassNames = computed(() => {
+  const blockTransitions = currentPage.value?.transitions
+    || innerStory.value?.navigation?.defaultTransition?.transitions
+    || {}
+
+  const objTransitions = {
+    'navigation-forward-enter': blockTransitions['navigation-forward-enter'] || blockTransitions['navigation-enter'],
+    'navigation-forward-leave': blockTransitions['navigation-forward-leave'] || blockTransitions['navigation-leave'],
+    'navigation-back-enter': blockTransitions['navigation-back-enter'] || blockTransitions['navigation-enter'],
+    'navigation-back-leave': blockTransitions['navigation-back-leave'] || blockTransitions['navigation-leave'],
+    'show': blockTransitions.show,
+    'hide': blockTransitions.hide,
+  }
+
+  const retval = []
+  for (const [key, value] of Object.entries(objTransitions)) {
+    if (value) {
+      retval.push(`_phi_transition_${key}_${value}`)
+    }
+  }
+  return retval
+})
 </script>
 
 <template>
@@ -124,17 +147,17 @@ const isFooterEnabled = computed({
   >
     <Transition
       name="phi-navigation"
-      :enter-from-class="`phi-navigation-enter-from phi-navigation-${$nav.transitionDirection}-enter-from`"
-      :enter-active-class="`phi-navigation-enter-active phi-navigation-${$nav.transitionDirection}-enter-active`"
-      :enter-to-class="`phi-navigation-enter-to phi-navigation-${$nav.transitionDirection}-enter-to`"
-      :leave-from-class="`phi-navigation-leave-from phi-navigation-${$nav.transitionDirection}-leave-from`"
-      :leave-active-class="`phi-navigation-leave-active phi-navigation-${$nav.transitionDirection}-leave-active`"
-      :leave-to-class="`phi-navigation-leave-to phi-navigation-${$nav.transitionDirection}-leave-to`"
+      :enter-from-class="`phi-navigation-enter-from phi-navigation-${$nav.transitionDirection.value}-enter-from`"
+      :enter-active-class="`phi-navigation-enter-active phi-navigation-${$nav.transitionDirection.value}-enter-active`"
+      :enter-to-class="`phi-navigation-enter-to phi-navigation-${$nav.transitionDirection.value}-enter-to`"
+      :leave-from-class="`phi-navigation-leave-from phi-navigation-${$nav.transitionDirection.value}-leave-from`"
+      :leave-active-class="`phi-navigation-leave-active phi-navigation-${$nav.transitionDirection.value}-leave-active`"
+      :leave-to-class="`phi-navigation-leave-to phi-navigation-${$nav.transitionDirection.value}-leave-to`"
     >
       <div
         :key="currentPage.id"
         class="CmsStory__page LayoutPage"
-        :class="currentPage?.props?.class"
+        :class="[currentPage?.props?.class, ...transitionClassNames]"
         :style="currentPage?.props?.style"
       >
         <!-- Page header -->

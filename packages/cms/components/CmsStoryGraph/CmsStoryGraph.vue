@@ -12,12 +12,14 @@ const i18n = useI18n({
     'CmsStoryGraph.Visibility': 'Visibility',
     'CmsStoryGraph.CreatePathTo': 'Create path to ...',
     'CmsStoryGraph.CreatePage': 'Create page',
+    'CmsStoryGraph.DefaultTransition': 'Default transition',
   },
   es: {
     'CmsStoryGraph.OutgoingLinks': 'Rutas salientes',
     'CmsStoryGraph.Visibility': 'Visibilidad',
     'CmsStoryGraph.CreatePathTo': 'Crear ruta a ...',
     'CmsStoryGraph.CreatePage': 'Crear página',
+    'CmsStoryGraph.DefaultTransition': 'Transición',
   },
 })
 
@@ -224,6 +226,67 @@ function updatePathLabel(path, label) {
   existing.label = label
   emitUpdate()
 }
+
+
+const availableTransitionTemplates = [
+  {
+    id: 'none',
+    name: 'None',
+  },
+
+  {
+    id: 'nav-fade-horizontal',
+    name: 'Horizontal slide',
+    transitions: {
+      'navigation-forward-enter': 'fadeInRight',
+      'navigation-forward-leave': 'fadeOutLeft',
+      'navigation-back-enter': 'fadeInLeft',
+      'navigation-back-leave': 'fadeOutRight',
+    },
+  },
+  {
+    id: 'nav-bounce-horizontal',
+    name: 'Horizontal bounce',
+    transitions: {
+      'navigation-forward-enter': 'bounceInRight',
+      'navigation-forward-leave': 'bounceOutLeft',
+      'navigation-back-enter': 'bounceInLeft',
+      'navigation-back-leave': 'bounceOutRight',
+    },
+  },
+  {
+    id: 'nav-fade-vertical',
+    name: 'Vertical slide',
+    transitions: {
+      'navigation-forward-enter': 'fadeInBottom',
+      'navigation-forward-leave': 'fadeOutTop',
+      'navigation-back-enter': 'fadeInTop',
+      'navigation-back-leave': 'fadeOutBottom',
+    },
+  },
+]
+
+const defaultTransition = computed({
+  get() {
+    return props.story.navigation?.defaultTransition?.id || 'none'
+  },
+  set(transitionId) {
+    const storyNavigation = props.story.navigation && typeof props.story.navigation === 'object'
+      ? props.story.navigation
+      : {}
+
+    if (transitionId === 'none') {
+      storyNavigation.defaultTransition = null
+    } else {
+      storyNavigation.defaultTransition = availableTransitionTemplates.find((t) => t.id == transitionId)
+    }
+
+    emit('update:story', {
+      ...props.story,
+      navigation: storyNavigation,
+    })
+  },
+})
 </script>
 
 <template>
@@ -262,6 +325,16 @@ function updatePathLabel(path, label) {
     </div>
 
     <div class="CmsStoryGraph__page">
+      <UiInput
+        v-model="defaultTransition"
+        class="CmsStoryGraph__defaultTransition"
+        :label="i18n.t('CmsStoryGraph.DefaultTransition')"
+        type="select-native"
+        :options="availableTransitionTemplates"
+        option-value="$.id"
+        option-text="$.name"
+      />
+
       <UiItem
         class="CmsStoryGraph__headerItem"
         icon="mdi:file"
@@ -408,7 +481,9 @@ function updatePathLabel(path, label) {
     }
   }
 
-
+  &__defaultTransition {
+    margin-bottom: 1em;
+  }
 
 
   &__headerItem,

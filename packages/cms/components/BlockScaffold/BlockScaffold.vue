@@ -13,11 +13,15 @@ const i18n = useI18n({
     'BlockScaffold.Delete': 'Delete',
     'BlockScaffold.InsertBlockBefore': 'Insert block before',
     'BlockScaffold.InsertBlockAfter': 'Insert block after',
+    'BlockScaffold.MoveUp': 'Move up',
+    'BlockScaffold.MoveDown': 'Move down',
   },
   es: {
     'BlockScaffold.Delete': 'Eliminar',
     'BlockScaffold.InsertBlockBefore': 'Insertar bloque antes',
     'BlockScaffold.InsertBlockAfter': 'Insertar bloque después',
+    'BlockScaffold.MoveUp': 'Move hacia arriba',
+    'BlockScaffold.MoveDown': 'Move hacia abajo',
   },
 })
 
@@ -40,7 +44,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['select', 'delete', 'open-editor', 'insert-sibling'])
+const emit = defineEmits(['select', 'delete', 'open-editor', 'insert-sibling', 'move-up', 'move-down'])
 
 const definition = getBlockDefinition(props.block)
 const availableActions = computed(() => getBlockEditors(props.block, { allowSource: true }).actions)
@@ -130,7 +134,7 @@ onBeforeUnmount(() => {
     ]"
     tabindex="0"
     :style="stylesInChild"
-    @click="emitSelect"
+    @click.stop.prevent="emitSelect"
     @focus="emitSelect"
   >
     <div
@@ -144,8 +148,8 @@ onBeforeUnmount(() => {
         <div class="BlockScaffold__toolbarScroll">
           <UiItem
             class="BlockScaffold__titleItem"
-            :icon="definition.icon"
-            :text="props.block.title || definition.title || props.block.component"
+            :icon="definition?.icon"
+            :text="props.block.title || definition?.title || props.block.component"
           />
           <!-- Custom block toolbar -->
           <slot name="toolbar" />
@@ -156,7 +160,7 @@ onBeforeUnmount(() => {
             :key="action.id"
             :src="action.icon"
             :title="action.description"
-            :class="`BlockScaffold__shortcut BlockScaffold__action--${action.id}`"
+            :class="`BlockScaffold__button BlockScaffold__button--shortcut BlockScaffold__action--${action.id}`"
             @click.stop="emit('open-editor', action.id)"
           />
         </div>
@@ -165,7 +169,7 @@ onBeforeUnmount(() => {
         <UiDropdown>
           <template #trigger>
             <UiIcon
-              class="BlockScaffold__menuBtn"
+              class="BlockScaffold__button"
               src="mdi:dots-vertical"
             />
           </template>
@@ -195,6 +199,23 @@ onBeforeUnmount(() => {
             </div>
           </template>
         </UiDropdown>
+
+
+        <!-- Mode UP/DOWN buttons -->
+        <UiIcon
+          class="BlockScaffold__button BlockScaffold__button--move-up"
+          src="mdi:arrow-up-thick"
+          style="margin-left:auto"
+          :title="i18n.t('BlockScaffold.MoveUp')"
+          @click="emit('move-up')"
+        />
+
+        <UiIcon
+          class="BlockScaffold__button  BlockScaffold__button--move-down"
+          src="mdi:arrow-down-thick"
+          :title="i18n.t('BlockScaffold.MoveDown')"
+          @click="emit('move-down')"
+        />
       </div>
     </div>
 
@@ -203,24 +224,64 @@ onBeforeUnmount(() => {
       class="BlockScaffold__dragbar-wrap"
     >
       <div class="BlockScaffold__dragbar">
-        <UiItem
-          class="BlockScaffold__dragHandle color-scheme-dark"
-          icon="mdi:drag"
-          :text="props.block.title || definition?.title || props.block.component"
-        >
-          <template #actions>
-            <UiIcon
-              class="BlockScaffold__settingsIcon"
-              src="mdi:cog"
-              @click="emit('open-editor')"
-            />
-          </template>
-        </UiItem>
+        <div class="BlockScaffold__dragItem color-scheme-dark">
+          <UiItem
+            class="BlockScaffold__dragHandle"
+            icon="mdi:drag"
+            :text="props.block.title || definition?.title || props.block.component"
+          />
+
+          <!-- shortcut icons -->
+          <UiIcon
+            v-for="action in shortcuts"
+            :key="action.id"
+            :src="action.icon"
+            :title="action.description"
+            :class="`BlockScaffold__button BlockScaffold__button--shortcut BlockScaffold__action--${action.id}`"
+            @click.stop="emit('open-editor', action.id)"
+          />
+
+          <!-- Available actions dropdown -->
+          <UiDropdown>
+            <template #trigger>
+              <UiIcon
+                class="BlockScaffold__button"
+                src="mdi:dots-vertical"
+              />
+            </template>
+            <template #default="{close}">
+              <div class="BlockScaffold__actionList color-scheme-dark">
+                <UiItem
+                  v-for="action in availableActions"
+                  :key="action.id"
+                  :icon="action.icon"
+                  :text="action.title"
+                  :class="`BlockScaffold__action BlockScaffold__action--${action.id}`"
+                  @click.stop="emit('open-editor', action.id); close();"
+                />
+
+                <Component
+                  :is="pluginData.getSlotComponent('BlockMenu')"
+                  :block="props.block"
+                  :close="close"
+                />
+
+                <UiItem
+                  class="BlockScaffold__action BlockScaffold__action--delete"
+                  icon="mdi:close"
+                  :text="i18n.t('BlockScaffold.Delete')"
+                  @click="emit('delete'); close()"
+                />
+              </div>
+            </template>
+          </UiDropdown>
+        </div>
+
         <UiItem
           v-if="parent"
           class="BlockScaffold__parent"
           icon="mdi:chevron-up"
-          :title="parent.innerBlock.value.title || parent.definition.title || parent.innerBlock.value.component"
+          :title="parent.innerBlock.value.title || parent.definition?.title || parent.innerBlock.value.component"
           @click.stop.prevent="parent.selectBlock()"
         />
       </div>

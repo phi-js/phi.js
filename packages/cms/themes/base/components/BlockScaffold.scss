@@ -95,31 +95,6 @@
   }
 
 
-  &__shortcut {
-    width: 36px;
-    font-size: 0.85rem;
-    opacity: 0.7;
-
-    cursor: pointer;
-    &:hover {
-      opacity: 1;
-      background-color: var(--ui-color-hover);
-    }
-
-    text-shadow: 0px 1px 2px #00000055;
-  }
-
-
-  &__menuBtn {
-    @extend .ui--clickable;
-    width: 38px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-
   // Class BlockScaffold__button is added to <UiIcon> and <button> in MediaHtmlBlockEditor.vue
   &__button {
     @extend .ui--clickable;
@@ -171,7 +146,6 @@
   // DragBar.  Bar placed absolutely over the block's face
   &__dragbar-wrap {
     position: sticky;
-    // top: 132px;  // Must match the height of CmsStoryBuilder__header + dragbar height.  92 + 40
     top: calc(var(--cms-builder-header-bottom, 0) + 30px); // --cms-builder-header-bottom is set in CmsStoryBuilder.vue
     z-index: 3;
   }
@@ -186,12 +160,36 @@
     display: flex;
     flex-wrap: nowrap;
 
-    .UiItem {
-      border-radius: 4px;
-      &__icon {
-        font-size: 1rem;
-      }
+    font-size: 0.75rem;
+  }
+
+  &__dragItem {
+    border-radius: 4px;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    text-shadow: none;
+
+    background-color: var(--ui-color-background);
+    color: var(--ui-color-foreground);
+
+    cursor: pointer;
+
+    &:hover {
+      background-color: #444;
     }
+
+    .BlockScaffold__button {
+      min-width: 32px;
+      height: 32px;
+    }
+  }
+
+  &__dragHandle {
+    --ui-item-padding: 0 8px;
+    cursor: move;
   }
 
   &__parent {
@@ -199,41 +197,6 @@
     --ui-item-padding: 6px 12px;
   }
 
-  &__dragHandle {
-    align-items: stretch;
-    text-shadow: none;
-
-    font-size: 0.75rem;
-    background-color: var(--ui-color-background);
-    color: var(--ui-color-foreground);
-    &:hover {
-      background-color: #444;
-    }
-
-    .UiItem__icon,
-    .UiItem__body {
-      cursor: move;
-    }
-
-    .UiItem__body {
-      padding: 6px 8px 6px 0;
-    }
-
-    .UiItem__icon {
-      width: 32px;
-    }
-  }
-
-  &__settingsIcon {
-    @extend .ui--clickable;
-    width: 32px;
-    height: 100%;
-
-    opacity: 0.6;
-    &:hover {
-      opacity: 1;
-    }
-  }
 
 
   &__launcher {

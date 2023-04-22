@@ -375,6 +375,7 @@ const targetOptions = [
   <BlockScaffold
     class="MediaHtmlBlockEditor"
     :block="props.block"
+    tabindex="-1"
   >
     <template #toolbar>
       <UiPopover>
@@ -554,7 +555,7 @@ const targetOptions = [
 
 .MediaHtmlBlockEditor {
   .tiptap-editor-contents {
-    padding: 2px 4px;
+    padding-left: 4px; // makes room between the BlockScaffold outline and the cursor
   }
 
   &__languageTabs {

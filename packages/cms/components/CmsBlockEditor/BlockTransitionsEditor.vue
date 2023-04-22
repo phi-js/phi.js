@@ -86,6 +86,10 @@ const availableTransitions = [
 
 const availableTemplates = [
   {
+    id: 'default',
+    name: 'Default',
+  },
+  {
     id: 'nav-fade-horizontal',
     name: 'Horizontal slide',
     transitions: {
@@ -117,7 +121,7 @@ const availableTemplates = [
   },
   {
     id: 'custom',
-    name: 'Custom',
+    name: 'Custom ...',
   },
 ]
 
@@ -152,10 +156,16 @@ function emitUpdate() {
 const currentTemplateId = computed({
   get() {
     return transitions.value === null
-      ? ''
+      ? 'default'
       : transitions.value?.id || 'custom'
   },
   set(templateId) {
+    if (templateId === 'default') {
+      transitions.value = null
+      emitUpdate()
+      return
+    }
+
     const tpl = availableTemplates.find((t) => t.id == templateId)
     if (tpl?.transitions) {
       transitions.value = {

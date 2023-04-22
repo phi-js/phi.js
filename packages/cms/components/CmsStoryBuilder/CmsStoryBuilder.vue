@@ -365,6 +365,7 @@ function onTemplatePickerInput($event) {
         >
           <template #buttons>
             <UiIcon
+              class="BlockScaffold__button"
               :title="i18n.t('CmsStoryBuilder.Graph')"
               src="mdi:sitemap"
               @click="windowTab = 'graph'"

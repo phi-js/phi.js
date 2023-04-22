@@ -174,15 +174,24 @@
 
 
 // Mobile displays
-@media (max-width: 500px) {
+@media (max-width: 700px) {
   // Move block to the bottom of headerPage
   #omg-testing {
     order: 1;
-    padding: 2px 0;
+    min-width: 100%;
+
+    .BlockScaffold__toolbar {
+      margin: 2px 0;
+    }
   }
 
   // Hide resolution picker
   .UiResolutionPicker {
     display: none;
+  }
+
+  .StoryPageManager {
+    flex: 1;
+    min-width: 0;
   }
 }

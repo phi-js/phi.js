@@ -1,18 +1,21 @@
 <script setup>
 import { computed, inject, ref, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
-import { UiInput } from '@/packages/ui'
-import StoryPageToolbar from './StoryPageToolbar.vue'
+import { UiInput, UiIcon, UiItem, UiDropdown } from '@/packages/ui'
+
+import { getBlockEditors } from '../../functions'
 import promptCreatePage from './promptCreatePage.js'
 
 const i18n = useI18n({
   en: {
     'StoryPageManager.DeleteThisPage': 'Delete this page?',
     'StoryPageManager.CreatePage': 'Create page',
+    'StoryPageManager.Delete': 'Delete',
   },
   es: {
     'StoryPageManager.DeleteThisPage': 'Eliminar esta página?',
     'StoryPageManager.CreatePage': 'Crear página',
+    'StoryPageManager.Delete': 'Eliminar',
   },
 })
 
@@ -90,8 +93,6 @@ const currentPage = computed({
 })
 
 
-const isDialogOpen = ref(false)
-
 const openBlockWindow = inject('$_cms_openBlockWindow')
 
 function onCurrentPageClickAction(actionId) {
@@ -124,46 +125,82 @@ const pagePickerValue = computed({
     }
   },
 })
+
+
+const blockEditors = computed(() => getBlockEditors(currentPage.value, { allowSource: true }))
+const shortcuts = computed(() => blockEditors.value.actions.filter((a) => a.hasData))
 </script>
 
 <template>
   <div class="StoryPageManager">
-    <UiInput
-      v-model="pagePickerValue"
-      class="StoryPageManager__picker"
-      type="select-native"
-      :options="pagePickerOptions"
-    />
+    <div class="StoryPageManager__scroll">
+      <UiInput
+        v-model="pagePickerValue"
+        class="StoryPageManager__picker"
+        type="select-native"
+        :options="pagePickerOptions"
+      />
 
-    <slot name="buttons" />
+      <slot name="buttons" />
 
-    <StoryPageToolbar
-      v-if="currentPage"
-      v-model="currentPage"
-      @click="isDialogOpen = !isDialogOpen"
-      @click-action="onCurrentPageClickAction"
-      @delete="deletePage(currentPage.id)"
-    />
+      <!-- shortcut icons -->
+      <UiIcon
+        v-for="action in shortcuts"
+        :key="action.id"
+        :src="action.icon"
+        :title="action.description"
+        :class="`BlockScaffold__button BlockScaffold__button--shortcut BlockScaffold__action--${action.id}`"
+        @click.stop="onCurrentPageClickAction(action.id)"
+      />
+    </div>
+
+    <!-- Menu -->
+    <UiDropdown>
+      <template #trigger>
+        <UiIcon
+          src="mdi:dots-vertical"
+          class="BlockScaffold__button"
+        />
+      </template>
+      <template #default="{ close }">
+        <div class="BlockScaffold__actionList color-scheme-dark">
+          <UiItem
+            v-for="action in blockEditors.actions"
+            :key="action.id"
+            :text="action.title"
+            :icon="action.icon"
+            :class="`BlockScaffold__action BlockScaffold__action--${action.id}`"
+            @click="close(); onCurrentPageClickAction(action.id);"
+          />
+          <UiItem
+            class="BlockScaffold__action BlockScaffold__action--delete"
+            icon="mdi:close"
+            :text="i18n.t('StoryPageManager.Delete')"
+            @click="close(); deletePage(currentPage.id);"
+          />
+        </div>
+      </template>
+    </UiDropdown>
   </div>
 </template>
 
 <style lang="scss">
 .StoryPageManager {
+  min-width: none;
+
   display: flex;
   flex-wrap: nowrap;
   align-items: stretch;
-  gap: 3px;
+
+  &__scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    overflow-x: auto;
+  }
 
   &__picker select {
     max-width: 150px;
-  }
-
-  & > .UiIcon {
-    width: 42px;
-    cursor: pointer;
-    &:hover {
-      background-color: var(--ui-color-hover);
-    }
   }
 }
 </style>

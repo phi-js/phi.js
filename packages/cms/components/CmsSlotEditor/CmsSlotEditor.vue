@@ -141,6 +141,41 @@ function onInsertSibling(index, position = null) {
 
   innerSlot.value.splice(targetIndex, 0, { _placeholder: true })
 }
+
+
+function onMoveUp(index) {
+  if (index === 0) {
+    return
+  }
+
+  const block = innerSlot.value[index]
+  innerSlot.value.splice(index, 1) // remove the item
+  innerSlot.value.splice(index - 1, 0, block) // insert before
+  emitUpdate()
+
+  nextTick(() => {
+    if (blockRefs.value?.[index - 1]?.$el) {
+      blockRefs.value[index - 1].$el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
+    }
+  })
+}
+
+function onMoveDown(index) {
+  if (index === innerSlot.value.length - 1) {
+    return
+  }
+
+  const block = innerSlot.value[index]
+  innerSlot.value.splice(index, 1) // remove the item
+  innerSlot.value.splice(index + 1, 0, block) // insert after
+  emitUpdate()
+
+  nextTick(() => {
+    if (blockRefs.value?.[index + 1]?.$el) {
+      blockRefs.value[index + 1].$el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
+    }
+  })
+}
 </script>
 
 <template>
@@ -184,6 +219,9 @@ function onInsertSibling(index, position = null) {
         @deselect="deselectBlock(index)"
         @delete="removeBlockAt(index)"
         @insert-sibling="onInsertSibling(index, $event)"
+
+        @move-up="onMoveUp(index)"
+        @move-down="onMoveDown(index)"
       />
     </template>
 

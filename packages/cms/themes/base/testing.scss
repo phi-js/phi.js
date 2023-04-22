@@ -1,62 +1,3 @@
-// Buttony MediaLinks
-.MediaLink {
-  @extend .ui--clickable;
-  --ui-item-padding: 6px 18px;
-  border-radius: 4px;
-  font-weight: bold;
-  color: inherit;
-  margin: 6px 0;
-
-  .UiItem {
-    &__icon {
-      color: var(--ui-color-primary);
-      order: 1;
-    }
-  }
-
-  background-color: var(--ui-color-z1);
-}
-
-// Spacing in MediaLinkEditor
-.MediaLinkEditor__tabContents {
-  display: flex;
-  flex-direction: column;
-  padding: 18px;
-  gap: 18px;
-}
-
-
-.UiWindow {
-  .UiTabs__header {
-    margin: 4px;
-  }
-
-  .UiTab {
-    flex: 1;
-    max-width: none;
-  }
-
-  .UiTabs__contents {
-    margin: 4px;
-  }
-
-  .UiTabs__contents .UiTabs__header {
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .UiTabs__contents .UiTabs__contents {
-    margin-left: 0;
-    margin-right: 0;
-    padding: 6px;
-    // padding: 0 8px;
-
-    background-color: var(--ui-color-z1);
-    border-radius: 5px;
-  }
-}
-
-
 // Make sure all editor/builder components have a consistent font
 // i.e. do NOT inherit the default font
 .PageToolbar,
@@ -66,9 +7,25 @@
 .CmsBlockPicker,
 .UiWindow,
 .tippy-content,
-.UiDialog__contents {
+.UiDialog__contents,
+.BlockScaffold__actionList,
+.BlockScaffold__launcher {
   font-family: "Nunito", sans-serif;
   font-size: 14px;
   --ui-font-titles: "Nunito", sans-serif;
   --ui-font-texts: "Nunito", sans-serif;
+}
+
+// Center and stretch all UiTabs inside UiWindow
+.UiWindow {
+  .UiTabs {
+    &__header {
+      padding: 4px;
+    }
+
+    .UiTab {
+      flex: 1;
+      max-width: none;
+    }
+  }
 }
