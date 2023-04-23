@@ -18,12 +18,25 @@ const props = defineProps({
   },
 })
 
-const visibleFields = computed(() =>
-  props.fields.map((field) => ({
+const visibleFields = computed(() => {
+  return props.fields.map((field) => ({
     ...field,
-    value: getProperty(props.value, field.value),
-  })))
+    value: field.children || !field.value
+      ? null
+      : getProperty(props.value, field.value),
+    isEmpty: isFieldEmpty(field),
+  }))
+})
 
+function isFieldEmpty(field) {
+  if (field.children) {
+    return field.children.every((child) => isFieldEmpty(child))
+  }
+  if (!field.value) {
+    return true
+  }
+  return !getProperty(props.value, field.value)
+}
 </script>
 
 <template>
@@ -35,6 +48,7 @@ const visibleFields = computed(() =>
       <details
         v-if="field.children"
         class="UiDataRecord__group"
+        :class="{'UiDataRecord__group--empty': field.isEmpty}"
         :open="field.open"
       >
         <summary v-text="field.title" />
@@ -48,6 +62,7 @@ const visibleFields = computed(() =>
       <div
         v-else
         class="UiDataRecord__field"
+        :class="{'UiDataRecord__field--empty': field.isEmpty}"
       >
         <div
           class="UiDataRecord__label"
