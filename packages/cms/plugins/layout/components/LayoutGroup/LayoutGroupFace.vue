@@ -14,30 +14,29 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-const pageSlot = ref([])
+const groupSlot = ref([])
 watch(
   () => props.modelValue,
   (newValue) => {
-    pageSlot.value = Array.isArray(newValue?.slot) ? newValue.slot : []
+    groupSlot.value = Array.isArray(newValue?.slot) ? newValue.slot : []
   },
   { immediate: true },
 )
 
 function onSlotUpdate() {
-  emit('update:modelValue', { ...props.modelValue, slot: pageSlot })
+  emit('update:modelValue', { ...props.modelValue, slot: groupSlot })
 }
 </script>
 
 <template>
   <CmsSlotEditor
-    v-model:slot="pageSlot"
+    v-model:slot="groupSlot"
     :label="props.modelValue?.title"
-
-    :class="`LayoutGroupFace LayoutGroupFace--${modelValue.props.direction} LayoutGroup`"
-    :style="{
-      display: modelValue.props.direction == 'row' ? 'flex' : 'block',
-      flexDirection: modelValue.props.direction,
-    }"
+    :class="[
+      `LayoutGroupFace LayoutGroupFace--${modelValue.props.direction} LayoutGroup`,
+      props.modelValue.props?.class
+    ]"
+    :style="props.modelValue.props?.style"
     :direction="modelValue.props.direction == 'row' ? 'horizontal' : 'vertical'"
     @update:slot="onSlotUpdate"
   >
@@ -65,7 +64,6 @@ function onSlotUpdate() {
     color: var(--ui-color-primary);
   }
 }
-
 
 .LayoutGroupFace {
   position: relative;

@@ -1,4 +1,5 @@
 import LayoutGroup from './LayoutGroup.vue'
+// import LayoutGroupEditor from './LayoutGroupEditor.vue'
 import LayoutGroupFace from './LayoutGroupFace.vue'
 import LayoutGroupSettings from './LayoutGroupSettings.vue'
 
@@ -11,19 +12,14 @@ export default {
     component: LayoutGroup,
     props: {
       direction: 'column',
-      style: {
-        'display': 'block',
-        'flex-direction': 'row',
-        'flex-wrap': 'nowrap',
-        'align-items': 'flex-start',
-        'justify-content': 'flex-start',
-      },
+      style: {},
     },
   },
 
   staging: true,
 
   editor: {
+    // component: LayoutGroupEditor,
     face: { component: LayoutGroupFace },
     actions: [
       {

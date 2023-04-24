@@ -45,6 +45,11 @@
     }
   }
 
+  &--selected,
+  &:hover {
+    z-index: 1;
+  }
+
   &--selected::after,
   &:hover::after {
     opacity: 1;
