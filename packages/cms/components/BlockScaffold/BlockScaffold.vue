@@ -78,28 +78,53 @@ const refSlot = ref()
 const stylesInChild = ref()
 
 function getChildStyles() {
+  // if (props.block.component === 'LayoutGroup') {
+  //   return
+  // }
+
   if (!refSlot.value) {
     return null
   }
 
-  const elementInSlot = refSlot.value.querySelector('.BlockScaffold__toolbar-container + *') /// FIX THIS, set correct selector
+  const elementInSlot = refSlot.value.querySelector('.BlockScaffold__slotMarker + *') // first element
   if (!elementInSlot) {
     return null
   }
 
-  const elementStyle = getComputedStyle(elementInSlot)
-  stylesInChild.value = {
-    display: elementInSlot.tagName == 'IFRAME' ? 'block' : elementStyle.display,
-    flex: elementStyle.flex,
-    alignSelf: elementStyle.alignSelf,
-    float: elementStyle.float,
 
-    // These mess up LayoutGroup blocks:
-    // alignItems: elementStyle.alignItems,
-    // justifyContent: elementStyle.justifyContent,
+  const computedStyle = getComputedStyle(elementInSlot)
 
-    // ...props.block?.props?.style,
+  let elementStyle = {
+    display: elementInSlot.tagName == 'IFRAME'
+      ? 'block'
+      : (computedStyle.display.includes('inline') ? 'inline' : 'block'),
   }
+
+  if (elementInSlot.computedStyleMap) {
+    const styleMap = elementInSlot.computedStyleMap()
+    elementStyle.margin = styleMap.get('margin').toString() // finally, gets 'auto'
+    elementStyle.flex = styleMap.get('flex').toString()
+    elementStyle.alignSelf = styleMap.get('align-self').toString()
+    elementStyle.float = styleMap.get('float').toString()
+    elementStyle.minWidth = styleMap.get('min-width').toString()
+    elementStyle.maxWidth = styleMap.get('max-width').toString()
+    elementStyle.minHeight = styleMap.get('min-height').toString()
+    elementStyle.maxHeight = styleMap.get('max-height').toString()
+    elementStyle.alignItems = styleMap.get('align-items').toString()
+    elementStyle.justifyContent = styleMap.get('justify-content').toString()
+  } else {
+    elementStyle.flex = computedStyle.flex
+    elementStyle.alignSelf = computedStyle.alignSelf
+    elementStyle.float = computedStyle.float
+    elementStyle.minWidth = computedStyle.minWidth
+    elementStyle.maxWidth = computedStyle.maxWidth
+    elementStyle.minHeight = computedStyle.minHeight
+    elementStyle.maxHeight = computedStyle.maxHeight
+    elementStyle.alignItems = computedStyle.alignItems
+    elementStyle.justifyContent = computedStyle.justifyContent
+  }
+
+  stylesInChild.value = elementStyle
 }
 
 const mutationObserver = new MutationObserver(getChildStyles)
@@ -286,6 +311,12 @@ onBeforeUnmount(() => {
         />
       </div>
     </div>
+
+    <!-- Marker!!! -->
+    <span
+      style="display:none"
+      class="BlockScaffold__slotMarker"
+    />
 
     <slot />
 
