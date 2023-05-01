@@ -13,7 +13,6 @@ export default class {
     })
   }
 
-
   /*
   Generate text, via text-davinci-003
 
@@ -68,5 +67,20 @@ export default class {
   */
   generateCss(postData) {
     return this.http.post('/api/1/openai/css', postData)
+  }
+
+  /*
+  Straight access to ChatGPT
+
+  {
+    "apiKey": "please",
+    "messages": [
+      {"role": "system", "content": "You reply sarcastically and with a lot of swearing"},
+      {"role": "user", "content": "Hello"}
+    ]
+  }
+  */
+  postChat(postData) {
+    return this.http.post('/api/1/openai/chat', postData)
   }
 }
