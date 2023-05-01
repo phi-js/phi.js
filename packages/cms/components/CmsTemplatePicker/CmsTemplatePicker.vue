@@ -34,6 +34,11 @@ function selectTemplate(template) {
 }
 
 function onStagingAccept($event) {
+  if (Array.isArray($event?.pages)) {
+    emit('input', $event)
+    return
+  }
+
   const finalStory = {
     id: 'imported',
     pages: [
@@ -53,8 +58,8 @@ function onStagingAccept($event) {
 </script>
 
 <template>
-  <div class="StoryTemplatePicker">
-    <div class="StoryTemplatePicker__list">
+  <div class="CmsTemplatePicker">
+    <div class="CmsTemplatePicker__list">
       <div
         v-for="(template,i) in availableTemplates"
         :key="i"
@@ -74,7 +79,7 @@ function onStagingAccept($event) {
       v-if="stagingComponent"
       v-slot="{ close }"
       :open="true"
-      class="StoryTemplatePicker__dialog"
+      class="CmsTemplatePicker__dialog"
       @cancel="stagingComponent = null"
     >
       <Component
@@ -88,7 +93,7 @@ function onStagingAccept($event) {
 </template>
 
 <style lang="scss">
-.StoryTemplatePicker {
+.CmsTemplatePicker {
   display: flex;
   flex-wrap: wrap;
   align-items: center;

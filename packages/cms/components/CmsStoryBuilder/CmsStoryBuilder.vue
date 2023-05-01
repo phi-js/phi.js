@@ -7,7 +7,7 @@ import CmsStoryEditor from '../CmsStoryEditor/CmsStoryEditor.vue'
 import StoryEditorWindow from '../CmsStoryEditor/StoryEditorWindow.vue'
 import BlockWindow from '../CmsBlockEditor/BlockWindow.vue'
 import StoryPageManager from './StoryPageManager.vue'
-import StoryTemplatePicker from './StoryTemplatePicker.vue'
+import CmsTemplatePicker from '../CmsTemplatePicker/CmsTemplatePicker.vue'
 import promptImportFont from './promptImportFont.js'
 
 import { getStoryFields, sanitizeStory } from '../../functions'
@@ -404,7 +404,7 @@ function onTemplatePickerInput($event) {
       </div>
     </div>
 
-    <StoryTemplatePicker
+    <CmsTemplatePicker
       v-if="isEmpty"
       @input="onTemplatePickerInput"
     />

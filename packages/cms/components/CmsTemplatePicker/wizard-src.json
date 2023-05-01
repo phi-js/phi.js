@@ -1,0 +1,145 @@
+{
+  "id": "some-new-story",
+  "title": "Bootstrap",
+  "pages": [
+    {
+      "component": "LayoutPage",
+      "slots": {
+        "default": [
+          {
+            "props": {
+              "direction": "column",
+              "style": {
+                "background-image": "url(\"{{baseUrl}}/api/1/openai/image?q={{images.header}}\")",
+                "min-height": "40vh"
+              },
+              "class": [
+                "sectionBig"
+              ]
+            },
+            "component": "LayoutGroup",
+            "title": "Main header",
+            "slot": [
+              {
+                "component": "MediaHtml",
+                "props": {
+                  "value": "<h1>{{ title }}</h1><p>{{ slogan }}</p>"
+                }
+              }
+            ]
+          },
+          {
+            "props": {
+              "direction": "column",
+              "style": {
+                "display": "flex",
+                "flex-direction": "row",
+                "flex-wrap": "wrap",
+                "align-items": "center"
+              },
+              "class": [
+                "sectionWhite"
+              ]
+            },
+            "component": "LayoutGroup",
+            "title": "First text",
+            "slot": [
+              {
+                "component": "MediaHtml",
+                "props": {
+                  "value": "<h2>{{ description }}</h2>",
+                  "style": {
+                    "padding": "25px",
+                    "flex": "2"
+                  }
+                }
+              },
+              {
+                "component": "MediaImage",
+                "props": {
+                  "alt": "{{images.image1}}",
+                  "src": "{{baseUrl}}/api/1/openai/image?q={{images.image1}}",
+                  "align": "center",
+                  "width": "256",
+                  "height": "256",
+                  "style": {
+                    "flex": "1",
+                    "border": "1px solid #ccc",
+                    "padding": "1rem",
+                    "transform": "rotate(3deg)",
+                    "background": "white",
+                    "box-shadow": "0 4px 6px rgba(0, 0, 0, 0.3)",
+                    "border-radius": "12px"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "id": "p1",
+      "title": "Page 1",
+      "hash": "page-1"
+    }
+  ],
+  "header": [],
+  "footer": [],
+  "paths": [],
+  "stylesheets": [
+    {
+      "id": "theme-bootstrap",
+      "container-class": "theme-bootstrap",
+      "src": "https://phi.co/stylesheets/themes/bootstrap/index.css",
+      "title": "Bootstrap",
+      "description": "Every bootstrap website ever",
+      "thumbnail": "https://phi.co/stylesheets/themes/bootstrap/thumbnail.jpg",
+      "classes": [
+        {
+          "name": "sectionBig",
+          "text": "Big section",
+          "subtext": "Centered text in a full height container"
+        },
+        {
+          "name": "sectionHighlighted",
+          "text": "Highlighted section",
+          "subtext": "White text on contrasting background"
+        },
+        {
+          "name": "sectionWhite",
+          "text": "Text section",
+          "subtext": "Padded text on a light background"
+        },
+        {
+          "name": "cardItem",
+          "text": "Card item",
+          "subtext": "Big icon on top, text on bottom"
+        }
+      ],
+      "type": "theme"
+    },
+    {
+      "id": "story-style",
+      "src": {
+        "--ui-content-margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "story-style-dark",
+      "src": {
+        "--ui-color-background": "{{ colors.dark.background }}",
+        "--ui-color-foreground": "{{ colors.dark.text }}",
+        "--ui-color-primary": "{{ colors.dark.accent }}"
+      },
+      "prefers-color-scheme": "dark"
+    },
+    {
+      "id": "story-style-light",
+      "src": {
+        "--ui-color-background": "{{ colors.light.background }}",
+        "--ui-color-foreground": "{{ colors.light.text }}",
+        "--ui-color-primary": "{{ colors.light.accent }}"
+      },
+      "prefers-color-scheme": "light"
+    }
+  ]
+}
