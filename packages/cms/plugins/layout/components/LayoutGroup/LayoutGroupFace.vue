@@ -50,6 +50,7 @@ function onSlotUpdate() {
 </template>
 
 <style lang="scss">
+.BlockScaffold--PersonEditor,
 .BlockScaffold--LayoutGroup {
   padding: 6px;
   margin-top: 6px;
@@ -67,7 +68,7 @@ function onSlotUpdate() {
 
 .LayoutGroupFace {
   position: relative;
-  padding-top: 16px;
+  padding-top: 18px;
   width: 100%;
 
   &__label {

@@ -6,12 +6,12 @@
   .CssDeclaration {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
 
     &__properties {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 6px;
     }
 
     & > .UiDetails {

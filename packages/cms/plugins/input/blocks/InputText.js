@@ -2,7 +2,6 @@ import { UiInput } from '@/packages/ui/components'
 import InputSettings from '../components/InputSettings/InputSettings.vue'
 import InputFace from '../components/InputFace.vue'
 
-
 export default {
   name: 'InputText',
   title: 'Text',
