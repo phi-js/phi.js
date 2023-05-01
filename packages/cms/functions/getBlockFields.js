@@ -94,6 +94,15 @@ export default function getBlockFields(block) {
     return retval
   }
 
+  if (block.component == 'EsignConsent') {
+    retval.push({
+      value: block['v-model'],
+      type: 'EsignConsent',
+      text: block._plugin_api_storage?.title || block.props?.documentName || 'EsignConsent',
+      props: { documentName: block.props?.documentName },
+    })
+  }
+
   if (block.component == 'MediaVideo' || block.component == 'MediaVideoContainer') {
     if (block['v-model:isPlaying']) {
       retval.push({
@@ -135,9 +144,7 @@ export default function getBlockFields(block) {
         important: true,
       })
     }
-
-    return retval
   }
 
-  return []
+  return retval
 }
