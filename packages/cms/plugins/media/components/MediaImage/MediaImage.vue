@@ -1,5 +1,9 @@
+<script>
+export default { inheritAttrs: false }
+</script>
+
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, useAttrs } from 'vue'
 
 const props = defineProps({
   src: {
@@ -35,14 +39,26 @@ const props = defineProps({
     required: false,
     default: '_self',
   },
-
 })
 
+const attrs = useAttrs()
+
 const isError = ref(false)
+const isLoading = ref()
+
+// Debounce changes to 'src'
+const innerSrc = ref(props.src || '')
+let loadTimeout = null
 
 watch(
   () => props.src,
-  (newValue) => isError.value = !newValue,
+  (newValue) => {
+    innerSrc.value = newValue
+
+    isError.value = !newValue
+    clearTimeout(loadTimeout)
+    loadTimeout = setTimeout(() => isLoading.value = true, 50)
+  },
   { immediate: true },
 )
 
@@ -50,6 +66,10 @@ function onImageError() {
   isError.value = true
 }
 
+function onImageLoad() {
+  clearTimeout(loadTimeout)
+  isLoading.value = false
+}
 
 const imgStyle = computed(() => {
   return {
@@ -72,36 +92,39 @@ const imgStyle = computed(() => {
     :href="href"
     :target="target"
     class="MediaImage MediaImage--link"
+    :class="{'MediaImage--loading': isLoading}"
     :align="props.align"
     style="max-width: 100%"
   >
     <img
       class="MediaImage__img"
-      :alt="src"
-      :src="src"
+      v-bind="attrs"
+      :src="innerSrc"
       :style="imgStyle"
       @error="onImageError"
+      @load="onImageLoad"
     >
   </a>
   <div
     v-else
-    class="MediaImage"
+    class="MediaImage MediaImage--div"
+    :class="{'MediaImage--loading': isLoading}"
     :align="props.align"
     style="max-width: 100%"
   >
     <img
       class="MediaImage__img"
-      :alt="src"
-      :src="src"
+      v-bind="attrs"
+      :src="innerSrc"
       :style="imgStyle"
       @error="onImageError"
+      @load="onImageLoad"
     >
   </div>
 </template>
 
 <style lang="scss">
 .MediaImage {
-
   // Los estilos de MediaImage se asignan en la propiedad <img> directamente
   // para no depender de la declaracion CSS de un archivo externo, y poder portarlo (para exportarlo a PDF, por ejemplo)
 
@@ -111,6 +134,14 @@ const imgStyle = computed(() => {
   //   max-width: 100%;
   //   max-height: 100%;
   // }
+
+  &--loading &__img {
+    border: 3px dashed red;
+    border-radius: 3px;
+    min-width: 120px;
+    min-height: 120px;
+    background-color: var(--ui-color-hover);
+  }
 
   &--error {
     width: 100%;

@@ -62,6 +62,7 @@ function emitUpdate() {
           type="url"
           label="URL"
           :endpoint="props.endpoint"
+          debounce="700"
           @update:model-value="emitUpdate"
         />
 
