@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import { useI18n } from '@/packages/i18n'
 import { UiItem, UiIcon, UiDropdown } from '@/packages/ui'
@@ -78,10 +78,6 @@ const refSlot = ref()
 const stylesInChild = ref()
 
 function getChildStyles() {
-  // if (props.block.component === 'LayoutGroup') {
-  //   return
-  // }
-
   if (!refSlot.value) {
     return null
   }
@@ -91,7 +87,6 @@ function getChildStyles() {
     return null
   }
 
-
   const computedStyle = getComputedStyle(elementInSlot)
 
   let elementStyle = {
@@ -100,9 +95,9 @@ function getChildStyles() {
       : (computedStyle.display.includes('inline') ? 'inline' : 'block'),
   }
 
-  if (elementInSlot.computedStyleMap) {
+  if (elementInSlot.computedStyleMap) { // computedStyleMap is not supported in Firefox
     const styleMap = elementInSlot.computedStyleMap()
-    elementStyle.margin = styleMap.get('margin').toString() // finally, gets 'auto'
+    elementStyle.margin = styleMap.get('margin').toString() == 'auto' ? 'auto' : null // finally, gets 'auto'
     elementStyle.flex = styleMap.get('flex').toString()
     elementStyle.alignSelf = styleMap.get('align-self').toString()
     elementStyle.float = styleMap.get('float').toString()
@@ -127,25 +122,18 @@ function getChildStyles() {
   stylesInChild.value = elementStyle
 }
 
-const mutationObserver = new MutationObserver(getChildStyles)
+watch(
+  () => props.block,
+  () => {
+    nextTick(() => getChildStyles())
+  },
+  { immediate: true },
+)
 
+/// !!! Black magic.  Teleport the toolbar into CsmStoryBuilder
 const refToolbar = ref()
-
-onMounted(() => {
-  /// !!! Black magic.  Teleport the toolbar into CsmStoryBuilder
-  document.getElementById('omg-testing').appendChild(refToolbar.value)
-
-  getChildStyles()
-  mutationObserver.observe(refSlot.value, {
-    childList: true,
-    attributes: true,
-    subtree: false,
-  })
-})
-
-onBeforeUnmount(() => {
-  refToolbar.value.remove()
-})
+onMounted(() => document.getElementById('omg-testing').appendChild(refToolbar.value))
+onBeforeUnmount(() => refToolbar.value.remove())
 </script>
 
 <template>
@@ -159,7 +147,6 @@ onBeforeUnmount(() => {
     ]"
     tabindex="0"
     :style="stylesInChild"
-    @click.stop.prevent="emitSelect"
     @focus="emitSelect"
   >
     <div
