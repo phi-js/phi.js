@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import { useI18n } from '@/packages/i18n'
 import { UiInput } from '@/packages/ui'
@@ -109,24 +109,48 @@ const i18n = useI18n({
     'InputSettings.DateFormat.timestamp': 'Timestamp',
   },
 })
+
+const availableComponents = [
+  { value: 'InputText', type: 'text', text: i18n.t('plugin.component.InputText.title') },
+  { value: 'InputTextarea', type: 'textarea', text: i18n.t('plugin.component.InputTextarea.title') },
+  { value: 'InputCheckbox', type: 'checkbox', text: i18n.t('plugin.component.InputCheckbox.title') },
+  { value: 'InputDate', type: 'date', text: i18n.t('plugin.component.InputDate.title') },
+  { value: 'InputNumber', type: 'number', text: i18n.t('plugin.component.InputNumber.title') },
+  { value: 'InputPassword', type: 'password', text: i18n.t('plugin.component.InputPassword.title') },
+  // { value: 'InputSelect', type: 'select', text: i18n.t('plugin.component.InputSelect.title') },
+  // { value: 'InputUpload', type: 'upload', text: i18n.t('plugin.component.InputUpload.title') },
+  // { value: 'InputButton', type: 'submit', text: i18n.t('plugin.component.InputButton.title') },
+]
+
+const blockComponent = computed({
+  get() {
+    return block.value.component
+  },
+  set(newValue) {
+    block.value.component = newValue
+    const targetComponent = availableComponents.find((t) => t.value == newValue)
+    if (targetComponent) {
+      block.value.props.type = targetComponent.type
+    }
+    emitUpdate()
+  },
+})
+
+const multipleOptions = [
+  {
+    text: i18n.t('InputSettings.Single'),
+    value: false,
+  },
+  {
+    text: i18n.t('InputSettings.Multiple'),
+    value: true,
+  },
+]
 </script>
 
 <template>
   <div class="InputSettings">
-    <!-- Date options-->
-    <UiInput
-      v-if="['date', 'date-range'].includes(block.props.type)"
-      v-model="block.props.type"
-      type="select-list"
-      :label="i18n.t('InputSettings.InputType')"
-      :options="[
-        {value: 'date', text: i18n.t('InputSettings.type.Date')},
-        {value: 'date-range', text: i18n.t('InputSettings.type.DateRange')},
-      ]"
-      @update:model-value="emitUpdate"
-    />
-
-    <!-- Button options -->
+    <!-- Button type: submit | button -->
     <UiInput
       v-if="block.component == 'InputButton'"
       v-model="block.props.type"
@@ -139,6 +163,7 @@ const i18n = useI18n({
       @update:model-value="emitUpdate"
     />
 
+    <!-- Label -->
     <CmsPropInput
       v-model:block="block"
       :model-value="block.props.label"
@@ -148,6 +173,7 @@ const i18n = useI18n({
       @update:block="emitUpdate"
     />
 
+    <!-- Loading label -->
     <CmsPropInput
       v-if="block.component == 'InputButton' && block.props.type == 'submit'"
       v-model="block.props.loadingLabel"
@@ -159,6 +185,7 @@ const i18n = useI18n({
       @update:block="emitUpdate"
     />
 
+    <!-- Subtext -->
     <CmsPropInput
       v-model="block.props.subtext"
       v-model:block="block"
@@ -168,6 +195,7 @@ const i18n = useI18n({
       @update:block="emitUpdate"
     />
 
+    <!-- Placeholder -->
     <CmsPropInput
       v-model="block.props.placeholder"
       v-model:block="block"
@@ -177,10 +205,41 @@ const i18n = useI18n({
       @update:block="emitUpdate"
     />
 
+    <!-- Variable name -->
     <UiInput
       v-model="block['v-model']"
       type="text"
       :label="i18n.t('InputSettings.VariableName')"
+      @update:model-value="emitUpdate"
+    />
+
+    <!-- Multiple / Single -->
+    <UiInput
+      v-if="block.component == 'InputUpload'"
+      v-model="block.props.multiple"
+      type="select-buttons"
+      :options="multipleOptions"
+      @update:model-value="emitUpdate"
+    />
+
+    <!-- Block type picker -->
+    <UiInput
+      v-if="!['InputSelect', 'InputUpload', 'InputButton'].includes(block.component)"
+      v-model="blockComponent"
+      type="select-native"
+      :options="availableComponents"
+      :label="i18n.t('InputSettings.InputType')"
+    />
+
+    <!-- Date options-->
+    <UiInput
+      v-if="['date', 'date-range'].includes(block.props.type)"
+      v-model="block.props.type"
+      type="select-list"
+      :options="[
+        {value: 'date', text: i18n.t('InputSettings.type.Date')},
+        {value: 'date-range', text: i18n.t('InputSettings.type.DateRange')},
+      ]"
       @update:model-value="emitUpdate"
     />
 
