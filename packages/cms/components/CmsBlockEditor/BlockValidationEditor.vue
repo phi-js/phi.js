@@ -116,6 +116,7 @@ const availableRules = computed(() => {
     'email',
     'tel',
     'url',
+    'upload',
   ].includes(props.modelValue.props.type) || props.modelValue.props.type.startsWith('select')
 
   return rules.value.filter((r) => {
