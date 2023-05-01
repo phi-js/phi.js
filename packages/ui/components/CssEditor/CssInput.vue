@@ -115,6 +115,8 @@ onMounted(() => {
 
 <style lang="scss">
 .CssInput {
+  background-color: var(--ui-color-hover);
+
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -123,16 +125,13 @@ onMounted(() => {
   border-radius: 4px;
   padding: 4px;
 
-  &__deleter,
-  &__label,
-  &__helperTrigger {
-    margin-top: 6px;
-  }
+  gap: 4px;
+
 
   &__label {
     font-size: 10pt;
     font-weight: bold;
-    padding: 6px;
+    padding: 7px;
     user-select: none;
 
     flex: 1;
@@ -160,8 +159,6 @@ onMounted(() => {
     height: 32px;
     user-select: none;
 
-    margin-right: 4px;
-
     border-radius: 4px;
     cursor: pointer;
     &:hover {
@@ -188,11 +185,6 @@ onMounted(() => {
     // padding-right: 62px; // make room for __helperTrigger.  width + 2*margin
     background: transparent;
     border: 0;
-  }
-
-
-  &:hover {
-    background-color: var(--ui-color-hover);
   }
 
   &--endangered {
