@@ -24,24 +24,13 @@ const i18n = provideI18n({
     fr: 'Français',
     pir: 'Pirate!',
   },
-
-  // old options
-  // locale: 'es', // set locale
-  // fallbackLocale: 'en', // set fallback locale,
-  // currency: 'cop', //default currency
-  // dictionary: {
-  //   de: { globalWord: 'globales Wort' },
-  //   en: { globalWord: 'Global Word' },
-  //   es: { globalWord: 'Palabra Global' },
-  //   fr: { globalWord: 'mot global' },
-  // },
 })
 
-function filterTree(arrTree, strFilter) {
+function filterTree(arrTree, strSearch) {
   let retval = []
   arrTree.forEach((node) => {
     if (node?.children?.length) {
-      let filteredChildren = filterTree(node.children, strFilter)
+      let filteredChildren = filterTree(node.children, strSearch)
       if (filteredChildren.length) {
         retval.push({
           ...node,
@@ -49,9 +38,9 @@ function filterTree(arrTree, strFilter) {
           isActive: filteredChildren.some((child) => child.isActive),
         })
       }
-    } else if (strFilter) {
+    } else if (strSearch) {
       let searchKey = normalize(node.text)
-      if (searchKey.includes(strFilter)) {
+      if (searchKey.includes(strSearch)) {
         retval.push({
           ...node,
           isActive: true,
@@ -77,7 +66,7 @@ const filteredTree = computed(() => {
 
 
 // currentUrl se inicializa segun el hash actual
-const currentUrl = ref(window.location.hash.split('#')[1])
+const currentUrl = ref(window.location.hash.split('#')[1] || '/phi.js/1.home.vue') // !!! hard-coded default page.  SHould look for first available one
 
 // Escuchar cambios en el hash de la URL y actualizar currentUrl
 const onHashChange = () => {
@@ -93,11 +82,11 @@ const error = ref()
 // cuando cambie currentUrl, cargamos dinamicamente la pagina /pages/hashname.vue
 watch(
   currentUrl,
-  async () => {
-    searchString.value = ''
+  async (newValue) => {
+    // searchString.value = ''
     error.value = null
     try {
-      component.value = await getComponent(currentUrl.value)
+      component.value = await getComponent(newValue)
     } catch (e) {
       component.value = null
       error.value = e
@@ -106,6 +95,36 @@ watch(
   },
   { immediate: true },
 )
+
+function onClickCodeBlock(evt) {
+  const codeBlock = evt.target
+  navigator.clipboard.writeText(codeBlock.textContent)
+  codeBlock.classList.add('Docs__copiable--copied')
+  setTimeout(() => codeBlock.classList.remove('Docs__copiable--copied'), 1000)
+}
+
+function onComponentMounted(evt) {
+  if (evt?.el?.classList && evt.el.classList.contains('Docs')) {
+    const codeBlocks = evt.el.querySelectorAll('code')
+    codeBlocks.forEach((codeBlock) => {
+      codeBlock.classList.add('Docs__copiable')
+      codeBlock.setAttribute('title', 'Click to copy')
+      codeBlock.addEventListener('click', onClickCodeBlock)
+    })
+  }
+}
+
+function onComponentUnmounted(evt) {
+  if (evt?.el?.classList && evt.el.classList.contains('Docs')) {
+    const codeBlocks = evt.el.querySelectorAll('code')
+    codeBlocks.forEach((codeBlock) => {
+      codeBlock.classList.remove('Docs__copiable')
+      codeBlock.removeAttribute('title')
+      codeBlock.removeEventListener('click', onClickCodeBlock)
+    })
+  }
+}
+
 </script>
 
 <template>
@@ -176,7 +195,11 @@ watch(
             v-if="component"
             :key="currentUrl"
           >
-            <component :is="component" />
+            <Component
+              :is="component"
+              @vue:mounted="onComponentMounted"
+              @vue:unmounted="onComponentUnmounted"
+            />
           </div>
         </Transition>
 
@@ -226,10 +249,25 @@ watch(
 
   &__sidebar {
     display: block;
-    overflow: hidden;
-    overflow-y: auto;
     width: 300px;
-    padding: 10px;
+    padding: 6px;
+    margin: 10px;
+
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    max-height: calc(100vh - 54px); // minus top bar height
+    position: sticky;
+    top: 0;
+
+    scrollbar-width: thin; /*firefox only*/
+    &::-webkit-scrollbar { /*webkit based browsers only*/
+      width: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
   }
 
   &__body {
@@ -303,6 +341,66 @@ watch(
       padding: 0;
     }
   }
-
 }
+
+
+.Docs {
+  padding: 12px 20px;
+
+
+  code {
+    white-space: pre-wrap;
+    display: block;
+    border: 1px solid #999;
+    border-radius: 4px;
+    padding: 12px 16px;
+  }
+
+  table {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-spacing: 0;
+
+    th:first-child {
+      width: 16%;
+    }
+
+    th {
+      text-align: left;
+      border-bottom: 1px solid #ccc;
+    }
+
+    td {
+      vertical-align: top;
+      padding: 4px;
+    }
+  }
+
+  &__copiable {
+    cursor: pointer;
+    &:hover {
+      background-color: #ffff8877;
+    }
+
+    &--copied {
+      position: relative;
+      &::before {
+        content: 'Copied';
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+
+        margin: 6px;
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-size: 0.7rem;
+
+        background-color: rgba(0,0,0, 0.7);
+        color: #fff;
+      }
+    }
+  }
+}
+
 </style>
