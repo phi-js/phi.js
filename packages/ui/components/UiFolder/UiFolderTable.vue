@@ -81,7 +81,7 @@ const itemCount = computed(() => {
 
         <tr
           v-for="(item, i) in section.items"
-          :key="item.path + i"
+          :key="`${item.path}${i}`"
           class="UiFolderTable__itemRow"
           :class="item.class"
         >

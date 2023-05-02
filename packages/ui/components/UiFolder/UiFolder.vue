@@ -113,6 +113,11 @@ const sortedSections = computed(() => {
     if (sortColumn.value) {
       items.sort((a, b) => {
         let retval = 0
+
+        if (!a.data || !b.data) {
+          return 0
+        }
+
         if (sortColumn.value == 'text') {
           retval = a.data[sortColumn.value].localeCompare(b.data[sortColumn.value])
         } else {
@@ -136,13 +141,15 @@ const sortedSections = computed(() => {
     :class="`UiFolder--${currentView}`"
   >
     <div class="UiFolder__header">
+      <slot name="header" />
+
       <UiInput
         v-model="currentView"
         class="UiFolder__viewPicker"
         type="select-buttons"
         :options="[
-          {value:'grid', text: i18n.t('UiFolder.Grid'), icon:'mdi:view-grid'},
-          {value:'table', text: i18n.t('UiFolder.Table'), icon:'mdi:view-list'},
+          { value: 'grid', text: i18n.t('UiFolder.Grid'), icon: 'mdi:view-grid' },
+          { value: 'table', text: i18n.t('UiFolder.Table'), icon: 'mdi:view-list' },
         ]"
       />
 
@@ -223,6 +230,7 @@ const sortedSections = computed(() => {
       width: 40px;
       border-radius: 4px;
       cursor: pointer;
+
       &:hover {
         background-color: var(--ui-color-hover);
       }

@@ -67,8 +67,8 @@ defineProps({
           <a
             class="UiFolderGrid__item"
             :class="item.class"
-            :href="item.data.href"
-            :target="item.data.target"
+            :href="item.data?.href"
+            :target="item.data?.target"
           >
             <UiItem
               class="UiFolderGrid__uiItem"
@@ -85,12 +85,12 @@ defineProps({
               </template>
             </UiItem>
             <div
-              v-if="item.data.thumbnail"
+              v-if="item.data?.thumbnail"
               class="UiFolderGrid__itemThumbnail"
             >
               <img
-                :src="item.data.thumbnail"
-                :alt="item.data.text"
+                :src="item.data?.thumbnail"
+                :alt="item.data?.text"
               >
             </div>
           </a>

@@ -211,6 +211,9 @@ onMounted(() => {
   document.addEventListener('scroll', onScroll)
 
   setTimeout(() => {
+    if (!refHeader.value) {
+      return
+    }
     const rect = refHeader.value.getBoundingClientRect()
     storyBuilderStyle.value['--cms-builder-header-bottom'] = `${rect.bottom}px`
   }, 80)
@@ -280,7 +283,7 @@ const isEmpty = computed(() => !innerStory.value.pages?.length)
 function onTemplatePickerInput($event) {
   innerStory.value = {
     ...$event,
-    id: props.story.id,
+    id: innerStory.value.id,
     title: innerStory.value.title || $event.title,
     subtext: undefined,
   }
