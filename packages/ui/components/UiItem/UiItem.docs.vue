@@ -1,6 +1,8 @@
+<!-- eslint-disable max-len -->
 <script setup>
 import { reactive } from 'vue'
 import UiItem from './UiItem.vue'
+import UiInput from '../UiInput/UiInput.vue'
 
 const item = reactive({
   icon: 'mdi:account',
@@ -24,51 +26,184 @@ function saySomething() {
 </script>
 
 <template>
-  <div class="UiItemDocs">
+  <div class="Docs Docs--UiItem">
     <h1>UiItem</h1>
-    <form>
-      <select
-        v-model="item.icon"
-        class="UiInput"
-      >
-        <option value>
-          None
-        </option>
-        <option value="mdi:account">
-          mdi:account
-        </option>
-        <option value="mdi:android">
-          mdi:android
-        </option>
-        <option value="mdi:close">
-          mdi:close
-        </option>
-        <option value="mdi:delete">
-          mdi:delete
-        </option>
-        <option value="mdi:star">
-          mdi:star
-        </option>
-      </select>
+    <code>import { UiItem } from '@/packages/ui'</code>
+    <p>
+      UiItem is a versatile and customizable list item component. It can display text, subtext, icon, and extra actions. You can also use it as a link by providing an href prop.
+    </p>
 
-      <input
+    <table>
+      <thead>
+        <tr>
+          <th>Prop</th>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Required</th>
+          <th>Default Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>text</td>
+          <td>Text content of the item</td>
+          <td>String, Number</td>
+          <td>No</td>
+          <td>null</td>
+        </tr>
+        <tr>
+          <td>subtext</td>
+          <td>Subtext content of the item</td>
+          <td>String, Number</td>
+          <td>No</td>
+          <td>''</td>
+        </tr>
+        <tr>
+          <td>icon</td>
+          <td>Icon source for the item</td>
+          <td>String, Number</td>
+          <td>No</td>
+          <td>null</td>
+        </tr>
+        <tr>
+          <td>badge</td>
+          <td>Badge content for the item</td>
+          <td>String, Number</td>
+          <td>No</td>
+          <td>null</td>
+        </tr>
+        <tr>
+          <td>href</td>
+          <td>URL for the link</td>
+          <td>String</td>
+          <td>No</td>
+          <td>null</td>
+        </tr>
+        <tr>
+          <td>bem</td>
+          <td>Additional base BEM name</td>
+          <td>String</td>
+          <td>No</td>
+          <td>null</td>
+        </tr>
+        <tr>
+          <td>onDelete</td>
+          <td>Delete function for the item</td>
+          <td>Function</td>
+          <td>No</td>
+          <td>null</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>click</td>
+          <td>Event emitted when the item is clicked</td>
+        </tr>
+        <tr>
+          <td>click-icon</td>
+          <td>Event emitted when the icon is clicked</td>
+        </tr>
+        <tr>
+          <td>click-body</td>
+          <td>Event emitted when the body is clicked</td>
+        </tr>
+        <tr>
+          <td>click-actions</td>
+          <td>Event emitted when the actions are clicked</td>
+        </tr>
+        <tr>
+          <td>delete</td>
+          <td>Event emitted when the delete function is called</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Slot</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>icon</td>
+          <td>Slot for custom icon content</td>
+        </tr>
+        <tr>
+          <td>default</td>
+          <td>Slot for custom body content (text and subtext)</td>
+        </tr>
+        <tr>
+          <td>actions</td>
+          <td>Slot for custom actions content</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <pre>
+      <code>
+&lt;UiItem text="Item title" subtext="Item subtitle" icon="mdi:example-icon" /&gt;
+
+&lt;UiItem text="Item title" subtext="Item subtitle" href="https://example.com" /&gt;
+
+&lt;UiItem&gt;
+  &lt;template #icon&gt;
+    &lt;custom-icon /&gt;
+  &lt;/template&gt;
+  &lt;template #default&gt;
+    &lt;p&gt;Custom body content&lt;/p&gt;
+  &lt;/template&gt;
+  &lt;template #actions&gt;
+    &lt;button&gt;Action&lt;/button&gt;
+  &lt;/template&gt;
+&lt;/UiItem&gt;
+      </code>
+      </pre>
+
+
+    <form style="display:flex">
+      <UiInput
+        v-model="item.icon"
+        label="icon"
+        type="select-native"
+        :options="[
+          { value:'', text:'None' },
+          { value:'mdi:account', text: 'mdi:account' },
+          { value:'mdi:android', text: 'mdi:android' },
+          { value:'mdi:close', text: 'mdi:close' },
+          { value:'mdi:delete', text: 'mdi:delete' },
+          { value:'mdi:star', text: 'mdi:star' },
+        ]"
+      />
+
+      <UiInput
         v-model="item.text"
-        class="UiInput"
+        label="text"
         type="text"
         placeholder="text"
-      >
-      <input
+      />
+      <UiInput
         v-model="item.subtext"
-        class="UiInput"
+        label="subtext"
         type="text"
         placeholder="subtext"
-      >
-      <input
+      />
+      <UiInput
         v-model="item.badge"
-        class="UiInput"
+        label="badge"
         type="text"
         placeholder="badge"
-      >
+      />
     </form>
 
     <section>
@@ -147,7 +282,7 @@ function saySomething() {
 </template>
 
 <style lang="scss">
-.UiItemDocs {
+.Docs--UiItem {
   section {
     margin-bottom: 20px;
 
