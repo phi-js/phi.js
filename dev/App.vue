@@ -347,6 +347,14 @@ function onComponentUnmounted(evt) {
 .Docs {
   padding: 12px 20px;
 
+  var {
+    font-style: normal;
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.06);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-weight: bold;
+  }
 
   code {
     white-space: pre-wrap;
