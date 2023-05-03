@@ -149,6 +149,7 @@ function onComponentUnmounted(evt) {
       <div class="App__sidebar">
         <UiInput
           v-model="searchString"
+          class="App__sidebarSearch"
           type="search"
           placeholder="Buscar..."
           :value="searchString"
@@ -270,6 +271,15 @@ function onComponentUnmounted(evt) {
     }
   }
 
+  &__sidebarSearch {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    input {
+      width: 100%;
+    }
+  }
+
   &__body {
     position: relative;
     flex: 1;
@@ -346,6 +356,10 @@ function onComponentUnmounted(evt) {
 
 .Docs {
   padding: 12px 20px;
+
+  a {
+    text-decoration: underline;
+  }
 
   var {
     font-style: normal;

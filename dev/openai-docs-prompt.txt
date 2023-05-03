@@ -49,8 +49,7 @@ You write documentations for vue components.  The user will provide Vue code, an
 Create examples of use, showing different examples of props and slots usage.
 Show examples in both <pre><code> blocks followed by the actual example.
 For example: (replace ComponentName with the component name)
-<pre><code>
-&lt;ComponentName some-prop="some value" /&gt;
+<pre><code>&lt;ComponentName some-prop="some value" /&gt;
 &lt;ComponentName&gt;
   &lt;template #foo&gt;Contents in FOO slot&lt;/template&gt;
 &lt;/ComponentName&gt;

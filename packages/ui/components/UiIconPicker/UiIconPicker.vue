@@ -3,7 +3,6 @@
     <UiIcon
       class="UiIconPicker__current ui--clickable"
       :src="modelValue"
-      :color="color"
       @click="isDialogOpen = true"
     />
 
@@ -78,12 +77,6 @@ export default {
 
   props: {
     modelValue: {
-      type: String,
-      required: false,
-      default: null,
-    },
-
-    color: {
       type: String,
       required: false,
       default: null,

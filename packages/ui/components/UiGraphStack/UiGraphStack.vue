@@ -1,7 +1,6 @@
 <script setup>
 import { computed, defineAsyncComponent } from 'vue'
 import UiItem from '../UiItem/UiItem.vue'
-// import draggable from 'vuedraggable'
 const draggable = defineAsyncComponent(() => import('vuedraggable'))
 
 const props = defineProps({

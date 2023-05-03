@@ -1,11 +1,5 @@
-<script>
-export default { inheritAttrs: false }
-</script>
-
 <script setup>
-import { ref, watch, useAttrs } from 'vue'
-
-const attrs = useAttrs()
+import { ref, watch } from 'vue'
 
 const props = defineProps({
   /* Timer in milliseconds (e.g. 100749) */
