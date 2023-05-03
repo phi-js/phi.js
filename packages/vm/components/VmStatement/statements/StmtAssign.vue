@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { UiInput, UiDrawer, UiItem } from '@/packages/ui/components'
+import { UiInput, UiDetails, UiItem } from '@/packages/ui/components'
 import { VmStatement } from '..'
 
 import useVmI18n from '../../../i18n'
@@ -46,8 +46,8 @@ const faceItemProps = computed(() => {
 </script>
 
 <template>
-  <UiDrawer class="StmtAssign">
-    <template #trigger>
+  <UiDetails class="StmtAssign">
+    <template #summary>
       <UiItem
         class="StmtAssign__item"
         v-bind="faceItemProps"
@@ -76,5 +76,5 @@ const faceItemProps = computed(() => {
         />
       </div>
     </template>
-  </UiDrawer>
+  </UiDetails>
 </template>

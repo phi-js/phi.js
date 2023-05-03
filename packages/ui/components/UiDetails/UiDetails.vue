@@ -148,7 +148,7 @@ async function expand() {
 }
 
 function shrink() {
-  if (!refEl.value || !isOpen.value || isClosing.value) {
+  if (!refEl.value || !refEl.value.open || isClosing.value) {
     return
   }
 

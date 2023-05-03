@@ -1,5 +1,5 @@
 <script setup>
-import { defineAsyncComponent, ref, watch } from 'vue'
+import { defineAsyncComponent, nextTick, ref, watch } from 'vue'
 import { UiIcon } from '@/packages/ui'
 import useVmI18n from '../../../../i18n'
 import StmtChainItem from './StmtChainItem.vue'
@@ -50,6 +50,14 @@ function onPickerInput(expression) {
 
   innerValue.value.chain.push(newStmt)
   emitUpdate()
+
+  // Open the newly created input
+  nextTick(() => {
+    const lastStatement = elRoot.value.querySelector('.StmtChainItem:last-child details')
+    if (lastStatement) {
+      lastStatement.open = true
+    }
+  })
 }
 
 function ifify(item, i) {
@@ -68,11 +76,15 @@ function deifify(item, i) {
   emitUpdate()
 }
 
+const elRoot = ref()
 const endangeredIndex = ref(-1)
 </script>
 
 <template>
-  <div class="StmtChain">
+  <div
+    ref="elRoot"
+    class="StmtChain"
+  >
     <draggable
       v-model="innerValue.chain"
       class="StmtChain__items"

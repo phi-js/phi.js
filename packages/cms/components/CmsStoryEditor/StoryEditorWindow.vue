@@ -249,5 +249,12 @@ const i18n = useI18n({
       height: 100%;
     }
   }
+
+
+  .contents-code {
+    .UiTabs__contents {
+      padding: 7px;
+    }
+  }
 }
 </style>
