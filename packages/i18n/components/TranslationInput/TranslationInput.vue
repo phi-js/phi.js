@@ -154,7 +154,7 @@ async function translateMissingWords() {
           title="Translations"
         />
       </template>
-      <template #contents>
+      <template #default>
         <div class="TranslationInput__box UiForm--wide">
           <UiInput
             v-for="language in i18n.availableLanguages"

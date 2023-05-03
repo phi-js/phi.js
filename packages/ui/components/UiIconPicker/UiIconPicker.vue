@@ -52,7 +52,7 @@
         </div>
       </template>
 
-      <template #contents>
+      <template #default>
         <div class="UiIconPicker__grid">
           <span
             v-for="iconName in listedIcons"

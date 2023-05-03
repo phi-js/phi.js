@@ -80,7 +80,7 @@ function onStagingAccept($event) {
       v-slot="{ close }"
       :open="true"
       class="CmsTemplatePicker__dialog"
-      @cancel="stagingComponent = null"
+      @close="stagingComponent = null"
     >
       <Component
         :is="stagingComponent"

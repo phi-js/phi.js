@@ -1,19 +1,21 @@
 <script setup>
 import { ref } from 'vue'
-import { UiDialog, UiItem, UiInput } from '../'
+import { UiDialog, UiItem } from '../'
 
 const isSaving = ref(false)
 async function doAccept() {
   isSaving.value = true
-  await new Promise((resolve) => setTimeout(resolve, 1000))
+  await new Promise((resolve) => setTimeout(resolve, 2000))
   isSaving.value = false
 
-  return true
+  return confirm('Retornar TRUE?')
 }
 
 function doCancel() {
   return confirm('Perderás los cambios.  Continuar?')
 }
+
+const isOpen = ref(false)
 </script>
 
 <template>
@@ -21,7 +23,7 @@ function doCancel() {
     <h1>UiDialog</h1>
     <code>import { UiDialog } from '@/packages/ui'</code>
     <p>
-      The UiDialog component is a customizable dialog box that provides open, close, accept, and cancel functionalities. It also supports custom slots for triggers and contents.
+      The UiDialog component provides a customizable dialog with a trigger, header, content, and footer. It supports opening and closing the dialog, accepting and canceling actions, and handling asynchronous actions with a waiting state.
     </p>
 
     <table>
@@ -37,38 +39,38 @@ function doCancel() {
       <tbody>
         <tr>
           <td>open</td>
-          <td>Controls the open state of the dialog.</td>
+          <td>Initial open state of the dialog.</td>
           <td>String, Number, Boolean</td>
-          <td>false</td>
+          <td>No</td>
           <td>false</td>
         </tr>
         <tr>
           <td>onAccept</td>
-          <td>Function to be executed when the accept button is clicked.</td>
+          <td>Function to be called when the accept action is performed.</td>
           <td>Function</td>
-          <td>false</td>
+          <td>No</td>
           <td>null</td>
         </tr>
         <tr>
           <td>onCancel</td>
-          <td>Function to be executed when the cancel button is clicked.</td>
+          <td>Function to be called when the cancel action is performed.</td>
           <td>Function</td>
-          <td>false</td>
+          <td>No</td>
           <td>null</td>
         </tr>
         <tr>
           <td>tabindex</td>
-          <td>Tabindex attribute for the trigger element.</td>
+          <td>Tabindex of the dialog trigger element.</td>
           <td>String, Number</td>
-          <td>false</td>
+          <td>No</td>
           <td>''</td>
         </tr>
         <tr>
-          <td>closeButton</td>
-          <td>Shows a close button in the footer if true.</td>
-          <td>Boolean</td>
+          <td>isWaiting</td>
+          <td>Indicates if the dialog is in a waiting state for asynchronous actions.</td>
+          <td>Boolean, String</td>
+          <td>No</td>
           <td>false</td>
-          <td>true</td>
         </tr>
       </tbody>
     </table>
@@ -83,7 +85,7 @@ function doCancel() {
       <tbody>
         <tr>
           <td>update:open</td>
-          <td>Emitted when the open state changes.</td>
+          <td>Emitted when the open state of the dialog changes.</td>
         </tr>
         <tr>
           <td>open</td>
@@ -93,14 +95,6 @@ function doCancel() {
           <td>close</td>
           <td>Emitted when the dialog is closed.</td>
         </tr>
-        <tr>
-          <td>accept</td>
-          <td>Emitted when the accept button is clicked.</td>
-        </tr>
-        <tr>
-          <td>cancel</td>
-          <td>Emitted when the cancel button is clicked.</td>
-        </tr>
       </tbody>
     </table>
 
@@ -109,52 +103,70 @@ function doCancel() {
         <tr>
           <th>Slot</th>
           <th>Description</th>
+          <th>Slot bindings</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>trigger</td>
-          <td>Slot for custom trigger elements that open and close the dialog.</td>
+          <td>Slot for customizing the dialog trigger element.</td>
+          <td>isOpen, open, close</td>
+        </tr>
+        <tr>
+          <td>summary</td>
+          <td>Alternative naming for the trigger slot.</td>
+          <td>isOpen, open, close</td>
         </tr>
         <tr>
           <td>header</td>
-          <td>Slot for custom header contents within the dialog.</td>
-        </tr>
-        <tr>
-          <td>contents</td>
-          <td>Slot for custom main contents within the dialog.</td>
+          <td>Slot for customizing the dialog header.</td>
+          <td>accept, cancel, close</td>
         </tr>
         <tr>
           <td>default</td>
-          <td>Alias for contents slot.</td>
+          <td>Slot for customizing the dialog content.</td>
+          <td>accept, cancel, close</td>
         </tr>
         <tr>
           <td>footer</td>
-          <td>Slot for custom footer contents within the dialog. Accept and Cancel buttons are placed here by default.</td>
+          <td>Slot for customizing the dialog footer and action buttons.</td>
+          <td>accept, cancel, close</td>
         </tr>
       </tbody>
     </table>
 
-    <pre><code>
-&lt;UiDialog open @update:open="handleOpenUpdate" @open="handleOpen" @close="handleClose" &gt;
-  &lt;template #trigger&gt;
-    &lt;button&gt;Open Dialog&lt;/button&gt;
-  &lt;/template&gt;
-  &lt;template #header&gt;
-    &lt;h2&gt;Dialog Title&lt;/h2&gt;
-  &lt;/template&gt;
-  &lt;template #contents&gt;
-    &lt;p&gt;This is the main content of the dialog.&lt;/p&gt;
-  &lt;/template&gt;
-  &lt;template #footer="{ close }"&gt;
-    &lt;button @click="close"&gt;Accept&lt;/button&gt;
-    &lt;button @click="close"&gt;Cancel&lt;/button&gt;
-  &lt;/template&gt;
-&lt;/UiDialog&gt;
-</code></pre>
 
     <fieldset>
-      <legend>Example</legend>
+      <legend>Basic example</legend>
+      <UiDialog>
+        <template #trigger>
+          Open dialog
+        </template>
+        <template #default>
+          Hello :)
+        </template>
+      </UiDialog>
+    </fieldset>
+
+    <fieldset>
+      <legend>v-model:open</legend>
+
+      <label for="chbox">
+        isOpen: <input
+          id="chbox"
+          v-model="isOpen"
+          type="checkbox"
+        > {{ isOpen }}
+      </label>
+      <UiDialog v-model:open="isOpen">
+        Hello :)
+      </UiDialog>
+    </fieldset>
+
+
+
+    <fieldset>
+      <legend>All slots</legend>
       <UiDialog>
         <template #trigger>
           <button>Open Dialog</button>
@@ -162,36 +174,34 @@ function doCancel() {
         <template #header>
           <h2>Dialog Title</h2>
         </template>
-        <template #contents>
+        <template #default>
           <p>This is the main content of the dialog.</p>
         </template>
         <template #footer="{ close }">
-          <button @click="close">
+          <button type="submit">
             Accept
           </button>
-          <button @click="close">
-            Cancel
+          <button type="button">
+            Do nothing
+          </button>
+          <button
+            type="button"
+            @click="close"
+          >
+            Close
           </button>
         </template>
       </UiDialog>
     </fieldset>
 
-    <fieldset>
-      <legend>Simple example</legend>
-      <UiDialog>
-        <template #trigger>
-          Click me
-        </template>
-        <template #contents>
-          Hello :)
-        </template>
-      </UiDialog>
-    </fieldset>
-
 
     <fieldset>
-      <legend>Cancel listener</legend>
-      <UiDialog @cancel="doCancel">
+      <legend>Accept and Cancel listeneres</legend>
+      <UiDialog
+        :is-waiting="isSaving"
+        @accept="doAccept"
+        @cancel="doCancel"
+      >
         <template #trigger>
           <UiItem
             class="ui--clickable"
@@ -200,31 +210,11 @@ function doCancel() {
           />
         </template>
 
-        <template #contents>
+        <template #default>
           <h1>Contenido del dialog</h1>
           <p>dfkjh adsflkjhas dklfhasdf lkahsdfk jlasdh kfjldsakjhf kasdf s</p>
           <p>dfkjh adsflkjhas dklfhasdf lkahsdfk jlasdh kfjldsakjhf kasdf s</p>
           <p>dfkjh adsflkjhas dklfhasdf lkahsdfk jlasdh kfjldsakjhf kasdf s</p>
-        </template>
-
-        <template #footer="{ close }">
-          <div
-            class="UiGroup"
-            style="background-color: rgba(0, 0, 0, 0.02)"
-          >
-            <UiInput
-              type="button"
-              :label="isSaving ? 'Guardando...' : 'Aceptar'"
-              :disabled="isSaving"
-              @click="doAccept().then(r => r && close())"
-            />
-            <UiInput
-              type="button"
-              label="Cancelar"
-              class="--cancel"
-              @click="doCancel() && close()"
-            />
-          </div>
         </template>
       </UiDialog>
     </fieldset>

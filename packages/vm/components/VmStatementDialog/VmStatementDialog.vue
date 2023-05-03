@@ -73,34 +73,36 @@ function emitUpdate(newValue) {
   <UiDialog
     class="VmStatementDialog"
     :open="true"
+    @accept="accept"
+    @cancel="cancel"
   >
-    <template #contents="{ close }">
-      <form @submit.prevent="accept() && close()">
-        <VmStatement
-          v-model="tmpValue"
-          open
-          :fields="[field]"
-        />
-        <footer class="VmStatementDialog__footer">
-          <UiInput
-            type="submit"
-            :label="i18n.t('Accept')"
-          />
-          <UiInput
-            class="UiButton--cancel"
-            type="button"
-            :label="i18n.t('Cancel')"
-            @click="cancel() && close();"
-          />
-          <UiInput
-            :disabled="!modelValue"
-            class="UiButton--danger"
-            type="button"
-            :label="i18n.t('Clear')"
-            @click="clear() && close()"
-          />
-        </footer>
-      </form>
+    <template #default>
+      <h1>AQUI ESTOY</h1>
+      <VmStatement
+        v-model="tmpValue"
+        open
+        :fields="[field]"
+      />
+    </template>
+
+    <template #footer="dialogSlot">
+      <UiInput
+        type="submit"
+        :label="i18n.t('Accept')"
+      />
+      <UiInput
+        class="UiButton--cancel"
+        type="button"
+        :label="i18n.t('Cancel')"
+        @click="dialogSlot.cancel()"
+      />
+      <UiInput
+        :disabled="!modelValue"
+        class="UiButton--danger"
+        type="button"
+        :label="i18n.t('Clear')"
+        @click="clear() && dialogSlot.close()"
+      />
     </template>
   </UiDialog>
 </template>
@@ -115,20 +117,5 @@ function emitUpdate(newValue) {
     }
   }
 
-  &__footer {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 8px;
-    padding: 8px;
-
-    .UiButton--danger {
-      margin-left: auto;
-    }
-  }
-
-  .UiDialog__footer {
-    display: none;
-  }
 }
 </style>

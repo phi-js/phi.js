@@ -1,6 +1,7 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import { useI18n } from '@/packages/i18n'
+import { UiInput } from '../UiInput'
 
 const i18n = useI18n()
 
@@ -29,47 +30,28 @@ const props = defineProps({
     default: '',
   },
 
-  // Show a close button
-  closeButton: {
-    type: Boolean,
+  isWaiting: {
+    type: [Boolean, String],
     required: false,
-    default: true,
+    default: false,
   },
 })
 
-const emit = defineEmits(['update:open', 'open', 'close', 'accept', 'cancel'])
+const emit = defineEmits(['update:open', 'open', 'close'])
 
 const refDialog = ref()
-
 const isOpen = ref(false)
-
-onMounted(() => {
-  isOpen.value = !!props.open
-  if (isOpen.value) {
-    refDialog.value?.showModal?.()
-    document.body.style.overflow = 'hidden'
-  } else if (refDialog.value) {
-    refDialog.value?.close?.()
-    document.body.style.overflow = null
-  }
-})
 
 watch(
   () => props.open,
   (newValue) => {
-    if (isOpen.value === newValue) {
-      return
-    }
-    isOpen.value = !!newValue
-    if (isOpen.value) {
-      refDialog.value?.showModal?.()
-      document.body.style.overflow = 'hidden'
-    } else if (refDialog.value) {
-      refDialog.value?.close?.()
-      document.body.style.overflow = null
+    if (!refDialog.value) { // happens on "immediate" watch execution
+      nextTick(() => newValue ? open() : close())
+    } else {
+      newValue ? open() : close()
     }
   },
-  // { immediate: true },
+  { immediate: true },
 )
 
 function open() {
@@ -82,35 +64,34 @@ function open() {
 
 function close() {
   refDialog.value?.close?.()
-}
-
-function accept() {
-  if (!refDialog.value) {
-    return
-  }
-
-  refDialog.value.returnValue = 'accept'
-  refDialog.value.close()
-}
-
-async function onDialogClose($event) {
-  if (!$event.target.returnValue && props.onCancel) {
-    let res = await props.onCancel()
-    if (res !== undefined && !res) {
-      return
-    }
-  }
-
-  if ($event.target.returnValue == 'accept' && props.onAccept) {
-    await props.onAccept()
-  }
-
-  $event.target.returnValue = '' // reset dialog's returnValue
-
   document.body.style.overflow = null
   isOpen.value = false
   emit('update:open', isOpen.value)
   emit('close')
+}
+
+async function accept() {
+  if (!props.onAccept) {
+    return close()
+  }
+  const acceptResponse = await props.onAccept(refDialog.value)
+  if (acceptResponse === false) {
+    return
+  }
+  close()
+}
+
+async function cancel() {
+  if (!props.onCancel) {
+    return close()
+  }
+
+  const cancelResponse = await props.onCancel(refDialog.value)
+  if (cancelResponse === false) {
+    return
+  }
+
+  close()
 }
 </script>
 
@@ -145,104 +126,66 @@ async function onDialogClose($event) {
     <dialog
       ref="refDialog"
       class="UiDialog__dialog"
-      @close="onDialogClose"
+      @cancel.prevent="cancel"
     >
-      <div class="UiDialog__box">
+      <form
+        class="UiDialog__box"
+        method="dialog"
+        @submit.prevent="accept"
+      >
         <div class="UiDialog__header">
           <slot
             name="header"
+            :accept="accept"
+            :cancel="cancel"
             :close="close"
           />
         </div>
 
         <div
-          v-if="$slots.contents || $slots.default"
+          v-if="$slots.default"
           class="UiDialog__contents"
         >
           <slot
-            name="contents"
-            :close="close"
-            :accept="accept"
-          />
-          <slot
             name="default"
-            :close="close"
             :accept="accept"
+            :cancel="cancel"
+            :close="close"
           />
         </div>
 
-        <slot
-          name="footer"
-          :close="close"
-        >
-          <form
-            v-if="onAccept || onCancel || closeButton"
-            class="UiDialog__footer"
-            method="dialog"
+        <footer class="UiDialog__footer">
+          <slot
+            name="footer"
+            :accept="accept"
+            :cancel="cancel"
+            :close="close"
           >
-            <button
-              v-if="onAccept"
-              class="UiDialog__acceptButton UiButton UiButton--main"
+            <UiInput
+              v-if="props.onAccept"
+              class="UiDialog__acceptButton"
               type="submit"
               value="accept"
+              :is-loading="props.isWaiting"
               v-text="i18n.t('Accept')"
             />
-            <button
-              v-if="onCancel"
-              class="UiDialog__cancelButton UiButton UiButton--cancel"
-              type="submit"
+            <UiInput
+              v-if="props.onCancel"
+              class="UiDialog__cancelButton UiButton--cancel"
+              type="button"
+              @click="cancel"
               v-text="i18n.t('Cancel')"
             />
-            <button
-              v-else-if="closeButton"
-              class="UiDialog__cancelButton UiButton UiButton--cancel"
-              type="submit"
+            <UiInput
+              v-else
+              class="UiDialog__cancelButton UiButton--cancel"
+              type="button"
+              @click="close"
               v-text="i18n.t('Close')"
             />
-          </form>
-        </slot>
-      </div>
+          </slot>
+        </footer>
+      </form>
     </dialog>
   </div>
 </template>
-
-<style lang="scss">
-.UiDialog {
-  &__dialog {
-    width: 600px;
-
-    border: 0;
-    border-radius: 5px;
-    background-color: var(--ui-color-z1);
-    padding: 0;
-    overflow: visible; // allows UiPopover inside dialog to show correctly
-    margin-top: 8vh;
-
-    &::backdrop {
-      background: rgba(0,0,0, 0.6);
-    }
-  }
-
-  &__box {
-    max-height: 82vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__contents {
-    flex: 1;
-    overflow: auto;
-  }
-
-  &__footer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    padding: 4px;
-  }
-
-  &__cancelButton {
-    margin-left: auto;
-  }
-}
-</style>

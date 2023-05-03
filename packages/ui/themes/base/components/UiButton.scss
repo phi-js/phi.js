@@ -24,6 +24,7 @@
 
   /* darkener layer */
   position: relative;
+
   &::before {
     content: '';
     position: absolute;
@@ -31,7 +32,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0,0,0, 0.2);
+    background-color: rgba(0, 0, 0, 0.2);
     pointer-events: none;
     opacity: 0;
     border-radius: 5px;
@@ -72,10 +73,10 @@
 button.UiButton {
   padding: var(--ui-button-padding);
 
-  &--component {
-    padding: 0;
-    --ui-item-padding: var(--ui-button-padding);
-  }
+  // &--component {
+  //   padding: 0;
+  //   --ui-item-padding: var(--ui-button-padding);
+  // }
 }
 
 // Loading Animation
@@ -83,6 +84,7 @@ button.UiButton {
   position: relative;
 
   .UiItem {
+
     &__icon,
     &__actions {
       overflow: hidden;
@@ -125,6 +127,7 @@ button.UiButton {
           content: var(--ui-button-loading-label);
         }
       }
+
       &__text {
         display: none;
       }

@@ -1,0 +1,34 @@
+.UiDialog {
+  &__dialog {
+    width: 600px;
+
+    border: 0;
+    border-radius: 5px;
+    background-color: var(--ui-color-z1);
+    padding: 0;
+    overflow: visible; // allows UiPopover inside dialog to show correctly
+    margin-top: 8vh;
+
+    &::backdrop {
+      background: rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  &__box {
+    max-height: 82vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__contents {
+    flex: 1;
+    overflow: auto;
+  }
+
+  &__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px;
+  }
+}

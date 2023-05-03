@@ -37,7 +37,7 @@ defineProps({
           v-if="section.creator?.component"
           class="UiFolderGrid__item UiFolderGrid__item--adder"
         >
-          <UiDialog :close-button="false">
+          <UiDialog>
             <template #trigger>
               <UiItem
                 class="UiFolderGrid__uiItem"
@@ -54,6 +54,9 @@ defineProps({
                   @cancel="close()"
                 />
               </div>
+            </template>
+            <template #footer>
+              <span />
             </template>
           </UiDialog>
         </div>

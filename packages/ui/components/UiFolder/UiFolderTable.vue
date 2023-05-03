@@ -55,7 +55,7 @@ const itemCount = computed(() => {
           class="UiFolderTable__adderRow"
         >
           <td>
-            <UiDialog :close-button="false">
+            <UiDialog>
               <template #trigger>
                 <UiItem
                   class="UiFolderTable__item UiFolderTable__item--adder"
@@ -72,6 +72,9 @@ const itemCount = computed(() => {
                     @cancel="close()"
                   />
                 </div>
+              </template>
+              <template #footer>
+                <span />
               </template>
             </UiDialog>
           </td>

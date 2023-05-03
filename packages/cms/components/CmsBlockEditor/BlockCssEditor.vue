@@ -292,7 +292,7 @@ function openVisibilityEditor(className) {
   }
 }
 
-function onEditorSubmit() {
+function onEditorAccept() {
   const foundClass = blockClassList.value.find((c) => c.name == editingClass.value?.name)
   if (!foundClass) {
     return
@@ -478,33 +478,14 @@ const blockHasStyle = computed(() => {
 
       <!-- class visibility conditions editor -->
       <UiDialog
-        v-slot="{ close }"
         :open="!!editingClass"
-        :close-button="false"
+        @accept="onEditorAccept()"
         @close="onEditorClose()"
       >
-        <form
-          class="BlockCssEditor__dialog"
-          method="dialog"
-          @submit="onEditorSubmit()"
-        >
-          <VmStatement
-            v-if="editingClass"
-            v-model="editingClass.condition"
-          />
-          <footer>
-            <UiButton
-              type="submit"
-              label="Accept"
-            />
-            <UiButton
-              type="button"
-              label="Cancel"
-              class="UiButton--cancel"
-              @click="close()"
-            />
-          </footer>
-        </form>
+        <VmStatement
+          v-if="editingClass"
+          v-model="editingClass.condition"
+        />
       </UiDialog>
 
       <!-- Class picker -->

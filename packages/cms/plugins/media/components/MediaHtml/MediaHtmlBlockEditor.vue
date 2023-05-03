@@ -354,13 +354,11 @@ function onDialogAccept() {
       .run()
   }
 
-  isLinkDialogOpen.value = false
   linkUrl.value = ''
   linkTarget.value = ''
 }
 
 function onDialogCancel() {
-  isLinkDialogOpen.value = false
   linkUrl.value = ''
   linkTarget.value = ''
 }
@@ -496,13 +494,10 @@ const targetOptions = [
 
       <UiDialog
         v-model:open="isLinkDialogOpen"
-        :close-button="false"
+        @accept="onDialogAccept"
+        @cancel="onDialogCancel"
       >
-        <form
-          class="MediaHtmlBlockEditor__linkDialog"
-          method="dialog"
-          @submit="onDialogAccept"
-        >
+        <div class="MediaHtmlBlockEditor__linkDialog">
           <UiInput
             v-model="linkUrl"
             placeholder="URL"
@@ -518,20 +513,7 @@ const targetOptions = [
             type="select-list"
             :options="targetOptions"
           />
-
-          <footer>
-            <UiInput
-              type="submit"
-              :label="i18n.t('Accept')"
-            />
-            <UiInput
-              type="button"
-              class="UiButton--cancel"
-              :label="i18n.t('Cancel')"
-              @click="onDialogCancel"
-            />
-          </footer>
-        </form>
+        </div>
       </UiDialog>
     </template>
   </BlockScaffold>
@@ -571,15 +553,8 @@ const targetOptions = [
 
   &__linkDialog {
     padding: 5px;
-
     .UiInput {
       margin-bottom: 1em;
-    }
-
-    footer {
-      display: flex;
-      gap: 5px;
-      padding: 5px;
     }
   }
 }

@@ -106,7 +106,7 @@ function onSelectItem($event) {
         :text="props.label"
       />
     </template>
-    <template #contents="{ close }">
+    <template #default="{ close }">
       <UiItemFinder
         class="VmStatementPicker__contents"
         :items="availableStatements"

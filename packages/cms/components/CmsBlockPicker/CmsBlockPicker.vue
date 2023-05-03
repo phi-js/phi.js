@@ -106,7 +106,7 @@ function onClickSuggestion(sugg) {
     ]"
   >
     <UiDialog
-      v-slot="{ accept }"
+      v-slot="{ close }"
       v-model:open="isOpen"
       @update:open="emit('update:open', $event)"
       @cancel="emit('cancel')"
@@ -114,7 +114,7 @@ function onClickSuggestion(sugg) {
       <UiItemFinder
         v-model:searchString="searchString"
         :items="availableBlocks"
-        @select-item="emit('input', $event); accept()"
+        @select-item="emit('input', $event); close()"
       >
         <template #body>
           <div
@@ -128,13 +128,13 @@ function onClickSuggestion(sugg) {
               :icon="sugg.icon"
               :text="sugg.title"
               :subtext="sugg.subtext"
-              @click="onClickSuggestion(sugg); accept()"
+              @click="onClickSuggestion(sugg); close()"
             />
           </div>
 
           <slot
             name="body"
-            :close="accept"
+            :close="close"
           />
         </template>
       </UiItemFinder>

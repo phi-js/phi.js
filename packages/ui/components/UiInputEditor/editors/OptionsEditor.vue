@@ -173,7 +173,7 @@ function onDialogAccept(textareaValue) {
               icon="mdi:text-box-plus-outline"
             />
           </template>
-          <template #contents>
+          <template #default>
             <UiInput
               type="textarea"
               :placeholder="i18n.t('OptionsEditor.TextareaPlaceholder')"
