@@ -11,23 +11,23 @@ const math = ref('x = \\frac { -b \\pm \\sqrt{ b^2-4ac } } { 2a }')
     <h1>UiKatex</h1>
     <code>import { UiKatex } from '@/packages/ui'</code>
     <p>
-      UiKatex es un componente Vue que renderiza ecuaciones matemáticas utilizando la biblioteca KaTeX.
+      UiKatex is a Vue component that renders mathematical equations using the KaTeX library.
     </p>
 
     <table>
       <thead>
         <tr>
           <th>Prop</th>
-          <th>Descripción</th>
-          <th>Tipo</th>
-          <th>Obligatorio</th>
-          <th>Valor por defecto</th>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Required</th>
+          <th>Default Value</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>value</td>
-          <td>La ecuación matemática a renderizar</td>
+          <td>The mathematical equation to render</td>
           <td>String</td>
           <td>false</td>
           <td>null</td>
@@ -38,12 +38,12 @@ const math = ref('x = \\frac { -b \\pm \\sqrt{ b^2-4ac } } { 2a }')
     <table>
       <thead>
         <tr>
-          <th>Evento</th>
-          <th>Descripción</th>
+          <th>Event</th>
+          <th>Description</th>
         </tr>
       </thead>
       <tbody>
-        <!-- No hay eventos -->
+        <!-- No events -->
       </tbody>
     </table>
 
@@ -51,20 +51,24 @@ const math = ref('x = \\frac { -b \\pm \\sqrt{ b^2-4ac } } { 2a }')
       <thead>
         <tr>
           <th>Slot</th>
-          <th>Descripción</th>
-          <th>Enlaces de slot</th>
+          <th>Description</th>
+          <th>Slot bindings</th>
         </tr>
       </thead>
       <tbody>
-        <!-- No hay slots -->
+        <!-- No slots -->
       </tbody>
     </table>
 
-    <pre><code>
-&lt;UiKatex value="c = \pm\sqrt{a^2 + b^2}" /&gt;
-</code></pre>
+    <fieldset>
+      <legend>Ejemplo (AI)</legend>
 
-    <UiKatex value="c = \pm\sqrt{a^2 + b^2}" />
+      <pre><code>
+      &lt;UiKatex value="c = \pm\sqrt{a^2 + b^2}" /&gt;
+      </code></pre>
+
+      <UiKatex value="c = \pm\sqrt{a^2 + b^2}" />
+    </fieldset>
 
 
     <fieldset>
