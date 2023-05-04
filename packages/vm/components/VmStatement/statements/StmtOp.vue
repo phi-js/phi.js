@@ -108,6 +108,37 @@ const availableOperators = computed(() => {
   })
 })
 
+/*
+[
+  {
+    "label": "Dates",
+    "operators": [
+      ... filtered list from availableOperators
+    ]
+  }
+]
+*/
+const operatorOptionGroups = computed(() => {
+  const typeHash = {} // typeHash[operator type] = { label, operators: [] }
+  availableOperators.value.forEach((op) => {
+    if (!op.text) {
+      return
+    }
+
+    const opType = op.type || 'other'
+
+    if (!typeHash[op.type]) {
+      typeHash[op.type] = {
+        label: opType,
+        operators: [],
+      }
+    }
+    typeHash[op.type].operators.push(op)
+  })
+
+  return Object.values(typeHash)
+})
+
 const isKnownOperator = computed(() => {
   return (
     availableOperators.value.findIndex((opDef) => opDef.operator == innerModel.value?.op) >= 0
@@ -199,13 +230,20 @@ function argsToString(strArgs) {
           class="UiInput"
           @change="onChangeOp()"
         >
-          <option
-            v-for="(opDef, i) in availableOperators"
-            :key="i"
-            :value="opDef.operator"
+          <optgroup
+            v-for="optgroup in operatorOptionGroups"
+            :key="optgroup.label"
+            :label="optgroup.label"
           >
-            {{ opDef.text }}
-          </option>
+            <option
+              v-for="(opDef, i) in optgroup.operators"
+              :key="i"
+              :value="opDef.operator"
+            >
+              {{ opDef.text }}
+            </option>
+          </optgroup>
+
 
           <option
             v-if="!isKnownOperator"
