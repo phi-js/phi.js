@@ -67,7 +67,7 @@ const timeOptions = computed(() => {
 
   while (current <= max) {
     const text = current.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    const value = text.substring(0, 5)
+    const value = current.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }).substring(0, 5)
     slots.push({ text: text, value: value })
     current.setTime(current.getTime() + step)
   }
