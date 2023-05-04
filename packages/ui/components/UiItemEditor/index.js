@@ -1,1 +1,0 @@
-export { default as UiItemEditor } from './UiItemEditor.vue'

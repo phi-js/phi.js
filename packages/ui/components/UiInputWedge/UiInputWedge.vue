@@ -91,7 +91,7 @@ function onEscape(inputEl) {
       :placeholder="props.placeholder"
       @keydown.esc="onEscape($event.target)"
       @keypress.enter="onEnter($event.target.value)"
-    />
+    >
   </div>
 </template>
 

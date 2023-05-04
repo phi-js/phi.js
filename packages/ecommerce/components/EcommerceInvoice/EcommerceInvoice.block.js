@@ -18,9 +18,5 @@ export default {
         'v-model': 'block.props.blueprint',
       },
     ],
-    // face: {
-    //   'component': UiItemEditor,
-    //   'v-model': 'block.props',
-    // },
   },
 }

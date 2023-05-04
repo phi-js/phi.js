@@ -1,6 +1,5 @@
 // !!! HIDE ICONS inside .UiWindow tabs
-.UiWindow .UiTab,
-.UiWindow .UiDrawerStack__drawer > summary {
+.UiWindow .UiTab {
   .UiItem__icon {
     display: none;
   }
@@ -20,8 +19,9 @@
 
   // Hide window top right icons
   .UiWindow__header {
-    & > .UiWindow__eyeIcon,
-    & > .UiPopover {
+
+    &>.UiWindow__eyeIcon,
+    &>.UiPopover {
       display: none;
     }
   }

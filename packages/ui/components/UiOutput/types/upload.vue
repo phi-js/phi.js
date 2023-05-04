@@ -3,6 +3,15 @@ import { UiItem } from '../../UiItem'
 import bytes from '../../../filters/bytes.js'
 
 const props = defineProps({
+  /*
+  {
+    url,
+    thumbnail,
+    title,
+    name
+    size
+  }
+  */
   value: {
     type: Object,
     required: false,

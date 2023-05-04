@@ -257,7 +257,7 @@ function onComponentUnmounted(evt) {
     overflow-y: auto;
     overscroll-behavior: contain;
 
-    max-height: calc(100vh - 54px); // minus top bar height
+    max-height: calc(100vh - 54px - 20px - 4px); // minus top bar height, minus 2*margin, minus a small padding
     position: sticky;
     top: 0;
 

@@ -1,343 +1,167 @@
 <script setup>
 import { ref } from 'vue'
-import { default as xrecords } from './records.js'
-
 import { UiSelect } from './index.js'
-
-const singlePerson = ref()
-const manyPeople = ref([])
-const records = ref(xrecords)
-const testValue = ref()
-
-function onNativeSelectScroll(event) {
-  var hiddenHeight = event.target.scrollHeight - event.target.offsetHeight + event.target.scrollTop
-  console.log(
-    'onNativeSelectScroll',
-    event.target.scrollTop,
-    event.target.offsetHeight,
-    event.target.scrollHeight,
-    hiddenHeight,
-  )
-}
-
+const selectedOption = ref('')
+const selectedOptions = ref([])
 </script>
+
 <template>
-  <h1>UiSelect</h1>
+  <div class="Docs">
+    <h1>UiSelect</h1>
+    <code>import { UiSelect } from '@/packages/ui'</code>
+    <p>A versatile, customizable select component for Vue.js applications. It supports single and multiple selections, searching, and more.</p>
 
-  <select
-    v-model="singlePerson"
-    placeholder="Child options!"
-    multiple
-    style="min-height: 350px;"
-    @scroll="onNativeSelectScroll"
-  >
-    <option>No value prop</option>
-    <option :value="undefined">
-      :value="undefined"
-    </option>
-    <option value="0">
-      value="0"
-    </option>
-    <option :value="0">
-      :value="0"
-    </option>
-    <option value="false">
-      value="false"
-    </option>
-    <option :value="false">
-      :value="false"
-    </option>
-    <option value="null">
-      value="null"
-    </option>
-    <option :value="null">
-      :value="null"
-    </option>
+    <table>
+      <thead>
+        <tr>
+          <th>Prop</th>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Required</th>
+          <th>Default Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>multiple</td>
+          <td>Whether the select allows multiple selections.</td>
+          <td>Boolean</td>
+          <td>No</td>
+          <td>false</td>
+        </tr>
+        <tr>
+          <td>modelValue</td>
+          <td>Value binding for the selected option(s).</td>
+          <td>Any</td>
+          <td>No</td>
+          <td>null</td>
+        </tr>
+        <tr>
+          <td>placeholder</td>
+          <td>Placeholder text for the select input.</td>
+          <td>String</td>
+          <td>No</td>
+          <td>''</td>
+        </tr>
+        <tr>
+          <td>options</td>
+          <td>An array of arbitrary objects to be used as a source for options.</td>
+          <td>Array</td>
+          <td>No</td>
+          <td>[]</td>
+        </tr>
+        <tr>
+          <td>optionValue</td>
+          <td>A JSON PATH string pointing to the item property to be used as a scalar VALUE identifier. Defaults to '$.value'.</td>
+          <td>String</td>
+          <td>No</td>
+          <td>null</td>
+        </tr>
+        <tr>
+          <td>optionText</td>
+          <td>A JSON PATH string pointing to the item property to be used as a scalar TEXT identifier. Defaults to '$.text'.</td>
+          <td>String</td>
+          <td>No</td>
+          <td>null</td>
+        </tr>
+        <tr>
+          <td>optionSearch</td>
+          <td>A JSON PATH (or Array of JSON paths) listing the property values to be indexed for searching. Defaults to '$.text'.</td>
+          <td>String or Array</td>
+          <td>No</td>
+          <td>null</td>
+        </tr>
+      </tbody>
+    </table>
 
-    <option
-      value="1"
-      class="Option Option--selected"
-    >
-      Sincere@april.biz
-    </option>
-    <option
-      value="2"
-      class="Option Option--selected"
-    >
-      Shanna@melissa.tv
-    </option>
-    <option value="3">
-      Nathan@yesenia.net
-    </option>
-    <option
-      value="4"
-      class="Option Option--selected"
-    >
-      Julianne.OConner@kory.org
-    </option>
+    <table>
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>update:modelValue</td>
+          <td>Emitted when the selected option(s) is/are changed.</td>
+        </tr>
+        <tr>
+          <td>focus</td>
+          <td>Emitted when the select gains focus.</td>
+        </tr>
+        <tr>
+          <td>blur</td>
+          <td>Emitted when the select loses focus.</td>
+        </tr>
+      </tbody>
+    </table>
 
-    <optgroup label="Group 1">
-      <option
-        value="5"
-        class="Option Option--selected"
-      >
-        Sincere@april.biz
-      </option>
-      <option value="6">
-        Shanna@melissa.tv
-      </option>
-      <option value="7">
-        Nathan@yesenia.net
-      </option>
-      <option value="8">
-        Julianne.OConner@kory.org
-      </option>
-    </optgroup>
+    <table>
+      <thead>
+        <tr>
+          <th>Slot</th>
+          <th>Description</th>
+          <th>Slot bindings</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>chip</td>
+          <td>Used to customize the appearance of selected chips in multiple selection mode.</td>
+          <td>option</td>
+        </tr>
+        <tr>
+          <td>aggregator</td>
+          <td>Used to customize the appearance of the aggregator, which shows the number of hidden chips in multiple selection mode.</td>
+          <td>options</td>
+        </tr>
+        <tr>
+          <td>placeholder</td>
+          <td>Used to customize the appearance of the placeholder text when no options are selected.</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td>option</td>
+          <td>Used to customize the appearance of the options in the dropdown list.</td>
+          <td>option</td>
+        </tr>
+      </tbody>
+    </table>
 
-    <!-- repeated values -->
-    <option value="3">
-      Nathan@yesenia.net
-    </option>
-    <option value="4">
-      Julianne.OConner@kory.org
-    </option>
+    <pre><code>&lt;UiSelect
+  :options="[{value: 1, text: 'Option 1'}, {value: 2, text: 'Option 2'}]"
+  v-model="selectedOption"
+  placeholder="Select an option"
+/&gt;
 
-    <!-- repeated group label-->
-    <optgroup label="Group 1">
-      <option value="9">
-        Sincere@april.biz
-      </option>
-      <option value="10">
-        Shanna@melissa.tv
-      </option>
-      <option value="11">
-        Nathan@yesenia.net
-      </option>
-      <option value="12">
-        Julianne.OConner@kory.org
-      </option>
-    </optgroup>
-
-    <!-- Opgroup sin label-->
-    <optgroup>
-      <option value="9">
-        Sincere@april.biz
-      </option>
-      <option value="10">
-        Shanna@melissa.tv
-      </option>
-      <option value="11">
-        Nathan@yesenia.net
-      </option>
-      <option value="12">
-        Julianne.OConner@kory.org
-      </option>
-    </optgroup>
-
-    <optgroup label="Group 2">
-      <option value="13">
-        Sincere@april.biz
-      </option>
-      <option value="14">
-        Shanna@melissa.tv
-      </option>
-      <option value="15">
-        Nathan@yesenia.net
-      </option>
-      <option value="16">
-        Julianne.OConner@kory.org
-      </option>
-    </optgroup>
-
-    <optgroup label="Empty" />
-  </select>
-
-  <UiSelect
-    v-model="singlePerson"
-    placeholder="Child options!"
-  >
-    <option>No value prop</option>
-    <option value="0">
-      value="0"
-    </option>
-    <option :value="0">
-      :value="0"
-    </option>
-    <option value="false">
-      value="false"
-    </option>
-    <option :value="false">
-      :value="false"
-    </option>
-    <option value="null">
-      value="null"
-    </option>
-    <option :value="null">
-      :value="null"
-    </option>
-
-    <option value="1">
-      Sincere@april.biz
-    </option>
-    <option value="2">
-      Shanna@melissa.tv
-    </option>
-    <option value="3">
-      Nathan@yesenia.net
-    </option>
-    <option value="4">
-      Julianne.OConner@kory.org
-    </option>
-
-    <optgroup label="Group 1">
-      <option value="5">
-        Sincere@april.biz
-      </option>
-      <option value="6">
-        Shanna@melissa.tv
-      </option>
-      <option value="7">
-        Nathan@yesenia.net
-      </option>
-      <option value="8">
-        Julianne.OConner@kory.org
-      </option>
-    </optgroup>
-
-    <!-- repeated values -->
-    <option value="3">
-      Nathan@yesenia.net
-    </option>
-    <option value="4">
-      Julianne.OConner@kory.org
-    </option>
-
-    <!-- repeated group label-->
-    <optgroup label="Group 1">
-      <option value="9">
-        Sincere@april.biz
-      </option>
-      <option value="10">
-        Shanna@melissa.tv
-      </option>
-      <option value="11">
-        Nathan@yesenia.net
-      </option>
-      <option value="12">
-        Julianne.OConner@kory.org
-      </option>
-    </optgroup>
-
-    <!-- Opgroup sin label-->
-    <optgroup>
-      <option value="9">
-        Sincere@april.biz
-      </option>
-      <option value="10">
-        Shanna@melissa.tv
-      </option>
-      <option value="11">
-        Nathan@yesenia.net
-      </option>
-      <option value="12">
-        Julianne.OConner@kory.org
-      </option>
-    </optgroup>
-
-    <optgroup label="Group 2">
-      <option value="13">
-        Sincere@april.biz
-      </option>
-      <option value="14">
-        Shanna@melissa.tv
-      </option>
-      <option value="15">
-        Nathan@yesenia.net
-      </option>
-      <option value="16">
-        Julianne.OConner@kory.org
-      </option>
-    </optgroup>
-
-    <optgroup label="Empty" />
-  </UiSelect>
-
-  <hr>
-
-  <!-- <pre class="Code--html"><code>
 &lt;UiSelect
-  v-model="singlePerson"
-  :options="records"
-  placeholder="Escoge una persona"
-  option-value="$.id"
-  option-text="$.email"
-/>
-  </code></pre>-->
-
-  <UiSelect
-    v-model="testValue"
-    :options="records"
-    placeholder="Escoge una persona"
-    option-value="$.id"
-    option-text="$.email"
-  />
-  <pre>testValue: {{ testValue }}</pre>
-
-  <hr>
-
-  <p>Multiple:</p>
-  <pre class="docs-code"><code>
-&lt;UiSelect
-  v-model="manyPeople"
+  :options="[{value: 1, text: 'Option 1'}, {value: 2, text: 'Option 2'}]"
   multiple
-  :options="records"
-  placeholder="Escoge varias personas"
-  option-value="$.id"
-  option-text="$.email"
-/>
-  </code></pre>
+  v-model="selectedOptions"
+  placeholder="Select options"
+&gt;
+  &lt;template #chip="{ option }"&gt;
+    &lt;span class="custom-chip"&gt;{ { option.text } }&lt;/span&gt;
+  &lt;/template&gt;
+&lt;/UiSelect&gt;
+</code></pre>
 
-  <UiSelect
-    v-model="manyPeople"
-    multiple
-    :options="records"
-    placeholder="Escoge varias personas"
-    option-value="$.id"
-    option-text="$.email"
-  />
-
-  <section>
-    <h2>Aggregator slot</h2>
     <UiSelect
-      v-model="manyPeople"
+      v-model="selectedOption"
+      :options="[{value: 1, text: 'Option 1'}, {value: 2, text: 'Option 2'}]"
+      placeholder="Select an option"
+    />
+
+    <UiSelect
+      v-model="selectedOptions"
+      :options="[{value: 1, text: 'Option 1'}, {value: 2, text: 'Option 2'}]"
       multiple
-      :options="records"
-      placeholder="Escoge varias personas"
-      option-value="$.id"
-      option-text="$.email"
+      placeholder="Select options"
     >
-      <template #aggregator="{ options }">
-        y otras {{ options.length }} personas
+      <template #chip="{ option }">
+        <span class="custom-chip">{{ option.text }}</span>
       </template>
     </UiSelect>
-  </section>
-
-  <pre>manyPeople: {{ manyPeople }}</pre>
-
-  <pre class="docs-code"><code>const records = {{ records }}</code></pre>
+  </div>
 </template>
-
-<style lang="scss">
-option {
-  &:checked {
-    background: #ffff88;
-  }
-}
-
-.Option {
-  &--selected {
-    // background: #ffff88;
-    color: var(--ui-color-primary);
-  }
-}
-</style>

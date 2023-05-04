@@ -1,159 +1,124 @@
 <script setup>
 import { UiOutput } from '.'
 
-const examples = [
-  { value: 'Hola' },
-
-  { value: 'santiago@phi.co', type: 'email' },
-  { value: 'santiago@phi.co', type: 'email', text: 'Enviar mail a Santiago' },
-
-  { value: 1500 },
-  { value: 1500, type: 'currency' },
-  { value: 1500, type: 'currency', currency: 'EUR' },
-  { value: 1500, type: 'currency', currency: 'MXN' },
-  { value: 1500, type: 'currency', currency: 'COP' },
-
-  { value: '2022-08-18' },
-  { value: '2022-08-18', type: 'date' },
-
-  {
-    value: '2022-08-18',
-    type: 'date',
-    format: { // Valor de OPTIONS a pasar a toLocaleString
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    },
-  },
-
-  {
-    value: '2022-08-18',
-    type: 'date',
-    format: { year: 'numeric', month: 'long', day: 'numeric' },
-  },
-
-  {
-    value: '2022-08-18',
-    type: 'date',
-    format: { month: 'long', day: 'numeric' },
-  },
-
-
-  { value: '2022-08-18', type: 'time' },
-  { value: '2022-08-18', type: 'time', format: { hour: '2-digit' } },
-  { value: '2022-08-18', type: 'time', format: { hour: '2-digit', minute: '2-digit' } },
-  { value: '2022-08-18', type: 'time', format: { timeStyle: 'full' } },
-  { value: '2022-08-18', type: 'time', format: { timeStyle: 'long' } },
-  { value: '2022-08-18', type: 'time', format: { timeStyle: 'medium' } },
-  { value: '2022-08-18', type: 'time', format: { timeStyle: 'short' } },
-
-  { value: '2022-08-18', type: 'datetime' },
-  { value: '2022-08-18', type: 'datetime', format: { timeStyle: 'long' } },
-  { value: '2022-08-18', type: 'datetime', format: { hour: '2-digit', minute: '2-digit' } },
-
-  { value: '1660845034' },
-  { value: '1660845034', type: 'date' },
-  { value: '1660845034', type: 'date', format: 'day' },
-  { value: '1660845034', type: 'date', format: 'time' },
-
-  { value: 1660845034 },
-  { value: 1660845034, type: 'date' },
-  { value: 1660845034, type: 'date', format: 'day' },
-
-  { value: true },
-  { value: true, type: 'boolean' },
-  {
-    value: true,
-    type: 'enum',
-    options: [
-      { value: true, text: 'Oh yeah' },
-      { value: false, text: 'oh no' },
-    ],
-  },
-
-  { value: false },
-  { value: false, type: 'boolean' },
-  {
-    value: false,
-    type: 'enum',
-    options: [
-      { value: true, text: 'Oh yeah' },
-      { value: false, text: 'oh no' },
-    ],
-  },
-
-  {
-    value: { lat: 0, lng: 0 },
-    type: 'geo',
-  },
-
-  {
-    value: { lat: 40.4185483, lng: -3.710289 },
-    type: 'geo',
-  },
-
-  // enum
-  {
-    value: 0,
-    type: 'enum',
-    options: [
-      { value: '0', text: 'Female' },
-      { value: '1', text: 'Male' },
-    ],
-  },
-  {
-    value: 1,
-    type: 'enum',
-    options: [
-      { value: '0', text: 'Female' },
-      { value: '1', text: 'Male' },
-    ],
-  },
-  {
-    value: 2,
-    type: 'enum',
-    options: [
-      { value: '0', text: 'Female' },
-      { value: '1', text: 'Male' },
-    ],
-  },
-  {
-    value: 'foo',
-    type: 'enum',
-    options: [
-      { value: '0', text: 'Female' },
-      { value: '1', text: 'Male' },
-    ],
-  },
-]
-
 </script>
 
 <template>
-  <div class="UiOutput-docs">
+  <div class="Docs">
     <h1>UiOutput</h1>
+    <code>import { UiOutput } from '@/packages/ui'</code>
+    <p>A flexible component for outputting data in various formats. Supports a variety of types, including currency, date, datetime, email, enum, geo, image, time, upload, url, and more. Can also handle arrays and objects.</p>
 
-    <table border="1">
+    <table>
       <thead>
         <tr>
-          <th>Props</th>
-          <th>Result</th>
+          <th>Prop</th>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Required</th>
+          <th>Default Value</th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(example, i) in examples"
-          :key="i"
-        >
-          <td><pre><code>{{ example }}</code></pre></td>
-          <td valign="top">
-            <UiOutput
-              v-bind="example"
-            />
-          </td>
+        <tr>
+          <td>value</td>
+          <td>The value to be outputted</td>
+          <td>Any</td>
+          <td>false</td>
+          <td>null</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>The type of output to use. Supported types include currency, date, datetime, email, enum, geo, image, time, upload, url, and more.</td>
+          <td>String</td>
+          <td>false</td>
+          <td>null</td>
+        </tr>
+        <tr>
+          <td>component</td>
+          <td>The component to use for rendering the output. If specified, overrides the <strong>type</strong> prop.</td>
+          <td>Object</td>
+          <td>false</td>
+          <td>null</td>
+        </tr>
+        <tr>
+          <td>props</td>
+          <td>The props to pass to the specified <strong>component</strong>.</td>
+          <td>Object</td>
+          <td>false</td>
+          <td>null</td>
+        </tr>
+        <tr>
+          <td>items</td>
+          <td>The props to pass to each item in the array when using <strong>type="array"</strong>.</td>
+          <td>Object</td>
+          <td>false</td>
+          <td>null</td>
+        </tr>
+        <tr>
+          <td>...attrs</td>
+          <td>Any additional attributes to be passed to the component.</td>
+          <td>Any</td>
+          <td>false</td>
+          <td>null</td>
         </tr>
       </tbody>
     </table>
+
+    Examples:
+    <pre><code>&lt;UiOutput value="Hello, world!" /&gt;&lt;br&gt;
+&lt;UiOutput type="currency" value="1000" /&gt;&lt;br&gt;
+&lt;UiOutput type="date" value="2022-01-01" /&gt;&lt;br&gt;
+&lt;UiOutput type="datetime" value="2022-01-01T12:00:00" /&gt;&lt;br&gt;
+&lt;UiOutput type="email" value="example@example.com" /&gt;&lt;br&gt;
+&lt;UiOutput type="enum" :enum="['foo', 'bar']" value="foo" /&gt;&lt;br&gt;
+&lt;UiOutput type="geo" :value="{lat: 37.7749, lng: -122.4194}" /&gt;&lt;br&gt;
+&lt;UiOutput type="image" value="https://via.placeholder.com/150" /&gt;&lt;br&gt;
+&lt;UiOutput type="upload" :value="{ url: 'https://example.com/files/123', name: 'example.pdf' }" /&gt;&lt;br&gt;
+&lt;UiOutput type="url" value="https://example.com" /&gt;&lt;br&gt;
+&lt;UiOutput type="array" :value="[ 'foo', 'bar' ]" /&gt;&lt;br&gt;</code></pre>
+
+    <UiOutput value="Hello, world!" /><br>
+    <UiOutput
+      type="currency"
+      value="1000"
+    /><br>
+    <UiOutput
+      type="date"
+      value="2022-01-01"
+    /><br>
+    <UiOutput
+      type="datetime"
+      value="2022-01-01T12:00:00"
+    /><br>
+    <UiOutput
+      type="email"
+      value="example@example.com"
+    /><br>
+    <UiOutput
+      type="enum"
+      :enum="['foo', 'bar']"
+      value="foo"
+    /><br>
+    <UiOutput
+      type="geo"
+      :value="{lat: 37.7749, lng: -122.4194}"
+    /><br>
+    <UiOutput
+      type="image"
+      value="https://via.placeholder.com/150"
+    /><br>
+    <UiOutput
+      type="upload"
+      :value="{ url: 'https://example.com/files/123', name: 'example.pdf' }"
+    /><br>
+    <UiOutput
+      type="url"
+      value="https://example.com"
+    /><br>
+    <UiOutput
+      type="array"
+      :value="[ 'foo', 'bar' ]"
+    /><br>
   </div>
 </template>

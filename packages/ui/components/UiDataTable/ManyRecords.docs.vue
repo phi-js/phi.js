@@ -7,7 +7,7 @@ const records = ref([])
 
 onMounted(async () => {
   isLoading.value = true
-  records.value = await fetch('https://jsonplaceholder.typicode.com/photos?_limit=300')
+  records.value = await fetch('https://jsonplaceholder.typicode.com/photos?_limit=2000')
     .then((r) => r.json())
 
   isLoading.value = false

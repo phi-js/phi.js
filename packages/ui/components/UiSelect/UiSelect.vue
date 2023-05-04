@@ -247,7 +247,10 @@ const placeholderOption = computed(() => {
             v-for="option in visibleChips"
             :key="option.value"
           >
-            <slot name="chip">
+            <slot
+              name="chip"
+              :option="option"
+            >
               <UiItem
                 v-bind="option"
                 class="UiChip"

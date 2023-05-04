@@ -1,123 +1,93 @@
 <script setup>
-import { ref } from 'vue'
-import UiMap from './UiMap.vue'
-import { UiItem } from '../UiItem'
-import { UiInput } from '../UiInput'
-
-// const center = ref({ lat: -34.397, lng: 150.644 })
-const center = ref({ lat: 40.4144424, lng: -3.711398 })
-const zoom = ref(16)
-const markers = ref([
-  {
-    id: 'm1',
-    text: 'Marker 1',
-    subtext: 'Subtext 1',
-    icon: null,
-
-    position: {
-      lat: 40.4144424,
-      lng: -3.711398,
-    },
-  },
-  {
-    id: 'm2',
-    text: 'Marker 2',
-    subtext: 'Subtext 2',
-    // icon: 'https://image.shutterstock.com/image-vector/car-icon-vector-symbol-on-260nw-1721339608.jpg',
-    icon: null,
-
-    position: {
-      lat: 40.4152056,
-      lng: -3.7080868,
-    },
-
-    draggable: true,
-  },
-])
-
-const settings = ref({
+const settings = {
   provider: 'google',
   apiKey: 'AIzaSyCpSKazmH7T7ArBkdcPiRYaYG_QKhj7rRM',
-})
+}
+
+import UiMap from './UiMap.vue'
+
 </script>
 
 <template>
-  <div class="UiMapDocs">
+  <div class="Docs">
+    <h1>UiMap</h1>
+    <code>import { UiMap } from '@/packages/ui'</code>
+    <p>This is a component that displays a map using Google Maps API.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Prop</th>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Required</th>
+          <th>Default Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>center</td>
+          <td>The center of the map.</td>
+          <td>Object</td>
+          <td>No</td>
+          <td>{ lat: -34.397, lng: 150.644 }</td>
+        </tr>
+        <tr>
+          <td>zoom</td>
+          <td>The zoom level of the map.</td>
+          <td>String or Number</td>
+          <td>No</td>
+          <td>8</td>
+        </tr>
+        <tr>
+          <td>markers</td>
+          <td>An array of markers that will be displayed on the map.</td>
+          <td>Array</td>
+          <td>No</td>
+          <td>[]</td>
+        </tr>
+        <tr>
+          <td>settings</td>
+          <td>An object containing settings for the map.</td>
+          <td>Object</td>
+          <td>No</td>
+          <td>{ provider: 'google', apiKey: null }</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>update:center</td>
+          <td>Emitted when the center of the map is updated.</td>
+        </tr>
+        <tr>
+          <td>update:markers</td>
+          <td>Emitted when the markers on the map are updated.</td>
+        </tr>
+        <tr>
+          <td>update:zoom</td>
+          <td>Emitted when the zoom level of the map is updated.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Examples</h2>
+
+    <pre><code>&lt;UiMap :settings="settings" :center="{ lat: 37.7749, lng: -122.4194 }" :zoom="12" :markers="[{ id: '1', text: 'Marker 1', subtext: 'This is marker 1', icon: '', position: { lat: 37.7749, lng: -122.4194 }, draggable: true }]" /&gt;</code></pre>
+
     <UiMap
-      v-model:center="center"
-      v-model:zoom="zoom"
-      v-model:markers="markers"
       :settings="settings"
+      :center="{ lat: 37.7749, lng: -122.4194 }"
+      :zoom="12"
+      :markers="[{ id: '1', text: 'Marker 1', subtext: 'This is marker 1', icon: '', position: { lat: 37.7749, lng: -122.4194 }, draggable: true }]"
     />
-
-    <fieldset>
-      <legend>v-models</legend>
-
-      <ul>
-        <li
-          v-for="(marker, index) in markers"
-          :key="marker.id"
-        >
-          <UiItem
-            :text="marker.text"
-            :subtext="`${marker.position.lat}, ${marker.position.lng}`"
-            icon="mdi:map-marker"
-          >
-            <input
-              v-model="marker.position.lat"
-              type="text"
-            >
-            <input
-              v-model="marker.position.lng"
-              type="text"
-            >
-
-            <template #actions>
-              <button
-                type="button"
-                @click="markers.splice(index, 1)"
-              >
-                &times;
-              </button>
-            </template>
-          </UiItem>
-        </li>
-
-        <li>
-          <UiItem
-            class="ui--clickable"
-            text="Add marker"
-            icon="mdi:map-marker-plus"
-            @click="markers.push({
-              id: `m${markers.length+1}`,
-              text: `Marker ${markers.length+1}`,
-              icon: null,
-              position: center,
-              draggable: true,
-            })"
-          />
-        </li>
-      </ul>
-
-      <UiInput label="center">
-        <input
-          v-model="center.lat"
-          type="text"
-        >
-        <input
-          v-model="center.lng"
-          type="text"
-        >
-      </UiInput>
-
-
-      <UiInput
-        v-model="zoom"
-        label="zoom"
-        type="number"
-        min="0"
-        max="25"
-      />
-    </fieldset>
   </div>
 </template>
