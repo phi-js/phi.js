@@ -12,11 +12,24 @@ It wraps a CssClassManager object, and links its value to the globally provided 
 */
 import { ref, inject, watch, computed } from 'vue'
 
-import { UiIcon, UiDialog, UiButton, UiItem, UiItemFinder } from '@/packages/ui'
+import { useI18n } from '@/packages/i18n'
+import { VmStatement } from '@/packages/vm'
+import { UiIcon, UiDialog, UiItem, UiItemFinder } from '@/packages/ui'
 import CssEditor from '@/packages/ui/components/CssEditor/CssEditor.vue'
 import { cssStringToObject, cssObjectToString } from '@/packages/ui/components/CssEditor/helpers.js'
 
-import { VmStatement } from '@/packages/vm'
+const i18n = useI18n({
+  en: {
+    'BlockCssEditor.Classes': 'Classes',
+    'BlockCssEditor.AddClass': 'Add class',
+    'BlockCssEditor.ElementStyle': 'Element style',
+  },
+  es: {
+    'BlockCssEditor.Classes': 'Clases',
+    'BlockCssEditor.AddClass': 'Agregar clase',
+    'BlockCssEditor.ElementStyle': 'Estilos de elemento',
+  },
+})
 
 const props = defineProps({
   /* BLOCK object */
@@ -325,7 +338,7 @@ const editableStylesheets = computed(() => {
   // Pseudo class "element.style", to be relayed to block.props.style
   retval['element.style'] = {
     id: 'element.style',
-    title: 'Element style',
+    title: i18n.t('BlockCssEditor.ElementStyle'),
     src: cssObjectToString({
       'element.style': props.modelValue?.props?.style && typeof props.modelValue?.props?.style === 'object'
         ? props.modelValue.props.style
@@ -446,36 +459,6 @@ const blockHasStyle = computed(() => {
       </CssEditor>
     </template>
     <template v-else>
-      <fieldset
-        v-for="(classGroup, i) in blockClassGroups"
-        :key="i"
-        class="BlockCssEditor__fieldset"
-      >
-        <legend>{{ classGroup.text }}</legend>
-        <UiItem
-          v-for="(classItem) in classGroup.children"
-          :key="classItem.name"
-          :text="classItem.text"
-          :subtext="classItem.subtext"
-          :icon="editableStylesheets[classItem.name] ? 'mdi:arrow-right-thick' : ''"
-          class="BlockCssEditor__classItem"
-          @click="editingClassName = classItem.name"
-        >
-          <template #actions>
-            <UiIcon
-              class="BlockCssEditor__classIcon"
-              :src="hasCondition(classItem.name) ? 'mdi:eye' : 'mdi:eye-outline'"
-              @click="openVisibilityEditor(classItem.name)"
-            />
-            <UiIcon
-              class="BlockCssEditor__classIcon"
-              src="mdi:close"
-              @click="removeClass(classItem.name)"
-            />
-          </template>
-        </UiItem>
-      </fieldset>
-
       <!-- class visibility conditions editor -->
       <UiDialog
         :open="!!editingClass"
@@ -488,41 +471,73 @@ const blockHasStyle = computed(() => {
         />
       </UiDialog>
 
-      <!-- Class picker -->
-      <UiDialog v-model:open="isPickerOpen">
-        <template #trigger>
-          <UiItem
-            class="BlockCssEditor__adder"
-            text="Add class"
-            icon="mdi:plus"
-          />
-        </template>
-        <template #default="{ close }">
-          <UiItemFinder
-            v-if="isPickerOpen"
-            :items="availableClasses"
-            @select-item="$event => onSelectItem($event) && close()"
-          />
-        </template>
-      </UiDialog>
-
-      <!-- Element styles link -->
-      <UiItem
-        class="BlockCssEditor__adder"
-        text="Element style"
-        icon="mdi:arrow-right-thick"
-        @click="editingClassName = 'element.style'"
-      >
+      <fieldset class="BlockCssEditor__fieldset">
+        <legend>{{ i18n.t('BlockCssEditor.Classes') }}</legend>
         <template
-          v-if="blockHasStyle"
-          #actions
+          v-for="(classGroup, i) in blockClassGroups"
+          :key="i"
         >
-          <UiIcon
-            src="mdi:circle-medium"
-            style="font-size: 24px; color:lightgreen;"
-          />
+          <UiItem
+            v-for="(classItem) in classGroup.children"
+            :key="classItem.name"
+            :text="classItem.text"
+            :subtext="classItem.subtext"
+            :icon="editableStylesheets[classItem.name] ? 'mdi:arrow-right-thick' : ''"
+            class="BlockCssEditor__classItem"
+            @click="editingClassName = classItem.name"
+          >
+            <template #actions>
+              <UiIcon
+                class="BlockCssEditor__classIcon"
+                :src="hasCondition(classItem.name) ? 'mdi:eye' : 'mdi:eye-outline'"
+                @click="openVisibilityEditor(classItem.name)"
+              />
+              <UiIcon
+                class="BlockCssEditor__classIcon"
+                src="mdi:close"
+                @click="removeClass(classItem.name)"
+              />
+            </template>
+          </UiItem>
         </template>
-      </UiItem>
+        <!-- Class picker -->
+        <UiDialog v-model:open="isPickerOpen">
+          <template #trigger>
+            <UiItem
+              class="BlockCssEditor__adder"
+              :text="i18n.t('BlockCssEditor.AddClass')"
+              icon="mdi:plus"
+            />
+          </template>
+          <template #default="{ close }">
+            <UiItemFinder
+              v-if="isPickerOpen"
+              :items="availableClasses"
+              @select-item="$event => onSelectItem($event) && close()"
+            />
+          </template>
+        </UiDialog>
+      </fieldset>
+
+      <fieldset class="BlockCssEditor__fieldset">
+        <!-- Element styles link -->
+        <UiItem
+          class="BlockCssEditor__adder"
+          :text="i18n.t('BlockCssEditor.ElementStyle')"
+          icon="mdi:arrow-right-thick"
+          @click="editingClassName = 'element.style'"
+        >
+          <template
+            v-if="blockHasStyle"
+            #actions
+          >
+            <UiIcon
+              src="mdi:circle-medium"
+              style="font-size: 24px; color:lightgreen;"
+            />
+          </template>
+        </UiItem>
+      </fieldset>
     </template>
   </div>
 </template>

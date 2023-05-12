@@ -45,7 +45,7 @@ export default function useNavigation(refStory, refModelValue = null, listeners 
         return !path['v-if'] || navVM.eval(path['v-if'], refModelValue.value)
       })
       .map((path) => ({
-        ...path,
+        ...(i18n.obj(path)), // translate all path properties
         nodeFrom: hashNodes[path.from] || null,
         nodeTo: hashNodes[path.to] || null,
       }))

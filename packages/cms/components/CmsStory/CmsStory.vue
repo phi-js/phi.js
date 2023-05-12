@@ -56,7 +56,6 @@ export default {
     const sanitizedStory = ref(null)
     watchEffect(() => {
       sanitizedStory.value = JSON.parse(JSON.stringify(sanitizeStory(props.story))) // clone is important, otherwise we'll be mutating prop (i.e. when setting block.props and block.rules below)
-      sanitizedStory.value.paths = i18n.obj(sanitizedStory.value.paths)
     })
 
     // Story model value and single source of truth for all things model

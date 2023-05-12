@@ -1,8 +1,23 @@
 <script setup>
 import { inject } from 'vue'
-import InputButton from '../../../input/components/InputButton/InputButton.vue'
 
+import { useI18n } from '@/packages/i18n'
+import InputButton from '../../../input/components/InputButton/InputButton.vue'
 const $nav = inject('$_cms_navigation', null)
+
+const i18n = useI18n({
+  en: { 'NavigationControls.labelBack': 'Back' },
+  es: { 'NavigationControls.labelBack': 'Regresar' },
+  de: { 'NavigationControls.labelBack': 'zurückgehen' },
+})
+
+const props = defineProps({
+  labelBack: {
+    type: String,
+    required: false,
+    default: null,
+  },
+})
 </script>
 
 <template>
@@ -15,7 +30,7 @@ const $nav = inject('$_cms_navigation', null)
         class="UiButton UiButton--cancel"
         name="story-goto"
         value="back"
-        label="Regresar"
+        :label="props.labelBack || i18n.t('NavigationControls.labelBack')"
       />
     </div>
 

@@ -6,7 +6,7 @@
   .CssDeclaration {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 6px;
 
     &__properties {
       display: flex;
@@ -14,11 +14,11 @@
       gap: 6px;
     }
 
-    & > .UiDetails {
+    &>.UiDetails {
       @extend .outset;
 
       .UiDetails__item {
-        --ui-item-padding: 6px;
+        --ui-item-padding: 10px 4px;
         font-size: 10pt;
       }
     }
@@ -32,6 +32,7 @@
         // font-weight: bold;
 
         cursor: pointer;
+
         &:hover {
           background-color: var(--ui-color-hover);
         }
