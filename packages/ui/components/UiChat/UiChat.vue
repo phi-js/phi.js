@@ -165,7 +165,6 @@ function scrollToLasMessage() {
         ref="refInput"
         v-model="msgInput"
         :disabled="isLoading"
-        label="user"
         type="text"
         required
       />
@@ -173,7 +172,7 @@ function scrollToLasMessage() {
         :is-loading="isLoading"
         type="submit"
         label="Send"
-        loading-label="..."
+        loading-label=" "
       />
     </form>
   </div>
@@ -197,6 +196,18 @@ function scrollToLasMessage() {
     display: flex;
     flex-direction: column;
     gap: 12px;
+  }
+
+  &__form {
+    margin-top: 12px;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    & > *:first-child {
+      flex: 1;
+    }
   }
 }
 

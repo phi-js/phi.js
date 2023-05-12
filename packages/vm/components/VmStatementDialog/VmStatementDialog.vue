@@ -77,7 +77,6 @@ function emitUpdate(newValue) {
     @cancel="cancel"
   >
     <template #default>
-      <h1>AQUI ESTOY</h1>
       <VmStatement
         v-model="tmpValue"
         open

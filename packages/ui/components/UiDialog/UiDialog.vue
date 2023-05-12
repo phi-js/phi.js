@@ -55,7 +55,12 @@ watch(
 )
 
 function open() {
-  refDialog.value?.showModal?.()
+
+  try {
+    refDialog.value?.showModal?.()
+  } catch (err) {
+    // showModal() throws an exception when dialog is already open
+  }
   document.body.style.overflow = 'hidden'
   isOpen.value = true
   emit('update:open', isOpen.value)
