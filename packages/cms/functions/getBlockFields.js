@@ -36,6 +36,10 @@ export default function getBlockFields(block) {
     icon: 'mdi:form-textbox',
   }
 
+  if (Array.isArray(block._plugin_api_storage?.enum)) {
+    field.enum = block._plugin_api_storage?.enum
+  }
+
   const props = block.props || {}
 
   if (block.component.substring(0, 5) == 'Input') {
