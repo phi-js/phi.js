@@ -17,6 +17,7 @@ const availableTypes = {
   enum: defineAsyncComponent(() => import('./types/enum.vue')),
   geo: defineAsyncComponent(() => import('./types/geo.vue')),
   image: defineAsyncComponent(() => import('./types/image.vue')),
+  price: defineAsyncComponent(() => import('./types/price.vue')),
   time: defineAsyncComponent(() => import('./types/time.vue')),
   upload: defineAsyncComponent(() => import('./types/upload.vue')),
   url: defineAsyncComponent(() => import('./types/url.vue')),
