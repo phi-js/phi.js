@@ -18,7 +18,11 @@ export default function useNavigation(refStory, refModelValue = null, listeners 
   const transitionDirection = ref('forward') // 'forward' || 'back'
   const i18n = useI18n()
   const navVM = new VM()
-  const history = ref([])
+
+  // persistent navigation history
+  const storageKey = `navigation-history-${refStory?.id}`
+  const storedHistory = JSON.parse(localStorage.getItem(storageKey)) || []
+  const history = ref(storedHistory)
 
   const graph = computed(() => {
     const nodes = refStory.value.pages
@@ -148,6 +152,7 @@ export default function useNavigation(refStory, refModelValue = null, listeners 
       timestamp: Math.floor(new Date().getTime() / 1000),
       pageId: targetPage.id,
     })
+    localStorage.setItem(storageKey, JSON.stringify(history.value))
   }
 
   function goNext() {
@@ -172,6 +177,7 @@ export default function useNavigation(refStory, refModelValue = null, listeners 
   const $nav = {
     graph,
     currentPageId,
+    history,
     nextPages,
     previousPages,
     trail,

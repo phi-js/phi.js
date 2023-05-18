@@ -1,5 +1,4 @@
 <script>
-import { onMounted } from 'vue'
 let lastNavigationScrollLeft = 0
 </script>
 
@@ -8,15 +7,17 @@ let lastNavigationScrollLeft = 0
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { UiItem } from '@/packages/ui'
 
-const $nav = inject('$_cms_navigation', null)
+const $nav = inject('$_cms_navigation')
 
 const steps = computed(() => {
-  const activeIndex = $nav.trail.value.findIndex((n) => n.id == $nav.currentPageId.value)
+  const currentIndex = $nav.trail.value.findIndex((n) => n.id == $nav.currentPageId.value)
   return $nav.trail.value.map((item, i) => ({
     ...item,
     href: $nav.getPageHref(item.id),
-    isActive: $nav.currentPageId.value == item.id,
-    isPast: i < activeIndex,
+    isCurrent: $nav.currentPageId.value == item.id,
+    isVisited: $nav.history.value.findIndex((n) => n.pageId == item.id) > -1,
+    dude: $nav.history.value.findIndex((n) => n.pageId == item.id),
+    isPast: i < currentIndex,
   }))
 })
 
@@ -30,11 +31,11 @@ watch(
         return
       }
 
-      const activeItemRef = refEl.value.querySelector('.NavigationProgress__step--active')
-      if (!activeItemRef?.scrollIntoView) {
+      const currentItemRef = refEl.value.querySelector('.NavigationProgress__step--current')
+      if (!currentItemRef?.scrollIntoView) {
         return
       }
-      activeItemRef.scrollIntoView({
+      currentItemRef.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest',
         inline: 'nearest',
@@ -59,9 +60,11 @@ onMounted(() => refEl.value.scrollLeft = lastNavigationScrollLeft)
       :key="page.id"
       class="NavigationProgress__step"
       :class="{
-        'NavigationProgress__step--active': page.isActive,
+        'NavigationProgress__step--current': page.isCurrent,
         'NavigationProgress__step--past': page.isPast,
         'NavigationProgress__step--future': !page.isPast,
+        'NavigationProgress__step--seen': page.isVisited,
+        'NavigationProgress__step--unseen': !page.isVisited,
       }"
       :href="page.href"
       :text="page.title"
@@ -145,6 +148,10 @@ onMounted(() => refEl.value.scrollLeft = lastNavigationScrollLeft)
       display: none;
     }
 
+    &:hover {
+      background-color: var(--ui-color-hover);
+    }
+
     &--past {
       &::before, &::after {
         background: var(--progress-color-done);
@@ -163,7 +170,7 @@ onMounted(() => refEl.value.scrollLeft = lastNavigationScrollLeft)
       }
     }
 
-    &--active {
+    &--current {
       .UiItem__icon {
         background-color: var(--ui-color-background);
         border-color: var(--progress-color-done);
@@ -178,8 +185,15 @@ onMounted(() => refEl.value.scrollLeft = lastNavigationScrollLeft)
       }
     }
 
-    &:hover {
-      background-color: var(--ui-color-hover);
+    /* enable/disable according to history */
+    &--unseen {
+      pointer-events: none;
+    }
+
+    &--seen {
+      .UiItem__icon {
+        color: var(--progress-color-done);
+      }
     }
   }
 }
