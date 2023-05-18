@@ -59,7 +59,7 @@ const props = defineProps({
   autoOpenFileEditor: {
     type: Boolean,
     required: false,
-    default: true,
+    default: false,
   },
 
   multiple: {
@@ -94,7 +94,8 @@ const emit = defineEmits(['update:modelValue', 'upload'])
 
 const i18n = useI18n({
   en: {
-    'UiUpload.Upload': 'Upload',
+    'UiUpload.UploadFile': 'Upload file',
+    'UiUpload.UploadFiles': 'Upload files',
     'UiUpload.Rename': 'Rename',
     'UiUpload.Close': 'Close',
     'UiUpload.Description': 'Description',
@@ -102,7 +103,8 @@ const i18n = useI18n({
   },
 
   es: {
-    'UiUpload.Upload': 'Subir archivo',
+    'UiUpload.UploadFile': 'Subir archivo',
+    'UiUpload.UploadFiles': 'Subir archivos',
     'UiUpload.Rename': 'Renombrar',
     'UiUpload.Close': 'Cerrar',
     'UiUpload.Description': 'Descripción',
@@ -227,76 +229,86 @@ function closeEditor(index) {
 <template>
   <div class="UiUpload">
     <div class="UiUpload__files">
-      <div
+      <template
         v-for="(file, index) in innerFiles"
         :key="index"
-
-        class="UiUpload__file"
-        :class="{'UiUpload__file--danger': endangeredIndex === index}"
       >
-        <a
-          class="UiUpload__figure"
-          target="_blank"
-          :href="file.url"
-          tabindex="-1"
+        <slot
+          name="file"
+          :file="innerFiles[index]"
+          :index="index"
+          :delete-file="() => deleteFile(file)"
+          :emit-update="emitUpdate"
         >
-          <img
-            :src="file.thumbnail"
-            :title="file.url"
+          <div
+            class="UiUpload__file"
+            :class="{'UiUpload__file--danger': endangeredIndex === index}"
           >
-          <small>{{ bytes(file.size) }}</small>
-        </a>
+            <a
+              class="UiUpload__figure"
+              target="_blank"
+              :href="file.url"
+              tabindex="-1"
+            >
+              <img
+                :src="file.thumbnail"
+                :title="file.url"
+              >
+              <small>{{ bytes(file.size) }}</small>
+            </a>
 
-        <div
-          v-if="editingIndexes.includes(index)"
-          class="UiUpload__editor"
-        >
-          <input
-            class="UiUpload__title"
-            type="text"
-            :value="file.title"
-            :placeholder="file.name"
-            @input="file.title = $event.target.value; emitUpdate()"
-          >
-          <input
-            class="UiUpload__description"
-            type="text"
-            :value="file.description"
-            :placeholder="i18n.t('UiUpload.Description')"
-            @input="file.description = $event.target.value; emitUpdate()"
-          >
+            <div
+              v-if="editingIndexes.includes(index)"
+              class="UiUpload__editor"
+            >
+              <input
+                class="UiUpload__title"
+                type="text"
+                :value="file.title"
+                :placeholder="file.name"
+                @input="file.title = $event.target.value; emitUpdate()"
+              >
+              <input
+                class="UiUpload__description"
+                type="text"
+                :value="file.description"
+                :placeholder="i18n.t('UiUpload.Description')"
+                @input="file.description = $event.target.value; emitUpdate()"
+              >
 
-          <UiItem
-            class="UiUpload__actionItem"
-            icon="mdi:check"
-            :text="i18n.t('UiUpload.Close')"
-            @click.prevent="closeEditor(index)"
-          />
-        </div>
-        <div
-          v-else
-          class="UiUpload__details"
-          :title="file.name"
-        >
-          <h1 v-text="file.title || file.name" />
-          <p v-text="file.description" />
-          <UiItem
-            class="UiUpload__actionItem"
-            icon="mdi:pencil"
-            :text="i18n.t('UiUpload.Rename')"
-            @click.prevent="openEditor(index)"
-          />
-        </div>
+              <UiItem
+                class="UiUpload__actionItem"
+                icon="mdi:check"
+                :text="i18n.t('UiUpload.Close')"
+                @click.prevent="closeEditor(index)"
+              />
+            </div>
+            <div
+              v-else
+              class="UiUpload__details"
+              :title="file.name"
+            >
+              <h1 v-text="file.title || file.name" />
+              <p v-text="file.description" />
+              <UiItem
+                class="UiUpload__actionItem"
+                icon="mdi:pencil"
+                :text="i18n.t('UiUpload.Rename')"
+                @click.prevent="openEditor(index)"
+              />
+            </div>
 
-        <UiIcon
-          v-if="!editingIndexes.includes(index)"
-          class="UiUpload__deleter"
-          src="mdi:close"
-          @click.prevent="deleteFile(file)"
-          @mouseenter="endangeredIndex = index"
-          @mouseleave="endangeredIndex = -1"
-        />
-      </div>
+            <UiIcon
+              v-if="!editingIndexes.includes(index)"
+              class="UiUpload__deleter"
+              src="mdi:close"
+              @click.prevent="deleteFile(file)"
+              @mouseenter="endangeredIndex = index"
+              @mouseleave="endangeredIndex = -1"
+            />
+          </div>
+        </slot>
+      </template>
     </div>
 
     <template v-if="!props.inline && (props.multiple || innerFiles.length < 1)">
@@ -310,7 +322,7 @@ function closeEditor(index) {
         v-else
         type="button"
         class="UiUpload__button"
-        :label="props.placeholder || i18n.t('UiUpload.Upload')"
+        :label="props.placeholder || i18n.t(props.multiple ? 'UiUpload.UploadFiles' : 'UiUpload.UploadFile')"
         @click="isOpen = !isOpen"
       />
     </template>
