@@ -536,8 +536,9 @@ const targetOptions = [
 }
 
 .MediaHtmlBlockEditor {
-  .tiptap-editor-contents {
-    padding-left: 4px; // makes room between the BlockScaffold outline and the cursor
+  // make room between the BlockScaffold outline and the cursor
+  &::after {
+    margin-left: -3px;
   }
 
   &__languageTabs {
