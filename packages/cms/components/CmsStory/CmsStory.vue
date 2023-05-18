@@ -47,7 +47,7 @@ export default {
     },
   },
 
-  emits: ['update:modelValue', 'update:currentPageId', 'story-emit'],
+  emits: ['update:modelValue', 'update:currentPageId', 'story-emit', 'page-enter'],
 
   setup(props, { emit }) {
     const i18n = useI18n()
@@ -148,6 +148,7 @@ export default {
       }
 
       emit('update:currentPageId', pageId)
+      emit('page-enter', pageTo)
     }
 
     function onPageLeave(pageId) {
