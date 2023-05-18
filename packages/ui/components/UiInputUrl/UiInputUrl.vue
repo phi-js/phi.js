@@ -63,7 +63,6 @@ const emit = defineEmits(['update:modelValue'])
   }
 
   .UiUpload__button {
-    --ui-item-padding: 6px 16px;
     min-height: 0;
   }
 }

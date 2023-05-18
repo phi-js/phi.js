@@ -1,4 +1,8 @@
 .UiFileList {
+  &__empty {
+    --ui-item-padding: 8px 12px;
+  }
+
   &__link {
     --ui-item-padding: 8px;
     display: block;

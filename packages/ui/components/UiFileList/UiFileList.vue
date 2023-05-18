@@ -1,6 +1,13 @@
 <script setup>
+import { useI18n } from '@/packages/i18n'
 import { UiItem } from '../UiItem'
 import { UiPhotoGallery } from '../UiPhotoGallery'
+
+const i18n = useI18n({
+  en: { 'UiFileList.NothingHere': 'No files' },
+  es: { 'UiFileList.NothingHere': 'No hay archivos' },
+  de: { 'UiFileList.NothingHere': 'Keine Dateien' },
+})
 
 defineProps({
   /*
@@ -37,6 +44,13 @@ defineProps({
     class="UiFileList"
     :class="`UiFileList--${view}`"
   >
+    <UiItem
+      v-if="!files.length"
+      class="UiFileList__empty"
+      :text="i18n.t('UiFileList.NothingHere')"
+      icon="mdi:file-alert"
+    />
+
     <UiPhotoGallery
       v-if="view === 'gallery'"
       class="UiFileList__gallery"

@@ -108,9 +108,6 @@ function isFieldEmpty(field) {
 
   &__group {
     & > .UiDataRecord {
-      // margin: 1em;
-      // margin: 0 0 1em 1em;
-
       .UiDataRecord__label {
         padding-left: 2em;
       }
