@@ -1,10 +1,11 @@
-import { UiFileList, UiInput, UiUpload } from '@/packages/ui'
+import { defineAsyncComponent } from 'vue'
+import { UiFileList } from '@/packages/ui'
+const MediaGalleryEditor = defineAsyncComponent(() => import('../MediaGallery/MediaGalleryEditor.vue'))
 
 export default {
   name: 'MediaFileList',
   title: 'Files',
   icon: 'mdi:folder-upload',
-  description: 'List or gallery of uploaded files',
 
   block: {
     component: UiFileList,
@@ -15,30 +16,14 @@ export default {
   },
 
   editor: {
-    toolbar: {
-      'component': UiInput,
-      'v-model': 'block.props.view',
-      'props': {
-        type: 'select-native',
-        options: [
-          { value: 'list', text: 'Lista' },
-          { value: 'gallery', text: 'Galería' },
-        ],
+    actions: [
+      {
+        'id': 'MediaGalleryEditor',
+        'title': 'Files',
+        'component': MediaGalleryEditor,
+        'v-model': 'block.props',
+        'props': { endpoint: '{{ $settings.uploads.assets }}' },
       },
-    },
-
-    face: {
-      'component': UiUpload,
-      'v-model': 'block.props.files',
-      'props': {
-        endpoint: '{{ $settings.uploads.assets }}',
-        multiple: true,
-        inline: false,
-        placeholder: {
-          icon: 'mdi:upload',
-          text: 'Subir archivos',
-        },
-      },
-    },
+    ],
   },
 }
