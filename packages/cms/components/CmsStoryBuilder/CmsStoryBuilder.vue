@@ -41,6 +41,38 @@ const props = defineProps({
     default: () => ({}),
   },
 
+  /*
+  An array of "fields" (A bastardization of a Schema object)
+  describing the fields in modelValue.
+  e.g.
+  modelValue: {
+    person: {
+      firstname: 'foo',
+      lastname: 'foo',
+    },
+    picked: 'a'
+  }
+
+  modelFields: [
+    {
+      value: 'person.firstname',
+      text: 'Nombre de la persona'
+    },
+    {
+      value: 'picked',
+      enum: [
+        {value: 'a', 'Option A'},
+        {value: 'b', 'Option B'},
+      ]
+    }
+  ]
+  */
+  modelFields: {
+    type: Array,
+    required: false,
+    default: () => [],
+  },
+
   contentSize: {
     type: Object,
     required: false,
@@ -93,7 +125,7 @@ const i18n = useI18n({
     'CmsStoryBuilder.Languages': 'Languages',
     'CmsStoryBuilder.Source': 'Source',
     'CmsStoryBuilder.Preview': 'Preview',
-    'CmsStoryBuilder.DataExplorer': 'Data',
+    'CmsStoryBuilder.DataExplorer': 'Variables',
     'CmsStoryBuilder.Undo': 'Undo',
     'CmsStoryBuilder.Redo': 'Redo',
     'CmsStoryBuilder.hideToolbar': 'Close editor',
@@ -108,7 +140,7 @@ const i18n = useI18n({
     'CmsStoryBuilder.Languages': 'Idiomas',
     'CmsStoryBuilder.Source': 'Fuente',
     'CmsStoryBuilder.Preview': 'Vista previa',
-    'CmsStoryBuilder.DataExplorer': 'Datos',
+    'CmsStoryBuilder.DataExplorer': 'Variables',
     'CmsStoryBuilder.Undo': 'Deshacer',
     'CmsStoryBuilder.Redo': 'Rehacer',
     'CmsStoryBuilder.hideToolbar': 'Cerrar editor',
@@ -264,7 +296,10 @@ provide('$_cms_openBlockWindow', openBlockWindow)
 
 
 const storyFields = computed(() => {
-  return i18n.obj(getStoryFields(innerStory.value))
+  return i18n.obj([
+    ...(props.modelFields || []),
+    ...getStoryFields(innerStory.value),
+  ])
 })
 
 provide('$_vm_fields', storyFields)
