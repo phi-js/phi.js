@@ -1,5 +1,4 @@
 export default {
-
   async 'array.map'(value, args, localScope = null) {
     if (!Array.isArray(value)) {
       return []
@@ -72,6 +71,19 @@ export default {
 
     for (let i = 0; i < args.length; i++) {
       if (!value.includes(args[i])) {
+        return false
+      }
+    }
+    return true
+  },
+
+  'array.notHasAny'(value, args) {
+    if (!Array.isArray(value) || !value.length) {
+      return true
+    }
+
+    for (let i = 0; i < args.length; i++) {
+      if (value.includes(args[i])) {
         return false
       }
     }
