@@ -32,3 +32,23 @@
     padding: 4px;
   }
 }
+
+/*
+Disabled submit bottons on invalid forms
+(fights with rule .LayoutPage:invalid input[type=submit], .LayoutPage:invalid button[type=submit])
+*/
+form.UiDialog__box {
+
+  button[type=submit],
+  input[type=submit] {
+    opacity: 1 !important;
+  }
+
+  &:invalid {
+
+    button[type=submit],
+    input[type=submit] {
+      opacity: 0.6 !important;
+    }
+  }
+}
