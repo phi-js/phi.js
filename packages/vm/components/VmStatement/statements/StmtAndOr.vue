@@ -126,7 +126,7 @@ export default {
 
         <VmStatementPicker
           type="operator"
-          label="Add condition"
+          :label="i18n.t('StmtAndOr.addCondition')"
           @input="pushOperator"
         />
       </div>

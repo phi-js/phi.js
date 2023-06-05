@@ -89,8 +89,8 @@ const currentField = computed(() => {
 const translatedOperators = computed(() => {
   return allOperators.map((op) => ({
     ...op,
-    text: i18n.t(`StmtOp.operator.${op.operator}.title`, null, ''),
-    subtext: i18n.t(`StmtOp.operator.${op.operator}.description`, null, ''),
+    text: i18n.t(`StmtOp.operator.${op.operator}.title`, null, op.text || ''),
+    subtext: i18n.t(`StmtOp.operator.${op.operator}.description`, null, op.subtext || ''),
   }))
 })
 
@@ -121,9 +121,9 @@ const availableOperators = computed(() => {
 const operatorOptionGroups = computed(() => {
   const typeHash = {} // typeHash[operator type] = { label, operators: [] }
   availableOperators.value.forEach((op) => {
-    if (!op.text) {
-      return
-    }
+    // if (!op.text) {
+    //   return
+    // }
 
     const opType = op.type || 'other'
 

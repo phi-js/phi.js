@@ -5,8 +5,9 @@ export default {
 
   'StmtAssign.assign': 'Assign to',
 
-  'StmtOp.operator.array.hasAny.title': 'contains any',
-  'StmtOp.operator.array.hasAll.title': 'contains all',
+  'StmtOp.operator.array.hasAny.title': 'contains (any)',
+  'StmtOp.operator.array.hasAll.title': 'contains (all)',
+  'StmtOp.operator.array.notHasAny.title': 'does not contain',
   'StmtOp.operator.array.eq.title': 'contains exactly',
 
   'StmtOp.operator.boolean.isTrue.title': 'is true',
@@ -52,6 +53,7 @@ export default {
   'VmOperatorPicker.Variables': 'Variables',
   'VmOperatorPicker.Conditions': 'Conditions',
 
+  'StmtAndOr.addCondition': 'Add condition',
   'StmtAndOr.allOf': 'All of the following',
   'StmtAndOr.anyOf': 'Any of the following',
 

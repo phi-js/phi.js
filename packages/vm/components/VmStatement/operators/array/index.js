@@ -5,14 +5,21 @@ export default [
     type: 'array',
     operator: 'array.hasAny',
     icon: 'mdi:equal',
-    text: 'contiene cualquiera',
+    text: 'contiene (alguno)',
     editor: { component: EnumPicker },
   },
   {
     type: 'array',
     operator: 'array.hasAll',
     icon: 'mdi:equal',
-    text: 'contiene todos',
+    text: 'contiene (todos)',
+    editor: { component: EnumPicker },
+  },
+  {
+    type: 'array',
+    operator: 'array.notHasAny',
+    icon: 'mdi:equal',
+    text: 'no contiene',
     editor: { component: EnumPicker },
   },
   {

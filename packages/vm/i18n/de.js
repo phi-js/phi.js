@@ -5,8 +5,10 @@ export default {
 
   'StmtAssign.assign': 'Assign to',
 
-  'StmtOp.operator.array.hasAny.title': 'enthält alle',
-  'StmtOp.operator.array.hasAll.title': 'enthält alles',
+  'StmtOp.operator.array.hasAny.title': 'enthält (beliebig)',
+  'StmtOp.operator.array.hasAll.title': 'enthält (alle)',
+  'StmtOp.operator.array.notHasAny.title': 'enthält nicht',
+
   'StmtOp.operator.array.eq.title': 'enthält genau',
 
   'StmtOp.operator.boolean.isTrue.title': 'ist wahr',
@@ -52,6 +54,7 @@ export default {
   'VmOperatorPicker.Variables': 'Variablen',
   'VmOperatorPicker.Conditions': 'Bedingungen',
 
+  'StmtAndOr.addCondition': 'Bedingung hinzufügen',
   'StmtAndOr.allOf': 'Alles',
   'StmtAndOr.anyOf': 'Irgendein',
 
