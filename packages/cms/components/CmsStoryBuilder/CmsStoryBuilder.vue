@@ -298,6 +298,7 @@ provide('$_cms_openBlockWindow', openBlockWindow)
 const storyFields = computed(() => {
   return i18n.obj([
     ...(props.modelFields || []),
+    ...(innerStory.value.modelFields || []),
     ...getStoryFields(innerStory.value),
   ])
 })
