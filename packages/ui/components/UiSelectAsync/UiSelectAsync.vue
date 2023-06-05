@@ -16,6 +16,12 @@ const props = defineProps({
     default: null,
   },
 
+  multiple: {
+    type: [Boolean, Number, String],
+    required: false,
+    default: false,
+  },
+
   hydrate: {
     type: Function,
     required: false,
@@ -31,6 +37,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
+/* Inner value.  Is ALWAYS an ARRAY */
 const innerValue = ref([])
 
 watch(
@@ -39,14 +46,18 @@ watch(
     if (Array.isArray(newValue)) {
       innerValue.value = newValue.concat([])
     } else {
-      innerValue.value = newValue !== null && newValue !== undefined ? [innerValue.value] : []
+      innerValue.value = newValue !== null && newValue !== undefined
+        ? [newValue]
+        : []
     }
   },
   { immediate: true },
 )
 
 function emitUpdate() {
-  emit('update:modelValue', innerValue.value.concat([]))
+  emit('update:modelValue', props.multiple
+    ? innerValue.value.concat([])
+    : innerValue.value?.[0] || null)
 }
 
 function toggleValue(val) {
@@ -89,8 +100,8 @@ const refSearch = ref()
 function onClickOption(option) {
   hydratedValues.value[option.value] = option
   toggleValue(option.value)
+  isPopoverOpen.value = false
 }
-
 
 // Hydration
 const hydratedValues = ref({})
@@ -111,12 +122,14 @@ watch(
 
     if (missingHydrations.length) {
       const results = await props.hydrate(missingHydrations)
+      if (!Array.isArray(results)) {
+        return
+      }
       results.forEach((hydratedOption) => hydratedValues.value[hydratedOption.value] = hydratedOption)
     }
   },
   { immediate: true },
 )
-
 
 const isPopoverOpen = ref(false)
 </script>
@@ -139,6 +152,7 @@ const isPopoverOpen = ref(false)
       </UiItem>
 
       <UiPopover
+        v-show="multiple || !innerValue.length"
         v-model:open="isPopoverOpen"
         trigger="manual"
         placement="bottom-start"
