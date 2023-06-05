@@ -11,6 +11,7 @@ const UiInputJson = defineAsyncComponent(() => import('../UiInputJson/UiInputJso
 const UiInputNumberSlide = defineAsyncComponent(() => import('../UiInputNumberSlide/UiInputNumberSlide.vue'))
 const UiInputTimer = defineAsyncComponent(() => import('../UiInputTimer/UiInputTimer.vue'))
 const UiInputUrl = defineAsyncComponent(() => import('../UiInputUrl/UiInputUrl.vue'))
+const UiInputVariable = defineAsyncComponent(() => import('../UiInputVariable/UiInputVariable.vue'))
 const UiSelect = defineAsyncComponent(() => import('../UiSelect/UiSelect.vue'))
 const UiSelectButtons = defineAsyncComponent(() => import('../UiSelectButtons/UiSelectButtons.vue'))
 const UiSelectCountry = defineAsyncComponent(() => import('../UiSelectCountry/UiSelectCountry.vue'))
@@ -38,4 +39,5 @@ export default {
   'translation': TranslationInput,
   'upload': UiUpload,
   'url': UiInputUrl,
+  'variable': UiInputVariable,
 }
