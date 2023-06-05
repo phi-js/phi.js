@@ -208,7 +208,7 @@ const multipleOptions = [
     <!-- Variable name -->
     <UiInput
       v-model="block['v-model']"
-      type="text"
+      type="variable"
       :label="i18n.t('InputSettings.VariableName')"
       @update:model-value="emitUpdate"
     />

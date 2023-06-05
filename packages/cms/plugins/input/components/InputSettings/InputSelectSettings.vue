@@ -36,7 +36,7 @@ const i18n = useI18n({
     'InputSelectSettings.Single': 'Single',
     'InputSelectSettings.Multiple': 'Multiple',
     'InputSelectSettings.ValueType': 'Value type',
-    'InputSelectSettings.SelectType': 'Style',
+    'InputSelectSettings.SelectType': 'Component',
   },
   es: {
     'InputSelectSettings.Label': 'Etiqueta',
@@ -45,7 +45,7 @@ const i18n = useI18n({
     'InputSelectSettings.Single': 'Único',
     'InputSelectSettings.Multiple': 'Múltiple',
     'InputSelectSettings.ValueType': 'Tipo de dato',
-    'InputSelectSettings.SelectType': 'Estilo',
+    'InputSelectSettings.SelectType': 'Componente',
   },
 })
 
@@ -72,16 +72,6 @@ const multipleOptions = [
     />
 
     <UiInput
-      :label="i18n.t('InputSelectSettings.Options')"
-      class="InputSelectSettings__item"
-    >
-      <OptionsEditor
-        v-model="block.props.options"
-        @update:model-value="emitUpdate"
-      />
-    </UiInput>
-
-    <UiInput
       v-model="block.props.multiple"
       class="InputSelectSettings__item"
       :label="i18n.t('InputSelectSettings.ValueType')"
@@ -94,7 +84,7 @@ const multipleOptions = [
       v-model="block['v-model']"
       class="InputSelectSettings__item"
       :label="i18n.t('InputSelectSettings.VariableName')"
-      type="text"
+      type="variable"
       @update:model-value="emitUpdate"
     />
 
@@ -111,6 +101,16 @@ const multipleOptions = [
       ]"
       @update:model-value="emitUpdate"
     />
+
+    <UiInput
+      :label="i18n.t('InputSelectSettings.Options')"
+      class="InputSelectSettings__item"
+    >
+      <OptionsEditor
+        v-model="block.props.options"
+        @update:model-value="emitUpdate"
+      />
+    </UiInput>
   </div>
 </template>
 
