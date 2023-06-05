@@ -135,6 +135,10 @@ function deleteFile(file) {
   emitUpdate()
 }
 
+// Modal
+const isOpen = ref(false)
+
+
 // UPPY uploader
 const uppy = computed(() => new Uppy({
   autoProceed: props.autoProceed, // si se autoprocede, no se puede usar ImageEditor
@@ -188,18 +192,16 @@ const uppy = computed(() => new Uppy({
       innerFiles.value = props.multiple ? innerFiles.value.concat(uploads) : [uploads[0]]
       emitUpdate()
     }
+  })
+
+  .on('dashboard:modal-closed', () => {
+    isOpen.value = false
   }))
 
 onBeforeUnmount(() => uppy.value.close())
 
-// Modal
-const isOpen = ref(false)
-function onModalClose() {
-  isOpen.value = false
-}
 
 const dashboardProps = computed(() => ({
-  onRequestCloseModal: onModalClose,
   closeModalOnClickOutside: false,
   closeAfterFinish: props.inline ? null : true,
   height: '100%',
