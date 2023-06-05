@@ -103,13 +103,12 @@ const i18n = useI18n({
     class="CmsPropInput UiInput"
     :class="`CmsPropInput--${type}`"
   >
-    <label
-      class="CmsPropInput__label UiInput__label"
-      for=""
-      v-text="$attrs.label"
-    />
-
-    <div class="CmsPropInput__body UiInput__body">
+    <div class="CmsPropInput__label">
+      <label
+        class="UiInput__label"
+        for=""
+        v-text="$attrs.label"
+      />
       <select
         v-model="type"
         class="CmsPropInput__typeSelect"
@@ -126,45 +125,50 @@ const i18n = useI18n({
           value="expression"
           v-text="i18n.t('CmsPropInput.expression')"
         />
-      <!-- <option
-        value="lang"
-        v-text="i18n.t('CmsPropInput.lang')"
-      /> -->
       </select>
+    </div>
 
-      <Component
-        v-bind="{...$attrs, label:undefined }"
-        :is="editorComponent"
-        v-if="editorComponent"
-        class="CmsPropInput__component"
-        :model-value="props.modelValue"
-        :block="props.block"
-        @update:model-value="emit('update:modelValue', $event)"
-      />
+    <div class="CmsPropInput__body UiInput__body">
+      <template v-if="type == 'constant' && $slots.default">
+        <slot name="default" />
+      </template>
+      <template v-else>
+        <Component
+          v-bind="{...$attrs, label:undefined }"
+          :is="editorComponent"
+          v-if="editorComponent"
+          class="CmsPropInput__component"
+          :model-value="props.modelValue"
+          :block="props.block"
+          @update:model-value="emit('update:modelValue', $event)"
+        />
+      </template>
     </div>
   </div>
 </template>
 
 <style lang="scss">
 .CmsPropInput {
+  &__label {
+    padding: 3px 0;
+  }
+
   &__body {
     position: relative;
   }
 
   &__typeSelect {
     color: inherit;
-
-    position: absolute;
-    right: 0;
-    bottom: 100%;
-
     padding: 4px 6px;
     border: 0;
     border-radius: 4px;
-    font-size: 0.8em;
+    font-size: 0.7rem;
     font-weight: bold;
 
-    opacity: 0.5;
+    background-color: var(--ui-color-hover);
+    margin-left: 1em;
+
+    opacity: 0.4;
     &:hover {
       opacity: 1;
     }

@@ -48,7 +48,7 @@ const i18n = useI18n({
     <UiInput
       v-model="block['v-model']"
       :label="i18n.t('BlockDataEditor.VariableName')"
-      type="text"
+      type="variable"
       @update:model-value="emitUpdate"
     />
 

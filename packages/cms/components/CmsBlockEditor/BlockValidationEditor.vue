@@ -108,16 +108,18 @@ const availableRules = computed(() => {
   ].includes(props.modelValue.props.type)
 
   // eslint-disable-next-line max-len
-  const showMinMax = [
-    'text',
-    'textarea',
-    'search',
-    'password',
-    'email',
-    'tel',
-    'url',
-    'upload',
-  ].includes(props.modelValue.props.type) || props.modelValue.props.type.startsWith('select')
+  const showMinMax = typeof props.modelValue.props?.type == 'string'
+    ? [
+      'text',
+      'textarea',
+      'search',
+      'password',
+      'email',
+      'tel',
+      'url',
+      'upload',
+    ].includes(props.modelValue.props.type) // || props.modelValue.props.type.startsWith('select')
+    : true
 
   return rules.value.filter((r) => {
     if (r.type == 'pattern') {

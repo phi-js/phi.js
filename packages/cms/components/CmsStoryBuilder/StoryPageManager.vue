@@ -11,11 +11,15 @@ const i18n = useI18n({
     'StoryPageManager.DeleteThisPage': 'Delete this page?',
     'StoryPageManager.CreatePage': 'Create page',
     'StoryPageManager.Delete': 'Delete',
+    'StoryPageManager.PageSettings': 'Page settings',
+    'StoryPageManager.PageList': 'Page list',
   },
   es: {
     'StoryPageManager.DeleteThisPage': 'Eliminar esta página?',
     'StoryPageManager.CreatePage': 'Crear página',
     'StoryPageManager.Delete': 'Eliminar',
+    'StoryPageManager.PageSettings': 'Ajustes de página',
+    'StoryPageManager.PageList': 'Lista de páginas',
   },
 })
 
@@ -139,6 +143,7 @@ const shortcuts = computed(() => blockEditors.value.actions.filter((a) => a.hasD
         class="StoryPageManager__picker"
         type="select-native"
         :options="pagePickerOptions"
+        :title="i18n.t('StoryPageManager.PageList')"
       />
 
       <slot name="buttons" />
@@ -158,6 +163,7 @@ const shortcuts = computed(() => blockEditors.value.actions.filter((a) => a.hasD
     <UiDropdown>
       <template #trigger>
         <UiIcon
+          :title="i18n.t('StoryPageManager.PageSettings')"
           src="mdi:dots-vertical"
           class="BlockScaffold__button"
         />
