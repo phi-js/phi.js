@@ -39,7 +39,13 @@ function sanitizeOptions(options) {
     if (!retval.headers) {
       retval.headers = {}
     }
-    retval.headers['content-type'] = 'application/json'
+    if (typeof retval.headers['content-type'] == 'undefined') {
+      retval.headers['content-type'] = 'application/json'
+    }
+
+    if (retval.headers['content-type'] === null) {
+      delete retval.headers['content-type']
+    }
   }
 
   if (!retval.headers) {
