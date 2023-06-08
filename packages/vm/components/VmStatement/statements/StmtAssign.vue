@@ -1,7 +1,8 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { UiInput, UiDetails, UiItem } from '@/packages/ui/components'
+import { UiInput, UiItem } from '@/packages/ui'
 import { VmStatement } from '..'
+import { VmCodeBox } from '../../VmCode'
 
 import useVmI18n from '../../../i18n'
 const i18n = useVmI18n()
@@ -36,24 +37,31 @@ watch(
 )
 
 const faceItemProps = computed(() => {
-  const stmtInfo = statement.value.info || statement.value.stmt?.info
   return {
-    text: i18n.t('StmtAssign.assign'),
-    ...stmtInfo,
-    subtext: statement.value.assign,
+    ...statement.value.info,
+    text: statement.value.info?.text || i18n.t('StmtAssign.assign'),
   }
 })
 </script>
 
 <template>
-  <UiDetails class="StmtAssign">
-    <template #summary>
-      <UiItem
-        class="StmtAssign__item"
-        v-bind="faceItemProps"
-      />
+  <VmCodeBox
+    class="StmtAssign"
+  >
+    <template #face>
+      <div class="StmtAssign__face">
+        <UiItem
+          class="StmtAssign__item"
+          v-bind="faceItemProps"
+        />
+        <span
+          v-if="statement.assign"
+          class="StmtAssign__var"
+        >{{ statement.assign }}</span>
+      </div>
     </template>
-    <template #contents="{ close }">
+
+    <template #default>
       <div class="StmtAssign__contents">
         <VmStatement
           v-model="statement.stmt"
@@ -68,13 +76,45 @@ const faceItemProps = computed(() => {
           type="text"
           @update:model-value="emitUpdate"
         />
-        <UiInput
-          class="UiButton--cancel"
-          type="button"
-          :label="i18n.t('Close')"
-          @click="close"
-        />
       </div>
     </template>
-  </UiDetails>
+  </VmCodeBox>
 </template>
+
+<style lang="scss">
+.StmtAssign {
+  &__footer {
+    background-color: rgba(0,0,0, 0.02);
+    font-size: 0.9rem;
+    border-radius: 4px;
+    padding: 4px;
+    margin-top: 1rem;
+  }
+
+  &__face {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  &__item {
+    --ui-item-padding: 2px 3px;
+    font-weight: bold;
+
+    .UiItem__icon {
+      margin-right: 8px;
+    }
+  }
+
+  &__var {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    background-color: var(--ui-color-primary);
+    color: #fff;
+    border-radius: 4px;
+  }
+}
+</style>

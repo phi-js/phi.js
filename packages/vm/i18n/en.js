@@ -30,8 +30,8 @@ export default {
   'StmtOp.operator.number.lt.title': 'less than',
   'StmtOp.operator.number.lte.title': 'less or equal than',
 
-  'StmtOp.operator.string.same.title': 'equals',
-  'StmtOp.operator.string.eq.title': 'is exactly',
+  'StmtOp.operator.string.same.title': 'is similar to',
+  'StmtOp.operator.string.eq.title': 'equals',
   'StmtOp.operator.string.includes.title': 'contains',
   'StmtOp.operator.string.startsWith.title': 'starts with',
   'StmtOp.operator.string.endsWith.title': 'ends with',
@@ -57,6 +57,7 @@ export default {
   'StmtAndOr.allOf': 'All of the following',
   'StmtAndOr.anyOf': 'Any of the following',
 
+  'StmtChain.addAction': 'Add action',
   'StmtChain.ifify': 'Wrap in conditional',
   'StmtChain.deifify': 'Remove conditional',
   'StmtChain.deleteItem': 'Delete action',

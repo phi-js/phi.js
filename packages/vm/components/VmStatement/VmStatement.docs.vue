@@ -1,106 +1,77 @@
 <script setup>
 import { ref } from 'vue'
-import VmStatement from './VmStatement.vue'
-import { UiInput } from '../../../ui/components'
+import { VmStatement } from '@/packages/vm'
 
-const _stmt = ref({
+const fields = [
+  {
+    value: '$.prop1',
+    type: 'string',
+    text: 'Propiedad 1',
+  },
+  {
+    value: '$.color',
+    type: 'string',
+    text: 'Color favorito',
+    enum: [
+      { value: 'am', text: 'Amarillo' },
+      { value: 'az', text: 'Azul' },
+      { value: 'ro', text: 'Rojo' },
+    ],
+  },
+]
+
+const stmt = ref({
   chain: [
     {
-      info: { text: 'Hacer la cosa 1' },
-      do: { call: 'console.log', args: 'Hola mundo' },
+      assign: 'personas',
+      stmt: {
+        call: 'fetch',
+        args: null,
+      },
+      info: {
+        text: 'API: Obtener personas',
+        icon: 'mdi:api',
+      },
+    },
+    {
+      if: {
+        or: [
+          {
+            op: 'string.same',
+            field: 'perro',
+            args: 'gato',
+            info: {
+              text: '',
+              icon: '',
+            },
+          },
+        ],
+      },
+      then: null,
+      else: null,
+      info: {
+        text: 'Si se cumple ....',
+        icon: 'mdi:directions-fork',
+      },
     },
   ],
 })
-
-const stmt = ref(null)
-
-const schema = {
-  type: 'object',
-  properties: {
-    yousuck: {
-      type: 'string',
-      text: 'Propiedad I',
-    },
-    two: { type: 'string' },
-    personId: {
-      type: 'person',
-      text: 'Estudiante',
-    },
-    date: { type: 'date' },
-    color: {
-      type: 'string',
-      text: 'Color favorito',
-      enum: [
-        {
-          value: 'am',
-          text: 'Amarillo',
-        },
-        {
-          value: 'az',
-          text: 'Azul',
-        },
-        {
-          value: 'ro',
-          text: 'Rojo',
-        },
-      ],
-    },
-    child: {
-      type: 'object',
-      properties: {
-        one: {
-          type: 'string',
-          text: 'Propiedad I',
-        },
-        two: { type: 'string' },
-        personId: {
-          type: 'person',
-          text: 'Estudiante',
-        },
-        date: { type: 'date' },
-        color: {
-          type: 'string',
-          text: 'Color favorito',
-          enum: [
-            {
-              value: 'am',
-              text: 'Amarillo',
-            },
-            {
-              value: 'az',
-              text: 'Azul',
-            },
-            {
-              value: 'ro',
-              text: 'Rojo',
-            },
-          ],
-        },
-      },
-    },
-  },
-}
 </script>
 
 <template>
-  <div class="UiGroup">
-    <UiInput
-      v-model="stmt"
-      label="Stmt"
-      type="json"
-    />
-    <UiInput
-      v-model="schema"
-      label="schema"
-      type="json"
-    />
-  </div>
-  <hr>
+  <div class="VmStatement-docs">
+    <h1>VmStatement</h1>
 
-  <VmStatement
-    v-model="stmt"
-    :model-schema="schema"
-    :default="{and:[]}"
-  />
-  <pre>stmt: {{ stmt }}</pre>
+    <VmStatement
+      v-model="stmt"
+      :fields="fields"
+    />
+    <pre>stmt: {{ stmt }}</pre>
+  </div>
 </template>
+
+<style lang="scss">
+.VmStatement-docs {
+  max-width: 600px;
+}
+</style>

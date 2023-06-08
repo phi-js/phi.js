@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 import VmStatement from '../VmStatement.vue'
 import useVmI18n from '../../../i18n'
+import { VmCodeGroup } from '../../VmCode'
 
 const i18n = useVmI18n()
 
@@ -38,32 +39,37 @@ function accept() {
 
 <template>
   <div class="StmtIf">
-    <div class="StmtIf__if">
-      <label>{{ i18n.t('StmtIf.if') }}</label>
+    <VmCodeGroup
+      class="StmtIf__if"
+      :text="i18n.t('StmtIf.if')"
+    >
       <VmStatement
         v-model="innerValue.if"
         :default="{and: []}"
         @update:model-value="accept()"
       />
-    </div>
+    </VmCodeGroup>
 
-    <div class="StmtIf__then">
-      <label>{{ i18n.t('StmtIf.then') }}</label>
+    <VmCodeGroup
+      class="StmtIf__then"
+      :text="i18n.t('StmtIf.then')"
+    >
       <VmStatement
         v-model="innerValue.then"
         :default="{chain: []}"
         @update:model-value="accept()"
       />
-    </div>
+    </VmCodeGroup>
 
-    <div class="StmtIf__else">
-      <label>{{ i18n.t('StmtIf.else') }}</label>
-
+    <VmCodeGroup
+      class="StmtIf__else"
+      :text="i18n.t('StmtIf.else')"
+    >
       <VmStatement
         v-model="innerValue.else"
         :default="{chain: []}"
         @update:model-value="accept()"
       />
-    </div>
+    </VmCodeGroup>
   </div>
 </template>

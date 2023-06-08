@@ -7,7 +7,8 @@ const i18n = useVmI18n()
 const props = defineProps({
   modelValue: {
     type: Object,
-    required: true,
+    required: false,
+    default: null,
   },
 })
 

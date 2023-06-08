@@ -1,18 +1,11 @@
 <script setup>
 import { computed, inject } from 'vue'
-import { UiItem, UiDialog, UiItemFinder } from '@/packages/ui'
+import { UiDialog, UiItemFinder } from '@/packages/ui'
 import getDefinedStatements from './getDefinedStatements.js'
 import useVmI18n from '../../i18n'
-
-
+import { VmCodeLine } from '../VmCode'
 
 const props = defineProps({
-  label: {
-    type: String,
-    required: false,
-    default: 'Add statement',
-  },
-
   type: {
     type: String,
     required: false,
@@ -100,11 +93,7 @@ function onSelectItem($event) {
 <template>
   <UiDialog class="VmStatementPicker">
     <template #trigger>
-      <UiItem
-        class="VmStatementPicker__item"
-        icon="mdi:plus"
-        :text="props.label"
-      />
+      <VmCodeLine v-bind="$attrs" />
     </template>
     <template #default="{ close }">
       <UiItemFinder

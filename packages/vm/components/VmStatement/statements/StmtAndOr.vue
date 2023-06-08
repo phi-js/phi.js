@@ -1,16 +1,19 @@
 <script>
 import { defineAsyncComponent } from 'vue'
-const VmStatement = defineAsyncComponent(() => import('../VmStatement.vue'))
+const VmStatement = defineAsyncComponent(() => import('../VmStatement.vue')) // prevent component recursion
 
-import { UiDetails } from '@/packages/ui'
+import { VmCodeGroup } from '../../VmCode'
 import VmStatementPicker from '../VmStatementPicker.vue'
 import useVmI18n from '../../../i18n'
 
-let globalCounter = 0
 
 export default {
   name: 'StmtAndOr',
-  components: { VmStatement, VmStatementPicker, UiDetails },
+  components: {
+    VmStatement,
+    VmStatementPicker,
+    VmCodeGroup,
+  },
 
   props: {
     modelValue: {
@@ -24,11 +27,7 @@ export default {
 
   setup() {
     const i18n = useVmI18n()
-
-    return {
-      i18n,
-      uid: globalCounter++,
-    }
+    return { i18n }
   },
 
   data() {
@@ -65,15 +64,6 @@ export default {
         this.innerModel.list.push({ op: null })
       }
       this.emitInput()
-
-      // Focus the first found input field
-      setTimeout(() => {
-        const childItems = this.$el.querySelectorAll('.StmtAndOr__item')
-        const newlyCreatedChild = childItems?.[childItems.length - 1]
-        if (newlyCreatedChild?.querySelector) {
-          newlyCreatedChild.querySelector('input')?.focus?.()
-        }
-      }, 77)
     },
 
     emitInput() {
@@ -85,51 +75,75 @@ export default {
 </script>
 
 <template>
-  <UiDetails
+  <VmCodeGroup
     class="StmtAndOr"
+    :text="innerModel.operator"
     open
   >
-    <template #summary>
-      <div class="StmtAndOr__header">
-        <select
-          v-model="innerModel.operator"
-          class="StmtAndOr__select"
-          @change="emitInput"
-          @click.prevent.stop="()=>1"
-        >
-          <option
-            value="and"
-            v-text="i18n.t('StmtAndOr.allOf')"
-          />
-          <option
-            value="or"
-            v-text="i18n.t('StmtAndOr.anyOf')"
-          />
-        </select>
+    <template #face="{ isOpen }">
+      <div
+        v-if="!isOpen"
+        class="StmtAndOr__text"
+      >
+        {{ innerModel.operator == 'and' ? i18n.t('StmtAndOr.allOf') : i18n.t('StmtAndOr.anyOf') }} ...
       </div>
+      <select
+        v-else
+        v-model="innerModel.operator"
+        class="StmtAndOr__select"
+        @change="emitInput"
+        @click.prevent.stop="()=>1"
+      >
+        <option
+          value="and"
+          v-text="i18n.t('StmtAndOr.allOf')"
+        />
+        <option
+          value="or"
+          v-text="i18n.t('StmtAndOr.anyOf')"
+        />
+      </select>
     </template>
 
     <template #default>
-      <div class="StmtAndOr__body">
-        <div
-          v-for="(_, i) in innerModel.list"
-          :key="i"
-          class="StmtAndOr__item"
-        >
-          <VmStatement
-            v-model="innerModel.list[i]"
-            :group="`StmtAndOr-${uid}`"
-            @update:model-value="emitInput"
-            @delete="removeCondition(i)"
-          />
-        </div>
+      <VmStatement
+        v-for="(_, i) in innerModel.list"
+        :key="i"
+        v-model="innerModel.list[i]"
+        class="StmtAndOr__item"
+        @update:model-value="emitInput"
+        @delete="removeCondition(i)"
+      />
 
-        <VmStatementPicker
-          type="operator"
-          :label="i18n.t('StmtAndOr.addCondition')"
-          @input="pushOperator"
-        />
-      </div>
+      <VmStatementPicker
+        type="operator"
+        :text="i18n.t('StmtAndOr.addCondition')"
+        icon="mdi:plus"
+        @input="pushOperator"
+      />
     </template>
-  </UiDetails>
+  </VmCodeGroup>
 </template>
+
+<style lang="scss">
+.StmtAndOr {
+  &__select,
+  &__text {
+    font-size: 0.8rem;
+    padding: 3px 6px;
+    margin: 5px 3px;
+  }
+
+  &__select {
+    font-family: inherit;
+    background: transparent;
+    border: none;
+
+    border-radius: 4px;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--ui-color-hover);
+    }
+  }
+}
+</style>

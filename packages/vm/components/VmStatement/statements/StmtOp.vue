@@ -1,9 +1,9 @@
 <script setup>
 import { ref, computed, watch, nextTick, onBeforeMount, inject } from 'vue'
 
-import { UiDetails } from '@/packages/ui'
-import VmStatement from '../VmStatement.vue'
 import baseOperators from '../operators'
+import VmStatement from '../VmStatement.vue'
+import { VmCodeBox } from '../../VmCode'
 
 import useVmI18n from '../../../i18n'
 const i18n = useVmI18n()
@@ -13,7 +13,6 @@ const injectedOperators = inject('$_vm_operators', [])
 const allOperators = baseOperators.concat(injectedOperators)
 
 const props = defineProps({
-
   /*
   OP Object
   {
@@ -181,8 +180,9 @@ const operationRedaction = computed(() => {
   const opName = currentOperator.value?.text ? currentOperator.value?.text + ' ' : ''
   const stringArgs = argsToString(innerModel.value.args)
   return {
-    text: fieldName,
-    subtext: `${opName} ${stringArgs}`,
+    field: fieldName,
+    op: opName,
+    args: stringArgs,
   }
 })
 
@@ -203,87 +203,118 @@ function argsToString(strArgs) {
 </script>
 
 <template>
-  <UiDetails
+  <VmCodeBox
     v-model:open="detailsIsOpen"
     class="StmtOp"
     v-bind="operationRedaction"
   >
-    <div class="StmtOp__body">
-      <div
-        v-if="!currentField"
-        class="StmtOp__field"
-      >
-        <input
-          v-model="innerModel.field"
-          type="text"
-          class="UiInput"
-          @input="emitInput"
-        >
+    <template #face>
+      <div class="StmtOp__face">
+        <span class="StmtOp__face-field">{{ operationRedaction.field }}</span>
+        <span class="StmtOp__face-op">{{ operationRedaction.op }}</span>
+        <span class="StmtOp__face-args">{{ operationRedaction.args }}</span>
       </div>
+    </template>
 
-      <div
-        v-if="availableOperators?.length > 1"
-        class="StmtOp__op"
-      >
-        <select
-          v-model="innerModel.op"
-          class="UiInput"
-          @change="onChangeOp()"
+    <template #default>
+      <div class="StmtOp__body">
+        <div
+          v-if="!currentField"
+          class="StmtOp__field"
         >
-          <optgroup
-            v-for="optgroup in operatorOptionGroups"
-            :key="optgroup.label"
-            :label="optgroup.label"
+          <input
+            v-model="innerModel.field"
+            type="text"
+            class="UiInput"
+            @input="emitInput"
           >
-            <option
-              v-for="(opDef, i) in optgroup.operators"
-              :key="i"
-              :value="opDef.operator"
+        </div>
+
+        <div
+          v-if="availableOperators?.length > 1"
+          class="StmtOp__op"
+        >
+          <select
+            v-model="innerModel.op"
+            class="UiInput"
+            @change="onChangeOp()"
+          >
+            <optgroup
+              v-for="optgroup in operatorOptionGroups"
+              :key="optgroup.label"
+              :label="optgroup.label"
             >
-              {{ opDef.text }}
+              <option
+                v-for="(opDef, i) in optgroup.operators"
+                :key="i"
+                :value="opDef.operator"
+              >
+                {{ opDef.text }}
+              </option>
+            </optgroup>
+
+
+            <option
+              v-if="!isKnownOperator"
+              :value="innerModel.op"
+            >
+              Custom:
             </option>
-          </optgroup>
+            <option
+              v-else
+              :value="null"
+            >
+              Custom:
+            </option>
+          </select>
 
-
-          <option
-            v-if="!isKnownOperator"
-            :value="innerModel.op"
+          <input
+            v-show="!isKnownOperator"
+            ref="optionOther"
+            v-model="innerModel.op"
+            type="text"
+            class="UiInput"
+            @input="emitInput"
           >
-            Custom:
-          </option>
-          <option
-            v-else
-            :value="null"
-          >
-            Custom:
-          </option>
-        </select>
+        </div>
 
-        <input
-          v-show="!isKnownOperator"
-          ref="optionOther"
-          v-model="innerModel.op"
-          type="text"
-          class="UiInput"
-          @input="emitInput"
-        >
+        <div class="StmtOp__arguments">
+          <component
+            :is="customArgsComponent.component"
+            v-if="customArgsComponent?.component"
+            v-model="innerModel.args"
+            v-bind="customArgsComponent.props"
+            :field="currentField"
+            @update:model-value="emitInput"
+          />
+          <VmStatement
+            v-else-if="customArgsComponent !== false"
+            v-model="innerModel.args"
+            @update:model-value="emitInput"
+          />
+        </div>
       </div>
-
-      <div class="StmtOp__arguments">
-        <component
-          :is="customArgsComponent.component"
-          v-if="customArgsComponent?.component"
-          v-model="innerModel.args"
-          v-bind="customArgsComponent.props"
-          :field="currentField"
-          @update:model-value="emitInput"
-        />
-        <VmStatement
-          v-else-if="customArgsComponent !== false"
-          v-model="innerModel.args"
-          @update:model-value="emitInput"
-        />
-      </div>
-    </div>
-  </UiDetails>
+    </template>
+  </VmCodeBox>
 </template>
+
+<style lang="scss">
+.StmtOp {
+  &__face {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+
+    &-op {
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: normal;
+      padding: 2px 8px;
+      background-color: #f0f0f0;
+    }
+  }
+}
+</style>

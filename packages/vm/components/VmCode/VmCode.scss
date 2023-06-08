@@ -1,0 +1,242 @@
+.VmCodeLine,
+.VmCodeBox,
+.VmCodeGroup {
+  --code-left-width: 24px;
+  --code-left-border: 1px solid #ccc;
+
+  &__icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+
+.VmCodeGroup {
+  &__face {
+    display: flex;
+    align-items: stretch;
+
+    user-select: none;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--ui-color-hover);
+    }
+  }
+
+  &__left {
+    width: var(--code-left-width);
+    border-right: var(--code-left-border);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__body {
+    flex: 1;
+    margin-left: var(--code-indent-width, 0px);
+  }
+
+  &__text {
+    padding: 6px;
+  }
+}
+
+/* open / collapsed */
+.VmCodeGroup {
+  &__slot {
+    display: none;
+  }
+
+  &--open>.VmCodeGroup__slot {
+    display: block;
+  }
+}
+
+/* Indentation */
+// .VmCodeGroup__slot {
+//   --code-indent-width: calc(var(--code-indent-width, 0px) + 6px);
+// }
+.VmCodeGroup {
+  --code-indent-step: 12px;
+}
+
+.VmCodeGroup__slot {
+  --code-indent-width: calc(var(--code-indent-step) * 1);
+}
+
+.VmCodeGroup__slot .VmCodeGroup__slot {
+  --code-indent-width: calc(var(--code-indent-step) * 2);
+}
+
+.VmCodeGroup__slot .VmCodeGroup__slot .VmCodeGroup__slot {
+  --code-indent-width: calc(var(--code-indent-step) * 3);
+}
+
+.VmCodeGroup__slot .VmCodeGroup__slot .VmCodeGroup__slot .VmCodeGroup__slot {
+  --code-indent-width: calc(var(--code-indent-step) * 4);
+}
+
+.VmCodeGroup__slot .VmCodeGroup__slot .VmCodeGroup__slot .VmCodeGroup__slot .VmCodeGroup__slot {
+  --code-indent-width: calc(var(--code-indent-step) * 5);
+}
+
+//////////////////////////
+
+.VmCodeBox {
+  display: flex;
+
+  &:hover {
+    background-color: var(--ui-color-hover);
+  }
+
+  &__left {
+    width: var(--code-left-width);
+    border-right: var(--code-left-border);
+
+    padding-top: 8px;
+    display: flex;
+    justify-content: center;
+
+    user-select: none;
+    cursor: pointer;
+  }
+
+  &__body {
+    flex: 1;
+    margin-left: var(--code-indent-width, 0px);
+  }
+
+  &__summary {
+    padding: 4px 8px;
+
+    display: flex;
+    align-items: center;
+
+    user-select: none;
+    cursor: pointer;
+
+    &> :first-child {
+      flex: 1;
+    }
+  }
+
+  &__actions {
+    margin-left: auto;
+  }
+
+  &__box {
+    border-radius: 4px;
+    background-color: var(--ui-color-z1);
+    margin: 4px;
+  }
+
+  &__slot {
+    padding: 4px;
+  }
+
+  &__text {
+    font-weight: bold;
+    font-size: 0.9rem;
+    padding: 3px 6px;
+  }
+
+  &__delete {
+    cursor: pointer;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  &--endangered &__box {
+    background-color: var(--ui-color-danger);
+  }
+}
+
+// open / collapsed states
+.VmCodeBox>.VmCodeBox__body>.VmCodeBox__box>.VmCodeBox__slot {
+  display: none;
+}
+
+.VmCodeBox--open>.VmCodeBox__body>.VmCodeBox__box>.VmCodeBox__slot {
+  display: block;
+}
+
+///////////////////////////////////////
+
+.VmCodeLine {
+  display: flex;
+  user-select: none;
+  cursor: pointer;
+
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+    background-color: var(--ui-color-hover);
+  }
+
+  &__left {
+    width: var(--code-left-width);
+    border-right: var(--code-left-border);
+
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+  }
+
+  &__body {
+    flex: 1;
+    margin-left: var(--code-indent-width, 0px);
+  }
+
+  &__text {
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin: 4px;
+    padding: 6px 4px;
+  }
+}
+
+
+
+
+//////////////////////////////////////
+
+.StmtChainItem {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+
+  &__handle {
+    cursor: move;
+    width: 32px;
+    height: 32px;
+    position: relative;
+    top: 0.3em;
+  }
+
+  &__statement {
+    flex: 1;
+  }
+
+  &__actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+  }
+
+  &__actionIcon {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+  }
+
+  &--endangered {
+    background-color: rgba(255, 0, 0, 0.2);
+  }
+}
