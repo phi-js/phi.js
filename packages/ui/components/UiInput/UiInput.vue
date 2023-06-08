@@ -312,11 +312,11 @@ const nativeElementProps = computed(() => {
       event.target.setCustomValidity('')
       isInvalid.value = !event.target.checkValidity()
     },
-    onKeydown: (event) => {
-      if (event.key == 'Enter') {
-        emitUpdate(true)
-      }
-    },
+    // onKeydown: (event) => { // This hijacks any @keydown.XXX events on the parent.  And also it shouldn't be here
+    //   if (event.key == 'Enter') {
+    //     emitUpdate(true)
+    //   }
+    // },
     ...validationProps.value,
 
     modelValue: undefined,

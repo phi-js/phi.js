@@ -2,44 +2,46 @@
 import { ref } from 'vue'
 import UiSelectAsync from './UiSelectAsync.vue'
 
-// const selectValue = ref()
-const selectValue = ref(['f1:toma ya mismo! perro'])
+const singleValue = ref(7)
+const multipleValue = ref([7, 1, 7, 2])
 
-// const options = [
-//   { value: 'value1', text: 'Option 1' },
-//   { value: 'value2', text: 'Option 2' },
-//   { value: 'value3', text: 'Option 3' },
-// ]
-
-// async function hydrateValues(values) {
-//   return options.filter((option) => values.includes(option.value))
-// }
-
+const cachedRequests = {}
 
 async function options(searchString = null) {
-  if (!searchString) {
-    return [
-      { value: 'none', text: 'Valor predeterminado' },
-    ]
+  if (cachedRequests['posts']) {
+    return cachedRequests['posts']
   }
 
-  return [
-    { value: `f1:${searchString}`, text: `TEXTO F1 PARA ${searchString}` },
-    { value: `f2:${searchString}`, text: `TEXTO F2 PARA ${searchString}` },
-  ]
+  cachedRequests['posts'] = fetch('https://jsonplaceholder.typicode.com/posts')
+    .then((response) => response.json())
+    .then((posts) => posts.map((post) => ({
+      value: post.id,
+      text: post.title,
+      // subtext: post.body,
+    })))
+
+  return cachedRequests['posts']
 }
 
 async function hydrateValues(values) {
-  // return options.filter((option) => values.includes(option.value))
-  return values.map((valId) => {
-    const parts = valId.split(':')
-    return {
-      value: valId,
-      text: `Hydrated: ${parts[0]} :: ${parts[1]}`,
+  const responses = await Promise.all(values.map((postId) => {
+    if (cachedRequests[`post-${postId}`]) {
+      return cachedRequests[`post-${postId}`]
     }
-  })
-}
 
+    cachedRequests[`post-${postId}`] = fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`)
+      .then((response) => response.json())
+      .then((objPost) => ({
+        value: objPost.id,
+        text: objPost.title,
+        // subtext: objPost.body,
+      }))
+
+    return cachedRequests[`post-${postId}`]
+  }))
+
+  return responses
+}
 </script>
 
 <template>
@@ -64,13 +66,28 @@ async function hydrateValues(values) {
     <p>The component implements the type-ahead search by first fetching the options and then filtering the options as the user types. The component also allows for the option to be hydrated, which means fetching additional</p>
   </div>
 
-  <UiSelectAsync
-    v-model="selectValue"
-    :options="options"
-    :hydrate="hydrateValues"
-    placeholder="Choose options"
-    debounce="0"
-  />
+  <fieldset>
+    <legend>Single</legend>
+    <UiSelectAsync
+      v-model="singleValue"
+      :options="options"
+      :hydrate="hydrateValues"
+      placeholder="Choose options"
+      debounce="0"
+    />
+    <pre>singleValue: {{ singleValue }}</pre>
+  </fieldset>
 
-  <pre>selectValue: {{ selectValue }}</pre>
+  <fieldset>
+    <legend>Multiple</legend>
+    <UiSelectAsync
+      v-model="multipleValue"
+      :multiple="true"
+      :options="options"
+      :hydrate="hydrateValues"
+      placeholder="Choose options"
+      debounce="0"
+    />
+    <pre>multipleValue: {{ multipleValue }}</pre>
+  </fieldset>
 </template>

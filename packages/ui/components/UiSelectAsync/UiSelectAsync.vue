@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 
 import { UiInput, UiItem, UiIcon, UiPopover } from '@/packages/ui'
 
@@ -78,11 +78,16 @@ const innerOptions = ref([])
 
 async function fetchOptions(searchString = '') {
   if (typeof props.options === 'function') {
-    props.options(searchString).then((incomingOptions) => innerOptions.value = incomingOptions)
+    const incomingOptions = await props.options(searchString)
+    innerOptions.value = incomingOptions
   } else {
     innerOptions.value = Array.isArray(props.options)
       ? props.options.concat([])
       : []
+  }
+
+  if (searchString && innerOptions.value) {
+    isPopoverOpen.value = true
   }
 }
 
@@ -100,7 +105,13 @@ const refSearch = ref()
 function onClickOption(option) {
   hydratedValues.value[option.value] = option
   toggleValue(option.value)
-  isPopoverOpen.value = false
+
+  if (!props.multiple) {
+    isPopoverOpen.value = false
+    return
+  }
+
+  focusedIndex.value = innerOptions.value.findIndex((opt) => opt.value == option.value)
 }
 
 // Hydration
@@ -132,6 +143,68 @@ watch(
 )
 
 const isPopoverOpen = ref(false)
+const focusedIndex = ref(-1)
+const refOptionList = ref()
+
+function focusNext() {
+  if (!isPopoverOpen.value) {
+    return
+  }
+
+  focusedIndex.value = Math.min(focusedIndex.value + 1, innerOptions.value.length - 1)
+  scrollIntoFocused()
+}
+
+function focusPrev() {
+  if (!isPopoverOpen.value) {
+    return
+  }
+
+  focusedIndex.value = Math.max(focusedIndex.value - 1, 0)
+  scrollIntoFocused()
+}
+
+function scrollIntoFocused() {
+  nextTick(() => {
+    const focusedItem = refOptionList.value.querySelector('.UiSelectAsync__option--focused')
+    if (focusedItem) {
+      // focusedItem.scrollIntoView(false)
+      focusedItem.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+    }
+  })
+}
+
+function onSearchTab(event) {
+  if (!isPopoverOpen.value) {
+    return
+  }
+  event.preventDefault()
+
+  if (event.shiftKey) {
+    focusPrev()
+  } else {
+    return focusNext()
+  }
+}
+
+function onSearchEnter(event) {
+  if (!isPopoverOpen.value) {
+    return
+  }
+  event.preventDefault()
+
+  if (!innerOptions.value[focusedIndex.value]) {
+    return
+  }
+
+  return onClickOption(innerOptions.value[focusedIndex.value])
+}
+
+function onSearchFocus() {
+  if (innerOptions.value.length) {
+    isPopoverOpen.value = true
+  }
+}
 </script>
 
 <template>
@@ -152,10 +225,12 @@ const isPopoverOpen = ref(false)
       </UiItem>
 
       <UiPopover
-        v-show="multiple || !innerValue.length"
+        v-if="multiple || !innerValue.length"
         v-model:open="isPopoverOpen"
         trigger="manual"
         placement="bottom-start"
+        @open="focusedIndex = 0"
+        @close="focusedIndex = -1"
       >
         <template #trigger>
           <UiInput
@@ -165,16 +240,32 @@ const isPopoverOpen = ref(false)
             class="UiSelectAsync__search"
             :debounce="props.debounce"
             :placeholder="$attrs.placeholder"
-            @focus="isPopoverOpen = true"
+            @focus="onSearchFocus()"
+            @keydown.down="focusNext($event)"
+            @keydown.up="focusPrev($event)"
+            @keydown.tab="onSearchTab($event)"
+            @keydown.enter="onSearchEnter($event)"
           />
         </template>
         <template #default>
-          <div class="UiSelectAsync__options">
+          <div
+            v-if="search && !innerOptions.length"
+            class="UiSelectAsync__empty"
+          >
+            No results
+          </div>
+          <div
+            ref="refOptionList"
+            class="UiSelectAsync__options"
+          >
             <UiItem
-              v-for="(option) in innerOptions"
+              v-for="(option, i) in innerOptions"
               :key="option.value"
               class="UiSelectAsync__option"
-              :class="{'UiSelectAsync__option--selected': innerValue.includes(option.value)}"
+              :class="{
+                'UiSelectAsync__option--selected': innerValue.includes(option.value),
+                'UiSelectAsync__option--focused': i == focusedIndex,
+              }"
               v-bind="option"
               tabindex="0"
               @click="onClickOption(option)"
@@ -212,24 +303,6 @@ const isPopoverOpen = ref(false)
 
   &__search {
     min-width: 200px;
-  }
-
-  &__options {
-    max-height: 400px;
-    overflow: auto;
-
-    &::-webkit-scrollbar {
-      width: 7px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: rgba(255,255,255, 0.1);
-      border-radius: 6px;
-    }
-
-    &:hover::-webkit-scrollbar-thumb {
-      background-color: #ccc;
-    }
   }
 
   &__chips {
@@ -271,6 +344,37 @@ const isPopoverOpen = ref(false)
       height: 30px;
       border-radius: 5px;
       overflow: hidden;
+    }
+  }
+
+  &__options {
+    max-height: 400px;
+    overflow: auto;
+    padding: 4px;
+
+    &::-webkit-scrollbar {
+      width: 7px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(255,255,255, 0.1);
+      border-radius: 6px;
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+    }
+  }
+
+
+  &__option {
+    --ui-item-padding: 6px 12px;
+    box-sizing: border-box;
+    // min-height: 54px;
+    border-radius: 4px;
+
+    &--focused {
+      background-color: rgba(255, 255, 255, 0.3) !important;
     }
   }
 }

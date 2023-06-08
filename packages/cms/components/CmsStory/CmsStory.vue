@@ -382,7 +382,7 @@ export default {
           return ''
         }
         const arrValue = Array.isArray(value) ? value : [value]
-        return new Intl.ListFormat(i18n.language.value).format(arrValue) // This is awesome
+        return new Intl.ListFormat(i18n.baseLanguage.value).format(arrValue) // This is awesome
       },
 
       date(value, options = null) {
