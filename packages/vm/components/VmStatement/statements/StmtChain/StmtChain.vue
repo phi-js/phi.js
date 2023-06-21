@@ -1,9 +1,15 @@
+<script>
+import { defineAsyncComponent, ref, watch } from 'vue'
+const isDragging = ref(false)
+</script>
+
 <script setup>
-import { ref, watch } from 'vue'
-import { UiIcon } from '@/packages/ui'
+import { UiIcon, UiCodeLine } from '@/packages/ui'
 import useVmI18n from '../../../../i18n'
 import VmStatementPicker from '../../VmStatementPicker.vue'
 import VmStatement from '../../VmStatement.vue'
+
+const draggable = defineAsyncComponent(() => import('vuedraggable'))
 
 const i18n = useVmI18n()
 
@@ -18,12 +24,17 @@ const emit = defineEmits(['update:modelValue'])
 const innerValue = ref({})
 watch(
   () => props.modelValue,
-  (newValue) => innerValue.value = newValue ? JSON.parse(JSON.stringify(newValue)) : { chain: [] },
+  (newValue) => {
+    innerValue.value = newValue
+      ? JSON.parse(JSON.stringify(newValue))
+      : { chain: [] }
+  },
   { immediate: true, deep: true },
 )
 
 function emitUpdate() {
-  emit('update:modelValue', JSON.parse(JSON.stringify(innerValue.value)))
+  const retval = JSON.parse(JSON.stringify(innerValue.value))
+  emit('update:modelValue', retval)
 }
 
 const endangeredIndex = ref(-1)
@@ -77,44 +88,69 @@ function deifify(item, i) {
 </script>
 
 <template>
-  <div class="StmtChain">
-    <div
-      v-for="(element, index) in innerValue.chain"
-      :key="index"
-      class="StmtChainItem"
-      :class="{'StmtChainItem--endangered': endangeredIndex == index}"
+  <div
+    class="StmtChain"
+    :class="{'StmtChain--dragging': isDragging}"
+  >
+    <draggable
+      v-model="innerValue.chain"
+      class="StmtChain__items"
+      handle=".StmtChainItem__drag"
+      group="StmtChain__items"
+      :item-key="chainItem => innerValue.chain.indexOf(chainItem)+2"
+      @update:model-value="emitUpdate()"
+      @start="isDragging = true"
+      @end="isDragging = false"
     >
-      <VmStatement
-        v-model="innerValue.chain[index]"
-        class="StmtChainItem__statement"
-        :open="index === lastAddedIndex"
-        @update:model-value="emitUpdate()"
-      />
-      <div class="StmtChainItem__actions">
-        <UiIcon
-          v-if="!element?.if"
-          class="StmtChainItem__actionIcon"
-          src="mdi:directions-fork"
-          :title="i18n.t('StmtChain.ifify')"
-          @click.stop="ifify(element, index)"
+      <template #header>
+        <UiCodeLine
+          v-if="isDragging"
+          class="StmtChain__dropzone"
         />
-        <UiIcon
-          v-else
-          class="StmtChainItem__actionIcon"
-          src="mdi:minus-network"
-          :title="i18n.t('StmtChain.deifify')"
-          @click.stop="deifify(element, index)"
-        />
-        <UiIcon
-          class="StmtChainItem__actionIcon"
-          src="mdi:close"
-          :title="i18n.t('StmtChain.deleteItem')"
-          @click.stop="removeItem(index)"
-          @mouseenter="endangeredIndex = index"
-          @mouseleave="endangeredIndex = -1"
-        />
-      </div>
-    </div>
+      </template>
+
+      <template #item="{ element, index }">
+        <div
+          class="StmtChainItem"
+          :class="{'StmtChainItem--endangered': endangeredIndex == index}"
+        >
+          <VmStatement
+            v-model="innerValue.chain[index]"
+            class="StmtChainItem__statement"
+            :open="index === lastAddedIndex"
+            @update:model-value="emitUpdate()"
+          />
+          <div class="StmtChainItem__actions">
+            <UiIcon
+              v-if="!element?.if"
+              class="StmtChainItem__actionIcon"
+              src="mdi:directions-fork"
+              :title="i18n.t('StmtChain.ifify')"
+              @click.stop="ifify(element, index)"
+            />
+            <UiIcon
+              v-else
+              class="StmtChainItem__actionIcon"
+              src="mdi:minus-network"
+              :title="i18n.t('StmtChain.deifify')"
+              @click.stop="deifify(element, index)"
+            />
+            <UiIcon
+              class="StmtChainItem__actionIcon"
+              src="mdi:close"
+              :title="i18n.t('StmtChain.deleteItem')"
+              @click.stop="removeItem(index)"
+              @mouseenter="endangeredIndex = index"
+              @mouseleave="endangeredIndex = -1"
+            />
+            <UiIcon
+              class="StmtChainItem__drag StmtChainItem__actionIcon"
+              src="mdi:drag"
+            />
+          </div>
+        </div>
+      </template>
+    </draggable>
 
     <VmStatementPicker
       icon="mdi:plus"

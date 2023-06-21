@@ -3,18 +3,18 @@ import { UiIcon } from '@/packages/ui'
 </script>
 
 <template>
-  <div class="VmCodeLine">
-    <div class="VmCodeLine__left">
+  <div class="UiCodeLine">
+    <div class="UiCodeLine__left">
       <UiIcon
         v-if="$attrs.icon"
-        class="VmCodeLine__icon"
+        class="UiCodeLine__icon"
         :src="$attrs.icon"
       />
     </div>
 
-    <div class="VmCodeLine__body">
+    <div class="UiCodeLine__body">
       <slot name="default">
-        <div class="VmCodeLine__text">
+        <div class="UiCodeLine__text">
           {{ $attrs.text }}
         </div>
       </slot>

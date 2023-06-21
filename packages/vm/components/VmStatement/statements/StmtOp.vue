@@ -1,9 +1,9 @@
 <script setup>
 import { ref, computed, watch, nextTick, onBeforeMount, inject } from 'vue'
 
+import { UiCodeBox } from '@/packages/ui'
 import baseOperators from '../operators'
 import VmStatement from '../VmStatement.vue'
-import { VmCodeBox } from '../../VmCode'
 
 import useVmI18n from '../../../i18n'
 const i18n = useVmI18n()
@@ -203,7 +203,7 @@ function argsToString(strArgs) {
 </script>
 
 <template>
-  <VmCodeBox
+  <UiCodeBox
     v-model:open="detailsIsOpen"
     class="StmtOp"
     v-bind="operationRedaction"
@@ -295,7 +295,7 @@ function argsToString(strArgs) {
         </div>
       </div>
     </template>
-  </VmCodeBox>
+  </UiCodeBox>
 </template>
 
 <style lang="scss">
@@ -313,7 +313,7 @@ function argsToString(strArgs) {
       font-size: 0.8rem;
       font-weight: normal;
       padding: 2px 8px;
-      background-color: #f0f0f0;
+      background-color: rgba(0,0,0, 0.07);
     }
   }
 }

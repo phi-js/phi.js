@@ -45,13 +45,89 @@ const stmt = ref({
               icon: '',
             },
           },
+          {
+            op: 'enum.any',
+            field: '$.color',
+            args: [
+              'am',
+              'az',
+              'ro',
+            ],
+            info: {
+              text: '',
+              icon: '',
+            },
+          },
         ],
       },
-      then: null,
+      then: {
+        chain: [
+          {
+            assign: '',
+            stmt: { eval: '' },
+            info: {
+              text: 'Javascript',
+              icon: 'mdi:language-javascript',
+            },
+          },
+          {
+            assign: '',
+            stmt: null,
+            info: {
+              text: 'Asignar variable',
+              icon: 'mdi:variable',
+            },
+          },
+        ],
+      },
       else: null,
       info: {
         text: 'Si se cumple ....',
         icon: 'mdi:directions-fork',
+      },
+    },
+    {
+      assign: 'uno',
+      stmt: {
+        call: 'window.alert',
+        args: null,
+      },
+      info: {
+        text: 'Alertar',
+        icon: 'mdi:window-maximize',
+      },
+    },
+    {
+      assign: 'dos',
+      stmt: {
+        call: 'window.confirm',
+        args: null,
+      },
+      info: {
+        text: 'Pedir confirmación',
+        icon: 'mdi:window-maximize',
+      },
+    },
+    {
+      assign: 'tres',
+      stmt: {
+        call: 'window.prompt',
+        args: null,
+      },
+      info: {
+        text: 'Introducir texto',
+        icon: 'mdi:window-maximize',
+      },
+    },
+    {
+      assign: 'cuatro',
+      stmt: {
+        call: 'console.log',
+        args: null,
+      },
+      info: {
+        text: 'Mostrar en consola',
+        icon: 'mdi:window-maximize',
       },
     },
   ],
@@ -64,6 +140,7 @@ const stmt = ref({
 
     <VmStatement
       v-model="stmt"
+      class="UiCodeContainer"
       :fields="fields"
     />
     <pre>stmt: {{ stmt }}</pre>

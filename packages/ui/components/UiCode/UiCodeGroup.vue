@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { UiIcon } from '@/packages/ui'
+import UiCodeLine from './UiCodeLine.vue'
 
 const props = defineProps({
   open: {
@@ -15,25 +16,25 @@ const isOpen = ref(props.open)
 
 <template>
   <div
-    class="VmCodeGroup"
-    :class="{'VmCodeGroup--open': isOpen}"
+    class="UiCodeGroup"
+    :class="{'UiCodeGroup--open': isOpen}"
   >
     <div
-      class="VmCodeGroup__face"
+      class="UiCodeGroup__face"
       @click="isOpen = !isOpen"
     >
-      <div class="VmCodeGroup__left">
+      <div class="UiCodeGroup__left">
         <UiIcon
-          class="VmCodeGroup__icon"
+          class="UiCodeGroup__icon"
           :src="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'"
         />
       </div>
-      <div class="VmCodeGroup__body">
+      <div class="UiCodeGroup__body">
         <slot
           name="face"
           :is-open="isOpen"
         >
-          <div class="VmCodeGroup__text">
+          <div class="UiCodeGroup__text">
             <strong>{{ $attrs.text }}</strong>
           &nbsp;
             <small>{{ $attrs.subtext }}</small>
@@ -41,8 +42,12 @@ const isOpen = ref(props.open)
         </slot>
       </div>
     </div>
-    <div class="VmCodeGroup__slot">
+    <div class="UiCodeGroup__slot">
       <slot name="default" />
+      <UiCodeLine
+        v-show="isOpen"
+        class="UiCodeGroup__spacer"
+      />
     </div>
   </div>
 </template>

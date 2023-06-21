@@ -4,14 +4,14 @@ import { useI18n } from '@/packages/i18n'
 
 import { sanitizeDeclarationObject } from './helpers.js'
 
-import UiDetails from '../UiDetails/UiDetails.vue'
 import UiItemFinder from '../UiItemFinder/UiItemFinder.vue'
 import UiDialog from '../UiDialog/UiDialog.vue'
-import UiItem from '../UiItem/UiItem.vue'
 import UiInput from '../UiInput/UiInput.vue'
+import { UiCodeGroup, UiCodeLine } from '../UiCode'
 
 import CssInput from './CssInput.vue'
 import cssPropertiesTree from './tree.js'
+
 
 const i18n = useI18n({
   en: {
@@ -172,7 +172,7 @@ function onQuickSelect($event) {
 
 <template>
   <div class="CssDeclaration">
-    <UiDetails
+    <UiCodeGroup
       v-for="(propGroup) in usedTree"
       :key="propGroup.text"
       open
@@ -192,19 +192,23 @@ function onQuickSelect($event) {
       </div>
 
       <!-- Quick adder -->
-      <UiInput
+      <UiCodeLine
         v-if="propGroup.unusedProperties?.length"
+        icon="mdi:plus"
         class="CssDeclaration__quickAdd"
-        type="select-native"
-        :placeholder="i18n.t('CssDeclaration.QuickAdd')"
-        :options="propGroup.unusedProperties"
-        @update:model-value="$event => onQuickSelect($event)"
-      />
-    </UiDetails>
+      >
+        <UiInput
+          type="select-native"
+          :placeholder="i18n.t('CssDeclaration.QuickAdd')"
+          :options="propGroup.unusedProperties"
+          @update:model-value="$event => onQuickSelect($event)"
+        />
+      </UiCodeLine>
+    </UiCodeGroup>
 
     <UiDialog>
       <template #trigger>
-        <UiItem
+        <UiCodeLine
           class="CssDeclaration__adder"
           :text="i18n.t('CssDeclaration.AddProperty')"
           icon="mdi:plus"

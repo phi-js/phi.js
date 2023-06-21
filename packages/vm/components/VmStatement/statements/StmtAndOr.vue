@@ -2,7 +2,7 @@
 import { defineAsyncComponent } from 'vue'
 const VmStatement = defineAsyncComponent(() => import('../VmStatement.vue')) // prevent component recursion
 
-import { VmCodeGroup } from '../../VmCode'
+import { UiCodeGroup } from '@/packages/ui'
 import VmStatementPicker from '../VmStatementPicker.vue'
 import useVmI18n from '../../../i18n'
 
@@ -12,7 +12,7 @@ export default {
   components: {
     VmStatement,
     VmStatementPicker,
-    VmCodeGroup,
+    UiCodeGroup,
   },
 
   props: {
@@ -75,7 +75,7 @@ export default {
 </script>
 
 <template>
-  <VmCodeGroup
+  <UiCodeGroup
     class="StmtAndOr"
     :text="innerModel.operator"
     open
@@ -122,7 +122,7 @@ export default {
         @input="pushOperator"
       />
     </template>
-  </VmCodeGroup>
+  </UiCodeGroup>
 </template>
 
 <style lang="scss">
@@ -143,6 +143,10 @@ export default {
     cursor: pointer;
     &:hover {
       background-color: var(--ui-color-hover);
+    }
+
+    option {
+      color: black;
     }
   }
 }

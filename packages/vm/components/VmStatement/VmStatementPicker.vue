@@ -1,9 +1,8 @@
 <script setup>
 import { computed, inject } from 'vue'
-import { UiDialog, UiItemFinder } from '@/packages/ui'
+import { UiDialog, UiItemFinder, UiCodeLine } from '@/packages/ui'
 import getDefinedStatements from './getDefinedStatements.js'
 import useVmI18n from '../../i18n'
-import { VmCodeLine } from '../VmCode'
 
 const props = defineProps({
   type: {
@@ -93,7 +92,7 @@ function onSelectItem($event) {
 <template>
   <UiDialog class="VmStatementPicker">
     <template #trigger>
-      <VmCodeLine v-bind="$attrs" />
+      <UiCodeLine v-bind="$attrs" />
     </template>
     <template #default="{ close }">
       <UiItemFinder
@@ -104,3 +103,23 @@ function onSelectItem($event) {
     </template>
   </UiDialog>
 </template>
+
+<style lang="scss">
+.VmStatementPicker {
+  .UiCodeLine {
+    cursor: pointer;
+
+    &__text,
+    &__icon {
+      opacity: 0.5;
+    }
+
+    &:hover .UiCodeLine {
+      &__text,
+      &__icon {
+        opacity: 1;
+      }
+    }
+  }
+}
+</style>

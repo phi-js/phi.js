@@ -1,17 +1,45 @@
-.VmCodeLine,
-.VmCodeBox,
-.VmCodeGroup {
-  --code-left-width: 24px;
-  --code-left-border: 1px solid #ccc;
+:root {
+  --code-left-width: 32px;
+  --code-left-border: 1px solid #cccccc55;
+}
 
+.UiCodeContainer {
+  background-color: field;
+
+  .UiCodeLine,
+  .UiCodeBox,
+  .UiCodeGroup {
+    &__left {
+      opacity: 0.3;
+    }
+  }
+}
+
+.UiCodeContainer:hover {
+
+  .UiCodeLine,
+  .UiCodeBox,
+  .UiCodeGroup {
+    &__left {
+      opacity: 1;
+    }
+  }
+}
+
+.UiCodeLine,
+.UiCodeBox,
+.UiCodeGroup {
   &__icon {
     width: 20px;
     height: 20px;
   }
+
+  &__left {
+    margin-right: 3px;
+  }
 }
 
-
-.VmCodeGroup {
+.UiCodeGroup {
   &__face {
     display: flex;
     align-items: stretch;
@@ -44,47 +72,47 @@
 }
 
 /* open / collapsed */
-.VmCodeGroup {
+.UiCodeGroup {
   &__slot {
     display: none;
   }
 
-  &--open>.VmCodeGroup__slot {
+  &--open>.UiCodeGroup__slot {
     display: block;
   }
 }
 
 /* Indentation */
-// .VmCodeGroup__slot {
+// .UiCodeGroup__slot {
 //   --code-indent-width: calc(var(--code-indent-width, 0px) + 6px);
 // }
-.VmCodeGroup {
-  --code-indent-step: 12px;
+.UiCodeGroup {
+  --code-indent-step: 8px;
 }
 
-.VmCodeGroup__slot {
+.UiCodeGroup__slot {
   --code-indent-width: calc(var(--code-indent-step) * 1);
 }
 
-.VmCodeGroup__slot .VmCodeGroup__slot {
+.UiCodeGroup__slot .UiCodeGroup__slot {
   --code-indent-width: calc(var(--code-indent-step) * 2);
 }
 
-.VmCodeGroup__slot .VmCodeGroup__slot .VmCodeGroup__slot {
+.UiCodeGroup__slot .UiCodeGroup__slot .UiCodeGroup__slot {
   --code-indent-width: calc(var(--code-indent-step) * 3);
 }
 
-.VmCodeGroup__slot .VmCodeGroup__slot .VmCodeGroup__slot .VmCodeGroup__slot {
+.UiCodeGroup__slot .UiCodeGroup__slot .UiCodeGroup__slot .UiCodeGroup__slot {
   --code-indent-width: calc(var(--code-indent-step) * 4);
 }
 
-.VmCodeGroup__slot .VmCodeGroup__slot .VmCodeGroup__slot .VmCodeGroup__slot .VmCodeGroup__slot {
+.UiCodeGroup__slot .UiCodeGroup__slot .UiCodeGroup__slot .UiCodeGroup__slot .UiCodeGroup__slot {
   --code-indent-width: calc(var(--code-indent-step) * 5);
 }
 
 //////////////////////////
 
-.VmCodeBox {
+.UiCodeBox {
   display: flex;
 
   &:hover {
@@ -128,18 +156,12 @@
 
   &__box {
     border-radius: 4px;
-    background-color: var(--ui-color-z1);
+    background-color: var(--ui-color-z2);
     margin: 4px;
   }
 
   &__slot {
     padding: 4px;
-  }
-
-  &__text {
-    font-weight: bold;
-    font-size: 0.9rem;
-    padding: 3px 6px;
   }
 
   &__delete {
@@ -153,30 +175,26 @@
   &--endangered &__box {
     background-color: var(--ui-color-danger);
   }
+
+  &--open>&__body>&__box {
+    margin-bottom: 1rem;
+  }
 }
 
 // open / collapsed states
-.VmCodeBox>.VmCodeBox__body>.VmCodeBox__box>.VmCodeBox__slot {
+.UiCodeBox>.UiCodeBox__body>.UiCodeBox__box>.UiCodeBox__slot {
   display: none;
 }
 
-.VmCodeBox--open>.VmCodeBox__body>.VmCodeBox__box>.VmCodeBox__slot {
+.UiCodeBox--open>.UiCodeBox__body>.UiCodeBox__box>.UiCodeBox__slot {
   display: block;
 }
 
 ///////////////////////////////////////
 
-.VmCodeLine {
+.UiCodeLine {
   display: flex;
   user-select: none;
-  cursor: pointer;
-
-  opacity: 0.7;
-
-  &:hover {
-    opacity: 1;
-    background-color: var(--ui-color-hover);
-  }
 
   &__left {
     width: var(--code-left-width);
@@ -205,11 +223,21 @@
 
 //////////////////////////////////////
 
+// .StmtChain--dragging .StmtChain__items {
+//   min-height: 1rem;
+//   border-radius: 4px;
+//   border: 2px dashed #ddd;
+// }
+
 .StmtChainItem {
   position: relative;
   display: flex;
   flex-wrap: nowrap;
   align-items: flex-start;
+
+  &--endangered {
+    background-color: rgba(255, 0, 0, 0.2);
+  }
 
   &__handle {
     cursor: move;
@@ -228,15 +256,41 @@
     top: 0;
     right: 0;
     z-index: 2;
+    padding: 7px;
   }
 
   &__actionIcon {
     width: 32px;
     height: 32px;
     cursor: pointer;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: var(--ui-color-hover);
+    }
   }
 
-  &--endangered {
-    background-color: rgba(255, 0, 0, 0.2);
+  &__drag {
+    cursor: move;
   }
+}
+
+.StmtIf+.StmtChainItem__actions {
+  padding: 4px 7px;
+}
+
+.StmtChain {
+  &__dropzone {
+    .UiCodeLine__text {
+      border-radius: 4px;
+      border: 2px dashed #ddd;
+      height: 1rem;
+    }
+
+    display: none;
+  }
+}
+
+.StmtChain__items .StmtChain .StmtChain__dropzone {
+  display: flex;
 }

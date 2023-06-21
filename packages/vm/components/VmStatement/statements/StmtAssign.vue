@@ -1,8 +1,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { UiInput, UiItem } from '@/packages/ui'
+import { UiInput, UiItem, UiCodeBox } from '@/packages/ui'
 import { VmStatement } from '..'
-import { VmCodeBox } from '../../VmCode'
 
 import useVmI18n from '../../../i18n'
 const i18n = useVmI18n()
@@ -45,7 +44,7 @@ const faceItemProps = computed(() => {
 </script>
 
 <template>
-  <VmCodeBox
+  <UiCodeBox
     class="StmtAssign"
   >
     <template #face>
@@ -78,7 +77,7 @@ const faceItemProps = computed(() => {
         />
       </div>
     </template>
-  </VmCodeBox>
+  </UiCodeBox>
 </template>
 
 <style lang="scss">
@@ -98,15 +97,14 @@ const faceItemProps = computed(() => {
   }
 
   &__item {
-    --ui-item-padding: 2px 3px;
-    font-weight: bold;
-
+    --ui-item-padding: 4px;
     .UiItem__icon {
-      margin-right: 8px;
+      margin-right: 10px;
     }
   }
 
   &__var {
+    align-self: center;
     display: inline-flex;
     align-items: center;
 

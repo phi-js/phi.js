@@ -22,36 +22,39 @@ const inEndangered = ref(false)
 
 <template>
   <div
-    class="VmCodeBox"
-    :class="{'VmCodeBox--open': isOpen, 'VmCodeBox--endangered': inEndangered}"
+    class="UiCodeBox"
+    :class="{'UiCodeBox--open': isOpen, 'UiCodeBox--endangered': inEndangered}"
   >
     <div
-      class="VmCodeBox__left"
+      class="UiCodeBox__left"
       @click="isOpen = !isOpen"
     >
       <UiIcon
-        class="VmCodeBox__icon"
+        class="UiCodeBox__icon"
         :src="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'"
       />
     </div>
 
-    <div class="VmCodeBox__body">
-      <div class="VmCodeBox__box">
+    <div class="UiCodeBox__body">
+      <div class="UiCodeBox__box">
         <div
-          class="VmCodeBox__summary"
+          class="UiCodeBox__summary"
           @click="isOpen = !isOpen"
         >
-          <slot name="face">
-            <div class="VmCodeBox__text">
+          <slot
+            name="face"
+            :is-open="isOpen"
+          >
+            <div class="UiCodeBox__text">
               {{ $attrs.text }}
             </div>
           </slot>
 
-          <div class="VmCodeBox__actions">
+          <div class="UiCodeBox__actions">
             <slot name="actions" />
             <UiIcon
               v-if="props.onDelete"
-              class="VmCodeBox__delete"
+              class="UiCodeBox__delete"
               src="mdi:close"
               @click="props.onDelete()"
               @mouseenter="inEndangered = true"
@@ -60,7 +63,7 @@ const inEndangered = ref(false)
           </div>
         </div>
 
-        <div class="VmCodeBox__slot">
+        <div class="UiCodeBox__slot">
           <slot name="default" />
         </div>
       </div>
