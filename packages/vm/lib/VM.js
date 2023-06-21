@@ -39,6 +39,14 @@ export default class VM {
       return retval
     }
 
+    /* Ignore all evaluation */
+    if (expr.$ignore) {
+      return {
+        ...expr,
+        $ignore: undefined,
+      }
+    }
+
     /*
     If an object has statement properties but needs to be ignored
     e.g.
