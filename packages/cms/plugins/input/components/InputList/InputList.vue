@@ -13,7 +13,7 @@ const props = defineProps({
   adderLabel: {
     type: String,
     required: false,
-    default: 'Add item',
+    default: '',
   },
 
   deleteLabel: {
@@ -34,14 +34,20 @@ const emit = defineEmits(['update:modelValue'])
 
 const innerValue = ref([])
 
-let _ignoreUpdates = false
+let _changesCameFromProp = false
+let _isFirstExecution = true
 
 watch(
   () => props.modelValue,
   (newValue) => {
-    _ignoreUpdates = true
+    if (_isFirstExecution) {
+      _isFirstExecution = false
+    } else {
+      _changesCameFromProp = true
+    }
+
     innerValue.value = Array.isArray(newValue)
-      ? newValue.concat([])
+      ? JSON.parse(JSON.stringify(newValue))
       : []
   },
   { immediate: true },
@@ -50,10 +56,13 @@ watch(
 watch(
   innerValue,
   () => {
-    if (_ignoreUpdates) {
-      _ignoreUpdates = false
+    // Ignore this watch if the changes came from props.modelValue
+    if (_changesCameFromProp) {
+      _changesCameFromProp = false
       return
     }
+
+    // Emit an upate when innerValue was changed directly
     emitUpdate()
   },
   { deep: true },
@@ -116,6 +125,7 @@ function isBlank(obj) {
       <button
         class="InputList__deleter"
         type="button"
+        tabindex="-1"
         @click="removeItemAt(i)"
       >
         &times;
@@ -127,7 +137,7 @@ function isBlank(obj) {
       class="InputList__adder UiButton"
       type="button"
       @click="pushItem"
-      v-text="adderLabel"
+      v-text="adderLabel || 'Add item'"
     />
 
     <UiInput
@@ -142,13 +152,32 @@ function isBlank(obj) {
 .InputList {
   &__item {
     position: relative;
+
+    padding: 4px 12px;
     padding-right: 35px;
+
+    border-radius: 4px;
+    background-color: rgba(0,0,0, 0.03);
+    margin-bottom: 1rem;
   }
 
   &__deleter {
     position: absolute;
-    top: 8px;
-    right: 5px;
+    top: 3px;
+    right: 3px;
+
+    border: 0;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 18px;
+    font-weight: bold;
+    background: transparent;
+    color: red;
+
+    cursor: pointer;
+    &:hover {
+      background-color: var(--ui-color-hover);
+    }
   }
 }
 </style>

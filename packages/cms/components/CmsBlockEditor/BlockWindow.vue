@@ -196,7 +196,7 @@ const windowTitle = computed(() => {
 
   &__pickerItem {
     @extend .ui--clickable;
-    --ui-item-padding: 6px 12px;
+    --ui-item-padding: 6px 16px;
 
     margin-right: 0.5em;
     margin-bottom: -1px;

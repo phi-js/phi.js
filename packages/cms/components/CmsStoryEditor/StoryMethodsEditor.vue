@@ -75,6 +75,7 @@ function deleteMethodAt(i) {
       /> -->
       <VmStatement
         v-model="storyMethods[i].do"
+        class="UiCodeContainer"
         @update:model-value="emitUpdate()"
       />
     </UiDetails>

@@ -4,32 +4,16 @@
   }
 
   .CssDeclaration {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-
-    &__properties {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    &>.UiDetails {
-      @extend .outset;
-
-      .UiDetails__item {
-        --ui-item-padding: 10px 4px;
-        font-size: 10pt;
-      }
-    }
-
     &__quickAdd {
-      margin-top: 5px;
+      .UiCodeLine__left {
+        padding-top: 9px;
+      }
 
       select {
         background: transparent;
         border: 0;
-        // font-weight: bold;
+        font-family: inherit;
+        font-size: 0.9rem;
 
         cursor: pointer;
 
@@ -45,11 +29,6 @@
 
     &__adder {
       @extend .ui--clickable;
-      --ui-item-padding: 10px;
-
-      &:hover {
-        @extend .outset;
-      }
     }
   }
 }

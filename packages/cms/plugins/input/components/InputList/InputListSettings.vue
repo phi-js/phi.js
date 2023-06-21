@@ -38,11 +38,13 @@ const i18n = useI18n({
     'InputListSettings.label': 'Title',
     'InputListSettings.adderLabel': 'Label (add item)',
     'InputListSettings.deleteLabel': 'Warning message (delete)',
+    'InputListSettings.VariableName': 'Variable',
   },
   es: {
     'InputListSettings.label': 'Título',
     'InputListSettings.adderLabel': 'Etiqueta (agregar elemento)',
     'InputListSettings.deleteLabel': 'Mensaje de advertencia (eliminar)',
+    'InputListSettings.VariableName': 'Variable',
   },
 })
 </script>
@@ -68,6 +70,13 @@ const i18n = useI18n({
       v-model="block.props.deleteLabel"
       type="text"
       :label="i18n.t('InputListSettings.deleteLabel')"
+      @update:model-value="emitUpdate"
+    />
+
+    <UiInput
+      v-model="block['v-model']"
+      type="variable"
+      :label="i18n.t('InputListSettings.VariableName')"
       @update:model-value="emitUpdate"
     />
   </div>

@@ -39,6 +39,10 @@ const i18n = useI18n({
     'BlockVisibilityEditor.visibleWhen': 'Mostrar este bloque si',
     'BlockVisibilityEditor.useAnimation': 'Usar animación',
   },
+  de: {
+    'BlockVisibilityEditor.visibleWhen': 'Diesen Block anzeigen, wenn',
+    'BlockVisibilityEditor.useAnimation': 'Animation verwenden',
+  },
 })
 </script>
 
@@ -47,11 +51,12 @@ const i18n = useI18n({
     <UiItem
       class="BlockVisibilityEditor__item"
       :icon="block['v-if'] ? 'mdi:eye' : 'mdi:eye-outline'"
-      :text="i18n.t('BlockVisibilityEditor.visibleWhen')"
+      text="Visibility"
+      :subtext="i18n.t('BlockVisibilityEditor.visibleWhen')"
     />
     <VmStatement
       v-model="block['v-if']"
-      class="BlockVisibilityEditor__stmt"
+      class="BlockVisibilityEditor__stmt UiCodeContainer"
       :default="{ and: [] }"
       @update:model-value="emitUpdate"
     />
@@ -60,13 +65,23 @@ const i18n = useI18n({
 
 <style lang="scss">
 .BlockVisibilityEditor {
+  // height: 100%;
+  display: flex;
+  flex-direction: column;
+
   &__item {
-    --ui-item-padding: 6px 12px;
-    margin-bottom: 6px;
+    user-select: none;
+    --ui-item-padding: 12px;
+    border-bottom: 1px solid var(--ui-color-ridge-top);
   }
 
   &__stmt {
-    border: 1px solid #eee;
+    flex: 1;
   }
 }
+
+.BlockWindow__contents--BlockVisibilityEditor {
+  padding: 0;
+}
+
 </style>

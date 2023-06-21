@@ -172,6 +172,10 @@ const i18n = useI18n({
     &:hover {
       opacity: 1;
     }
+
+    option {
+      color: black;
+    }
   }
 
   &__component {

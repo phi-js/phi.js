@@ -9,14 +9,14 @@ import promptCreatePage from './promptCreatePage.js'
 const i18n = useI18n({
   en: {
     'StoryPageManager.DeleteThisPage': 'Delete this page?',
-    'StoryPageManager.CreatePage': 'Create page',
+    'StoryPageManager.AddPage': ' + Add page ...',
     'StoryPageManager.Delete': 'Delete',
     'StoryPageManager.PageSettings': 'Page settings',
     'StoryPageManager.PageList': 'Page list',
   },
   es: {
     'StoryPageManager.DeleteThisPage': 'Eliminar esta página?',
-    'StoryPageManager.CreatePage': 'Crear página',
+    'StoryPageManager.AddPage': ' + Agregar página ...',
     'StoryPageManager.Delete': 'Eliminar',
     'StoryPageManager.PageSettings': 'Ajustes de página',
     'StoryPageManager.PageList': 'Lista de páginas',
@@ -114,7 +114,7 @@ function onCurrentPageClickAction(actionId) {
 const pagePickerOptions = computed(() => {
   return innerPages.value
     .map((page) => ({ value: page.id, text: i18n.obj(page.title) }))
-    .concat([{ value: 'create', text: i18n.t('StoryPageManager.CreatePage') }])
+    .concat([{ value: 'create', text: i18n.t('StoryPageManager.AddPage') }])
 })
 
 const pagePickerValue = computed({

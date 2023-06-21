@@ -121,6 +121,7 @@ const endangeredIndex = ref(-1)
     >
       <VmStatement
         v-model="events[i].stmt"
+        class="UiCodeContainer"
         @update:model-value="emitUpdate"
       />
     </UiDetails>

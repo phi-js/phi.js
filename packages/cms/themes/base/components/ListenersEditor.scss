@@ -6,4 +6,9 @@
   &__listener {
     @extend .outset;
   }
+
+  .UiCodeContainer {
+    border-radius: 4px;
+    overflow: hidden;
+  }
 }

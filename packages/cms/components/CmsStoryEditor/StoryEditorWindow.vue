@@ -147,7 +147,7 @@ const i18n = useI18n({
           >
             <VmStatement
               v-model="innerStory.setup"
-              class="StoryEditorWindow__setup"
+              class="StoryEditorWindow__setup UiCodeContainer"
               :default="{chain:[]}"
               @update:model-value="emitStoryUpdate"
             />

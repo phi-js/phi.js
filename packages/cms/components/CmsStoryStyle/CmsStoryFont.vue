@@ -81,6 +81,24 @@ function deleteFontAt(index) {
 
 <template>
   <div class="CmsStoryFont UiForm UiForm--wide">
+    <fieldset>
+      <legend>{{ i18n.t('CmsStoryFont.AvailableFonts') }}</legend>
+      <UiItem
+        v-for="(font, i) in fonts"
+        :key="font.id"
+        class="CmsStoryFont__font"
+        :text="font.name"
+        icon="mdi:format-font"
+        @delete="deleteFontAt(i)"
+      />
+      <UiItem
+        class="CmsStoryFont__adder"
+        :text="i18n.t('CmsStoryFont.ImportGoogleFont')"
+        icon="mdi:plus"
+        @click="importGoogleFont"
+      />
+    </fieldset>
+
     <fieldset class="CmsStoryFont__defaults">
       <legend>{{ i18n.t('CmsStoryFont.Defaults') }}</legend>
 
@@ -112,24 +130,6 @@ function deleteFontAt(index) {
           ...props.storyCssVariables,
           '--ui-font-size': $event
         })"
-      />
-    </fieldset>
-
-    <fieldset>
-      <legend>{{ i18n.t('CmsStoryFont.AvailableFonts') }}</legend>
-      <UiItem
-        v-for="(font, i) in fonts"
-        :key="font.id"
-        class="CmsStoryFont__font"
-        :text="font.name"
-        icon="mdi:format-font"
-        @delete="deleteFontAt(i)"
-      />
-      <UiItem
-        class="CmsStoryFont__adder"
-        :text="i18n.t('CmsStoryFont.ImportGoogleFont')"
-        icon="mdi:plus"
-        @click="importGoogleFont"
       />
     </fieldset>
   </div>

@@ -136,11 +136,15 @@ const imgStyle = computed(() => {
   // }
 
   &--loading &__img {
-    border: 3px dashed red;
-    border-radius: 3px;
+    // border: 3px dashed red;
+    // border-radius: 3px;
+    // background-color: var(--ui-color-hover);
     min-width: 120px;
     min-height: 120px;
-    background-color: var(--ui-color-hover);
+
+    background: linear-gradient(to bottom, #cccccc33, #ffffff33);
+    background-size: 100% 200%;
+    animation: loadingAnimation 4s linear infinite;
   }
 
   &--error {
@@ -153,6 +157,15 @@ const imgStyle = computed(() => {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+}
+
+@keyframes loadingAnimation {
+  0% {
+    background-position: 0 200%;
+  }
+  100% {
+    background-position: 0 -200%;
   }
 }
 </style>

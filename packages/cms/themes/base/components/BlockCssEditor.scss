@@ -21,6 +21,7 @@
 
       .UiInput--type-code {
         height: 100%;
+
         .UiInput__body,
         .UiInputCode {
           height: 100%;
@@ -33,6 +34,7 @@
 
 .BlockCssEditor {
   @extend .UiForm;
+  padding: 2px;
 
   &__fieldset {
     display: flex;
@@ -77,7 +79,18 @@
       border-radius: 4px;
       width: 36px;
       height: 36px;
-      margin-right: 4px;
+      margin-right: 0.5rem;
     }
+  }
+
+  .CssEditor__header {
+    border-bottom: 1px solid var(--window-ridge-color);
+  }
+
+  .CssDeclaration {
+    --code-left-width: 32px;
+    --code-left-border: 1px solid var(--window-ridge-color);
+    background-color: field;
+    border-bottom: 1px solid var(--window-ridge-color);
   }
 }
