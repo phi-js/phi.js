@@ -27,6 +27,7 @@ const props = defineProps({
     :title="props.value.name"
     target="_blank"
     :href="props.value.url"
+    @click="$event => $event.stopPropagation()"
   >
     <UiItem
       :icon="props.value.thumbnail"

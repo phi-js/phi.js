@@ -17,7 +17,7 @@ const emit = defineEmits(['update:modelValue'])
 </script>
 
 <template>
-  <div class="CssTypeColor">
+  <div class="CssTypeColor UiInput__element">
     <UiInput
       type="color-css"
       :model-value="props.modelValue"
@@ -34,3 +34,10 @@ const emit = defineEmits(['update:modelValue'])
     />
   </div>
 </template>
+
+<style lang="scss">
+.CssTypeColor {
+  display: flex;
+  flex-wrap: wrap;
+}
+</style>
