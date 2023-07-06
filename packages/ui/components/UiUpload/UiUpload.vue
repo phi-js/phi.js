@@ -74,6 +74,13 @@ const props = defineProps({
     default: null,
   },
 
+  /* Cadena a adjuntar como prefijo en los nombres de archivos a subir */
+  fileNamePrefix: {
+    type: String,
+    required: false,
+    default: '',
+  },
+
   /*
   Cadena de placeholder a mostrar en el boton en modo inline.
   Tambien puede ser un OBJETO con propiedades para UiItem
@@ -140,27 +147,26 @@ const isOpen = ref(false)
 
 
 // UPPY uploader
-const uppy = computed(() => new Uppy({
-  autoProceed: props.autoProceed, // si se autoprocede, no se puede usar ImageEditor
-
-  locale: i18n.baseLanguage.value == 'es'
-    ? Spanish
-    : (i18n.baseLanguage.value == 'de' ? German : English),
-
-  restrictions: {
-    minNumberOfFiles: props.multiple ? null : 1,
-    maxNumberOfFiles: props.multiple ? null : 1,
-    allowedFileTypes: Array.isArray(props.allowedFileTypes) ? props.allowedFileTypes : null,
-  },
-
-})
-  .use(XHRUpload, {
+const uppy = computed(() => {
+  const uppyInstance = new Uppy({
+    autoProceed: props.autoProceed, // si se autoprocede, no se puede usar ImageEditor
+    locale: i18n.baseLanguage.value == 'es'
+      ? Spanish
+      : (i18n.baseLanguage.value == 'de' ? German : English),
+    restrictions: {
+      minNumberOfFiles: props.multiple ? null : 1,
+      maxNumberOfFiles: props.multiple ? null : 1,
+      allowedFileTypes: Array.isArray(props.allowedFileTypes) ? props.allowedFileTypes : null,
+    },
+  })
+  uppyInstance.use(XHRUpload, {
     endpoint: props.endpoint,
     fieldName: 'file',
   })
 
-  .use(Webcam)
-  .use(ImageEditor, {
+  uppyInstance.use(Webcam)
+
+  uppyInstance.use(ImageEditor, {
     quality: 0.8,
     actions: {
       revert: false,
@@ -176,30 +182,37 @@ const uppy = computed(() => new Uppy({
     cropperOptions: { aspectRatio: props.aspectRatio },
   })
 
-  .on('complete', (result) => {
-    const uploads = []
-    result.successful.forEach((upload) => {
-      const resultObj = upload?.response?.body?.[0]
-      if (!resultObj) {
-        console.warn('UiUpload: invalid API response', upload)
-        return
-      }
-      uploads.push(resultObj)
+  uppyInstance
+    // See https://uppy.io/docs/xhr-upload/#frequently-asked-questions
+    .on('file-added', (file) => {
+      uppyInstance.setFileMeta(file.id, { name: props.fileNamePrefix + file.name })
     })
 
-    if (uploads.length) {
-      emit('upload', uploads)
-      innerFiles.value = props.multiple ? innerFiles.value.concat(uploads) : [uploads[0]]
-      emitUpdate()
-    }
-  })
+    .on('complete', (result) => {
+      const uploads = []
+      result.successful.forEach((upload) => {
+        const resultObj = upload?.response?.body?.[0]
+        if (!resultObj) {
+          console.warn('UiUpload: invalid API response', upload)
+          return
+        }
+        uploads.push(resultObj)
+      })
+      if (uploads.length) {
+        emit('upload', uploads)
+        innerFiles.value = props.multiple ? innerFiles.value.concat(uploads) : [uploads[0]]
+        emitUpdate()
+      }
+    })
 
-  .on('dashboard:modal-closed', () => {
-    isOpen.value = false
-  }))
+    .on('dashboard:modal-closed', () => {
+      isOpen.value = false
+    })
+
+  return uppyInstance
+})
 
 onBeforeUnmount(() => uppy.value.close())
-
 
 const dashboardProps = computed(() => ({
   closeModalOnClickOutside: false,
