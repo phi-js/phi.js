@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, useSlots, watch } from 'vue'
 import { UiItem } from '../UiItem'
+import useLocationHashPage from '@/packages/cms/functions/useLocationhashPage.js'
 
 const props = defineProps({
   modelValue: {
@@ -30,6 +31,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:modelValue'])
 
+// Currently selected value
+const innerValue = ref()
 
 // Obtain tabs from default slot contents
 const slots = useSlots()
@@ -37,6 +40,35 @@ const slots = useSlots()
 // const tabs = ref(getTabs())
 const tabs = computed(() => getTabs())
 
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (newValue !== undefined) {
+      innerValue.value = newValue
+    }
+
+    if (props.autoSelect && !innerValue.value) {
+      innerValue.value = tabs.value?.[0]?.value
+    }
+  },
+  { immediate: true },
+)
+
+const hasHashed = tabs.value.some((tab) => tab.props.href && tab.props.href.startsWith('#'))
+if (hasHashed) {
+  const locationHash = useLocationHashPage('#')
+  watch(
+    locationHash,
+    (newValue) => {
+      const foundTab = tabs.value.find((tab) => tab.props.href == '#' + newValue)
+      if (foundTab) {
+        console.log('foudn tab', foundTab)
+        innerValue.value = foundTab.value
+      }
+    },
+    { immediate: true },
+  )
+}
 
 function getTabs() {
   if (!slots?.default) {
@@ -74,10 +106,6 @@ const markedTabs = computed(() => {
   }))
 })
 
-
-// Handle selected value
-const innerValue = ref()
-
 const root = ref(null)
 const direction = ref('left')
 const incomingTabIndex = ref(-1)
@@ -94,20 +122,6 @@ if (props.name) {
     () => localStorage.setItem(`UiTabs:${props.name}`, JSON.stringify(innerValue.value)),
   )
 }
-
-watch(
-  () => props.modelValue,
-  (newValue) => {
-    if (newValue !== undefined) {
-      innerValue.value = newValue
-    }
-
-    if (props.autoSelect && !innerValue.value) {
-      innerValue.value = tabs.value?.[0]?.value
-    }
-  },
-  { immediate: true },
-)
 
 function selectTab(incomingTab, scrollIntoView = true) {
   if (!incomingTab || incomingTab.value === innerValue.value) {

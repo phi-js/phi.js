@@ -130,5 +130,29 @@ const selectedTab = ref()
         Right Content
       </template>
     </UiTabs>
+
+    <hr>
+    <h2>Tabs with window hash navigation</h2>
+    <p>just use href="#tabname" in each tab</p>
+    <UiTabs>
+      <UiTab
+        text="Thing 1"
+        href="#/phi.js/packages/ui/components/UiTabs/UiTabs.docs.vue#thing1"
+      >
+        <h1>Thing 1</h1>
+      </UiTab>
+      <UiTab
+        text="Thing 2"
+        href="#/phi.js/packages/ui/components/UiTabs/UiTabs.docs.vue#thing2"
+      >
+        <h1>Thing 2</h1>
+      </UiTab>
+      <UiTab
+        text="Thing 3"
+        href="#/phi.js/packages/ui/components/UiTabs/UiTabs.docs.vue#thing3"
+      >
+        <h1>Thing 3</h1>
+      </UiTab>
+    </UiTabs>
   </div>
 </template>
