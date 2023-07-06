@@ -37,7 +37,7 @@ function clickItem(item, toggleFx) {
     class="myTree"
     :value="tree"
   >
-    <template #default="{item, children, isOpen, toggle}">
+    <template #item="{item, children, isOpen, toggle}">
       <UiItem
         v-bind="(({ children, ...o }) => o)(item)"
         class="myTreeItem ui--clickable"

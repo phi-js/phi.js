@@ -50,6 +50,12 @@ const props = defineProps({
     required: false,
     default: () => [],
   },
+
+  allowMultipleOpen: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
 })
 
 const emit = defineEmits(['click-item'])
@@ -72,6 +78,7 @@ watch(
       :depth="props.depth"
       :children-prop="props.childrenProp"
       :initial-open="props.initialOpen"
+      :allow-multiple-open="props.allowMultipleOpen"
       :name="props.name"
       :open="props.path[0] == i"
       :path="props.path[0] == i ? props.path.slice(1) : []"

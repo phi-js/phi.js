@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineAsyncComponent, watch } from 'vue'
+import { ref, defineAsyncComponent, watch, computed } from 'vue'
 import { UiDetails } from '../UiDetails'
 import { UiItem } from '../UiItem'
 import { UiIcon } from '../UiIcon'
@@ -62,6 +62,12 @@ const props = defineProps({
     required: false,
     default: '',
   },
+
+  allowMultipleOpen: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
 })
 
 const children = ref()
@@ -112,6 +118,17 @@ function onDetailsOpen($event) {
     }, 120)
   }
 }
+
+const drawerGroupName = computed(() => {
+  if (props.allowMultipleOpen) {
+    return props.depth > 0
+      ? `UiTree-${props.name}-${props.depth}`
+      : null
+  }
+
+  return `UiTree-${props.name}-${props.depth}`
+})
+
 </script>
 
 <template>
@@ -153,8 +170,8 @@ function onDetailsOpen($event) {
     <UiDetails
       v-if="children?.length"
       v-model:open="isOpen"
-      :drawer-group="`UiTree-${props.name}-${props.depth}`"
-      :group="`UiTree-${props.name}-${props.depth}`"
+      :drawer-group="drawerGroupName"
+      :group="drawerGroupName"
       @open="onDetailsOpen"
     >
       <UiTree
