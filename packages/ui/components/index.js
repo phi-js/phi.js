@@ -1,6 +1,7 @@
 export * from './TempValue'
 export * from './UiButton'
 export * from './UiCalendar'
+export * from './UiCard'
 export * from './UiChat'
 export * from './UiCode'
 export * from './UiContentWrapper'
