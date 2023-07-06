@@ -45,10 +45,7 @@ function parse(string, sourceData, preserveUndefined = false) {
             continue // Si la propiedad no existe, se conserva la cadena (e.j. el texto se conserva '{{ propiedadQueNoExiste }}')
           }
           targetValue = ''
-        }/* else if (typeof targetValue === 'string') {
-          // ENCODE HTML present in target value (!)
-          targetValue = targetValue.replaceAll('>', '&gt;').replaceAll('<', '&lt;')
-        }*/
+        }
 
         /*
         Convert object in substrings to json.  e.g.:
@@ -62,7 +59,7 @@ function parse(string, sourceData, preserveUndefined = false) {
         --->
         "Hola {soy:'un objeto'}!"
         */
-        if (string != m[0] && typeof targetValue == 'object') {
+        if (string != m[0] && targetValue && typeof targetValue == 'object') {
           targetValue = JSON.stringify(targetValue, null, 2)
         }
 
