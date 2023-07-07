@@ -83,6 +83,10 @@ export default class I18n {
 
 
   t(word, params = null, defaultValue = null) {
+    if (word && typeof word == 'object') {
+      return this.obj(word)
+    }
+
     let translated = this.languages[this.language.value]?.dictionary?.[word]
 
     // Not found. Look in base language
