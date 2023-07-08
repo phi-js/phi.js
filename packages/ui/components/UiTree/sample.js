@@ -41,6 +41,7 @@ export default [
     subtext: 'Otro subtexto',
     color: 'purple',
     icon: 'mdi:code-json',
+    isOpen: true,
     children: [
       { text: 'Item 3.1' },
       {

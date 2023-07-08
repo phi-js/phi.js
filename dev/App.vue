@@ -36,6 +36,7 @@ function filterTree(arrTree, strSearch) {
           ...node,
           children: filteredChildren,
           isActive: filteredChildren.some((child) => child.isActive),
+          isOpen: filteredChildren.some((child) => child.isOpen),
         })
       }
     } else if (strSearch) {
@@ -44,12 +45,14 @@ function filterTree(arrTree, strSearch) {
         retval.push({
           ...node,
           isActive: true,
+          isOpen: true,
         })
       }
     } else {
       retval.push({
         ...node,
         isActive: currentUrl.value == node?.url,
+        isOpen: currentUrl.value == node?.url,
       })
     }
   })
@@ -159,9 +162,8 @@ function onComponentUnmounted(evt) {
         <UiTree
           class="NavTree"
           :value="filteredTree"
-          :initial-open="(item) => item.isActive"
         >
-          <template #item="{ item, children, isOpen, toggle }">
+          <template #item="{ item }">
             <a
               v-if="!item.children"
               class="NavTree__link"
@@ -176,13 +178,13 @@ function onComponentUnmounted(evt) {
                 :text="item.text"
                 :subtext="item.subtext"
                 class="NavTree__toggler"
-                @click="toggle()"
+                @click="item.isOpen = !item.isOpen"
               >
                 <template
-                  v-if="children?.length"
+                  v-if="item.children?.length"
                   #actions
                 >
-                  <UiIcon :src="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'" />
+                  <UiIcon :src="item.isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'" />
                 </template>
               </UiItem>
             </div>

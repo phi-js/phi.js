@@ -4,7 +4,7 @@ import UiTreeItem from './UiTreeItem.vue'
 
 const props = defineProps({
   /*
-  An arbitrary object, or an ARRAY of arbitrary objects
+  An arbitrary object, or an ARRAY of arbitrary objects (called ITEMS)
   */
   value: {
     type: [Array, Object],
@@ -13,12 +13,21 @@ const props = defineProps({
   },
 
   /*
-  The object property containing a "tree" object (i.e. an object, or array of objects)
+  A function that given an ITEM, returns its children
   */
-  childrenProp: {
-    type: String,
+  getChildren: {
+    type: Function,
     required: false,
-    default: 'children',
+    default: (item) => item.children,
+  },
+
+  /*
+  A function that given an ITEM, returns a BOOLEAN indicating its open state
+  */
+  getOpen: {
+    type: Function,
+    required: false,
+    default: (item) => item.isOpen,
   },
 
   /* For internal use */
@@ -27,44 +36,17 @@ const props = defineProps({
     required: false,
     default: 0,
   },
-
-  initialOpen: {
-    type: Function,
-    required: false,
-    default: null,
-  },
-
-  /* Unique name (to use as drawer group base name) */
-  name: {
-    type: String,
-    required: false,
-    default: () => 'UiTree_' + Math.floor(Math.random() * 100000),
-  },
-
-  /*
-  Currently selected path
-  An ARRAY of indexes. e.g. [2,1,2]
-  */
-  path: {
-    type: Array,
-    required: false,
-    default: () => [],
-  },
-
-  allowMultipleOpen: {
-    type: Boolean,
-    required: false,
-    default: true,
-  },
 })
-
-const emit = defineEmits(['click-item'])
 
 const items = ref([])
 
 watch(
   () => props.value,
-  (newValue) => items.value = Array.isArray(newValue) ? newValue : [newValue],
+  (newValue) => {
+    items.value = Array.isArray(newValue)
+      ? newValue
+      : [newValue]
+  },
   { immediate: true },
 )
 </script>
@@ -75,14 +57,9 @@ watch(
       v-for="(_, i) in items"
       :key="i"
       :value="items[i]"
+      :get-children="props.getChildren"
+      :get-open="props.getOpen"
       :depth="props.depth"
-      :children-prop="props.childrenProp"
-      :initial-open="props.initialOpen"
-      :allow-multiple-open="props.allowMultipleOpen"
-      :name="props.name"
-      :open="props.path[0] == i"
-      :path="props.path[0] == i ? props.path.slice(1) : []"
-      @click-item="emit('click-item', $event)"
     >
       <template #item="slotProps">
         <slot

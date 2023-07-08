@@ -6,54 +6,44 @@ import { UiItem, UiIcon } from '../'
 import sample from './sample.js'
 
 const tree = ref(sample)
-const activeItem = ref()
-
-function clickItem(item, toggleFx) {
-  if (item?.children?.length) {
-    return toggleFx()
-  }
-
-  item.isActive = !item.isActive
-
-  if (activeItem.value && activeItem.value !== item) {
-    activeItem.value.isActive = false
-  } else if (!item.isActive && activeItem.value === item) {
-    activeItem.value = null
-  }
-
-  if (item.isActive) {
-    activeItem.value = item
-  }
-
-}
-
 </script>
 
 <template>
   <h1>UiTree</h1>
-  <label>Selected: {{ activeItem?.text || 'N.A.' }}</label>
+
+  <input
+    v-model="tree[0].text"
+    type="text"
+  >
+
+  <input
+    v-model="tree[2].isOpen"
+    type="checkbox"
+  >
 
   <UiTree
-    class="myTree"
     :value="tree"
+    class="myTree"
   >
-    <template #item="{item, children, isOpen, toggle}">
+    <template #item="{item}">
       <UiItem
         v-bind="(({ children, ...o }) => o)(item)"
         class="myTreeItem ui--clickable"
-        :class="{'myTreeItem--open': isOpen, 'myTreeItem--active': item.isActive}"
+        :class="{'myTreeItem--open': item.isOpen}"
         :style="{'--item-color': item.color}"
-        @click="clickItem(item, toggle)"
+        @click="item.isOpen = !item.isOpen"
       >
         <template
-          v-if="children?.length"
+          v-if="item.children?.length"
           #actions
         >
-          <UiIcon :src="isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'" />
+          <UiIcon :src="item.isOpen ? 'mdi:chevron-down' : 'mdi:chevron-right'" />
         </template>
       </UiItem>
     </template>
   </UiTree>
+
+  <pre>{{ tree }}</pre>
 </template>
 
 <style lang="scss">
