@@ -81,6 +81,8 @@ const i18n = useI18n({
     'InputSettings.DateFormat': 'Date format',
     'InputSettings.DateFormat.native': 'Native [YYYY-MM-DD]',
     'InputSettings.DateFormat.timestamp': 'Timestamp',
+
+    'InputSettings.UiUpload.fileNamePrefix': 'File name prefix',
   },
   es: {
     'InputSettings.Texts': 'Textos',
@@ -107,6 +109,8 @@ const i18n = useI18n({
     'InputSettings.DateFormat': 'Formato de fecha',
     'InputSettings.DateFormat.native': 'Nativo [YYYY-MM-DD]',
     'InputSettings.DateFormat.timestamp': 'Timestamp',
+
+    'InputSettings.UiUpload.fileNamePrefix': 'Prefijo en nombre de archivo',
   },
 })
 
@@ -213,14 +217,26 @@ const multipleOptions = [
       @update:model-value="emitUpdate"
     />
 
-    <!-- Multiple / Single -->
-    <UiInput
-      v-if="block.component == 'InputUpload'"
-      v-model="block.props.multiple"
-      type="select-buttons"
-      :options="multipleOptions"
-      @update:model-value="emitUpdate"
-    />
+
+    <!-- UiUplaod options -->
+    <template v-if="block.component == 'InputUpload'">
+      <!-- Multiple / Single -->
+      <UiInput
+        v-model="block.props.multiple"
+        type="select-list"
+        :label="i18n.t('InputSettings.ValueType')"
+        :options="multipleOptions"
+        @update:model-value="emitUpdate"
+      />
+
+      <!-- File name prefix -->
+      <UiInput
+        v-model="block.props.fileNamePrefix"
+        type="text"
+        :label="i18n.t('InputSettings.UiUpload.fileNamePrefix')"
+        @update:model-value="emitUpdate"
+      />
+    </template>
 
     <!-- Block type picker -->
     <UiInput
