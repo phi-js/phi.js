@@ -35,36 +35,53 @@ const selectOptions = computed(() => {
 })
 
 function generateBlock() {
-  const allFields = []
-  targetPageIds.value.forEach((pageId) => {
-    const targetPage = storyFields.value.find((page) => page.id == pageId)
-    allFields.push(...targetPage.children)
-  })
-
   const finalBlock = {
-    component: '',
-    props: { value: '' },
+    component: 'LayoutGroup',
+    props: {},
+    slot: [],
   }
 
-  allFields.forEach((field) => {
-    field.variableName = (typeof field?.enum !== 'undefined' || typeof field?.items?.enum !== 'undefined')
-      ? `{{ $format.ul($enum.${field.value}) }}`
-      : `{{ ${field.value} }}`
-  })
+  targetPageIds.value.forEach((pageId) => {
+    const targetPage = injectedStory.value.pages.find((page) => page.id == pageId)
+    if (!targetPage) {
+      return
+    }
 
-  if (targetFormat.value == 'html') {
-    finalBlock.component = 'MediaHtmlCode'
-    finalBlock.props.value = `<table>
+    const targetPageField = storyFields.value.find((page) => page.id == pageId)
+    if (!targetPageField || !targetPageField.children?.length) {
+      return
+    }
+
+    const pageFields = targetPageField.children.map((field) => ({
+      ...field,
+      variableName: (typeof field?.enum !== 'undefined' || typeof field?.items?.enum !== 'undefined')
+        ? `{{ $format.ul($enum.${field.value}) }}`
+        : `{{ ${field.value} }}`,
+    }))
+
+    const pageFieldsBlock = {
+      'component': '',
+      'props': { value: '' },
+      'v-if': targetPage['v-if'],
+    }
+
+    if (targetFormat.value == 'html') {
+      pageFieldsBlock.component = 'MediaHtmlCode'
+      pageFieldsBlock.props.value = `<table>
   <tbody>
-${allFields.map((field) => `    <tr>\n      <td>${field.text}</td>\n      <td>${field.variableName}</td>\n    </tr>`).join('\n')}
+${pageFields.map((field) => `    <tr>\n      <td>${field.text}</td>\n      <td>${field.variableName}</td>\n    </tr>`).join('\n')}
   </tbody>
 </table>`
-  } else {
-    finalBlock.component = 'MediaHtml'
-    finalBlock.props.value = allFields.map((field) => `<p><strong>${field.text}</strong>: ${field.variableName}</p>`).join('\n')
-  }
+    } else {
+      pageFieldsBlock.component = 'MediaHtml'
+      pageFieldsBlock.props.value = pageFields.map((field) => `<p><strong>${field.text}</strong>: ${field.variableName}</p>`).join('\n')
+    }
 
-  emit('input', finalBlock)
+    finalBlock.slot.push(pageFieldsBlock)
+  })
+
+  // emit('input', finalBlock)
+  emit('input', finalBlock.slot)
 }
 </script>
 
