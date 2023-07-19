@@ -46,16 +46,22 @@ function generateBlock() {
     props: { value: '' },
   }
 
+  allFields.forEach((field) => {
+    field.variableName = (typeof field?.enum !== 'undefined' || typeof field?.items?.enum !== 'undefined')
+      ? `{{ $format.ul($enum.${field.value}) }}`
+      : `{{ ${field.value} }}`
+  })
+
   if (targetFormat.value == 'html') {
     finalBlock.component = 'MediaHtmlCode'
     finalBlock.props.value = `<table>
   <tbody>
-${allFields.map((field) => `    <tr>\n      <td>${field.text}</td>\n      <td>{{${field.value}}}</td>\n    </tr>`).join('\n')}
+${allFields.map((field) => `    <tr>\n      <td>${field.text}</td>\n      <td>${field.variableName}</td>\n    </tr>`).join('\n')}
   </tbody>
 </table>`
   } else {
     finalBlock.component = 'MediaHtml'
-    finalBlock.props.value = allFields.map((field) => `<p><strong>${field.text}</strong>: {{${field.value}}}</p>`).join('\n')
+    finalBlock.props.value = allFields.map((field) => `<p><strong>${field.text}</strong>: ${field.variableName}</p>`).join('\n')
   }
 
   emit('input', finalBlock)
