@@ -129,8 +129,7 @@ onMounted(() => {
 
   &__propName {
     font-weight: bold;
-    margin-right: 1em;
-    min-width: 180px;
+    margin-right: 0.5em;
     &::after {
       content: ': ';
     }

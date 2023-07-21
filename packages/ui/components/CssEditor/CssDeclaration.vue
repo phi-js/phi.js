@@ -6,7 +6,7 @@ import { sanitizeDeclarationObject } from './helpers.js'
 
 import UiItemFinder from '../UiItemFinder/UiItemFinder.vue'
 import UiDialog from '../UiDialog/UiDialog.vue'
-import UiInput from '../UiInput/UiInput.vue'
+// import UiInput from '../UiInput/UiInput.vue'
 import { UiCodeGroup, UiCodeLine } from '../UiCode'
 
 import CssInput from './CssInput.vue'
@@ -16,14 +16,14 @@ import cssPropertiesTree from './tree.js'
 const i18n = useI18n({
   en: {
     'CssDeclaration.QuickAdd': 'Add property',
-    'CssDeclaration.AddProperty': 'Add CSS property',
+    'CssDeclaration.AddProperty': 'Add style rule',
     'CssDeclaration.PromptLabel': 'Property name',
     'CssDeclaration.CustomCssVariables': 'Custom variables',
     'CssDeclaration.OtherCssProperties': 'Other properties',
   },
   es: {
     'CssDeclaration.QuickAdd': 'Agregar propiedad',
-    'CssDeclaration.AddProperty': 'Agregar propiedad CSS',
+    'CssDeclaration.AddProperty': 'Agregar regla CSS',
     'CssDeclaration.PromptLabel': 'Nombre de la propiedad',
     'CssDeclaration.CustomCssVariables': 'Variables',
     'CssDeclaration.OtherCssProperties': 'Otras propiedades',
@@ -164,10 +164,10 @@ function emitUpdate() {
   emit('update:modelValue', css.value)
 }
 
-function onQuickSelect($event) {
-  css.value[$event] = null
-  emitUpdate()
-}
+// function onQuickSelect($event) {
+//   css.value[$event] = null
+//   emitUpdate()
+// }
 </script>
 
 <template>
@@ -192,7 +192,7 @@ function onQuickSelect($event) {
       </div>
 
       <!-- Quick adder -->
-      <UiCodeLine
+      <!-- <UiCodeLine
         v-if="propGroup.unusedProperties?.length"
         icon="mdi:plus"
         class="CssDeclaration__quickAdd"
@@ -203,7 +203,7 @@ function onQuickSelect($event) {
           :options="propGroup.unusedProperties"
           @update:model-value="$event => onQuickSelect($event)"
         />
-      </UiCodeLine>
+      </UiCodeLine> -->
     </UiCodeGroup>
 
     <UiDialog>
