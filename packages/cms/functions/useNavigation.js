@@ -72,10 +72,18 @@ export default function useNavigation(refStory, refModelValue = null, listeners 
   const previousPages = computed(() => {
     return graph.value.paths
       .filter((p) => p.to == currentPageId.value)
-      .map((path) => ({
-        ...path.nodeFrom,
-        label: path.label,
-      }))
+      .map((path) => {
+        const nodeFrom = graph.value.nodes.find((n) => n.id == path.from)
+        if (!nodeFrom) {
+          return null
+        }
+
+        return {
+          ...nodeFrom,
+          label: path.label,
+        }
+      })
+      .filter((page) => page !== null)
   })
 
   const trail = computed(() => {
@@ -164,7 +172,7 @@ export default function useNavigation(refStory, refModelValue = null, listeners 
   }
 
   function goBack() {
-    if (!previousPages.value.length) {
+    if (!previousPages.value?.[0]?.id) {
       return window.history.go(-1)
     }
     goTo(previousPages.value[0].id)
