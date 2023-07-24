@@ -17,6 +17,7 @@ import MediaMap from './components/MediaMap/MediaMap.block.js'
 import MediaPdf from './components/MediaPdf/MediaPdf.block.js'
 import MediaVideo from './components/MediaVideo/MediaVideo.block.js'
 import MediaVideoContainer from './components/MediaVideo/MediaVideoContainer.block.js'
+import MediaQrCode from './components/MediaQrCode/MediaQrCode.block.js'
 
 import fnPlay from './functions/MediaVideo/play.js'
 import fnPause from './functions/MediaVideo/pause.js'
@@ -76,6 +77,7 @@ export default {
         MediaCalendar,
         MediaIframe,
         MediaPdf,
+        MediaQrCode,
       ],
     },
   ],

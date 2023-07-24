@@ -44,6 +44,7 @@
     "@uppy/xhr-upload": "^3.1.0",
     "chart.js": "^4.2.1",
     "katex": "^0.15.3",
+    "qrious": "^4.0.2",
     "tippy.js": "^6.3.7",
     "vue": "^3.2.38",
     "vue-zoomer": "^0.4.0-beta.2",

@@ -1,0 +1,1 @@
+export { default as UiQrCode } from './UiQrCode.vue'
