@@ -75,8 +75,7 @@ watch(
 </script>
 
 <template>
-  <canvas
-    ref="refCanvas"
-    class="UiQrCode"
-  />
+  <div class="UiQrCode">
+    <canvas ref="refCanvas" />
+  </div>
 </template>
