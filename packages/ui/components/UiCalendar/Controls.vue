@@ -156,7 +156,14 @@ export default {
         let objDate = new Date()
         objDate.setDate(1)
         objDate.setMonth(m)
-        retval.push(objDate.toLocaleString(/*this.$i18n.language*/'en', { month: 'long' }))
+
+        let monthName = ''
+        try {
+          monthName = objDate.toLocaleString(this.i18n?.baseLanguage?.value || 'en', { month: 'long' })
+        } catch {
+          monthName = objDate.toLocaleString('en', { month: 'long' })
+        }
+        retval.push(monthName)
       }
       return retval
     },

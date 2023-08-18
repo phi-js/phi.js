@@ -2,7 +2,13 @@
   <div class="ui-calendar-view-days">
     <!-- Fila (encabezado) conteniendo los GMTs y Titulos de los dias -->
     <div class="row row-day-names">
-      <div v-for="(tz, i) in innerTimezones" :key="i" class="column column-timezone">{{ tz.label }}</div>
+      <div
+        v-for="(tz, i) in innerTimezones"
+        :key="i"
+        class="column column-timezone"
+      >
+        {{ tz.label }}
+      </div>
 
       <div
         v-for="day in visibleDays"
@@ -18,26 +24,40 @@
 
     <!-- Fila 2: Listas de eventos que ocurren todo el dia -->
     <div class="row row-header">
-      <div v-for="(tz, i) in innerTimezones" :key="i" class="column column-timezone"></div>
+      <div
+        v-for="(tz, i) in innerTimezones"
+        :key="i"
+        class="column column-timezone"
+      />
 
-      <div class="day-slot-header column" v-for="day in visibleDays" :key="day.key">
+      <div
+        v-for="day in visibleDays"
+        :key="day.key"
+        class="day-slot-header column"
+      >
         <div
           v-for="event in day.eventsAllDay"
           :key="event.key"
-          class="event event-all-day"
-          :class="['event', `event-${event.id}`]"
-          :style="[event.style, { height: 'auto' }]"
+          class="UiCalendarEvent UiCalendarEvent--allDay"
+          :class="[`UiCalendarEvent--id-${event.id}`, event.className]"
+          :style="event.style"
           @click="clickEvent(event)"
-        >{{ event.title }}</div>
+        >
+          <span class="UiCalendarEvent__title">{{ event.title }}</span>
+        </div>
       </div>
     </div>
 
     <!-- Fila 3: Columnas prinicpales con los eventos de cada dia -->
     <div class="row row-grid">
-      <div v-for="(tz, i) in innerTimezones" :key="i" class="column column-timezone">
+      <div
+        v-for="(tz, i) in innerTimezones"
+        :key="i"
+        class="column column-timezone"
+      >
         <div
-          v-for="(timeSlot, i) in timeSlots"
-          :key="i"
+          v-for="(timeSlot, k) in timeSlots"
+          :key="i+'_'+k"
           class="slot hour-slot"
           :style="timeSlotStyle"
         >
@@ -45,17 +65,28 @@
         </div>
       </div>
 
-      <div v-for="day in visibleDays" :key="day.key" class="column column-day">
+      <div
+        v-for="day in visibleDays"
+        :key="day.key"
+        class="column column-day"
+      >
         <!-- divs para cada evento de este dia -->
         <div class="events-container">
           <div
             v-for="event in day.events"
             :key="event.key"
-            :class="['event', `event-${event.id}`, event._siblings > 1 ? '--siblings' : null]"
+            :class="[
+              'UiCalendarEvent',
+              `UiCalendarEvent--id-${event.id}`,
+              event.className,
+              event._siblings > 1 ? '--siblings' : null
+            ]"
             :style="event.style"
             :title="event.title"
             @click="clickEvent(event)"
-          >{{ event.title }}</div>
+          >
+            <span class="UiCalendarEvent__title">{{ event.title }}</span>
+          </div>
         </div>
 
         <!-- slots de hora (para dibujar el grid) -->
@@ -64,7 +95,7 @@
           :key="i"
           class="slot hour-slot"
           :style="timeSlotStyle"
-        ></div>
+        />
       </div>
     </div>
   </div>
@@ -74,12 +105,7 @@
 import { useI18n } from '../../../../i18n'
 
 export default {
-  name: 'ui-calendar-week',
-
-  setup() {
-    const i18n = useI18n()
-    return { i18n }
-  },
+  name: 'UiCalendarWeek',
 
   props: {
     date: {
@@ -146,10 +172,17 @@ export default {
     },
   },
 
+  emits: ['click-day', 'click-event'],
+
+  setup() {
+    const i18n = useI18n()
+    return { i18n }
+  },
+
   computed: {
     innerTimezones() {
       if (this.timezones?.length) {
-        return this.timezones;
+        return this.timezones
       }
 
       return [
@@ -167,7 +200,7 @@ export default {
         //   offset: '+0800',
         //   useAm: true,
         // },
-      ];
+      ]
     },
 
     /*
@@ -177,26 +210,24 @@ export default {
     timeSlots contiene el arreglo de todas los bloques de una hora
     */
     timeSlots() {
-      let retval = [];
+      let retval = []
 
-      let startHour = Math.max(0, parseInt(this.hourMin));
-      let endHour = Math.max(startHour, parseInt(this.hourMax));
+      let startHour = Math.max(0, parseInt(this.hourMin))
+      let endHour = Math.max(startHour, parseInt(this.hourMax))
 
       for (let curHour = startHour; curHour <= endHour; curHour++) {
-        let nextHour = curHour + 1;
+        let nextHour = curHour + 1
         retval.push({
           start: (curHour < 10 ? '0' : '') + `${curHour}:00`,
           end: (nextHour < 10 ? '0' : '') + `${nextHour}:00`,
-        });
+        })
       }
 
-      return retval;
+      return retval
     },
 
     timeSlotStyle() {
-      return {
-        height: this.slotHeight + 'px',
-      };
+      return { height: this.slotHeight + 'px' }
     },
 
     /*
@@ -209,36 +240,39 @@ export default {
     }
     */
     hashEvents() {
-      let minuteSize = this.slotHeight / this.slotSize; // tamaño de un minuto en pixeles
+      let minuteSize = this.slotHeight / this.slotSize // tamaño de un minuto en pixeles
 
-      let firstSlot = this.timeSlots[0];
-      let parts = firstSlot.start.split(':');
-      let slotStartMinute = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+      let firstSlot = this.timeSlots[0]
+      let parts = firstSlot.start.split(':')
+      let slotStartMinute = parseInt(parts[0]) * 60 + parseInt(parts[1])
 
-      let retval = {};
+      let retval = {}
       for (let i = 0; i < this.events.length; i++) {
-        let eventStart = this.events[i].dateStart;
-        let eventEnd = this.events[i].dateEnd;
-        let eventKey = this.getKey(eventStart);
+        let eventStart = this.events[i].dateStart
+        let eventEnd = this.events[i].dateEnd
+        let eventKey = this.getKey(eventStart)
 
         if (typeof retval[eventKey] == 'undefined') {
-          retval[eventKey] = [];
+          retval[eventKey] = []
         }
 
         let eventStartMinute =
-          eventStart.getUTCHours() * 60 + eventStart.getUTCMinutes();
+          eventStart.getUTCHours() * 60 + eventStart.getUTCMinutes()
 
         let eventEndMinute = eventEnd
           ? eventEnd.getUTCHours() * 60 + eventEnd.getUTCMinutes()
-          : eventStartMinute + 60;
+          : eventStartMinute + 60
 
         let event = Object.assign({}, this.events[i], {
           key: this.events[i].id,
           style: {
+            ...this.events[i].style,
             top:
               Math.max(eventStartMinute - slotStartMinute, 0) * minuteSize +
               'px',
-            height: (eventEndMinute - eventStartMinute) * minuteSize + 'px',
+            height: (eventEndMinute - eventStartMinute) * minuteSize
+              ? (eventEndMinute - eventStartMinute) * minuteSize + 'px'
+              : 'auto',
             zIndex: eventStartMinute,
             backgroundColor: this.events[i].color,
           },
@@ -247,9 +281,9 @@ export default {
           _endMinute: eventEndMinute,
           _siblings: 0,
           _order: 0,
-        });
+        })
 
-        retval[eventKey].push(event);
+        retval[eventKey].push(event)
       }
 
       /*
@@ -257,10 +291,7 @@ export default {
       Un hermano es todo evento cuya primera hora se intersecta contra su primera hora
       */
       for (let eventKey in retval) {
-        if (!retval.hasOwnProperty(eventKey)) {
-          continue;
-        }
-        let events = retval[eventKey];
+        let events = retval[eventKey]
 
         events.forEach((event) => {
           let siblings = events.filter((e) => {
@@ -269,27 +300,27 @@ export default {
               // e._startMinute <= event._endMinute
               e._startMinute + 60 > event._startMinute &&
               e._startMinute < event._startMinute + 60
-            );
-          });
+            )
+          })
 
-          event._siblings = siblings.length;
+          event._siblings = siblings.length
 
-          let order = 1;
+          let order = 1
           siblings.forEach((sibling) => {
             if (!sibling._order) {
-              sibling._order = order++;
+              sibling._order = order++
             }
-          });
-        });
+          })
+        })
 
         events.forEach((event) => {
-          event.style.width = Math.floor(100 / event._siblings) + '%';
+          event.style.width = Math.floor(100 / event._siblings) + '%'
           event.style.left =
-            (event._order - 1) * Math.floor(100 / event._siblings) + '%';
-        });
+            (event._order - 1) * Math.floor(100 / event._siblings) + '%'
+        })
       }
 
-      return retval;
+      return retval
     },
 
     visibleDays() {
@@ -300,21 +331,21 @@ export default {
         eventsAllDay: [] ?
       */
 
-      let retval = [];
-      let startDay = new Date(this.date);
+      let retval = []
+      let startDay = new Date(this.date)
 
       if (this.view == 'week') {
-        let offset = startDay.getDay() - this.startDay;
+        let offset = startDay.getDay() - this.startDay
         if (offset < 0) {
-          offset = 7 + offset;
+          offset = 7 + offset
         }
-        startDay.setDate(startDay.getDate() - offset);
+        startDay.setDate(startDay.getDate() - offset)
       }
 
-      let curDay = startDay;
+      let curDay = startDay
       for (let dayN = 0; dayN < this.nDays; dayN++) {
-        let dayKey = this.getKey(curDay);
-        let dayEvents = this.hashEvents[dayKey];
+        let dayKey = this.getKey(curDay)
+        let dayEvents = this.hashEvents[dayKey]
 
         let day = {
           date: new Date(curDay),
@@ -322,7 +353,7 @@ export default {
           key: dayKey,
           classnames: [
             {
-              today: this.isToday(curDay),
+              'today': this.isToday(curDay),
               'other-month': curDay.getMonth() != this.date.getMonth(),
               'first-of-month': curDay.getDate() == 1,
             },
@@ -330,13 +361,13 @@ export default {
 
           events: dayEvents ? dayEvents.filter((e) => !e.isAllDay) : [],
           eventsAllDay: dayEvents ? dayEvents.filter((e) => e.isAllDay) : [],
-        };
+        }
 
-        retval.push(day);
-        curDay.setDate(curDay.getDate() + 1);
+        retval.push(day)
+        curDay.setDate(curDay.getDate() + 1)
       }
 
-      return retval;
+      return retval
     },
   },
 
@@ -346,91 +377,71 @@ export default {
     timezone: objeto timezone {label: 'es', offset: '+0000' (+HHMM)}
     */
     getHourLabel(timeSlot, timezone) {
-      let utcHour = timeSlot.start;
-      let utcParts = utcHour.split(':');
-      let utcMinutes = parseInt(utcParts[0]) * 60 + parseInt(utcParts[1]);
+      let utcHour = timeSlot.start
+      let utcParts = utcHour.split(':')
+      let utcMinutes = parseInt(utcParts[0]) * 60 + parseInt(utcParts[1])
 
-      let offset = timezone.offset;
+      let offset = timezone.offset
       let offsetMinutes =
         parseInt(offset.substring(1, 3)) * 60 +
-        parseInt(offset.substring(3, 5));
+        parseInt(offset.substring(3, 5))
 
       if (offset[0] == '-') {
-        offsetMinutes *= -1;
+        offsetMinutes *= -1
       }
 
-      let localMinutes = utcMinutes + offsetMinutes;
+      let localMinutes = utcMinutes + offsetMinutes
 
       if (localMinutes < 0) {
-        localMinutes = 24 * 60 + localMinutes;
+        localMinutes = 24 * 60 + localMinutes
       }
 
-      let localHour = Math.floor(localMinutes / 60);
-      let localMinute = localMinutes - localHour * 60;
-
-      let retval = {
-        offset,
-        hour: localHour,
-        minute: localMinute,
-      };
+      let localHour = Math.floor(localMinutes / 60)
+      let localMinute = localMinutes - localHour * 60
 
       // formato am/pm (1 pm - 3 pm)
-      let hour = localHour % 12;
+      let hour = localHour % 12
       if (hour == 0) {
-        hour = 12;
+        hour = 12
       }
 
       return timezone.useAm
         ? hour + ' ' + (localHour >= 12 ? 'pm' : 'am')
         : String(localHour).padStart(2, '0') +
         ':' +
-        String(localMinute).padStart(2, '0');
+        String(localMinute).padStart(2, '0')
     },
 
     clickDay(day) {
-      this.$emit('click-day', day.date);
+      this.$emit('click-day', day.date)
     },
 
     clickEvent(event) {
-      this.$emit('click-event', event);
+      this.$emit('click-event', event)
     },
 
     getKey(date) {
       return (
         date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear()
-      );
+      )
     },
 
     isToday(date) {
-      let today = new Date();
+      let today = new Date()
 
       return (
         date.getFullYear() === today.getFullYear() &&
         date.getMonth() === today.getMonth() &&
         date.getDate() === today.getDate()
-      );
+      )
     },
   },
-};
+}
 </script>
 
 <style lang="scss">
 .ui-calendar-view-days {
   background: #fff;
-
-  .event {
-    background-color: #666;
-    color: #fff;
-    border-radius: 5px;
-    padding: 3px 6px;
-    box-sizing: border-box;
-    font-size: 12px;
-
-    // white-space: nowrap;
-    // overflow: hidden;
-    text-overflow: ellipsis;
-    cursor: pointer;
-  }
 
   .row {
     display: flex;
@@ -459,16 +470,10 @@ export default {
         bottom: 0;
       }
 
-      .event {
+      .UiCalendarEvent {
         position: absolute;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-
         overflow: hidden;
         text-overflow: ellipsis;
-
-        &:hover {
-          border: 1px solid rgba(255, 255, 255, 0.8);
-        }
 
         &.--siblings:hover {
           opacity: 0.95;

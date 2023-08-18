@@ -17,17 +17,19 @@
         <div
           v-for="(event, i) in day.events"
           :key="i"
-          @click="$emit('click-event', event)"
           :class="['day-event', 'ui-calendar-event', event.className]"
           :style="[{ backgroundColor: event.color }, event.style]"
+          @click="$emit('click-event', event)"
         >
           <div class="time">
-            <span class="start">{{ i18n.d(event.dateStart, 'time') }}</span>
+            <span class="start">{{ i18n.time(event.dateStart, { hour: "2-digit", minute: "2-digit" }) }}</span>
             -
-            <span class="end">{{ i18n.d(event.dateEnd, 'time') }}</span>
+            <span class="end">{{ i18n.time(event.dateEnd, { hour: "2-digit", minute: "2-digit" }) }}</span>
           </div>
 
-          <div class="description">{{ event.title }}</div>
+          <div class="description">
+            {{ event.title }}
+          </div>
         </div>
       </div>
     </div>
@@ -38,12 +40,7 @@
 import { useI18n } from '../../../../i18n'
 
 export default {
-  name: 'ui-calendar-schedule',
-
-  setup() {
-    const i18n = useI18n()
-    return { i18n }
-  },
+  name: 'UiCalendarSchedule',
 
   props: {
     events: {
@@ -71,29 +68,36 @@ export default {
     },
   },
 
+  emits: ['click-day', 'click-event'],
+
+  setup() {
+    const i18n = useI18n()
+    return { i18n }
+  },
+
   computed: {
     days() {
-      let retval = [];
+      let retval = []
 
       let startDate = new Date(
         this.date.getFullYear(),
         this.date.getMonth(),
-        this.date.getDate() - this.numDaysBefore
-      );
+        this.date.getDate() - this.numDaysBefore,
+      )
       let endDate = new Date(
         this.date.getFullYear(),
         this.date.getMonth(),
-        this.date.getDate() + this.numDaysAfter
-      );
+        this.date.getDate() + this.numDaysAfter,
+      )
 
-      let curDate = startDate;
+      let curDate = startDate
       while (curDate <= endDate) {
-        let dayEvents = this.getEventsForDay(curDate);
+        let dayEvents = this.getEventsForDay(curDate)
 
         let isSelectedDay =
           curDate.getFullYear() === this.date.getFullYear() &&
           curDate.getMonth() === this.date.getMonth() &&
-          curDate.getDate() === this.date.getDate();
+          curDate.getDate() === this.date.getDate()
 
         let day = {
           date: new Date(curDate.getTime()),
@@ -104,29 +108,29 @@ export default {
             '--previous': curDate < this.today,
             '--empty': dayEvents.length == 0,
           },
-        };
+        }
 
-        retval.push(day);
-        curDate.setDate(curDate.getDate() + 1);
+        retval.push(day)
+        curDate.setDate(curDate.getDate() + 1)
       }
 
-      return retval;
+      return retval
     },
 
     today() {
-      return new Date();
+      return new Date()
     },
   },
 
   methods: {
     isToday(date) {
-      let today = new Date();
+      let today = new Date()
 
       return (
         date.getFullYear() === today.getFullYear() &&
         date.getMonth() === today.getMonth() &&
         date.getDate() === today.getDate()
-      );
+      )
     },
 
     // focusWindow() {
@@ -138,21 +142,21 @@ export default {
 
     getEventsForDay(date) {
       return this.events.filter((event) => {
-        let eventDate = event.dateStart;
+        let eventDate = event.dateStart
 
         return (
           date.getFullYear() == eventDate.getFullYear() &&
           date.getMonth() == eventDate.getMonth() &&
           date.getDate() == eventDate.getDate()
-        );
-      });
+        )
+      })
     },
   },
 
   // mounted() {
   //   this.focusWindow();
   // }
-};
+}
 </script>
 
 <style lang="scss">

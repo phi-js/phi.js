@@ -46,11 +46,11 @@
                   <li
                     v-for="(event, i) in dayEvents[day.key]"
                     :key="i"
-                    :class="['UiCalendarEvent', 'ui-calendar-event', event.className]"
+                    :class="['UiCalendarEvent', event.className]"
                     :style="[{ backgroundColor: event.color }, event.style]"
                     @click.stop="clickEvent(event)"
                   >
-                    <span class="UiCalendarEvent__title event-title">{{ event.title }}</span>
+                    <span class="UiCalendarEvent__title">{{ event.title }}</span>
                   </li>
                 </ul>
               </slot>
@@ -282,17 +282,6 @@ export default {
     list-style: none;
     margin: 0;
     padding: 0;
-
-    .ui-calendar-event {
-      border-radius: 3px;
-      font-size: 11px;
-      padding: 2px 6px;
-
-      color: #666;
-
-      // Los estilos del evento deben venir de afuera siempre
-      // background-color: rgba(255, 255, 255, 0.2);
-    }
   }
 
   .ui-calendar-day {
