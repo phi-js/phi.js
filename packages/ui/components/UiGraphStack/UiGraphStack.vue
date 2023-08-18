@@ -104,7 +104,6 @@ const pathItems = computed(() => {
           icon="mdi:drag-vertical"
           :text="element.text || element.id"
           @click-body="emit('click-node', element)"
-          @click-actions="emit('click-node', element)"
         >
           <template #actions>
             <slot

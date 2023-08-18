@@ -7,10 +7,11 @@
   --outline-offset: 0;
 
   // Launchers visible on selected only
-  & > &__launcher {
+  &>&__launcher {
     visibility: hidden;
   }
-  &--selected > &__launcher {
+
+  &--selected>&__launcher {
     visibility: visible;
   }
 
@@ -141,7 +142,6 @@
 
     .UiItem {
       @extend .ui--clickable;
-      font-weight: bold;
       font-size: 0.85rem;
       border-radius: 4px;
     }
@@ -151,7 +151,7 @@
   // DragBar.  Bar placed absolutely over the block's face
   &__dragbar-wrap {
     position: sticky;
-    top: calc(var(--cms-builder-header-bottom, 0) + 30px); // --cms-builder-header-bottom is set in CmsStoryBuilder.vue
+    top: var(--cms-builder-header-bottom, 0); // --cms-builder-header-bottom is set in CmsStoryBuilder.vue
     z-index: 3;
   }
 
@@ -237,6 +237,7 @@
 
     cursor: pointer;
     opacity: 0.5;
+
     &:hover {
       border: 2px solid var(--ui-color-primary);
       color: var(--ui-color-primary);
@@ -249,7 +250,7 @@
 // Sibling launcher positions depending on block "direction" props
 .BlockScaffold--horizontal {
 
-  & > .BlockScaffold__launcher--before {
+  &>.BlockScaffold__launcher--before {
     top: 50%;
     left: 0;
     bottom: auto;
@@ -257,7 +258,7 @@
     margin-top: -10px;
   }
 
-  & > .BlockScaffold__launcher--after {
+  &>.BlockScaffold__launcher--after {
     top: 50%;
     right: -13px;
     bottom: auto;

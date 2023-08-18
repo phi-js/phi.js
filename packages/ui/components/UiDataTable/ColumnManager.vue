@@ -61,14 +61,15 @@ function emitUpdate() {
             icon="mdi:drag"
             class="ColumnManager__item"
             :text="element.title"
-            @click-actions="columns[index].enabled = !columns[index].enabled; emitUpdate();"
           >
             <template #actions>
-              <input
-                :checked="columns[index].enabled"
-                type="checkbox"
-                style="pointer-events: none"
-              >
+              <div @click.stop.prevent="columns[index].enabled = !columns[index].enabled; emitUpdate();">
+                <input
+                  :checked="columns[index].enabled"
+                  type="checkbox"
+                  style="pointer-events: none"
+                >
+              </div>
             </template>
           </UiItem>
         </template>

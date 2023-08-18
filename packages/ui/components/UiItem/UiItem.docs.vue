@@ -117,10 +117,6 @@ function saySomething() {
           <td>Event emitted when the body is clicked</td>
         </tr>
         <tr>
-          <td>click-actions</td>
-          <td>Event emitted when the actions are clicked</td>
-        </tr>
-        <tr>
           <td>delete</td>
           <td>Event emitted when the delete function is called</td>
         </tr>

@@ -54,7 +54,7 @@ export default {
     },
   },
 
-  emits: ['click', 'click-icon', 'click-body', 'click-actions', 'delete'],
+  emits: ['click', 'click-icon', 'click-body', 'delete'],
 
   data() {
     return { isEndangered: false }
@@ -99,7 +99,7 @@ export default {
       :class="'UiItem__body' + (bem ? ` ${bem}__body` : '')"
       @click="$emit('click-body', $event)"
     >
-      <h1
+      <div
         v-if="text"
         :class="'UiItem__text' + (bem ? ` ${bem}__text` : '')"
         v-text="text"
@@ -119,7 +119,6 @@ export default {
     <div
       v-if="hasSlot('actions')"
       :class="'UiItem__actions' + (bem ? ` ${bem}__actions` : '')"
-      @click.stop.prevent="$emit('click-actions', $event)"
     >
       <slot name="actions" />
     </div>
@@ -182,7 +181,6 @@ export default {
   &__text {
     margin: 0;
     font-size: 1em;
-    font-weight: inherit;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

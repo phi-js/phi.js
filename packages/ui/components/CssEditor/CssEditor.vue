@@ -1,11 +1,23 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 
-import { UiInput, UiIcon, UiDialog } from '../'
+import { UiInput, UiItem, UiDialog, UiTabs, UiTab } from '../'
 import { cssStringToObject, cssObjectToString } from './helpers.js'
 import CssDeclaration from './CssDeclaration.vue'
 
 import OpenAiCss from '@/packages/cms/plugins/openai/OpenAiCss.vue'
+import { useI18n } from '../../../i18n'
+
+const i18n = useI18n({
+  en: {
+    'CssEditor.Rules': 'Rules',
+    'CssEditor.Source': 'Source',
+  },
+  es: {
+    'CssEditor.Rules': 'Reglas',
+    'CssEditor.Source': 'CSS',
+  },
+})
 
 const props = defineProps({
   /*
@@ -75,12 +87,27 @@ function onOpenAiInput($event) {
         :options="availableSelectors"
       />
 
+      <UiTabs
+        v-model="isSourceOpen"
+        class="CssEditor__tabs"
+      >
+        <UiTab
+          :value="false"
+          :text="i18n.t('CssEditor.Rules')"
+        />
+        <UiTab
+          :value="true"
+          :text="i18n.t('CssEditor.Source')"
+        />
+      </UiTabs>
+
+
       <UiDialog>
         <template #trigger>
-          <UiIcon
-            title="Edit styles with ChatGPT"
-            class="CssEditor__button"
-            src="mdi:head-snowflake"
+          <UiItem
+            class="CssEditor__aiButton"
+            icon="mdi:head-snowflake"
+            text="OpenAI"
           />
         </template>
         <template #default="{ close }">
@@ -90,13 +117,6 @@ function onOpenAiInput($event) {
           />
         </template>
       </UiDialog>
-
-      <UiIcon
-        class="CssEditor__button"
-        :class="{'CssEditor__button--active': isSourceOpen}"
-        src="mdi:code-json"
-        @click="isSourceOpen = !isSourceOpen"
-      />
     </div>
 
     <div class="CssEditor__body">
@@ -134,9 +154,10 @@ function onOpenAiInput($event) {
     }
   }
 
-  &__button {
-    width: 38px;
-    height: 38px;
+  &__aiButton {
+    font-size: 0.9em;
+    --ui-item-padding: 8px 12px;
+    font-weight: bold;
     border-radius: 4px;
     margin: 3px;
 
@@ -147,6 +168,12 @@ function onOpenAiInput($event) {
 
     &--active {
       color: var(--ui-color-primary);
+    }
+  }
+
+  &__tabs {
+    .UiTabs__header {
+      padding: 0;
     }
   }
 
