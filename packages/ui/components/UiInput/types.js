@@ -9,6 +9,7 @@ const UiInputDatetime = defineAsyncComponent(() => import('../UiInputDatetime/Ui
 const UiInputHtml = defineAsyncComponent(() => import('../UiInputHtml/UiInputHtml.vue'))
 const UiInputJson = defineAsyncComponent(() => import('../UiInputJson/UiInputJson.vue'))
 const UiInputNumberSlide = defineAsyncComponent(() => import('../UiInputNumberSlide/UiInputNumberSlide.vue'))
+const UiInputRating = defineAsyncComponent(() => import('../UiInputRating/UiInputRating.vue'))
 const UiInputTimer = defineAsyncComponent(() => import('../UiInputTimer/UiInputTimer.vue'))
 const UiInputUrl = defineAsyncComponent(() => import('../UiInputUrl/UiInputUrl.vue'))
 const UiInputVariable = defineAsyncComponent(() => import('../UiInputVariable/UiInputVariable.vue'))
@@ -31,6 +32,7 @@ export default {
   'json': UiInputJson,
   'nationality': UiSelectNationality,
   'number-slide': UiInputNumberSlide,
+  'rating': UiInputRating,
   'select-buttons': UiSelectButtons,
   'select-list': UiSelectList,
   'select-native': UiSelectNative,
