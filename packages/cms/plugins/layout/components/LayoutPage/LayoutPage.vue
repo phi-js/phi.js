@@ -9,6 +9,12 @@ const props = defineProps({
     required: false,
     default: null,
   },
+
+  formId: {
+    type: String,
+    required: false,
+    default: null,
+  },
 })
 
 const emit = defineEmits(['mounted', 'change'])
@@ -21,6 +27,8 @@ provide('_LayoutPage_onBeforeSubmit', (callable) => onBeforeSubmit.push(callable
 const isSubmitting = ref(false)
 
 async function onFormSubmit($event) {
+  $event.preventDefault()
+
   if (isSubmitting.value) {
     return
   }
@@ -49,6 +57,7 @@ async function onFormSubmit($event) {
     const results = await Promise.allSettled(arrCallbacks.map((callback) => callback($event)))
     if (results.some((outcome) => outcome.status == 'rejected' || outcome.value === false)) {
       isSubmitting.value = false
+      console.warn(results)
       return false
     }
   }
@@ -103,9 +112,10 @@ function onFormChange($event) {
 
 <template>
   <form
+    :id="props.formId"
     class="LayoutPage"
     :class="{'LayoutPage--submitting': isSubmitting}"
-    @submit.prevent="onFormSubmit"
+    @submit="onFormSubmit"
     @change="onFormChange"
   >
     <div

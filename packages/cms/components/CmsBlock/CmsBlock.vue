@@ -192,7 +192,6 @@ const CmsBlock = {
         }
       }
 
-
       // Block listeners defined via plugins
       if (Array.isArray(pluginData?.blockListeners)) {
         pluginData.blockListeners.forEach((listener) => {
@@ -205,6 +204,13 @@ const CmsBlock = {
             },
           )
         })
+      }
+
+      // Listeners declared via attrs
+      for (const [attrName, attrValue] of Object.entries(attrs)) {
+        if (attrName.startsWith('on')) {
+          pushListener(retval, attrName, attrValue)
+        }
       }
 
       return retval

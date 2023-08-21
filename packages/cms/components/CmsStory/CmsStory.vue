@@ -9,6 +9,7 @@ import {
   Transition,
   onMounted,
   computed,
+  useAttrs,
 } from 'vue'
 
 import { CmsBlock } from '../CmsBlock'
@@ -27,6 +28,8 @@ import { useI18n } from '@/packages/i18n'
 import { VM } from '@/packages/vm'
 
 export default {
+  inheritAttrs: false,
+
   props: {
     story: {
       type: Object,
@@ -50,6 +53,7 @@ export default {
   emits: ['update:modelValue', 'update:currentPageId', 'story-emit', 'page-enter'],
 
   setup(props, { emit }) {
+    const attrs = useAttrs()
     const i18n = useI18n()
 
     // Sanitize and translate (precompile) incoming story
@@ -437,6 +441,7 @@ export default {
           },
           () => currentPage.value
             ? h(CmsBlock, {
+              ...attrs,
               'key': currentPage.value.id,
               'class': 'CmsStory__page',
               'block': translatedPage.value,
