@@ -42,7 +42,7 @@
           :class="[`UiCalendarEvent--id-${event.id}`, event.className]"
           :style="event.style"
           tabindex="0"
-          @keyup.enter="clickEvent(event)"
+          @keydown.enter="clickEvent(event)"
           @click="clickEvent(event)"
         >
           <span class="UiCalendarEvent__title">{{ event.title }}</span>
@@ -87,7 +87,7 @@
             :title="event.title"
             tabindex="0"
             @click="clickEvent(event)"
-            @keyup.enter="clickEvent(event)"
+            @keydown.enter="clickEvent(event)"
           >
             <span class="UiCalendarEvent__title">{{ event.title }}</span>
             <span class="UiCalendarEvent__time">
