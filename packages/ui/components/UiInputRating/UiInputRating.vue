@@ -28,7 +28,9 @@ export default {
       color="var(--ui-color-primary)"
       class="UiInputRating__star"
       :src="n <= modelValue ? 'mdi:star' : 'mdi:star-outline'"
+      tabindex="0"
       @click="$emit('update:modelValue', n == modelValue ? 0 : n)"
+      @keyup.enter="$emit('update:modelValue', n == modelValue ? 0 : n)"
     />
   </div>
 </template>
