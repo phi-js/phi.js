@@ -19,7 +19,9 @@
           :key="i"
           :class="['day-event', 'ui-calendar-event', event.className]"
           :style="[{ backgroundColor: event.color }, event.style]"
+          tabindex="0"
           @click="$emit('click-event', event)"
+          @keyup.enter="$emit('click-event', event)"
         >
           <div class="time">
             <span class="start">{{ i18n.time(event.dateStart, { hour: "2-digit", minute: "2-digit" }) }}</span>
@@ -218,7 +220,7 @@ export default {
     &.--today {
       .day {
         color: #fff;
-        background-color: #0288d1;
+        background-color: var(--ui-color-primary);
       }
     }
 

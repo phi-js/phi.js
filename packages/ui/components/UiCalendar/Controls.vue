@@ -11,20 +11,41 @@
       {{ i18n.t('UiCalendar.Today') }}
     </button>
 
-    <span class="view-selector">
-      <select
-        class="UiInput"
-        :value="currentView"
-        @change="setCurrentView($event.target.value)"
-      >
-        <option value="month">{{ i18n.t('UiCalendar.Month') }}</option>
-        <option value="week">{{ i18n.t('UiCalendar.Week') }}</option>
-        <option value="schedule">{{ i18n.t('UiCalendar.Schedule') }}</option>
-        <option value="days">{{ i18n.t('UiCalendar.Days') }}</option>
-      </select>
-    </span>
+    <div class="date-controls">
+      <div class="month-controls">
+        <span
+          class="month-prev"
+          @click="goPrev()"
+        >
+          <ui-icon src="mdi:chevron-left" />
+        </span>
 
-    <span
+        <span
+          class="month-next"
+          @click="goNext()"
+        >
+          <ui-icon src="mdi:chevron-right" />
+        </span>
+      </div>
+
+      <div class="month-selector">
+        <select
+          class="UiInput"
+          :value="innerDate.getMonth()"
+          @change="setMonth($event.target.value)"
+        >
+          <option
+            v-for="(monthName, i) in allMonths"
+            :key="i"
+            :value="i"
+            v-text="monthName"
+          />
+        </select>
+        <span class="current-year">{{ innerDate.getFullYear() }}</span>
+      </div>
+    </div>
+
+    <div
       v-if="currentView == 'days'"
       class="counter-days"
     >
@@ -35,39 +56,28 @@
       <span @click="setCurrentDay(1)">
         <ui-icon src="mdi:plus" />
       </span>
-    </span>
+    </div>
 
-    <span class="month-selector">
+    <div class="view-selector">
       <select
         class="UiInput"
-        :value="innerDate.getMonth()"
-        @change="setMonth($event.target.value)"
+        :value="currentView"
+        @change="setCurrentView($event.target.value)"
       >
-        <option
-          v-for="(monthName, i) in allMonths"
-          :key="i"
-          :value="i"
-          v-text="monthName"
-        />
+        <option value="month">
+          {{ i18n.t('UiCalendar.Month') }}
+        </option>
+        <option value="week">
+          {{ i18n.t('UiCalendar.Week') }}
+        </option>
+        <option value="schedule">
+          {{ i18n.t('UiCalendar.Schedule') }}
+        </option>
+        <option value="days">
+          {{ i18n.t('UiCalendar.Days') }}
+        </option>
       </select>
-      <span class="current-year">{{ innerDate.getFullYear() }}</span>
-    </span>
-
-    <span class="month-controls">
-      <span
-        class="month-prev"
-        @click="goPrev()"
-      >
-        <ui-icon src="mdi:chevron-left" />
-      </span>
-
-      <span
-        class="month-next"
-        @click="goNext()"
-      >
-        <ui-icon src="mdi:chevron-right" />
-      </span>
-    </span>
+    </div>
   </div>
 </template>
 
@@ -249,29 +259,41 @@ export default {
 </script>
 
 <style lang="scss">
+@media screen and (max-width: 599px) {
+  .ui-calendar-controls {
+    .date-controls {
+      width: 100%;
+      justify-content: space-between;
+      order: 2;
+    }
+  }
+}
+
 .ui-calendar-controls {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   flex-wrap: wrap;
 
-  .view-selector {
-    margin: 0 12px;
+  user-select: none;
+
+  .date-controls {
+    flex: 1;
+
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
   }
 
   .month-selector {
-    margin: 0 12px 0 0;
-    margin-left: auto;
     display: flex;
     align-items: center;
-
-    select {
-      margin: 0 12px 0 0;
-    }
+    gap: 1em;
   }
 
   .month-controls {
     justify-content: center;
-    margin-left: auto;
   }
 
   .month-controls,
@@ -289,7 +311,7 @@ export default {
       height: 40px;
       width: 40px;
 
-      border-radius: 50%;
+      border-radius: 4px;
       background-color: transparent;
       color: #666;
 

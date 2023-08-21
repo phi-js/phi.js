@@ -16,7 +16,7 @@
         :class="['column column-day-name ui-calendar-day', day.classnames]"
         @click="clickDay(day)"
       >
-        <span class="label-weekday">{{ i18n.d(day.date, { weekday: 'long' }) }}</span>
+        <span class="label-weekday">{{ i18n.d(day.date, { weekday: 'short' }) }}</span>
         <span class="label-day">{{ day.date.getDate() }}</span>
         <span class="label-month">{{ i18n.d(day.date, { month: 'short' }) }}</span>
       </div>
@@ -41,6 +41,8 @@
           class="UiCalendarEvent UiCalendarEvent--allDay"
           :class="[`UiCalendarEvent--id-${event.id}`, event.className]"
           :style="event.style"
+          tabindex="0"
+          @keyup.enter="clickEvent(event)"
           @click="clickEvent(event)"
         >
           <span class="UiCalendarEvent__title">{{ event.title }}</span>
@@ -83,9 +85,16 @@
             ]"
             :style="event.style"
             :title="event.title"
+            tabindex="0"
             @click="clickEvent(event)"
+            @keyup.enter="clickEvent(event)"
           >
             <span class="UiCalendarEvent__title">{{ event.title }}</span>
+            <span class="UiCalendarEvent__time">
+              {{ i18n.time(event.dateStart, { hour: "2-digit", minute: "2-digit" }) }}
+              -
+              {{ i18n.time(event.dateEnd, { hour: "2-digit", minute: "2-digit" }) }}
+            </span>
           </div>
         </div>
 

@@ -6,13 +6,13 @@
   >
     <thead>
       <tr>
-        <td
+        <th
           v-for="(day, dk) in weeks[0].days"
           :key="dk"
           valign="top"
         >
           {{ i18n.d(day.date, { weekday: 'short' }) }}
-        </td>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -46,10 +46,13 @@
                   <li
                     v-for="(event, i) in dayEvents[day.key]"
                     :key="i"
+                    tabindex="0"
                     :class="['UiCalendarEvent', event.className]"
                     :style="[{ backgroundColor: event.color }, event.style]"
                     @click.stop="clickEvent(event)"
+                    @keyup.enter="clickEvent(event)"
                   >
+                    <span class="UiCalendarEvent__time">{{ i18n.time(event.dateStart, { hour: "2-digit", minute: "2-digit" }) }}</span>
                     <span class="UiCalendarEvent__title">{{ event.title }}</span>
                   </li>
                 </ul>
@@ -269,7 +272,7 @@ export default {
     }
 
     thead {
-      td {
+      th {
         padding-bottom: 4px;
         font-weight: bold;
         font-size: 0.8em;
@@ -314,6 +317,9 @@ export default {
         padding: 3px;
 
         border-radius: 50%;
+        width: 1.3em;
+        height: 1.3em;
+
         background-color: var(--ui-color-primary);
         color: #fff;
       }
