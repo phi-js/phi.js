@@ -35,6 +35,13 @@ const props = defineProps({
     required: false,
     default: false,
   },
+
+  /* form attribute to be set to all <input>s (see https://www.w3schools.com/tags/att_form.asp)*/
+  form: {
+    type: String,
+    required: false,
+    default: null,
+  },
 })
 
 const emit = defineEmits(['update:open', 'open', 'close'])
@@ -168,6 +175,7 @@ async function cancel() {
           >
             <UiInput
               v-if="props.onAccept"
+              :form="props.form"
               class="UiDialog__acceptButton"
               type="submit"
               value="accept"
@@ -176,6 +184,7 @@ async function cancel() {
             />
             <UiInput
               v-if="props.onCancel"
+              :form="props.form"
               class="UiDialog__cancelButton UiButton--cancel"
               type="button"
               @click="cancel"
@@ -183,6 +192,7 @@ async function cancel() {
             />
             <UiInput
               v-else
+              :form="props.form"
               class="UiDialog__cancelButton UiButton--cancel"
               type="button"
               @click="close"
