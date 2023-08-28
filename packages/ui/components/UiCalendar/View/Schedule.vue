@@ -18,10 +18,10 @@
           v-for="(event, i) in day.events"
           :key="i"
           :class="['day-event', 'ui-calendar-event', event.className]"
-          :style="[{ backgroundColor: event.color }, event.style]"
+          :style="event.style"
           tabindex="0"
           @click="$emit('click-event', event)"
-          @keydown.enter="$emit('click-event', event)"
+          @keydown.enter.prevent="$emit('click-event', event)"
         >
           <div class="time">
             <span class="start">{{ i18n.time(event.dateStart, { hour: "2-digit", minute: "2-digit" }) }}</span>

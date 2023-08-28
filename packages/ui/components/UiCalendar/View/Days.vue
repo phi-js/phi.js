@@ -41,8 +41,9 @@
           class="UiCalendarEvent UiCalendarEvent--allDay"
           :class="[`UiCalendarEvent--id-${event.id}`, event.className]"
           :style="event.style"
+          :title="event.title"
           tabindex="0"
-          @keydown.enter="clickEvent(event)"
+          @keydown.enter.prevent="clickEvent(event)"
           @click="clickEvent(event)"
         >
           <span class="UiCalendarEvent__title">{{ event.title }}</span>
@@ -87,7 +88,7 @@
             :title="event.title"
             tabindex="0"
             @click="clickEvent(event)"
-            @keydown.enter="clickEvent(event)"
+            @keydown.enter.prevent="clickEvent(event)"
           >
             <span class="UiCalendarEvent__title">{{ event.title }}</span>
             <span class="UiCalendarEvent__time">
@@ -283,7 +284,6 @@ export default {
               ? (eventEndMinute - eventStartMinute) * minuteSize + 'px'
               : 'auto',
             zIndex: eventStartMinute,
-            backgroundColor: this.events[i].color,
           },
 
           _startMinute: eventStartMinute,
@@ -323,6 +323,10 @@ export default {
         })
 
         events.forEach((event) => {
+          if (event.isAllDay) {
+            return
+          }
+
           event.style.width = Math.floor(100 / event._siblings) + '%'
           event.style.left =
             (event._order - 1) * Math.floor(100 / event._siblings) + '%'
@@ -460,6 +464,7 @@ export default {
     .column {
       flex: 1;
       align-self: stretch;
+      min-width: 0;
     }
 
     .column-time {

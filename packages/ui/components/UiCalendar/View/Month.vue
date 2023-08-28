@@ -48,9 +48,10 @@
                     :key="i"
                     tabindex="0"
                     :class="['UiCalendarEvent', event.className]"
-                    :style="[{ backgroundColor: event.color }, event.style]"
+                    :style="event.style"
+                    :title="event.title"
                     @click.stop="clickEvent(event)"
-                    @keydown.enter="clickEvent(event)"
+                    @keydown.enter.prevent="clickEvent(event)"
                   >
                     <span class="UiCalendarEvent__time">{{ i18n.time(event.dateStart, { hour: "2-digit", minute: "2-digit" }) }}</span>
                     <span class="UiCalendarEvent__title">{{ event.title }}</span>
