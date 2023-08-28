@@ -15,6 +15,18 @@ export default {
       required: false,
       default: 5,
     },
+
+    labelMin: {
+      type: String,
+      required: false,
+      default: '',
+    },
+
+    labelMax: {
+      type: String,
+      required: false,
+      default: '',
+    },
   },
   emits: ['update:modelValue'],
 }
@@ -22,6 +34,12 @@ export default {
 
 <template>
   <div class="UiInputRating">
+    <span
+      v-if="labelMin"
+      class="UiInputRating__label UiInputRating__label--min"
+      @click="$emit('update:modelValue', 1)"
+      v-text="labelMin"
+    />
     <UiIcon
       v-for="n in max"
       :key="n"
@@ -31,6 +49,12 @@ export default {
       tabindex="0"
       @click="$emit('update:modelValue', n == modelValue ? 0 : n)"
       @keyup.enter="$emit('update:modelValue', n == modelValue ? 0 : n)"
+    />
+    <span
+      v-if="labelMax"
+      class="UiInputRating__label UiInputRating__label--max"
+      @click="$emit('update:modelValue', max)"
+      v-text="labelMax"
     />
   </div>
 </template>
