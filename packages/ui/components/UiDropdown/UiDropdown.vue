@@ -20,7 +20,7 @@ const emit = defineEmits(['update:open'])
 const isOpen = ref(false)
 
 watch(
-  () => props.isOpen,
+  () => props.open,
   (newValue) => isOpen.value = !!newValue,
   { immediate: true },
 )
