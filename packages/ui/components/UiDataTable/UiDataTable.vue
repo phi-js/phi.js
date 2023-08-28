@@ -76,7 +76,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['click-record', 'update:order', 'update:pointer', 'scroll-bottom'])
+const emit = defineEmits(['click-record', 'update:order', 'update:pointer', 'scroll-bottom', 'update:visible-columns'])
 
 const refBody = ref()
 
@@ -220,6 +220,10 @@ const visibleColumns = computed(() => {
   return columnList.filter((col) => !col.group || col.group == selectedGroup.value)
 })
 
+watch(
+  visibleColumns,
+  () => emit('update:visible-columns', visibleColumns.value),
+)
 
 /*
 A hashed object of cell values:

@@ -2,17 +2,17 @@ export default [
   {
     title: 'User ID',
     value: '$.id',
-    sortable: '$.id',
+    orderBy: '$.id',
   },
   {
     title: 'Full name',
     value: '$.name',
-    sortable: '$.name',
+    orderBy: '$.name',
   },
   {
     title: 'Gender',
     value: '$.gender',
-    sortable: '$.gender',
+    orderBy: '$.gender',
     type: 'enum',
     options: [
       { value: 0, text: 'Chica' },
@@ -29,7 +29,7 @@ export default [
     title: 'eMail',
     value: '$.email',
     type: 'email',
-    sortable: '$.email',
+    orderBy: '$.email',
     group: 'Personal info',
   },
 
