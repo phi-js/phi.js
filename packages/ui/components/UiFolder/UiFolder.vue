@@ -51,7 +51,10 @@ const props = defineProps({
   [
     {
       text: 'Suggestions',
-      match: { type: 'suggestion' },
+      match: {
+        type: 'suggestion'
+        PROP NAME:  PROP VALUE  // se determina que un item pertenece a un section si item[prop name] == section.match[prop name]
+      },
     },
     {
       text: 'Folders',
@@ -68,9 +71,15 @@ const props = defineProps({
     required: false,
     default: () => [],
   },
+
+  view: {
+    type: String,
+    required: false,
+    default: 'table', // 'grid' | 'table'
+  },
 })
 
-const currentView = ref(localStorage.getItem('UiFolder.view') || 'grid')
+const currentView = ref(localStorage.getItem('UiFolder.view') || props.view)
 watch(currentView, (val) => localStorage.setItem('UiFolder.view', val))
 
 const sortColumn = ref(localStorage.getItem('UiFolder.sortColumn') || 'dateModified')
@@ -78,15 +87,6 @@ watch(sortColumn, (val) => localStorage.setItem('UiFolder.sortColumn', val))
 
 const sortDesc = ref((localStorage.getItem('UiFolder.sortDesc') || 'desc') == 'desc')
 watch(sortDesc, (val) => localStorage.setItem('UiFolder.sortDesc', val ? 'desc' : 'asc'))
-
-
-// Force "grid" view on mobile  (because so far the table looks like sht in mobile)
-const isMobile = screen.width <= 500
-if (isMobile) {
-  currentView.value = 'grid'
-}
-
-
 
 const availableColumns = computed(() => [
   { value: 'text', text: i18n.t('UiFolder.Name') },
@@ -101,7 +101,14 @@ const computedSections = computed(() => {
   return props.sections.map((section) => {
     return {
       ...section,
-      items: props.items.filter((item) => item.type == section.match.type),
+      items: props.items.filter((item) => {
+        for (const [key, value] of Object.entries(section.match)) {
+          if (item[key] == value) {
+            return true
+          }
+        }
+        return false
+      }),
     }
   })
 })
