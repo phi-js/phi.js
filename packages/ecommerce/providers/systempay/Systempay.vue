@@ -1,9 +1,10 @@
 <template>
   <div class="Systempay">
-    <div class="formTest"></div>
+    <div class="formTest" />
 
-    <button @click="initialize">RECARGAR LIBRERIA</button>
-
+    <button @click="initialize">
+      RECARGAR LIBRERIA
+    </button>
   </div>
 </template>
 
@@ -43,84 +44,82 @@ export default {
   },
 
   data() {
-    return {
-      isDone: false,
-    };
+    return { isDone: false }
   },
 
   mounted() {
-    this.initialize();
+    this.initialize()
   },
 
   methods: {
     onBrandChanged(foo) {
-      console.log('onBrandChanged', foo);
+      console.log('onBrandChanged', foo)
     },
     onError(foo) {
-      console.log('onError', foo);
+      console.log('onError', foo)
     },
     onFocus(foo) {
-      console.log('onFocus', foo);
+      console.log('onFocus', foo)
     },
     onFormCreated(foo) {
-      console.log('onFormCreated', foo);
+      console.log('onFormCreated', foo)
     },
     onFormReady(foo) {
-      console.log('onFormReady', foo);
+      console.log('onFormReady', foo)
     },
     onLoaded(foo) {
-      console.log('onLoaded', foo);
+      console.log('onLoaded', foo)
     },
     onSubmit(foo) {
-      console.log('onSubmit', foo);
+      console.log('onSubmit', foo)
     },
     onButtonClick(foo) {
-      console.log('onButtonClick', foo);
+      console.log('onButtonClick', foo)
     },
 
     async initialize() {
-      return; //////////////////
-      await this.includeKrypton();
+      return //////////////////
+      await this.includeKrypton()
 
       KRGlue.loadLibrary(this.url, this.publicKey)
         .then(({ KR }) => {
-          KR.onBrandChanged(this.onBrandChanged);
-          KR.onError(this.onError);
-          KR.onFocus(this.onFocus);
-          KR.onFormCreated(this.onFormCreated);
-          KR.onFormReady(this.onFormReady);
-          KR.onLoaded(this.onLoaded);
-          KR.onSubmit(this.onSubmit);
-          KR.button.onClick(this.onButtonClick);
+          KR.onBrandChanged(this.onBrandChanged)
+          KR.onError(this.onError)
+          KR.onFocus(this.onFocus)
+          KR.onFormCreated(this.onFormCreated)
+          KR.onFormReady(this.onFormReady)
+          KR.onLoaded(this.onLoaded)
+          KR.onSubmit(this.onSubmit)
+          KR.button.onClick(this.onButtonClick)
 
           return KR.setFormConfig({
-            formToken: this.formToken,
+            'formToken': this.formToken,
             // 'kr-language': 'en-US',
             // 'kr-language': 'fr-FR',
             // 'kr-language': 'de-GR',
             'kr-language': 'es-ES',
-          });
+          })
         })
         .then(({ KR }) => KR.addForm('.formTest'))
-        .then(({ KR, result }) => KR.showForm(result.formId));
+        .then(({ KR, result }) => KR.showForm(result.formId))
     },
 
     includeKrypton() {
       return new Promise((resolve, reject) => {
         if (document.getElementById('script-krypton')) {
-          return resolve();
+          return resolve()
         }
 
-        var tag = document.createElement('script');
-        tag.id = 'script-krypton';
-        tag.src = this.url + '/static/js/krypton-client/V4.0/ext/classic.js';
+        var tag = document.createElement('script')
+        tag.id = 'script-krypton'
+        tag.src = this.url + '/static/js/krypton-client/V4.0/ext/classic.js'
         tag.onload = () => {
-          resolve();
-        };
+          resolve()
+        }
 
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      });
+        var firstScriptTag = document.getElementsByTagName('script')[0]
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
+      })
     },
 
     /*
@@ -132,27 +131,30 @@ export default {
     includeScript() {
       return new Promise((resolve, reject) => {
         if (document.getElementById('script-systempay')) {
-          return resolve();
+          return resolve()
         }
 
-        var tag = document.createElement('script');
-        tag.id = 'script-systempay';
-        tag.src =
-          'https://api.systempay.fr/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js';
-        tag.setAttribute('kr-public-key', this.publicKey);
-        tag.setAttribute('kr-post-url-success', 'ok.html');
-        tag.onload = () => {
-          resolve();
-        };
+        var link = document.createElement('link')
+        link.href = 'https://api.systempay.fr/static/js/krypton-client/V4.0/ext/classic-reset.css'
+        link.type = 'text/css'
+        link.rel = 'stylesheet'
+        link.media = 'screen,print'
+        document.getElementsByTagName('head')[0].appendChild(link)
 
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      });
+        var tag = document.createElement('script')
+        tag.id = 'script-systempay'
+        tag.src =
+          'https://api.systempay.fr/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js'
+        tag.setAttribute('kr-public-key', this.publicKey)
+        tag.setAttribute('kr-post-url-success', 'ok.html')
+        tag.onload = () => {
+          resolve()
+        }
+
+        var firstScriptTag = document.getElementsByTagName('script')[0]
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
+      })
     },
   },
-};
+}
 </script>
-
-<style lang="scss">
-@import url('https://api.systempay.fr/static/js/krypton-client/V4.0/ext/classic-reset.css');
-</style>
